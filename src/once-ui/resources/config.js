@@ -1,24 +1,25 @@
+import { APP_NAME } from "@/lib/constants";
+
 const baseURL = "demo.once-ui.com";
 
 // default customization applied to the HTML in the main layout.tsx
 const style = {
   theme: "dark", // dark | light
-  neutral: "gray", // sand | gray | slate
-  brand: "cyan", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan
-  accent: "cyan", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan
-  solid: "contrast", // color | contrast | inverse
-  solidStyle: "flat", // flat | plastic
-  border: "playful", // rounded | playful | conservative
-  surface: "filled", // filled | translucent
+  neutral: "slate", // sand | gray | slate
+  brand: "yellow", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan
+  accent: "aqua", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan
+  solid: "color", // color | contrast | inverse
+  solidStyle: "plastic", // flat | plastic
+  border: "rounded", // rounded | playful | conservative
+  surface: "translucent", // filled | translucent
   transition: "all", // all | micro | macro
   scaling: "100", // 90 | 95 | 100 | 105 | 110
 };
 
 // default metadata
 const meta = {
-  title: "Once UI - Your Personalized Design System for Next.js",
-  description:
-    "An open-source design system and component library for Next.js that emphasizes easy styling and accessibility in UI development.",
+  title: `${APP_NAME}`,
+  description: 'A design system for Next.js'
 };
 
 // default open graph data

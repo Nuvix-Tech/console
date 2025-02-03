@@ -1,12 +1,14 @@
 "use client";
 import { APP_NAME } from "@/lib/constants";
+import { sdkForConsole } from "@/lib/sdk";
 import {
   Button, Column,
   Heading, Line, Logo,
   Row,
   SmartLink, Text,
   Input, PasswordInput,
-  useToast
+  useToast,
+  Flex
 } from "@/once-ui/components";
 import React, { useState } from "react";
 
@@ -14,7 +16,9 @@ import React, { useState } from "react";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const { addToast } = useToast();
+  const { account } = sdkForConsole;
 
   const validateLogin = () => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -23,6 +27,27 @@ export default function Login() {
     }
     return null;
   };
+
+  async function onSubmit() {
+    setLoading(true)
+    try {
+      const res = await account.createEmailPasswordSession(
+        email,
+        password,
+      );
+      addToast({
+        variant: "success",
+        message: "You have successfully logged in.",
+      });
+    } catch (e: any) {
+      addToast({
+        variant: "danger",
+        message: e.message,
+      });
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <>
@@ -34,29 +59,6 @@ export default function Login() {
         Log in or
         <SmartLink href="/auth/register">sign up</SmartLink>
       </Text>
-      <Column fillWidth gap="8">
-        <Button
-          label="Continue with Google"
-          fillWidth
-          variant="secondary"
-          weight="default"
-          prefixIcon="google"
-          size="l"
-        />
-        <Button
-          label="Continue with GitHub"
-          fillWidth
-          variant="secondary"
-          weight="default"
-          prefixIcon="github"
-          size="l"
-        />
-      </Column>
-      <Row fillWidth paddingY="24">
-        <Row onBackground="neutral-weak" fillWidth gap="24" vertical="center">
-          <Line />/<Line />
-        </Row>
-      </Row>
       <Column gap="-1" fillWidth>
         <Input
           id="email"
@@ -78,19 +80,45 @@ export default function Login() {
           value={password}
           validate={validateLogin}
         />
+        <Flex horizontal="end" paddingTop="8">
+          <SmartLink color="gray" href="/auth/forgot-password">Forgot password?</SmartLink>
+        </Flex>
       </Column>
       <Button
         id="login"
         label="Log in"
         arrowIcon
+        disabled={(validateLogin() !== null) || loading}
+        loading={loading}
         fillWidth
-        onClick={() => {
-          addToast({
-            variant: "success",
-            message: "Wohoo! It's a toast!",
-          });
-        }}
+        onClick={onSubmit}
       />
+      <Row fillWidth paddingY="24">
+        <Row onBackground="neutral-weak" fillWidth gap="24" vertical="center">
+          <Line />*<Line />
+        </Row>
+      </Row>
+      <Column fillWidth gap="8">
+        {/* <Button
+          label="Continue with Google"
+          fillWidth
+          variant="secondary"
+          weight="default"
+          prefixIcon="google"
+          size="l"
+        /> */}
+        <Button
+          label="Continue with GitHub"
+          fillWidth
+          disabled={loading}
+          loading={loading}
+          variant="secondary"
+          weight="default"
+          prefixIcon="github"
+          size="l"
+        />
+      </Column>
+
     </>
   )
 }

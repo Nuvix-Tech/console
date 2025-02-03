@@ -9,7 +9,7 @@ import { baseURL, style, meta, og, schema, social } from "@/once-ui/resources/co
 import { Background, Column, Flex, ToastProvider } from "@/once-ui/components";
 
 import { Inter } from "next/font/google";
-import { Roboto_Mono } from "next/font/google";
+import { Roboto_Mono, Space_Grotesk } from "next/font/google";
 
 const primary = Inter({
   variable: "--font-primary",
@@ -28,14 +28,18 @@ type FontConfig = {
 };
 
 /*
-	Replace with code for secondary and tertiary fonts
-	from https://once-ui.com/customize
+  Replace with code for secondary and tertiary fonts
+  from https://once-ui.com/customize
 */
 const secondary: FontConfig | undefined = undefined;
-const tertiary: FontConfig | undefined = undefined;
+const tertiary = Space_Grotesk({
+  variable: '--font-tertiary',
+  subsets: ['latin'],
+  display: 'swap'
+})
+
 /*
  */
-
 export async function generateMetadata(): Promise<Metadata> {
   const host = (await headers()).get("host");
   const metadataBase = host ? new URL(`https://${host}`) : undefined;
@@ -48,11 +52,11 @@ export async function generateMetadata(): Promise<Metadata> {
       description: og.description,
       url: "https://" + baseURL,
       images: [
-				{
-					url: og.image,
-					alt: og.title,
-				},
-			],
+        {
+          url: og.image,
+          alt: og.title,
+        },
+      ],
       type: og.type as
         | "website"
         | "article"
@@ -68,11 +72,11 @@ export async function generateMetadata(): Promise<Metadata> {
         | "video.other",
     },
     twitter: {
-			card: 'summary_large_image',
-			title: og.title,
-			description: og.description,
-			images: [og.image],
-		},
+      card: 'summary_large_image',
+      title: og.title,
+      description: og.description,
+      images: [og.image],
+    },
     metadataBase,
   };
 }
@@ -125,33 +129,7 @@ export default function RootLayout({
         />
       </head>
       <ToastProvider>
-        <Column as="body" fillWidth  margin="0" padding="0">
-          <Background
-            position="absolute"
-            mask={{
-              x: 100,
-              y: 0,
-              radius: 100,
-            }}
-            gradient={{
-              display: true,
-              x: 100,
-              y: 60,
-              width: 70,
-              height: 50,
-              tilt: -40,
-              opacity: 90,
-              colorStart: "accent-background-strong",
-              colorEnd: "page-background",
-            }}
-            grid={{
-              display: true,
-              opacity: 100,
-              width: "0.25rem",
-              color: "neutral-alpha-medium",
-              height: "0.25rem",
-            }}
-          />
+        <Column as="body" fillWidth margin="0" padding="0">
           {children}
         </Column>
       </ToastProvider>
