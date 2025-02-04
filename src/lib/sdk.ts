@@ -20,17 +20,17 @@ import {
   Storage,
   Teams,
   Users,
-  Vcs
-} from '@nuvix/console';
+  Vcs,
+} from "@nuvix/console";
 
-const API_URL = process.env.PUBLIC_NUVIX_ENDPOINT ?? process.env.NUVIX_ENDPOINT ?? 'https://skill.collegejaankaar.in/v1';
+const API_URL =
+  process.env.PUBLIC_NUVIX_ENDPOINT ??
+  process.env.NUVIX_ENDPOINT ??
+  "https://skill.collegejaankaar.in/v1";
 
-const clientConsole = new Client()
-  .setEndpoint(API_URL)
-  .setProject('console')
+const clientConsole = new Client().setEndpoint(API_URL).setProject("console");
 
-const clientProject = new Client()
-  .setEndpoint(API_URL)
+const clientProject = new Client().setEndpoint(API_URL);
 
 const sdkForProject = {
   client: clientProject,
@@ -49,7 +49,7 @@ const sdkForProject = {
   users: new Users(clientProject),
   vcs: new Vcs(clientProject),
   proxy: new Proxy(clientProject),
-  migrations: new Migrations(clientProject)
+  migrations: new Migrations(clientProject),
 };
 
 const sdkForConsole = {
@@ -67,12 +67,12 @@ const sdkForConsole = {
   assistant: new Assistant(clientConsole),
   // billing: new Billing(clientConsole),
   // sources: new Sources(clientConsole),
-  organizations: new Organizations(clientConsole)
+  organizations: new Organizations(clientConsole),
 };
 
 function getProjectSdk(id: string) {
-  clientProject.setProject(id)
-  return sdkForProject
+  clientProject.setProject(id);
+  return sdkForProject;
 }
 
 export { sdkForConsole, getProjectSdk };

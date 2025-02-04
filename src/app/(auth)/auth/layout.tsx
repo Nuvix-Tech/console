@@ -1,21 +1,12 @@
 "use client";
-import {
-  Background,
-  Column,
-  Row, SmartImage,
-} from "@/once-ui/components";
+import { Background, Column, Row, SmartImage } from "@/once-ui/components";
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
-  
   return (
     <>
-      <Row
-        paddingX="xl"
-        background="page"
-      >
+      <Row paddingX="xl" background="page">
         <Row
           marginY={"xl"}
-
           background="overlay"
           fillWidth
           radius="xl"
@@ -61,6 +52,5 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
     </>
   );
 };
-
 
 export default AuthLayout;

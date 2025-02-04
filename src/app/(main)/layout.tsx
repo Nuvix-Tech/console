@@ -33,10 +33,10 @@ type FontConfig = {
 */
 const secondary: FontConfig | undefined = undefined;
 const tertiary = Space_Grotesk({
-  variable: '--font-tertiary',
-  subsets: ['latin'],
-  display: 'swap'
-})
+  variable: "--font-tertiary",
+  subsets: ["latin"],
+  display: "swap",
+});
 
 /*
  */
@@ -72,7 +72,7 @@ export async function generateMetadata(): Promise<Metadata> {
         | "video.other",
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title: og.title,
       description: og.description,
       images: [og.image],

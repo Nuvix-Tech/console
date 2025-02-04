@@ -4,10 +4,10 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import LoadingUI from "../loading";
 
-const ConsoleWrapper: React.FC<{ children: React.ReactNode, }> = ({ children }) => {
-    const [isLoading, setIsLoading] = useState(true)
-    const { account } = sdkForConsole;
-    const { push } = useRouter();
+const ConsoleWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const { account } = sdkForConsole;
+  const { push } = useRouter();
 
     useEffect(() => {
         const fetchUser = async () => {

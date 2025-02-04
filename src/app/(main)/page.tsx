@@ -374,12 +374,7 @@ export default function Home() {
                     onSolid="neutral-strong"
                   >
                     <Text variant="body-default-xl">Lorant One</Text>
-                    <Row
-                      fillWidth
-                      horizontal="space-between"
-                      vertical="end"
-                      paddingRight="16"
-                    >
+                    <Row fillWidth horizontal="space-between" vertical="end" paddingRight="16">
                       <Column gap="4">
                         <Text variant="body-default-m">08 / 27</Text>
                         <Text variant="body-default-m">1234 5678 1234 5678</Text>
@@ -527,14 +522,7 @@ export default function Home() {
         </Row>
 
         {/* PROFILE */}
-        <Row
-          horizontal="center"
-          paddingX="32"
-          paddingY="64"
-          fillWidth
-          gap="32"
-          position="relative"
-        >
+        <Row horizontal="center" paddingX="32" paddingY="64" fillWidth gap="32" position="relative">
           <Background
             mask={{
               cursor: true,
