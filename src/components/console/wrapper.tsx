@@ -9,25 +9,19 @@ const ConsoleWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) =
   const { account } = sdkForConsole;
   const { push } = useRouter();
 
-    useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                let user = await account.get()
-                setIsLoading(false)
-            } catch (e) {
-                push("/auth/login")
-            }
-        }
-        fetchUser()
-    }, [])
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        let user = await account.get();
+        setIsLoading(false);
+      } catch (e) {
+        push("/auth/login");
+      }
+    };
+    fetchUser();
+  }, []);
 
-    return (
-        <>
-            {
-                isLoading ? <LoadingUI /> : children
-            }
-        </>
-    )
-}
+  return <>{isLoading ? <LoadingUI /> : children}</>;
+};
 
 export default ConsoleWrapper;

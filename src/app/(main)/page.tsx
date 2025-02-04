@@ -234,13 +234,7 @@ export default function Home() {
             <Heading wrap="balance" variant="display-default-l" align="center" marginBottom="16">
               We let designers code and developers design
             </Heading>
-            <Button
-              id="readDocs"
-              label="Console"
-              href="/console"
-              variant="secondary"
-              arrowIcon
-            />
+            <Button id="readDocs" label="Console" href="/console" variant="secondary" arrowIcon />
             <Column horizontal="center" paddingTop="64" fillWidth gap="24">
               <Line maxWidth={4} marginBottom="16" background="neutral-alpha-medium" />
               <AvatarGroup
