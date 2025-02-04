@@ -38,13 +38,13 @@ const ConsoleHeader: React.FC<HeaderProps> = ({ authenticated = true, avatar, na
       background="surface"
     >
       <Row hide="s">
-        <Logo size="s" />
+        <Logo size="s" wordmarkSrc="/trademark/nuvix-logo-dark.svg" />
       </Row>
       <Row show="s" gap="4" vertical="center">
         <NavIcon />
-        <Logo wordmark={false} />
+        <Logo wordmark={false} iconSrc="/trademark/nuvix.svg" />
       </Row>
-      <Badge effect>PREVIEW</Badge>
+      <Badge effect arrow={false}>PREVIEW</Badge>
       {authenticated ? (
         <Row fillWidth vertical="center" horizontal="space-between">
           <Row fillWidth>
