@@ -236,9 +236,8 @@ export default function Home() {
             </Heading>
             <Button
               id="readDocs"
-              target="_blank"
-              label="Open docs"
-              href="https://once-ui.com/docs"
+              label="Console"
+              href="/console"
               variant="secondary"
               arrowIcon
             />

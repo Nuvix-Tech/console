@@ -2,6 +2,7 @@
 import { sdkForConsole } from "@/lib/sdk";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import LoadingUI from "./loading";
 
 const AuthWrapper: React.FC<{ children: React.ReactNode, isConsole?: boolean }> = ({ children, isConsole = false }) => {
     const [isLoading, setIsLoading] = useState(true)
@@ -23,7 +24,7 @@ const AuthWrapper: React.FC<{ children: React.ReactNode, isConsole?: boolean }> 
     return (
         <>
             {
-                isLoading ? "IS LOADING" : children
+                isLoading ? <LoadingUI /> : children
             }
         </>
     )
