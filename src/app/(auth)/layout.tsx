@@ -6,11 +6,11 @@ import { headers } from "next/headers";
 import { Metadata } from "next";
 
 import { baseURL, style, meta, og, schema, social } from "@/once-ui/resources/config";
-import { Background, Column, Flex, ToastProvider } from "@/once-ui/components";
+import { Column, Flex, ToastProvider } from "@/once-ui/components";
 
 import { Inter } from "next/font/google";
 import { Roboto_Mono, Space_Grotesk } from "next/font/google";
-import ConsoleWrapper from "@/components/console/wrapper";
+import AuthWrapper from "@/components/auth";
 
 const primary = Inter({
   variable: "--font-primary",
@@ -93,7 +93,7 @@ const schemaData = {
   sameAs: Object.values(social).filter(Boolean),
 };
 
-export default function ConsoleLayout({
+export default function AuthLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -132,9 +132,9 @@ export default function ConsoleLayout({
       </head>
       <ToastProvider>
         <Column as="body" fillWidth margin="0" padding="0">
-          <ConsoleWrapper>
+          <AuthWrapper>
             {children}
-          </ConsoleWrapper>
+          </AuthWrapper>
         </Column>
       </ToastProvider>
     </Flex>

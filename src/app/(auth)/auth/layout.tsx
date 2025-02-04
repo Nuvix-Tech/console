@@ -6,6 +6,7 @@ import {
 } from "@/once-ui/components";
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
+  
   return (
     <>
       <Row
@@ -13,7 +14,8 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
         background="page"
       >
         <Row
-          marginY="32"
+          marginY={"xl"}
+
           background="overlay"
           fillWidth
           radius="xl"

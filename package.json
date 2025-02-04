@@ -13,7 +13,7 @@
     "@nuvix/console": "^0.0.4-alpha.2",
     "classnames": "^2.5.1",
     "compressorjs": "^1.2.1",
-    "next": "15.1.4",
+    "next": "^15.1.6",
     "postcss": "^8.4.39",
     "postcss-preset-env": "^9.5.15",
     "prismjs": "^1.29.0",
