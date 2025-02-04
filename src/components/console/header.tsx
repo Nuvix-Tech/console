@@ -1,5 +1,6 @@
 "use client";
 
+import { sdkForConsole } from "@/lib/sdk";
 import {
   Badge,
   Button,
@@ -24,7 +25,8 @@ interface HeaderProps {
   subline?: string;
 }
 
-const ConsoleHeader: React.FC<HeaderProps> = ({ authenticated = true, avatar, name, subline }) => {
+const ConsoleHeader: React.FC<HeaderProps> = () => {
+  const { avatars } = sdkForConsole;
   const pathname = usePathname() ?? "";
 
   return (
@@ -38,79 +40,55 @@ const ConsoleHeader: React.FC<HeaderProps> = ({ authenticated = true, avatar, na
       background="surface"
     >
       <Row hide="s">
-        <Logo size="s" wordmarkSrc="/trademark/nuvix-logo-dark.svg" />
+        <Logo icon={false} size="s" wordmarkSrc="/trademark/nuvix-logo-dark.svg" />
       </Row>
       <Row show="s" gap="4" vertical="center">
         <NavIcon />
         <Logo wordmark={false} iconSrc="/trademark/nuvix.svg" />
       </Row>
-      <Badge effect arrow={false}>PREVIEW</Badge>
-      {authenticated ? (
-        <Row fillWidth vertical="center" horizontal="space-between">
-          <Row fillWidth>
-            <Row hide="s" fillWidth gap="4" paddingX="l" vertical="center">
-              <ToggleButton selected={true} label="Dashboard" />
-              <ToggleButton selected={pathname === "/apps"} label="Apps" />
-              <ToggleButton selected={pathname === "/resources"} label="Resources" />
-            </Row>
-          </Row>
-          <Row as="nav">
-            <Row hide="s">
-              <UserMenu
-                name={name}
-                subline={subline}
-                avatarProps={{
-                  empty: !avatar,
-                  src: avatar,
-                }}
-                dropdown={
-                  <Column padding="2" gap="2" minWidth={8}>
-                    <Option label="Profile" value="profile" />
-                    <Option label="Settings" value="settings" />
-                    <Line />
-                    <Option label="Log out" value="logout" />
-                  </Column>
-                }
-              />
-            </Row>
-            <Row show="s">
-              <UserMenu
-                avatarProps={{
-                  empty: !avatar,
-                  src: avatar,
-                }}
-                dropdown={
-                  <>
-                    <Option label="Profile" value="profile" />
-                    <Option label="Settings" value="settings" />
-                    <Option label="Log out" value="logout" />
-                  </>
-                }
-              />
-            </Row>
+      <Badge effect arrow={false}>DEV</Badge>
+
+      <Row fillWidth vertical="center" horizontal="space-between">
+        <Row fillWidth>
+          <Row hide="s" fillWidth gap="4" paddingX="l" vertical="center">
+            <ToggleButton selected={pathname === "/apps"} label="Support" />
+            <ToggleButton selected={pathname === "/resources"} label="Feedback" />
           </Row>
         </Row>
-      ) : (
-        <Row fillWidth center>
-          <Row
-            hide="s"
-            textVariant="label-default-s"
-            fillWidth
-            gap="4"
-            paddingX="l"
-            vertical="center"
-          >
-            <SmartLink href=" ">Home</SmartLink>
-            <SmartLink href=" ">Product</SmartLink>
-            <SmartLink href=" ">Solutions</SmartLink>
-            <SmartLink href=" ">Pricing</SmartLink>
+        <Row as="nav">
+          <Row hide="s">
+            <UserMenu
+              name={"Ravikant Saini"}
+              subline={"HELLO ORG"}
+              avatarProps={{
+                src: avatars.getInitials(),
+              }}
+              dropdown={
+                <Column padding="2" gap="2" minWidth={8}>
+                  <Option label="Profile" value="profile" />
+                  <Option label="Settings" value="settings" />
+                  <Line />
+                  <Option label="Log out" value="logout" />
+                </Column>
+              }
+            />
           </Row>
-          <Row vertical="center" gap="8">
-            <Button size="s" variant="secondary" label="Login" href="" />
-            <Button size="s" variant="primary" label="Sign up" href="" />
+          <Row show="s">
+            <UserMenu
+              avatarProps={{
+                src: avatars.getInitials(),
+              }}
+              dropdown={
+                <>
+                  <Option label="Profile" value="profile" />
+                  <Option label="Settings" value="settings" />
+                  <Option label="Log out" value="logout" />
+                </>
+              }
+            />
           </Row>
         </Row>
-      )}
+      </Row>
     </Row>
   );
 };
