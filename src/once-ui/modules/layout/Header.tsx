@@ -37,7 +37,7 @@ const Header: React.FC<HeaderProps> = ({ authenticated, avatar, name, subline })
       background="surface"
     >
       <Row hide="s">
-        <Logo size="s"/>
+        <Logo size="s" />
       </Row>
       <Row show="s" gap="4" vertical="center">
         <NavIcon />
@@ -65,7 +65,7 @@ const Header: React.FC<HeaderProps> = ({ authenticated, avatar, name, subline })
                   <Column padding="2" gap="2" minWidth={8}>
                     <Option label="Profile" value="profile" />
                     <Option label="Settings" value="settings" />
-                    <Line/>
+                    <Line />
                     <Option label="Log out" value="logout" />
                   </Column>
                 }

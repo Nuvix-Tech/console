@@ -34,10 +34,10 @@ type FontConfig = {
 */
 const secondary: FontConfig | undefined = undefined;
 const tertiary = Space_Grotesk({
-  variable: '--font-tertiary',
-  subsets: ['latin'],
-  display: 'swap'
-})
+  variable: "--font-tertiary",
+  subsets: ["latin"],
+  display: "swap",
+});
 
 /*
  */
@@ -73,7 +73,7 @@ export async function generateMetadata(): Promise<Metadata> {
         | "video.other",
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title: og.title,
       description: og.description,
       images: [og.image],
@@ -98,7 +98,6 @@ export default function AuthLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <Flex
       as="html"
@@ -132,9 +131,7 @@ export default function AuthLayout({
       </head>
       <ToastProvider>
         <Column as="body" fillWidth margin="0" padding="0">
-          <AuthWrapper>
-            {children}
-          </AuthWrapper>
+          <AuthWrapper>{children}</AuthWrapper>
         </Column>
       </ToastProvider>
     </Flex>

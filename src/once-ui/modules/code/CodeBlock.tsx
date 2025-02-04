@@ -187,12 +187,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
             </pre>
           </Flex>
           {compact && copyButton && (
-            <Flex
-              paddingX="8"
-              paddingY="4"
-              className={styles.compactCopy}
-              zIndex={1}
-            >
+            <Flex paddingX="8" paddingY="4" className={styles.compactCopy} zIndex={1}>
               <IconButton
                 tooltip="Copy"
                 tooltipPosition="left"

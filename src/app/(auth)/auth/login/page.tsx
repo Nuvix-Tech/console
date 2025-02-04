@@ -2,16 +2,20 @@
 import { APP_NAME } from "@/lib/constants";
 import { sdkForConsole } from "@/lib/sdk";
 import {
-  Button, Column,
-  Heading, Line, Logo,
+  Button,
+  Column,
+  Heading,
+  Line,
+  Logo,
   Row,
-  SmartLink, Text,
-  Input, PasswordInput,
+  SmartLink,
+  Text,
+  Input,
+  PasswordInput,
   useToast,
-  Flex
+  Flex,
 } from "@/once-ui/components";
 import React, { useState } from "react";
-
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -29,12 +33,9 @@ export default function Login() {
   };
 
   async function onSubmit() {
-    setLoading(true)
+    setLoading(true);
     try {
-      const res = await account.createEmailPasswordSession(
-        email,
-        password,
-      );
+      const res = await account.createEmailPasswordSession(email, password);
       addToast({
         variant: "success",
         message: "You have successfully logged in.",
@@ -45,7 +46,7 @@ export default function Login() {
         message: e.message,
       });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -81,14 +82,16 @@ export default function Login() {
           validate={validateLogin}
         />
         <Flex horizontal="end" paddingTop="8">
-          <SmartLink color="gray" href="/auth/forgot-password">Forgot password?</SmartLink>
+          <SmartLink color="gray" href="/auth/forgot-password">
+            Forgot password?
+          </SmartLink>
         </Flex>
       </Column>
       <Button
         id="login"
         label="Log in"
         arrowIcon
-        disabled={(validateLogin() !== null) || loading}
+        disabled={validateLogin() !== null || loading}
         loading={loading}
         fillWidth
         onClick={onSubmit}
@@ -118,7 +121,6 @@ export default function Login() {
           size="l"
         />
       </Column>
-
     </>
-  )
+  );
 }
