@@ -4,7 +4,7 @@ import { Background, Column, Row, SmartImage } from "@/once-ui/components";
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
-      <Row paddingX="xl" background="page">
+      <Row paddingX="xl" background="page" fill vertical="center">
         <Row
           marginY={"xl"}
           background="overlay"

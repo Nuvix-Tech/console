@@ -10,7 +10,7 @@ import styles from "./Icon.module.scss";
 import iconStyles from "./IconButton.module.scss";
 
 interface IconProps extends React.ComponentProps<typeof Flex> {
-  name: string;
+  name: string | IconType;
   onBackground?: `${ColorScheme}-${ColorWeight}`;
   onSolid?: `${ColorScheme}-${ColorWeight}`;
   size?: "xs" | "s" | "m" | "l" | "xl";
@@ -33,7 +33,8 @@ const Icon = forwardRef<HTMLDivElement, IconProps>(
     },
     ref,
   ) => {
-    const IconComponent: IconType | undefined = iconLibrary[name];
+
+    const IconComponent: IconType | undefined = typeof name === "string" ? iconLibrary[name] : name;
 
     if (!IconComponent) {
       console.warn(`Icon "${name}" does not exist in the library.`);
@@ -82,7 +83,7 @@ const Icon = forwardRef<HTMLDivElement, IconProps>(
         className={classNames(colorClass, styles.icon, styles[size])}
         role={decorative ? "presentation" : undefined}
         aria-hidden={decorative ? "true" : undefined}
-        aria-label={decorative ? undefined : name}
+        aria-label={decorative ? undefined : "icon"}
         onMouseEnter={() => setIsHover(true)}
         onMouseLeave={() => setIsHover(false)}
         {...rest}

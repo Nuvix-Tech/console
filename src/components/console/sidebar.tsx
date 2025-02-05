@@ -1,9 +1,9 @@
 "use client";
 
-import { Column, Icon, IconButton, Line, Row, Tag, Text, ToggleButton } from "@/once-ui/components";
+import { Column, Icon, Row, ToggleButton } from "@/once-ui/components";
 import { usePathname } from "next/navigation";
 
-const ProjectSidebar: React.FC = ({}) => {
+const ProjectSidebar: React.FC = ({ }) => {
   const pathname = usePathname() ?? "";
 
   return (
@@ -18,22 +18,15 @@ const ProjectSidebar: React.FC = ({}) => {
     >
       <Column fill paddingX="xs" gap="m">
         <Column fillWidth gap="4">
-          <Text
-            variant="body-default-xs"
-            onBackground="neutral-weak"
-            marginBottom="8"
-            marginLeft="16"
-          >
-            Dashboard
-          </Text>
-          <ToggleButton fillWidth justifyContent="flex-start" selected={true}>
-            <Row padding="4" vertical="center" gap="12" textVariant="label-default-s">
+
+          <ToggleButton size="l" fillWidth justifyContent="flex-start" selected={true}>
+            <Row padding="4" vertical="center" gap="12" textVariant="label-default-l">
               <Icon name="PiHouseDuotone" onBackground="neutral-weak" size="xs" />
               Dashboard
             </Row>
           </ToggleButton>
-          <ToggleButton fillWidth justifyContent="flex-start" selected={pathname === "analytics"}>
-            <Row padding="4" vertical="center" gap="12" textVariant="label-default-s">
+          <ToggleButton size="l" fillWidth justifyContent="flex-start" selected={pathname === "analytics"}>
+            <Row padding="4" vertical="center" gap="12" textVariant="label-default-l">
               <Icon name="PiTrendUpDuotone" onBackground="neutral-weak" size="xs" />
               Auth
             </Row>
@@ -42,75 +35,41 @@ const ProjectSidebar: React.FC = ({}) => {
             style={{
               position: "relative",
             }}
+            size="l"
             fillWidth
-            disabled
+            // disabled
             justifyContent="flex-start"
             selected={pathname === "reports"}
           >
-            <Row padding="4" vertical="center" gap="12" textVariant="label-default-s">
+            <Row padding="4" vertical="center" gap="12" textVariant="label-default-l">
               <Icon name="PiNotebookDuotone" onBackground="neutral-weak" size="xs" />
               Functions
-              <Tag variant="neutral" size="s" position="absolute" right="8">
+              {/* <Tag variant="neutral" size="s" position="absolute" right="8">
                 soon
-              </Tag>
+              </Tag> */}
             </Row>
           </ToggleButton>
-          <ToggleButton fillWidth justifyContent="flex-start" selected={pathname === "analytics"}>
-            <Row padding="4" vertical="center" gap="12" textVariant="label-default-s">
-              <Icon name="PiTrendUpDuotone" onBackground="neutral-weak" size="xs" />
+          <ToggleButton size="l" fillWidth justifyContent="flex-start" selected={pathname === "analytics"}>
+            <Row padding="4" vertical="center" gap="12" textVariant="label-default-l">
+              <Icon name="" onBackground="neutral-weak" size="xs" />
               Databases
             </Row>
           </ToggleButton>
-        </Column>
-
-        <Line />
-
-        <Column fillWidth gap="4">
-          <Text variant="body-default-xs" onBackground="neutral-weak" marginY="8" marginLeft="16">
-            Management
-          </Text>
-          <ToggleButton fillWidth justifyContent="flex-start" selected={pathname === "users"}>
-            <Row padding="4" gap="12" vertical="center" textVariant="label-default-s">
-              <Line width="16" />
-              Users
+          <ToggleButton size="l" fillWidth justifyContent="flex-start" selected={pathname === "analytics"}>
+            <Row padding="4" vertical="center" gap="12" textVariant="label-default-l">
+              <Icon name="" onBackground="neutral-weak" size="xs" />
+              Messaging
             </Row>
           </ToggleButton>
-          <ToggleButton fillWidth justifyContent="flex-start" selected={pathname === "roles"}>
-            <Row padding="4" vertical="center" gap="12" textVariant="label-default-s">
-              <Line width="16" />
-              Roles
-            </Row>
-          </ToggleButton>
-          <ToggleButton fillWidth justifyContent="flex-start" selected={pathname === "permissions"}>
-            <Row padding="4" gap="12" vertical="center" textVariant="label-default-s">
-              <Line width="16" />
-              Permissions
+          <ToggleButton size="l" fillWidth justifyContent="flex-start" selected={pathname === "analytics"}>
+            <Row padding="4" vertical="center" gap="12" textVariant="label-default-l">
+              <Icon name="" onBackground="neutral-weak" size="xs" />
+              Storage
             </Row>
           </ToggleButton>
         </Column>
 
-        <Line />
 
-        <Column fill gap="4">
-          <Row fillWidth horizontal="space-between" vertical="center" paddingY="8" paddingX="16">
-            <Text variant="body-default-xs" onBackground="neutral-weak">
-              Projects
-            </Text>
-            <IconButton tooltip="Create" variant="secondary" icon="plus" size="s" />
-          </Row>
-          <ToggleButton fillWidth justifyContent="flex-start" selected={pathname === "overview"}>
-            <Row padding="4" gap="12" vertical="center" textVariant="label-default-s">
-              <Line width="16" />
-              Overview
-            </Row>
-          </ToggleButton>
-          <ToggleButton fillWidth justifyContent="flex-start" selected={pathname === "projects"}>
-            <Row padding="4" gap="12" vertical="center" textVariant="label-default-s">
-              <Line width="16" />
-              My projects
-            </Row>
-          </ToggleButton>
-        </Column>
       </Column>
     </Column>
   );

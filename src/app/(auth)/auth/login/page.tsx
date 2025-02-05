@@ -15,6 +15,7 @@ import {
   useToast,
   Flex,
 } from "@/once-ui/components";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 export default function Login() {
@@ -23,6 +24,8 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const { addToast } = useToast();
   const { account } = sdkForConsole;
+
+  const { push } = useRouter();
 
   const validateLogin = () => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -40,6 +43,7 @@ export default function Login() {
         variant: "success",
         message: "You have successfully logged in.",
       });
+      push("/console");
     } catch (e: any) {
       addToast({
         variant: "danger",
