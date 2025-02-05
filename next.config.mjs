@@ -5,7 +5,11 @@ const nextConfig = {
     silenceDeprecations: ["legacy-js-api"],
   },
   images: {
-    domains: ['skill.collegejaankaar.in']
+    remotePatterns: [
+      {
+        hostname: 'skill.collegejaankaar.in'
+      }
+    ]
   }
 };
 

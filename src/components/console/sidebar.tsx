@@ -43,15 +43,22 @@ const ProjectSidebar: React.FC = ({}) => {
               position: "relative",
             }}
             fillWidth
+            disabled
             justifyContent="flex-start"
             selected={pathname === "reports"}
           >
             <Row padding="4" vertical="center" gap="12" textVariant="label-default-s">
               <Icon name="PiNotebookDuotone" onBackground="neutral-weak" size="xs" />
-              Reports
+              Functions
               <Tag variant="neutral" size="s" position="absolute" right="8">
-                New
+                soon
               </Tag>
+            </Row>
+          </ToggleButton>
+          <ToggleButton fillWidth justifyContent="flex-start" selected={pathname === "analytics"}>
+            <Row padding="4" vertical="center" gap="12" textVariant="label-default-s">
+              <Icon name="PiTrendUpDuotone" onBackground="neutral-weak" size="xs" />
+              Databases
             </Row>
           </ToggleButton>
         </Column>
