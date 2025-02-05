@@ -1,6 +1,7 @@
 "use client";
 
 import { sdkForConsole } from "@/lib/sdk";
+import { ConsoleContext } from "@/lib/store/console";
 import {
   Badge,
   Button,
@@ -16,7 +17,7 @@ import {
   UserMenu,
 } from "@/once-ui/components";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { useContext } from "react";
 
 interface HeaderProps {
   authenticated?: boolean;
@@ -26,8 +27,10 @@ interface HeaderProps {
 }
 
 const ConsoleHeader: React.FC<HeaderProps> = () => {
+  const { data } = useContext(ConsoleContext);
   const { avatars } = sdkForConsole;
   const pathname = usePathname() ?? "";
+  const user = data.user;
 
   return (
     <Row
@@ -57,10 +60,13 @@ const ConsoleHeader: React.FC<HeaderProps> = () => {
         <Row as="nav">
           <Row hide="s" minWidth={12}>
             <UserMenu
-              name={"Ravikant Saini"}
+              name={user?.name}
               subline={"HELLO ORG"}
               avatarProps={{
-                src: avatars.getInitials(),
+                src: avatars.getInitials(
+                  user?.name,
+                  96, 96
+                ),
               }}
               dropdown={
                 <Column padding="2" gap="2" minWidth={8}>
