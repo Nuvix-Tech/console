@@ -1,8 +1,5 @@
-type Props = {
-    parms: Promise<{ id: string }>
-}
 
-export default function ({ parms }: Props) {
+export default function () {
 
     return (
         <>
