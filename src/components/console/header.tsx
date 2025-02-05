@@ -46,8 +46,7 @@ const ConsoleHeader: React.FC<HeaderProps> = () => {
         <NavIcon />
         <Logo wordmark={false} iconSrc="/trademark/nuvix.svg" />
       </Row>
-      <Badge effect arrow={false}>DEV</Badge>
-
+      <Badge hide="s" effect arrow={false}>DEV</Badge>
       <Row fillWidth vertical="center" horizontal="space-between">
         <Row fillWidth>
           <Row hide="s" fillWidth gap="4" paddingX="l" vertical="center">
@@ -56,7 +55,7 @@ const ConsoleHeader: React.FC<HeaderProps> = () => {
           </Row>
         </Row>
         <Row as="nav">
-          <Row hide="s">
+          <Row hide="s" minWidth={12}>
             <UserMenu
               name={"Ravikant Saini"}
               subline={"HELLO ORG"}

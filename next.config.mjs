@@ -4,11 +4,9 @@ const nextConfig = {
     compiler: "modern",
     silenceDeprecations: ["legacy-js-api"],
   },
-  images: [
-    {
-      hostname: "skil.collegejaankaar.in"
-    }
-  ]
+  images: {
+    domains: ['skill.collegejaankaar.in']
+  }
 };
 
 export default nextConfig;
