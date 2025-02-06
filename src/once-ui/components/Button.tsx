@@ -1,10 +1,11 @@
 "use client";
 
-import React, { ReactNode, forwardRef } from "react";
-import { ElementType } from "./ElementType";
 import classNames from "classnames";
+import type React from "react";
+import { type ReactNode, forwardRef } from "react";
+import { ElementType } from "./ElementType";
 
-import { Spinner, Icon, Arrow, Flex } from ".";
+import { Arrow, Flex, Icon, Spinner } from ".";
 import styles from "./Button.module.scss";
 
 interface CommonProps {

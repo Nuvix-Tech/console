@@ -1,9 +1,3 @@
-
 export default function () {
-
-    return (
-        <>
-            HELLO PROJECT
-        </>
-    )
+  return <>HELLO PROJECT</>;
 }

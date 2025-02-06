@@ -17,7 +17,8 @@ import {
   UserMenu,
 } from "@/once-ui/components";
 import { usePathname } from "next/navigation";
-import React, { useContext } from "react";
+import type React from "react";
+import { useContext } from "react";
 
 interface HeaderProps {
   authenticated?: boolean;
@@ -49,7 +50,9 @@ const ConsoleHeader: React.FC<HeaderProps> = () => {
         <NavIcon />
         <Logo wordmark={false} iconSrc="/trademark/nuvix.svg" />
       </Row>
-      <Badge hide="s" effect arrow={false}>DEV</Badge>
+      <Badge hide="s" effect arrow={false}>
+        DEV
+      </Badge>
       <Row fillWidth vertical="center" horizontal="space-between">
         <Row fillWidth>
           <Row hide="s" fillWidth gap="4" paddingX="l" vertical="center">
@@ -63,10 +66,7 @@ const ConsoleHeader: React.FC<HeaderProps> = () => {
               name={user?.name}
               subline={"HELLO ORG"}
               avatarProps={{
-                src: avatars.getInitials(
-                  user?.name,
-                  96, 96
-                ),
+                src: avatars.getInitials(user?.name, 96, 96),
               }}
               dropdown={
                 <Column padding="2" gap="2" minWidth={8}>

@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, forwardRef, useImperativeHandle } from "react";
-import { Flex, Icon, Heading, Column } from ".";
+import type React from "react";
+import { forwardRef, useImperativeHandle, useState } from "react";
+import { Column, Flex, Heading, Icon } from ".";
 import styles from "./Accordion.module.scss";
 
 interface AccordionProps extends Omit<React.ComponentProps<typeof Flex>, "title"> {

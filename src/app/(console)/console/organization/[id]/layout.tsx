@@ -8,7 +8,5 @@ export default async function ({
   children: React.ReactNode;
 }) {
   const { id } = await params;
-  return <OrgLayout id={id}>
-    {children}
-  </OrgLayout>;
+  return <OrgLayout id={id}>{children}</OrgLayout>;
 }

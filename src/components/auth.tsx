@@ -1,7 +1,8 @@
 "use client";
 import { sdkForConsole } from "@/lib/sdk";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import type React from "react";
+import { useEffect, useState } from "react";
 import LoadingUI from "./loading";
 
 const AuthWrapper: React.FC<{ children: React.ReactNode; isConsole?: boolean }> = ({
@@ -15,7 +16,7 @@ const AuthWrapper: React.FC<{ children: React.ReactNode; isConsole?: boolean }> 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        let user = await account.get();
+        const user = await account.get();
         push("/console");
       } catch (e) {
         setIsLoading(false);

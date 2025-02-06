@@ -1,11 +1,20 @@
 "use client";
 
-import { Models } from "@nuvix/console";
-import { useEffect, useState } from "react";
-import { AvatarGroup, Button, Heading, Row, SegmentedControl, SmartLink, Tag, Text } from "@/once-ui/components";
 import { sdkForConsole } from "@/lib/sdk";
+import {
+  AvatarGroup,
+  Button,
+  Column,
+  Heading,
+  Row,
+  SegmentedControl,
+  Tag,
+} from "@/once-ui/components";
+import { ConsoleSidebar } from "@/once-ui/modules/layout/ConsoleSidebar";
+import type { Models } from "@nuvix/console";
+import { useEffect, useState } from "react";
 
-export default function OrgLayout({ children, id }: { children: React.ReactNode, id: string }) {
+export default function OrgLayout({ children, id }: { children: React.ReactNode; id: string }) {
   const [organization, setOrganization] = useState<Models.Organization<any>>();
   const [memberships, setMemberships] = useState<Models.Membership[]>([]);
   const { organizations, avatars } = sdkForConsole;
@@ -18,66 +27,72 @@ export default function OrgLayout({ children, id }: { children: React.ReactNode,
     organizations.listMemberships(id).then((memberships) => {
       setMemberships(memberships.memberships);
     });
-
   }, [id]);
 
   return (
     <>
-      <Row fillWidth maxHeight={12} fillHeight background="neutral-alpha-weak" direction="column" horizontal="center" vertical="space-between" paddingTop="l">
-        <Row fillWidth maxWidth={'l'} horizontal="space-between" vertical="center">
-          <Row vertical="center" gap="s">
-            <Heading size="xl" as={'h2'}>{organization?.name}</Heading>
-            {organization?.billingPlan === 'tier-0' ? <Tag size="m" color="neutral">
-              Free
-            </Tag> : null}
+      <Row fillHeight>
+        <ConsoleSidebar />
+        {/* <Column fillWidth padding="l" gap="l">
+          <Row maxHeight={12} fillHeight background="neutral-alpha-weak" direction="column" horizontal="center" vertical="space-between" paddingTop="l">
+            <Row fillWidth maxWidth={'l'} horizontal="space-between" vertical="center">
+              <Row vertical="center" gap="s">
+                <Heading size="xl" as={'h2'}>{organization?.name}</Heading>
+                {organization?.billingPlan === 'tier-0' ? <Tag size="m" color="neutral">
+                  Free
+                </Tag> : null}
+              </Row>
+              <Row gap="s">
+                <AvatarGroup avatars={memberships
+                  .map((membership) => ({
+                    src: avatars.getInitials(membership.userName),
+                    name: membership.userName,
+                  }))
+                } />
+
+                <Button prefixIcon="plus" >Invite</Button>
+              </Row>
+            </Row>
+
+            <Row fillWidth maxWidth={'l'} horizontal="space-between" vertical="center">
+              <SegmentedControl fitWidth buttons={[
+                {
+                  label: 'Projects',
+                  value: 'projects',
+                  variant: 'ghost',
+                },
+                {
+                  label: 'Members',
+                  value: 'members',
+                  variant: 'ghost',
+
+                },
+                {
+                  label: 'Usage',
+                  value: 'usage',
+                  variant: 'ghost',
+
+                },
+                {
+                  label: 'Billing',
+                  value: 'billing',
+                  variant: 'ghost',
+
+                },
+                {
+                  label: 'Settings',
+                  value: 'settings',
+                  variant: 'ghost',
+
+                }
+              ]} onToggle={() => { }} bottomRadius="xs" />
+            </Row>
           </Row>
-          <Row gap="s">
-            <AvatarGroup avatars={memberships
-              .map((membership) => ({
-                src: avatars.getInitials(membership.userName),
-                name: membership.userName,
-              }))
-            } />
-
-            <Button prefixIcon="plus" >Invite</Button>
-          </Row>
-        </Row>
-
-        <Row fillWidth maxWidth={'l'} horizontal="space-between" vertical="center">
-          <SegmentedControl fitWidth buttons={[
-            {
-              label: 'Projects',
-              value: 'projects',
-              variant: 'ghost',
-            },
-            {
-              label: 'Members',
-              value: 'members',
-              variant: 'ghost',
-
-            },
-            {
-              label: 'Usage',
-              value: 'usage',
-              variant: 'ghost',
-
-            },
-            {
-              label: 'Billing',
-              value: 'billing',
-              variant: 'ghost',
-
-            },
-            {
-              label: 'Settings',
-              value: 'settings',
-              variant: 'ghost',
-
-            }
-          ]} onToggle={() => { }} bottomRadius="xs" />
+          </Column> */}
+        <Row fillWidth paddingX="l" paddingY="s" gap="l">
+          {children}
         </Row>
       </Row>
-      {children}
     </>
   );
 }

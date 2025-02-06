@@ -14,7 +14,7 @@ import {
   UserMenu,
 } from "@/once-ui/components";
 import { usePathname } from "next/navigation";
-import React from "react";
+import type React from "react";
 
 interface HeaderProps {
   authenticated: boolean;

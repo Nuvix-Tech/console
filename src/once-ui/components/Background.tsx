@@ -1,11 +1,12 @@
 "use client";
 
-import React, { CSSProperties, forwardRef, useEffect, useRef, useState } from "react";
-import { SpacingToken } from "../types";
-import { Flex } from "./Flex";
-import { DisplayProps } from "../interfaces";
-import styles from "./Background.module.scss";
 import classNames from "classnames";
+import type React from "react";
+import { type CSSProperties, forwardRef, useEffect, useRef, useState } from "react";
+import type { DisplayProps } from "../interfaces";
+import type { SpacingToken } from "../types";
+import styles from "./Background.module.scss";
+import { Flex } from "./Flex";
 
 function setRef<T>(ref: React.Ref<T> | undefined, value: T | null) {
   if (typeof ref === "function") {
