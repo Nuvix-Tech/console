@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@floating-ui/react-dom": "^2.1.1",
-    "@nuvix/console": "^0.0.4-alpha.2",
+    "@nuvix/console": "^0.0.5",
     "classnames": "^2.5.1",
     "compressorjs": "^1.2.1",
     "next": "^15.1.6",

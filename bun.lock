@@ -5,7 +5,7 @@
       "name": "@once-ui-system/nextjs-starter",
       "dependencies": {
         "@floating-ui/react-dom": "^2.1.1",
-        "@nuvix/console": "^0.0.4-alpha.2",
+        "@nuvix/console": "^0.0.5",
         "classnames": "^2.5.1",
         "compressorjs": "^1.2.1",
         "next": "^15.1.6",
@@ -205,7 +205,7 @@
 
     "@next/swc-win32-x64-msvc": ["@next/swc-win32-x64-msvc@15.1.6", "", { "os": "win32", "cpu": "x64" }, "sha512-6xomMuu54FAFxttYr5PJbEfu96godcxBTRk1OhAvJq0/EnmFU/Ybiax30Snis4vdWZ9LGpf7Roy5fSs7v/5ROQ=="],
 
-    "@nuvix/console": ["@nuvix/console@0.0.4-alpha.2", "", { "dependencies": { "socket.io-client": "^4.8.1" } }, "sha512-fjBC5/5MnzbaaBcRxU1UOffIRhH+QqinTwBdOIq2qKrEuNrRo9cU+jsMEAIGeROwVTRpn+QySlUKOB8Ny1wP+A=="],
+    "@nuvix/console": ["@nuvix/console@0.0.5", "", { "dependencies": { "socket.io-client": "^4.8.1" } }, "sha512-T3shxnWmsznOkr8le1Aq2ZkrIYMPDCar7ywtqb3MHxtuYxGBBdbcRKySjoDGZ9V+GW60+gK9nknw12R01O3+SA=="],
 
     "@parcel/watcher": ["@parcel/watcher@2.5.1", "", { "dependencies": { "detect-libc": "^1.0.3", "is-glob": "^4.0.3", "micromatch": "^4.0.5", "node-addon-api": "^7.0.0" }, "optionalDependencies": { "@parcel/watcher-android-arm64": "2.5.1", "@parcel/watcher-darwin-arm64": "2.5.1", "@parcel/watcher-darwin-x64": "2.5.1", "@parcel/watcher-freebsd-x64": "2.5.1", "@parcel/watcher-linux-arm-glibc": "2.5.1", "@parcel/watcher-linux-arm-musl": "2.5.1", "@parcel/watcher-linux-arm64-glibc": "2.5.1", "@parcel/watcher-linux-arm64-musl": "2.5.1", "@parcel/watcher-linux-x64-glibc": "2.5.1", "@parcel/watcher-linux-x64-musl": "2.5.1", "@parcel/watcher-win32-arm64": "2.5.1", "@parcel/watcher-win32-ia32": "2.5.1", "@parcel/watcher-win32-x64": "2.5.1" } }, "sha512-dfUnCxiN9H4ap84DvD2ubjw+3vUNpstxa0TneY/Paat8a3R4uQZDLSvWjmznAY/DoahqTHl9V46HF/Zs3F29pg=="],
 
