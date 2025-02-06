@@ -38,8 +38,8 @@ import {
   Textarea,
   TiltFx,
   useToast,
-} from "@/once-ui/components";
-import { CodeBlock, MediaUpload } from "@/once-ui/modules";
+} from "@/ui/components";
+import { CodeBlock, MediaUpload } from "@/ui/modules";
 
 export default function Home() {
   const [selectedValue, setSelectedValue] = useState("");

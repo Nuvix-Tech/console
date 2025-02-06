@@ -12,7 +12,7 @@ import {
   SmartLink,
   ToggleButton,
   UserMenu,
-} from "@/once-ui/components";
+} from "@/ui/components";
 import { usePathname } from "next/navigation";
 import type React from "react";
 

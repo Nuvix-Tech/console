@@ -1,0 +1,21 @@
+@use "@/ui/styles/spacing.scss";
+@use "@/ui/styles/border.scss";
+@use "@/ui/styles/color.scss";
+@use "@/ui/styles/background.scss";
+@use "@/ui/styles/typography.scss";
+@use "@/ui/styles/global.scss";
+@use "@/ui/styles/layout.scss";
+@use "@/ui/styles/shadow.scss";
+@use "@/ui/styles/size.scss";
+@use "@/ui/styles/display.scss";
+@use "@/ui/styles/position.scss";
+@use "@/ui/styles/grid.scss";
+@use "@/ui/styles/flex.scss";
+@use "@/ui/styles/utilities.scss";
+
+
+:root {
+  --color-neutral-100: var(--scheme-slate-100);
+  --color-neutral-105: var(--scheme-slate-105);
+  --color-neutral-1000: var(--scheme-slate-1000);
+}

@@ -1,4 +1,4 @@
-import { Button, Card, Column, Icon, Row, Tag, Text } from "@/once-ui/components";
+import { Button, Card, Column, Icon, Row, Tag, Text } from "@/ui/components";
 import type { Models } from "@nuvix/console";
 import { useRouter } from "next/navigation";
 import { IoIosAppstore } from "react-icons/io";
@@ -48,21 +48,19 @@ export const ProjectCard = ({ project }: { project: Models.Project }) => {
 
 const TagMapper = ({ type }: { type: string }) => {
   const comp = ({ name, icon }: { name: string; icon: any }) => (
-    <Tag color="neutral" size="l">
-      <Row gap="4" vertical="center">
-        <Icon name={icon} size="xs" />
-        {name}
-      </Row>
-    </Tag>
+    <div className="tag">
+      <span className={`icon-${icon}`} aria-hidden="true"></span>
+      <span className="text">{name}</span>
+    </div>
   );
 
   switch (type) {
     case "web":
-      return comp({ name: "Web", icon: RxCode });
+      return comp({ name: "Web", icon: "code" });
     case "android":
-      return comp({ name: "Android", icon: MdAndroid });
+      return comp({ name: "Android", icon: "android" });
     case "ios":
-      return comp({ name: "iOS", icon: IoIosAppstore });
+      return comp({ name: "iOS", icon: "ios" });
     default:
       return null;
   }

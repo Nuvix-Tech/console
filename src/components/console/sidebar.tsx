@@ -1,6 +1,6 @@
 "use client";
 
-import { Column, Icon, Row, ToggleButton } from "@/once-ui/components";
+import { Column, Icon, Row, ToggleButton } from "@/ui/components";
 import { usePathname } from "next/navigation";
 
 const ProjectSidebar: React.FC = ({}) => {
@@ -21,6 +21,7 @@ const ProjectSidebar: React.FC = ({}) => {
           <ToggleButton size="l" fillWidth justifyContent="flex-start" selected={true}>
             <Row padding="4" vertical="center" gap="12" textVariant="label-default-l">
               <Icon name="PiHouseDuotone" onBackground="neutral-weak" size="xs" />
+              <span className="icon-chart-bar" aria-hidden="true"></span>
               Dashboard
             </Row>
           </ToggleButton>
@@ -31,8 +32,8 @@ const ProjectSidebar: React.FC = ({}) => {
             selected={pathname === "analytics"}
           >
             <Row padding="4" vertical="center" gap="12" textVariant="label-default-l">
-              <Icon name="PiTrendUpDuotone" onBackground="neutral-weak" size="xs" />
-              Auth
+              <span className="icon-user-group" aria-hidden="true"></span>
+              Authentication
             </Row>
           </ToggleButton>
           <ToggleButton
@@ -46,7 +47,7 @@ const ProjectSidebar: React.FC = ({}) => {
             selected={pathname === "reports"}
           >
             <Row padding="4" vertical="center" gap="12" textVariant="label-default-l">
-              <Icon name="PiNotebookDuotone" onBackground="neutral-weak" size="xs" />
+              <span className="icon-lightning-bolt" aria-hidden="true"></span>
               Functions
               {/* <Tag variant="neutral" size="s" position="absolute" right="8">
                 soon
@@ -60,7 +61,7 @@ const ProjectSidebar: React.FC = ({}) => {
             selected={pathname === "analytics"}
           >
             <Row padding="4" vertical="center" gap="12" textVariant="label-default-l">
-              <Icon name="" onBackground="neutral-weak" size="xs" />
+              <span className="icon-database" aria-hidden="true"></span>
               Databases
             </Row>
           </ToggleButton>
@@ -71,7 +72,7 @@ const ProjectSidebar: React.FC = ({}) => {
             selected={pathname === "analytics"}
           >
             <Row padding="4" vertical="center" gap="12" textVariant="label-default-l">
-              <Icon name="" onBackground="neutral-weak" size="xs" />
+              <span className="icon-send" aria-hidden="true"></span>
               Messaging
             </Row>
           </ToggleButton>
@@ -82,7 +83,7 @@ const ProjectSidebar: React.FC = ({}) => {
             selected={pathname === "analytics"}
           >
             <Row padding="4" vertical="center" gap="12" textVariant="label-default-l">
-              <Icon name="" onBackground="neutral-weak" size="xs" />
+              <span className="icon-folder" aria-hidden="true"></span>
               Storage
             </Row>
           </ToggleButton>

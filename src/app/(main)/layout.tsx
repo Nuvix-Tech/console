@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 
-import { baseURL, meta, og } from "@/once-ui/resources/config";
+import { baseURL, meta, og } from "@/ui/resources/config";
 
 /*
  */

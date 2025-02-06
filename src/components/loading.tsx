@@ -1,4 +1,4 @@
-import { Background, Flex, GlitchFx, Heading, Spinner } from "@/once-ui/components";
+import { Background, Flex, GlitchFx, Heading, Spinner } from "@/ui/components";
 
 export default function LoadingUI() {
   return (

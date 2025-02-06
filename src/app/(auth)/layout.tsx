@@ -1,5 +1,5 @@
 import AuthWrapper from "@/components/auth";
-import { baseURL, meta, og } from "@/once-ui/resources/config";
+import { baseURL, meta, og } from "@/ui/resources/config";
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 

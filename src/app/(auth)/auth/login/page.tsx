@@ -14,7 +14,7 @@ import {
   SmartLink,
   Text,
   useToast,
-} from "@/once-ui/components";
+} from "@/ui/components";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 

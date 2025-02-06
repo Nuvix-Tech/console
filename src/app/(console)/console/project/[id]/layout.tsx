@@ -1,6 +1,6 @@
 "use client";
 import { ProjectSidebar } from "@/components/console/sidebar";
-import { Row } from "@/once-ui/components";
+import { Row } from "@/ui/components";
 import type React from "react";
 
 export default function ({ children }: { children: React.ReactNode }) {

@@ -1,16 +1,8 @@
 "use client";
 
 import { sdkForConsole } from "@/lib/sdk";
-import {
-  AvatarGroup,
-  Button,
-  Column,
-  Heading,
-  Row,
-  SegmentedControl,
-  Tag,
-} from "@/once-ui/components";
-import { ConsoleSidebar } from "@/once-ui/modules/layout/ConsoleSidebar";
+import { AvatarGroup, Button, Column, Heading, Row, SegmentedControl, Tag } from "@/ui/components";
+import { ConsoleSidebar } from "@/ui/modules/layout/ConsoleSidebar";
 import type { Models } from "@nuvix/console";
 import { useEffect, useState } from "react";
 

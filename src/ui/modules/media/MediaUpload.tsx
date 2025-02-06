@@ -1,4 +1,4 @@
-import { Flex, Icon, SmartImage, Spinner, Text } from "@/once-ui/components";
+import { Flex, Icon, SmartImage, Spinner, Text } from "@/ui/components";
 import Compressor from "compressorjs";
 import type React from "react";
 import { forwardRef, useEffect, useRef, useState } from "react";

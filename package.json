@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@appwrite.io/pink": "^1.0.0",
+    "@appwrite.io/pink-icons": "^1.0.0",
     "@floating-ui/react-dom": "^2.1.1",
     "@nuvix/console": "^0.0.5",
     "classnames": "^2.5.1",

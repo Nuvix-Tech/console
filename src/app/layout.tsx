@@ -1,14 +1,15 @@
-import "@/once-ui/styles/index.scss";
-import "@/once-ui/tokens/index.scss";
 import "@appwrite.io/pink";
+import "@appwrite.io/pink-icons";
+import "@/ui/styles/index.scss";
+import "@/ui/tokens/index.scss";
 
 import Providers from "@/components/providers";
 import classNames from "classnames";
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 
-import { Column, Flex, ToastProvider } from "@/once-ui/components";
-import { baseURL, meta, og, schema, social, style } from "@/once-ui/resources/config";
+import { Column, Flex, ToastProvider } from "@/ui/components";
+import { baseURL, meta, og, schema, social, style } from "@/ui/resources/config";
 
 import { Inter } from "next/font/google";
 import { Roboto_Mono, Space_Grotesk } from "next/font/google";
@@ -117,6 +118,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           code.variable,
           secondary ? secondary.variable : "",
           tertiary ? tertiary.variable : "",
+          "theme-dark",
         )}
       >
         <head>
@@ -128,7 +130,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           />
         </head>
         <ToastProvider>
-          <Column as="body" fillWidth margin="0" padding="0">
+          <Column as="body" fillWidth margin="0" padding="0" className="theme-dark">
             <Providers>{children}</Providers>
           </Column>
         </ToastProvider>

@@ -1,5 +1,5 @@
 "use client";
-import { Background, Column, Row, SmartImage } from "@/once-ui/components";
+import { Background, Column, Row, SmartImage } from "@/ui/components";
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   return (

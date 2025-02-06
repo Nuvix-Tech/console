@@ -1,6 +1,6 @@
 "use client";
 
-import { Column, Icon, IconButton, Line, Row, Tag, Text, ToggleButton } from "@/once-ui/components";
+import { Column, Icon, IconButton, Line, Row, Tag, Text, ToggleButton } from "@/ui/components";
 import { usePathname } from "next/navigation";
 
 const Sidebar: React.FC = ({}) => {
