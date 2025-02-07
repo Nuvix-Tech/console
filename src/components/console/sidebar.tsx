@@ -14,7 +14,11 @@ const ProjectSidebar: React.FC = ({}) => {
       paddingY="32"
       gap="m"
       background="surface"
-      border="neutral-weak"
+      border="neutral-medium"
+      style={{
+        borderWidth: 0,
+        borderRightWidth: 1,
+      }}
     >
       <Column fill paddingX="xs" gap="m">
         <Column fillWidth gap="4">

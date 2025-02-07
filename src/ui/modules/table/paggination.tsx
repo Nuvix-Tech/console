@@ -1,3 +1,5 @@
+import { useSearchParams, useRouter } from "next/navigation";
+
 export type PaginationProps = {
   /**
    * The total number of items.
@@ -14,7 +16,7 @@ export type PaginationProps = {
   /**
    * The function to call when the page changes.
    */
-  onPageChange: (page: number) => void;
+  onPageChange?: (page: number) => void;
 
   /**
    * The function to call when the page size changes.
@@ -27,17 +29,29 @@ export type PaginationProps = {
 export const Pagination = (props: PaginationProps) => {
   const { totalItems, currentPage, itemsPerPage, onPageChange, onPageSizeChange } = props;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const { push } = useRouter();
+  const searchParams = useSearchParams();
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
-      onPageChange(page);
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("page", page.toString());
+      if (onPageChange) {
+        onPageChange(page);
+      } else {
+        push(`?${params.toString()}`);
+      }
     }
   };
 
   const handlePageSizeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newSize = parseInt(event.target.value, 10);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("limit", newSize.toString());
     if (onPageSizeChange) {
       onPageSizeChange(newSize);
+    } else {
+      push(`?${params.toString()}`);
     }
   };
 
@@ -48,7 +62,12 @@ export const Pagination = (props: PaginationProps) => {
           <div className="form-item ">
             <label className="label u-hide">Projects per page</label>
             <div className="select">
-              <select id="rows" aria-label="Projects per page">
+              <select
+                id="rows"
+                aria-label="Projects per page"
+                value={itemsPerPage}
+                onChange={handlePageSizeChange}
+              >
                 <option value="6">6 </option>
                 <option value="12">12 </option>
                 <option value="24">24 </option>
@@ -58,15 +77,16 @@ export const Pagination = (props: PaginationProps) => {
               <span className="icon-cheveron-down" aria-hidden="true"></span>
             </div>
           </div>
-          <p className="text">Projects per page. Total results: 1</p>
+          <p className="text">Projects per page. Total results: {totalItems}</p>
         </div>
         <div className="u-margin-inline-start-auto">
           <nav className="pagination">
             <button
-              disabled={true}
-              className="button is-disabled is-text"
+              disabled={currentPage <= 1}
+              className={`button ${currentPage <= 1 ? "is-disabled" : ""} is-text`}
               aria-label="prev page"
               type="button"
+              onClick={() => handlePageChange(currentPage - 1)}
             >
               <span className="icon-cheveron-left" aria-hidden="true">
                 {" "}
@@ -74,22 +94,25 @@ export const Pagination = (props: PaginationProps) => {
               <span className="text">Prev</span>
             </button>
             <ol className="pagination-list is-only-desktop">
-              <li className="pagination-item">
-                <button
-                  disabled={true}
-                  className="button is-disabled"
-                  aria-label="page"
-                  type="button"
-                >
-                  <span className="text">1</span>
-                </button>
-              </li>
+              {Array.from({ length: totalPages }, (_, index) => (
+                <li key={index} className="pagination-item">
+                  <button
+                    className={`button ${currentPage === index + 1 ? "is-disabled" : ""}`}
+                    aria-label={`page ${index + 1}`}
+                    type="button"
+                    onClick={() => handlePageChange(index + 1)}
+                  >
+                    <span className="text">{index + 1}</span>
+                  </button>
+                </li>
+              ))}
             </ol>
             <button
-              disabled={true}
-              className="button is-disabled is-text"
+              disabled={currentPage >= totalPages}
+              className={`button ${currentPage >= totalPages ? "is-disabled" : ""} is-text`}
               aria-label="next page"
               type="button"
+              onClick={() => handlePageChange(currentPage + 1)}
             >
               <span className="text">Next</span>
               <span className="icon-cheveron-right" aria-hidden="true">

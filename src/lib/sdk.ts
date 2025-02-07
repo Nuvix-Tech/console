@@ -76,3 +76,4 @@ function getProjectSdk(id: string) {
 }
 
 export { sdkForConsole, getProjectSdk };
+export type { sdkForProject };

@@ -1,6 +1,6 @@
 import { APP_NAME } from "@/lib/constants";
 
-const baseURL = "demo.once-ui.com";
+const baseURL = "https://nuvix.com";
 
 // default customization applied to the HTML in the main layout.tsx
 const style = {
@@ -11,7 +11,7 @@ const style = {
   solid: "contrast", // color | contrast | inverse
   solidStyle: "plastic", // flat | plastic
   border: "playful", // rounded | playful | conservative
-  surface: "filled", // filled | translucent
+  surface: "translucent", // filled | translucent
   transition: "all", // all | micro | macro
   scaling: "100", // 90 | 95 | 100 | 105 | 110
 };
@@ -19,13 +19,15 @@ const style = {
 // default metadata
 const meta = {
   title: `${APP_NAME}`,
-  description: "A design system for Next.js",
+  description:
+    "Nuvix is a Backend as a Service (BaaS) platform that provides a comprehensive set of tools and services to help developers build, deploy, and scale their applications quickly and easily.",
 };
 
 // default open graph data
 const og = {
-  title: "Once UI for Next.js",
-  description: "We let designers code and developers design.",
+  title: "Nuvix",
+  description:
+    "Nuvix is a Backend as a Service (BaaS) platform that provides a comprehensive set of tools and services to help developers build, deploy, and scale their applications quickly and easily.",
   type: "website",
   image: "/images/cover.jpg",
 };
@@ -34,16 +36,17 @@ const og = {
 const schema = {
   logo: "",
   type: "Organization",
-  name: "One UI",
-  description: "Once UI is an open-source design system and component library for Next.js.",
+  name: "Nuvix",
+  description:
+    "Nuvix is a Backend as a Service (BaaS) platform that provides a comprehensive set of tools and services to help developers build, deploy, and scale their applications quickly and easily.",
   email: "",
 };
 
 // social links
 const social = {
-  twitter: "https://www.twitter.com/_onceui",
-  linkedin: "https://www.linkedin.com/company/once-ui/",
-  discord: "https://discord.com/invite/5EyAQ4eNdS",
+  twitter: "https://www.twitter.com/nuvix",
+  linkedin: "https://www.linkedin.com/company/nuvix/",
+  discord: "https://discord.com/invite/5",
 };
 
 export { baseURL, style, meta, og, schema, social };
