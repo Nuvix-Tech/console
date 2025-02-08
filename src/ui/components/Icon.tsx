@@ -11,7 +11,7 @@ import styles from "./Icon.module.scss";
 import iconStyles from "./IconButton.module.scss";
 
 interface IconProps extends React.ComponentProps<typeof Flex> {
-  name: string | ReactNode;
+  name: string | ReactNode | IconType;
   onBackground?: `${ColorScheme}-${ColorWeight}`;
   onSolid?: `${ColorScheme}-${ColorWeight}`;
   size?: "xs" | "s" | "m" | "l" | "xl";
