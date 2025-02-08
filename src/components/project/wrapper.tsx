@@ -3,6 +3,7 @@
 import { getProjectSdk, sdkForConsole } from "@/lib/sdk";
 import { ProjectContext } from "@/lib/store/project";
 import React from "react";
+import { ProjectSidebarData } from "../console/sidebar";
 
 export default function ProjectWrapper({
   children,
@@ -11,6 +12,7 @@ export default function ProjectWrapper({
   const [project, setProject] = React.useState<any>(null);
   const [sdk, setSdk] = React.useState<any>(null);
   const [loading, setLoading] = React.useState<boolean>(true);
+  const [sidebarLinks, setSidebarLinks] = React.useState<ProjectSidebarData[]>([]);
 
   const { projects } = sdkForConsole;
 
@@ -26,7 +28,9 @@ export default function ProjectWrapper({
 
   return (
     <>
-      <ProjectContext.Provider value={{ data: { project, loading, sdk }, dispatch: setProject }}>
+      <ProjectContext.Provider
+        value={{ data: { project, loading, sdk, sideLinks: sidebarLinks }, dispatch: setProject }}
+      >
         {children}
       </ProjectContext.Provider>
     </>
