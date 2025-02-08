@@ -1,7 +1,7 @@
 "use client";
 
 import { getProjectSdk, sdkForConsole } from "@/lib/sdk";
-import { ProjectContext } from "@/lib/store/project";
+import { dispatchData, ProjectContext } from "@/lib/store/project";
 import React from "react";
 import { ProjectSidebarData } from "../console/sidebar";
 
@@ -26,10 +26,29 @@ export default function ProjectWrapper({
     });
   }, [id]);
 
+  const update = (data: any) => {
+    setProject((prev: any) => ({ ...prev, ...data }));
+  };
+
+  const dispatch = ({ action, data }: dispatchData) => {
+    switch (action) {
+      case "UPDATE_PROJECT":
+        update(data);
+        break;
+      case "UPDATE_SIDEBAR_LINKS":
+        setSidebarLinks(data);
+        break;
+    }
+  };
+
   return (
     <>
       <ProjectContext.Provider
-        value={{ data: { project, loading, sdk, sideLinks: sidebarLinks }, dispatch: setProject }}
+        value={{
+          data: { project, loading, sdk, sideLinks: sidebarLinks },
+          dispatch: dispatch,
+          update: update,
+        }}
       >
         {children}
       </ProjectContext.Provider>

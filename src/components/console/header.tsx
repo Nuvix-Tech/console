@@ -4,15 +4,12 @@ import { sdkForConsole } from "@/lib/sdk";
 import { ConsoleContext } from "@/lib/store/console";
 import {
   Badge,
-  Button,
   Column,
-  Flex,
   Line,
   Logo,
   NavIcon,
   Option,
   Row,
-  SmartLink,
   ToggleButton,
   UserMenu,
 } from "@/ui/components";
@@ -38,13 +35,20 @@ const ConsoleHeader: React.FC<HeaderProps> = () => {
       as="header"
       borderBottom="neutral-medium"
       fillWidth
+      position="fixed"
+      zIndex={10}
       paddingX="m"
       height="64"
       vertical="center"
       background="surface"
     >
       <Row hide="s">
-        <Logo icon={false} size="s" wordmarkSrc="/trademark/nuvix-logo-dark.svg" />
+        <div className="u-only-dark">
+          <Logo icon={false} size="s" wordmarkSrc="/trademark/nuvix-logo-dark.svg" />
+        </div>
+        <div className="u-only-light">
+          <Logo icon={false} size="s" wordmarkSrc="/trademark/nuvix-logo-light.svg" />
+        </div>
       </Row>
       <Row show="s" gap="4" vertical="center">
         <NavIcon />

@@ -34,7 +34,7 @@ const ProjectSidebar: React.FC = () => {
     },
     {
       name: "Authentication",
-      href: `/console/project/${id}/auth`,
+      href: `/console/project/${id}/authentication/users`,
       icon: <span className="icon-users" />,
     },
     {
@@ -60,14 +60,28 @@ const ProjectSidebar: React.FC = () => {
   ];
 
   const onThemeChange = (theme: string) => {
-    const body = document.querySelector("body");
+    const body = document.body;
+    const html = document.documentElement;
+
     if (body) {
-      if (!body.className.includes(`theme-${theme}`)) {
-        body.className = body.className.replace(/theme-\S+/g, `theme-${theme}`);
-      }
-      body.className += ` theme-${theme}`;
+      body.classList.forEach((className) => {
+        if (className.startsWith("theme-")) {
+          body.classList.remove(className);
+        }
+      });
+      body.classList.add(`theme-${theme}`);
     }
-    document.documentElement.setAttribute("data-theme", theme);
+
+    if (html) {
+      html.setAttribute("data-theme", theme);
+      html.style.colorScheme = theme;
+      html.classList.forEach((className) => {
+        if (className.startsWith("theme-")) {
+          html.classList.remove(className);
+        }
+      });
+      html.classList.add(`theme-${theme}`);
+    }
   };
 
   return (
@@ -142,6 +156,10 @@ const ProjectSidebar: React.FC = () => {
               position="relative"
               background="page"
               border="neutral-weak"
+              style={{
+                borderWidth: 0,
+                borderRightWidth: 1,
+              }}
               className="sidebar-large"
             >
               <Column fill paddingX="xs" gap="m">
@@ -265,6 +283,7 @@ const SidebarSmallButton = ({
     <ToggleButton
       size="l"
       fillWidth
+      href={item.href}
       justifyContent={showFullSidebar ? "flex-start" : "center"}
       selected={selected ?? false}
       onClick={item.onClick}

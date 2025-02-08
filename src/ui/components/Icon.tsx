@@ -11,7 +11,7 @@ import styles from "./Icon.module.scss";
 import iconStyles from "./IconButton.module.scss";
 
 interface IconProps extends React.ComponentProps<typeof Flex> {
-  name: string | IconType;
+  name: string | ReactNode;
   onBackground?: `${ColorScheme}-${ColorWeight}`;
   onSolid?: `${ColorScheme}-${ColorWeight}`;
   size?: "xs" | "s" | "m" | "l" | "xl";
@@ -34,7 +34,8 @@ const Icon = forwardRef<HTMLDivElement, IconProps>(
     },
     ref,
   ) => {
-    const IconComponent: IconType | undefined = typeof name === "string" ? iconLibrary[name] : name;
+    const IconComponent: IconType | undefined | any =
+      typeof name === "string" ? iconLibrary[name] : name;
 
     if (!IconComponent) {
       console.warn(`Icon "${name}" does not exist in the library.`);
@@ -88,7 +89,7 @@ const Icon = forwardRef<HTMLDivElement, IconProps>(
         onMouseLeave={() => setIsHover(false)}
         {...rest}
       >
-        <IconComponent />
+        {typeof IconComponent === "function" ? <IconComponent /> : IconComponent}
         {tooltip && isTooltipVisible && (
           <Flex position="absolute" zIndex={1} className={iconStyles[tooltipPosition]}>
             <Tooltip label={tooltip} />
