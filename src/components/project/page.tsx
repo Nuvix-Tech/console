@@ -1,15 +1,25 @@
 "use client";
-
-import { useProject } from "@/hooks/useProject";
+import { appState } from "@/state/app-state";
+import { getProjectState } from "@/state/project-state";
 import { Background, Chip, Column, Feedback, Heading, Line, Row, Skeleton } from "@/ui/components";
-import React from "react";
+import React, { Suspense } from "react";
+import { useProxy } from "valtio/utils";
 
 type ProjectPageProps = {
   id: string;
 };
 
 export default function ProjectPage({ id }: ProjectPageProps) {
-  const { project, loading } = useProject();
+  return (
+    <Suspense fallback={<Skeleton fill shape="block" />}>
+      <SubPage />
+    </Suspense>
+  );
+}
+
+const SubPage = () => {
+  const state = getProjectState();
+  const project = state.project;
 
   React.useEffect(() => {
     const projectElement = document.getElementById("project");
@@ -55,7 +65,7 @@ export default function ProjectPage({ id }: ProjectPageProps) {
                   size: "4",
                 }}
               />
-              {loading && !project ? (
+              {!project ? (
                 <Skeleton fill shape="block" />
               ) : (
                 <Column
@@ -156,7 +166,7 @@ export default function ProjectPage({ id }: ProjectPageProps) {
       </Row>
     </>
   );
-}
+};
 
 const platformIcon = (platform: string) => {
   switch (platform) {

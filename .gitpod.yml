@@ -8,7 +8,7 @@ ports:
 tasks:
     - name: install cypress to workspace
       init: |
-          bun install
+          npm install
           npx cypress install
     - name: run chrome tests
       command: |

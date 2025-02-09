@@ -4,48 +4,32 @@ import { getProjectSdk, sdkForConsole } from "@/lib/sdk";
 import { dispatchData, ProjectContext } from "@/lib/store/project";
 import React from "react";
 import { ProjectSidebarData } from "../console/sidebar";
+import { getProjectState, projectState } from "@/state/project-state";
 
 export default function ProjectWrapper({
   children,
   id,
 }: { children: React.ReactNode; id: string }) {
-  const [project, setProject] = React.useState<any>(null);
-  const [sdk, setSdk] = React.useState<any>(null);
-  const [loading, setLoading] = React.useState<boolean>(true);
-  const [sidebarLinks, setSidebarLinks] = React.useState<ProjectSidebarData[]>([]);
-
+  const { project, sdk, initialfetching } = getProjectState();
   const { projects } = sdkForConsole;
 
   React.useEffect(() => {
-    setLoading(true);
-
     projects.get(id).then((project) => {
-      setProject(project);
-      setSdk(getProjectSdk(project.$id));
-      setLoading(false);
+      projectState.project = project;
+      projectState.sdk = getProjectSdk(project.$id);
+      projectState.initialfetching = false;
     });
   }, [id]);
 
-  const update = (data: any) => {
-    setProject((prev: any) => ({ ...prev, ...data }));
-  };
+  const update = (data: any) => {};
 
-  const dispatch = ({ action, data }: dispatchData) => {
-    switch (action) {
-      case "UPDATE_PROJECT":
-        update(data);
-        break;
-      case "UPDATE_SIDEBAR_LINKS":
-        setSidebarLinks(data);
-        break;
-    }
-  };
+  const dispatch = ({ action, data }: dispatchData) => {};
 
   return (
     <>
       <ProjectContext.Provider
         value={{
-          data: { project, loading, sdk, sideLinks: sidebarLinks },
+          data: { project, loading: initialfetching, sdk, sideLinks: [] },
           dispatch: dispatch,
           update: update,
         }}

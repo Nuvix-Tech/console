@@ -3,7 +3,7 @@ import "@/ui/modules/layout/sidebar.scss";
 import { Column, Icon, IconButton, Line, Row, Text, ToggleButton } from "@/ui/components";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { useProject } from "@/hooks/useProject";
+import { getProjectState } from "@/state/project-state";
 
 interface ProjectSidebarProps {
   data: ProjectSidebarData[];
@@ -19,14 +19,30 @@ export interface ProjectSidebarData {
   children?: ProjectSidebarData[];
 }
 
+export interface SidebarItem {
+  name: string;
+  active?: boolean;
+  disabled?: boolean;
+  href?: string;
+  icon?: React.ReactNode;
+  endIcon?: React.ReactNode;
+  onClick?: () => void;
+  badge?: React.ReactNode;
+}
+
+export interface SidebarItemGroup {
+  title: string;
+  items: SidebarItem[];
+}
+
 const ProjectSidebar: React.FC = () => {
   const [showFullSidebar, setShowFullSidebar] = React.useState(false);
   const pathname = usePathname() ?? "";
-  const { project, sideLinks } = useProject();
+  const { project, sidebar } = getProjectState();
 
   const id = project?.$id;
 
-  const sideNav: ProjectSidebarData[] = [
+  const sideNav: SidebarItem[] = [
     {
       name: "Overview",
       href: `/console/project/${id}`,
@@ -145,7 +161,7 @@ const ProjectSidebar: React.FC = () => {
             </Column>
           </Column>
 
-          {sideLinks?.length ? (
+          {sidebar ? (
             <Column
               fillHeight
               fillWidth
@@ -162,110 +178,7 @@ const ProjectSidebar: React.FC = () => {
               }}
               className="sidebar-large"
             >
-              <Column fill paddingX="xs" gap="m">
-                <Column gap="4">
-                  <ToggleButton fillWidth justifyContent="flex-start" selected={false}>
-                    <Row padding="4" vertical="center" gap="12" textVariant="label-default-s">
-                      <span className="icon-chart-bar" aria-hidden="true"></span>
-                      Overview
-                    </Row>
-                  </ToggleButton>
-
-                  <Row
-                    fillWidth
-                    horizontal="space-between"
-                    vertical="center"
-                    paddingY="8"
-                    paddingX="16"
-                  >
-                    <Text variant="body-default-xs" onBackground="neutral-weak">
-                      Projects
-                    </Text>
-                    <IconButton tooltip="Create" variant="secondary" icon="plus" size="s" />
-                  </Row>
-                  <ToggleButton
-                    fillWidth
-                    justifyContent="flex-start"
-                    selected={pathname === "projects"}
-                  >
-                    <Row padding="4" gap="12" vertical="center" textVariant="label-default-s">
-                      <Line width="16" />
-                      All Projects
-                    </Row>
-                  </ToggleButton>
-                </Column>
-
-                <Line />
-
-                <Column fillWidth gap="4">
-                  <Text
-                    variant="body-default-xs"
-                    onBackground="neutral-weak"
-                    marginBottom="8"
-                    marginLeft="16"
-                  >
-                    Account
-                  </Text>
-                  <ToggleButton fillWidth justifyContent="flex-start" selected={false}>
-                    <Row padding="4" vertical="center" gap="12" textVariant="label-default-s">
-                      <Icon name="PiHouseDuotone" onBackground="neutral-weak" size="xs" />
-                      Preferences
-                    </Row>
-                  </ToggleButton>
-                  <ToggleButton
-                    fillWidth
-                    justifyContent="flex-start"
-                    selected={pathname === "analytics"}
-                  >
-                    <Row padding="4" vertical="center" gap="12" textVariant="label-default-s">
-                      <Icon name="PiTrendUpDuotone" onBackground="neutral-weak" size="xs" />
-                      Audit Logs
-                    </Row>
-                  </ToggleButton>
-                </Column>
-
-                <Line />
-
-                <Column fillWidth gap="4">
-                  <Text
-                    variant="body-default-xs"
-                    onBackground="neutral-weak"
-                    marginBottom="8"
-                    marginLeft="16"
-                  >
-                    Documentation
-                  </Text>
-                  <ToggleButton fillWidth justifyContent="flex-start" selected={false}>
-                    <Row padding="4" vertical="center" gap="12" textVariant="label-default-s">
-                      Guides
-                    </Row>
-                  </ToggleButton>
-                  <ToggleButton
-                    fillWidth
-                    justifyContent="flex-start"
-                    selected={pathname === "analytics"}
-                  >
-                    <Row padding="4" vertical="center" gap="12" textVariant="label-default-s">
-                      API Reference
-                    </Row>
-                  </ToggleButton>
-                </Column>
-
-                <Line />
-
-                <Column fillWidth gap="4">
-                  <ToggleButton
-                    fillWidth
-                    justifyContent="flex-start"
-                    selected={pathname === "permissions"}
-                  >
-                    <Row padding="4" gap="12" vertical="center" textVariant="label-default-s">
-                      Logout
-                    </Row>
-                  </ToggleButton>
-                </Column>
-                <Line />
-              </Column>
+              {sidebar}
             </Column>
           ) : null}
         </Row>
