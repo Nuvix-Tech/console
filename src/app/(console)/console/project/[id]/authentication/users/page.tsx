@@ -1,13 +1,13 @@
 "use client";
 import { getProjectState } from "@/state/project-state";
-import { Skeleton } from "@/ui/components";
+import { Avatar, Skeleton } from "@/ui/components";
 import { Models } from "@nuvix/console";
 import { usePathname } from "next/navigation";
 import React, { Suspense } from "react";
 import { Column, Icon, IconButton, Line, Row, Text, ToggleButton } from "@/ui/components";
-import { default as TB } from "@/ui/modules/table";
 import Table from "@/ui/modules/table/table";
 import { ColumnDef } from "@tanstack/react-table";
+import { Tooltip } from "@/components/ui/tooltip";
 
 const UsersPage: React.FC = () => {
   const state = getProjectState();
@@ -95,15 +95,50 @@ const SubPage = () => {
     {
       header: "Name",
       accessorKey: "name",
+      cell(props) {
+        return (
+          <Row vertical="center" gap="12">
+            <Avatar size="m" src={sdk?.avatars.getInitials(props.getValue<string>(), 64, 64)} />
+            <Text variant="label-default-s">{props.getValue<string>()}</Text>
+          </Row>
+        );
+      },
       size: 200,
     },
     {
-      header: "Email",
-      accessorKey: "email",
+      header: "Identifiers",
+      accessorFn: (row) => [row.email, row.phone]?.filter(Boolean).join(", "),
+      cell(props) {
+        // return <Tooltip content={props.getValue<string>()}>
+        //   <Text as={'span'} variant="label-default-s" className="tooltip">
+        //     {props.getValue<string>()}
+        //   </Text>;
+        // </Tooltip>
+        return <Text variant="label-default-s">{props.getValue<string>()}</Text>;
+      },
     },
     {
-      header: "Options",
-      accessorKey: "options",
+      header: "Status",
+      accessorKey: "status",
+    },
+    {
+      header: "ID",
+      accessorKey: "$id",
+    },
+    {
+      header: "Labels",
+      accessorKey: "labels",
+    },
+    {
+      header: "Joined",
+      accessorKey: "$createdAt",
+    },
+    {
+      header: "Last Activity",
+      accessorKey: "accessedAt",
+      cell(props) {
+        return <Text variant="label-default-s">{props.getValue<string>() ?? "never"}</Text>;
+      },
     },
   ];
 
@@ -111,16 +146,16 @@ const SubPage = () => {
     <div className="p-4">
       <Row vertical="center" horizontal="space-between" marginBottom="24" paddingX="8">
         <Text variant="heading-default-l">Users</Text>
-        <IconButton icon="plus" title="Add User" onClick={() => {/* Add user logic */ }} />
+        <IconButton
+          icon="plus"
+          title="Add User"
+          onClick={() => {
+            /* Add user logic */
+          }}
+        />
       </Row>
 
       <Table<Models.User<any>> columns={columns} data={users.users} />
-
-      {users.total === 0 && (
-        <Text variant="body-default-xl" onBackground="neutral-weak" marginTop="4">
-          No users found.
-        </Text>
-      )}
     </div>
   );
 };

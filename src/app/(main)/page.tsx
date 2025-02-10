@@ -122,7 +122,12 @@ export default function Home() {
           paddingLeft="32"
           paddingY="20"
         >
-          <Logo size="m" icon={false} href="https://once-ui.com" wordmarkSrc="/trademark/nuvix-logo-dark.svg" />
+          <Logo
+            size="m"
+            icon={false}
+            href="https://once-ui.com"
+            wordmarkSrc="/trademark/nuvix-logo-dark.svg"
+          />
           <Row gap="12" hide="s">
             <Button
               href="https://discord.com/"
@@ -143,11 +148,7 @@ export default function Home() {
             <StyleOverlay top="20" right="24" />
           </Row>
           <Row gap="16" show="s" horizontal="center" paddingRight="24">
-            <IconButton
-              href="https://discord.com/invite"
-              icon="discord"
-              variant="tertiary"
-            />
+            <IconButton href="https://discord.com/invite" icon="discord" variant="tertiary" />
             <IconButton
               href="https://github.com/ravikan6/console"
               icon="github"
@@ -236,7 +237,6 @@ export default function Home() {
               Welcome to Console
             </Heading>
             <Button id="readDocs" label="Console" href="/console" variant="secondary" arrowIcon />
-
           </Column>
         </Column>
 
@@ -307,8 +307,6 @@ export default function Home() {
             </Column>
           </Column>
         </TiltFx>
-
-
       </Column>
     </Column>
   );

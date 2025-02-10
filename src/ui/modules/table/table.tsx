@@ -1,10 +1,7 @@
 import React from "react";
-import { useReactTable, getCoreRowModel, flexRender, ColumnDef } from "@tanstack/react-table";
+import { useReactTable, getCoreRowModel, flexRender, TableOptions } from "@tanstack/react-table";
 
-interface TableProps<T> {
-  columns: ColumnDef<T>[];
-  data: T[];
-}
+interface TableProps<T> extends Omit<TableOptions<T>, "getCoreRowModel"> {}
 
 const Table = <T,>({ columns, data }: TableProps<T>) => {
   const table = useReactTable({
@@ -16,14 +13,20 @@ const Table = <T,>({ columns, data }: TableProps<T>) => {
   return (
     <div className="table" role="table">
       <div className="table-thead" role="rowheader">
-        {table.getHeaderGroups().map(headerGroup => (
+        {table.getHeaderGroups().map((headerGroup) => (
           <div className="table-row" role="row" key={headerGroup.id}>
-            {headerGroup.headers.map(header => (
+            {headerGroup.headers.map((header) => (
               <div
                 key={header.id}
                 className="table-thead-col"
                 role="columnheader"
-                style={{ "--p-col-width": header.column.columnDef.size ? `${header.column.columnDef.size}px` : undefined } as React.CSSProperties}
+                style={
+                  {
+                    "--p-col-width": header.column.columnDef.size
+                      ? `${header.column.columnDef.size}px`
+                      : undefined,
+                  } as React.CSSProperties
+                }
               >
                 <span className="eyebrow-heading-3">
                   {flexRender(header.column.columnDef.header, header.getContext())}
@@ -34,16 +37,29 @@ const Table = <T,>({ columns, data }: TableProps<T>) => {
         ))}
       </div>
       <div className="table-tbody" role="rowgroup">
-        {table.getRowModel().rows.map(row => (
+        {table.getRowModel().rows.map((row) => (
           <a className="table-row" role="row" href="#" key={row.id}>
-            {row.getVisibleCells().map(cell => (
-              <div key={cell.id} className="table-col" role="cell" data-title={String(cell.column.columnDef.header)}>
+            {row.getVisibleCells().map((cell) => (
+              <div
+                key={cell.id}
+                className="table-col"
+                role="cell"
+                data-title={String(cell.column.columnDef.header)}
+              >
                 {cell.column.id === "imageUrl" ? (
                   <div className="u-inline-flex u-cross-center u-gap-12">
                     <span className="image">
-                      <img className="avatar" width="32" height="32" src={String(cell.getValue())} alt="" />
+                      <img
+                        className="avatar"
+                        width="32"
+                        height="32"
+                        src={String(cell.getValue())}
+                        alt=""
+                      />
                     </span>
-                    <span className="text u-break-word u-line-height-1-5">{String((row.original as any)["name"])} </span>
+                    <span className="text u-break-word u-line-height-1-5">
+                      {String((row.original as any)["name"])}{" "}
+                    </span>
                   </div>
                 ) : cell.column.id === "options" ? (
                   <div className="u-flex">
@@ -58,7 +74,9 @@ const Table = <T,>({ columns, data }: TableProps<T>) => {
                     </button>
                   </div>
                 ) : (
-                  <span className="text">{flexRender(cell.column.columnDef.cell, cell.getContext())}</span>
+                  <span className="text">
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </span>
                 )}
               </div>
             ))}

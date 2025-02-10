@@ -99,6 +99,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Flex
+        suppressHydrationWarning
         as="html"
         lang="en"
         fillHeight
@@ -121,16 +122,24 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           "theme-dark",
         )}
       >
-        <head>
+        {/* <head>
           <script
+          suppressHydrationWarning
             type="application/ld+json"
             dangerouslySetInnerHTML={{
               __html: JSON.stringify(schemaData),
             }}
           />
-        </head>
+        </head> */}
         <ToastProvider>
-          <Column as="body" fillWidth margin="0" padding="0" className="theme-dark">
+          <Column
+            suppressHydrationWarning
+            as="body"
+            fillWidth
+            margin="0"
+            padding="0"
+            className="theme-dark"
+          >
             <Providers>{children}</Providers>
           </Column>
         </ToastProvider>
