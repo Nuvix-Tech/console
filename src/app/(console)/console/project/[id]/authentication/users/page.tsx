@@ -8,7 +8,7 @@ import { Column, Icon, IconButton, Line, Row, Text, ToggleButton } from "@/ui/co
 import Table from "@/ui/modules/table/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Tooltip } from "@/components/ui/tooltip";
-import { Button } from "@chakra-ui/react";
+import { SearchAndCreate } from "@/ui/modules/table";
 
 const UsersPage: React.FC = () => {
   const state = getProjectState();
@@ -144,16 +144,11 @@ const SubPage = () => {
 
   return (
     <div className="p-4">
-      <Row vertical="center" horizontal="space-between" marginBottom="24" paddingX="8">
-        <Text variant="heading-default-l">Users</Text>
-        <IconButton
-          icon="plus"
-          title="Add User"
-          onClick={() => {
-            /* Add user logic */
-          }}
-        />
+      <Row vertical="center" horizontal="start" marginTop="24" paddingX="8">
+        <Text variant="heading-strong-xl">Users</Text>
       </Row>
+
+      <SearchAndCreate button={{ text: "Create User" }} />
 
       <Table<Models.User<any>> columns={columns} data={users.users} />
     </div>

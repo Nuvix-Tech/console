@@ -81,3 +81,5 @@ const Table: React.FC<TableProps> = ({ columns, rows }) => (
 );
 
 export default Table;
+
+export { default as SearchAndCreate } from "./header";

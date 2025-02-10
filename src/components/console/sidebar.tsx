@@ -66,7 +66,7 @@ const ProjectSidebar: React.FC = () => {
     {
       name: "Functions",
       href: `/console/project/${id}/functions`,
-      icon: <span className="icon-code" />,
+      icon: <span className="icon-sparkles" />,
     },
     {
       name: "Messaging",

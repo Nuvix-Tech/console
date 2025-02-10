@@ -1,5 +1,6 @@
 import React from "react";
 import { useReactTable, getCoreRowModel, flexRender, TableOptions } from "@tanstack/react-table";
+import Link from "next/link";
 
 interface TableProps<T> extends Omit<TableOptions<T>, "getCoreRowModel"> {}
 
@@ -38,7 +39,13 @@ const Table = <T,>({ columns, data }: TableProps<T>) => {
       </div>
       <div className="table-tbody" role="rowgroup">
         {table.getRowModel().rows.map((row) => (
-          <a className="table-row" role="row" href="#" key={row.id}>
+          <Link
+            className="table-row"
+            role="row"
+            href={`users/${row.getValue("$id")}`}
+            key={row.id}
+            style={{ textDecoration: "none" }}
+          >
             {row.getVisibleCells().map((cell) => (
               <div
                 key={cell.id}
@@ -80,7 +87,7 @@ const Table = <T,>({ columns, data }: TableProps<T>) => {
                 )}
               </div>
             ))}
-          </a>
+          </Link>
         ))}
       </div>
     </div>
