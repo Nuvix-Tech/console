@@ -8,6 +8,7 @@ import { Column, Icon, IconButton, Line, Row, Text, ToggleButton } from "@/ui/co
 import Table from "@/ui/modules/table/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Tooltip } from "@/components/ui/tooltip";
+import { Button } from "@chakra-ui/react";
 
 const UsersPage: React.FC = () => {
   const state = getProjectState();
@@ -109,12 +110,11 @@ const SubPage = () => {
       header: "Identifiers",
       accessorFn: (row) => [row.email, row.phone]?.filter(Boolean).join(", "),
       cell(props) {
-        // return <Tooltip content={props.getValue<string>()}>
-        //   <Text as={'span'} variant="label-default-s" className="tooltip">
-        //     {props.getValue<string>()}
-        //   </Text>;
-        // </Tooltip>
-        return <Text variant="label-default-s">{props.getValue<string>()}</Text>;
+        return (
+          <Tooltip content={props.getValue<string>()}>
+            <span>{props.getValue<string>()}</span>
+          </Tooltip>
+        );
       },
     },
     {
