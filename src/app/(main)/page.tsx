@@ -122,10 +122,10 @@ export default function Home() {
           paddingLeft="32"
           paddingY="20"
         >
-          <Logo size="m" icon={false} href="https://once-ui.com" />
+          <Logo size="m" icon={false} href="https://once-ui.com" wordmarkSrc="/trademark/nuvix-logo-dark.svg" />
           <Row gap="12" hide="s">
             <Button
-              href="https://discord.com/invite/5EyAQ4eNdS"
+              href="https://discord.com/"
               prefixIcon="discord"
               size="s"
               label="Discord"
@@ -133,7 +133,7 @@ export default function Home() {
               variant="tertiary"
             />
             <Button
-              href="https://github.com/once-ui-system/nextjs-starter"
+              href="https://github.com/ravikan6/console"
               prefixIcon="github"
               size="s"
               label="GitHub"
@@ -144,12 +144,12 @@ export default function Home() {
           </Row>
           <Row gap="16" show="s" horizontal="center" paddingRight="24">
             <IconButton
-              href="https://discord.com/invite/5EyAQ4eNdS"
+              href="https://discord.com/invite"
               icon="discord"
               variant="tertiary"
             />
             <IconButton
-              href="https://github.com/once-ui-system/nextjs-starter"
+              href="https://github.com/ravikan6/console"
               icon="github"
               variant="tertiary"
             />
@@ -227,491 +227,18 @@ export default function Home() {
           />
           <Column fillWidth horizontal="center" gap="32" padding="32" position="relative">
             <InlineCode radius="xl" shadow="m" fit paddingX="16" paddingY="8">
-              Start by editing
+              Start by editing{" "}
               <Text onBackground="brand-medium" marginLeft="8">
                 app/page.tsx
               </Text>
             </InlineCode>
             <Heading wrap="balance" variant="display-default-l" align="center" marginBottom="16">
-              We let designers code and developers design
+              Welcome to Console
             </Heading>
             <Button id="readDocs" label="Console" href="/console" variant="secondary" arrowIcon />
-            <Column horizontal="center" paddingTop="64" fillWidth gap="24">
-              <Line maxWidth={4} marginBottom="16" background="neutral-alpha-medium" />
-              <AvatarGroup
-                marginBottom="8"
-                reverse
-                size="s"
-                avatars={[
-                  {
-                    src: "/images/l.jpg",
-                  },
-                  {
-                    src: "/images/z.jpg",
-                  },
-                ]}
-              />
-              <Heading marginBottom="12" as="h2" align="center" variant="heading-default-l">
-                Brought to you by indie creators
-                <br /> behind stellar projects:
-              </Heading>
-              <LogoCloud
-                paddingBottom="104"
-                columns="3"
-                mobileColumns="1"
-                limit={3}
-                fillWidth
-                logos={[
-                  {
-                    icon: false,
-                    wordmarkSrc: "/trademark/dopler-wordmark.svg",
-                    href: "https://dropler.app",
-                    size: "m",
-                  },
-                  {
-                    icon: false,
-                    wordmarkSrc: "/trademark/design-engineers-wordmark.svg",
-                    href: "https://club.dropler.io",
-                    size: "m",
-                  },
-                  {
-                    icon: false,
-                    wordmarkSrc: "/trademark/enroll-wordmark.svg",
-                    href: "https://enroll.dopler.app",
-                    size: "m",
-                  },
-                  {
-                    icon: false,
-                    wordmarkSrc: "/trademark/magic-portfolio-wordmark.svg",
-                    href: "https://magic-portfolio.com",
-                    size: "m",
-                  },
-                ]}
-              />
-            </Column>
-          </Column>
-          <Column fillWidth paddingX="32" gap="12" horizontal="center" position="relative">
-            <Heading as="h2" variant="display-default-m">
-              Showcase
-            </Heading>
-            <Text marginBottom="32" align="center" onBackground="neutral-weak">
-              Tiny snippets to inspire your next project
-            </Text>
 
-            {/* LOGIN */}
           </Column>
         </Column>
-
-        {/* PAYMENT */}
-        <Row
-          paddingX="32"
-          fillWidth
-          paddingY="160"
-          gap="64"
-          position="relative"
-          mobileDirection="column"
-          vertical="center"
-        >
-          <Background
-            style={{ left: "-1px" }}
-            borderTop="neutral-alpha-medium"
-            mask={{
-              x: 0,
-              y: 50,
-              radius: 100,
-            }}
-            position="absolute"
-            grid={{
-              display: true,
-              opacity: 100,
-              width: "10%",
-              color: "neutral-alpha-medium",
-              height: "1.25%",
-            }}
-          />
-          <Row
-            position="relative"
-            shadow="xl"
-            fillWidth
-            border="neutral-alpha-medium"
-            borderStyle="dashed"
-            background="page"
-            radius="xl"
-          >
-            <TiltFx
-              aspectRatio="16 / 9"
-              fillWidth
-              radius="xl"
-              border="accent-alpha-weak"
-              overflow="hidden"
-            >
-              <HoloFx fill>
-                <Background
-                  fill
-                  position="absolute"
-                  gradient={{
-                    display: true,
-                    tilt: -45,
-                    height: 150,
-                    width: 100,
-                    x: 75,
-                    y: -50,
-                    colorStart: "brand-solid-strong",
-                    colorEnd: "accent-solid-weak",
-                  }}
-                >
-                  <Column
-                    fill
-                    position="absolute"
-                    padding="24"
-                    vertical="end"
-                    gap="12"
-                    onSolid="neutral-strong"
-                  >
-                    <Text variant="body-default-xl">Lorant One</Text>
-                    <Row fillWidth horizontal="space-between" vertical="end" paddingRight="16">
-                      <Column gap="4">
-                        <Text variant="body-default-m">08 / 27</Text>
-                        <Text variant="body-default-m">1234 5678 1234 5678</Text>
-                      </Column>
-                      <Icon name="visa" size="xl" />
-                    </Row>
-                  </Column>
-                </Background>
-              </HoloFx>
-            </TiltFx>
-          </Row>
-          <Column position="relative" fillWidth gap="-1">
-            <Row fillWidth vertical="center" horizontal="space-between" marginBottom="32">
-              <Heading as="h3" variant="display-default-xs">
-                Fill in your card details
-              </Heading>
-              <IconButton
-                data-border="rounded"
-                variant="tertiary"
-                icon="chevronRight"
-                tooltip="Next"
-                tooltipPosition="left"
-              />
-            </Row>
-            <Input
-              id="cardnumber"
-              label="Card number"
-              labelAsPlaceholder
-              radius="top"
-              defaultValue="1234 5678 1234 5678"
-            />
-            <Row fillWidth gap="-1">
-              <Input
-                id="expiry"
-                label="Expiry date"
-                labelAsPlaceholder
-                radius="bottom-left"
-                defaultValue="08 / 27"
-              />
-              <Input
-                id="cvv"
-                label="CVV"
-                labelAsPlaceholder
-                radius="bottom-right"
-                defaultValue="123"
-              />
-            </Row>
-          </Column>
-        </Row>
-
-        {/* BOOKING */}
-        <Row
-          padding="32"
-          fillWidth
-          gap="64"
-          position="relative"
-          mobileDirection="column"
-          vertical="center"
-        >
-          <Background
-            fill
-            position="absolute"
-            gradient={{
-              display: true,
-              opacity: 60,
-              tilt: 0,
-              height: 100,
-              width: 100,
-              x: 50,
-              y: 0,
-              colorStart: "brand-solid-strong",
-              colorEnd: "static-transparent",
-            }}
-          />
-          <Column
-            fillWidth
-            background="surface"
-            radius="xl"
-            border="neutral-medium"
-            overflow="hidden"
-            padding="32"
-            gap="40"
-            position="relative"
-          >
-            <Row fillWidth horizontal="center" gap="-1">
-              <Column
-                maxWidth={12}
-                gap="4"
-                leftRadius="l"
-                paddingX="16"
-                paddingY="12"
-                background="surface"
-                border="neutral-medium"
-              >
-                <Text variant="label-default-s" onBackground="neutral-weak">
-                  Check in
-                </Text>
-                {selectedRange?.startDate ? (
-                  <>
-                    {selectedRange?.startDate.toLocaleDateString("default", {
-                      day: "numeric",
-                      month: "long",
-                    })}
-                  </>
-                ) : (
-                  "Add dates"
-                )}
-              </Column>
-              <Column
-                maxWidth={12}
-                gap="4"
-                rightRadius="l"
-                paddingX="16"
-                paddingY="12"
-                background="surface"
-                border="neutral-medium"
-              >
-                <Text variant="label-default-s" onBackground="neutral-weak">
-                  Check out
-                </Text>
-                {selectedRange?.endDate ? (
-                  <>
-                    {selectedRange?.endDate?.toLocaleDateString("default", {
-                      day: "numeric",
-                      month: "long",
-                    })}
-                  </>
-                ) : (
-                  "Add dates"
-                )}
-              </Column>
-            </Row>
-            <Row fillWidth horizontal="center">
-              <DateRangePicker
-                data-scaling="110"
-                size="l"
-                fitWidth
-                gap="40"
-                mobileDirection="column"
-                onChange={(range) => setSelectedRange(range)}
-                value={selectedRange}
-              />
-            </Row>
-          </Column>
-        </Row>
-
-        {/* PROFILE */}
-        <Row horizontal="center" paddingX="32" paddingY="64" fillWidth gap="32" position="relative">
-          <Background
-            mask={{
-              cursor: true,
-            }}
-            dots={{
-              display: true,
-              opacity: 50,
-              color: "neutral-solid-strong",
-              size: "48",
-            }}
-            fill
-            position="absolute"
-            gradient={{
-              display: true,
-              opacity: 100,
-              tilt: 0,
-              height: 100,
-              width: 200,
-              x: 50,
-              y: 0,
-              colorStart: "neutral-background-medium",
-              colorEnd: "static-transparent",
-            }}
-          />
-          <Column maxWidth={32} gap="-1">
-            <Feedback icon variant="success" radius={undefined} topRadius="l" zIndex={1}>
-              Your profile is public.
-            </Feedback>
-            <Column
-              background="page"
-              radius={undefined}
-              bottomRadius="l"
-              overflow="hidden"
-              position="relative"
-              fillWidth
-              horizontal="center"
-              border="neutral-medium"
-            >
-              <MediaUpload
-                border={undefined}
-                emptyState={<Row paddingBottom="80">Drag and drop or click to browse</Row>}
-                position="absolute"
-                aspectRatio="16 / 9"
-                sizes="560px"
-                radius={undefined}
-                initialPreviewImage="/images/profile.jpg"
-              />
-              <Column
-                paddingTop="160"
-                paddingX="32"
-                paddingBottom="32"
-                fillWidth
-                position="relative"
-                horizontal="center"
-                gap="8"
-              >
-                <Avatar
-                  zIndex={1}
-                  style={{
-                    border: "8px solid var(--page-background)",
-                  }}
-                  size="xl"
-                  src="/images/l.jpg"
-                />
-                <Heading marginTop="24" as="h3" variant="display-default-m">
-                  Lorant One
-                </Heading>
-                <Text align="center" onBackground="neutral-weak" marginBottom="24">
-                  165 connections
-                </Text>
-                <SegmentedControl
-                  onToggle={(value) => console.log("SegmentedControl changed", value)}
-                  buttons={[
-                    {
-                      size: "l",
-                      value: "profile",
-                      label: "Profile",
-                    },
-                    {
-                      size: "l",
-                      value: "settings",
-                      label: "Settings",
-                    },
-                    {
-                      size: "l",
-                      value: "notifications",
-                      label: (
-                        <Row gap="8">
-                          Notifications
-                          <StatusIndicator size="s" color="cyan" />
-                        </Row>
-                      ),
-                    },
-                    {
-                      size: "l",
-                      value: "integrations",
-                      label: "Integrations",
-                    },
-                    {
-                      size: "l",
-                      value: "inbox",
-                      label: "Inbox",
-                    },
-                    {
-                      size: "l",
-                      value: "requests",
-                      label: "Requests",
-                    },
-                  ]}
-                />
-                <Column paddingY="32" fillWidth gap="-1">
-                  <Input
-                    radius="top"
-                    label="Name"
-                    labelAsPlaceholder
-                    defaultValue="Lorant One"
-                    id="name"
-                  />
-                  <Input
-                    radius="bottom"
-                    label="Email"
-                    labelAsPlaceholder
-                    defaultValue="lorant@once-ui.com"
-                    id="profileEmail"
-                  />
-                </Column>
-                <Textarea
-                  id="intro"
-                  label="Intro"
-                  lines="auto"
-                  value={intro}
-                  onChange={(e) => setIntro(e.target.value)}
-                  validate={validateIntro}
-                />
-                <TagInput
-                  id="interests"
-                  value={tags}
-                  onChange={(newTags: string[]) => {
-                    setTags(newTags);
-                  }}
-                  label="Interests"
-                />
-                <Select
-                  searchable
-                  labelAsPlaceholder
-                  id="select"
-                  label="Country"
-                  value={selectedValue}
-                  options={[
-                    {
-                      value: "Austria",
-                      label: "Austria",
-                      onClick: (value) => console.log("Visiblity set: ", value),
-                    },
-                    {
-                      value: "Finland",
-                      label: "Finland",
-                      onClick: (value) => console.log("Visiblity set: ", value),
-                    },
-                    {
-                      value: "New Zeland",
-                      label: "New Zeland",
-                      onClick: (value) => console.log("Visiblity set: ", value),
-                    },
-                    {
-                      value: "Norway",
-                      label: "Norway",
-                      onClick: (value) => console.log("Visiblity set: ", value),
-                    },
-                    {
-                      value: "United Kingdom",
-                      label: "United Kingdom",
-                      onClick: (value) => console.log("Visiblity set: ", value),
-                    },
-                    {
-                      value: "United States",
-                      label: "United States",
-                      onClick: (value) => console.log("Visiblity set: ", value),
-                    },
-                  ]}
-                  onSelect={handleSelect}
-                />
-                <Button
-                  className="mt-32"
-                  prefixIcon="security"
-                  variant="secondary"
-                  onClick={() => setIsFirstDialogOpen(true)}
-                >
-                  Password and security
-                </Button>
-              </Column>
-            </Column>
-          </Column>
-        </Row>
 
         {/* CODE PREVIEW */}
         <TiltFx fillWidth paddingX="32" paddingTop="64">
@@ -771,9 +298,9 @@ export default function Home() {
                 maxWidth={40}
                 codeInstances={[
                   {
-                    code: `git clone https://github.com/once-ui-system/nextjs-starter.git`,
-                    language: "tsx",
-                    label: "tsx",
+                    code: `THE RIGHT WAY TO BUILD MODERN APPS`,
+                    language: "plaintext",
+                    label: "Console",
                   },
                 ]}
               />
@@ -781,149 +308,8 @@ export default function Home() {
           </Column>
         </TiltFx>
 
-        <Row
-          position="relative"
-          fillWidth
-          paddingX="32"
-          paddingTop="160"
-          minHeight={28}
-          paddingBottom="80"
-          horizontal="center"
-          vertical="end"
-        >
-          <Background
-            mask={{
-              x: 50,
-              y: 100,
-            }}
-            position="absolute"
-            grid={{
-              display: true,
-              width: "0.25rem",
-              color: "brand-alpha-strong",
-              height: "0.25rem",
-            }}
-          />
-          <Row position="relative" textVariant="display-default-m" align="center">
-            Learn more
-          </Row>
-        </Row>
-        <Row fillWidth overflow="hidden">
-          <Row maxWidth="32" borderTop="neutral-alpha-weak" borderBottom="neutral-medium"></Row>
-          <Row fillWidth border="neutral-alpha-weak" mobileDirection="column">
-            {links.map((link, index) => (
-              <SmartLink unstyled fillWidth target="_blank" key={link.href} href={link.href}>
-                <Card
-                  fillWidth
-                  padding="40"
-                  gap="8"
-                  direction="column"
-                  background={undefined}
-                  borderRight={index < links.length - 1 ? "neutral-alpha-weak" : undefined}
-                  border={undefined}
-                  radius={undefined}
-                >
-                  <Row fillWidth center gap="12">
-                    <Text variant="body-strong-m" onBackground="neutral-strong">
-                      {link.title}
-                    </Text>
-                    <Icon size="s" name="arrowUpRight" />
-                  </Row>
-                  <Text align="center" variant="body-default-s" onBackground="neutral-weak">
-                    {link.description}
-                  </Text>
-                </Card>
-              </SmartLink>
-            ))}
-          </Row>
-          <Row maxWidth="32" borderTop="neutral-alpha-weak" borderBottom="neutral-medium"></Row>
-        </Row>
-        <Row
-          position="relative"
-          as="footer"
-          fillWidth
-          paddingX="l"
-          paddingTop="128"
-          paddingBottom="80"
-        >
-          <Background
-            borderTop="brand-alpha-strong"
-            mask={{
-              x: 50,
-              y: 0,
-            }}
-            position="absolute"
-            grid={{
-              display: true,
-              width: "0.25rem",
-              color: "brand-alpha-strong",
-              height: "0.25rem",
-            }}
-          />
-          <Column
-            position="relative"
-            textVariant="body-default-xs"
-            onBackground="neutral-medium"
-            horizontal="center"
-            align="center"
-            fillWidth
-            gap="16"
-          >
-            <Logo wordmark={false} size="s" />
-            <Text size="m">
-              <Text onBackground="neutral-weak">2024 /</Text> Once UI
-            </Text>
-            <SmartLink href="https://github.com/once-ui-system/nextjs-starter?tab=MIT-1-ov-file">
-              MIT License
-            </SmartLink>
-          </Column>
-        </Row>
-      </Column>
 
-      <Dialog
-        isOpen={isFirstDialogOpen}
-        onClose={() => setIsFirstDialogOpen(false)}
-        title="Account details"
-        description="Manage your security settings and password."
-        base={isSecondDialogOpen}
-        onHeightChange={(height) => setFirstDialogHeight(height)}
-        footer={
-          <>
-            <Button variant="secondary" onClick={() => setIsFirstDialogOpen(false)}>
-              Close
-            </Button>
-          </>
-        }
-      >
-        <Column paddingTop="24" fillWidth gap="24">
-          <Switch
-            reverse
-            isChecked={twoFA}
-            onToggle={() => setTwoFA(!twoFA)}
-            label="2FA"
-            description="Enable two factor authentication"
-          />
-          <Button onClick={() => setIsSecondDialogOpen(true)}>Change password</Button>
-        </Column>
-      </Dialog>
-      <Dialog
-        isOpen={isSecondDialogOpen}
-        onClose={() => setIsSecondDialogOpen(false)}
-        title="Change password"
-        stack
-        description="Choose a new password for your account."
-        minHeight={firstDialogHeight}
-        footer={
-          <>
-            <Button variant="secondary" onClick={() => setIsSecondDialogOpen(false)}>
-              Close
-            </Button>
-            <Button onClick={() => setIsSecondDialogOpen(false)}>Save</Button>
-          </>
-        }
-      >
-        <PasswordInput id="resetPassword" label="New password" />
-      </Dialog>
+      </Column>
     </Column>
   );
 }

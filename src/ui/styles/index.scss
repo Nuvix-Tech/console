@@ -15,18 +15,35 @@
 
 
 :root {
-  --color-neutral-10: var(--scheme-sand-100);
-  --color-neutral-20: var(--scheme-sand-200);
-  --color-neutral-30: var(--scheme-sand-300);
-  --color-neutral-40: var(--scheme-sand-400);
-  --color-neutral-50: var(--scheme-sand-500);
-  --color-neutral-60: var(--scheme-sand-600);
-  --color-neutral-75: var(--scheme-sand-700);
-  --color-neutral-80: var(--scheme-sand-800);
-  --color-neutral-85: var(--scheme-sand-900);
-  --color-neutral-90: var(--scheme-sand-1000);
-  --color-neutral-95: var(--scheme-sand-1100);
-  --color-neutral-100: var(--scheme-slate-100);
-  --color-neutral-105: var(--scheme-slate-105);
-  --color-neutral-1000: var(--scheme-slate-1000);
+  --color-neutral-0: 0 0% 100%;
+  /* White */
+  --color-neutral-5: 227 96% 99%;
+  /* scheme-slate-1200 */
+  --color-neutral-10: 227 95% 97%;
+  /* scheme-slate-1100 */
+  --color-neutral-15: 227 90% 95%;
+  /* scheme-slate-1000 */
+  --color-neutral-20: 227 50% 91%;
+  /* scheme-slate-900 */
+  --color-neutral-50: 227 21% 72%;
+  /* scheme-slate-700 */
+  --color-neutral-60: 227 15% 61%;
+  /* scheme-slate-600 */
+  --color-neutral-70: 227 14% 49%;
+  /* scheme-slate-500 */
+  --color-neutral-80: 227 17% 38%;
+  /* scheme-slate-400 */
+  --color-neutral-85: 227 20% 28%;
+  /* scheme-slate-300 */
+  --color-neutral-90: 226 48% 12%;
+  /* scheme-slate-200 */
+  --color-neutral-95: 225 60% 8%;
+  /* scheme-slate-150 */
+
+  --color-neutral-100: 225 60% 5%;
+  /* scheme-slate-100 */
+  --color-neutral-105: 225 60% 4%;
+  /* Slightly darker than slate-100 */
+  --color-neutral-1000: 0 0% 0%;
+  /* Black */
 }

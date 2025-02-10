@@ -14,6 +14,7 @@
     "@appwrite.io/pink-icons": "^1.0.0",
     "@floating-ui/react-dom": "^2.1.1",
     "@nuvix/console": "^0.0.5",
+    "@tanstack/react-table": "^8.20.6",
     "classnames": "^2.5.1",
     "compressorjs": "^1.2.1",
     "next": "^15.1.6",

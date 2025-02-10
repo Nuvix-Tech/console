@@ -5,7 +5,9 @@ import { Models } from "@nuvix/console";
 import { usePathname } from "next/navigation";
 import React, { Suspense } from "react";
 import { Column, Icon, IconButton, Line, Row, Text, ToggleButton } from "@/ui/components";
-import Table from "@/ui/modules/table";
+import { default as TB } from "@/ui/modules/table";
+import Table from "@/ui/modules/table/table";
+import { ColumnDef } from "@tanstack/react-table";
 
 const UsersPage: React.FC = () => {
   const state = getProjectState();
@@ -89,33 +91,36 @@ const SubPage = () => {
     fetchUsers();
   }, [sdk]);
 
+  const columns: ColumnDef<Models.User<any>>[] = [
+    {
+      header: "Name",
+      accessorKey: "name",
+      size: 200,
+    },
+    {
+      header: "Email",
+      accessorKey: "email",
+    },
+    {
+      header: "Options",
+      accessorKey: "options",
+    },
+  ];
+
   return (
     <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">Users</h1>
-      <Table
-        columns={[
-          {
-            header: "Name",
-            accessor: "name",
-            width: 200,
-          },
-          {
-            header: "Email",
-            accessor: "email",
-            width: 200,
-          },
-          {
-            header: "Options",
-            accessor: "options",
-            isDesktopOnly: true,
-          },
-        ]}
-        rows={users.users.map((user) => ({
-          name: user.name,
-          email: user.email,
-          options: "",
-        }))}
-      />
+      <Row vertical="center" horizontal="space-between" marginBottom="24" paddingX="8">
+        <Text variant="heading-default-l">Users</Text>
+        <IconButton icon="plus" title="Add User" onClick={() => {/* Add user logic */ }} />
+      </Row>
+
+      <Table<Models.User<any>> columns={columns} data={users.users} />
+
+      {users.total === 0 && (
+        <Text variant="body-default-xl" onBackground="neutral-weak" marginTop="4">
+          No users found.
+        </Text>
+      )}
     </div>
   );
 };
