@@ -40,7 +40,7 @@ const Table = <T,>({ columns, data }: TableProps<T>) => {
       <div className="table-tbody" role="rowgroup">
         {table.getRowModel().rows.map((row) => (
           <Link
-            className="table-row"
+            className="table-row neutral-on-background-strong"
             role="row"
             href={`users/${row.getValue("$id")}`}
             key={row.id}

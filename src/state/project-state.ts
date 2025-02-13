@@ -1,3 +1,4 @@
+"use client";
 import { proxy } from "valtio";
 import { Models } from "@nuvix/console";
 import type { sdkForProject } from "@/lib/sdk";

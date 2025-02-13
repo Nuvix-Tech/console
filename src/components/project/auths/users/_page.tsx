@@ -1,3 +1,5 @@
+// Suggested code may be subject to a license. Learn more: ~LicenseLog:2122513446.
+"use client";
 import { getProjectState } from "@/state/project-state";
 import { Avatar, Skeleton } from "@/ui/components";
 import { Models } from "@nuvix/console";
@@ -7,6 +9,8 @@ import Table from "@/ui/modules/table/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Tooltip } from "@/components/ui/tooltip";
 import { SearchAndCreate } from "@/ui/modules/table";
+import { Badge } from "@chakra-ui/react";
+import { formatDate } from "@/lib/utils";
 
 
 export const UsersPage = () => {
@@ -55,7 +59,30 @@ export const UsersPage = () => {
     },
     {
       header: "Status",
-      accessorKey: "status",
+      accessorFn: (row) => {
+        if (!row.status) {
+          return "blocked";
+        }
+        if (row.email && row.phone) {
+          if (row.emailVerification && row.phoneVerification) {
+            return "verified";
+          }
+          return "unverfied";
+        } else if (row.email) {
+          return row.emailVerification ? "verified email" : "unverfied";
+        } else if (row.phone) {
+          return row.phoneVerification ? "verified phone" : "unverfied";
+        }
+        return "active";
+      },
+      cell(props) {
+        const status = props.getValue<string>();
+        return (
+          <Badge variant="subtle" size="lg" colorPalette={status === "blocked" ? "red" : status.startsWith('verified') ? "green" : "gray"}>
+            {status}
+          </Badge>
+        )
+      }
     },
     {
       header: "ID",
@@ -68,12 +95,15 @@ export const UsersPage = () => {
     {
       header: "Joined",
       accessorKey: "$createdAt",
+      cell(props) {
+        return <Text variant="label-default-s">{formatDate(props.getValue<string>())}</Text>;
+      },
     },
     {
       header: "Last Activity",
       accessorKey: "accessedAt",
       cell(props) {
-        return <Text variant="label-default-s">{props.getValue<string>() ?? "never"}</Text>;
+        return <Text variant="label-default-s">{formatDate(props.getValue<string>()) ?? "never"}</Text>;
       },
     },
   ];
