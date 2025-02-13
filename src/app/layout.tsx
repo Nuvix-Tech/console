@@ -124,7 +124,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       >
         <head>
           <script
-          suppressHydrationWarning
+            suppressHydrationWarning
             type="application/ld+json"
             dangerouslySetInnerHTML={{
               __html: JSON.stringify(schemaData),

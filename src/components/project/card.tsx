@@ -50,7 +50,7 @@ const TagMapper = ({ type }: { type: string }) => {
   const comp = ({ name, icon }: { name: string; icon: any }) => (
     <Tag size="l">
       <span className={`icon-${icon}`} aria-hidden="true"></span>
-      <Text marginLeft="4" >{name}</Text>
+      <Text marginLeft="4">{name}</Text>
     </Tag>
   );
 

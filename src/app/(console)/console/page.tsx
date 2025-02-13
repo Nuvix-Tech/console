@@ -1,22 +1,22 @@
 "use client";
 
 import { sdkForConsole } from "@/lib/sdk";
-import { ConsoleContext } from "@/lib/store/console";
+import { appState } from "@/state/app-state";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 
 export default function Page() {
-  const { data, dispatch } = useContext(ConsoleContext);
+  const { user } = appState;
   const { organizations, account } = sdkForConsole;
 
   const { replace } = useRouter();
 
   useEffect(() => {
     async function fetchUser() {
-      if (!data.user) return;
+      if (!user) return;
 
-      if (data.user.prefs?.organization) {
-        replace(`/console/organization/${data.user.prefs.organization}`);
+      if (user.prefs?.organization) {
+        replace(`/console/organization/${user.prefs.organization}`);
         return;
       }
 
@@ -26,14 +26,14 @@ export default function Page() {
         return;
       }
 
-      await account.updatePrefs({
-        ...data.user.prefs,
+      appState.user = await account.updatePrefs({
+        ...user.prefs,
         organization: orgs.teams[0].$id,
       });
     }
 
     fetchUser();
-  }, [data.user]);
+  }, [user?.$id]);
 
   return (
     <div>

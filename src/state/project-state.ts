@@ -6,6 +6,12 @@ import { useProxy } from "valtio/utils";
 import { SidebarItem, SidebarItemGroup } from "@/components/console/sidebar";
 import React from "react";
 
+interface Sidebar {
+  first?: React.ReactNode;
+  middle?: React.ReactNode;
+  last?: React.ReactNode;
+}
+
 interface ProjectState {
   initialfetching: boolean;
   project?: Models.Project;
@@ -13,7 +19,7 @@ interface ProjectState {
 
   showSidebar: boolean;
   sidebarItems: (SidebarItemGroup | SidebarItem)[];
-  sidebar: React.ReactNode;
+  sidebar: Sidebar;
 }
 
 export const projectState = proxy<ProjectState>({
@@ -21,7 +27,11 @@ export const projectState = proxy<ProjectState>({
 
   showSidebar: false,
   sidebarItems: [],
-  sidebar: null,
+  sidebar: {
+    first: null,
+    middle: null,
+    last: null
+  },
 });
 
 export const getProjectState = () => useProxy(projectState);

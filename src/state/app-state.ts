@@ -7,9 +7,6 @@ interface AppState {
 
   organization: Models.Organization<any>;
   user: Models.User<any>;
-
-  project: Models.Project | null;
-  sdk: typeof sdkForProject | null;
 }
 
 export const appState = proxy<AppState>({
@@ -19,6 +16,4 @@ export const appState = proxy<AppState>({
   // user state
   organization: null as unknown as Models.Organization<any>,
   user: null as unknown as Models.User<any>,
-  project: null as unknown as Models.Project,
-  sdk: null as unknown as typeof sdkForProject,
 });

@@ -1,4 +1,6 @@
-import { Button, Icon, Input, Row } from "@/ui/components";
+import { InputGroup } from "@/components/ui/input-group";
+import { Button, Icon, Row } from "@/ui/components";
+import { Input } from "@chakra-ui/react";
 import React from "react";
 
 interface SearchAndCreateProps {
@@ -19,15 +21,17 @@ const SearchAndCreate: React.FC<SearchAndCreateProps> = ({ placeholder, button }
     <>
       <Row fillWidth horizontal="space-between" vertical="center" marginY="16" paddingX="20">
         <Row maxWidth={20} fillWidth>
-          <Input
-            id="search"
-            label={placeholder ?? "Search"}
-            value={searchValue}
-            hasPrefix={<Icon name="search" />}
-            labelAsPlaceholder
-            onChange={(e) => setSearchValue(e.target.value)}
-            height="m"
-          />
+          <InputGroup
+            flex="1"
+            startElement={<Icon name="search" />}
+            endElement={<Icon name="close" />}
+          >
+            <Input
+              placeholder={placeholder ?? "Search ..."}
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+            />
+          </InputGroup>
         </Row>
 
         <Button variant="primary" size="m" prefixIcon="plus">

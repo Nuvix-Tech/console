@@ -5,21 +5,23 @@ import { useRouter } from "next/navigation";
 import type React from "react";
 import { useEffect, useState } from "react";
 import LoadingUI from "../loading";
+import { appState } from "@/state/app-state";
 
 const ConsoleWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [data, setData] = useState<Partial<ConsoleContextData>>({});
   const [isLoading, setIsLoading] = useState(true);
   const { account } = sdkForConsole;
-  const { push } = useRouter();
+  const { replace } = useRouter();
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const user = await account.get();
+        appState.user = user;
         setData((prev) => ({ ...prev, user }));
         setIsLoading(false);
       } catch (e) {
-        push("/auth/login");
+        replace("/auth/login");
       }
     };
     fetchUser();

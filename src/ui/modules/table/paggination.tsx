@@ -4,18 +4,17 @@ import {
   SelectRoot,
   SelectTrigger,
   SelectValueText,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 import { Row } from "@/ui/components";
 import { createListCollection } from "@chakra-ui/react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { HStack } from "@chakra-ui/react"
+import { HStack } from "@chakra-ui/react";
 import {
   PaginationItems,
   PaginationNextTrigger,
   PaginationPrevTrigger,
   PaginationRoot,
-} from "@/components/ui/pagination"
-
+} from "@/components/ui/pagination";
 
 export type PaginationProps = {
   /**
@@ -62,7 +61,7 @@ export const Pagination = (props: PaginationProps) => {
   };
 
   const handlePageSizeChange = (value: number) => {
-    console.log(value, ')__')
+    console.log(value, ")__");
     const params = new URLSearchParams(searchParams.toString());
     params.set("limit", value.toString());
     if (onPageSizeChange) {
@@ -74,7 +73,7 @@ export const Pagination = (props: PaginationProps) => {
 
   const pages = createListCollection({
     items: ["6", "12", "24", "48", "96"],
-  })
+  });
 
   return (
     <>

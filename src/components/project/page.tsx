@@ -1,25 +1,15 @@
 "use client";
-import { appState } from "@/state/app-state";
 import { getProjectState } from "@/state/project-state";
 import { Background, Chip, Column, Feedback, Heading, Line, Row, Skeleton } from "@/ui/components";
-import React, { Suspense } from "react";
-import { useProxy } from "valtio/utils";
+import React from "react";
 
 type ProjectPageProps = {
   id: string;
 };
 
 export default function ProjectPage({ id }: ProjectPageProps) {
-  return (
-    <Suspense fallback={<Skeleton fill shape="block" />}>
-      <SubPage />
-    </Suspense>
-  );
-}
-
-const SubPage = () => {
   const state = getProjectState();
-  const project = state.project;
+  const { project } = state;
 
   React.useEffect(() => {
     const projectElement = document.getElementById("project");
@@ -166,7 +156,7 @@ const SubPage = () => {
       </Row>
     </>
   );
-};
+}
 
 const platformIcon = (platform: string) => {
   switch (platform) {

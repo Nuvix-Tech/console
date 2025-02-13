@@ -1,17 +1,15 @@
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:2122513446.
 "use client";
 import { getProjectState } from "@/state/project-state";
-import { Avatar, Skeleton } from "@/ui/components";
+import { Avatar } from "@/ui/components";
 import { Models } from "@nuvix/console";
 import React from "react";
 import { Row, Text } from "@/ui/components";
-import Table from "@/ui/modules/table/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Tooltip } from "@/components/ui/tooltip";
 import { SearchAndCreate } from "@/ui/modules/table";
 import { Badge } from "@chakra-ui/react";
 import { formatDate } from "@/lib/utils";
-
+import { DataGrid } from "@/ui/modules/data-grid";
 
 export const UsersPage = () => {
   const state = getProjectState();
@@ -78,11 +76,17 @@ export const UsersPage = () => {
       cell(props) {
         const status = props.getValue<string>();
         return (
-          <Badge variant="subtle" size="lg" colorPalette={status === "blocked" ? "red" : status.startsWith('verified') ? "green" : "gray"}>
+          <Badge
+            variant="subtle"
+            size="lg"
+            colorPalette={
+              status === "blocked" ? "red" : status.startsWith("verified") ? "green" : "gray"
+            }
+          >
             {status}
           </Badge>
-        )
-      }
+        );
+      },
     },
     {
       header: "ID",
@@ -103,7 +107,9 @@ export const UsersPage = () => {
       header: "Last Activity",
       accessorKey: "accessedAt",
       cell(props) {
-        return <Text variant="label-default-s">{formatDate(props.getValue<string>()) ?? "never"}</Text>;
+        return (
+          <Text variant="label-default-s">{formatDate(props.getValue<string>()) ?? "never"}</Text>
+        );
       },
     },
   ];
@@ -116,11 +122,9 @@ export const UsersPage = () => {
 
       <SearchAndCreate button={{ text: "Create User" }} />
 
-      <Table<Models.User<any>> columns={columns} data={users.users} />
+      <DataGrid<Models.User<any>> columns={columns} data={users.users} />
     </div>
   );
 };
 
-
-
-export { }
+export {};

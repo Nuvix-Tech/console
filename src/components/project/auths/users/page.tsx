@@ -2,7 +2,7 @@
 
 import { getProjectState } from "@/state/project-state";
 
-import { Avatar, Skeleton } from "@/ui/components";
+import { Avatar } from "@/ui/components";
 
 import { Models } from "@nuvix/console";
 import React, { useEffect } from "react";

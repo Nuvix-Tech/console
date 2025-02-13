@@ -1,13 +1,10 @@
 "use client";
 import "@/ui/modules/layout/sidebar.scss";
-import { Column, Icon, IconButton, Line, Row, Text, ToggleButton } from "@/ui/components";
+import { Column, Line, Row, ToggleButton } from "@/ui/components";
 import { usePathname } from "next/navigation";
-import React from "react";
 import { getProjectState } from "@/state/project-state";
-
-interface ProjectSidebarProps {
-  data: ProjectSidebarData[];
-}
+import * as React from "react";
+import { useColorMode } from "../ui/color-mode";
 
 export interface ProjectSidebarData {
   name: string;
@@ -39,6 +36,7 @@ const ProjectSidebar: React.FC = () => {
   const [showFullSidebar, setShowFullSidebar] = React.useState(false);
   const pathname = usePathname() ?? "";
   const { project, sidebar } = getProjectState();
+  const { setColorMode } = useColorMode();
 
   const id = project?.$id;
 
@@ -75,28 +73,12 @@ const ProjectSidebar: React.FC = () => {
     },
   ];
 
-  const onThemeChange = (theme: string) => {
-    const body = document.body;
+  const onThemeChange = (theme: "light" | "dark") => {
     const html = document.documentElement;
-
-    if (body) {
-      body.classList.forEach((className) => {
-        if (className.startsWith("theme-")) {
-          body.classList.remove(className);
-        }
-      });
-      body.classList.add(`theme-${theme}`);
-    }
-
     if (html) {
       html.setAttribute("data-theme", theme);
       html.style.colorScheme = theme;
-      html.classList.forEach((className) => {
-        if (className.startsWith("theme-")) {
-          html.classList.remove(className);
-        }
-      });
-      html.classList.add(`theme-${theme}`);
+      setColorMode(theme);
     }
   };
 
@@ -161,11 +143,10 @@ const ProjectSidebar: React.FC = () => {
             </Column>
           </Column>
 
-          {sidebar ? (
+          {sidebar.first || sidebar.middle || sidebar.last ? (
             <Column
               fillHeight
               fillWidth
-              paddingX="16"
               paddingY="32"
               marginLeft={"64"}
               gap="m"
@@ -178,7 +159,11 @@ const ProjectSidebar: React.FC = () => {
               }}
               className="sidebar-large"
             >
-              {sidebar}
+              <Column fill gap="m">
+                {sidebar.first}
+                {sidebar.middle}
+                {sidebar.last}
+              </Column>
             </Column>
           ) : null}
         </Row>

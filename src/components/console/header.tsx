@@ -16,6 +16,7 @@ import {
 import { usePathname } from "next/navigation";
 import type React from "react";
 import { useContext } from "react";
+import { ColorModeButton } from "../ui/color-mode";
 
 interface HeaderProps {
   authenticated?: boolean;
@@ -76,6 +77,7 @@ const ConsoleHeader: React.FC<HeaderProps> = () => {
                 <Column padding="2" gap="2" minWidth={8}>
                   <Option label="Profile" value="profile" />
                   <Option label="Settings" value="settings" />
+                  <ColorModeButton />
                   <Line />
                   <Option label="Log out" value="logout" />
                 </Column>
