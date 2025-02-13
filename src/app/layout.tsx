@@ -1,4 +1,4 @@
-import "@appwrite.io/pink";
+// import "@appwrite.io/pink";
 import "@appwrite.io/pink-icons";
 import "@/ui/styles/index.scss";
 import "@/ui/tokens/index.scss";
@@ -122,7 +122,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           "theme-dark",
         )}
       >
-        {/* <head>
+        <head>
           <script
           suppressHydrationWarning
             type="application/ld+json"
@@ -130,7 +130,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               __html: JSON.stringify(schemaData),
             }}
           />
-        </head> */}
+        </head>
         <ToastProvider>
           <Column
             suppressHydrationWarning

@@ -10,7 +10,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@appwrite.io/pink": "^1.0.0",
     "@appwrite.io/pink-icons": "^1.0.0",
     "@chakra-ui/react": "^3.8.0",
     "@emotion/react": "^11.14.0",

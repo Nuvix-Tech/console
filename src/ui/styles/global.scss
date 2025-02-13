@@ -66,3 +66,19 @@ a:not(.button) {
 ::-webkit-scrollbar-corner {
     background-color: var(--static-transparent);
 }
+
+[data-theme='dark'] .is-only-dark {
+    display: inherit;
+}
+
+[data-theme='light'] .is-only-dark {
+    display: none;
+}
+
+[data-theme='light'] .is-only-light {
+    display: inherit;
+}
+
+[data-theme='dark'] .is-only-light {
+    display: none;
+}

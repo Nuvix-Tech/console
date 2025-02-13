@@ -1,4 +1,21 @@
+import {
+  SelectContent,
+  SelectItem,
+  SelectRoot,
+  SelectTrigger,
+  SelectValueText,
+} from "@/components/ui/select"
+import { Row } from "@/ui/components";
+import { createListCollection } from "@chakra-ui/react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { HStack } from "@chakra-ui/react"
+import {
+  PaginationItems,
+  PaginationNextTrigger,
+  PaginationPrevTrigger,
+  PaginationRoot,
+} from "@/components/ui/pagination"
+
 
 export type PaginationProps = {
   /**
@@ -44,84 +61,62 @@ export const Pagination = (props: PaginationProps) => {
     }
   };
 
-  const handlePageSizeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const newSize = parseInt(event.target.value, 10);
+  const handlePageSizeChange = (value: number) => {
+    console.log(value, ')__')
     const params = new URLSearchParams(searchParams.toString());
-    params.set("limit", newSize.toString());
+    params.set("limit", value.toString());
     if (onPageSizeChange) {
-      onPageSizeChange(newSize);
+      onPageSizeChange(value);
     } else {
       push(`?${params.toString()}`);
     }
   };
 
+  const pages = createListCollection({
+    items: ["6", "12", "24", "48", "96"],
+  })
+
   return (
     <>
-      <div className="u-flex u-cross-baseline u-margin-block-start-32 u-flex-wrap">
-        <div className="u-flex u-gap-12 u-cross-center">
-          <div className="form-item ">
-            <label className="label u-hide">Projects per page</label>
-            <div className="select">
-              <select
-                id="rows"
-                aria-label="Projects per page"
-                value={itemsPerPage}
-                onChange={handlePageSizeChange}
-              >
-                <option value="6">6 </option>
-                <option value="12">12 </option>
-                <option value="24">24 </option>
-                <option value="48">48 </option>
-                <option value="96">96 </option>
-              </select>
-              <span className="icon-cheveron-down" aria-hidden="true"></span>
-            </div>
-          </div>
-          <p className="text">Projects per page. Total results: {totalItems}</p>
-        </div>
-        <div className="u-margin-inline-start-auto">
-          <nav className="pagination">
-            <button
-              disabled={currentPage <= 1}
-              className={`button ${currentPage <= 1 ? "is-disabled" : ""} is-text`}
-              aria-label="prev page"
-              type="button"
-              onClick={() => handlePageChange(currentPage - 1)}
-            >
-              <span className="icon-cheveron-left" aria-hidden="true">
-                {" "}
-              </span>
-              <span className="text">Prev</span>
-            </button>
-            <ol className="pagination-list is-only-desktop">
-              {Array.from({ length: totalPages }, (_, index) => (
-                <li key={index} className="pagination-item">
-                  <button
-                    className={`button ${currentPage === index + 1 ? "is-disabled" : ""}`}
-                    aria-label={`page ${index + 1}`}
-                    type="button"
-                    onClick={() => handlePageChange(index + 1)}
-                  >
-                    <span className="text">{index + 1}</span>
-                  </button>
-                </li>
+      <Row marginX="12" horizontal="space-between" vertical="center">
+        <Row vertical="center" gap="12">
+          <SelectRoot
+            collection={pages}
+            size="sm"
+            width="80px"
+            value={[itemsPerPage.toString()]}
+            onValueChange={(details) => {
+              const [value] = details.value;
+              handlePageSizeChange(parseInt(value, 10));
+            }}
+          >
+            <SelectTrigger>
+              <SelectValueText placeholder="Select Limit" />
+            </SelectTrigger>
+            <SelectContent>
+              {pages.items.map((page) => (
+                <SelectItem item={page} key={page}>
+                  {page}
+                </SelectItem>
               ))}
-            </ol>
-            <button
-              disabled={currentPage >= totalPages}
-              className={`button ${currentPage >= totalPages ? "is-disabled" : ""} is-text`}
-              aria-label="next page"
-              type="button"
-              onClick={() => handlePageChange(currentPage + 1)}
-            >
-              <span className="text">Next</span>
-              <span className="icon-cheveron-right" aria-hidden="true">
-                {" "}
-              </span>
-            </button>
-          </nav>
-        </div>
-      </div>
+            </SelectContent>
+          </SelectRoot>
+          <p className="text">Projects per page. Total results: {totalItems}</p>
+        </Row>
+        <PaginationRoot
+          count={totalItems}
+          pageSize={itemsPerPage}
+          defaultPage={1}
+          variant="subtle"
+          onPageChange={(details) => handlePageChange(details.page)}
+        >
+          <HStack>
+            <PaginationPrevTrigger />
+            <PaginationItems />
+            <PaginationNextTrigger />
+          </HStack>
+        </PaginationRoot>
+      </Row>
     </>
   );
 };

@@ -43,10 +43,10 @@ const ConsoleHeader: React.FC<HeaderProps> = () => {
       background="surface"
     >
       <Row hide="s">
-        <div className="u-only-dark">
+        <div className="is-only-dark">
           <Logo icon={false} size="s" wordmarkSrc="/trademark/nuvix-logo-dark.svg" />
         </div>
-        <div className="u-only-light">
+        <div className="is-only-light">
           <Logo icon={false} size="s" wordmarkSrc="/trademark/nuvix-logo-light.svg" />
         </div>
       </Row>

@@ -4,6 +4,7 @@ import { GridSkelton } from "@/components/skelton";
 import { sdkForConsole } from "@/lib/sdk";
 import { Button, Column, Grid, Row } from "@/ui/components";
 import { Pagination } from "@/ui/modules/table/paggination";
+import { Heading } from "@chakra-ui/react";
 import { Query, type Models } from "@nuvix/console";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -48,14 +49,14 @@ export const OrganizationPage = ({ id, searchParams }: Props) => {
   return (
     <Row fillWidth center>
       <Column maxWidth={"l"} fillWidth fillHeight>
-        <div className="grid-header">
-          <h2 className="grid-header-col-1 heading-level-5 u-trim-1 u-cross-child-center">
+        <Row horizontal="space-between" vertical="center">
+          <Heading size="xl">
             Projects
-          </h2>
+          </Heading>
           <Button prefixIcon="plus" onClick={() => push("/create-project")}>
             Create project
           </Button>
-        </div>
+        </Row>
 
         <Grid gap="l" marginTop="l" columns={2}>
           {loading ? (

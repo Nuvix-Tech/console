@@ -48,10 +48,10 @@ export const ProjectCard = ({ project }: { project: Models.Project }) => {
 
 const TagMapper = ({ type }: { type: string }) => {
   const comp = ({ name, icon }: { name: string; icon: any }) => (
-    <div className="tag">
+    <Tag size="l">
       <span className={`icon-${icon}`} aria-hidden="true"></span>
-      <span className="text">{name}</span>
-    </div>
+      <Text marginLeft="4" >{name}</Text>
+    </Tag>
   );
 
   switch (type) {
