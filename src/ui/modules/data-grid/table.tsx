@@ -40,7 +40,9 @@ const DataGrid = <T,>({ columns, data }: TableProps<T>) => {
     columns,
     data,
     getCoreRowModel: getCoreRowModel(),
-    onPaginationChange: onPaginationChange as any,
+    onPaginationChange(value) {
+      console.log(value)
+    }
   });
 
   const pages = createListCollection({

@@ -127,11 +127,11 @@ export const UsersPage = () => {
 
   return (
     <div className="p-16">
-      <Row vertical="center" horizontal="start" marginTop="24" paddingX="8">
-        <Text fontSize={'4xl'} as={'h2'} fontWeight={'bold'}>Users</Text>
+      <Row vertical="center" horizontal="start" marginBottom="24" marginTop="4" paddingX="8">
+        <Text fontSize={'2xl'} as={'h2'} fontWeight={'bold'}>Users</Text>
       </Row>
 
-      <SearchAndCreate button={{ text: "Create User" }} />
+      <SearchAndCreate button={{ text: "Create User" }} placeholder="Search user by name, email and uid" />
 
       <DataGrid<Models.User<any>>
         columns={columns}
