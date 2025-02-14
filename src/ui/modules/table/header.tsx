@@ -2,6 +2,7 @@ import { InputGroup } from "@/components/ui/input-group";
 import { Button, Icon, Row } from "@/ui/components";
 import { Input } from "@chakra-ui/react";
 import React from "react";
+import { LuSearch } from "react-icons/lu";
 
 interface SearchAndCreateProps {
   placeholder?: string;
@@ -23,8 +24,8 @@ const SearchAndCreate: React.FC<SearchAndCreateProps> = ({ placeholder, button }
         <Row maxWidth={20} fillWidth>
           <InputGroup
             flex="1"
-            startElement={<Icon name="search" />}
-            endElement={<Icon name="close" />}
+            startElement={<LuSearch />}
+            endElement={<Icon size="s" name="close" />}
           >
             <Input
               placeholder={placeholder ?? "Search ..."}

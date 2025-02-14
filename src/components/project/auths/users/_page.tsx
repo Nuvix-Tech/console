@@ -123,7 +123,12 @@ export const UsersPage = () => {
 
       <SearchAndCreate button={{ text: "Create User" }} />
 
-      <DataGrid<Models.User<any>> columns={columns} data={users.users} />
+      <DataGrid<Models.User<any>>
+        columns={columns}
+        data={users.users}
+        manualPagination
+        rowCount={users.total}
+      />
     </div>
   );
 };
