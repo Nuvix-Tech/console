@@ -1,7 +1,8 @@
 import { InputGroup } from "@/components/ui/input-group";
 import { Button, Icon, Row } from "@/ui/components";
 import { Input } from "@chakra-ui/react";
-import React from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect } from "react";
 import { LuSearch } from "react-icons/lu";
 
 interface SearchAndCreateProps {
@@ -18,9 +19,23 @@ interface SearchAndCreateProps {
 
 const SearchAndCreate: React.FC<SearchAndCreateProps> = ({ placeholder, button }) => {
   const [searchValue, setSearchValue] = React.useState("");
+  const searchParmas = useSearchParams();
+  const path = usePathname();
+  const { push } = useRouter();
+
+  useEffect(() => {
+    setSearchValue(searchParmas.get('search') ?? "")
+  }, [searchParmas.get('search')])
+
+  const onSearch = (value: string) => {
+    const params = new URLSearchParams(searchParmas)
+    value ? params.set('search', value) : params.delete('search');
+    push(path + `?${params.toString()}`)
+  };
+
   return (
     <>
-      <Row fillWidth horizontal="space-between" vertical="center" marginY="16" paddingX="20">
+      <Row fillWidth horizontal="space-between" vertical="center" marginY="16">
         <Row maxWidth={20} fillWidth>
           <InputGroup
             flex="1"
@@ -30,7 +45,7 @@ const SearchAndCreate: React.FC<SearchAndCreateProps> = ({ placeholder, button }
             <Input
               placeholder={placeholder ?? "Search ..."}
               value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
+              onChange={(e) => { setSearchValue(e.target.value); onSearch(e.target.value) }}
             />
           </InputGroup>
         </Row>

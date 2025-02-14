@@ -1,15 +1,16 @@
 "use client";
 import { getProjectState } from "@/state/project-state";
 import { Avatar } from "@/ui/components";
-import { Models } from "@nuvix/console";
+import { Models, Query } from "@nuvix/console";
 import React from "react";
-import { Row, Text } from "@/ui/components";
+import { Row } from "@/ui/components";
 import { ColumnDef } from "@tanstack/react-table";
 import { Tooltip } from "@/components/ui/tooltip";
 import { SearchAndCreate } from "@/ui/modules/table";
-import { Badge } from "@chakra-ui/react";
+import { Badge, Text } from "@chakra-ui/react";
 import { formatDate } from "@/lib/utils";
 import { DataGrid } from "@/ui/modules/data-grid";
+import { useSearchParams } from "next/navigation";
 
 export const UsersPage = () => {
   const state = getProjectState();
@@ -18,17 +19,26 @@ export const UsersPage = () => {
     users: [],
     total: 0,
   });
+  const searchParams = useSearchParams();
 
   React.useEffect(() => {
     if (!sdk) return;
+    const limit = searchParams.get('limit') ? Number(searchParams.get('limit')) : 6;
+    const page = searchParams.get('page') ? Number(searchParams.get('page')) : 1;
+    const queries: string[] = [];
 
+    queries.push(
+      Query.limit(limit),
+      Query.offset((page - 1) * limit),
+    )
     const fetchUsers = async () => {
-      const users = await sdk.users.list();
+      const users = await sdk.users.list(queries, searchParams.get('search') ?? undefined
+      );
       setUsers(users);
     };
 
     fetchUsers();
-  }, [sdk]);
+  }, [sdk, searchParams]);
 
   const columns: ColumnDef<Models.User<any>>[] = [
     {
@@ -38,7 +48,7 @@ export const UsersPage = () => {
         return (
           <Row vertical="center" gap="12">
             <Avatar size="m" src={sdk?.avatars.getInitials(props.getValue<string>(), 64, 64)} />
-            <Text variant="label-default-s">{props.getValue<string>()}</Text>
+            <Text>{props.getValue<string>()}</Text>
           </Row>
         );
       },
@@ -101,7 +111,7 @@ export const UsersPage = () => {
       header: "Joined",
       accessorKey: "$createdAt",
       cell(props) {
-        return <Text variant="label-default-s">{formatDate(props.getValue<string>())}</Text>;
+        return <Text>{formatDate(props.getValue<string>())}</Text>;
       },
     },
     {
@@ -109,16 +119,16 @@ export const UsersPage = () => {
       accessorKey: "accessedAt",
       cell(props) {
         return (
-          <Text variant="label-default-s">{formatDate(props.getValue<string>()) ?? "never"}</Text>
+          <Text>{formatDate(props.getValue<string>()) ?? "never"}</Text>
         );
       },
     },
   ];
 
   return (
-    <div className="p-4">
+    <div className="p-16">
       <Row vertical="center" horizontal="start" marginTop="24" paddingX="8">
-        <Text variant="heading-strong-xl">Users</Text>
+        <Text fontSize={'4xl'} as={'h2'} fontWeight={'bold'}>Users</Text>
       </Row>
 
       <SearchAndCreate button={{ text: "Create User" }} />
@@ -128,6 +138,12 @@ export const UsersPage = () => {
         data={users.users}
         manualPagination
         rowCount={users.total}
+        initialState={{
+          pagination: {
+            pageIndex: 0,
+            pageSize: 12
+          }
+        }}
       />
     </div>
   );

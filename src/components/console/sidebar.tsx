@@ -92,6 +92,7 @@ const ProjectSidebar: React.FC = () => {
             paddingY="32"
             position="absolute"
             vertical="space-between"
+            overflowX="hidden"
             border="neutral-medium"
             style={{
               borderWidth: 0,

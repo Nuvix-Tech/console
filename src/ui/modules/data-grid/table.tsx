@@ -16,14 +16,31 @@ import {
 } from "@/components/ui/select";
 import { createListCollection } from "@chakra-ui/react";
 import { Row, SmartLink } from "@/ui/components";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 interface TableProps<T> extends Omit<TableOptions<T>, "getCoreRowModel"> { }
 
 const DataGrid = <T,>({ columns, data }: TableProps<T>) => {
+  const searchParams = useSearchParams();
+  const path = usePathname();
+  const { push } = useRouter();
+
+  const onPaginationChange = ({ pageIndex, pageSize }: { pageIndex: number, pageSize: number }) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('limit', pageSize.toString())
+    if (pageIndex) {
+      params.set('page', pageIndex.toString())
+    } else {
+      params.delete('page')
+    }
+    push(path + '?' + params.toString())
+  }
+
   const table = useReactTable({
     columns,
     data,
     getCoreRowModel: getCoreRowModel(),
+    onPaginationChange: onPaginationChange as any,
   });
 
   const pages = createListCollection({
@@ -32,7 +49,7 @@ const DataGrid = <T,>({ columns, data }: TableProps<T>) => {
 
   return (
     <VStack>
-      <Table.Root size="md" variant="outline" borderRadius={'lg'} >
+      <Table.Root size="md" variant="outline" borderRadius={'lg'} interactive>
         <Table.Header>
           {table.getHeaderGroups().map((headerGroup) => (
             <Table.Row key={headerGroup.id}>
@@ -65,7 +82,7 @@ const DataGrid = <T,>({ columns, data }: TableProps<T>) => {
         </Table.Body>
       </Table.Root>
 
-      <Row marginX="12" horizontal="space-between" vertical="center">
+      <Row marginY="12" fillWidth horizontal="space-between" vertical="center">
         <Row vertical="center" gap="12">
           <SelectRoot
             collection={pages}
