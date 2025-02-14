@@ -13,7 +13,7 @@ const DataGrid = <T,>({ columns, data }: TableProps<T>) => {
   });
 
   return (
-    <Table.Root size="sm" variant="outline" striped>
+    <Table.Root size="md" variant="outline" borderRadius={'lg'} >
       <Table.Header>
         {table.getHeaderGroups().map((headerGroup) => (
           <Table.Row key={headerGroup.id}>
@@ -28,20 +28,20 @@ const DataGrid = <T,>({ columns, data }: TableProps<T>) => {
 
       <Table.Body>
         {table.getRowModel().rows.map((row) => (
-          // <SmartLink
-          //   fillWidth
-          //   className="neutral-on-background-strong"
-          //   href={`users/${row.getValue("$id")}`}
-          //   key={row.id}
-          //   unstyled
-          //   unselectable="on"
-          // >
           <Table.Row>
+            {/* <SmartLink
+              fillWidth
+              className="neutral-on-background-strong"
+              href={`users/${row.getValue("$id")}`}
+              key={row.id}
+              unstyled
+              unselectable="on"
+            > */}
             {row.getVisibleCells().map((cell) => (
               <Table.Cell>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Table.Cell>
             ))}
+            {/* </SmartLink> */}
           </Table.Row>
-          // </SmartLink>
         ))}
       </Table.Body>
     </Table.Root>

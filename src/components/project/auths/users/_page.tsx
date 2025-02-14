@@ -79,6 +79,7 @@ export const UsersPage = () => {
           <Badge
             variant="subtle"
             size="lg"
+            borderRadius={'2xl'}
             colorPalette={
               status === "blocked" ? "red" : status.startsWith("verified") ? "green" : "gray"
             }
@@ -127,4 +128,4 @@ export const UsersPage = () => {
   );
 };
 
-export {};
+export { };
