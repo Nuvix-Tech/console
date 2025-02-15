@@ -1,5 +1,6 @@
+"use client";
 import React from "react";
-import { useReactTable, getCoreRowModel, flexRender, TableOptions } from "@tanstack/react-table";
+import { useReactTable, getCoreRowModel, flexRender, TableOptions, Updater } from "@tanstack/react-table";
 import { Table, VStack, HStack } from "@chakra-ui/react";
 import {
   PaginationItems,
@@ -25,7 +26,17 @@ const DataGrid = <T,>({ columns, data }: TableProps<T>) => {
   const path = usePathname();
   const { push } = useRouter();
 
+  const table = useReactTable({
+    columns,
+    data,
+    getCoreRowModel: getCoreRowModel(),
+    onPaginationChange(updater) {
+      onPaginationChange(safeUpdater(table.getState().pagination, updater))
+    },
+  });
+
   const onPaginationChange = ({ pageIndex, pageSize }: { pageIndex: number, pageSize: number }) => {
+    console.log({ pageIndex, pageSize })
     const params = new URLSearchParams(searchParams);
     params.set('limit', pageSize.toString())
     if (pageIndex) {
@@ -34,16 +45,8 @@ const DataGrid = <T,>({ columns, data }: TableProps<T>) => {
       params.delete('page')
     }
     push(path + '?' + params.toString())
+    return { pageIndex, pageSize };
   }
-
-  const table = useReactTable({
-    columns,
-    data,
-    getCoreRowModel: getCoreRowModel(),
-    onPaginationChange(value) {
-      console.log(value)
-    }
-  });
 
   const pages = createListCollection({
     items: ["6", "12", "24", "48", "96"],
@@ -66,7 +69,7 @@ const DataGrid = <T,>({ columns, data }: TableProps<T>) => {
 
         <Table.Body>
           {table.getRowModel().rows.map((row) => (
-            <Table.Row>
+            <Table.Row key={row.id}>
               {/* <SmartLink
               fillWidth
               className="neutral-on-background-strong"
@@ -76,7 +79,7 @@ const DataGrid = <T,>({ columns, data }: TableProps<T>) => {
               unselectable="on"
             > */}
               {row.getVisibleCells().map((cell) => (
-                <Table.Cell>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Table.Cell>
+                <Table.Cell key={cell.id} >{flexRender(cell.column.columnDef.cell, cell.getContext())}</Table.Cell>
               ))}
               {/* </SmartLink> */}
             </Table.Row>
@@ -130,6 +133,11 @@ const DataGrid = <T,>({ columns, data }: TableProps<T>) => {
       </Row>
     </VStack>
   );
+};
+
+const safeUpdater = <T,>(old: T, updater: Updater<T>): T => {
+  console.log(old, updater)
+  return updater instanceof Function ? updater(old) : updater;
 };
 
 export { DataGrid };

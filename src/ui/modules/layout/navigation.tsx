@@ -33,9 +33,9 @@ const SidebarGroup = ({ title, items, titleUppercase = true }: SidebarGroupProps
         </Text>
       )}
 
-      {items.map((item) =>
+      {items.map((item, _) =>
         item.href ? (
-          <SmartLink href={item.href} unstyled fillWidth>
+          <SmartLink href={item.href} key={_} unstyled fillWidth>
             <ToggleButton fillWidth justifyContent="flex-start" selected={!!item.isSelected}>
               <Row padding="4" vertical="center" gap="12" textVariant="label-default-s">
                 {item.icon}
@@ -45,6 +45,7 @@ const SidebarGroup = ({ title, items, titleUppercase = true }: SidebarGroupProps
           </SmartLink>
         ) : (
           <ToggleButton
+          key={_}
             fillWidth
             justifyContent="flex-start"
             selected={!!item.isSelected}

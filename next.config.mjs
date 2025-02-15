@@ -10,7 +10,8 @@ const nextConfig = {
         hostname: 'skill.collegejaankaar.in'
       }
     ]
-  }
+  },
+  reactStrictMode: false
 };
 
 export default nextConfig;

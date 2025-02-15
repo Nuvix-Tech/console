@@ -20,11 +20,11 @@ export const UsersPage = () => {
     total: 0,
   });
   const searchParams = useSearchParams();
+  const limit = searchParams.get('limit') ? Number(searchParams.get('limit')) : 12;
+  const page = searchParams.get('page') ? Number(searchParams.get('page')) : 1;
 
   React.useEffect(() => {
     if (!sdk) return;
-    const limit = searchParams.get('limit') ? Number(searchParams.get('limit')) : 6;
-    const page = searchParams.get('page') ? Number(searchParams.get('page')) : 1;
     const queries: string[] = [];
 
     queries.push(
@@ -38,7 +38,7 @@ export const UsersPage = () => {
     };
 
     fetchUsers();
-  }, [sdk, searchParams]);
+  }, [sdk, limit, page]);
 
   const columns: ColumnDef<Models.User<any>>[] = [
     {
@@ -133,20 +133,30 @@ export const UsersPage = () => {
 
       <SearchAndCreate button={{ text: "Create User" }} placeholder="Search user by name, email and uid" />
 
-      <DataGrid<Models.User<any>>
+      <SubPage
         columns={columns}
-        data={users.users}
-        manualPagination
-        rowCount={users.total}
-        initialState={{
-          pagination: {
-            pageIndex: 0,
-            pageSize: 12
-          }
-        }}
+        users={users.users}
+        total={users.total}
+        page={page}
+        limit={limit}
       />
     </div>
   );
 };
+
+const SubPage = (props: any) => {
+  return <DataGrid<Models.User<any>>
+    columns={props.columns}
+    data={props.users}
+    manualPagination
+    rowCount={props.total}
+    initialState={{
+      pagination: {
+        pageIndex: props.page,
+        pageSize: props.limit
+      }
+    }}
+  />
+}
 
 export { };
