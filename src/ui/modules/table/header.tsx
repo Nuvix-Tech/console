@@ -40,7 +40,7 @@ const SearchAndCreate: React.FC<SearchAndCreateProps> = ({ placeholder, button }
           <InputGroup
             flex="1"
             startElement={<LuSearch />}
-            endElement={<Icon size="s" name="close" />}
+            endElement={searchValue ? <Icon size="s" name="close" onClick={() => { setSearchValue(""); onSearch("") }} /> : null}
           >
             <Input
               placeholder={placeholder ?? "Search ..."}

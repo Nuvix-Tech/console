@@ -1,6 +1,6 @@
 "use client";
 import { getProjectState } from "@/state/project-state";
-import { Avatar } from "@/ui/components";
+import { Avatar, Column } from "@/ui/components";
 import { Models, Query } from "@nuvix/console";
 import React from "react";
 import { Row } from "@/ui/components";
@@ -22,6 +22,7 @@ export const UsersPage = () => {
   const searchParams = useSearchParams();
   const limit = searchParams.get('limit') ? Number(searchParams.get('limit')) : 12;
   const page = searchParams.get('page') ? Number(searchParams.get('page')) : 1;
+  const search = searchParams.get('search');
 
   React.useEffect(() => {
     if (!sdk) return;
@@ -32,13 +33,12 @@ export const UsersPage = () => {
       Query.offset((page - 1) * limit),
     )
     const fetchUsers = async () => {
-      const users = await sdk.users.list(queries, searchParams.get('search') ?? undefined
-      );
+      const users = await sdk.users.list(queries, search ?? undefined);
       setUsers(users);
     };
 
     fetchUsers();
-  }, [sdk, limit, page]);
+  }, [sdk, limit, page, search]);
 
   const columns: ColumnDef<Models.User<any>>[] = [
     {
@@ -52,7 +52,7 @@ export const UsersPage = () => {
           </Row>
         );
       },
-      size: 200,
+      size: 150,
     },
     {
       header: "Identifiers",
@@ -105,13 +105,15 @@ export const UsersPage = () => {
     },
     {
       header: "Labels",
+      maxSize: 100,
       accessorKey: "labels",
     },
     {
       header: "Joined",
       accessorKey: "$createdAt",
+      size: 150,
       cell(props) {
-        return <Text>{formatDate(props.getValue<string>())}</Text>;
+        return formatDate(props.getValue<string>());
       },
     },
     {
@@ -119,44 +121,34 @@ export const UsersPage = () => {
       accessorKey: "accessedAt",
       cell(props) {
         return (
-          <Text>{formatDate(props.getValue<string>()) ?? "never"}</Text>
+          formatDate(props.getValue<string>()) ?? "never"
         );
       },
     },
   ];
 
   return (
-    <div className="p-16">
+    <Column paddingX="16" fillWidth>
       <Row vertical="center" horizontal="start" marginBottom="24" marginTop="4" paddingX="8">
         <Text fontSize={'2xl'} as={'h2'} fontWeight={'bold'}>Users</Text>
       </Row>
 
       <SearchAndCreate button={{ text: "Create User" }} placeholder="Search user by name, email and uid" />
 
-      <SubPage
+      <DataGrid<Models.User<any>>
         columns={columns}
-        users={users.users}
-        total={users.total}
-        page={page}
-        limit={limit}
+        data={users.users}
+        manualPagination
+        rowCount={users.total}
+        state={{
+          pagination: {
+            pageIndex: page,
+            pageSize: limit
+          }
+        }}
       />
-    </div>
+    </Column>
   );
 };
-
-const SubPage = (props: any) => {
-  return <DataGrid<Models.User<any>>
-    columns={props.columns}
-    data={props.users}
-    manualPagination
-    rowCount={props.total}
-    initialState={{
-      pagination: {
-        pageIndex: props.page,
-        pageSize: props.limit
-      }
-    }}
-  />
-}
 
 export { };
