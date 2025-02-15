@@ -1,5 +1,6 @@
+import { CloseButton } from "@/components/ui/close-button";
 import { InputGroup } from "@/components/ui/input-group";
-import { Button, Icon, Row } from "@/ui/components";
+import { Button, Row } from "@/ui/components";
 import { Input } from "@chakra-ui/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
@@ -35,12 +36,12 @@ const SearchAndCreate: React.FC<SearchAndCreateProps> = ({ placeholder, button }
 
   return (
     <>
-      <Row fillWidth horizontal="space-between" vertical="center" marginY="16">
+      <Row fillWidth horizontal="space-between" vertical="center" marginY="12" marginBottom="24">
         <Row maxWidth={20} fillWidth>
           <InputGroup
             flex="1"
             startElement={<LuSearch />}
-            endElement={searchValue ? <Icon size="s" name="close" onClick={() => { setSearchValue(""); onSearch("") }} /> : null}
+            endElement={searchValue ? <CloseButton size={'xs'} onClick={() => { setSearchValue(""); onSearch("") }} /> : null}
           >
             <Input
               placeholder={placeholder ?? "Search ..."}

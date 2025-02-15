@@ -30,7 +30,7 @@ const API_URL =
 
 const clientConsole = new Client().setEndpoint(API_URL).setProject("console");
 
-const clientProject = new Client().setEndpoint(API_URL);
+const clientProject = new Client().setEndpoint(API_URL).setMode('admin');
 
 const sdkForProject = {
   client: clientProject,

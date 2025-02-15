@@ -6,11 +6,13 @@ import React from "react";
 import { Row } from "@/ui/components";
 import { ColumnDef } from "@tanstack/react-table";
 import { Tooltip } from "@/components/ui/tooltip";
-import { SearchAndCreate } from "@/ui/modules/table";
 import { Badge, Text } from "@chakra-ui/react";
 import { formatDate } from "@/lib/utils";
-import { DataGrid } from "@/ui/modules/data-grid";
+import { DataGrid, DataGridSkelton, SearchAndCreate } from "@/ui/modules/data-grid";
 import { useSearchParams } from "next/navigation";
+import { EmptyState } from "@/ui/modules/layout/empty-state";
+import { EmptySearch } from "@/ui/modules/layout";
+import { CopyID } from "@/components/ui/copy-id";
 
 export const UsersPage = () => {
   const state = getProjectState();
@@ -43,7 +45,7 @@ export const UsersPage = () => {
     fetchUsers();
   }, [sdk, limit, page, search]);
 
-  const authPath = `/project/${project?.$id}/authentication`
+  const authPath = `/console/project/${project?.$id}/authentication`
 
   const columns: ColumnDef<Models.User<any>>[] = [
     {
@@ -58,7 +60,7 @@ export const UsersPage = () => {
         );
       },
       meta: {
-        href: (row) => `${authPath}/user/${row.$id}`,
+        href: (row) => `${authPath}/users/${row.$id}`,
       },
       size: 150,
     },
@@ -67,7 +69,7 @@ export const UsersPage = () => {
       accessorFn: (row) => [row.email, row.phone]?.filter(Boolean).join(", "),
       cell(props) {
         return (
-          <Tooltip content={props.getValue<string>()}>
+          <Tooltip showArrow content={props.getValue<string>()}>
             <span>{props.getValue<string>()}</span>
           </Tooltip>
         );
@@ -110,6 +112,9 @@ export const UsersPage = () => {
     {
       header: "ID",
       accessorKey: "$id",
+      cell(props) {
+        return <CopyID id={props.getValue<string>()} text="User ID" />;
+      },
     },
     {
       header: "Labels",
@@ -121,43 +126,55 @@ export const UsersPage = () => {
       accessorKey: "$createdAt",
       size: 150,
       cell(props) {
-        return formatDate(props.getValue<string>());
+        const joined = formatDate(props.getValue<string>());
+        return <Tooltip showArrow content={joined}>
+          <span>{joined}</span>
+        </Tooltip>;
       },
     },
     {
       header: "Last Activity",
       accessorKey: "accessedAt",
       cell(props) {
-        return (
-          formatDate(props.getValue<string>()) ?? "never"
-        );
+        const date = formatDate(props.getValue<string>());
+        return <Tooltip showArrow content={date} disabled={!date}>
+          <span>{date ?? 'never'}</span>
+        </Tooltip>;
       },
     },
   ];
 
   return (
     <Column paddingX="16" fillWidth>
-      <Row vertical="center" horizontal="start" marginBottom="24" marginTop="4" paddingX="8">
-        <Text fontSize={'2xl'} as={'h2'} fontWeight={'bold'}>Users</Text>
+      <Row vertical="center" horizontal="start" marginBottom="24" marginTop="12" paddingX="8">
+        <Text fontSize={'2xl'} as={'h2'} fontWeight={'semibold'}>Users</Text>
       </Row>
 
-      <SearchAndCreate button={{ text: "Create User" }} placeholder="Search by name, email, phone or ID" />
+      {loading && !users.total ? (
+        <DataGridSkelton />
+      ) : (users.total > 0 || !!search || page > 1) ? (
+        <>
+          <SearchAndCreate
+            button={{ text: "Create User" }}
+            placeholder="Search by name, email, phone or ID"
+          />
 
-      <DataGrid<Models.User<any>>
-        columns={columns}
-        data={users.users}
-        manualPagination
-        rowCount={users.total}
-        loading={loading}
-        state={{
-          pagination: {
-            pageIndex: page,
-            pageSize: limit
-          }
-        }}
-      />
+          {users.total > 0 ? (
+            <DataGrid<Models.User<any>>
+              columns={columns}
+              data={users.users}
+              manualPagination
+              rowCount={users.total}
+              loading={loading}
+              state={{ pagination: { pageIndex: page, pageSize: limit } }}
+            />
+          ) : (search && <EmptySearch
+            title={`Sorry, we couldn't find '${search}'`}
+            description="There are no users that match your search."
+            clearSearch
+          />)}
+        </>
+      ) : <EmptyState title="No Users" description="No users have been created yet." />}
     </Column>
   );
 };
-
-export { };

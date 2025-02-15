@@ -59,48 +59,63 @@ const DataGrid = <T,>({ columns, data, loading = false, ...rest }: TableProps<T>
 
   return (
     <VStack width={'full'}>
-      <Table.ScrollArea borderWidth="1px" borderRadius={'lg'} maxW="full">
+      <Table.ScrollArea borderWidth="1px" borderRadius={'lg'} width="full">
         <Table.Root
           size="md"
           variant="outline"
           borderRadius={'lg'}
           interactive
-          showColumnBorder
+        // showColumnBorder
         >
-          <Table.Header>
+          <Table.Header position={'relative'}>
             {table.getHeaderGroups().map((headerGroup) => (
               <Table.Row
                 key={headerGroup.id}
                 display={'flex'}
+                justifyContent={'space-between'}
                 alignItems={'center'}
                 width='full'
+                borderBottom={0.5}
+                borderStyle={'solid'}
+                borderColor={'border'}
               >
                 {headerGroup.headers.map((header) => (
                   <Table.ColumnHeader
                     display={'flex'}
                     alignItems={'center'}
-                    // justifyContent={'space-around'}
+                    textTransform={'uppercase'}
                     textOverflow={'ellipsis'}
                     overflow={'hidden'}
+                    className="neutral-on-background-medium"
+                    fontSize={'sm'}
                     whiteSpace={'nowrap'}
-                    width={header.column.columnDef.size ?? 'min-content'}
+                    width={header.column.columnDef.size ?? 'full'}
                     minWidth={header.column.columnDef.minSize}
                     maxWidth={header.column.columnDef.maxSize}
                     key={header.id}
+                    borderBottom={0}
                   >
                     {flexRender(header.column.columnDef.header, header.getContext())}
                   </Table.ColumnHeader>
                 ))}
               </Table.Row>
             ))}
+            {loading ? <Progress.Root
+              size={'xs'}
+              value={null}
+              position={'absolute'}
+              width={'full'}
+              height={'0.5'}
+              bottom={'0'}
+            >
+              <ProgressBar height={'0.5'} />
+            </Progress.Root> : null}
           </Table.Header>
-          {loading ? <Progress.Root size={'xs'} value={null}>
-            <ProgressBar />
-          </Progress.Root> : null}
           <Table.Body as={'div'}>
             {table.getRowModel().rows.map((row) => (
               <Table.Row
                 display={'flex'}
+                justifyContent={'space-between'}
                 key={row.id}
                 borderRadius={0}
                 gap={0}
@@ -112,7 +127,7 @@ const DataGrid = <T,>({ columns, data, loading = false, ...rest }: TableProps<T>
               >
                 <SmartLink
                   fillWidth
-                  className="neutral-on-background-strong"
+                  className="neutral-on-background-medium"
                   href={
                     row.getVisibleCells()[0].column.columnDef.meta?.href
                       ? row.getVisibleCells()[0].column.columnDef.meta?.href!(row.original)
@@ -130,7 +145,7 @@ const DataGrid = <T,>({ columns, data, loading = false, ...rest }: TableProps<T>
                       overflow={'hidden'}
                       whiteSpace={'nowrap'}
                       as={'div'}
-                      width={cell.column.columnDef.size ?? 'min-content'}
+                      width={cell.column.columnDef.size ?? 'full'}
                       minWidth={cell.column.columnDef.minSize}
                       maxWidth={cell.column.columnDef.maxSize}
                     >
@@ -144,7 +159,7 @@ const DataGrid = <T,>({ columns, data, loading = false, ...rest }: TableProps<T>
         </Table.Root>
       </Table.ScrollArea>
 
-      <Row marginY="12" fillWidth horizontal="space-between" vertical="center">
+      <Row marginTop="20" marginY="12" fillWidth horizontal="space-between" vertical="center">
         <Row vertical="center" gap="12">
           <SelectRoot
             collection={pages}

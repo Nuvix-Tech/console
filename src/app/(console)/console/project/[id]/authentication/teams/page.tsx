@@ -1,7 +1,7 @@
+import { TeamsPage } from "@/components/project/auths/teams/_page";
 
-
-export default function (){
+export default function () {
   return (
-    <h3>HE::O Teams</h3>
+    <TeamsPage />
   )
 }
