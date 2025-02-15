@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useReactTable, getCoreRowModel, flexRender, TableOptions, Updater } from "@tanstack/react-table";
-import { Table, VStack, HStack, Flex } from "@chakra-ui/react";
+import { Table, VStack, HStack, Flex, Progress } from "@chakra-ui/react";
 import {
   PaginationItems,
   PaginationNextTrigger,
@@ -18,10 +18,13 @@ import {
 import { createListCollection } from "@chakra-ui/react";
 import { Row, SmartLink } from "@/ui/components";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { ProgressBar } from "@/components/ui/progress";
 
-interface TableProps<T> extends Omit<TableOptions<T>, "getCoreRowModel"> { }
+interface TableProps<T> extends Omit<TableOptions<T>, "getCoreRowModel"> {
+  loading?: boolean;
+}
 
-const DataGrid = <T,>({ columns, data, ...rest }: TableProps<T>) => {
+const DataGrid = <T,>({ columns, data, loading = false, ...rest }: TableProps<T>) => {
   const searchParams = useSearchParams();
   const path = usePathname();
   const { push } = useRouter();
@@ -57,7 +60,13 @@ const DataGrid = <T,>({ columns, data, ...rest }: TableProps<T>) => {
   return (
     <VStack width={'full'}>
       <Table.ScrollArea borderWidth="1px" borderRadius={'lg'} maxW="full">
-        <Table.Root size="md" variant="outline" borderRadius={'lg'} interactive showColumnBorder>
+        <Table.Root
+          size="md"
+          variant="outline"
+          borderRadius={'lg'}
+          interactive
+          showColumnBorder
+        >
           <Table.Header>
             {table.getHeaderGroups().map((headerGroup) => (
               <Table.Row
@@ -85,7 +94,9 @@ const DataGrid = <T,>({ columns, data, ...rest }: TableProps<T>) => {
               </Table.Row>
             ))}
           </Table.Header>
-
+          {loading ? <Progress.Root size={'xs'} value={null}>
+            <ProgressBar />
+          </Progress.Root> : null}
           <Table.Body as={'div'}>
             {table.getRowModel().rows.map((row) => (
               <Table.Row
@@ -94,7 +105,7 @@ const DataGrid = <T,>({ columns, data, ...rest }: TableProps<T>) => {
                 borderRadius={0}
                 gap={0}
                 _hover={{
-                  bg: 'bg.emphasized',
+                  bg: 'bg.muted',
                   cursor: 'pointer',
                 }}
                 asChild
@@ -102,7 +113,11 @@ const DataGrid = <T,>({ columns, data, ...rest }: TableProps<T>) => {
                 <SmartLink
                   fillWidth
                   className="neutral-on-background-strong"
-                  href={`users/${row.getValue("$id")}`}
+                  href={
+                    row.getVisibleCells()[0].column.columnDef.meta?.href
+                      ? row.getVisibleCells()[0].column.columnDef.meta?.href!(row.original)
+                      : undefined
+                  }
                   key={row.id}
                   unstyled
                   unselectable="on"
@@ -114,6 +129,7 @@ const DataGrid = <T,>({ columns, data, ...rest }: TableProps<T>) => {
                       alignContent={'center'}
                       overflow={'hidden'}
                       whiteSpace={'nowrap'}
+                      as={'div'}
                       width={cell.column.columnDef.size ?? 'min-content'}
                       minWidth={cell.column.columnDef.minSize}
                       maxWidth={cell.column.columnDef.maxSize}
@@ -134,6 +150,7 @@ const DataGrid = <T,>({ columns, data, ...rest }: TableProps<T>) => {
             collection={pages}
             size="sm"
             width="80px"
+            disabled={loading}
             value={[table.getState().pagination.pageSize.toString()]}
             onValueChange={(details) => {
               const [value] = details.value;
@@ -163,12 +180,12 @@ const DataGrid = <T,>({ columns, data, ...rest }: TableProps<T>) => {
           <HStack>
             <PaginationPrevTrigger
               onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
+              disabled={loading || !table.getCanPreviousPage()}
             />
             <PaginationItems />
             <PaginationNextTrigger
               onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
+              disabled={loading || !table.getCanNextPage()}
             />
           </HStack>
         </PaginationRoot>

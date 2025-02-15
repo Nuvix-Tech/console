@@ -14,7 +14,8 @@ import { useSearchParams } from "next/navigation";
 
 export const UsersPage = () => {
   const state = getProjectState();
-  const sdk = state.sdk;
+  const { sdk, project } = state;
+  const [loading, setLoading] = React.useState(true);
   const [users, setUsers] = React.useState<Models.UserList<any>>({
     users: [],
     total: 0,
@@ -26,6 +27,7 @@ export const UsersPage = () => {
 
   React.useEffect(() => {
     if (!sdk) return;
+    setLoading(true)
     const queries: string[] = [];
 
     queries.push(
@@ -35,10 +37,13 @@ export const UsersPage = () => {
     const fetchUsers = async () => {
       const users = await sdk.users.list(queries, search ?? undefined);
       setUsers(users);
+      setLoading(false);
     };
 
     fetchUsers();
   }, [sdk, limit, page, search]);
+
+  const authPath = `/project/${project?.$id}/authentication`
 
   const columns: ColumnDef<Models.User<any>>[] = [
     {
@@ -51,6 +56,9 @@ export const UsersPage = () => {
             <Text>{props.getValue<string>()}</Text>
           </Row>
         );
+      },
+      meta: {
+        href: (row) => `${authPath}/user/${row.$id}`,
       },
       size: 150,
     },
@@ -133,13 +141,14 @@ export const UsersPage = () => {
         <Text fontSize={'2xl'} as={'h2'} fontWeight={'bold'}>Users</Text>
       </Row>
 
-      <SearchAndCreate button={{ text: "Create User" }} placeholder="Search user by name, email and uid" />
+      <SearchAndCreate button={{ text: "Create User" }} placeholder="Search by name, email, phone or ID" />
 
       <DataGrid<Models.User<any>>
         columns={columns}
         data={users.users}
         manualPagination
         rowCount={users.total}
+        loading={loading}
         state={{
           pagination: {
             pageIndex: page,
