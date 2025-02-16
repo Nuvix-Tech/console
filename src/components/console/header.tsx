@@ -2,12 +2,18 @@
 
 import { sdkForConsole } from "@/lib/sdk";
 import { ConsoleContext } from "@/lib/store/console";
-import { Badge, Column, Logo, NavIcon, Option, Row, ToggleButton, UserMenu } from "@/ui/components";
-import { usePathname } from "next/navigation";
+import { Badge, Column, Logo, NavIcon, Row, ToggleButton } from "@/ui/components";
+import { usePathname, useRouter } from "next/navigation";
 import type React from "react";
-import { useContext } from "react";
-import { ColorModeButton } from "../ui/color-mode";
-import { Avatar, HStack, Stack, Text } from "@chakra-ui/react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { Avatar, HStack, Stack, Text, createListCollection } from "@chakra-ui/react";
+import {
+  SelectContent,
+  SelectItem,
+  SelectRoot,
+  SelectTrigger,
+  SelectValueText,
+} from "@/components/ui/select";
 import { appState, getAppState } from "@/state/app-state";
 import {
   DrawerActionTrigger,
@@ -22,6 +28,8 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { FirstSidebar, SecondSidebar } from "./sidebar";
+import { Models } from "@nuvix/console";
+import { getProjectState } from "@/state/project-state";
 
 interface HeaderProps {
   authenticated?: boolean;
@@ -36,6 +44,7 @@ const ConsoleHeader: React.FC<HeaderProps> = () => {
   const { avatars } = sdkForConsole;
   const pathname = usePathname() ?? "";
   const user = data.user;
+  const headerRef = useRef<any>(null);
 
   return (
     <>
@@ -46,10 +55,12 @@ const ConsoleHeader: React.FC<HeaderProps> = () => {
         fillWidth
         position="fixed"
         zIndex={10}
+        gap="12"
         paddingX="m"
         height="64"
         vertical="center"
         background="surface"
+        ref={headerRef}
       >
         <Row>
           <div className="is-only-dark">
@@ -63,6 +74,11 @@ const ConsoleHeader: React.FC<HeaderProps> = () => {
           DEV
         </Badge>
         <Row fillWidth vertical="center" horizontal="space-between">
+          <Row vertical="center" gap={"8"}>
+            <OrganizationSelector ref={headerRef} />
+            <span>/</span>
+            <ProjectSelector ref={headerRef} />
+          </Row>
           <Row fillWidth>
             <Row fillWidth gap="4" paddingX="l" vertical="center">
               <ToggleButton selected={pathname === "/apps"} label="Support" />
@@ -175,4 +191,101 @@ const ConsoleHeader: React.FC<HeaderProps> = () => {
 };
 
 ConsoleHeader.displayName = "Header";
+
+const OrganizationSelector = ({ ref }: { ref: any }) => {
+  const { organization } = getAppState();
+  const { organizations: orgApi } = sdkForConsole;
+  const [orgs, setOrgs] = useState<Models.Organization<any>[]>();
+  const { push } = useRouter();
+
+  useEffect(() => {
+    async function getAll() {
+      const orgs = await orgApi.list<any>();
+      setOrgs(orgs.teams);
+    }
+    getAll();
+  }, []);
+
+  const organizations = useMemo(() => {
+    return createListCollection({
+      items: orgs || [],
+      itemToString: (item) => item.name,
+      itemToValue: (item) => item.$id,
+    });
+  }, [orgs]);
+
+  return (
+    <>
+      <SelectRoot
+        collection={organizations}
+        size="xs"
+        width="150px"
+        value={[organization?.$id]}
+        onValueChange={(e) => {
+          push(`/console/organizations/${e.value[0]}`);
+        }}
+      >
+        <SelectTrigger>
+          <SelectValueText placeholder="Organization" />
+        </SelectTrigger>
+        <SelectContent portalRef={ref}>
+          {organizations.items.map((org) => (
+            <SelectItem item={org} key={org.name}>
+              {org.name}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </SelectRoot>
+    </>
+  );
+};
+
+const ProjectSelector = ({ ref }: { ref: any }) => {
+  const { project } = getProjectState();
+  const { projects: projectApi } = sdkForConsole;
+  const [projects, setProjects] = useState<Models.Project[]>();
+  const { push } = useRouter();
+
+  useEffect(() => {
+    async function getAll() {
+      const projects = await projectApi.list();
+      setProjects(projects.projects);
+    }
+    getAll();
+  }, []);
+
+  const projectsColl = useMemo(() => {
+    return createListCollection({
+      items: projects || [],
+      itemToString: (item) => item.name,
+      itemToValue: (item) => item.$id,
+    });
+  }, [projects]);
+
+  return (
+    <>
+      <SelectRoot
+        collection={projectsColl}
+        size="xs"
+        width="150px"
+        value={[project?.$id ?? ""]}
+        onValueChange={(e) => {
+          push(`/console/project/${e.value[0]}`);
+        }}
+      >
+        <SelectTrigger>
+          <SelectValueText placeholder="Project" />
+        </SelectTrigger>
+        <SelectContent portalRef={ref}>
+          {projectsColl.items.map((proj) => (
+            <SelectItem item={proj} key={proj.name}>
+              {proj.name}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </SelectRoot>
+    </>
+  );
+};
+
 export { ConsoleHeader };
