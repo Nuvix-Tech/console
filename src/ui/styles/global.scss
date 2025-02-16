@@ -82,3 +82,9 @@ a:not(.button) {
 [data-theme='dark'] .is-only-light {
     display: none;
 }
+
+@media (max-width: 768px) {
+    .main-console {
+        top: 80px !important;
+    }
+}

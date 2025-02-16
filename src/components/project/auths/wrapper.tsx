@@ -64,11 +64,11 @@ function Wrapper({
   );
 
   useEffect(() => {
-    const elementProject = document.getElementById('project')
+    const elementProject = document.getElementById("project");
     if (elementProject) {
-      elementProject.classList.add('show-sidebar-large')
+      elementProject.classList.add("show-sidebar-large");
     }
-  }, [])
+  }, []);
 
   return <>{children}</>;
 }

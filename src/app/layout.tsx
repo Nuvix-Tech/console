@@ -108,7 +108,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         data-brand={style.brand}
         data-accent={style.accent}
         data-border={style.border}
-        data-theme={style.theme}
         data-solid={style.solid}
         data-solid-style={style.solidStyle}
         data-surface={style.surface}

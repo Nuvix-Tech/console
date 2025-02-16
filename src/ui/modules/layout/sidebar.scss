@@ -3,32 +3,42 @@
 }
 
 .sidebar {
-  position: fixed;
-  z-index: 999;
   display: none;
-  height: calc(100% - 54px);
 }
 
 .show-sidebar .sidebar {
-  max-width: 60px;
-  width: 60px;
-  display: flex;
-}
-
-.show-sidebar .sidebar-small-open {
-  overflow: visible;
-  width: 250px;
-}
-
-.show-sidebar-large .sidebar {
-  max-width: 300px;
-  width: 300px;
-}
-
-.sidebar-large {
   display: none;
 }
 
-.show-sidebar-large .sidebar-large {
-  display: flex;
+@media (min-width: 768px) {
+  .sidebar {
+    position: fixed;
+    z-index: 999;
+    display: none;
+    height: calc(100% - 54px);
+  }
+
+  .show-sidebar .sidebar {
+    max-width: 60px;
+    width: 60px;
+    display: flex;
+  }
+
+  .show-sidebar .sidebar-small-open {
+    overflow: visible;
+    width: 250px;
+  }
+
+  .show-sidebar-large .sidebar {
+    max-width: 285px;
+    width: 285px;
+  }
+
+  .sidebar-large {
+    display: none;
+  }
+
+  .show-sidebar-large .sidebar-large {
+    display: flex;
+  }
 }

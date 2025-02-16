@@ -45,7 +45,7 @@ const SidebarGroup = ({ title, items, titleUppercase = true }: SidebarGroupProps
           </SmartLink>
         ) : (
           <ToggleButton
-          key={_}
+            key={_}
             fillWidth
             justifyContent="flex-start"
             selected={!!item.isSelected}

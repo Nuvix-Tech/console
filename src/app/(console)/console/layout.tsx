@@ -7,7 +7,14 @@ export default function ({ children }: { children: React.ReactNode }) {
     <>
       <Row fill>
         <ConsoleHeader />
-        <Row fill position="relative" top="64" as={"main"} style={{ display: "block" }}>
+        <Row
+          fill
+          position="relative"
+          top="64"
+          as={"main"}
+          style={{ display: "block" }}
+          className="main-console"
+        >
           {children}
         </Row>
       </Row>

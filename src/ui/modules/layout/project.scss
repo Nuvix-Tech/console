@@ -8,12 +8,14 @@
   overflow-y: auto;
 }
 
-.show-sidebar .project-main {
-  margin-left: 60px !important;
-  width: calc(100% - 60px) !important;
-}
+@media (min-width: 768px) {
+  .show-sidebar .project-main {
+    margin-left: 60px !important;
+    width: calc(100% - 60px) !important;
+  }
 
-.show-sidebar.show-sidebar-large .project-main {
-  margin-left: 300px !important;
-  width: calc(100% - 300px) !important;
+  .show-sidebar.show-sidebar-large .project-main {
+    margin-left: 285px !important;
+    width: calc(100% - 285px) !important;
+  }
 }

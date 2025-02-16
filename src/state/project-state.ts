@@ -30,7 +30,7 @@ export const projectState = proxy<ProjectState>({
   sidebar: {
     first: null,
     middle: null,
-    last: null
+    last: null,
   },
 });
 

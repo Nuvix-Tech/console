@@ -1,6 +1,12 @@
 "use client";
 import React from "react";
-import { useReactTable, getCoreRowModel, flexRender, TableOptions, Updater } from "@tanstack/react-table";
+import {
+  useReactTable,
+  getCoreRowModel,
+  flexRender,
+  TableOptions,
+  Updater,
+} from "@tanstack/react-table";
 import { Table, VStack, HStack, Flex, Progress } from "@chakra-ui/react";
 import {
   PaginationItems,
@@ -33,63 +39,62 @@ const DataGrid = <T,>({ columns, data, loading = false, ...rest }: TableProps<T>
     columns,
     data,
     getCoreRowModel: getCoreRowModel(),
-    ...rest
+    ...rest,
   });
-
 
   const onPageSizeChange = (pageSize: number) => {
     const params = new URLSearchParams(searchParams);
-    params.set('limit', pageSize.toString())
-    push(path + '?' + params.toString())
-  }
+    params.set("limit", pageSize.toString());
+    push(path + "?" + params.toString());
+  };
 
   const onPageChange = (page: number) => {
     const params = new URLSearchParams(searchParams);
     if (page) {
-      params.set('page', page.toString())
+      params.set("page", page.toString());
     } else {
-      params.delete('page')
+      params.delete("page");
     }
-    push(path + '?' + params.toString())
-  }
+    push(path + "?" + params.toString());
+  };
 
   const pages = createListCollection({
     items: ["6", "12", "24", "48", "96"],
   });
 
   return (
-    <VStack width={'full'}>
-      <Table.ScrollArea borderWidth="1px" borderRadius={'lg'} width="full">
+    <VStack width={"full"}>
+      <Table.ScrollArea borderWidth="1px" borderRadius={"lg"} width="full">
         <Table.Root
           size="md"
           variant="outline"
-          borderRadius={'lg'}
+          borderRadius={"lg"}
           interactive
-        // showColumnBorder
+          // showColumnBorder
         >
-          <Table.Header position={'relative'}>
+          <Table.Header position={"relative"}>
             {table.getHeaderGroups().map((headerGroup) => (
               <Table.Row
                 key={headerGroup.id}
-                display={'flex'}
-                justifyContent={'space-between'}
-                alignItems={'center'}
-                width='full'
+                display={"flex"}
+                justifyContent={"space-between"}
+                alignItems={"center"}
+                width="full"
                 borderBottom={0.5}
-                borderStyle={'solid'}
-                borderColor={'border'}
+                borderStyle={"solid"}
+                borderColor={"border"}
               >
                 {headerGroup.headers.map((header) => (
                   <Table.ColumnHeader
-                    display={'flex'}
-                    alignItems={'center'}
-                    textTransform={'uppercase'}
-                    textOverflow={'ellipsis'}
-                    overflow={'hidden'}
+                    display={"flex"}
+                    alignItems={"center"}
+                    textTransform={"uppercase"}
+                    textOverflow={"ellipsis"}
+                    overflow={"hidden"}
                     className="neutral-on-background-medium"
-                    fontSize={'sm'}
-                    whiteSpace={'nowrap'}
-                    width={header.column.columnDef.size ?? 'full'}
+                    fontSize={"sm"}
+                    whiteSpace={"nowrap"}
+                    width={header.column.columnDef.size ?? "full"}
                     minWidth={header.column.columnDef.minSize}
                     maxWidth={header.column.columnDef.maxSize}
                     key={header.id}
@@ -100,28 +105,30 @@ const DataGrid = <T,>({ columns, data, loading = false, ...rest }: TableProps<T>
                 ))}
               </Table.Row>
             ))}
-            {loading ? <Progress.Root
-              size={'xs'}
-              value={null}
-              position={'absolute'}
-              width={'full'}
-              height={'0.5'}
-              bottom={'0'}
-            >
-              <ProgressBar height={'0.5'} />
-            </Progress.Root> : null}
+            {loading ? (
+              <Progress.Root
+                size={"xs"}
+                value={null}
+                position={"absolute"}
+                width={"full"}
+                height={"0.5"}
+                bottom={"0"}
+              >
+                <ProgressBar height={"0.5"} />
+              </Progress.Root>
+            ) : null}
           </Table.Header>
-          <Table.Body as={'div'}>
+          <Table.Body as={"div"}>
             {table.getRowModel().rows.map((row) => (
               <Table.Row
-                display={'flex'}
-                justifyContent={'space-between'}
+                display={"flex"}
+                justifyContent={"space-between"}
                 key={row.id}
                 borderRadius={0}
                 gap={0}
                 _hover={{
-                  bg: 'bg.muted',
-                  cursor: 'pointer',
+                  bg: "bg.muted",
+                  cursor: "pointer",
                 }}
                 asChild
               >
@@ -140,12 +147,12 @@ const DataGrid = <T,>({ columns, data, loading = false, ...rest }: TableProps<T>
                   {row.getVisibleCells().map((cell) => (
                     <Table.Cell
                       key={cell.id}
-                      textOverflow={'ellipsis'}
-                      alignContent={'center'}
-                      overflow={'hidden'}
-                      whiteSpace={'nowrap'}
-                      as={'div'}
-                      width={cell.column.columnDef.size ?? 'full'}
+                      textOverflow={"ellipsis"}
+                      alignContent={"center"}
+                      overflow={"hidden"}
+                      whiteSpace={"nowrap"}
+                      as={"div"}
+                      width={cell.column.columnDef.size ?? "full"}
                       minWidth={cell.column.columnDef.minSize}
                       maxWidth={cell.column.columnDef.maxSize}
                     >

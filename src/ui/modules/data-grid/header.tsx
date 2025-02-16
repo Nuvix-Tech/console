@@ -25,28 +25,48 @@ const SearchAndCreate: React.FC<SearchAndCreateProps> = ({ placeholder, button }
   const { push } = useRouter();
 
   useEffect(() => {
-    setSearchValue(searchParmas.get('search') ?? "")
-  }, [searchParmas.get('search')])
+    setSearchValue(searchParmas.get("search") ?? "");
+  }, [searchParmas.get("search")]);
 
   const onSearch = (value: string) => {
-    const params = new URLSearchParams(searchParmas)
-    value ? params.set('search', value) : params.delete('search');
-    push(path + `?${params.toString()}`)
+    const params = new URLSearchParams(searchParmas);
+    value ? params.set("search", value) : params.delete("search");
+    push(path + `?${params.toString()}`);
   };
 
   return (
     <>
-      <Row fillWidth horizontal="space-between" vertical="center" marginY="12" marginBottom="24">
+      <Row
+        fillWidth
+        horizontal="space-between"
+        vertical="center"
+        marginY="12"
+        marginBottom="24"
+        gap="12"
+      >
         <Row maxWidth={20} fillWidth>
           <InputGroup
             flex="1"
             startElement={<LuSearch />}
-            endElement={searchValue ? <CloseButton size={'xs'} onClick={() => { setSearchValue(""); onSearch("") }} /> : null}
+            endElement={
+              searchValue ? (
+                <CloseButton
+                  size={"xs"}
+                  onClick={() => {
+                    setSearchValue("");
+                    onSearch("");
+                  }}
+                />
+              ) : null
+            }
           >
             <Input
               placeholder={placeholder ?? "Search ..."}
               value={searchValue}
-              onChange={(e) => { setSearchValue(e.target.value); onSearch(e.target.value) }}
+              onChange={(e) => {
+                setSearchValue(e.target.value);
+                onSearch(e.target.value);
+              }}
             />
           </InputGroup>
         </Row>

@@ -33,9 +33,28 @@ export interface SidebarItemGroup {
 }
 
 const ProjectSidebar: React.FC = () => {
+  return (
+    <>
+      <Row className="sidebar">
+        <Row gap="0" fill position="relative">
+          <FirstSidebar />
+          <SecondSidebar />
+        </Row>
+      </Row>
+    </>
+  );
+};
+
+interface FirstSidebarProps {
+  alwaysFull?: boolean;
+  noBg?: boolean;
+  border?: boolean;
+}
+
+export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarProps) => {
   const [showFullSidebar, setShowFullSidebar] = React.useState(false);
   const pathname = usePathname() ?? "";
-  const { project, sidebar } = getProjectState();
+  const { project } = getProjectState();
   const { setColorMode } = useColorMode();
 
   const id = project?.$id;
@@ -74,101 +93,105 @@ const ProjectSidebar: React.FC = () => {
   ];
 
   const onThemeChange = (theme: "light" | "dark") => {
-    const html = document.documentElement;
-    if (html) {
-      html.setAttribute("data-theme", theme);
-      html.style.colorScheme = theme;
-      setColorMode(theme);
-    }
+    setColorMode(theme);
   };
 
   return (
     <>
-      <Row className="sidebar">
-        <Row gap="0" fill position="relative">
-          <Column
-            maxWidth={showFullSidebar ? 14 : 4}
-            fill
-            paddingY="32"
-            position="absolute"
-            vertical="space-between"
-            overflowX="hidden"
-            border="neutral-medium"
-            style={{
-              borderWidth: 0,
-              borderRightWidth: 1,
+      <Column
+        maxWidth={alwaysFull ? undefined : showFullSidebar ? 14 : 4}
+        fill
+        paddingY="32"
+        position={alwaysFull ? "relative" : "absolute"}
+        vertical="space-between"
+        overflowX="hidden"
+        border={"neutral-medium"}
+        style={{
+          borderWidth: 0,
+          borderRightWidth: border ? 1 : 0,
+        }}
+        zIndex={10}
+        className={`sidebar-small ${showFullSidebar ? "sidebar-small-open" : ""}`}
+        background={noBg ? "transparent" : "surface"}
+        onMouseEnter={() => setShowFullSidebar(true)}
+        onMouseLeave={() => setShowFullSidebar(false)}
+      >
+        <Column fillWidth paddingX="xs" gap="m">
+          {sideNav.map((item, index) => (
+            <SidebarSmallButton
+              key={index}
+              item={item}
+              showFullSidebar={showFullSidebar || !!alwaysFull}
+              selected={pathname === item.href}
+            />
+          ))}
+        </Column>
+
+        <Column fillWidth paddingX="xs" gap="s">
+          <Line />
+
+          <SidebarSmallButton
+            item={{
+              name: "Settings",
+              href: `/console/project/${id}/settings`,
+              icon: <span className="icon-cog" />,
             }}
-            zIndex={10}
-            className={`sidebar-small ${showFullSidebar ? "sidebar-small-open" : ""}`}
-            background="surface"
-            onMouseEnter={() => setShowFullSidebar(true)}
-            onMouseLeave={() => setShowFullSidebar(false)}
-          >
-            <Column fillWidth paddingX="xs" gap="m">
-              {sideNav.map((item, index) => (
-                <SidebarSmallButton
-                  key={index}
-                  item={item}
-                  showFullSidebar={showFullSidebar}
-                  selected={pathname === item.href}
-                />
-              ))}
-            </Column>
+            showFullSidebar={showFullSidebar || !!alwaysFull}
+            selected={pathname === `/console/project/${id}/settings`}
+          />
 
-            <Column fillWidth paddingX="xs" gap="s">
-              <Line />
+          <SidebarSmallButton
+            item={{
+              name: "Appearance",
+              onClick: () => {
+                const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
+                const newTheme = currentTheme === "light" ? "dark" : "light";
+                onThemeChange(newTheme);
+              },
+              icon: <span className="icon-sun" />,
+            }}
+            showFullSidebar={showFullSidebar || !!alwaysFull}
+          />
+        </Column>
+      </Column>
+    </>
+  );
+};
 
-              <SidebarSmallButton
-                item={{
-                  name: "Settings",
-                  href: `/console/project/${id}/settings`,
-                  icon: <span className="icon-cog" />,
-                }}
-                showFullSidebar={showFullSidebar}
-                selected={pathname === `/console/project/${id}/settings`}
-              />
+interface SecondSidebarProps {
+  noMarg?: boolean;
+  noBg?: boolean;
+  border?: boolean;
+}
 
-              <SidebarSmallButton
-                item={{
-                  name: "Appearance",
-                  onClick: () => {
-                    const currentTheme =
-                      document.documentElement.getAttribute("data-theme") || "light";
-                    const newTheme = currentTheme === "light" ? "dark" : "light";
-                    onThemeChange(newTheme);
-                  },
-                  icon: <span className="icon-sun" />,
-                }}
-                showFullSidebar={showFullSidebar}
-              />
-            </Column>
+export const SecondSidebar = ({ noMarg, noBg, border = true }: SecondSidebarProps) => {
+  const { sidebar } = getProjectState();
+
+  return (
+    <>
+      {sidebar.first || sidebar.middle || sidebar.last ? (
+        <Column
+          fillHeight
+          fillWidth
+          paddingY="32"
+          marginLeft={noMarg ? "0" : "64"}
+          gap="m"
+          position="relative"
+          background={noBg ? "transparent" : "page"}
+          border="neutral-medium"
+          style={{
+            borderWidth: 0,
+            borderRightWidth: border ? 1 : 0,
+          }}
+          className="sidebar-large"
+        >
+          <Column fill gap="m">
+            {sidebar.first}
+            {sidebar.middle}
+            {sidebar.last}
           </Column>
-
-          {sidebar.first || sidebar.middle || sidebar.last ? (
-            <Column
-              fillHeight
-              fillWidth
-              paddingY="32"
-              marginLeft={"64"}
-              gap="m"
-              position="relative"
-              background="page"
-              border="neutral-weak"
-              style={{
-                borderWidth: 0,
-                borderRightWidth: 1,
-              }}
-              className="sidebar-large"
-            >
-              <Column fill gap="m">
-                {sidebar.first}
-                {sidebar.middle}
-                {sidebar.last}
-              </Column>
-            </Column>
-          ) : null}
-        </Row>
-      </Row>
+        </Column>
+      ) : null}
     </>
   );
 };
