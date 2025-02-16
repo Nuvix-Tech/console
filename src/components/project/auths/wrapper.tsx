@@ -16,8 +16,7 @@ function Wrapper({
 
   const resolveHref = (path: string) =>
     `/console/project/${state.project?.$id}/authentication/${path}`;
-
-  const resolveIsSelected = (path: string) => pathname.endsWith(path);
+  const resolveIsSelected = (value: string) => pathname.includes(resolveHref(value));
 
   projectState.sidebar.last = (
     <>

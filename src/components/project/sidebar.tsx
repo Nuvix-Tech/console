@@ -64,6 +64,7 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
       name: "Overview",
       href: `/console/project/${id}`,
       icon: <span className="icon-chart-bar" />,
+      active: pathname === `/console/project/${id}`,
     },
     {
       name: "Authentication",
@@ -122,7 +123,7 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
               key={index}
               item={item}
               showFullSidebar={showFullSidebar || !!alwaysFull}
-              selected={pathname === item.href}
+              selected={item.active ?? pathname.includes(item.href ?? "")}
             />
           ))}
         </Column>
@@ -186,7 +187,7 @@ export const SecondSidebar = ({ noMarg, noBg, border = true }: SecondSidebarProp
           }}
           className="sidebar-large"
         >
-          <Column fill gap="s" paddingBottom="56">
+          <Column fillWidth gap="s" paddingBottom="56">
             {sidebar.first}
             {sidebar.middle}
             {sidebar.last}
