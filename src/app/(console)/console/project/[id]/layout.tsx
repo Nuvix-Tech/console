@@ -1,5 +1,5 @@
 import "@/ui/modules/layout/project.scss";
-import { ProjectSidebar } from "@/components/console/sidebar";
+import { ProjectSidebar } from "@/components/project/sidebar";
 import ProjectWrapper from "@/components/project/wrapper";
 import { Row } from "@/ui/components";
 import type React from "react";

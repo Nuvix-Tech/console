@@ -19,7 +19,7 @@ interface SidebarGroupProps {
 const SidebarGroup = ({ title, items, titleUppercase = true }: SidebarGroupProps) => {
   return (
     <Column fillWidth gap="4" paddingX="xs">
-      {title && (
+      {title ? (
         <Text
           variant="body-default-xs"
           onBackground="neutral-weak"
@@ -31,10 +31,10 @@ const SidebarGroup = ({ title, items, titleUppercase = true }: SidebarGroupProps
         >
           {title}
         </Text>
-      )}
+      ) : null}
 
       {items.map((item, _) =>
-        item.href ? (
+        item.href && !item.disabled ? (
           <SmartLink href={item.href} key={_} unstyled fillWidth>
             <ToggleButton fillWidth justifyContent="flex-start" selected={!!item.isSelected}>
               <Row padding="4" vertical="center" gap="12" textVariant="label-default-s">
@@ -47,11 +47,18 @@ const SidebarGroup = ({ title, items, titleUppercase = true }: SidebarGroupProps
           <ToggleButton
             key={_}
             fillWidth
+            disabled={item.disabled}
             justifyContent="flex-start"
             selected={!!item.isSelected}
             onClick={item.onClick}
           >
-            <Row padding="4" vertical="center" gap="12" textVariant="label-default-s">
+            <Row
+              padding="4"
+              vertical="center"
+              gap="12"
+              textVariant={"label-default-s"}
+              opacity={item.disabled ? 60 : 100}
+            >
               {item.icon}
               {item.label}
             </Row>

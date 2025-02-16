@@ -3,7 +3,7 @@ import { proxy } from "valtio";
 import { Models } from "@nuvix/console";
 import type { sdkForProject } from "@/lib/sdk";
 import { useProxy } from "valtio/utils";
-import { SidebarItem, SidebarItemGroup } from "@/components/console/sidebar";
+import { SidebarItem, SidebarItemGroup } from "@/components/project/sidebar";
 import React from "react";
 
 interface Sidebar {

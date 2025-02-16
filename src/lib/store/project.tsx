@@ -1,7 +1,7 @@
 import type { Models } from "@nuvix/console";
 import React from "react";
 import { sdkForProject } from "../sdk";
-import { ProjectSidebarData } from "@/components/console/sidebar";
+import { ProjectSidebarData } from "@/components/project/sidebar";
 
 export interface ProjectContextData {
   project: Models.Project;

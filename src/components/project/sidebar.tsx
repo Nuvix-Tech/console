@@ -171,21 +171,22 @@ export const SecondSidebar = ({ noMarg, noBg, border = true }: SecondSidebarProp
     <>
       {sidebar.first || sidebar.middle || sidebar.last ? (
         <Column
-          fillHeight
           fillWidth
-          paddingY="32"
+          paddingY="12"
           marginLeft={noMarg ? "0" : "64"}
           gap="m"
           position="relative"
           background={noBg ? "transparent" : "page"}
           border="neutral-medium"
+          overflowX="hidden"
+          overflowY="auto"
           style={{
             borderWidth: 0,
             borderRightWidth: border ? 1 : 0,
           }}
           className="sidebar-large"
         >
-          <Column fill gap="m">
+          <Column fill gap="s" paddingBottom="56">
             {sidebar.first}
             {sidebar.middle}
             {sidebar.last}
