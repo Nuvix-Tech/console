@@ -14,7 +14,7 @@ import { EmptyState } from "@/ui/modules/layout/empty-state";
 import { EmptySearch } from "@/ui/modules/layout";
 import { CopyID } from "@/components/ui/copy-id";
 
-export const UsersPage = () => {
+const UsersPage = () => {
   const state = getProjectState();
   const { sdk, project } = state;
   const [loading, setLoading] = React.useState(true);
@@ -189,3 +189,5 @@ export const UsersPage = () => {
     </Column>
   );
 };
+
+export default UsersPage;

@@ -1,19 +1,16 @@
 "use client";
-
 import { CardUpdater } from "@/components/others/card";
 import { Avatar } from "@/components/ui/avatar";
 import { SkeletonText } from "@/components/ui/skeleton";
 import { getProjectState, projectState } from "@/state/project-state";
-
 import { Column, Line, Row } from "@/ui/components";
 import { SidebarGroup } from "@/ui/modules/layout/navigation";
 import { Text } from "@chakra-ui/react";
-
 import { Models } from "@nuvix/console";
 import { usePathname } from "next/navigation";
 import React, { useEffect } from "react";
 
-export const UserPage: React.FC<{ id: string }> = ({ id }) => {
+const UserPage: React.FC<{ id: string }> = ({ id }) => {
   const [user, setUser] = React.useState<Models.User<any>>();
   const [userState, setUserState] = React.useState<Models.User<any>>();
   const state = getProjectState();
@@ -134,3 +131,5 @@ export const UserPage: React.FC<{ id: string }> = ({ id }) => {
     </>
   );
 };
+
+export default UserPage;

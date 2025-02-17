@@ -1,4 +1,4 @@
-import { UsersPage } from "@/components/project/auths/users/_page";
+import { UsersPage } from "@/components/project/auths/users";
 import { Skeleton } from "@/ui/components";
 import React, { Suspense } from "react";
 

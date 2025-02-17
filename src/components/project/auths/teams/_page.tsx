@@ -12,7 +12,7 @@ import { DataGrid, DataGridSkelton, SearchAndCreate } from "@/ui/modules/data-gr
 import { useSearchParams } from "next/navigation";
 import { EmptySearch, EmptyState } from "@/ui/modules/layout";
 
-export const TeamsPage = () => {
+const Page = () => {
   const state = getProjectState();
   const { sdk, project } = state;
   const [loading, setLoading] = React.useState(true);
@@ -116,3 +116,5 @@ export const TeamsPage = () => {
     </Column>
   );
 };
+
+export default Page;

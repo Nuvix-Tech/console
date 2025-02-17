@@ -1,7 +1,8 @@
-import { UserPage } from "@/components/project/auths/users/page";
+import { UserPage } from "@/components/project/auths/users";
+import { PropsWithParams } from "@/types";
 import { Suspense } from "react";
 
-export default async function ({ params }: { params: Promise<{ userId: string }> }) {
+export default async function ({ params }: PropsWithParams<{ userId: string }>) {
   const { userId } = await params;
 
   return (
