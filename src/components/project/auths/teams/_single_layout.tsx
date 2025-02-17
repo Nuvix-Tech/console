@@ -1,7 +1,7 @@
 "use client";
 import { Avatar } from "@/components/ui/avatar";
 import { SkeletonText } from "@/components/ui/skeleton";
-import { teamPageState } from "@/state/page";
+import { getTeamPageState, teamPageState } from "@/state/page";
 import { getProjectState, projectState } from "@/state/project-state";
 import { Line, Row } from "@/ui/components";
 import { SidebarGroup } from "@/ui/modules/layout/navigation";
@@ -32,7 +32,7 @@ const Layout: React.FC<PropsWithChildren<{ teamId: string }>> = ({ children, tea
 
 const SidebarAddon = ({ teamId }: { teamId: string }) => {
   const { sdk, project } = getProjectState();
-  const { team } = teamPageState;
+  const { team } = getTeamPageState();
   const path = usePathname();
 
   const resolveHref = (value?: string) =>
