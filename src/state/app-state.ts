@@ -1,6 +1,5 @@
 import { proxy } from "valtio";
 import { Models } from "@nuvix/console";
-import type { sdkForProject } from "@/lib/sdk";
 import { useProxy } from "valtio/utils";
 
 interface AppState {

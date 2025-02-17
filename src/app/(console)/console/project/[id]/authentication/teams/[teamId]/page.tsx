@@ -1,3 +1,4 @@
+import { TeamPage } from "@/components/project/auths/teams";
 import { PropsWithParams } from "@/types";
 import React from "react";
 
@@ -6,16 +7,12 @@ interface TeamPageProps {
   teamId: string;
 }
 
-const TeamPage: React.FC<PropsWithParams<TeamPageProps>> = async ({ params }) => {
+const _TeamPage: React.FC<PropsWithParams<TeamPageProps>> = async ({ params }) => {
   const { id, teamId } = await params;
 
   return (
-    <div>
-      <h1>Team Page</h1>
-      <p>Project ID: {id}</p>
-      <p>Team ID: {teamId}</p>
-    </div>
+    <TeamPage id={teamId} />
   );
 };
 
-export default TeamPage;
+export default _TeamPage;

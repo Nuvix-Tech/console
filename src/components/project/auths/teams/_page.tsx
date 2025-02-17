@@ -1,5 +1,5 @@
 "use client";
-import { getProjectState } from "@/state/project-state";
+import { getProjectState, projectState } from "@/state/project-state";
 import { Avatar, Column } from "@/ui/components";
 import { Models, Query } from "@nuvix/console";
 import React from "react";
@@ -24,6 +24,8 @@ const Page = () => {
   const limit = searchParams.get("limit") ? Number(searchParams.get("limit")) : 12;
   const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
   const search = searchParams.get("search");
+
+  projectState.sidebar.first = null;
 
   React.useEffect(() => {
     if (!sdk) return;

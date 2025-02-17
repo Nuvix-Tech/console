@@ -1,7 +1,7 @@
 "use client";
 import { Avatar } from "@/components/ui/avatar";
 import { SkeletonText } from "@/components/ui/skeleton";
-import { userPageState } from "@/state/page";
+import { teamPageState } from "@/state/page";
 import { getProjectState, projectState } from "@/state/project-state";
 import { Line, Row } from "@/ui/components";
 import { SidebarGroup } from "@/ui/modules/layout/navigation";
@@ -9,19 +9,19 @@ import { Text } from "@chakra-ui/react";
 import { usePathname } from "next/navigation";
 import React, { PropsWithChildren, useEffect } from "react";
 
-const SingleLayout: React.FC<PropsWithChildren<{ userId: string }>> = ({ children, userId }) => {
+const Layout: React.FC<PropsWithChildren<{ teamId: string }>> = ({ children, teamId }) => {
   const { sdk } = getProjectState();
-  projectState.sidebar.first = <SidebarAddon userId={userId} />;
+  projectState.sidebar.first = <SidebarAddon teamId={teamId} />;
 
   useEffect(() => {
     if (!sdk) return;
-    const fetchUser = async () => {
-      const user = await sdk.users.get(userId);
-      userPageState.user = user;
+    const fetchTeam = async () => {
+      const team = await sdk.teams.get(teamId);
+      teamPageState.team = team;
     };
 
-    fetchUser();
-  }, [sdk, userId]);
+    fetchTeam();
+  }, [sdk, teamId]);
 
   return (
     <>
@@ -30,23 +30,23 @@ const SingleLayout: React.FC<PropsWithChildren<{ userId: string }>> = ({ childre
   );
 };
 
-const SidebarAddon = ({ userId }: { userId: string }) => {
+const SidebarAddon = ({ teamId }: { teamId: string }) => {
   const { sdk, project } = getProjectState();
-  const { user } = userPageState;
+  const { team } = teamPageState;
   const path = usePathname();
 
   const resolveHref = (value?: string) =>
-    `/console/project/${project?.$id}/authentication/users/${userId}${value ? `/${value}` : ""}`;
+    `/console/project/${project?.$id}/authentication/teams/${teamId}${value ? `/${value}` : ""}`;
   const resolveIsSelected = (value?: string) => path.includes(resolveHref(value));
 
   return (
     <>
       <Row paddingX="xs">
         <Row vertical="center" gap="12" fillWidth>
-          <Avatar size="xs" src={sdk?.avatars.getInitials(user?.name)} />
-          {user ? (
+          <Avatar size="xs" src={sdk?.avatars.getInitials(team?.name)} />
+          {team ? (
             <Text truncate textStyle={"lg"}>
-              {user?.name}
+              {team?.name}
             </Text>
           ) : (
             <SkeletonText noOfLines={1} />
@@ -62,26 +62,10 @@ const SidebarAddon = ({ userId }: { userId: string }) => {
             isSelected: resolveIsSelected(),
           },
           {
-            label: "Memberships",
-            href: resolveHref("memberships"),
-            isSelected: resolveIsSelected("memberships"),
-          },
-          {
-            label: "Sessions",
-            href: resolveHref("sessions"),
-            isSelected: resolveIsSelected("sessions"),
-          },
-          {
-            label: "Targets",
-            href: resolveHref("targets"),
-            isSelected: resolveIsSelected("targets"),
-          },
-          {
-            label: "Identities",
-            href: resolveHref("identities"),
-            isSelected: resolveIsSelected("identities"),
-          },
-          {
+            label: "Members",
+            href: resolveHref("members"),
+            isSelected: resolveIsSelected("members"),
+          }, {
             label: "Activity",
             href: resolveHref("logs"),
             isSelected: resolveIsSelected("logs"),
@@ -94,4 +78,4 @@ const SidebarAddon = ({ userId }: { userId: string }) => {
   );
 }
 
-export default SingleLayout;
+export default Layout;

@@ -8,5 +8,5 @@ export default async function ({
 }: PropsWithChildren & PropsWithParams<{ userId: string }>) {
   const { userId } = await params;
 
-  return <UserLayout>{children}</UserLayout>;
+  return <UserLayout userId={userId}>{children}</UserLayout>;
 }
