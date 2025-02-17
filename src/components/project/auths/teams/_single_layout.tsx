@@ -23,11 +23,7 @@ const Layout: React.FC<PropsWithChildren<{ teamId: string }>> = ({ children, tea
     fetchTeam();
   }, [sdk, teamId]);
 
-  return (
-    <>
-      {children}
-    </>
-  );
+  return <>{children}</>;
 };
 
 const SidebarAddon = ({ teamId }: { teamId: string }) => {
@@ -65,7 +61,8 @@ const SidebarAddon = ({ teamId }: { teamId: string }) => {
             label: "Members",
             href: resolveHref("members"),
             isSelected: resolveIsSelected("members"),
-          }, {
+          },
+          {
             label: "Activity",
             href: resolveHref("logs"),
             isSelected: resolveIsSelected("logs"),
@@ -76,6 +73,6 @@ const SidebarAddon = ({ teamId }: { teamId: string }) => {
       <Line />
     </>
   );
-}
+};
 
 export default Layout;

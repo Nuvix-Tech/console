@@ -23,11 +23,7 @@ const SingleLayout: React.FC<PropsWithChildren<{ userId: string }>> = ({ childre
     fetchUser();
   }, [sdk, userId]);
 
-  return (
-    <>
-      {children}
-    </>
-  );
+  return <>{children}</>;
 };
 
 const SidebarAddon = ({ userId }: { userId: string }) => {
@@ -92,6 +88,6 @@ const SidebarAddon = ({ userId }: { userId: string }) => {
       <Line />
     </>
   );
-}
+};
 
 export default SingleLayout;
