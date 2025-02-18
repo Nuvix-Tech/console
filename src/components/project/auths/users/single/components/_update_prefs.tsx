@@ -1,16 +1,16 @@
-import { Form, InputField, SubmitButton } from "@/components/others/forms";
+import { Form, InputObjectField, SubmitButton } from "@/components/others/forms";
 import { CardBox } from "@/components/others/card";
 import { getUserPageState } from "@/state/page";
-import { Card, Code, Stack, Text } from "@chakra-ui/react";
+import { Card, Stack, Text } from "@chakra-ui/react";
 import * as y from "yup";
 import { getProjectState } from "@/state/project-state";
 import { useToast } from "@/ui/components";
 
 const schema = y.object({
-  email: y.string().email(),
+  prefs: y.object(),
 });
 
-export const UpdateEmail = () => {
+export const UpdatePrefs = () => {
   const { user, _update } = getUserPageState();
   const { sdk } = getProjectState();
   const { addToast } = useToast();
@@ -19,16 +19,16 @@ export const UpdateEmail = () => {
     <>
       <Form
         initialValues={{
-          email: user?.email,
+          prefs: user?.prefs,
         }}
         enableReinitialize
         validationSchema={schema}
         onSubmit={async (values) => {
           try {
-            await sdk?.users.updateEmail(user?.$id!, values.email!);
+            await sdk?.users.updatePrefs(user?.$id!, values.prefs!);
             addToast({
               variant: "success",
-              message: "User email has been updated successfully.",
+              message: "User prefs have been updated successfully.",
             });
             await _update();
           } catch (e: any) {
@@ -48,14 +48,13 @@ export const UpdateEmail = () => {
         >
           <Stack direction={{ base: "column", md: "row" }} width={"full"} gap={"8"}>
             <Stack maxW={{ base: "full", md: "1/2" }} width={"full"} gap={"4"}>
-              <Card.Title>Email</Card.Title>
+              <Card.Title>Preferences</Card.Title>
               <Text textStyle={"sm"}>
-                Update user's email. An Email should be formatted as:{" "}
-                <Code variant={"surface"}>name@example.com</Code>.
+                Customize user preferences to sync them across all devices and sessions.
               </Text>
             </Stack>
             <Stack maxW={{ base: "full", md: "1/2" }} width={"full"}>
-              <InputField label={"Email"} name="email" />
+              <InputObjectField label={"Preferences"} name="prefs" />
             </Stack>
           </Stack>
         </CardBox>

@@ -16,7 +16,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { getStatus } from "@/components/others/user";
-import { UpdateEmail, UpdateName } from "./components";
+import {
+  UpdateEmail,
+  UpdateLabels,
+  UpdateName,
+  UpdatePassword,
+  UpdatePhone,
+  UpdatePrefs,
+} from "./components";
 
 const UserPage: React.FC<{ id: string }> = ({ id }) => {
   const { user } = getUserPageState();
@@ -25,8 +32,12 @@ const UserPage: React.FC<{ id: string }> = ({ id }) => {
     <>
       <Column fillWidth gap="20" paddingX="12" paddingY="20">
         <TopUserInfo />
-        <UpdateEmail />
         <UpdateName />
+        <UpdateEmail />
+        <UpdatePhone />
+        <UpdatePassword />
+        <UpdateLabels />
+        <UpdatePrefs />
       </Column>
     </>
   );

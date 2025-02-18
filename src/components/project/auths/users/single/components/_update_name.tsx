@@ -11,7 +11,7 @@ const schema = y.object({
 });
 
 export const UpdateName = () => {
-  const { user } = getUserPageState();
+  const { user, _update } = getUserPageState();
   const { sdk } = getProjectState();
   const { addToast } = useToast();
 
@@ -30,6 +30,7 @@ export const UpdateName = () => {
               variant: "success",
               message: "User name has been updated successfully.",
             });
+            await _update();
           } catch (e: any) {
             addToast({
               variant: "danger",
