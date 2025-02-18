@@ -2,6 +2,7 @@
 import { getProjectState } from "@/state/project-state";
 import { Background, Chip, Column, Feedback, Heading, Line, Row, Skeleton } from "@/ui/components";
 import React from "react";
+import { IDChip } from "../others";
 
 type ProjectPageProps = {
   id: string;
@@ -69,14 +70,7 @@ export default function ProjectPage({ id }: ProjectPageProps) {
                 >
                   <Row vertical="center" horizontal="start" fillWidth gap="8">
                     <Heading variant="heading-strong-xl">{project?.name}</Heading>
-                    <Chip
-                      selected={false}
-                      label={project?.$id ?? "Unknown"}
-                      iconButtonProps={{
-                        tooltip: "More info",
-                        tooltipPosition: "top",
-                      }}
-                    />
+                    <IDChip id={project?.$id} />
                   </Row>
                   <Row vertical="center" horizontal="start" fillWidth gap="8">
                     {(project?.platforms.length ?? 0) > 0 ? (

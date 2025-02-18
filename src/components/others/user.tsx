@@ -1,43 +1,39 @@
 import { Badge, BadgeProps } from "@chakra-ui/react";
 import { Models } from "@nuvix/console";
 
-function getStatusAndColor(user: Models.User<any>) {
+export function getStatus(user?: Models.User<any>) {
+  if (!user) return "";
   if (!user.status) {
-    return {
-      status: "blocked",
-      color: "red.500",
-    };
+    return "blocked";
   }
   if (user.email && user.phone) {
     if (user.emailVerification && user.phoneVerification) {
-      return {
-        status: "verified",
-        color: "green",
-      };
+      return "verified";
     }
-    if (user.emailVerification) {
-      return {
-        status: "email verified",
-        color: "yellow",
-      };
-    }
-    if (user.phoneVerification) {
-      return {
-        status: "phone verified",
-        color: "yellow",
-      };
-    }
-  } else if ((user.email && user.emailVerification) || (user.phone && user.phoneVerification))
-    return { status: "verified", color: "green" };
-  else if (user.email || user.phone) return { status: "unverified", color: "gray" };
-  else return { status: "blocked", color: "red" };
+    return user.emailVerification
+      ? "verified email"
+      : user.phoneVerification
+        ? "verified phone"
+        : "unverfied";
+  } else if (user.email) {
+    return user.emailVerification ? "verified email" : "unverfied";
+  } else if (user.phone) {
+    return user.phoneVerification ? "verified phone" : "unverfied";
+  }
+  return "active";
 }
 
 export const Status = ({ user, ...props }: { user: Models.User<any> } & BadgeProps) => {
-  const { status, color } = getStatusAndColor(user) as { status: string; color: string };
+  const status = getStatus(user);
 
   return (
-    <Badge variant="subtle" size="lg" borderRadius={"2xl"} colorPalette={color} {...props}>
+    <Badge
+      variant="subtle"
+      size="lg"
+      borderRadius={"2xl"}
+      colorPalette={status === "blocked" ? "red" : status.startsWith("verified") ? "green" : "gray"}
+      {...props}
+    >
       {status}
     </Badge>
   );

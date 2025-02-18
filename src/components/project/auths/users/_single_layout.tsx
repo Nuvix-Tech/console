@@ -55,7 +55,7 @@ const SidebarAddon = ({ userId }: { userId: string }) => {
           {
             label: "Overview",
             href: resolveHref(),
-            isSelected: resolveIsSelected(),
+            isSelected: path === resolveHref(),
           },
           {
             label: "Memberships",

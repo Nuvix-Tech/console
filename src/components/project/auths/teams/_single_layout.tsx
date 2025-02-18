@@ -55,7 +55,7 @@ const SidebarAddon = ({ teamId }: { teamId: string }) => {
           {
             label: "Overview",
             href: resolveHref(),
-            isSelected: resolveIsSelected(),
+            isSelected: path === resolveHref(),
           },
           {
             label: "Members",
