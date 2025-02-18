@@ -1,16 +1,5 @@
-import { Row } from "@/ui/components";
-import {
-  Button,
-  ButtonProps,
-  Card,
-  Input,
-  InputProps,
-  Separator,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Card, Separator } from "@chakra-ui/react";
 import React, { PropsWithChildren } from "react";
-import { Field, FieldProps } from "../ui/field";
 
 interface InfoCardProps {}
 

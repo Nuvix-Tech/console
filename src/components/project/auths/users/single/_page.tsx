@@ -1,16 +1,13 @@
 "use client";
 import { IDChip, TopCard, UserStatus } from "@/components/others";
-import { CardBox } from "@/components/others/card";
 import { Avatar } from "@/components/ui/avatar";
 import { SkeletonText } from "@/components/ui/skeleton";
 import { formatDate } from "@/lib/utils";
 import { getUserPageState, userPageState } from "@/state/page";
-import { getProjectState, projectState } from "@/state/project-state";
-import { Background, Column, Line, Row, useToast } from "@/ui/components";
+import { getProjectState } from "@/state/project-state";
+import { Column, Row, useToast } from "@/ui/components";
 import { Button, ButtonProps, HStack, Stack, Text, VStack } from "@chakra-ui/react";
-import { Models } from "@nuvix/console";
-import { usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   PopoverArrow,
   PopoverBody,
@@ -19,58 +16,17 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { getStatus } from "@/components/others/user";
-import { UpdateEmail } from "./components";
+import { UpdateEmail, UpdateName } from "./components";
 
 const UserPage: React.FC<{ id: string }> = ({ id }) => {
   const { user } = getUserPageState();
-  const [userState, setUserState] = React.useState<Models.User<any>>();
-  const state = getProjectState();
-  const { sdk } = state;
 
   return (
     <>
       <Column fillWidth gap="20" paddingX="12" paddingY="20">
         <TopUserInfo />
         <UpdateEmail />
-
-        {/* <CardUpdater
-          label="Name"
-          button={{
-            disabled: user?.name === userState?.name,
-          }}
-          field={{
-            label: "Name",
-          }}
-          input={{
-            placeholder: "Name",
-            type: "text",
-            value: userState?.name,
-            onChange: (e) => {
-              setUserState((prev: any) => ({ ...prev, name: e.target.value }));
-            },
-          }}
-          onSubmit={() => sdk?.users.updateName(user?.$id!, userState?.name!)}
-        />
-
-        <CardUpdater
-          label="Email"
-          description="Update user's email. An Email should be formatted as: name@example.com."
-          button={{
-            disabled: user?.email === userState?.email,
-          }}
-          field={{
-            label: "Email",
-          }}
-          input={{
-            placeholder: "Email",
-            type: "email",
-            value: userState?.email,
-            onChange: (e) => {
-              setUserState((prev: any) => ({ ...prev, email: e.target.value }));
-            },
-          }}
-          onSubmit={() => { }}
-        /> */}
+        <UpdateName />
       </Column>
     </>
   );

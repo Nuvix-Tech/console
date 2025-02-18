@@ -7,10 +7,10 @@ import { getProjectState } from "@/state/project-state";
 import { useToast } from "@/ui/components";
 
 const schema = y.object({
-  email: y.string().email(),
+  name: y.string().max(256),
 });
 
-export const UpdateEmail = () => {
+export const UpdateName = () => {
   const { user } = getUserPageState();
   const { sdk } = getProjectState();
   const { addToast } = useToast();
@@ -19,16 +19,16 @@ export const UpdateEmail = () => {
     <>
       <Form
         initialValues={{
-          email: user?.email,
+          name: user?.name,
         }}
         enableReinitialize
         validationSchema={schema}
         onSubmit={async (values) => {
           try {
-            await sdk?.users.updateEmail(user?.$id!, values.email!);
+            await sdk?.users.updateName(user?.$id!, values.name!);
             addToast({
               variant: "success",
-              message: "User email has been updated successfully.",
+              message: "User name has been updated successfully.",
             });
           } catch (e: any) {
             addToast({
@@ -47,14 +47,10 @@ export const UpdateEmail = () => {
         >
           <Stack direction={{ base: "column", md: "row" }} width={"full"} gap={"8"}>
             <Stack maxW={{ base: "full", md: "1/2" }} width={"full"} gap={"4"}>
-              <Card.Title>Email</Card.Title>
-              <Text textStyle={"sm"}>
-                Update user's email. An Email should be formatted as:{" "}
-                <Code variant={"surface"}>name@example.com</Code>.
-              </Text>
+              <Card.Title>Name</Card.Title>
             </Stack>
             <Stack maxW={{ base: "full", md: "1/2" }} width={"full"}>
-              <InputField label={"Email"} name="email" />
+              <InputField label={"Name"} name="name" />
             </Stack>
           </Stack>
         </CardBox>
