@@ -1,6 +1,6 @@
 "use client";
 import { IDChip, TopCard, UserStatus } from "@/components/others";
-import { CardUpdater } from "@/components/others/card";
+import { CardBox } from "@/components/others/card";
 import { Avatar } from "@/components/ui/avatar";
 import { SkeletonText } from "@/components/ui/skeleton";
 import { formatDate } from "@/lib/utils";
@@ -19,6 +19,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { getStatus } from "@/components/others/user";
+import { UpdateEmail } from "./components";
 
 const UserPage: React.FC<{ id: string }> = ({ id }) => {
   const { user } = getUserPageState();
@@ -30,8 +31,9 @@ const UserPage: React.FC<{ id: string }> = ({ id }) => {
     <>
       <Column fillWidth gap="20" paddingX="12" paddingY="20">
         <TopUserInfo />
+        <UpdateEmail />
 
-        <CardUpdater
+        {/* <CardUpdater
           label="Name"
           button={{
             disabled: user?.name === userState?.name,
@@ -67,15 +69,15 @@ const UserPage: React.FC<{ id: string }> = ({ id }) => {
               setUserState((prev: any) => ({ ...prev, email: e.target.value }));
             },
           }}
-          onSubmit={() => {}}
-        />
+          onSubmit={() => { }}
+        /> */}
       </Column>
     </>
   );
 };
 
 const TopUserInfo = () => {
-  const { user } = getUserPageState();
+  const { user, _update } = getUserPageState();
   const { sdk } = getProjectState();
   const status = getStatus(user);
   const { addToast } = useToast();
@@ -84,16 +86,18 @@ const TopUserInfo = () => {
     try {
       let _user: any;
       if (status === "blocked") {
-        _user = await sdk?.users.updateStatus(user?.$id!, true);
-        addToast({
-          variant: "success",
-          message: "You have successfully blocked this user.",
-        });
-      } else {
-        _user = await sdk?.users.updateStatus(user?.$id!, false);
+        await sdk?.users.updateStatus(user?.$id!, true);
+        await _update();
         addToast({
           variant: "success",
           message: "You have successfully unblocked this user.",
+        });
+      } else {
+        await sdk?.users.updateStatus(user?.$id!, false);
+        await _update();
+        addToast({
+          variant: "success",
+          message: "You have successfully blocked this user.",
         });
       }
       _user && (userPageState.user = _user);
@@ -107,21 +111,20 @@ const TopUserInfo = () => {
 
   const onVerify = async (emailVerification?: boolean, phoneVerification?: boolean) => {
     try {
-      let _user: any;
       if (emailVerification) {
-        _user = await sdk?.users.updateEmailVerification(user?.$id!, true);
+        await sdk?.users.updateEmailVerification(user?.$id!, true);
         addToast({
           variant: "success",
           message: "You have successfully verified this user's email.",
         });
       } else if (phoneVerification) {
-        _user = await sdk?.users.updatePhoneVerification(user?.$id!, true);
+        await sdk?.users.updatePhoneVerification(user?.$id!, true);
         addToast({
           variant: "success",
           message: "You have successfully verified this user's phone.",
         });
       }
-      _user && (userPageState.user = _user);
+      await _update();
     } catch (e: any) {
       addToast({
         variant: "danger",
@@ -132,21 +135,20 @@ const TopUserInfo = () => {
 
   const onUnverify = async (emailVerification?: boolean, phoneVerification?: boolean) => {
     try {
-      let _user: any;
       if (emailVerification) {
-        _user = await sdk?.users.updateEmailVerification(user?.$id!, false);
+        await sdk?.users.updateEmailVerification(user?.$id!, false);
         addToast({
           variant: "success",
           message: "You have successfully unverified this user's email.",
         });
       } else if (phoneVerification) {
-        _user = await sdk?.users.updatePhoneVerification(user?.$id!, false);
+        await sdk?.users.updatePhoneVerification(user?.$id!, false);
         addToast({
           variant: "success",
           message: "You have successfully unverified this user's phone.",
         });
       }
-      _user && (userPageState.user = _user);
+      await _update();
     } catch (e: any) {
       addToast({
         variant: "danger",

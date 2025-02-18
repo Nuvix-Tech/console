@@ -11,6 +11,9 @@ import React, { PropsWithChildren, useEffect } from "react";
 
 const SingleLayout: React.FC<PropsWithChildren<{ userId: string }>> = ({ children, userId }) => {
   const { sdk } = getProjectState();
+  userPageState._update = async () => {
+    userPageState.user = await sdk?.users.get(userId);
+  };
   projectState.sidebar.first = <SidebarAddon userId={userId} />;
 
   useEffect(() => {
