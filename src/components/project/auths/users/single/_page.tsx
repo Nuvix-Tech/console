@@ -6,7 +6,7 @@ import { formatDate } from "@/lib/utils";
 import { getUserPageState, userPageState } from "@/state/page";
 import { getProjectState } from "@/state/project-state";
 import { Column, Row, useToast } from "@/ui/components";
-import { Button, ButtonProps, HStack, Stack, Text, VStack } from "@chakra-ui/react";
+import { Button, ButtonProps, HStack, Skeleton, Stack, Text, VStack } from "@chakra-ui/react";
 import React, { useState } from "react";
 import {
   PopoverArrow,
@@ -30,15 +30,25 @@ const UserPage: React.FC<{ id: string }> = ({ id }) => {
 
   return (
     <>
-      <Column fillWidth gap="20" paddingX="12" paddingY="20">
-        <TopUserInfo />
-        <UpdateName />
-        <UpdateEmail />
-        <UpdatePhone />
-        <UpdatePassword />
-        <UpdateLabels />
-        <UpdatePrefs />
-      </Column>
+      {user ? (
+        <Column fillWidth gap="20" paddingX="12" paddingY="20">
+          <TopUserInfo />
+          <UpdateName />
+          <UpdateEmail />
+          <UpdatePhone />
+          <UpdatePassword />
+          <UpdateLabels />
+          <UpdatePrefs />
+        </Column>
+      ) : (
+        <>
+          <Column fillWidth gap="20" paddingX="12" paddingY="20">
+            {Array.from({ length: 7 }).map((_, i) => (
+              <Skeleton key={i} width={"full"} height={"28"} />
+            ))}
+          </Column>
+        </>
+      )}
     </>
   );
 };

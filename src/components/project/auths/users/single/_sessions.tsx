@@ -5,9 +5,10 @@ import { getProjectState } from "@/state/project-state";
 import { Models } from "@nuvix/console";
 import { ColumnDef } from "@tanstack/react-table";
 import { Chip, Column, Row, useToast } from "@/ui/components";
-import { Button, Text } from "@chakra-ui/react";
+import { Button, IconButton, Text } from "@chakra-ui/react";
 import { DataGrid, DataGridSkelton } from "@/ui/modules/data-grid";
 import { EmptyState } from "@/ui/modules/layout";
+import { LuTrash2 } from "react-icons/lu";
 
 const SessionPage = () => {
   const [sessions, setSessions] = useState<Models.SessionList>({
@@ -68,7 +69,18 @@ const SessionPage = () => {
       header: "",
       accessorKey: "$id",
       cell(props) {
-        return <Button disabled={loading}>Sign Out</Button>;
+        return (
+          <IconButton
+            size={"sm"}
+            variant={"ghost"}
+            disabled={loading}
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+          >
+            <LuTrash2 />
+          </IconButton>
+        );
       },
     },
   ];

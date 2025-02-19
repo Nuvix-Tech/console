@@ -11,6 +11,9 @@ import React, { PropsWithChildren, useEffect } from "react";
 
 const Layout: React.FC<PropsWithChildren<{ teamId: string }>> = ({ children, teamId }) => {
   const { sdk } = getProjectState();
+  teamPageState._update = async () => {
+    teamPageState.team = await sdk?.teams.get(teamId)!;
+  };
   projectState.sidebar.first = <SidebarAddon teamId={teamId} />;
 
   useEffect(() => {

@@ -4,7 +4,6 @@ import { useProxy } from "valtio/utils";
 
 interface UserPageState {
   user?: Models.User<Record<string, any>>;
-  _user?: Models.User<Record<string, any>>;
   loading: boolean;
   _update: () => Promise<void>;
 }
@@ -18,10 +17,14 @@ export const getUserPageState = () => useProxy(userPageState);
 
 interface TeamPageState {
   team: Models.Team<Record<string, any>>;
+  loading: boolean;
+  _update: () => Promise<void>;
 }
 
 export const teamPageState = proxy<TeamPageState>({
   team: null as unknown as Models.Team<any>,
+  loading: true,
+  _update: async () => {},
 });
 
 export const getTeamPageState = () => useProxy(teamPageState);

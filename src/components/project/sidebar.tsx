@@ -69,6 +69,7 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
     {
       name: "Authentication",
       href: `/console/project/${id}/authentication/users`,
+      active: pathname.includes(`/console/project/${id}/authentication`),
       icon: <span className="icon-users" />,
     },
     {
