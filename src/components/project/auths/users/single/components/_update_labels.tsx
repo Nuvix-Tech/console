@@ -19,7 +19,7 @@ export const UpdateLabels = () => {
     <>
       <Form
         initialValues={{
-          labels: user?.labels,
+          labels: user?.labels ?? [],
         }}
         enableReinitialize
         validationSchema={schema}
@@ -55,7 +55,12 @@ export const UpdateLabels = () => {
               </Text>
             </Stack>
             <Stack maxW={{ base: "full", md: "1/2" }} width={"full"}>
-              <InputTagField label={"labels"} name="labels" />
+              <InputTagField
+                label={"labels"}
+                name="labels"
+                helperText="Only alphanumeric characters are allowed."
+                suggestion={["admin", "vip", "pro", "vendor"]}
+              />
             </Stack>
           </Stack>
         </CardBox>

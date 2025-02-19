@@ -1,9 +1,11 @@
 import React from "react";
-import { VStack, HStack, Input, Button, Box, Text, InputProps } from "@chakra-ui/react";
+import { VStack, HStack, Input, Button, Box, Text, InputProps, Stack } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 import { Field, FieldProps } from "@/components/ui/field";
 import { PasswordInput } from "@/components/ui/password-input";
-import { TagInput, TagInputProps } from "@/ui/components";
+import { Chip, TagInput, TagInputProps } from "@/ui/components";
+import { CloseButton } from "@/components/ui/close-button";
+import { LuPlus } from "react-icons/lu";
 
 interface Props {
   name: string;
@@ -39,10 +41,23 @@ export const InputField = (props: InputFieldProps) => {
   );
 };
 
-type InputTagFieldProps = FieldProps & Omit<TagInputProps, "onChange" | "value" | "id"> & Props;
+type InputTagFieldProps = FieldProps &
+  Omit<TagInputProps, "onChange" | "value" | "id"> &
+  Props & {
+    suggestion?: string[];
+    removeOnSelect?: boolean;
+  };
 
 export const InputTagField = (props: InputTagFieldProps) => {
-  const { label, errorText, helperText, optionalText, ...rest } = props;
+  const {
+    label,
+    errorText,
+    helperText,
+    optionalText,
+    suggestion = [],
+    removeOnSelect,
+    ...rest
+  } = props;
   const { values, errors, touched, handleBlur, setFieldValue } =
     useFormikContext<Record<string, string[]>>();
 
@@ -55,15 +70,41 @@ export const InputTagField = (props: InputTagFieldProps) => {
         helperText={helperText}
         {...{ label, optionalText }}
       >
-        <TagInput
-          id={rest.name}
-          value={values[rest.name]}
-          label={typeof label === "string" ? label : rest.name}
-          error={!!(errors[rest.name] && touched[rest.name])}
-          onBlur={handleBlur}
-          {...rest}
-          onChange={(v) => setFieldValue(rest.name, v)}
-        />
+        <VStack width="full" gap="3">
+          <TagInput
+            id={rest.name}
+            value={values[rest.name]}
+            label={typeof label === "string" ? label : rest.name}
+            error={!!(errors[rest.name] && touched[rest.name])}
+            onBlur={handleBlur}
+            {...rest}
+            onChange={(v) => setFieldValue(rest.name, v)}
+          />
+          {suggestion.length ? (
+            <>
+              <Stack gap={"4"} flexWrap="wrap" direction={"row"}>
+                {suggestion
+                  .filter((v) => !removeOnSelect || !values[rest.name].includes(v))
+                  .map((s, i) => (
+                    <Chip
+                      label={s}
+                      key={i}
+                      onClick={() => {
+                        const newValue = removeOnSelect
+                          ? [...values[rest.name], s]
+                          : values[rest.name].includes(s)
+                            ? values[rest.name].filter((val) => val !== s)
+                            : [...values[rest.name], s];
+                        setFieldValue(rest.name, newValue);
+                      }}
+                      prefixIcon="plus"
+                      selected={false}
+                    />
+                  ))}
+              </Stack>
+            </>
+          ) : null}
+        </VStack>
       </Field>
     </>
   );
@@ -100,7 +141,7 @@ export const InputObjectField: React.FC<InputObjectFieldProps> = ({
   };
 
   const handleAddField = () => {
-    const newKey = `newKey${Date.now()}`;
+    const newKey = "";
     setFieldValue(name, { ...values[name], [newKey]: "" });
   };
 
@@ -110,7 +151,7 @@ export const InputObjectField: React.FC<InputObjectFieldProps> = ({
     setFieldValue(name, updatedValues);
   };
 
-  const currentValues = values[name] || {};
+  const currentValues = values[name] || { "": "" };
 
   return (
     <Field
@@ -128,29 +169,34 @@ export const InputObjectField: React.FC<InputObjectFieldProps> = ({
       }
       invalid={!!(errors[name] && touched[name])}
       helperText={helperText}
-      {...{ optionalText, label }}
+      {...{ optionalText }}
     >
       <VStack width="full" gap={4}>
         {Object.entries(currentValues).map(([key, value]) => (
           <HStack key={key} width="full" gap={2}>
             <Input
               placeholder="Enter Key"
+              size={"xs"}
               value={key}
               onChange={(e) => handleFieldChange(key, e.target.value, value)} // Pass old key
               onBlur={() => {}}
             />
             <Input
               placeholder="Enter Value"
+              size={"xs"}
               value={value}
               onChange={(e) => handleFieldChange(key, key, e.target.value)} // Pass old key, keep key if value is changed
               onBlur={() => {}}
             />
-            <Button colorScheme="red" size="sm" onClick={() => handleDeleteField(key)}>
-              Delete
-            </Button>
+            <CloseButton
+              size={"xs"}
+              onClick={() => handleDeleteField(key)}
+              disabled={!key && !value}
+            />
           </HStack>
         ))}
-        <Button colorScheme="blue" size="sm" onClick={handleAddField}>
+        <Button variant={"ghost"} size="xs" onClick={handleAddField}>
+          <LuPlus />
           Add Field
         </Button>
       </VStack>
