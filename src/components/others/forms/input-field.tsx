@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { VStack, HStack, Input, Button, Box, Text, InputProps, Stack } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 import { Field, FieldProps } from "@/components/ui/field";
@@ -117,6 +117,8 @@ interface InputObjectFieldProps extends FieldProps {
   optionalText?: string;
 }
 
+type Values = { key: string; value: string }[];
+
 export const InputObjectField: React.FC<InputObjectFieldProps> = ({
   label,
   errorText,
@@ -125,33 +127,39 @@ export const InputObjectField: React.FC<InputObjectFieldProps> = ({
   name,
   ...rest
 }) => {
-  const { values, errors, touched, setFieldValue } =
+  const [_values, setValues] = useState<Values>([]);
+  const { values, errors, touched, setFieldValue, initialValues } =
     useFormikContext<Record<string, { [key: string]: string }>>();
 
-  const handleFieldChange = (oldKey: string, newKey: string, value: string) => {
-    const updatedValues = { ...values[name] };
+  useEffect(() => {
+    const values: Record<string, string> = {};
+    _values.map(({ key, value }) => key && (values[key] = value));
+    setFieldValue(name, values);
+  }, [_values]);
 
-    // Delete the old key if it changed
-    if (oldKey !== newKey) {
-      delete updatedValues[oldKey];
-    }
-    updatedValues[newKey] = value; // Set the new key and value
+  useEffect(() => {
+    let values: Values = [];
+    Object.entries(initialValues[name] ?? {}).map(([key, value], i) =>
+      values.push({ key: key, value: value }),
+    );
+    setValues(values.length ? values : [{ key: "", value: "" }]);
+  }, [initialValues]);
 
-    setFieldValue(name, updatedValues);
+  const handleFieldChange = (key: "key" | "value", value: string, index: number) => {
+    const newValues: Values = [..._values];
+    newValues[index][key] = value;
+    setValues(newValues);
   };
 
   const handleAddField = () => {
-    const newKey = "";
-    setFieldValue(name, { ...values[name], [newKey]: "" });
+    setValues([..._values, { key: "", value: "" }]);
   };
 
-  const handleDeleteField = (keyToDelete: string) => {
-    const updatedValues = { ...values[name] };
-    delete updatedValues[keyToDelete];
-    setFieldValue(name, updatedValues);
+  const handleDeleteField = (index: number) => {
+    const newValues: Values = [..._values];
+    newValues.splice(index, 1);
+    setValues(newValues);
   };
-
-  const currentValues = values[name] || { "": "" };
 
   return (
     <Field
@@ -159,7 +167,7 @@ export const InputObjectField: React.FC<InputObjectFieldProps> = ({
       errorText={
         touched[name] && errors[name] ? (
           <Box>
-            {Object.entries(errors[name]).map(([key, message]) => (
+            {Object.entries(errors[name] ?? {}).map(([key, message]) => (
               <Text key={key} color="red.500" fontSize="sm">
                 {message as string}
               </Text>
@@ -171,31 +179,39 @@ export const InputObjectField: React.FC<InputObjectFieldProps> = ({
       helperText={helperText}
       {...{ optionalText }}
     >
-      <VStack width="full" gap={4}>
-        {Object.entries(currentValues).map(([key, value]) => (
-          <HStack key={key} width="full" gap={2}>
-            <Input
-              placeholder="Enter Key"
-              size={"xs"}
-              value={key}
-              onChange={(e) => handleFieldChange(key, e.target.value, value)} // Pass old key
-              onBlur={() => {}}
-            />
-            <Input
-              placeholder="Enter Value"
-              size={"xs"}
-              value={value}
-              onChange={(e) => handleFieldChange(key, key, e.target.value)} // Pass old key, keep key if value is changed
-              onBlur={() => {}}
-            />
-            <CloseButton
-              size={"xs"}
-              onClick={() => handleDeleteField(key)}
-              disabled={!key && !value}
-            />
-          </HStack>
-        ))}
-        <Button variant={"ghost"} size="xs" onClick={handleAddField}>
+      <VStack width="full" gap={2} alignItems={"flex-start"}>
+        <HStack width="full" gap={2} paddingEnd={"8"}>
+          <Field label="Key" required />
+          <Field label="Value" required />
+        </HStack>
+        <VStack width="full" gap={2}>
+          {_values.map(({ key, value }, i) => (
+            <Fragment key={i}>
+              <HStack width="full" gap={4}>
+                <Input
+                  placeholder="Enter Key"
+                  size={"xs"}
+                  value={key}
+                  onChange={(e) => handleFieldChange("key", e.target.value, i)}
+                />
+
+                <Input
+                  placeholder="Enter Value"
+                  size={"xs"}
+                  value={value}
+                  onChange={(e) => handleFieldChange("value", e.target.value, i)}
+                />
+
+                <CloseButton
+                  size={"xs"}
+                  onClick={() => handleDeleteField(i)}
+                  disabled={_values.length === 1}
+                />
+              </HStack>
+            </Fragment>
+          ))}
+        </VStack>
+        <Button variant={"ghost"} colorPalette={"fg"} size="xs" onClick={handleAddField}>
           <LuPlus />
           Add Field
         </Button>
