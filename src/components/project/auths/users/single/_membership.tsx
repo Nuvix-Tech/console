@@ -4,7 +4,7 @@ import { getUserPageState } from "@/state/page";
 import { getProjectState } from "@/state/project-state";
 import { Models } from "@nuvix/console";
 import { ColumnDef } from "@tanstack/react-table";
-import { Column, Row, useToast } from "@/ui/components";
+import { Column, Row, useConfirm, useToast } from "@/ui/components";
 import { Avatar } from "@/components/ui/avatar";
 import { IconButton, Text } from "@chakra-ui/react";
 import { Tooltip } from "@/components/ui/tooltip";
@@ -22,6 +22,7 @@ const MembershipPage = () => {
   const [loading, setLoading] = React.useState(true);
   const { sdk, project } = getProjectState();
   const { addToast } = useToast();
+  const confirm = useConfirm();
 
   const authPath = `/console/project/${project?.$id}/authentication`;
 
@@ -37,22 +38,33 @@ const MembershipPage = () => {
     get();
   }, [user, sdk]);
 
-  const onDeleteMembersip = async (teamId: string, membershipId: string) => {
-    setLoading(true);
-    try {
-      await sdk!.teams.deleteMembership(teamId, membershipId);
-      addToast({
-        variant: "success",
-        message: "Membership successfully deleted.",
-      });
-      await get();
-    } catch (e: any) {
-      addToast({
-        variant: "danger",
-        message: e.message,
-      });
-    } finally {
-      setLoading(false);
+  const onDeleteMembersip = async (member: Models.Membership) => {
+    if (
+      await confirm({
+        title: 'Delete Membership',
+        description: `Are you sure you want to delete the membership of ${member.userName} from the team ${member.teamName}? This action cannot be undone.`,
+        confirm: {
+          text: 'Delete',
+          variant: 'danger'
+        }
+      })
+    ) {
+      setLoading(true);
+      try {
+        await sdk!.teams.deleteMembership(member.teamId, member.$id);
+        addToast({
+          variant: "success",
+          message: "Membership successfully deleted.",
+        });
+        await get();
+      } catch (e: any) {
+        addToast({
+          variant: "danger",
+          message: e.message,
+        });
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -108,7 +120,7 @@ const MembershipPage = () => {
             disabled={loading}
             onClick={(e) => {
               e.preventDefault();
-              onDeleteMembersip(props.row.original.teamId, props.row.original.$id);
+              onDeleteMembersip(props.row.original);
             }}
           >
             <LuTrash2 />

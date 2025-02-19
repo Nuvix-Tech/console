@@ -64,3 +64,4 @@ export * from "./ToggleButton";
 export * from "./Tooltip";
 export * from "./User";
 export * from "./UserMenu";
+export * from "./ConfirmDialogProvider";

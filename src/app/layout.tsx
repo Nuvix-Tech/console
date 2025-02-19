@@ -1,4 +1,3 @@
-// import "@appwrite.io/pink";
 import "@appwrite.io/pink-icons";
 import "@/ui/styles/index.scss";
 import "@/ui/tokens/index.scss";
@@ -8,7 +7,7 @@ import classNames from "classnames";
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 
-import { Column, Flex, ToastProvider } from "@/ui/components";
+import { Column, ConfirmProvider, Flex, ToastProvider } from "@/ui/components";
 import { baseURL, meta, og, schema, social, style } from "@/ui/resources/config";
 
 import { Inter } from "next/font/google";
@@ -30,10 +29,6 @@ type FontConfig = {
   variable: string;
 };
 
-/*
-  Replace with code for secondary and tertiary fonts
-  from https://once-ui.com/customize
-*/
 const secondary: FontConfig | undefined = undefined;
 const tertiary = Space_Grotesk({
   variable: "--font-tertiary",
@@ -118,7 +113,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           code.variable,
           secondary ? secondary.variable : "",
           tertiary ? tertiary.variable : "",
-          "theme-dark",
         )}
       >
         <head>
@@ -130,18 +124,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             }}
           />
         </head>
-        <ToastProvider>
-          <Column
-            suppressHydrationWarning
-            as="body"
-            fillWidth
-            margin="0"
-            padding="0"
-            className="theme-dark"
-          >
-            <Providers>{children}</Providers>
-          </Column>
-        </ToastProvider>
+        <ConfirmProvider>
+          <ToastProvider>
+            <Column
+              suppressHydrationWarning
+              as="body"
+              fillWidth
+              margin="0"
+              padding="0"
+            >
+              <Providers>{children}</Providers>
+            </Column>
+          </ToastProvider>
+        </ConfirmProvider>
       </Flex>
     </>
   );
