@@ -28,9 +28,16 @@ import { ProgressBar } from "@/components/ui/progress";
 
 interface TableProps<T> extends Omit<TableOptions<T>, "getCoreRowModel"> {
   loading?: boolean;
+  showPaggination?: boolean;
 }
 
-const DataGrid = <T,>({ columns, data, loading = false, ...rest }: TableProps<T>) => {
+const DataGrid = <T,>({
+  columns,
+  data,
+  loading = false,
+  showPaggination = true,
+  ...rest
+}: TableProps<T>) => {
   const searchParams = useSearchParams();
   const path = usePathname();
   const { push } = useRouter();
@@ -166,52 +173,54 @@ const DataGrid = <T,>({ columns, data, loading = false, ...rest }: TableProps<T>
         </Table.Root>
       </Table.ScrollArea>
 
-      <Row marginTop="20" marginY="12" fillWidth horizontal="space-between" vertical="center">
-        <Row vertical="center" gap="12">
-          <SelectRoot
-            collection={pages}
-            size="sm"
-            width="80px"
-            disabled={loading}
-            value={[table.getState().pagination.pageSize.toString()]}
-            onValueChange={(details) => {
-              const [value] = details.value;
-              onPageSizeChange(parseInt(value));
-            }}
+      {showPaggination ? (
+        <Row marginTop="20" marginY="12" fillWidth horizontal="space-between" vertical="center">
+          <Row vertical="center" gap="12">
+            <SelectRoot
+              collection={pages}
+              size="sm"
+              width="80px"
+              disabled={loading}
+              value={[table.getState().pagination.pageSize.toString()]}
+              onValueChange={(details) => {
+                const [value] = details.value;
+                onPageSizeChange(parseInt(value));
+              }}
+            >
+              <SelectTrigger>
+                <SelectValueText placeholder="Select Limit" />
+              </SelectTrigger>
+              <SelectContent>
+                {pages.items.map((page) => (
+                  <SelectItem item={page} key={page}>
+                    {page}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </SelectRoot>
+            <p className="text"> Total results: {table.getRowCount()}</p>
+          </Row>
+          <PaginationRoot
+            count={table.getRowCount()}
+            pageSize={table.getState().pagination.pageSize}
+            onPageChange={(details) => onPageChange(details.page)}
+            defaultPage={1}
+            variant="subtle"
           >
-            <SelectTrigger>
-              <SelectValueText placeholder="Select Limit" />
-            </SelectTrigger>
-            <SelectContent>
-              {pages.items.map((page) => (
-                <SelectItem item={page} key={page}>
-                  {page}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </SelectRoot>
-          <p className="text"> Total results: {table.getRowCount()}</p>
+            <HStack>
+              <PaginationPrevTrigger
+                onClick={() => table.previousPage()}
+                disabled={loading || !table.getCanPreviousPage()}
+              />
+              <PaginationItems />
+              <PaginationNextTrigger
+                onClick={() => table.nextPage()}
+                disabled={loading || !table.getCanNextPage()}
+              />
+            </HStack>
+          </PaginationRoot>
         </Row>
-        <PaginationRoot
-          count={table.getRowCount()}
-          pageSize={table.getState().pagination.pageSize}
-          onPageChange={(details) => onPageChange(details.page)}
-          defaultPage={1}
-          variant="subtle"
-        >
-          <HStack>
-            <PaginationPrevTrigger
-              onClick={() => table.previousPage()}
-              disabled={loading || !table.getCanPreviousPage()}
-            />
-            <PaginationItems />
-            <PaginationNextTrigger
-              onClick={() => table.nextPage()}
-              disabled={loading || !table.getCanNextPage()}
-            />
-          </HStack>
-        </PaginationRoot>
-      </Row>
+      ) : null}
     </VStack>
   );
 };

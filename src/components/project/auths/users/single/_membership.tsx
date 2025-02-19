@@ -4,43 +4,62 @@ import { getUserPageState } from "@/state/page";
 import { getProjectState } from "@/state/project-state";
 import { Models } from "@nuvix/console";
 import { ColumnDef } from "@tanstack/react-table";
-import { Column, Row } from "@/ui/components";
+import { Column, Row, useToast } from "@/ui/components";
 import { Avatar } from "@/components/ui/avatar";
-import { Text } from "@chakra-ui/react";
+import { IconButton, Text } from "@chakra-ui/react";
 import { Tooltip } from "@/components/ui/tooltip";
 import { formatDate } from "@/lib/utils";
-import { LuDelete } from "react-icons/lu";
+import { LuTrash2 } from "react-icons/lu";
 import { DataGrid, DataGridSkelton } from "@/ui/modules/data-grid";
 import { EmptyState } from "@/ui/modules/layout";
-
 
 const MembershipPage = () => {
   const [memberships, setMemberships] = useState<Models.MembershipList>({
     memberships: [],
-    total: 0
-  })
+    total: 0,
+  });
   const { user } = getUserPageState();
   const [loading, setLoading] = React.useState(true);
   const { sdk, project } = getProjectState();
+  const { addToast } = useToast();
 
   const authPath = `/console/project/${project?.$id}/authentication`;
 
+  async function get() {
+    setLoading(true);
+    let memberships = await sdk!.users.listMemberships(user?.$id!);
+    setMemberships(memberships!);
+    setLoading(false);
+  }
+
   useEffect(() => {
     if (!user && !sdk) return;
-    setLoading(true);
+    get();
+  }, [user, sdk]);
 
-    async function get() {
-      let memberships = await sdk?.users.listMemberships(user?.$id!);
-      setMemberships(memberships!)
+  const onDeleteMembersip = async (teamId: string, membershipId: string) => {
+    setLoading(true);
+    try {
+      await sdk!.teams.deleteMembership(teamId, membershipId);
+      addToast({
+        variant: "success",
+        message: "Membership successfully deleted.",
+      });
+      await get();
+    } catch (e: any) {
+      addToast({
+        variant: "danger",
+        message: e.message,
+      });
+    } finally {
       setLoading(false);
     }
-    get()
-  }, [user, sdk])
+  };
 
   const columns: ColumnDef<Models.Membership>[] = [
     {
       header: "Name",
-      accessorKey: "name",
+      accessorKey: "userName",
       cell(props) {
         return (
           <Row vertical="center" gap="12">
@@ -83,14 +102,16 @@ const MembershipPage = () => {
       accessorKey: "$id",
       cell(props) {
         return (
-          <Tooltip showArrow content={'Delete'}>
-            <LuDelete />
-          </Tooltip>
+          <IconButton
+            disabled={loading}
+            onClick={() => onDeleteMembersip(props.row.original.teamId, props.row.original.$id)}
+          >
+            <LuTrash2 />
+          </IconButton>
         );
       },
     },
   ];
-
 
   return (
     <Column paddingX="16" fillWidth>
@@ -106,16 +127,15 @@ const MembershipPage = () => {
         <DataGrid<Models.Membership>
           columns={columns}
           data={memberships.memberships}
-          manualPagination
           rowCount={memberships.total}
           loading={loading}
+          showPaggination={false}
         />
       ) : (
         <EmptyState title="No Memberships" description="No memberships have been created yet." />
       )}
     </Column>
-  )
-}
-
+  );
+};
 
 export default MembershipPage;
