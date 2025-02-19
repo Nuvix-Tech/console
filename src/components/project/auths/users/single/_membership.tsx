@@ -41,12 +41,12 @@ const MembershipPage = () => {
   const onDeleteMembersip = async (member: Models.Membership) => {
     if (
       await confirm({
-        title: 'Delete Membership',
+        title: "Delete Membership",
         description: `Are you sure you want to delete the membership of ${member.userName} from the team ${member.teamName}? This action cannot be undone.`,
         confirm: {
-          text: 'Delete',
-          variant: 'danger'
-        }
+          text: "Delete",
+          variant: "danger",
+        },
       })
     ) {
       setLoading(true);
