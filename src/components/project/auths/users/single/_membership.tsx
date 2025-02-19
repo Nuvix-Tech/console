@@ -103,8 +103,13 @@ const MembershipPage = () => {
       cell(props) {
         return (
           <IconButton
+            size={"sm"}
+            variant={"ghost"}
             disabled={loading}
-            onClick={() => onDeleteMembersip(props.row.original.teamId, props.row.original.$id)}
+            onClick={(e) => {
+              e.preventDefault();
+              onDeleteMembersip(props.row.original.teamId, props.row.original.$id);
+            }}
           >
             <LuTrash2 />
           </IconButton>
