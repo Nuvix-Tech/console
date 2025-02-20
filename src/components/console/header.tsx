@@ -1,11 +1,10 @@
 "use client";
 
 import { sdkForConsole } from "@/lib/sdk";
-import { ConsoleContext } from "@/lib/store/console";
 import { Badge, Logo, NavIcon, Row, ToggleButton } from "@/ui/components";
 import { usePathname } from "next/navigation";
 import type React from "react";
-import { useContext, useRef } from "react";
+import { useRef } from "react";
 import { Avatar, HStack, Stack, Text } from "@chakra-ui/react";
 import { appState, getAppState } from "@/state/app-state";
 import {
@@ -25,11 +24,9 @@ interface HeaderProps {
 }
 
 const ConsoleHeader: React.FC<HeaderProps> = () => {
-  const { organization, isDrawerOpen } = getAppState();
-  const { data } = useContext(ConsoleContext);
+  const { organization, isDrawerOpen, user } = getAppState();
   const { avatars } = sdkForConsole;
   const pathname = usePathname() ?? "";
-  const user = data.user;
   const headerRef = useRef<any>(null);
 
   return (

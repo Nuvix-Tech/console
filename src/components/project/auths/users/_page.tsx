@@ -13,12 +13,10 @@ import { useSearchParams } from "next/navigation";
 import { EmptyState } from "@/ui/modules/layout/empty-state";
 import { EmptySearch } from "@/ui/modules/layout";
 import { CopyID } from "@/components/ui/copy-id";
-import { getAppState } from "@/state/app-state";
 
 const UsersPage = () => {
   const state = getProjectState();
-  const { permissions } = getAppState();
-  const { sdk, project } = state;
+  const { sdk, project, permissions } = state;
   const [loading, setLoading] = React.useState(true);
   const [users, setUsers] = React.useState<Models.UserList<any>>({
     users: [],
