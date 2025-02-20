@@ -72,9 +72,11 @@ const SearchAndCreate: React.FC<SearchAndCreateProps> = ({ placeholder, button }
           </InputGroup>
         </Row>
 
-        {button?.allowed ? <Button variant="primary" size="m" prefixIcon="plus">
-          {button?.text}
-        </Button> : null}
+        {button?.allowed ? (
+          <Button variant="primary" size="m" prefixIcon="plus">
+            {button?.text}
+          </Button>
+        ) : null}
       </Row>
     </>
   );

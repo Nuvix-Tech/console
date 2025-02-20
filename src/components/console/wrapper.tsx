@@ -24,15 +24,7 @@ const ConsoleWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) =
     fetchUser();
   }, []);
 
-  return (
-    <>
-      {isLoading ? (
-        <LoadingUI />
-      ) : (
-        children
-      )}
-    </>
-  );
+  return <>{isLoading ? <LoadingUI /> : children}</>;
 };
 
 export default ConsoleWrapper;

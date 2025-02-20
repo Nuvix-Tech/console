@@ -19,11 +19,11 @@ export default function Page() {
       if (!user) return;
       let org: Models.Organization<any> | null = null;
 
-      if (user.prefs?.organization) {
+      if (user?.prefs?.organization) {
         try {
           org = await organizations.get(user.prefs.organization);
-        } catch (e) {
-          /* noop */
+        } catch (e: any) {
+          // noop
         }
       }
 
@@ -36,10 +36,10 @@ export default function Page() {
 
         appState.user = await account.updatePrefs({
           ...user.prefs,
-          organization: orgs.teams[0].$id,
+          organization: orgs.teams?.[0]?.$id,
         });
       }
-      const scopes = await organizations.getScopes(org!.$id)
+      const scopes = await organizations.getScopes(org!.$id);
       appState.scopes = scopes;
       replace(`/console/organization/${org?.$id}`);
     }
@@ -49,7 +49,7 @@ export default function Page() {
 
   return (
     <Row fill center>
-      <Spinner size={'xl'} />
+      <Spinner size={"xl"} />
     </Row>
   );
 }
