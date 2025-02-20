@@ -13,9 +13,11 @@ import { useSearchParams } from "next/navigation";
 import { EmptyState } from "@/ui/modules/layout/empty-state";
 import { EmptySearch } from "@/ui/modules/layout";
 import { CopyID } from "@/components/ui/copy-id";
+import { getAppState } from "@/state/app-state";
 
 const UsersPage = () => {
   const state = getProjectState();
+  const { permissions } = getAppState();
   const { sdk, project } = state;
   const [loading, setLoading] = React.useState(true);
   const [users, setUsers] = React.useState<Models.UserList<any>>({
@@ -26,6 +28,7 @@ const UsersPage = () => {
   const limit = searchParams.get("limit") ? Number(searchParams.get("limit")) : 12;
   const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
   const search = searchParams.get("search");
+  const { canWriteProjects } = permissions;
 
   projectState.sidebar.first = null;
 
@@ -160,7 +163,7 @@ const UsersPage = () => {
       ) : users.total > 0 || !!search || page > 1 ? (
         <>
           <SearchAndCreate
-            button={{ text: "Create User" }}
+            button={{ text: "Create User", allowed: canWriteProjects }}
             placeholder="Search by name, email, phone or ID"
           />
 

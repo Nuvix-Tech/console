@@ -2,6 +2,9 @@
 
 import { sdkForConsole } from "@/lib/sdk";
 import { appState } from "@/state/app-state";
+import { Row } from "@/ui/components";
+import { Spinner } from "@chakra-ui/react";
+import { Models } from "@nuvix/console";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -14,31 +17,39 @@ export default function Page() {
   useEffect(() => {
     async function fetchUser() {
       if (!user) return;
+      let org: Models.Organization<any> | null = null;
 
       if (user.prefs?.organization) {
-        replace(`/console/organization/${user.prefs.organization}`);
-        return;
+        try {
+          org = await organizations.get(user.prefs.organization);
+        } catch (e) {
+          /* noop */
+        }
       }
 
-      const orgs = await organizations.list();
-      if (orgs.total === 0) {
-        replace("/console/onboarding");
-        return;
-      }
+      if (!org) {
+        const orgs = await organizations.list();
+        if (orgs.total === 0) {
+          replace("/console/onboarding");
+          return;
+        }
 
-      appState.user = await account.updatePrefs({
-        ...user.prefs,
-        organization: orgs.teams[0].$id,
-      });
+        appState.user = await account.updatePrefs({
+          ...user.prefs,
+          organization: orgs.teams[0].$id,
+        });
+      }
+      const scopes = await organizations.getScopes(org!.$id)
+      appState.scopes = scopes;
+      replace(`/console/organization/${org?.$id}`);
     }
 
     fetchUser();
   }, [user?.$id]);
 
   return (
-    <div>
-      <h1>Console</h1>
-      <p>This is the console page.</p>
-    </div>
+    <Row fill center>
+      <Spinner size={'xl'} />
+    </Row>
   );
 }

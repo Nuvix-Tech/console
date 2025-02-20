@@ -12,6 +12,7 @@ interface SearchAndCreateProps {
   onClear?: () => void;
   onCreate?: () => void;
   button?: {
+    allowed?: boolean;
     text: string;
     disabled?: boolean;
     tooltip?: string;
@@ -71,9 +72,9 @@ const SearchAndCreate: React.FC<SearchAndCreateProps> = ({ placeholder, button }
           </InputGroup>
         </Row>
 
-        <Button variant="primary" size="m" prefixIcon="plus">
+        {button?.allowed ? <Button variant="primary" size="m" prefixIcon="plus">
           {button?.text}
-        </Button>
+        </Button> : null}
       </Row>
     </>
   );
