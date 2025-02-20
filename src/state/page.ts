@@ -16,13 +16,12 @@ export const userPageState = proxy<UserPageState>({
 export const getUserPageState = () => useProxy(userPageState);
 
 interface TeamPageState {
-  team: Models.Team<Record<string, any>>;
+  team?: Models.Team<Record<string, any>>;
   loading: boolean;
   _update: () => Promise<void>;
 }
 
 export const teamPageState = proxy<TeamPageState>({
-  team: null as unknown as Models.Team<any>,
   loading: true,
   _update: async () => {},
 });

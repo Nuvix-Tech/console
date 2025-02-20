@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/popover";
 import { getStatus } from "@/components/others/user";
 import {
+  DeleteUser,
   UpdateEmail,
   UpdateLabels,
   UpdateName,
@@ -39,6 +40,7 @@ const UserPage: React.FC<{ id: string }> = ({ id }) => {
           <UpdatePassword />
           <UpdateLabels />
           <UpdatePrefs />
+          <DeleteUser />
         </Column>
       ) : (
         <>
