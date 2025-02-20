@@ -4,7 +4,7 @@ import React, { PropsWithChildren } from "react";
 interface InfoCardProps {}
 
 interface UpdateCardProps extends PropsWithChildren {
-  actions: React.ReactNode;
+  actions?: React.ReactNode;
 }
 
 export const CardBox = (props: UpdateCardProps) => {
@@ -12,10 +12,14 @@ export const CardBox = (props: UpdateCardProps) => {
 
   return (
     <>
-      <Card.Root variant={"subtle"}>
+      <Card.Root variant={"outline"}>
         <Card.Body>{children}</Card.Body>
-        <Separator variant={"dotted"} paddingBottom={"6"} />
-        <Card.Footer justifyContent={"flex-end"}>{actions}</Card.Footer>
+        {actions ? (
+          <>
+            <Separator variant={"dashed"} paddingBottom={"6"} />
+            <Card.Footer justifyContent={"flex-end"}>{actions}</Card.Footer>{" "}
+          </>
+        ) : null}
       </Card.Root>
     </>
   );

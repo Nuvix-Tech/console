@@ -1,7 +1,7 @@
 "use client";
 import { Column } from "@/ui/components";
 import React from "react";
-import { UpdateName, UpdatePrefs } from "./components";
+import { DeleteTeam, UpdateName, UpdatePrefs } from "./components";
 import { IDChip, TopCard } from "@/components/others";
 import { HStack, Stack, Text, VStack } from "@chakra-ui/react";
 import { Avatar } from "@/components/ui/avatar";
@@ -20,6 +20,7 @@ const SingleTeam: React.FC<TeamProps> = ({ id }) => {
         <TeamInfo />
         <UpdateName />
         <UpdatePrefs />
+        <DeleteTeam />
       </Column>
     </>
   );
