@@ -50,8 +50,8 @@ export const UpdatePrefs = () => {
             <Stack maxW={{ base: "full", md: "1/2" }} width={"full"} gap={"4"}>
               <Card.Title>Preferences</Card.Title>
               <Text textStyle={"sm"}>
-                Manage and update your team's preferences by storing shared information within the
-                team object, making it easily accessible to all members.
+                Update your team's preferences to ensure shared information is easily accessible to
+                all members.
               </Text>
             </Stack>
             <Stack maxW={{ base: "full", md: "1/2" }} width={"full"}>

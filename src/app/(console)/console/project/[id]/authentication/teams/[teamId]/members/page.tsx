@@ -1,12 +1,8 @@
+import { MembersPage } from "@/components/project/auths/teams";
 import React from "react";
 
 const TeamMembersPage: React.FC = () => {
-  return (
-    <div>
-      <h1>Team Members</h1>
-      {/* Add your team members component or logic here */}
-    </div>
-  );
+  return <MembersPage />;
 };
 
 export default TeamMembersPage;
