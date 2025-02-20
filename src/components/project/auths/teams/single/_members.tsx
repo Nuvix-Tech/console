@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { getTeamPageState } from "@/state/page";
 import { getProjectState } from "@/state/project-state";
-import { Models } from "@nuvix/console";
+import { Models, Query } from "@nuvix/console";
 import { ColumnDef } from "@tanstack/react-table";
 import { Column, Row, useConfirm, useToast } from "@/ui/components";
 import { Avatar } from "@/components/ui/avatar";
@@ -10,8 +10,9 @@ import { IconButton, Text } from "@chakra-ui/react";
 import { Tooltip } from "@/components/ui/tooltip";
 import { formatDate } from "@/lib/utils";
 import { LuTrash2 } from "react-icons/lu";
-import { DataGrid, DataGridSkelton } from "@/ui/modules/data-grid";
-import { EmptyState } from "@/ui/modules/layout";
+import { DataGrid, DataGridSkelton, SearchAndCreate } from "@/ui/modules/data-grid";
+import { EmptyState, EmptySearch } from "@/ui/modules/layout";
+import { useSearchParams } from "next/navigation";
 
 const MembersPage = () => {
   const [members, setMembers] = useState<Models.MembershipList>({
@@ -24,19 +25,26 @@ const MembersPage = () => {
   const { addToast } = useToast();
   const confirm = useConfirm();
 
+  const searchParams = useSearchParams();
+  const limit = searchParams.get("limit") ? Number(searchParams.get("limit")) : 12;
+  const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
+  const search = searchParams.get("search");
+
   const authPath = `/console/project/${project?.$id}/authentication`;
 
-  async function get() {
+  async function get(queries?: string[], search?: string) {
     setLoading(true);
-    let members = await sdk!.teams.listMemberships(team?.$id!);
+    let members = await sdk!.teams.listMemberships(team?.$id!, queries, search);
     setMembers(members!);
     setLoading(false);
   }
 
   useEffect(() => {
     if (!team && !sdk) return;
-    get();
-  }, [team, sdk]);
+    const queries: string[] = [];
+    queries.push(Query.limit(limit), Query.offset((page - 1) * limit), Query.orderDesc(""));
+    get(queries, search ?? undefined);
+  }, [team, sdk, limit, page, search]);
 
   const onDeleteMembersip = async (member: Models.Membership) => {
     if (
@@ -140,14 +148,29 @@ const MembersPage = () => {
 
       {loading && !members.total ? (
         <DataGridSkelton />
-      ) : members.total > 0 ? (
-        <DataGrid<Models.Membership>
-          columns={columns}
-          data={members.memberships}
-          rowCount={members.total}
-          loading={loading}
-          showPaggination={false}
-        />
+      ) : members.total > 0 || !!search || page > 1 ? (
+        <>
+          <SearchAndCreate button={{ text: "Create Membership" }} placeholder="Search by ID" />
+
+          {members.total > 0 ? (
+            <DataGrid<Models.Membership>
+              columns={columns}
+              data={members.memberships}
+              rowCount={members.total}
+              loading={loading}
+              manualPagination
+              state={{ pagination: { pageIndex: page, pageSize: limit } }}
+            />
+          ) : (
+            search && (
+              <EmptySearch
+                title={`Sorry, we couldn't find '${search}'`}
+                description="There are no members that match your search."
+                clearSearch
+              />
+            )
+          )}
+        </>
       ) : (
         <EmptyState title="No Members" description="No members have been created yet." />
       )}

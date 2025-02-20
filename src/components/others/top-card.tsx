@@ -2,11 +2,15 @@ import { Background, Row } from "@/ui/components";
 import { Stack } from "@chakra-ui/react";
 import { PropsWithChildren } from "react";
 
-const TopCard = ({ children }: PropsWithChildren) => {
+interface Props {
+  minHeight?: number;
+}
+
+const TopCard = ({ children, minHeight = 16 }: PropsWithChildren<Props>) => {
   return (
     <Row
       position="relative"
-      minHeight={16}
+      minHeight={minHeight}
       background="neutral-alpha-weak"
       radius="l"
       padding="12"

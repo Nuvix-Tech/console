@@ -30,7 +30,7 @@ const TeamInfo = () => {
   const { sdk } = getProjectState();
 
   return (
-    <TopCard>
+    <TopCard minHeight={8}>
       <Stack
         direction={{ base: "column", md: "row" }}
         gap={"2.5"}
