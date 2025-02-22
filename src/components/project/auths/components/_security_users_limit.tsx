@@ -1,7 +1,12 @@
 import { CardBox } from "@/components/others/card";
-import { Form, InputField, SubmitButton } from "@/components/others/forms";
+import { Form, RadioField, SubmitButton } from "@/components/others/forms";
+import { NumberInputField, NumberInputRoot } from "@/components/ui/number-input";
+import { Radio } from "@/components/ui/radio";
+import { sdkForConsole } from "@/lib/sdk";
 import { getProjectState } from "@/state/project-state";
-import { Card, Stack, Text } from "@chakra-ui/react";
+import { useToast } from "@/ui/components";
+import { Badge, Card, HStack, Stack, Text, VStack } from "@chakra-ui/react";
+import { useFormikContext } from "formik";
 import React from "react";
 import * as y from "yup";
 
@@ -10,32 +15,33 @@ const schema = y.object({
 });
 
 export const UsersLimit: React.FC = () => {
-  const { project } = getProjectState();
-
-  const onUpdate = async () => {};
+  const { project, _update } = getProjectState();
+  const { projects } = sdkForConsole;
+  const { addToast } = useToast();
 
   return (
     <>
       <Form
         initialValues={{
+          selected: project?.authLimit === 0 ? "1" : "2",
           limit: project?.authLimit,
         }}
         enableReinitialize
         validationSchema={schema}
         onSubmit={async (values) => {
-          // try {
-          //   await sdk?.users.updateEmail(user?.$id!, values.email!);
-          //   addToast({
-          //     variant: "success",
-          //     message: "User email has been updated successfully.",
-          //   });
-          //   await _update();
-          // } catch (e: any) {
-          //   addToast({
-          //     variant: "danger",
-          //     message: e.message,
-          //   });
-          // }
+          try {
+            await projects.updateAuthLimit(project?.$id!, Number(values.limit) ?? 0);
+            addToast({
+              variant: "success",
+              message: "Users limit updated.",
+            });
+            await _update();
+          } catch (e: any) {
+            addToast({
+              variant: "danger",
+              message: e.message,
+            });
+          }
         }}
       >
         <CardBox
@@ -47,15 +53,57 @@ export const UsersLimit: React.FC = () => {
         >
           <Stack direction={{ base: "column", md: "row" }} width={"full"} gap={"8"}>
             <Stack maxW={{ base: "full", md: "1/2" }} width={"full"} gap={"4"}>
-              <Card.Title>Users</Card.Title>
-              <Text textStyle={"sm"}>Update user's limit.</Text>
+              <Card.Title>Users limit</Card.Title>
+              <Text textStyle={"sm"}>
+                Restrict new user sign-ups for your project, regardless of authentication method.
+                User creation and team management remain available via your Nuvix console.
+              </Text>
             </Stack>
             <Stack maxW={{ base: "full", md: "1/2" }} width={"full"}>
-              <InputField label={"Users Limit"} name="limit" />
+              <RadioField name="selected">
+                <VStack gap="4" alignItems={"start"}>
+                  <Radio1 />
+                  <Radio2 />
+                </VStack>
+              </RadioField>
             </Stack>
           </Stack>
         </CardBox>
       </Form>
     </>
+  );
+};
+
+export const Radio2 = () => {
+  const { values, setFieldValue } = useFormikContext<Record<string, string>>();
+
+  return (
+    <Radio value="2">
+      <HStack gap={4}>
+        Limited
+        <NumberInputRoot
+          defaultValue="100"
+          min={0}
+          disabled={values.selected === "1"}
+          value={values.selected === "1" ? "100" : undefined}
+          onValueChange={(e) => setFieldValue("limit", Number(e.value))}
+        >
+          <NumberInputField />
+        </NumberInputRoot>
+      </HStack>
+    </Radio>
+  );
+};
+
+export const Radio1 = () => {
+  const { values, setFieldValue } = useFormikContext<Record<string, string>>();
+
+  return (
+    <Radio value="1" onClick={() => setFieldValue("limit", 0)}>
+      <HStack gap={6}>
+        Unlimited
+        <Badge variant={"surface"}>recommended</Badge>
+      </HStack>
+    </Radio>
   );
 };

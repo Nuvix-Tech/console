@@ -1,7 +1,7 @@
 "use client";
 import { proxy } from "valtio";
 import { Models } from "@nuvix/console";
-import type { sdkForProject } from "@/lib/sdk";
+import { sdkForConsole, type sdkForProject } from "@/lib/sdk";
 import { useProxy } from "valtio/utils";
 import { SidebarItem, SidebarItemGroup } from "@/components/project/sidebar";
 import React from "react";
@@ -22,11 +22,13 @@ interface IProjectState {
   sidebarItems: (SidebarItemGroup | SidebarItem)[];
   sidebar: Sidebar;
   permissions: AppPermission;
+  _update: () => Promise<void>;
 }
 
 class ProjectState implements IProjectState {
   initialfetching = true;
   scopes: Models.Roles = { roles: ["any"], scopes: [] };
+
   get permissions() {
     return {
       canReadSessions: this.scopes.scopes.includes("sessions.read"),
@@ -98,7 +100,7 @@ class ProjectState implements IProjectState {
       canWriteBilling: this.scopes.scopes.includes("billing.write"),
     };
   }
-
+  _update = async () => {};
   showSidebar = false;
   sidebarItems = [];
   sidebar = {

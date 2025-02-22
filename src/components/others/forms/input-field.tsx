@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, PropsWithChildren, useEffect, useState } from "react";
 import { VStack, HStack, Input, Button, Box, Text, InputProps, Stack } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 import { Field, FieldProps } from "@/components/ui/field";
@@ -6,6 +6,7 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { Chip, TagInput, TagInputProps } from "@/ui/components";
 import { CloseButton } from "@/components/ui/close-button";
 import { LuPlus } from "react-icons/lu";
+import { RadioGroup } from "@/components/ui/radio";
 
 interface Props {
   name: string;
@@ -217,5 +218,18 @@ export const InputObjectField: React.FC<InputObjectFieldProps> = ({
         </Button>
       </VStack>
     </Field>
+  );
+};
+
+type RadioFieldProps = Props & PropsWithChildren;
+
+export const RadioField = (props: RadioFieldProps) => {
+  const { children, ...rest } = props;
+  const { values, setFieldValue } = useFormikContext<Record<string, string>>();
+
+  return (
+    <RadioGroup value={values[rest.name]} onValueChange={(e) => setFieldValue(rest.name, e.value)}>
+      {children}
+    </RadioGroup>
   );
 };

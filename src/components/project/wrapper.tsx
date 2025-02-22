@@ -2,14 +2,20 @@
 
 import { getProjectSdk, sdkForConsole } from "@/lib/sdk";
 import React from "react";
-import { projectState } from "@/state/project-state";
+import { getProjectState, projectState } from "@/state/project-state";
 import { appState } from "@/state/app-state";
 
 export default function ProjectWrapper({
   children,
   id,
 }: { children: React.ReactNode; id: string }) {
+  const { project } = getProjectState();
   const { projects, organizations } = sdkForConsole;
+
+  projectState._update = async () => {
+    let p = await projects.get(project?.$id!);
+    projectState.project = p;
+  };
 
   React.useEffect(() => {
     projects.get(id).then((project) => {

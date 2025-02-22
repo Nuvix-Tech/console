@@ -7,7 +7,7 @@ import { UsersLimit } from "./components";
 const SecurityPage: React.FC = () => {
   return (
     <>
-      <Column gap="20" fillWidth>
+      <Column gap="20" fillWidth padding="20">
         <Heading as={"h2"} size={"xl"}>
           Security
         </Heading>
