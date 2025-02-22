@@ -2,7 +2,7 @@
 import { Column } from "@/ui/components";
 import { Heading } from "@chakra-ui/react";
 import React from "react";
-import { UsersLimit } from "./components";
+import { SessionDuration, UsersLimit, SessionLimit } from "./components";
 
 const SecurityPage: React.FC = () => {
   return (
@@ -13,6 +13,8 @@ const SecurityPage: React.FC = () => {
         </Heading>
 
         <UsersLimit />
+        <SessionDuration />
+        <SessionLimit />
       </Column>
     </>
   );
