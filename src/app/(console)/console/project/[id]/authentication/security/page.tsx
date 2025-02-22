@@ -1,12 +1,8 @@
+import { SecurityPage } from "@/components/project/auths";
 import React from "react";
 
-const SecurityPage: React.FC = () => {
-  return (
-    <div>
-      <h1>Security Settings</h1>
-      <p>Manage your security settings here.</p>
-    </div>
-  );
+const Security: React.FC = () => {
+  return <SecurityPage />;
 };
 
-export default SecurityPage;
+export default Security;

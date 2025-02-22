@@ -7,11 +7,11 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        hostname: 'skill.collegejaankaar.in'
+        hostname: 'api.nuvix.in'
       }
     ]
   },
-  reactStrictMode: false
+  reactStrictMode: true
 };
 
 export default nextConfig;

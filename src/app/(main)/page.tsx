@@ -17,7 +17,6 @@ import {
 import { CodeBlock } from "@/ui/modules";
 
 export default function Home() {
-
   return (
     <Column fillWidth paddingY="80" paddingX="s" horizontal="center" flex={1}>
       <Fade
@@ -155,9 +154,7 @@ export default function Home() {
             <Heading wrap="balance" variant="display-default-l" align="center" marginBottom="16">
               Welcome to Console
             </Heading>
-            <Text>
-              Click below button to access the dashboard
-            </Text>
+            <Text>Click below button to access the dashboard</Text>
             <Button id="readDocs" label="Console" href="/console" variant="secondary" arrowIcon />
           </Column>
         </Column>
