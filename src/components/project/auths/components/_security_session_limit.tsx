@@ -29,7 +29,7 @@ export const SessionLimit: React.FC = () => {
             await projects.updateAuthSessionsLimit(project?.$id!, Number(values.limit) ?? 0);
             addToast({
               variant: "success",
-              message: "Max number of Sessions limit updated.",
+              message: "Max allowed sessions limit updated.",
             });
             await _update();
           } catch (e: any) {

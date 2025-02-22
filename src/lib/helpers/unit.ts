@@ -25,8 +25,8 @@ function createValueUnitStore<T = string>(initialValue: number, units: Unit<T>[]
   const sortedUnits = [...units].sort((a, b) => b.value - a.value);
   const state = proxy<ValueUnitState<T>>({
     value: initialValue,
-    unit: sortedUnits[sortedUnits.length - 1].name,
-    baseValue: initialValue * sortedUnits[sortedUnits.length - 1].value,
+    unit: sortedUnits[0].name,
+    baseValue: initialValue * sortedUnits[0].value,
     setUnit(newUnit: T) {
       const prevUnit = units.find((u) => u.name === state.unit);
       const newUnitObj = units.find((u) => u.name === newUnit);
