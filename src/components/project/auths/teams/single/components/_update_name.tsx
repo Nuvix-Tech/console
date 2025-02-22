@@ -1,7 +1,6 @@
 import { Form, InputField, SubmitButton } from "@/components/others/forms";
-import { CardBox } from "@/components/others/card";
+import { CardBox, CardBoxBody, CardBoxDesc, CardBoxItem, CardBoxTitle } from "@/components/others/card";
 import { getTeamPageState } from "@/state/page";
-import { Card, Stack } from "@chakra-ui/react";
 import * as y from "yup";
 import { getProjectState } from "@/state/project-state";
 import { useToast } from "@/ui/components";
@@ -46,14 +45,14 @@ export const UpdateName = () => {
             </>
           }
         >
-          <Stack direction={{ base: "column", md: "row" }} width={"full"} gap={"8"}>
-            <Stack maxW={{ base: "full", md: "1/2" }} width={"full"} gap={"4"}>
-              <Card.Title>Name</Card.Title>
-            </Stack>
-            <Stack maxW={{ base: "full", md: "1/2" }} width={"full"}>
+          <CardBoxBody>
+            <CardBoxItem gap={"4"}>
+              <CardBoxTitle>Name</CardBoxTitle>
+            </CardBoxItem>
+            <CardBoxItem >
               <InputField label={"Name"} name="name" />
-            </Stack>
-          </Stack>
+            </CardBoxItem>
+          </CardBoxBody>
         </CardBox>
       </Form>
     </>

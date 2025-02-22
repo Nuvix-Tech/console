@@ -1,9 +1,9 @@
-import { CardBox } from "@/components/others/card";
+import { CardBox, CardBoxBody, CardBoxDesc, CardBoxItem, CardBoxTitle } from "@/components/others/card";
 import { Form, InputNumberField, SubmitButton } from "@/components/others/forms";
 import { sdkForConsole } from "@/lib/sdk";
 import { getProjectState } from "@/state/project-state";
 import { Column, Switch, useToast } from "@/ui/components";
-import { Card, Stack, Text } from "@chakra-ui/react";
+import { Text } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 import React from "react";
 import * as y from "yup";
@@ -50,18 +50,18 @@ export const PasswordHistory: React.FC = () => {
             </>
           }
         >
-          <Stack direction={{ base: "column", md: "row" }} width={"full"} gap={"8"}>
-            <Stack maxW={{ base: "full", md: "1/2" }} width={"full"} gap={"4"}>
-              <Card.Title>Password history</Card.Title>
-              <Text textStyle={"sm"}>
+          <CardBoxBody>
+            <CardBoxItem gap={"4"}>
+              <CardBoxTitle>Password history</CardBoxTitle>
+              <CardBoxDesc>
                 Enabling this option prevents users from reusing recent passwords by comparing the
                 new password with their password history.
-              </Text>
-            </Stack>
-            <Stack maxW={{ base: "full", md: "1/2" }} width={"full"}>
+              </CardBoxDesc>
+            </CardBoxItem>
+            <CardBoxItem>
               <PasswordHistoryField />
-            </Stack>
-          </Stack>
+            </CardBoxItem>
+          </CardBoxBody>
         </CardBox>
       </Form>
     </>

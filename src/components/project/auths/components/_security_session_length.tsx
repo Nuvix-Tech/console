@@ -1,4 +1,4 @@
-import { CardBox } from "@/components/others/card";
+import { CardBox, CardBoxBody, CardBoxDesc, CardBoxItem, CardBoxTitle } from "@/components/others/card";
 import { Form, SubmitButton } from "@/components/others/forms";
 import { Field } from "@/components/ui/field";
 import { NativeSelectField, NativeSelectRoot } from "@/components/ui/native-select";
@@ -7,7 +7,7 @@ import { useTimeUnitPair } from "@/lib/helpers/unit";
 import { sdkForConsole } from "@/lib/sdk";
 import { getProjectState } from "@/state/project-state";
 import { useToast } from "@/ui/components";
-import { Card, Group, Stack, Text } from "@chakra-ui/react";
+import { Group } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 import React from "react";
 import * as y from "yup";
@@ -52,25 +52,25 @@ export const SessionDuration: React.FC = () => {
             </>
           }
         >
-          <Stack direction={{ base: "column", md: "row" }} width={"full"} gap={"8"}>
-            <Stack maxW={{ base: "full", md: "1/2" }} width={"full"} gap={"4"}>
-              <Card.Title>Session length</Card.Title>
-              <Text textStyle={"sm"}>
+          <CardBoxBody>
+            <CardBoxItem gap={"4"}>
+              <CardBoxTitle>Session length</CardBoxTitle>
+              <CardBoxDesc>
                 If you lower the limit, all currently logged-in users will be automatically logged
                 out of the application.
-              </Text>
-            </Stack>
-            <Stack maxW={{ base: "full", md: "1/2" }} width={"full"}>
+              </CardBoxDesc>
+            </CardBoxItem>
+            <CardBoxItem>
               <SessionInput />
-            </Stack>
-          </Stack>
+            </CardBoxItem>
+          </CardBoxBody>
         </CardBox>
       </Form>
     </>
   );
 };
 
-const SessionInput = () => {
+export const SessionInput = () => {
   const { values, setFieldValue } = useFormikContext<Record<string, number>>();
   const { value, unit, baseValue, setValue, setUnit, units } = useTimeUnitPair(values.length);
 

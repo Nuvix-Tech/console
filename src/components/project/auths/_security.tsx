@@ -1,8 +1,13 @@
 "use client";
+import React from "react";
 import { Column } from "@/ui/components";
 import { Heading } from "@chakra-ui/react";
-import React from "react";
-import { SessionDuration, UsersLimit, SessionLimit } from "./components";
+import {
+  SessionDuration,
+  UsersLimit,
+  SessionLimit,
+  PasswordHistory
+} from "./components";
 
 const SecurityPage: React.FC = () => {
   return (
@@ -15,6 +20,7 @@ const SecurityPage: React.FC = () => {
         <UsersLimit />
         <SessionDuration />
         <SessionLimit />
+        <PasswordHistory />
       </Column>
     </>
   );

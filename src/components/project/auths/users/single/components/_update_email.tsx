@@ -1,7 +1,7 @@
 import { Form, InputField, SubmitButton } from "@/components/others/forms";
-import { CardBox } from "@/components/others/card";
+import { CardBox, CardBoxBody, CardBoxDesc, CardBoxItem, CardBoxTitle } from "@/components/others/card";
 import { getUserPageState } from "@/state/page";
-import { Card, Code, Stack, Text } from "@chakra-ui/react";
+import { Code } from "@chakra-ui/react";
 import * as y from "yup";
 import { getProjectState } from "@/state/project-state";
 import { useToast } from "@/ui/components";
@@ -46,18 +46,18 @@ export const UpdateEmail = () => {
             </>
           }
         >
-          <Stack direction={{ base: "column", md: "row" }} width={"full"} gap={"8"}>
-            <Stack maxW={{ base: "full", md: "1/2" }} width={"full"} gap={"4"}>
-              <Card.Title>Email</Card.Title>
-              <Text textStyle={"sm"}>
+          <CardBoxBody>
+            <CardBoxItem gap={"4"}>
+              <CardBoxTitle>Email</CardBoxTitle>
+              <CardBoxDesc>
                 Update user's email. An Email should be formatted as:{" "}
                 <Code variant={"surface"}>name@example.com</Code>.
-              </Text>
-            </Stack>
-            <Stack maxW={{ base: "full", md: "1/2" }} width={"full"}>
+              </CardBoxDesc>
+            </CardBoxItem>
+            <CardBoxItem >
               <InputField label={"Email"} name="email" />
-            </Stack>
-          </Stack>
+            </CardBoxItem>
+          </CardBoxBody>
         </CardBox>
       </Form>
     </>

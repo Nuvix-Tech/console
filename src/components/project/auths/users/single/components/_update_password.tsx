@@ -1,7 +1,6 @@
 import { Form, InputField, SubmitButton } from "@/components/others/forms";
-import { CardBox } from "@/components/others/card";
+import { CardBox, CardBoxBody, CardBoxDesc, CardBoxItem, CardBoxTitle } from "@/components/others/card";
 import { getUserPageState } from "@/state/page";
-import { Card, Stack, Text } from "@chakra-ui/react";
 import * as y from "yup";
 import { getProjectState } from "@/state/project-state";
 import { useToast } from "@/ui/components";
@@ -47,18 +46,18 @@ export const UpdatePassword = () => {
             </>
           }
         >
-          <Stack direction={{ base: "column", md: "row" }} width={"full"} gap={"8"}>
-            <Stack maxW={{ base: "full", md: "1/2" }} width={"full"} gap={"4"}>
-              <Card.Title>New Password</Card.Title>
-              <Text textStyle={"sm"}>
+          <CardBoxBody>
+            <CardBoxItem gap={"4"}>
+              <CardBoxTitle>New Password</CardBoxTitle>
+              <CardBoxDesc>
                 Please enter a new password for the user. The password must be at least 8 characters
                 long.
-              </Text>
-            </Stack>
-            <Stack maxW={{ base: "full", md: "1/2" }} width={"full"}>
+              </CardBoxDesc>
+            </CardBoxItem>
+            <CardBoxItem >
               <InputField label={"Password"} name="password" type="password" />
-            </Stack>
-          </Stack>
+            </CardBoxItem>
+          </CardBoxBody>
         </CardBox>
       </Form>
     </>

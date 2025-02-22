@@ -1,11 +1,11 @@
-import { CardBox } from "@/components/others/card";
+import { CardBox, CardBoxBody, CardBoxDesc, CardBoxItem, CardBoxTitle } from "@/components/others/card";
 import { Form, RadioField, SubmitButton } from "@/components/others/forms";
 import { NumberInputField, NumberInputRoot } from "@/components/ui/number-input";
 import { Radio } from "@/components/ui/radio";
 import { sdkForConsole } from "@/lib/sdk";
 import { getProjectState } from "@/state/project-state";
 import { useToast } from "@/ui/components";
-import { Badge, Card, HStack, Stack, Text, VStack } from "@chakra-ui/react";
+import { Badge, HStack, VStack } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 import React from "react";
 import * as y from "yup";
@@ -51,23 +51,23 @@ export const UsersLimit: React.FC = () => {
             </>
           }
         >
-          <Stack direction={{ base: "column", md: "row" }} width={"full"} gap={"8"}>
-            <Stack maxW={{ base: "full", md: "1/2" }} width={"full"} gap={"4"}>
-              <Card.Title>Users limit</Card.Title>
-              <Text textStyle={"sm"}>
+          <CardBoxBody>
+            <CardBoxItem gap={"4"}>
+              <CardBoxTitle>Users limit</CardBoxTitle>
+              <CardBoxDesc>
                 Restrict new user sign-ups for your project, regardless of authentication method.
                 User creation and team management remain available via your Nuvix console.
-              </Text>
-            </Stack>
-            <Stack maxW={{ base: "full", md: "1/2" }} width={"full"}>
+              </CardBoxDesc>
+            </CardBoxItem>
+            <CardBoxItem>
               <RadioField name="selected">
                 <VStack gap="4" alignItems={"start"}>
                   <Radio1 />
                   <Radio2 />
                 </VStack>
               </RadioField>
-            </Stack>
-          </Stack>
+            </CardBoxItem>
+          </CardBoxBody>
         </CardBox>
       </Form>
     </>
