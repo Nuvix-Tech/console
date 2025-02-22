@@ -7,6 +7,7 @@ import { Chip, TagInput, TagInputProps } from "@/ui/components";
 import { CloseButton } from "@/components/ui/close-button";
 import { LuPlus } from "react-icons/lu";
 import { RadioGroup } from "@/components/ui/radio";
+import { NumberInputField, NumberInputProps, NumberInputRoot } from "@/components/ui/number-input";
 
 interface Props {
   name: string;
@@ -37,6 +38,34 @@ export const InputField = (props: InputFieldProps) => {
           onBlur={handleBlur}
           {...rest}
         />
+      </Field>
+    </>
+  );
+};
+
+export const InputNumberField = (props: NumberInputProps & Props & FieldProps) => {
+  const { label, errorText, helperText, optionalText, ...rest } = props;
+  const { values, errors, touched, handleBlur, setFieldValue } =
+    useFormikContext<Record<string, string>>();
+
+  return (
+    <>
+      <Field
+        width={"full"}
+        errorText={errors[rest.name] && touched[rest.name] ? errors[rest.name] : undefined}
+        invalid={!!(errors[rest.name] && touched[rest.name])}
+        helperText={helperText}
+        {...{ label, optionalText }}
+      >
+        <NumberInputRoot
+          width={"full"}
+          value={values[rest.name]}
+          onValueChange={(e) => setFieldValue(rest.name, Number(e.value))}
+          onBlur={handleBlur}
+          {...rest}
+        >
+          <NumberInputField placeholder={typeof label === "string" ? label : undefined} />
+        </NumberInputRoot>
       </Field>
     </>
   );
