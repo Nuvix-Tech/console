@@ -1,5 +1,11 @@
 import { Form, InputField, SubmitButton } from "@/components/others/forms";
-import { CardBox, CardBoxBody, CardBoxDesc, CardBoxItem, CardBoxTitle } from "@/components/others/card";
+import {
+  CardBox,
+  CardBoxBody,
+  CardBoxDesc,
+  CardBoxItem,
+  CardBoxTitle,
+} from "@/components/others/card";
 import { getUserPageState } from "@/state/page";
 import * as y from "yup";
 import { getProjectState } from "@/state/project-state";
@@ -54,7 +60,7 @@ export const UpdatePassword = () => {
                 long.
               </CardBoxDesc>
             </CardBoxItem>
-            <CardBoxItem >
+            <CardBoxItem>
               <InputField label={"Password"} name="password" type="password" />
             </CardBoxItem>
           </CardBoxBody>

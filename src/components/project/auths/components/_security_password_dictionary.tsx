@@ -1,4 +1,3 @@
-import { Form, InputField, SubmitButton } from "@/components/others/forms";
 import {
   CardBox,
   CardBoxBody,
@@ -6,40 +5,36 @@ import {
   CardBoxItem,
   CardBoxTitle,
 } from "@/components/others/card";
-import { getUserPageState } from "@/state/page";
-import * as y from "yup";
+import { Form, InputSwitchField, SubmitButton } from "@/components/others/forms";
+import { sdkForConsole } from "@/lib/sdk";
 import { getProjectState } from "@/state/project-state";
 import { useToast } from "@/ui/components";
+import React from "react";
+import * as y from "yup";
 
 const schema = y.object({
-  phone: y
-    .string()
-    .matches(
-      /^\+\d{1,15}$/,
-      "Phone number must start with '+' and can have a maximum of 15 digits.",
-    )
-    .required("Phone number is required"),
+  is: y.boolean().required(),
 });
 
-export const UpdatePhone = () => {
-  const { user, _update } = getUserPageState();
-  const { sdk } = getProjectState();
+export const PasswordDictionary: React.FC = () => {
+  const { project, _update } = getProjectState();
+  const { projects } = sdkForConsole;
   const { addToast } = useToast();
 
   return (
     <>
       <Form
         initialValues={{
-          phone: user?.phone,
+          is: project?.authPasswordDictionary,
         }}
         enableReinitialize
         validationSchema={schema}
         onSubmit={async (values) => {
           try {
-            await sdk?.users.updatePhone(user?.$id!, values.phone!);
+            await projects.updateAuthPasswordHistory(project?.$id!, Number(values.is) ?? 0);
             addToast({
               variant: "success",
-              message: "User phone has been updated successfully.",
+              message: "Password history updated successfully.",
             });
             await _update();
           } catch (e: any) {
@@ -59,14 +54,14 @@ export const UpdatePhone = () => {
         >
           <CardBoxBody>
             <CardBoxItem gap={"4"}>
-              <CardBoxTitle>Phone</CardBoxTitle>
+              <CardBoxTitle>Password dictionary</CardBoxTitle>
               <CardBoxDesc>
-                Please enter the user's phone number. The phone number must start with '+' and can
-                have a maximum of 15 digits, for example: +14155552671.
+                Enabling this option prevent users from setting insecure passwords by comparing the
+                user's password with the 10k most commonly used passwords.
               </CardBoxDesc>
             </CardBoxItem>
             <CardBoxItem>
-              <InputField label={"Phone Number"} name="phone" />
+              <InputSwitchField name="is" />
             </CardBoxItem>
           </CardBoxBody>
         </CardBox>

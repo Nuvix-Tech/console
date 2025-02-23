@@ -1,5 +1,11 @@
 import { Form, InputField, SubmitButton } from "@/components/others/forms";
-import { CardBox, CardBoxBody, CardBoxDesc, CardBoxItem, CardBoxTitle } from "@/components/others/card";
+import {
+  CardBox,
+  CardBoxBody,
+  CardBoxDesc,
+  CardBoxItem,
+  CardBoxTitle,
+} from "@/components/others/card";
 import { getTeamPageState } from "@/state/page";
 import * as y from "yup";
 import { getProjectState } from "@/state/project-state";
@@ -49,7 +55,7 @@ export const UpdateName = () => {
             <CardBoxItem gap={"4"}>
               <CardBoxTitle>Name</CardBoxTitle>
             </CardBoxItem>
-            <CardBoxItem >
+            <CardBoxItem>
               <InputField label={"Name"} name="name" />
             </CardBoxItem>
           </CardBoxBody>

@@ -1,6 +1,6 @@
 "use client";
 import "@/ui/modules/layout/sidebar.scss";
-import { Column, Line, Row, ToggleButton } from "@/ui/components";
+import { Column, Line, RevealFx, Row, ToggleButton } from "@/ui/components";
 import { usePathname } from "next/navigation";
 import { getProjectState } from "@/state/project-state";
 import * as React from "react";
@@ -189,7 +189,7 @@ export const SecondSidebar = ({ noMarg, noBg, border = true }: SecondSidebarProp
           className="sidebar-large"
         >
           <Column fillWidth gap="s" paddingBottom="56">
-            {sidebar.first}
+            <RevealFx>{sidebar.first}</RevealFx>
             {sidebar.middle}
             {sidebar.last}
           </Column>

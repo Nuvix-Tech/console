@@ -25,7 +25,7 @@ export default function Login() {
   const { addToast } = useToast();
   const { account } = sdkForConsole;
 
-  const { push } = useRouter();
+  const { replace } = useRouter();
 
   const validateLogin = () => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -43,7 +43,7 @@ export default function Login() {
         variant: "success",
         message: "You have successfully logged in.",
       });
-      push("/console");
+      replace("/console");
     } catch (e: any) {
       addToast({
         variant: "danger",
@@ -117,8 +117,8 @@ export default function Login() {
         <Button
           label="Continue with GitHub"
           fillWidth
-          disabled={loading}
-          loading={loading}
+          disabled={true}
+          // loading={loading}
           variant="secondary"
           weight="default"
           prefixIcon="github"

@@ -26,7 +26,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { FirstSidebar, SecondSidebar } from "../project/sidebar";
+import { FirstSidebar, SecondSidebar } from "./sidebar";
 import { Models } from "@nuvix/console";
 import { getProjectState } from "@/state/project-state";
 

@@ -1,5 +1,11 @@
 import { Form, InputObjectField, SubmitButton } from "@/components/others/forms";
-import { CardBox, CardBoxBody, CardBoxDesc, CardBoxItem, CardBoxTitle } from "@/components/others/card";
+import {
+  CardBox,
+  CardBoxBody,
+  CardBoxDesc,
+  CardBoxItem,
+  CardBoxTitle,
+} from "@/components/others/card";
 import { getUserPageState } from "@/state/page";
 import * as y from "yup";
 import { getProjectState } from "@/state/project-state";
@@ -52,7 +58,7 @@ export const UpdatePrefs = () => {
                 Customize user preferences to sync them across all devices and sessions.
               </CardBoxDesc>
             </CardBoxItem>
-            <CardBoxItem >
+            <CardBoxItem>
               <InputObjectField label={"Preferences"} name="prefs" />
             </CardBoxItem>
           </CardBoxBody>

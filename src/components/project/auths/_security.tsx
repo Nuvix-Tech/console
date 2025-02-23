@@ -6,10 +6,16 @@ import {
   SessionDuration,
   UsersLimit,
   SessionLimit,
-  PasswordHistory
+  PasswordHistory,
+  PasswordDictionary,
+  PersonalData,
+  SessionAlerts,
 } from "./components";
+import { projectState } from "@/state/project-state";
 
 const SecurityPage: React.FC = () => {
+  projectState.sidebar.first = null;
+
   return (
     <>
       <Column gap="20" fillWidth padding="20">
@@ -21,6 +27,9 @@ const SecurityPage: React.FC = () => {
         <SessionDuration />
         <SessionLimit />
         <PasswordHistory />
+        <PasswordDictionary />
+        <PersonalData />
+        <SessionAlerts />
       </Column>
     </>
   );

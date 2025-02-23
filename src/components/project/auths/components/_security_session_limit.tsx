@@ -1,5 +1,11 @@
-import { CardBox, CardBoxBody, CardBoxDesc, CardBoxItem, CardBoxTitle } from "@/components/others/card";
-import { Form, InputField, SubmitButton } from "@/components/others/forms";
+import {
+  CardBox,
+  CardBoxBody,
+  CardBoxDesc,
+  CardBoxItem,
+  CardBoxTitle,
+} from "@/components/others/card";
+import { Form, InputNumberField, SubmitButton } from "@/components/others/forms";
 import { sdkForConsole } from "@/lib/sdk";
 import { getProjectState } from "@/state/project-state";
 import { useToast } from "@/ui/components";
@@ -54,7 +60,7 @@ export const SessionLimit: React.FC = () => {
               </CardBoxDesc>
             </CardBoxItem>
             <CardBoxItem>
-              <InputField name="limit" label="Limit" />
+              <InputNumberField name="limit" label="Limit" max={100} min={0} />
             </CardBoxItem>
           </CardBoxBody>
         </CardBox>

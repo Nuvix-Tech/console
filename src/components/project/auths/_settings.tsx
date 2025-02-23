@@ -1,13 +1,27 @@
 "use client";
+import { projectState } from "@/state/project-state";
+import { Column } from "@/ui/components";
+import { Heading, Text } from "@chakra-ui/react";
 import React from "react";
+import { AuthMethods } from "./components";
 
-const Settings: React.FC = () => {
+const SettingsPage: React.FC = () => {
+  projectState.sidebar.first = null;
+
   return (
-    <div>
-      <h1>Settings</h1>
-      <p>Configure your settings here.</p>
-    </div>
+    <Column gap="20" fillWidth padding="20">
+      <Column gap="4">
+        <Heading as={"h2"} size={"xl"}>
+          Settings
+        </Heading>
+        <Text textStyle="sm" color="fg.subtle">
+          Update authentication settings here.
+        </Text>
+      </Column>
+
+      <AuthMethods />
+    </Column>
   );
 };
 
-export default Settings;
+export { SettingsPage };

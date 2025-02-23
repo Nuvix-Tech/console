@@ -1,4 +1,10 @@
-import { CardBox, CardBoxBody, CardBoxDesc, CardBoxItem, CardBoxTitle } from "@/components/others/card";
+import {
+  CardBox,
+  CardBoxBody,
+  CardBoxDesc,
+  CardBoxItem,
+  CardBoxTitle,
+} from "@/components/others/card";
 import { Form, SubmitButton } from "@/components/others/forms";
 import { Field } from "@/components/ui/field";
 import { NativeSelectField, NativeSelectRoot } from "@/components/ui/native-select";

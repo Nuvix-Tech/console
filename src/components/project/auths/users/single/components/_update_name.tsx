@@ -49,7 +49,7 @@ export const UpdateName = () => {
             <CardBoxItem gap={"4"}>
               <CardBoxTitle>Name</CardBoxTitle>
             </CardBoxItem>
-            <CardBoxItem >
+            <CardBoxItem>
               <InputField label={"Name"} name="name" />
             </CardBoxItem>
           </CardBoxBody>

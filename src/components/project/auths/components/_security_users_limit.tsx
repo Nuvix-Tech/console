@@ -1,4 +1,10 @@
-import { CardBox, CardBoxBody, CardBoxDesc, CardBoxItem, CardBoxTitle } from "@/components/others/card";
+import {
+  CardBox,
+  CardBoxBody,
+  CardBoxDesc,
+  CardBoxItem,
+  CardBoxTitle,
+} from "@/components/others/card";
 import { Form, RadioField, SubmitButton } from "@/components/others/forms";
 import { NumberInputField, NumberInputRoot } from "@/components/ui/number-input";
 import { Radio } from "@/components/ui/radio";
@@ -100,7 +106,7 @@ export const Radio1 = () => {
 
   return (
     <Radio value="1" onClick={() => setFieldValue("limit", 0)}>
-      <HStack gap={6}>
+      <HStack gap={2}>
         Unlimited
         <Badge variant={"surface"}>recommended</Badge>
       </HStack>

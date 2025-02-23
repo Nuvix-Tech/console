@@ -1,0 +1,61 @@
+import {
+  CardBox,
+  CardBoxBody,
+  CardBoxDesc,
+  CardBoxItem,
+  CardBoxTitle,
+} from "@/components/others/card";
+import { sdkForConsole } from "@/lib/sdk";
+import { getProjectState } from "@/state/project-state";
+import { Switch, useToast } from "@/ui/components";
+import React from "react";
+
+export const SessionAlerts: React.FC = () => {
+  const [loading, setLoading] = React.useState(false);
+  const { project, _update } = getProjectState();
+  const { projects } = sdkForConsole;
+  const { addToast } = useToast();
+
+  const onSubmit = async () => {
+    if (loading) return;
+    try {
+      setLoading(true);
+      await projects.updateSessionAlerts(project?.$id!, !project?.authSessionAlerts!);
+      addToast({
+        variant: "success",
+        message: "Session alerts updated successfully.",
+      });
+      await _update();
+    } catch (e: any) {
+      addToast({
+        variant: "danger",
+        message: e.message,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <CardBox>
+        <CardBoxBody>
+          <CardBoxItem gap={"4"}>
+            <CardBoxTitle>Session alerts</CardBoxTitle>
+            <CardBoxDesc>
+              Enabling this option will send an email to the users when a new session is created.
+            </CardBoxDesc>
+          </CardBoxItem>
+          <CardBoxItem>
+            <Switch
+              label="Session alerts"
+              isChecked={project?.authSessionAlerts!}
+              loading={loading}
+              onToggle={onSubmit}
+            />
+          </CardBoxItem>
+        </CardBoxBody>
+      </CardBox>
+    </>
+  );
+};

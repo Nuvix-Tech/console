@@ -1,5 +1,11 @@
 import { Form, InputTagField, SubmitButton } from "@/components/others/forms";
-import { CardBox, CardBoxBody, CardBoxDesc, CardBoxItem, CardBoxTitle } from "@/components/others/card";
+import {
+  CardBox,
+  CardBoxBody,
+  CardBoxDesc,
+  CardBoxItem,
+  CardBoxTitle,
+} from "@/components/others/card";
 import { getUserPageState } from "@/state/page";
 import * as y from "yup";
 import { getProjectState } from "@/state/project-state";
@@ -53,7 +59,7 @@ export const UpdateLabels = () => {
                 criteria. New roles will be assigned based on these labels.
               </CardBoxDesc>
             </CardBoxItem>
-            <CardBoxItem >
+            <CardBoxItem>
               <InputTagField
                 label={"labels"}
                 name="labels"

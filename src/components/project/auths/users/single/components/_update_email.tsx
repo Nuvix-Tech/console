@@ -1,5 +1,11 @@
 import { Form, InputField, SubmitButton } from "@/components/others/forms";
-import { CardBox, CardBoxBody, CardBoxDesc, CardBoxItem, CardBoxTitle } from "@/components/others/card";
+import {
+  CardBox,
+  CardBoxBody,
+  CardBoxDesc,
+  CardBoxItem,
+  CardBoxTitle,
+} from "@/components/others/card";
 import { getUserPageState } from "@/state/page";
 import { Code } from "@chakra-ui/react";
 import * as y from "yup";
@@ -54,7 +60,7 @@ export const UpdateEmail = () => {
                 <Code variant={"surface"}>name@example.com</Code>.
               </CardBoxDesc>
             </CardBoxItem>
-            <CardBoxItem >
+            <CardBoxItem>
               <InputField label={"Email"} name="email" />
             </CardBoxItem>
           </CardBoxBody>

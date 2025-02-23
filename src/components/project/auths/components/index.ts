@@ -2,3 +2,7 @@ export * from "./_security_users_limit";
 export * from "./_security_session_length";
 export * from "./_security_session_limit";
 export * from "./_security_password_history";
+export * from "./_security_password_dictionary";
+export * from "./_security_session_alerts";
+export * from "./_security_personal_data";
+export * from "./_settings_auth_methods";

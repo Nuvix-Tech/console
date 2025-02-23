@@ -1,5 +1,11 @@
 import { Form, InputObjectField, SubmitButton } from "@/components/others/forms";
-import { CardBox, CardBoxBody, CardBoxDesc, CardBoxItem, CardBoxTitle } from "@/components/others/card";
+import {
+  CardBox,
+  CardBoxBody,
+  CardBoxDesc,
+  CardBoxItem,
+  CardBoxTitle,
+} from "@/components/others/card";
 import { getTeamPageState } from "@/state/page";
 import * as y from "yup";
 import { getProjectState } from "@/state/project-state";
@@ -53,7 +59,7 @@ export const UpdatePrefs = () => {
                 all members.
               </CardBoxDesc>
             </CardBoxItem>
-            <CardBoxItem >
+            <CardBoxItem>
               <InputObjectField label={"Preferences"} name="prefs" />
             </CardBoxItem>
           </CardBoxBody>
