@@ -15,11 +15,13 @@ import { InputGroup } from "@/components/ui/input-group";
 import { API_ENDPOINT } from "@/lib/constants";
 import { getProjectState } from "@/state/project-state";
 import { Button } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { LuExternalLink } from "react-icons/lu";
 
 export const ProjectInfo: React.FC = () => {
   const { project } = getProjectState();
+  const { push } = useRouter();
 
   return (
     <>
@@ -30,7 +32,12 @@ export const ProjectInfo: React.FC = () => {
             <CardBoxDesc>
               Use the API Endpoint and Project ID to access Nuvix services for this project.
             </CardBoxDesc>
-            <Button variant="surface" alignSelf="end">
+            <Button
+              variant="surface"
+              alignSelf="flex-start"
+              mt="auto"
+              onClick={() => push(`/console/project/${project?.$id}/apis`)}
+            >
               API Keys
               <LuExternalLink />
             </Button>
