@@ -1,3 +1,5 @@
+import { ProjectSettings } from "@/components/project";
+
 export default async function () {
-  return <>Something Beyond the world.</>;
+  return <ProjectSettings />;
 }
