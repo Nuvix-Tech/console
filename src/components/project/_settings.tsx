@@ -1,12 +1,11 @@
 "use client";
-import { projectState } from '@/state/project-state';
-import { Column } from '@/ui/components';
-import { Heading, Text } from '@chakra-ui/react';
-import React from 'react';
-import { SettingsSidebar } from './components';
+import { projectState } from "@/state/project-state";
+import { Column } from "@/ui/components";
+import { Heading, Text } from "@chakra-ui/react";
+import React from "react";
+import { ProjectInfo, SettingsSidebar } from "./components";
 
 const ProjectSettings: React.FC = () => {
-
   projectState.sidebar.first = null;
   projectState.sidebar.middle = <SettingsSidebar />;
 
@@ -21,7 +20,7 @@ const ProjectSettings: React.FC = () => {
         </Text>
       </Column>
 
-
+      <ProjectInfo />
     </Column>
   );
 };

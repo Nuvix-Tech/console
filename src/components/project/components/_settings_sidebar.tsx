@@ -59,7 +59,7 @@ const SettingsSidebar = () => {
         ]}
       />
     </>
-  )
-}
+  );
+};
 
 export { SettingsSidebar };
