@@ -1,4 +1,4 @@
-import { TeamLayout } from "@/components/project/auths/users/teams";
+import { TeamLayout } from "@/components/project/auths/teams";
 import { PropsWithParams } from "@/types";
 import React, { PropsWithChildren } from "react";
 

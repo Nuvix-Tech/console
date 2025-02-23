@@ -1,4 +1,4 @@
-import { MembersPage } from "@/components/project/auths/users/teams";
+import { MembersPage } from "@/components/project/auths/teams";
 import React from "react";
 
 const TeamMembersPage: React.FC = () => {

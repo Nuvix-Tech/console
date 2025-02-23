@@ -1,4 +1,4 @@
-import { TeamPage } from "@/components/project/auths/users/teams";
+import { TeamPage } from "@/components/project/auths/teams";
 import { PropsWithParams } from "@/types";
 import React from "react";
 

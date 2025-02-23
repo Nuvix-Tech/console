@@ -1,4 +1,4 @@
-import { TeamsPage } from "@/components/project/auths/users/teams";
+import { TeamsPage } from "@/components/project/auths/teams";
 
 export default function () {
   return <TeamsPage />;
