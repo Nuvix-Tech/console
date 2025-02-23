@@ -13,7 +13,7 @@ export default function ProjectWrapper({
   const { projects, organizations } = sdkForConsole;
 
   projectState._update = async () => {
-    let p = await projects.get(project?.$id!);
+    let p = await projects.get(id);
     projectState.project = p;
   };
 

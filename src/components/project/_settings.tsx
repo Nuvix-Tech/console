@@ -1,27 +1,10 @@
 "use client";
-import { projectState } from "@/state/project-state";
 import { Column } from "@/ui/components";
 import { Heading, Text } from "@chakra-ui/react";
 import React from "react";
-import {
-  DeleteProject,
-  ProjectInfo,
-  SettingsSidebar,
-  UpdateName,
-  UpdateServices,
-} from "./components";
+import { DeleteProject, ProjectInfo, UpdateName, UpdateServices } from "./components";
 
 const ProjectSettings: React.FC = () => {
-  projectState.sidebar.first = null;
-  projectState.sidebar.middle = <SettingsSidebar />;
-
-  React.useEffect(() => {
-    const elementProject = document.getElementById("project");
-    if (elementProject) {
-      elementProject.classList.add("show-sidebar-large");
-    }
-  }, []);
-
   return (
     <Column gap="20" fillWidth padding="20">
       <Column gap="4">
