@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Column } from "@/ui/components";
-import { Heading } from "@chakra-ui/react";
+import { Heading, Text } from "@chakra-ui/react";
 import {
   SessionDuration,
   UsersLimit,
@@ -19,9 +19,14 @@ const SecurityPage: React.FC = () => {
   return (
     <>
       <Column gap="20" fillWidth padding="20">
-        <Heading as={"h2"} size={"xl"}>
-          Security
-        </Heading>
+        <Column gap="4">
+          <Heading as={"h2"} size={"xl"}>
+            Security
+          </Heading>
+          <Text textStyle="sm" color="fg.subtle">
+            Configure security settings for your project.
+          </Text>
+        </Column>
 
         <UsersLimit />
         <SessionDuration />

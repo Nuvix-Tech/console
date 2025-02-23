@@ -42,17 +42,18 @@ export const SessionAlerts: React.FC = () => {
         <CardBoxBody>
           <CardBoxItem gap={"4"}>
             <CardBoxTitle>Session alerts</CardBoxTitle>
-            <CardBoxDesc>
-              Enabling this option will send an email to the users when a new session is created.
-            </CardBoxDesc>
           </CardBoxItem>
           <CardBoxItem>
             <Switch
+              reverse
               label="Session alerts"
               isChecked={project?.authSessionAlerts!}
               loading={loading}
               onToggle={onSubmit}
             />
+            <CardBoxDesc>
+              Enabling this option will send an email to the users when a new session is created.
+            </CardBoxDesc>
           </CardBoxItem>
         </CardBoxBody>
       </CardBox>

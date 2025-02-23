@@ -22,8 +22,10 @@ export function DangerCard(props: DangerCardProps) {
             justifyContent={"space-between"}
           >
             <Stack direction={"column"} maxW={{ base: "full", mdOnly: "full", lg: "5/12" }}>
-              <Card.Title color={"red.500"}>{props.title}</Card.Title>
-              <Text textStyle={"sm"}>{props.description}</Text>
+              <Card.Title color={"fg.error"}>{props.title}</Card.Title>
+              <Text textStyle={"sm"} color={"fg.subtle"}>
+                {props.description}
+              </Text>
             </Stack>
             <TheCard radius="m-4" padding="12" gap="20" direction="row" vertical="center" fillWidth>
               {children}

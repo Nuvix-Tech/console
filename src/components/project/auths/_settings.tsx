@@ -15,7 +15,7 @@ const SettingsPage: React.FC = () => {
           Settings
         </Heading>
         <Text textStyle="sm" color="fg.subtle">
-          Update authentication settings here.
+          Configure the authentication methods your project will use.
         </Text>
       </Column>
 

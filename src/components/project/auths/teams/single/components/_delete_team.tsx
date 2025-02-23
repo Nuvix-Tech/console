@@ -51,7 +51,7 @@ export const DeleteTeam = () => {
       actions={
         <Button
           variant={"surface"}
-          colorPalette={"red"}
+          colorPalette="red"
           loading={loading}
           onClick={() => deleteTeam(team?.$id!)}
           loadingText={"Deleting..."}

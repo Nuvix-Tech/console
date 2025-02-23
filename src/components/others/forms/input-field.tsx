@@ -3,12 +3,11 @@ import { VStack, HStack, Input, Button, Box, Text, InputProps, Stack } from "@ch
 import { useFormikContext } from "formik";
 import { Field, FieldProps } from "@/components/ui/field";
 import { PasswordInput } from "@/components/ui/password-input";
-import { Chip, Switch, TagInput, TagInputProps } from "@/ui/components";
+import { Chip, Switch, SwitchProps, TagInput, TagInputProps } from "@/ui/components";
 import { CloseButton } from "@/components/ui/close-button";
 import { LuPlus } from "react-icons/lu";
 import { RadioGroup } from "@/components/ui/radio";
 import { NumberInputField, NumberInputProps, NumberInputRoot } from "@/components/ui/number-input";
-import { SwitchProps } from "@/components/ui/switch";
 
 interface Props {
   name: string;
@@ -72,8 +71,10 @@ export const InputNumberField = (props: NumberInputProps & Props & FieldProps) =
   );
 };
 
-export const InputSwitchField = (props: SwitchProps & Props & Partial<FieldProps>) => {
-  const { label, errorText, helperText, optionalText, ...rest } = props;
+export const InputSwitchField = (
+  props: Omit<SwitchProps, "onToggle" | "isChecked"> & Props & Partial<FieldProps>,
+) => {
+  const { errorText, helperText, optionalText, ...rest } = props;
   const { values, errors, touched, handleBlur, setFieldValue } =
     useFormikContext<Record<string, string>>();
 
@@ -84,12 +85,11 @@ export const InputSwitchField = (props: SwitchProps & Props & Partial<FieldProps
         errorText={errors[rest.name] && touched[rest.name] ? errors[rest.name] : undefined}
         invalid={!!(errors[rest.name] && touched[rest.name])}
         helperText={helperText}
-        {...{ label, optionalText }}
+        {...{ optionalText }}
       >
         <Switch
           isChecked={!!values[rest.name]}
           onToggle={(() => setFieldValue(rest.name, !!!values[rest.name])) as any}
-          placeholder={typeof label === "string" ? label : undefined}
           onBlur={handleBlur}
           {...(rest as any)}
         />

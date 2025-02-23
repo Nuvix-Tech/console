@@ -31,10 +31,10 @@ export const PasswordDictionary: React.FC = () => {
         validationSchema={schema}
         onSubmit={async (values) => {
           try {
-            await projects.updateAuthPasswordHistory(project?.$id!, Number(values.is) ?? 0);
+            await projects.updateAuthPasswordDictionary(project?.$id!, values.is!);
             addToast({
               variant: "success",
-              message: "Password history updated successfully.",
+              message: "Password dictionary updated successfully.",
             });
             await _update();
           } catch (e: any) {
@@ -55,13 +55,13 @@ export const PasswordDictionary: React.FC = () => {
           <CardBoxBody>
             <CardBoxItem gap={"4"}>
               <CardBoxTitle>Password dictionary</CardBoxTitle>
+            </CardBoxItem>
+            <CardBoxItem>
+              <InputSwitchField name="is" label="Password dictionary" />
               <CardBoxDesc>
                 Enabling this option prevent users from setting insecure passwords by comparing the
                 user's password with the 10k most commonly used passwords.
               </CardBoxDesc>
-            </CardBoxItem>
-            <CardBoxItem>
-              <InputSwitchField name="is" />
             </CardBoxItem>
           </CardBoxBody>
         </CardBox>

@@ -42,18 +42,19 @@ export const PersonalData: React.FC = () => {
         <CardBoxBody>
           <CardBoxItem gap={"4"}>
             <CardBoxTitle>Personal Data</CardBoxTitle>
-            <CardBoxDesc>
-              Do not allow passwords that contain any part of the user's personal data. This
-              includes the user's name, email, or phone.
-            </CardBoxDesc>
           </CardBoxItem>
           <CardBoxItem>
             <Switch
+              reverse
               label="Disallow personal data"
               isChecked={project?.authPersonalDataCheck!}
               loading={loading}
               onToggle={onSubmit}
             />
+            <CardBoxDesc>
+              Do not allow passwords that contain any part of the user's personal data. This
+              includes the user's name, email, or phone.
+            </CardBoxDesc>
           </CardBoxItem>
         </CardBoxBody>
       </CardBox>
