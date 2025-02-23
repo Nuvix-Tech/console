@@ -34,6 +34,7 @@ export const UpdateServices = () => {
         message: e.message,
       });
     } finally {
+      setDisabled(false);
       setLoading(false);
     }
   };
@@ -61,7 +62,7 @@ export const UpdateServices = () => {
   const handleStatusAll = async (enable: boolean) => {
     if (
       await confirm({
-        title: `Confirm ${enable ? "Enable" : "Disable"} All Services`,
+        title: `${enable ? "Enable" : "Disable"} All Services`,
         description: `Are you sure you want to ${enable ? "enable" : "disable"} all services? This action will ${enable ? "enable" : "disable"} all services for the client API.`,
         confirm: {
           text: enable ? "Enable" : "Disable",
@@ -75,7 +76,6 @@ export const UpdateServices = () => {
         },
         `All services status ${enable ? "enabled" : "disabled"}.`,
       );
-      setDisabled(false);
     }
   };
 
@@ -96,19 +96,19 @@ export const UpdateServices = () => {
               </Button>
               <Line vert />
               <Button variant="ghost" disabled={disabled} onClick={() => handleStatusAll(false)}>
-                Enable All
+                Disable All
               </Button>
             </HStack>
           </CardBoxItem>
-          <CardBoxItem direction="row" gap="2">
-            <VStack justifyContent={"start"} alignItems="flex-start" flex="1">
+          <CardBoxItem direction="row" gap="8">
+            <VStack justifyContent={"start"} alignItems="flex-start" flex="1" gap="3">
               {renderSwitch("Account", ApiService.Account, project?.serviceStatusForAccount)}
               {renderSwitch("Avatars", ApiService.Avatars, project?.serviceStatusForAvatars)}
               {renderSwitch("Databases", ApiService.Databases, project?.serviceStatusForDatabases)}
               {renderSwitch("Functions", ApiService.Functions, project?.serviceStatusForFunctions)}
               {renderSwitch("Health", ApiService.Health, project?.serviceStatusForHealth)}
             </VStack>
-            <VStack justifyContent={"start"} alignItems="flex-start" flex="1">
+            <VStack justifyContent={"start"} alignItems="flex-start" flex="1" gap="3">
               {renderSwitch("Locale", ApiService.Locale, project?.serviceStatusForLocale)}
               {renderSwitch("Messaging", ApiService.Messaging, project?.serviceStatusForMessaging)}
               {renderSwitch("Storage", ApiService.Storage, project?.serviceStatusForStorage)}
