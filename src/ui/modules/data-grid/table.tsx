@@ -13,14 +13,13 @@ const TheTable = <T,>() => {
   return (
     <Table.ScrollArea borderWidth="1px" borderRadius={"lg"} width="full">
       <Table.Root
-        as={"div"}
         size="md"
         variant="outline"
         borderRadius={"lg"}
         interactive
         // showColumnBorder
       >
-        <Table.Header position={"relative"} as={"div"}>
+        <Table.Header position={"relative"}>
           {table.getHeaderGroups().map((headerGroup) => (
             <Table.Row
               key={headerGroup.id}
@@ -28,7 +27,6 @@ const TheTable = <T,>() => {
               justifyContent={"space-between"}
               alignItems={"center"}
               width="full"
-              as={"div"}
               borderBottom={0.5}
               borderStyle={"solid"}
               borderColor={"border"}
@@ -54,7 +52,6 @@ const TheTable = <T,>() => {
                   overflow={"hidden"}
                   className="neutral-on-background-medium"
                   fontSize={"sm"}
-                  as={"div"}
                   paddingX="4"
                   whiteSpace={"nowrap"}
                   width={header.column.columnDef.size ?? "full"}

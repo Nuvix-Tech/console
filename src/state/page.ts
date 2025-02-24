@@ -41,3 +41,15 @@ export const dbPageState = proxy<DatabasePageState & UpdateProps>({
 });
 
 export const getDbPageState = () => useProxy(dbPageState);
+
+interface CollectionPageState {
+  collection?: Models.Collection;
+  loading: boolean;
+}
+
+export const collectionPageState = proxy<CollectionPageState & UpdateProps>({
+  loading: true,
+  _update: async () => {},
+});
+
+export const getCollectionPageState = () => useProxy(collectionPageState);
