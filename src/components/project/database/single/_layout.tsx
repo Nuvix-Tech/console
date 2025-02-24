@@ -1,3 +1,4 @@
+"use client";
 import { dbPageState } from "@/state/page";
 import { getProjectState } from "@/state/project-state";
 import { notFound } from "next/navigation";
