@@ -7,9 +7,19 @@ import { Models, Query } from "@nuvix/console";
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Tooltip } from "@/components/ui/tooltip";
-import { Heading, Text } from "@chakra-ui/react";
+import { HStack, Heading, Text } from "@chakra-ui/react";
 import { formatDate } from "@/lib/utils";
-import { DataGrid, DataGridSkelton, SearchAndCreate } from "@/ui/modules/data-grid";
+import {
+  ActionButton,
+  DataActionBar,
+  DataGrid,
+  DataGridProvider,
+  DataGridSkelton,
+  Paggination,
+  SearchAndCreate,
+  SelectLimit,
+  Table,
+} from "@/ui/modules/data-grid";
 import { useSearchParams } from "next/navigation";
 import { EmptyState } from "@/ui/modules/layout/empty-state";
 import { EmptySearch } from "@/ui/modules/layout";
@@ -94,6 +104,10 @@ const DatabaseSinglePage = () => {
     },
   ];
 
+  const onDelete = (values: Models.Collection[]) => {
+    alert(JSON.stringify(values));
+  };
+
   return (
     <Column paddingX="16" fillWidth>
       <Column vertical="center" horizontal="start" marginBottom="24" marginTop="12" paddingX="8">
@@ -103,37 +117,55 @@ const DatabaseSinglePage = () => {
         </Text>
       </Column>
 
-      {loading && !collectionList.total ? (
-        <DataGridSkelton />
-      ) : collectionList.total > 0 || !!search || page > 1 ? (
-        <>
-          <SearchAndCreate
-            button={{ text: "Create Collection", allowed: canWriteDatabases }}
-            placeholder="Search by name or ID"
-          />
+      <DataGridProvider<Models.Collection>
+        columns={columns}
+        data={collectionList.collections}
+        manualPagination
+        rowCount={collectionList.total}
+        loading={loading}
+        state={{ pagination: { pageIndex: page, pageSize: limit } }}
+        showCheckbox
+      >
+        <SearchAndCreate
+          button={{ text: "Create Collection", allowed: canWriteDatabases }}
+          placeholder="Search by name or ID"
+        />
 
-          {collectionList.total > 0 ? (
-            <DataGrid<Models.Collection>
-              columns={columns}
-              data={collectionList.collections}
-              manualPagination
-              rowCount={collectionList.total}
-              loading={loading}
-              state={{ pagination: { pageIndex: page, pageSize: limit } }}
-            />
-          ) : (
-            search && (
-              <EmptySearch
-                title={`Sorry, we couldn't find '${search}'`}
-                description="There are no collections that match your search."
-                clearSearch
-              />
-            )
-          )}
-        </>
-      ) : (
-        <EmptyState title="No Collections" description="No collections have been created yet." />
-      )}
+        {loading && !collectionList.total ? (
+          <DataGridSkelton />
+        ) : collectionList.total > 0 || !!search || page > 1 ? (
+          <>
+            {collectionList.total > 0 ? (
+              <>
+                <Table />
+                <HStack marginTop="6" justifyContent="space-between" alignItems="center">
+                  <SelectLimit />
+                  <Paggination />
+                </HStack>
+                <DataActionBar
+                  actions={
+                    <>
+                      <ActionButton<Models.Collection> colorPalette="red" onClick={onDelete}>
+                        Delete
+                      </ActionButton>
+                    </>
+                  }
+                />
+              </>
+            ) : (
+              search && (
+                <EmptySearch
+                  title={`Sorry, we couldn't find '${search}'`}
+                  description="There are no collections that match your search."
+                  clearSearch
+                />
+              )
+            )}
+          </>
+        ) : (
+          <EmptyState title="No Collections" description="No collections have been created yet." />
+        )}
+      </DataGridProvider>
     </Column>
   );
 };
