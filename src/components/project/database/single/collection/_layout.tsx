@@ -2,8 +2,8 @@
 import { collectionPageState } from "@/state/page";
 import { getProjectState, projectState } from "@/state/project-state";
 import { notFound } from "next/navigation";
-import React, { PropsWithChildren } from "react";
-import { CollectionSidebar } from "./components";
+import React, { PropsWithChildren, useEffect } from "react";
+import { CollectionSidebar, CollectionsSiderbar } from "./components";
 
 type Props = PropsWithChildren & {
   databaseId: string;
@@ -12,12 +12,16 @@ type Props = PropsWithChildren & {
 
 export const CollectionLayout: React.FC<Props> = ({ children, databaseId, collectionId }) => {
   const { sdk } = getProjectState();
-  projectState.sidebar.first = <CollectionSidebar />;
 
-  sdk?.databases
-    .getCollection(databaseId, collectionId)
-    .then((v) => (collectionPageState.collection = v))
-    .catch(notFound);
+  projectState.sidebar.first = <CollectionSidebar />;
+  projectState.sidebar.middle = <CollectionsSiderbar />;
+
+  useEffect(() => {
+    sdk?.databases
+      .getCollection(databaseId, collectionId)
+      .then((v) => (collectionPageState.collection = v))
+      .catch(notFound);
+  }, [sdk, databaseId, collectionId]);
 
   return <>{children}</>;
 };

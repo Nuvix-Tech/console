@@ -57,8 +57,6 @@ const CollectionSidebar = () => {
       />
 
       <Line />
-
-      <CollectionsSiderbar />
     </>
   );
 };

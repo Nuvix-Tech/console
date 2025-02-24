@@ -90,7 +90,11 @@ const CollectionPage: React.FC<Props> = () => {
       minSize: 180,
       cell(props) {
         const date = formatDate(props.getValue<string>());
-        return <Tooltip showArrow content={date}></Tooltip>;
+        return (
+          <Tooltip showArrow content={date}>
+            <span>{date}</span>
+          </Tooltip>
+        );
       },
     },
   ];

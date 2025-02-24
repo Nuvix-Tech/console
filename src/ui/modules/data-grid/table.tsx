@@ -24,7 +24,7 @@ const TheTable = <T,>() => {
             <Table.Row
               key={headerGroup.id}
               display={"flex"}
-              justifyContent={"space-between"}
+              // justifyContent={"space-evenly"}
               alignItems={"center"}
               width="full"
               borderBottom={0.5}
@@ -61,7 +61,9 @@ const TheTable = <T,>() => {
                   fontSize={"sm"}
                   paddingX="4"
                   whiteSpace={"nowrap"}
-                  width={header.column.columnDef.size ?? "full"}
+                  width={
+                    header.column.columnDef.size === 150 ? "full" : header.column.columnDef.size
+                  }
                   minWidth={header.column.columnDef.minSize}
                   maxWidth={header.column.columnDef.maxSize}
                   key={header.id}
@@ -89,7 +91,7 @@ const TheTable = <T,>() => {
           {table.getRowModel().rows.map((row) => (
             <Table.Row
               display={"flex"}
-              justifyContent={"space-between"}
+              // justifyContent={"space-between"}
               key={row.id}
               borderRadius={0}
               gap={0}
@@ -117,7 +119,7 @@ const TheTable = <T,>() => {
                     overflow={"hidden"}
                     justifyContent={"center"}
                     as={"div"}
-                    width={"12"}
+                    width={"20"}
                   >
                     <Checkbox
                       aria-label="Select row"
@@ -138,7 +140,7 @@ const TheTable = <T,>() => {
                     overflow={"hidden"}
                     whiteSpace={"nowrap"}
                     as={"div"}
-                    width={cell.column.columnDef.size ?? "full"}
+                    width={cell.column.columnDef.size === 150 ? "full" : cell.column.columnDef.size}
                     minWidth={cell.column.columnDef.minSize}
                     maxWidth={cell.column.columnDef.maxSize}
                   >

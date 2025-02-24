@@ -1,4 +1,5 @@
-import { Background, Flex, GlitchFx, Heading, Spinner } from "@/ui/components";
+import { Background, Flex } from "@/ui/components";
+import { Spinner } from "@chakra-ui/react";
 
 export default function LoadingUI() {
   return (
@@ -8,23 +9,25 @@ export default function LoadingUI() {
           position="absolute"
           mask={{
             cursor: true,
+            x: 60,
+            y: 90,
           }}
           gradient={{
-            colorEnd: "static-transparent",
-            colorStart: "accent-solid-strong",
+            colorEnd: "accent-solid-strong",
+            colorStart: "brand-alpha-weak",
             display: true,
-            height: 100,
-            opacity: 100,
-            tilt: 0,
-            width: 150,
-            x: 0,
-            y: 0,
+            height: 70,
+            opacity: 70,
+            tilt: 89,
+            width: 50,
+            x: 30,
+            y: 20,
           }}
           dots={{
             color: "accent-on-background-medium",
             display: true,
-            opacity: 100,
-            size: "64",
+            opacity: 60,
+            size: "48",
           }}
         />
         <Flex fill fillWidth horizontal="center" vertical="center" align="center">

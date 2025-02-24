@@ -42,6 +42,7 @@ const DatabaseSinglePage = () => {
   const { canWriteDatabases } = permissions;
 
   projectState.sidebar.first = null;
+  projectState.sidebar.middle = null;
 
   const get = async () => {
     if (!sdk || !database) return;

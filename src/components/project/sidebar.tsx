@@ -189,11 +189,15 @@ export const SecondSidebar = ({ noMarg, noBg, border = true }: SecondSidebarProp
           className="sidebar-large"
         >
           <Column fillWidth gap="s" paddingBottom="56">
-            <RevealFx direction="column" fillWidth gap="s" horizontal="start" trigger>
+            <RevealFx direction="column" fillWidth gap="s" horizontal="start" trigger speed="fast">
               {sidebar.first}
             </RevealFx>
-            {sidebar.middle}
-            {sidebar.last}
+            <RevealFx direction="column" fillWidth gap="s" horizontal="start" trigger speed="fast">
+              {sidebar.middle}
+            </RevealFx>
+            <RevealFx direction="column" fillWidth gap="s" horizontal="start" trigger speed="fast">
+              {sidebar.last}
+            </RevealFx>
           </Column>
         </Column>
       ) : null}
