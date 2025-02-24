@@ -1,0 +1,20 @@
+import { PropsWithParams } from "@/types";
+import { PropsWithChildren, Suspense } from "react";
+import { DocumentLayout } from "@/components/project/database/single/collection/document";
+
+type Props = {
+  id: string;
+  databaseId: string;
+  collectionId: string;
+  documentId: string;
+};
+
+export default async function ({ children, params }: PropsWithChildren & PropsWithParams<Props>) {
+  const props = await params;
+
+  return (
+    <Suspense fallback="You know, what is going on :)?">
+      <DocumentLayout {...props}>{children}</DocumentLayout>
+    </Suspense>
+  );
+}

@@ -53,3 +53,16 @@ export const collectionPageState = proxy<CollectionPageState & UpdateProps>({
 });
 
 export const getCollectionPageState = () => useProxy(collectionPageState);
+
+interface DocumentPageState<T = unknown> {
+  document?: T extends Models.Document ? T : Models.Document;
+  loading: boolean;
+}
+
+export const documentPageState = proxy<DocumentPageState & UpdateProps>({
+  loading: true,
+  _update: async () => {},
+});
+
+export const getDocumentPageState = <T>() =>
+  useProxy<DocumentPageState<T> & UpdateProps>(documentPageState as any);

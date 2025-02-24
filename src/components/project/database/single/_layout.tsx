@@ -13,6 +13,7 @@ const DatabaseSingleLayout: React.FC<Props> = ({ children, databaseId }) => {
   const { sdk } = getProjectState();
 
   projectState.showSubSidebar = true;
+  projectState.sidebar.first = null;
   projectState.sidebar.middle = <DatbaseSidebar />;
 
   async function get() {
