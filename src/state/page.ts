@@ -27,3 +27,17 @@ export const teamPageState = proxy<TeamPageState>({
 });
 
 export const getTeamPageState = () => useProxy(teamPageState);
+
+type UpdateProps = { _update: () => Promise<any | void> };
+
+interface DatabasePageState {
+  database?: Models.Database;
+  loading: boolean;
+}
+
+export const dbPageState = proxy<DatabasePageState & UpdateProps>({
+  loading: true,
+  _update: async () => {},
+});
+
+export const getdbPageState = () => useProxy(dbPageState);
