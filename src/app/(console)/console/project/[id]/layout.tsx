@@ -13,12 +13,10 @@ export default async function ({
   return (
     <>
       <ProjectWrapper id={id}>
-        <div id="project" className="project show-sidebar">
-          <ProjectSidebar />
-          <Row fill className="project-main">
-            {children}
-          </Row>
-        </div>
+        <ProjectSidebar />
+        <Row fill className="project-main">
+          {children}
+        </Row>
       </ProjectWrapper>
     </>
   );

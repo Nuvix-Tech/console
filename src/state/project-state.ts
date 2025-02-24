@@ -19,6 +19,7 @@ interface IProjectState {
   sdk?: typeof sdkForProject;
   scopes: Models.Roles;
   showSidebar: boolean;
+  showSubSidebar: boolean;
   sidebarItems: (SidebarItemGroup | SidebarItem)[];
   sidebar: Sidebar;
   permissions: AppPermission;
@@ -28,7 +29,7 @@ interface IProjectState {
 class ProjectState implements IProjectState {
   initialfetching = true;
   scopes: Models.Roles = { roles: ["any"], scopes: [] };
-
+  showSubSidebar = false;
   get permissions() {
     return {
       canReadSessions: this.scopes.scopes.includes("sessions.read"),

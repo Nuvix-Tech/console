@@ -1,8 +1,9 @@
 "use client";
 import { dbPageState } from "@/state/page";
-import { getProjectState } from "@/state/project-state";
+import { getProjectState, projectState } from "@/state/project-state";
 import { notFound } from "next/navigation";
-import React, { PropsWithChildren, use, useEffect } from "react";
+import React, { PropsWithChildren, useEffect } from "react";
+import { DatbaseSidebar } from "./components";
 
 type Props = PropsWithChildren & {
   databaseId: string;
@@ -10,6 +11,9 @@ type Props = PropsWithChildren & {
 
 const DatabaseSingleLayout: React.FC<Props> = ({ children, databaseId }) => {
   const { sdk } = getProjectState();
+
+  projectState.showSubSidebar = true;
+  projectState.sidebar.middle = <DatbaseSidebar />;
 
   async function get() {
     if (!sdk) return;

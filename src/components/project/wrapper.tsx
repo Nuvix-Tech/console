@@ -4,12 +4,13 @@ import { getProjectSdk, sdkForConsole } from "@/lib/sdk";
 import React from "react";
 import { getProjectState, projectState } from "@/state/project-state";
 import { appState } from "@/state/app-state";
+import classNames from "classnames";
 
 export default function ProjectWrapper({
   children,
   id,
 }: { children: React.ReactNode; id: string }) {
-  const { project } = getProjectState();
+  const { project, showSubSidebar } = getProjectState();
   const { projects, organizations } = sdkForConsole;
 
   projectState._update = async () => {
@@ -30,5 +31,14 @@ export default function ProjectWrapper({
     });
   }, [id]);
 
-  return <>{children}</>;
+  return (
+    <>
+      <div
+        id="project"
+        className={classNames(`project show-sidebar`, { "show-sidebar-large": showSubSidebar })}
+      >
+        {children}
+      </div>
+    </>
+  );
 }

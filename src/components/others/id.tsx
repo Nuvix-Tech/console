@@ -3,7 +3,12 @@ import { Clipboard } from "@chakra-ui/react";
 import { LuClipboard } from "react-icons/lu";
 import { LuCheck } from "react-icons/lu";
 
-const IDChip = ({ id }: { id?: string }) => {
+type Props = {
+  id?: string;
+  hideIcon?: boolean;
+};
+
+const IDChip = ({ id, hideIcon }: Props) => {
   return (
     <Clipboard.Root value={id}>
       <Clipboard.Trigger asChild>
@@ -11,6 +16,7 @@ const IDChip = ({ id }: { id?: string }) => {
           copied={
             <Chip
               selected
+              onClick={(e) => e.preventDefault()}
               prefixIcon={<LuCheck size={14} />}
               label={id ?? "Unknown"}
               iconButtonProps={{
@@ -22,8 +28,9 @@ const IDChip = ({ id }: { id?: string }) => {
         >
           <Chip
             selected={false}
+            onClick={(e) => e.preventDefault()}
             label={id ?? "Unknown"}
-            prefixIcon={<LuClipboard size={14} />}
+            prefixIcon={!hideIcon && <LuClipboard size={14} />}
             iconButtonProps={{
               tooltip: "Copy ID",
               tooltipPosition: "top",
