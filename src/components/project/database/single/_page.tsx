@@ -2,7 +2,7 @@
 
 import { getDbPageState } from "@/state/page";
 import { getProjectState, projectState } from "@/state/project-state";
-import { Column } from "@/ui/components";
+import { Column, useConfirm, useToast } from "@/ui/components";
 import { Models, Query } from "@nuvix/console";
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
@@ -12,7 +12,6 @@ import { formatDate } from "@/lib/utils";
 import {
   ActionButton,
   DataActionBar,
-  DataGrid,
   DataGridProvider,
   DataGridSkelton,
   Paggination,
@@ -38,22 +37,23 @@ const DatabaseSinglePage = () => {
   const limit = searchParams.get("limit") ? Number(searchParams.get("limit")) : 6;
   const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
   const search = searchParams.get("search");
+  const confirm = useConfirm();
+  const { addToast } = useToast();
   const { canWriteDatabases } = permissions;
 
   projectState.sidebar.first = null;
 
-  React.useEffect(() => {
+  const get = async () => {
     if (!sdk || !database) return;
     setLoading(true);
     const queries: string[] = [];
-
     queries.push(Query.limit(limit), Query.offset((page - 1) * limit));
-    const get = async () => {
-      const cls = await sdk.databases.listCollections(database?.$id, queries, search ?? undefined);
-      setCollectionList(cls);
-      setLoading(false);
-    };
+    const cls = await sdk.databases.listCollections(database?.$id, queries, search ?? undefined);
+    setCollectionList(cls);
+    setLoading(false);
+  };
 
+  React.useEffect(() => {
     get();
   }, [sdk, limit, page, search, database]);
 
@@ -104,8 +104,39 @@ const DatabaseSinglePage = () => {
     },
   ];
 
-  const onDelete = (values: Models.Collection[]) => {
-    alert(JSON.stringify(values));
+  const onDelete = async (values: Models.Collection[]) => {
+    if (
+      await confirm({
+        title: "Delete Collection",
+        description: `Are you sure you want to delete ${values.length} collection(s)?`,
+        confirm: {
+          text: "Delete",
+          variant: "danger",
+        },
+      })
+    ) {
+      setLoading(true);
+      const ids = values.map((v) => v.$id);
+      if (!sdk) return;
+      await Promise.all(
+        ids.map(async (id) => {
+          try {
+            await sdk.databases.deleteCollection(database?.$id!, id);
+          } catch (e) {
+            addToast({
+              message: `Error deleting collection ${id}`,
+              variant: "danger",
+            });
+          }
+        }),
+      ).then((v) =>
+        addToast({
+          message: `Successfully deleted ${ids.length} collection(s)`,
+          variant: "success",
+        }),
+      );
+      await get();
+    }
   };
 
   return (

@@ -1,11 +1,12 @@
+import { Tooltip } from "@/components/ui/tooltip";
 import { getCollectionPageState, getDbPageState } from "@/state/page";
 import { getProjectState } from "@/state/project-state";
-import { Line } from "@/ui/components";
+import { IconButton, Line } from "@/ui/components";
 import { SidebarGroup } from "@/ui/modules/layout/navigation";
 import { Button, VStack } from "@chakra-ui/react";
 import { Models } from "@nuvix/console";
-import { usePathname } from "next/navigation";
-import { Suspense, use } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
 
 const CollectionSidebar = () => {
   const { project } = getProjectState();
@@ -62,40 +63,58 @@ const CollectionSidebar = () => {
   );
 };
 
-export const CollectionsSiderbar = () => {
-  const { project, sdk } = getProjectState();
+const CollectionsSiderbar = () => {
+  const { sdk } = getProjectState();
   const { database } = getDbPageState();
-  const { collection } = getCollectionPageState();
-  const path = usePathname();
+  const [collections, setCollections] = useState<Models.Collection[]>([]);
 
-  if (!sdk || database) return;
+  useEffect(() => {
+    if (!sdk || !database) return;
 
-  let data = sdk.databases.listCollections(database!.$id);
-
-  const resolveHref = (value?: string) =>
-    `/console/project/${project?.$id}/databases/${database!.$id}/collection/${collection?.$id}${value ? `/${value}` : ""}`;
-  const resolveIsSelected = (value?: string) => path.includes(resolveHref(value));
+    sdk.databases.listCollections(database!.$id).then((data) => {
+      setCollections(data.collections);
+    });
+  }, [sdk, database]);
 
   return (
     <>
-      <SidebarGroup title="Collections" items={[]} />
-
-      <Suspense fallback="HERE IS THE SKELTON">
-        <Collections promiseData={data} />
-      </Suspense>
-
+      <SidebarGroup
+        title="Collections"
+        action={
+          <Tooltip content="Create Collection" showArrow>
+            <IconButton variant="secondary" icon="plus" size="s" />
+          </Tooltip>
+        }
+        items={[]}
+      />
+      <Collections collections={collections} />
       <Line />
     </>
   );
 };
 
-const Collections = ({ promiseData }: { promiseData: Promise<Models.CollectionList> }) => {
-  const collections = use(promiseData);
+const Collections = ({ collections }: { collections: Models.Collection[] }) => {
+  const { project } = getProjectState();
+  const { database } = getDbPageState();
+  const { collection: selectedCollection } = getCollectionPageState();
+  const path = usePathname();
+  const router = useRouter();
 
   return (
-    <VStack justifyContent={"start"} alignItems={"start"} width="full">
-      {collections.collections.map((c) => (
-        <Button size="sm" width="full" key={c.$id} justifyContent="flex-start" variant="subtle">
+    <VStack justifyContent={"start"} alignItems={"start"} width="full" px="4">
+      {collections.map((c) => (
+        <Button
+          size="sm"
+          width="full"
+          key={c.$id}
+          justifyContent="flex-start"
+          variant={selectedCollection?.$id === c.$id ? "surface" : "plain"}
+          onClick={() =>
+            router.push(
+              `/console/project/${project?.$id}/databases/${database!.$id}/collection/${c.$id}`,
+            )
+          }
+        >
           {c.name}
         </Button>
       ))}
@@ -103,4 +122,4 @@ const Collections = ({ promiseData }: { promiseData: Promise<Models.CollectionLi
   );
 };
 
-export { CollectionSidebar };
+export { CollectionSidebar, CollectionsSiderbar };

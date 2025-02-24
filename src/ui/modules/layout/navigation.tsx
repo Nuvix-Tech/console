@@ -12,25 +12,29 @@ interface SidebarGroupItem {
 
 interface SidebarGroupProps {
   title?: string;
+  action?: React.ReactNode;
   titleUppercase?: boolean;
   items: SidebarGroupItem[];
 }
 
-const SidebarGroup = ({ title, items, titleUppercase = true }: SidebarGroupProps) => {
+const SidebarGroup = ({ title, items, titleUppercase = true, action }: SidebarGroupProps) => {
   return (
     <Column fillWidth gap="4" paddingX="xs">
-      {title ? (
-        <Text
-          variant="body-default-xs"
-          onBackground="neutral-weak"
-          marginBottom="8"
-          marginLeft="4"
-          style={{
-            textTransform: titleUppercase ? "uppercase" : "inherit",
-          }}
-        >
-          {title}
-        </Text>
+      {title || action ? (
+        <Row fillWidth horizontal="space-between" vertical="center" paddingBottom="8" paddingX="4">
+          {title ? (
+            <Text
+              variant="body-default-xs"
+              onBackground="neutral-weak"
+              style={{
+                textTransform: titleUppercase ? "uppercase" : "inherit",
+              }}
+            >
+              {title}
+            </Text>
+          ) : null}
+          {action}
+        </Row>
       ) : null}
 
       {items.map((item, _) =>

@@ -32,16 +32,23 @@ const TheTable = <T,>() => {
               borderColor={"border"}
             >
               {showCheckbox ? (
-                <Checkbox
-                  left="4"
-                  aria-label="Select all rows"
-                  checked={
-                    table.getIsSomeRowsSelected() ? "indeterminate" : table.getIsAllRowsSelected()
-                  }
-                  onCheckedChange={({ checked }) =>
-                    table.toggleAllRowsSelected(checked === "indeterminate" ? undefined : checked)
-                  }
-                />
+                <Table.ColumnHeader
+                  display={"flex"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  width={"12"}
+                  borderBottom={0}
+                >
+                  <Checkbox
+                    aria-label="Select all rows"
+                    checked={
+                      table.getIsSomeRowsSelected() ? "indeterminate" : table.getIsAllRowsSelected()
+                    }
+                    onCheckedChange={({ checked }) =>
+                      table.toggleAllRowsSelected(checked === "indeterminate" ? undefined : checked)
+                    }
+                  />
+                </Table.ColumnHeader>
               ) : null}
               {headerGroup.headers.map((header) => (
                 <Table.ColumnHeader
@@ -105,16 +112,23 @@ const TheTable = <T,>() => {
                 unselectable="on"
               >
                 {showCheckbox ? (
-                  <Checkbox
-                    left="4"
-                    aria-label="Select row"
-                    checked={row.getIsSelected()}
-                    disabled={!row.getCanSelect()}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      row.getToggleSelectedHandler()(e);
-                    }}
-                  />
+                  <Table.Cell
+                    alignContent={"center"}
+                    overflow={"hidden"}
+                    justifyContent={"center"}
+                    as={"div"}
+                    width={"12"}
+                  >
+                    <Checkbox
+                      aria-label="Select row"
+                      checked={row.getIsSelected()}
+                      disabled={!row.getCanSelect()}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        row.getToggleSelectedHandler()(e);
+                      }}
+                    />
+                  </Table.Cell>
                 ) : null}
                 {row.getVisibleCells().map((cell) => (
                   <Table.Cell
