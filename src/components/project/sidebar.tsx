@@ -74,7 +74,7 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
     },
     {
       name: "Database",
-      href: `/console/project/${id}/database`,
+      href: `/console/project/${id}/databases`,
       icon: <span className="icon-database" />,
     },
     {

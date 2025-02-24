@@ -40,4 +40,4 @@ export const dbPageState = proxy<DatabasePageState & UpdateProps>({
   _update: async () => {},
 });
 
-export const getdbPageState = () => useProxy(dbPageState);
+export const getDbPageState = () => useProxy(dbPageState);

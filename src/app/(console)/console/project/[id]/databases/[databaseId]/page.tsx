@@ -1,11 +1,6 @@
 import React from "react";
+import { DatabaseSinglePage } from "@/components/project/database/single";
 
-const DatabasePage: React.FC = () => {
-  return (
-    <div>
-      <p>Welcome to the database page.</p>
-    </div>
-  );
-};
-
-export default DatabasePage;
+export default function () {
+  return <DatabaseSinglePage />;
+}
