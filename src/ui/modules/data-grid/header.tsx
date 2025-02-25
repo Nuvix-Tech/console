@@ -1,10 +1,10 @@
 import { CloseButton } from "@/components/ui/close-button";
 import { InputGroup } from "@/components/ui/input-group";
-import { Button, Row } from "@/ui/components";
-import { Input } from "@chakra-ui/react";
+import { Row } from "@/ui/components";
+import { Button, ButtonProps, Input } from "@chakra-ui/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
-import { LuSearch } from "react-icons/lu";
+import { LuPlus, LuSearch } from "react-icons/lu";
 
 interface SearchAndCreateProps {
   placeholder?: string;
@@ -72,13 +72,18 @@ const SearchAndCreate: React.FC<SearchAndCreateProps> = ({ placeholder, button }
           </InputGroup>
         </Row>
 
-        {button?.allowed ? (
-          <Button variant="primary" size="m" prefixIcon="plus">
-            {button?.text}
-          </Button>
-        ) : null}
+        {button?.allowed ? <Button size="md">{button?.text}</Button> : null}
       </Row>
     </>
+  );
+};
+
+export const CreateButton = ({ label, ...props }: ButtonProps & { label: React.ReactNode }) => {
+  return (
+    <Button size="md" {...props}>
+      <LuPlus />
+      {label}
+    </Button>
   );
 };
 

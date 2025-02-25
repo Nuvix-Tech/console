@@ -8,7 +8,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Checkbox } from "@/components/ui/checkbox";
-import { LuColumns3 } from "react-icons/lu";
+import { LuColumns3, LuFilter } from "react-icons/lu";
 
 export const ColumnSelector = (props: ButtonProps) => {
   const { table } = useDataGrid();
@@ -42,5 +42,38 @@ export const ColumnSelector = (props: ButtonProps) => {
         </PopoverContent>
       </PopoverRoot>
     </>
+  );
+};
+
+export const Filter = (props: ButtonProps) => {
+  const { table } = useDataGrid();
+
+  return (
+    <PopoverRoot>
+      <PopoverTrigger asChild>
+        <Button size="sm" variant="outline" {...props}>
+          <LuFilter />
+          Filters
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent maxW={"40"}>
+        <PopoverArrow />
+        <PopoverBody>
+          <VStack justifyContent="flex-start" alignItems="flex-start">
+            {table.getAllColumns().map((column) => (
+              <Checkbox
+                size="sm"
+                key={column.id}
+                checked={column.getIsVisible()}
+                disabled={!column.getCanHide()}
+                onChange={column.getToggleVisibilityHandler()}
+              >
+                {column.columnDef.header as any}
+              </Checkbox>
+            ))}
+          </VStack>
+        </PopoverBody>
+      </PopoverContent>
+    </PopoverRoot>
   );
 };

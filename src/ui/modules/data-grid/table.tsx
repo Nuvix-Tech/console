@@ -2,14 +2,15 @@
 import React from "react";
 import { flexRender } from "@tanstack/react-table";
 import { Table, Progress } from "@chakra-ui/react";
-import { SmartLink } from "@/ui/components";
 import { ProgressBar } from "@/components/ui/progress";
 import { useDataGrid } from "./provider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { SHOW_TABLE_BORDER } from "@/lib/constants";
+import { useRouter } from "next/navigation";
 
 const TheTable = <T,>() => {
   const { table, loading, showCheckbox, stickyCheckBox } = useDataGrid<T>();
+  const { push } = useRouter();
   const checkBoxWidth = 12;
 
   return (
@@ -18,6 +19,7 @@ const TheTable = <T,>() => {
         size="md"
         variant="outline"
         borderRadius={"lg"}
+        // tableLayout='fixed'
         interactive
         overflow="auto"
         showColumnBorder={SHOW_TABLE_BORDER}
@@ -27,7 +29,7 @@ const TheTable = <T,>() => {
             <Table.Row
               key={headerGroup.id}
               display={"flex"}
-              // justifyContent={"space-between"}
+              justifyContent={"space-between"}
               alignItems={"center"}
               position={"relative"}
               width="full"
@@ -88,43 +90,45 @@ const TheTable = <T,>() => {
             </Progress.Root>
           ) : null}
         </Table.Header>
-        <Table.Body as={"div"}>
-          {table.getRowModel().rows.map((row) => (
-            <Table.Row
-              display={"flex"}
-              // justifyContent={"space-between"}
-              position="relative"
-              key={row.id}
-              borderRadius={0}
-              gap={0}
-              _hover={{
-                bg: "bg.muted",
-                cursor: "pointer",
-              }}
-              _focus={{
-                bg: "bg.subtle",
-                cursor: "pointer",
-              }}
-              asChild
-            >
-              <SmartLink
-                fillWidth
-                className="neutral-on-background-medium"
-                href={
-                  row.getVisibleCells()[0].column.columnDef.meta?.href
-                    ? row.getVisibleCells()[0].column.columnDef.meta?.href!(row.original)
-                    : undefined
-                }
+        <Table.Body>
+          {table.getRowModel().rows.map((row) => {
+            const caller = row.getAllCells()?.[0].column.columnDef.meta?.href;
+            return (
+              <Table.Row
+                display={"flex"}
+                justifyContent={"space-between"}
+                position="relative"
                 key={row.id}
-                unstyled
-                unselectable="on"
+                borderRadius={0}
+                gap={0}
+                _hover={{
+                  bg: "bg.muted",
+                  cursor: "pointer",
+                }}
+                _focus={{
+                  bg: "bg.subtle",
+                  cursor: "pointer",
+                }}
+                onClick={(e) => {
+                  const target = e.target as HTMLElement;
+                  if (!target.closest("[data-action]")) {
+                    caller && push(caller(row.original));
+                  }
+                }}
+                // onKeyDown={(e) => {
+                //   if ((e.key === "Enter" || e.key === " ") && caller) {
+                //     push(caller(row.original))
+                //   }
+                // }}
+                tabIndex={caller ? 0 : -1}
+                role={caller && "button"}
+                cursor={caller && "pointer"}
               >
                 {showCheckbox ? (
                   <Table.Cell
                     alignContent="center"
                     overflow="hidden"
                     justifyContent="center"
-                    as="div"
                     width={checkBoxWidth}
                     minWidth={checkBoxWidth}
                     maxWidth={checkBoxWidth}
@@ -135,12 +139,13 @@ const TheTable = <T,>() => {
                   >
                     <Checkbox
                       aria-label="Select row"
+                      data-action="checkbox"
                       checked={row.getIsSelected()}
                       disabled={!row.getCanSelect()}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        row.getToggleSelectedHandler()(e);
-                      }}
+                      cursor="checkbox"
+                      onCheckedChange={({ checked }) =>
+                        row.toggleSelected(checked === "indeterminate" ? undefined : checked)
+                      }
                     />
                   </Table.Cell>
                 ) : null}
@@ -151,7 +156,6 @@ const TheTable = <T,>() => {
                     alignContent={"center"}
                     overflow={"hidden"}
                     whiteSpace={"nowrap"}
-                    as={"div"}
                     width={cell.column.columnDef.size ?? "auto"}
                     minWidth={cell.column.columnDef.minSize}
                     maxWidth={cell.column.columnDef.maxSize}
@@ -159,9 +163,9 @@ const TheTable = <T,>() => {
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </Table.Cell>
                 ))}
-              </SmartLink>
-            </Table.Row>
-          ))}
+              </Table.Row>
+            );
+          })}
         </Table.Body>
       </Table.Root>
     </Table.ScrollArea>

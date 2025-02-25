@@ -14,6 +14,7 @@ import {
   DataActionBar,
   DataGridProvider,
   DataGridSkelton,
+  Filter,
   Paggination,
   PagginationWrapper,
   SelectLimit,
@@ -23,6 +24,7 @@ import { useSearchParams } from "next/navigation";
 import { EmptyState } from "@/ui/modules/layout/empty-state";
 import { IDChip } from "@/components/others";
 import { LuTrash2 } from "react-icons/lu";
+import { CreateButton } from "@/ui/modules/data-grid";
 
 type Props = {
   databaseId: string;
@@ -40,7 +42,7 @@ const CollectionPage: React.FC<Props> = () => {
     total: 0,
   });
   const searchParams = useSearchParams();
-  const limit = searchParams.get("limit") ? Number(searchParams.get("limit")) : 6;
+  const limit = searchParams.get("limit") ? Number(searchParams.get("limit")) : 12;
   const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
   const confirm = useConfirm();
   const { addToast } = useToast();
@@ -167,7 +169,11 @@ const CollectionPage: React.FC<Props> = () => {
         ) : documentList.total > 0 || page > 1 ? (
           <>
             <HStack mb="6" justifyContent="space-between" alignItems="center">
-              <ColumnSelector />
+              <Filter />
+              <HStack gap="8" alignItems="center">
+                <ColumnSelector />
+                <CreateButton label="Create Document" size={"sm"} />
+              </HStack>
             </HStack>
             <Table />
             <PagginationWrapper>

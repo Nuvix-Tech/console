@@ -16,7 +16,7 @@ const IDChip = ({ id, hideIcon }: Props) => {
           copied={
             <Chip
               selected
-              onClick={(e) => e.preventDefault()}
+              data-action="copyChip"
               prefixIcon={<LuCheck size={14} />}
               label={id ?? "Unknown"}
               iconButtonProps={{
@@ -28,7 +28,7 @@ const IDChip = ({ id, hideIcon }: Props) => {
         >
           <Chip
             selected={false}
-            onClick={(e) => e.preventDefault()}
+            data-action="copyChip"
             label={id ?? "Unknown"}
             prefixIcon={!hideIcon && <LuClipboard size={14} />}
             iconButtonProps={{
