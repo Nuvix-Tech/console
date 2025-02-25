@@ -119,7 +119,7 @@ const TheTable = <T,>() => {
                     overflow={"hidden"}
                     justifyContent={"center"}
                     as={"div"}
-                    width={"20"}
+                    width={"40"}
                   >
                     <Checkbox
                       aria-label="Select row"

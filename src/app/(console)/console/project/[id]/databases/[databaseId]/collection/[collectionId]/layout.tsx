@@ -9,7 +9,7 @@ export default async function ({
   const props = await params;
 
   return (
-    <Suspense fallback="You know, what is going on :)?">
+    <Suspense>
       <CollectionLayout {...props}>{children}</CollectionLayout>
     </Suspense>
   );

@@ -13,7 +13,7 @@ export default async function ({ children, params }: PropsWithChildren & PropsWi
   const props = await params;
 
   return (
-    <Suspense fallback="You know, what is going on :)?">
+    <Suspense>
       <DocumentLayout {...props}>{children}</DocumentLayout>
     </Suspense>
   );

@@ -14,6 +14,7 @@ import {
   DataGridProvider,
   DataGridSkelton,
   Paggination,
+  PagginationWrapper,
   SelectLimit,
   Table,
 } from "@/ui/modules/data-grid";
@@ -71,6 +72,9 @@ const CollectionPage: React.FC<Props> = () => {
         href: (row) => `${path}/${row.$id}`,
       },
     },
+
+    ...getColumns((collection?.attributes as any) || []),
+
     {
       header: "Created At",
       accessorKey: "$createdAt",
@@ -149,7 +153,9 @@ const CollectionPage: React.FC<Props> = () => {
         manualPagination
         rowCount={documentList.total}
         loading={loading}
-        state={{ pagination: { pageIndex: page, pageSize: limit } }}
+        state={{
+          pagination: { pageIndex: page, pageSize: limit },
+        }}
         showCheckbox
       >
         {loading && !documentList.total ? (
@@ -157,10 +163,10 @@ const CollectionPage: React.FC<Props> = () => {
         ) : documentList.total > 0 || page > 1 ? (
           <>
             <Table />
-            <HStack marginTop="6" justifyContent="space-between" alignItems="center">
+            <PagginationWrapper>
               <SelectLimit />
               <Paggination />
-            </HStack>
+            </PagginationWrapper>
             <DataActionBar
               actions={
                 <>
@@ -177,6 +183,20 @@ const CollectionPage: React.FC<Props> = () => {
       </DataGridProvider>
     </Column>
   );
+};
+
+const getColumns = (attributes: Models.AttributeString[]) => {
+  const columns: ColumnDef<Models.Document>[] = [];
+  attributes.map((attr) => {
+    if (attr.status !== "available") return undefined as any;
+    columns.push({
+      id: attr.key,
+      header: attr.key,
+      accessorKey: attr.key,
+      minSize: attr.size > 300 ? undefined : attr.size,
+    });
+  });
+  return columns;
 };
 
 export { CollectionPage };
