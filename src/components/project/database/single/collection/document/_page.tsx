@@ -1,5 +1,11 @@
 "use client";
-import { CardBox, CardBoxBody, CardBoxItem, CardBoxTitle } from "@/components/others/card";
+import {
+  CardBox,
+  CardBoxBody,
+  CardBoxDesc,
+  CardBoxItem,
+  CardBoxTitle,
+} from "@/components/others/card";
 import { formatDate } from "@/lib/utils";
 import { getCollectionPageState, getDbPageState, getDocumentPageState } from "@/state/page";
 import { Column } from "@/ui/components";
@@ -28,55 +34,22 @@ const DocumentPage: React.FC<Props> = ({ id, databaseId, collectionId, documentI
   return (
     <Column gap="20" padding="20" fillWidth>
       <MetaData />
-      <CardBox>
-        <CardBoxBody>
-          <CardBoxItem>
-            <CardBoxTitle>
-              Document
-            </CardBoxTitle>
-          </CardBoxItem>
-          <CardBoxItem>
-            <Column gap="12">
-              <Text>
-                {collection?.name} - {database?.name}
-              </Text>
-              <Text>
-                {document?.$id}
-              </Text>
-              <Text>
-                {formatDate(document?.$createdAt)}
-              </Text>
-              <Text>
-                {formatDate(document?.$updatedAt)}
-              </Text>
-            </Column>
-          </CardBoxItem>
-        </CardBoxBody>
-      </CardBox>
     </Column>
   );
 };
 
 const MetaData = () => {
   const { document } = getDocumentPageState();
-  const { collection } = getCollectionPageState();
-  const { database } = getDbPageState();
 
   return (
     <CardBox>
       <CardBoxBody>
         <CardBoxItem>
-          <CardBoxTitle>
-            Metadata
-          </CardBoxTitle>
+          <CardBoxTitle>Metadata</CardBoxTitle>
         </CardBoxItem>
         <CardBoxItem>
-          <Text>
-            {formatDate(document?.$createdAt)}
-          </Text>
-          <Text>
-            {formatDate(document?.$updatedAt)}
-          </Text>
+          <CardBoxDesc>Created: {formatDate(document?.$createdAt)}</CardBoxDesc>
+          <CardBoxDesc>Last updated: {formatDate(document?.$updatedAt)}</CardBoxDesc>
         </CardBoxItem>
       </CardBoxBody>
     </CardBox>
