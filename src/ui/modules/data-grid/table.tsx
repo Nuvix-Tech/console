@@ -6,9 +6,11 @@ import { SmartLink } from "@/ui/components";
 import { ProgressBar } from "@/components/ui/progress";
 import { useDataGrid } from "./provider";
 import { Checkbox } from "@/components/ui/checkbox";
+import { SHOW_TABLE_BORDER } from "@/lib/constants";
 
 const TheTable = <T,>() => {
-  const { table, loading, showCheckbox } = useDataGrid<T>();
+  const { table, loading, showCheckbox, stickyCheckBox } = useDataGrid<T>();
+  const checkBoxWidth = 12;
 
   return (
     <Table.ScrollArea borderWidth="1px" borderRadius={"lg"} width="full">
@@ -17,15 +19,17 @@ const TheTable = <T,>() => {
         variant="outline"
         borderRadius={"lg"}
         interactive
-        // showColumnBorder
+        overflow="auto"
+        showColumnBorder={SHOW_TABLE_BORDER}
       >
-        <Table.Header position={"relative"}>
+        <Table.Header position="relative">
           {table.getHeaderGroups().map((headerGroup) => (
             <Table.Row
               key={headerGroup.id}
               display={"flex"}
-              // justifyContent={"space-evenly"}
+              // justifyContent={"space-between"}
               alignItems={"center"}
+              position={"relative"}
               width="full"
               borderBottom={0.5}
               borderStyle={"solid"}
@@ -33,11 +37,17 @@ const TheTable = <T,>() => {
             >
               {showCheckbox ? (
                 <Table.ColumnHeader
-                  display={"flex"}
-                  alignItems={"center"}
-                  justifyContent={"center"}
-                  width={"12"}
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  width={checkBoxWidth}
+                  minWidth={checkBoxWidth}
+                  maxWidth={checkBoxWidth}
+                  position={stickyCheckBox ? "sticky" : "relative"}
+                  left={stickyCheckBox ? "0" : "auto"}
+                  bg={stickyCheckBox ? "bg.muted" : "inherit"}
                   borderBottom={0}
+                  zIndex={3}
                 >
                   <Checkbox
                     aria-label="Select all rows"
@@ -59,11 +69,9 @@ const TheTable = <T,>() => {
                   overflow={"hidden"}
                   className="neutral-on-background-medium"
                   fontSize={"sm"}
-                  paddingX="4"
+                  paddingX="2"
                   whiteSpace={"nowrap"}
-                  width={
-                    header.column.columnDef.size === 150 ? "full" : header.column.columnDef.size
-                  }
+                  width={header.column.columnDef.size ?? "auto"}
                   minWidth={header.column.columnDef.minSize}
                   maxWidth={header.column.columnDef.maxSize}
                   key={header.id}
@@ -75,15 +83,8 @@ const TheTable = <T,>() => {
             </Table.Row>
           ))}
           {loading ? (
-            <Progress.Root
-              size={"xs"}
-              value={null}
-              position={"absolute"}
-              width={"full"}
-              height={"0.5"}
-              bottom={"0"}
-            >
-              <ProgressBar height={"0.5"} />
+            <Progress.Root size={"xs"} value={null} position={"absolute"} width={"full"}>
+              <ProgressBar height={0.5} />
             </Progress.Root>
           ) : null}
         </Table.Header>
@@ -92,11 +93,16 @@ const TheTable = <T,>() => {
             <Table.Row
               display={"flex"}
               // justifyContent={"space-between"}
+              position="relative"
               key={row.id}
               borderRadius={0}
               gap={0}
               _hover={{
                 bg: "bg.muted",
+                cursor: "pointer",
+              }}
+              _focus={{
+                bg: "bg.subtle",
                 cursor: "pointer",
               }}
               asChild
@@ -115,11 +121,17 @@ const TheTable = <T,>() => {
               >
                 {showCheckbox ? (
                   <Table.Cell
-                    alignContent={"center"}
-                    overflow={"hidden"}
-                    justifyContent={"center"}
-                    as={"div"}
-                    width={"40"}
+                    alignContent="center"
+                    overflow="hidden"
+                    justifyContent="center"
+                    as="div"
+                    width={checkBoxWidth}
+                    minWidth={checkBoxWidth}
+                    maxWidth={checkBoxWidth}
+                    position={stickyCheckBox ? "sticky" : "relative"}
+                    left={stickyCheckBox ? "0" : "auto"}
+                    bg={stickyCheckBox ? "bg.subtle" : "inherit"}
+                    zIndex={3}
                   >
                     <Checkbox
                       aria-label="Select row"
@@ -140,7 +152,7 @@ const TheTable = <T,>() => {
                     overflow={"hidden"}
                     whiteSpace={"nowrap"}
                     as={"div"}
-                    width={cell.column.columnDef.size === 150 ? "full" : cell.column.columnDef.size}
+                    width={cell.column.columnDef.size ?? "auto"}
                     minWidth={cell.column.columnDef.minSize}
                     maxWidth={cell.column.columnDef.maxSize}
                   >

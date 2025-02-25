@@ -75,12 +75,12 @@ const DatabaseSinglePage = () => {
     {
       header: "Name",
       accessorKey: "name",
-      minSize: 150,
+      minSize: 250,
     },
     {
       header: "Created At",
       accessorKey: "$createdAt",
-      minSize: 180,
+      minSize: 200,
       cell(props) {
         const date = formatDate(props.getValue<string>());
         return (
@@ -93,7 +93,7 @@ const DatabaseSinglePage = () => {
     {
       header: "Updated At",
       accessorKey: "$updatedAt",
-      minSize: 180,
+      minSize: 200,
       cell(props) {
         const date = formatDate(props.getValue<string>());
         return (

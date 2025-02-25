@@ -55,8 +55,10 @@ export const PagginationWrapper = ({ children }: { children: React.ReactNode }) 
       justifyContent="space-between"
       alignItems="center"
       pos="fixed"
+      bg="bg"
       bottom="0"
       py="2"
+      zIndex={5}
       width="-webkit-fill-available"
     >
       {children}

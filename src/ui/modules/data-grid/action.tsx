@@ -1,12 +1,8 @@
 import React from "react";
-import {
-  ActionBarContent,
-  ActionBarRoot,
-  ActionBarSelectionTrigger,
-  ActionBarSeparator,
-} from "@/components/ui/action-bar";
 import { useDataGrid } from "./provider";
-import { Button, ButtonProps } from "@chakra-ui/react";
+import { ButtonProps } from "@chakra-ui/react";
+import { ActionBar, Button, Portal } from "@chakra-ui/react";
+import { CloseButton } from "@/components/ui/close-button";
 
 type Props = {
   actions?: React.ReactNode;
@@ -14,18 +10,27 @@ type Props = {
 
 export const DataActionBar = ({ actions }: Props) => {
   const { table } = useDataGrid();
-  const { getSelectedRowModel } = table;
+  const { getSelectedRowModel, toggleAllRowsSelected } = table;
 
   return (
-    <ActionBarRoot open={getSelectedRowModel().rows.length > 0}>
-      <ActionBarContent>
-        <ActionBarSelectionTrigger>
-          {getSelectedRowModel().rows.length} selected
-        </ActionBarSelectionTrigger>
-        {actions ? <ActionBarSeparator /> : null}
-        {actions}
-      </ActionBarContent>
-    </ActionBarRoot>
+    <ActionBar.Root open={getSelectedRowModel().rows.length > 0}>
+      <Portal>
+        <ActionBar.Positioner zIndex={999}>
+          <ActionBar.Content>
+            <ActionBar.SelectionTrigger>
+              {getSelectedRowModel().rows.length} selected
+            </ActionBar.SelectionTrigger>
+
+            {actions ? <ActionBar.Separator /> : null}
+            {actions}
+
+            <ActionBar.CloseTrigger asChild onClick={() => toggleAllRowsSelected(false)}>
+              <CloseButton size="sm" />
+            </ActionBar.CloseTrigger>
+          </ActionBar.Content>
+        </ActionBar.Positioner>
+      </Portal>
+    </ActionBar.Root>
   );
 };
 

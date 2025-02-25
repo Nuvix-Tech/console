@@ -6,3 +6,4 @@ export * from "./limit";
 export * from "./paggination";
 export { TheTable as Table } from "./table";
 export * from "./action";
+export * from "./filters";

@@ -17,10 +17,11 @@ export const CollectionLayout: React.FC<Props> = ({ children, databaseId, collec
   projectState.sidebar.middle = <CollectionsSiderbar />;
 
   useEffect(() => {
+    if (!sdk) return;
     sdk?.databases
       .getCollection(databaseId, collectionId)
       .then((v) => (collectionPageState.collection = v))
-      .catch(notFound);
+      .catch(() => notFound());
   }, [sdk, databaseId, collectionId]);
 
   return <>{children}</>;

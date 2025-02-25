@@ -10,6 +10,7 @@ import { HStack, Heading, Text } from "@chakra-ui/react";
 import { formatDate } from "@/lib/utils";
 import {
   ActionButton,
+  ColumnSelector,
   DataActionBar,
   DataGridProvider,
   DataGridSkelton,
@@ -21,6 +22,7 @@ import {
 import { useSearchParams } from "next/navigation";
 import { EmptyState } from "@/ui/modules/layout/empty-state";
 import { IDChip } from "@/components/others";
+import { LuTrash2 } from "react-icons/lu";
 
 type Props = {
   databaseId: string;
@@ -44,99 +46,99 @@ const CollectionPage: React.FC<Props> = () => {
   const { addToast } = useToast();
   const { canWriteDocuments } = permissions;
 
-  const get = async () => {
+  const get = React.useCallback(async () => {
     if (!sdk || !database || !collection) return;
     setLoading(true);
-    const queries: string[] = [];
-    queries.push(Query.limit(limit), Query.offset((page - 1) * limit));
-    const docs = await sdk.databases.listDocuments(database.$id, collection.$id, queries);
-    setDocumentList(docs);
-    setLoading(false);
-  };
+    try {
+      const queries: string[] = [Query.limit(limit), Query.offset((page - 1) * limit)];
+      const docs = await sdk.databases.listDocuments(database.$id, collection.$id, queries);
+      setDocumentList(docs);
+    } finally {
+      setLoading(false);
+    }
+  }, [sdk, database?.$id, collection?.$id, limit, page]); // Only depend on IDs to prevent unnecessary calls
 
   React.useEffect(() => {
     get();
-  }, [sdk, limit, page, database, collection]);
+  }, [get]); // Depend only on `get`
 
   const path = `/console/project/${project?.$id}/databases/${database?.$id}/collection/${collection?.$id}/document`;
 
-  const columns: ColumnDef<Models.Document>[] = [
-    {
-      header: "ID",
-      accessorKey: "$id",
-      minSize: 240,
-      cell(props) {
-        return <IDChip id={props.getValue<string>()} hideIcon />;
+  const columns = React.useMemo(
+    () => [
+      {
+        header: "ID",
+        accessorKey: "$id",
+        enableHiding: false,
+        minSize: 240,
+        cell(props) {
+          return <IDChip id={props.getValue<string>()} hideIcon />;
+        },
+        meta: {
+          href: (row) => `${path}/${row.$id}`,
+        },
       },
-      meta: {
-        href: (row) => `${path}/${row.$id}`,
+      ...getColumns((collection?.attributes as any) || []),
+      {
+        header: "Created At",
+        accessorKey: "$createdAt",
+        enableHiding: false,
+        minSize: 180,
+        cell(props) {
+          const date = formatDate(props.getValue<string>());
+          return (
+            <Tooltip showArrow content={date}>
+              <span>{date}</span>
+            </Tooltip>
+          );
+        },
       },
-    },
-
-    ...getColumns((collection?.attributes as any) || []),
-
-    {
-      header: "Created At",
-      accessorKey: "$createdAt",
-      minSize: 180,
-      cell(props) {
-        const date = formatDate(props.getValue<string>());
-        return (
-          <Tooltip showArrow content={date}>
-            <span>{date}</span>
-          </Tooltip>
-        );
+      {
+        header: "Updated At",
+        enableHiding: false,
+        accessorKey: "$updatedAt",
+        minSize: 180,
+        cell(props) {
+          const date = formatDate(props.getValue<string>());
+          return (
+            <Tooltip showArrow content={date}>
+              <span>{date}</span>
+            </Tooltip>
+          );
+        },
       },
-    },
-    {
-      header: "Updated At",
-      accessorKey: "$updatedAt",
-      minSize: 180,
-      cell(props) {
-        const date = formatDate(props.getValue<string>());
-        return (
-          <Tooltip showArrow content={date}>
-            <span>{date}</span>
-          </Tooltip>
-        );
-      },
-    },
-  ];
+    ],
+    [collection?.attributes],
+  );
 
   const onDelete = async (values: Models.Collection[]) => {
-    if (
-      await confirm({
-        title: "Delete Document",
-        description: `Are you sure you want to delete ${values.length} document(s)?`,
-        confirm: {
-          text: "Delete",
-          variant: "danger",
-        },
-      })
-    ) {
-      setLoading(true);
-      const ids = values.map((v) => v.$id);
-      if (!sdk) return;
-      await Promise.all(
-        ids.map(async (id) => {
-          try {
-            await sdk.databases.deleteDocument(database?.$id!, collection?.$id!, id);
-          } catch (e) {
-            addToast({
-              message: `Error deleting document ${id}`,
-              variant: "danger",
-            });
-          }
-        }),
-      ).then((v) =>
-        addToast({
-          message: `Successfully deleted ${ids.length} document(s)`,
-          variant: "success",
-        }),
-      );
+    const shouldDelete = await confirm({
+      title: "Delete Document",
+      description: `Are you sure you want to delete ${values.length} document(s)?`,
+      confirm: { text: "Delete", variant: "danger" },
+    });
+
+    if (!sdk || !database || !collection || !shouldDelete) return;
+    setLoading(true);
+    const ids = values.map((v) => v.$id);
+
+    try {
+      for (const id of ids) {
+        await sdk.databases.deleteDocument(database?.$id!, collection?.$id!, id);
+      }
+      addToast({ message: `Successfully deleted ${ids.length} document(s)`, variant: "success" });
+    } catch (e) {
+      alert(collection.$id);
+      addToast({ message: "Error deleting documents", variant: "danger" });
+    } finally {
       await get();
     }
   };
+
+  const hiddenIds = React.useMemo(
+    () => collection?.attributes.slice(3).map((att: any) => att.key) || [],
+    [collection?.attributes],
+  );
 
   return (
     <Column paddingX="16" fillWidth>
@@ -153,33 +155,39 @@ const CollectionPage: React.FC<Props> = () => {
         manualPagination
         rowCount={documentList.total}
         loading={loading}
+        stickyCheckBox
         state={{
           pagination: { pageIndex: page, pageSize: limit },
         }}
+        hiddenIds={hiddenIds}
         showCheckbox
       >
         {loading && !documentList.total ? (
           <DataGridSkelton />
         ) : documentList.total > 0 || page > 1 ? (
           <>
+            <HStack mb="6" justifyContent="space-between" alignItems="center">
+              <ColumnSelector />
+            </HStack>
             <Table />
             <PagginationWrapper>
               <SelectLimit />
               <Paggination />
             </PagginationWrapper>
-            <DataActionBar
-              actions={
-                <>
-                  <ActionButton<Models.Collection> colorPalette="red" onClick={onDelete}>
-                    Delete
-                  </ActionButton>
-                </>
-              }
-            />
           </>
         ) : (
           <EmptyState title="No Documents" description="No documents have been created yet." />
         )}
+        <DataActionBar
+          actions={
+            <>
+              <ActionButton<Models.Collection> colorPalette="red" onClick={onDelete}>
+                <LuTrash2 />
+                Delete
+              </ActionButton>
+            </>
+          }
+        />
       </DataGridProvider>
     </Column>
   );
@@ -193,7 +201,8 @@ const getColumns = (attributes: Models.AttributeString[]) => {
       id: attr.key,
       header: attr.key,
       accessorKey: attr.key,
-      minSize: attr.size > 300 ? undefined : attr.size,
+      minSize: attr.size > 300 ? 300 : attr.size,
+      maxSize: attr.size,
     });
   });
   return columns;
