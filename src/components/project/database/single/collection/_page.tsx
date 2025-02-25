@@ -207,11 +207,53 @@ const getColumns = (attributes: Models.AttributeString[]) => {
       id: attr.key,
       header: attr.key,
       accessorKey: attr.key,
-      minSize: attr.size > 300 ? 300 : attr.size,
-      maxSize: attr.size,
+      size: 200,
+      cell(props) {
+        const format = formatColumn(props.getValue());
+        return (
+          <Tooltip content={format.whole} disabled={!format.truncated} showArrow>
+            <span>{format.value}</span>
+          </Tooltip>
+        );
+      },
     });
   });
   return columns;
 };
+
+function formatArray(array: unknown[]) {
+  if (array.length === 0) return "[ ]";
+
+  let formattedFields: string[] = [];
+  for (const item of array) {
+    if (typeof item === "string") {
+      formattedFields.push(`"${item}"`);
+    } else {
+      formattedFields.push(`${item}`);
+    }
+  }
+
+  return `[${formattedFields.join(", ")}]`;
+}
+
+function formatColumn(column: unknown) {
+  let formattedColumn: string;
+
+  if (typeof column === "string") {
+    formattedColumn = column;
+  } else if (Array.isArray(column)) {
+    formattedColumn = formatArray(column);
+  } else if (column === null) {
+    formattedColumn = "null";
+  } else {
+    formattedColumn = `${column}`;
+  }
+
+  return {
+    value: formattedColumn.length > 60 ? `${formattedColumn.slice(0, 60)}...` : formattedColumn,
+    truncated: formattedColumn.length > 60,
+    whole: formattedColumn,
+  };
+}
 
 export { CollectionPage };

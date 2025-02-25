@@ -156,7 +156,7 @@ const TheTable = <T,>() => {
                     alignContent={"center"}
                     overflow={"hidden"}
                     whiteSpace={"nowrap"}
-                    width={cell.column.columnDef.size ?? "auto"}
+                    width={cell.column.columnDef.size ?? "full"}
                     minWidth={cell.column.columnDef.minSize}
                     maxWidth={cell.column.columnDef.maxSize}
                   >
