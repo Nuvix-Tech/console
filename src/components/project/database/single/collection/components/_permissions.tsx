@@ -1,4 +1,10 @@
-import { CardBox, CardBoxBody, CardBoxItem, CardBoxTitle } from "@/components/others/card";
+import {
+  CardBox,
+  CardBoxBody,
+  CardBoxDesc,
+  CardBoxItem,
+  CardBoxTitle,
+} from "@/components/others/card";
 import { Form, SubmitButton } from "@/components/others/forms";
 import { PermissionField } from "@/components/others/permissions";
 import { getCollectionPageState, getDbPageState } from "@/state/page";
@@ -58,9 +64,12 @@ export const UpdatePermissions: React.FC = () => {
           <CardBoxBody>
             <CardBoxItem gap={"4"}>
               <CardBoxTitle>Permissions</CardBoxTitle>
+              <CardBoxDesc>
+                Select who can access your collection and documents. Learn more about Permissions.
+              </CardBoxDesc>
             </CardBoxItem>
             <CardBoxItem>
-              <PermissionField name="permissions" withCreate />
+              <PermissionField name="permissions" withCreate sdk={sdk} />
             </CardBoxItem>
           </CardBoxBody>
         </CardBox>

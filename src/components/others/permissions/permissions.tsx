@@ -8,8 +8,21 @@ import {
 import { Card, Checkbox, IconButton } from "@/ui/components";
 import { Button, Table, VStack } from "@chakra-ui/react";
 import { LuPlus } from "react-icons/lu";
-import { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { CloseButton } from "@/components/ui/close-button";
+import { sdkForConsole, sdkForProject } from "@/lib/sdk";
+import {
+  DialogActionTrigger,
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { UserRole } from "./users";
 
 export type Permission = {
   create: boolean;
@@ -24,12 +37,14 @@ export type PermissionsEditorProps = {
   withCreate?: boolean;
   permissions: string[];
   onChange?: (permissions: string[]) => void;
+  sdk: typeof sdkForConsole | typeof sdkForProject;
 };
 
 export const PermissionsEditor = ({
   permissions,
   withCreate,
   onChange,
+  sdk,
 }: PermissionsEditorProps) => {
   const [groups, setGroups] = useState<Map<string, Permission>>(new Map());
 
@@ -159,7 +174,7 @@ export const PermissionsEditor = ({
                   </Table.Row>
                 ))}
                 <Table.Row>
-                  <PopoverBox addRole={addRole}>
+                  <PopoverBox addRole={addRole} sdk={sdk}>
                     <Button variant="subtle" size="sm">
                       <LuPlus />
                       Add Role
@@ -171,7 +186,7 @@ export const PermissionsEditor = ({
           </Table.ScrollArea>
         ) : (
           <Card title="Permissions" minHeight="160" radius="l-4" center fillWidth>
-            <PopoverBox addRole={addRole}>
+            <PopoverBox addRole={addRole} sdk={sdk}>
               <IconButton variant="secondary" size="m">
                 <LuPlus />
               </IconButton>
@@ -183,41 +198,62 @@ export const PermissionsEditor = ({
   );
 };
 
-const PopoverBox = ({
-  addRole,
-  children,
-}: { addRole: (role: string) => void; children: React.ReactNode }) => {
+export type PopoverBoxProps = {
+  addRole: (role: string) => void;
+  children: React.ReactNode;
+} & Pick<PermissionsEditorProps, "sdk">;
+
+const PopoverBox = ({ addRole, children, sdk }: PopoverBoxProps) => {
+  const [open, setOpen] = useState(false);
+  const [comp, setComp] = useState<React.JSX.Element>();
+
   const roles = [
     { role: "Any", onClick: () => addRole("any") },
     { role: "All Guests", onClick: () => addRole("all_guests") },
     { role: "All Users", onClick: () => addRole("all_users") },
-    { role: "Select Users", onClick: () => addRole("select_users") },
+    {
+      role: "Select Users",
+      onClick: () => {
+        setComp(<UserRole addRole={addRole} sdk={sdk} />);
+        setOpen(true);
+      },
+    },
     { role: "Select Teams", onClick: () => addRole("select_teams") },
     { role: "Label", onClick: () => addRole("label") },
     { role: "Custom Permission", onClick: () => addRole("custom_permission") },
   ];
 
   return (
-    <PopoverRoot size="xs">
-      <PopoverTrigger asChild>{children}</PopoverTrigger>
-      <PopoverContent maxWidth="56">
-        <PopoverArrow />
-        <PopoverBody>
-          <VStack>
-            {roles.map((role, index) => (
-              <Button
-                key={index}
-                variant="ghost"
-                width="full"
-                justifyContent="flex-start"
-                onClick={role.onClick}
-              >
-                {role.role}
-              </Button>
-            ))}
-          </VStack>
-        </PopoverBody>
-      </PopoverContent>
-    </PopoverRoot>
+    <>
+      <PopoverRoot size="xs">
+        <PopoverTrigger asChild>{children}</PopoverTrigger>
+        <PopoverContent maxWidth="56">
+          <PopoverArrow />
+          <PopoverBody>
+            <VStack>
+              {roles.map((role, index) => (
+                <PopoverTrigger asChild>
+                  <Button
+                    key={index}
+                    variant="ghost"
+                    width="full"
+                    justifyContent="flex-start"
+                    onClick={role.onClick}
+                  >
+                    {role.role}
+                  </Button>
+                </PopoverTrigger>
+              ))}
+            </VStack>
+          </PopoverBody>
+        </PopoverContent>
+      </PopoverRoot>
+
+      <DialogRoot lazyMount open={open} onOpenChange={(e) => setOpen(e.open)}>
+        <DialogContent>
+          <DialogBody>{comp}</DialogBody>
+        </DialogContent>
+      </DialogRoot>
+    </>
   );
 };
