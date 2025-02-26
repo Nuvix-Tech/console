@@ -2,7 +2,13 @@
 import { Column } from "@/ui/components";
 import { Heading, Text } from "@chakra-ui/react";
 import React from "react";
-import { DeleteCollection, DocumentSecurity, MetaEnable, UpdateName } from "./components";
+import {
+  DeleteCollection,
+  DocumentSecurity,
+  MetaEnable,
+  UpdateName,
+  UpdatePermissions,
+} from "./components";
 
 const SettingsPage: React.FC = () => {
   return (
@@ -18,6 +24,7 @@ const SettingsPage: React.FC = () => {
 
       <MetaEnable />
       <UpdateName />
+      <UpdatePermissions />
       <DocumentSecurity />
       <DeleteCollection />
     </Column>

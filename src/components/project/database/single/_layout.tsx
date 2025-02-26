@@ -20,7 +20,7 @@ const DatabaseSingleLayout: React.FC<Props> = ({ children, databaseId }) => {
   dbPageState._update = async () => {
     const db = await sdk?.databases.get(databaseId);
     dbPageState.database = db;
-  }
+  };
 
   async function get() {
     if (!sdk) return;

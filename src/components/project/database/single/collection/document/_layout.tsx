@@ -20,9 +20,9 @@ export const DocumentLayout: React.FC<Props> = ({
   projectState.sidebar.first = null;
 
   documentPageState._update = async () => {
-    const doc = await sdk?.databases.getDocument(databaseId, collectionId, documentId)
+    const doc = await sdk?.databases.getDocument(databaseId, collectionId, documentId);
     documentPageState.document = doc;
-  }
+  };
 
   useEffect(() => {
     if (!sdk) {
@@ -30,7 +30,7 @@ export const DocumentLayout: React.FC<Props> = ({
     }
     async function get() {
       try {
-        const doc = await sdk?.databases.getDocument(databaseId, collectionId, documentId)
+        const doc = await sdk?.databases.getDocument(databaseId, collectionId, documentId);
         documentPageState.document = doc;
         documentPageState.loading = false;
       } catch (e: any) {

@@ -17,15 +17,15 @@ export const CollectionLayout: React.FC<Props> = ({ children, databaseId, collec
   projectState.sidebar.middle = <CollectionsSiderbar />;
 
   collectionPageState._update = async () => {
-    const coll = await sdk?.databases.getCollection(databaseId, collectionId)
+    const coll = await sdk?.databases.getCollection(databaseId, collectionId);
     collectionPageState.collection = coll;
-  }
+  };
 
   useEffect(() => {
     if (!sdk) return;
     async function get() {
       try {
-        const coll = await sdk?.databases.getCollection(databaseId, collectionId)
+        const coll = await sdk?.databases.getCollection(databaseId, collectionId);
         collectionPageState.collection = coll;
         collectionPageState.loading = false;
       } catch (e: any) {
