@@ -195,13 +195,21 @@ export const PermissionsEditor = ({
             </Table.Root>
           </Table.ScrollArea>
         ) : (
-          <Card title="Permissions" minHeight="160" radius="l-4" center fillWidth>
+          <Card
+            title="Permissions"
+            minHeight="160"
+            radius="l-4"
+            center
+            fillWidth
+            direction="column"
+            gap="12"
+          >
             <PopoverBox addRole={addRole} sdk={sdk} groups={groups}>
               <IconButton variant="secondary" size="m">
                 <LuPlus />
               </IconButton>
             </PopoverBox>
-            <Text textStyle="sm" color="bg.emphasized">
+            <Text textStyle="sm" color="var(--neutral-on-background-weak)">
               No roles added yet. Click "+" to begin.
             </Text>
           </Card>

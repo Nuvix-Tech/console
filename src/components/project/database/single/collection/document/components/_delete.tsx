@@ -69,7 +69,7 @@ export const DeleteDocument = () => {
     >
       <VStack alignItems={"flex-start"} gap={0.2}>
         <Text textStyle="md" fontWeight="semibold">
-          {document.name}
+          {document.$id}
         </Text>
         <Text textStyle={{ base: "sm", mdOnly: "xs" }} color={"fg.muted"} truncate>
           Last Updated: {formatDate(document.$updatedAt)}
