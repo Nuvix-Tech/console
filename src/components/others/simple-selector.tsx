@@ -68,7 +68,7 @@ export const SimpleSelector = <T,>({
           {data.map((item) => onMap(item, toggleSelection, selections))}
         </VStack>
       ) : (
-        <Text>{search ? "No results found" : "No data available"}</Text>
+        <Text>{search ? "No results found" : loading && "No data available"}</Text>
       )}
 
       {setPage && (

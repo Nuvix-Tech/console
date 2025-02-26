@@ -20,7 +20,7 @@ export const LabelRole = ({ addRole, onClose, groups }: LabelProps) => {
 
   const onSave = () => {
     if (label && !groups.has(`label:${label}`)) {
-      addRole(label);
+      addRole(`label:${label}`);
     }
     onClose?.();
   };

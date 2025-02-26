@@ -6,7 +6,7 @@ import {
   PopoverBody,
 } from "@/components/ui/popover";
 import { Card, Checkbox, IconButton } from "@/ui/components";
-import { Button, Table, VStack } from "@chakra-ui/react";
+import { Button, Table, Text, VStack } from "@chakra-ui/react";
 import { LuPlus } from "react-icons/lu";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { CloseButton } from "@/components/ui/close-button";
@@ -201,6 +201,9 @@ export const PermissionsEditor = ({
                 <LuPlus />
               </IconButton>
             </PopoverBox>
+            <Text textStyle="sm" color="bg.emphasized">
+              No roles added yet. Click "+" to begin.
+            </Text>
           </Card>
         )}
       </VStack>

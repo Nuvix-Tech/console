@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/hover-card";
 import { Models } from "@nuvix/console";
 import { sdkForConsole, sdkForProject } from "@/lib/sdk";
+import { Line } from "@/ui/components";
+import IDChip from "../id";
 
 interface RoleHoverProps {
   role: string;
@@ -47,7 +49,7 @@ export function RoleHover({ role, sdk }: RoleHoverProps) {
   return (
     <HoverCardRoot>
       <HoverCardTrigger asChild onMouseEnter={fetchData}>
-        <Text cursor="pointer" fontWeight="medium">
+        <Text cursor="pointer" fontWeight="medium" truncate>
           {role}
         </Text>
       </HoverCardTrigger>
@@ -56,21 +58,24 @@ export function RoleHover({ role, sdk }: RoleHoverProps) {
         {isFetching ? (
           <HStack p={4}>
             <Spinner size="sm" />
-            <Text>Loading...</Text>
           </HStack>
         ) : data ? (
-          <HStack align="center" gap={4}>
-            {/* Avatar */}
-            {data.name ? <Avatar name={data.name} size="sm" /> : <Avatar size="sm" />}
+          <VStack align="start" gap={2}>
+            <HStack align="center" gap={4} width="full">
+              {/* Avatar */}
+              {data.name ? <Avatar name={data.name} size="sm" /> : <Avatar size="sm" />}
 
-            {/* User/Team Info */}
-            <VStack align="start" gap={1}>
-              <Text fontWeight="bold">{data.name || "-"}</Text>
-              {"email" in data && data.email && <Text fontSize="sm">Email: {data.email}</Text>}
-              {"phone" in data && data.phone && <Text fontSize="sm">Phone: {data.phone}</Text>}
-              {"total" in data && <Text fontSize="sm">Members: {data.total}</Text>}
-            </VStack>
-          </HStack>
+              {/* User/Team Info */}
+              <VStack align="start" gap={1}>
+                <Text fontWeight="bold">{data.name || "-"}</Text>
+                {"email" in data && data.email && <Text fontSize="sm">Email: {data.email}</Text>}
+                {"phone" in data && data.phone && <Text fontSize="sm">Phone: {data.phone}</Text>}
+                {"total" in data && <Text fontSize="sm">Members: {data.total}</Text>}
+              </VStack>
+            </HStack>
+            <Line fillWidth />
+            <IDChip id={role} />
+          </VStack>
         ) : (
           <Text>User/Team Not Found</Text>
         )}

@@ -9,8 +9,9 @@ import {
 import { formatDate } from "@/lib/utils";
 import { getCollectionPageState, getDbPageState, getDocumentPageState } from "@/state/page";
 import { Column } from "@/ui/components";
-import { Text } from "@chakra-ui/react";
 import React from "react";
+import { UpdatePermissions } from "./components";
+import { DeleteDocument } from "./components/_delete";
 
 type Props = {
   id: string;
@@ -34,6 +35,9 @@ const DocumentPage: React.FC<Props> = ({ id, databaseId, collectionId, documentI
   return (
     <Column gap="20" padding="20" fillWidth>
       <MetaData />
+
+      <UpdatePermissions />
+      <DeleteDocument />
     </Column>
   );
 };
