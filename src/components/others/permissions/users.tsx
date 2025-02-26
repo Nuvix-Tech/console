@@ -1,7 +1,7 @@
 import React from "react";
 import { PermissionsEditorProps } from "./permissions";
-import { Models } from "@nuvix/console";
-import { SimpleSelector } from "../simple-selector";
+import { Query } from "@nuvix/console";
+import { SimpleSelector, usePaginatedSelector } from "../simple-selector";
 import { Button, DialogHeader, DialogTitle, HStack, Text, VStack } from "@chakra-ui/react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Avatar } from "@/ui/components";
@@ -17,23 +17,17 @@ export type UserRoleProps = {
 } & Pick<PermissionsEditorProps, "sdk">;
 
 export const UserRole = ({ addRole, sdk }: UserRoleProps) => {
-  const [loading, setLoading] = React.useState(true);
-  const [search, setSearch] = React.useState<string | undefined>();
-  const [page, setPage] = React.useState(1);
-  const [usersList, setUserList] = React.useState<Models.UserList<any>>();
-  const [selections, setSelections] = React.useState<string[]>([]);
+  const fetchUsers = async (search: string | undefined, limit: number, offset: number) => {
+    let queris = [];
+    queris.push(Query.limit(limit), Query.offset(offset));
+    const res = await sdk.users.list(queris, search);
+    return { data: res.users, total: res.total };
+  };
 
-  React.useEffect(() => {
-    const fetch = async () => {
-      let u = await sdk.users.list([], search);
-      setUserList(u);
-      setLoading(false);
-    };
-    fetch();
-  }, [sdk, search]);
+  const { ...rest } = usePaginatedSelector({ fetchFunction: fetchUsers, limit: 10 });
 
   const onSave = () => {
-    for (const role of selections) {
+    for (const role of rest.selections) {
       addRole(role);
     }
   };
@@ -48,20 +42,8 @@ export const UserRole = ({ addRole, sdk }: UserRoleProps) => {
           <Text>Select users to assign roles. Use the search bar to filter users by name.</Text>
           <SimpleSelector
             placeholder="Search users by name, email, phone or ID"
-            data={usersList?.users ?? []}
-            limit={10}
-            onSelect={(user) => {
-              setSelections((prevSelections) => {
-                if (prevSelections.includes(user.$id)) {
-                  return prevSelections.filter((id) => id !== user.$id);
-                } else {
-                  return [...prevSelections, user.$id];
-                }
-              });
-            }}
-            total={usersList?.total}
-            {...{ page, setPage, search, loading, setSearch, selections }}
-            onMap={(user, onSelect, selections) => (
+            {...rest}
+            onMap={(user, toggleSelection, selections) => (
               <>
                 <HStack
                   key={user.$id}
@@ -75,17 +57,18 @@ export const UserRole = ({ addRole, sdk }: UserRoleProps) => {
                 >
                   <Checkbox
                     checked={selections.includes(user.$id)}
-                    onToggle={() => onSelect(user)}
-                  />
-                  <HStack gap={2} alignItems="center">
-                    <Avatar src={sdk.avatars.getInitials(user.name)} />
-                    <VStack alignItems="flex-start" gap={0}>
-                      <Text textStyle="sm">{user.name}</Text>
-                      <Text textStyle="xs" color={"fg.subtle"}>
-                        {user.$id}
-                      </Text>
-                    </VStack>
-                  </HStack>
+                    onToggle={() => toggleSelection(user.$id)}
+                  >
+                    <HStack gap={2} alignItems="center">
+                      <Avatar src={sdk.avatars.getInitials(user.name)} />
+                      <VStack alignItems="flex-start" gap={0}>
+                        <Text textStyle="sm">{user.name}</Text>
+                        <Text textStyle="xs" color={"fg.subtle"}>
+                          {user.$id}
+                        </Text>
+                      </VStack>
+                    </HStack>
+                  </Checkbox>
                 </HStack>
               </>
             )}

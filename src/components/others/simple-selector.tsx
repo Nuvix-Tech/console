@@ -1,7 +1,7 @@
 import { Button, HStack, Input, Text, VStack, Spinner } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
-export type SimpleSelectorProps<T, S> = {
+export type SimpleSelectorProps<T> = {
   placeholder?: string;
   search?: string;
   setSearch?: (v: string) => void;
@@ -9,14 +9,18 @@ export type SimpleSelectorProps<T, S> = {
   setPage?: (v: number) => void;
   limit?: number;
   total?: number;
-  onMap: (item: T, onSelect: (value: T) => void, selections: S) => React.ReactNode;
+  onMap: (
+    item: T,
+    toggleSelection: (value: string) => void,
+    selections: string[],
+  ) => React.ReactNode;
   loading?: boolean;
-  onSelect: (value: T) => void;
+  toggleSelection: (value: string) => void;
   data: T[];
-  selections: S;
+  selections: string[];
 };
 
-export const SimpleSelector = <T, S>({
+export const SimpleSelector = <T,>({
   placeholder,
   search,
   setSearch,
@@ -25,11 +29,11 @@ export const SimpleSelector = <T, S>({
   total = 0,
   setPage,
   onMap,
-  onSelect,
+  toggleSelection,
   data,
   loading,
   selections,
-}: SimpleSelectorProps<T, S>) => {
+}: SimpleSelectorProps<T>) => {
   // Calculate pagination limits
   const hasNextPage = page * limit < total;
   const hasPrevPage = page > 1;
@@ -59,7 +63,7 @@ export const SimpleSelector = <T, S>({
         </HStack>
       ) : data.length > 0 ? (
         <VStack alignItems="flex-start">
-          {data.map((item) => onMap(item, onSelect, selections))}
+          {data.map((item) => onMap(item, toggleSelection, selections))}
         </VStack>
       ) : (
         <Text>{search ? "No results found" : "No data available"}</Text>
@@ -81,3 +85,43 @@ export const SimpleSelector = <T, S>({
     </VStack>
   );
 };
+
+interface UsePaginatedSelectorProps<T> {
+  fetchFunction: (
+    search: string | undefined,
+    limit: number,
+    offset: number,
+  ) => Promise<{ data: T[]; total: number }>;
+  limit?: number;
+}
+
+export function usePaginatedSelector<T>({
+  fetchFunction,
+  limit = 10,
+}: UsePaginatedSelectorProps<T>) {
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState<string | undefined>();
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [data, setData] = useState<T[]>([]);
+  const [selections, setSelections] = useState<string[]>([]);
+
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    const offset = (page - 1) * limit;
+    const { data: result, total } = await fetchFunction(search, limit, offset);
+    setData(result);
+    setTotal(total);
+    setLoading(false);
+  }, [fetchFunction, search, page, limit]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const toggleSelection = (id: string) => {
+    setSelections((prev) => (prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]));
+  };
+
+  return { loading, data, page, setPage, search, setSearch, selections, toggleSelection, total };
+}
