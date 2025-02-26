@@ -43,7 +43,7 @@ export const UpdatePermissions: React.FC = () => {
             );
             addToast({
               variant: "success",
-              message: "Collection name updated.",
+              message: "Collection permissions updated.",
             });
             await _update();
           } catch (e: any) {

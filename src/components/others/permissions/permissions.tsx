@@ -23,6 +23,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { UserRole } from "./users";
+import { TeamRole } from "./teams";
 
 export type Permission = {
   create: boolean;
@@ -102,6 +103,20 @@ export const PermissionsEditor = ({
 
   const prevPermissionsRef = useRef<string[]>(permissions);
 
+  function sortRoles([a]: [string, Permission], [b]: [string, Permission]) {
+    if ((a === "any") !== (b === "any")) {
+      return a === "any" ? -1 : 1;
+    }
+    if ((a === "users") !== (b === "users")) {
+      return a === "users" ? -1 : 1;
+    }
+    if ((a === "guests") !== (b === "guests")) {
+      return a === "guests" ? -1 : 1;
+    }
+
+    return a.localeCompare(b);
+  }
+
   useEffect(() => {
     const newPermissions = convertGroupsToPermissions(groups);
     if (JSON.stringify(newPermissions) !== JSON.stringify(prevPermissionsRef.current)) {
@@ -139,9 +154,9 @@ export const PermissionsEditor = ({
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {[...groups.entries()].map(([role, permission]) => (
+                {[...groups].sort(sortRoles).map(([role, permission]) => (
                   <Table.Row key={role}>
-                    <Table.Cell>{role}</Table.Cell>
+                    <Table.Cell truncate>{role}</Table.Cell>
                     {withCreate && (
                       <Table.Cell>
                         <Checkbox
@@ -173,9 +188,9 @@ export const PermissionsEditor = ({
                     </Table.Cell>
                   </Table.Row>
                 ))}
-                <Table.Row>
+                <Table.Row width="full">
                   <PopoverBox addRole={addRole} sdk={sdk}>
-                    <Button variant="subtle" size="sm">
+                    <Button variant="subtle" size="sm" width="full">
                       <LuPlus />
                       Add Role
                     </Button>
@@ -220,8 +235,14 @@ const PopoverBox = ({ addRole, children, sdk }: PopoverBoxProps) => {
     { label: "Any", role: "any", component: null },
     { label: "All Guests", role: "guests", component: null },
     { label: "All Users", role: "users", component: null },
-    { label: "Select Users", component: <UserRole addRole={addRole} sdk={sdk} /> },
-    { label: "Select Teams", component: null },
+    {
+      label: "Select Users",
+      component: <UserRole addRole={addRole} sdk={sdk} onClose={() => setOpen(false)} />,
+    },
+    {
+      label: "Select Teams",
+      component: <TeamRole addRole={addRole} sdk={sdk} onClose={() => setOpen(false)} />,
+    },
     { label: "Label", component: null },
     { label: "Custom Permission", component: null },
   ];
@@ -232,10 +253,10 @@ const PopoverBox = ({ addRole, children, sdk }: PopoverBoxProps) => {
         <PopoverTrigger asChild>{children}</PopoverTrigger>
         <PopoverContent maxWidth="56">
           <PopoverArrow />
-          <PopoverBody>
-            <VStack>
+          <PopoverBody overflowY="auto">
+            <VStack width="full">
               {roles.map(({ role, component, label }, index) => (
-                <PopoverTrigger asChild key={index}>
+                <PopoverTrigger key={index} width="full">
                   <Button
                     variant="ghost"
                     width="full"
@@ -253,10 +274,12 @@ const PopoverBox = ({ addRole, children, sdk }: PopoverBoxProps) => {
 
       <DialogRoot
         lazyMount
+        unmountOnExit
         open={open}
         onOpenChange={(e) => setOpen(e.open)}
         placement="center"
-        size="lg"
+        size="md"
+        closeOnInteractOutside={false}
       >
         {comp}
       </DialogRoot>

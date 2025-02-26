@@ -1,5 +1,6 @@
 import { Button, HStack, Input, Text, VStack, Spinner } from "@chakra-ui/react";
 import React, { useState, useEffect, useCallback } from "react";
+import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 
 export type SimpleSelectorProps<T> = {
   placeholder?: string;
@@ -46,7 +47,7 @@ export const SimpleSelector = <T,>({
   useEffect(() => setPage?.(1), [search]);
 
   return (
-    <VStack gap={2} alignItems="flex-start" width="full">
+    <VStack gap={4} alignItems="flex-start" width="full">
       {setSearch && (
         <Input
           value={search || ""}
@@ -59,10 +60,11 @@ export const SimpleSelector = <T,>({
       {loading ? (
         <HStack justify="center" width="full">
           <Spinner size="md" />
-          <Text>Loading...</Text>
         </HStack>
-      ) : data.length > 0 ? (
-        <VStack alignItems="flex-start">
+      ) : null}
+
+      {data.length > 0 ? (
+        <VStack alignItems="flex-start" width="full">
           {data.map((item) => onMap(item, toggleSelection, selections))}
         </VStack>
       ) : (
@@ -71,14 +73,16 @@ export const SimpleSelector = <T,>({
 
       {setPage && (
         <HStack width="full" justify="space-between" mt={2}>
-          <Button disabled={!hasPrevPage} onClick={prevPage}>
+          <Button disabled={!hasPrevPage} onClick={prevPage} size="sm" variant="ghost">
+            <LuChevronLeft />
             Prev
           </Button>
           <Text>
             Page {page} / {Math.ceil(total / limit)}
           </Text>
-          <Button disabled={!hasNextPage} onClick={nextPage}>
+          <Button disabled={!hasNextPage} onClick={nextPage} size="sm" variant="ghost">
             Next
+            <LuChevronRight />
           </Button>
         </HStack>
       )}
@@ -106,22 +110,33 @@ export function usePaginatedSelector<T>({
   const [data, setData] = useState<T[]>([]);
   const [selections, setSelections] = useState<string[]>([]);
 
-  const fetchData = useCallback(async () => {
+  const fetchData = async () => {
     setLoading(true);
     const offset = (page - 1) * limit;
     const { data: result, total } = await fetchFunction(search, limit, offset);
     setData(result);
     setTotal(total);
     setLoading(false);
-  }, [fetchFunction, search, page, limit]);
+  };
 
   useEffect(() => {
     fetchData();
-  }, [fetchData]);
+  }, [search, page, limit]);
 
   const toggleSelection = (id: string) => {
     setSelections((prev) => (prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]));
   };
 
-  return { loading, data, page, setPage, search, setSearch, selections, toggleSelection, total };
+  return {
+    loading,
+    data,
+    page,
+    setPage,
+    search,
+    setSearch,
+    selections,
+    toggleSelection,
+    total,
+    limit,
+  };
 }
