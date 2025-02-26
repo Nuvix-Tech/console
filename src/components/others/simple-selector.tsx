@@ -1,66 +1,83 @@
-import { Button, HStack, Input, Text, VStack } from "@chakra-ui/react";
-import React from "react";
+import { Button, HStack, Input, Text, VStack, Spinner } from "@chakra-ui/react";
+import React, { useEffect } from "react";
 
 export type SimpleSelectorProps<T, S> = {
   placeholder?: string;
   search?: string;
   setSearch?: (v: string) => void;
-  limit?: number;
   page?: number;
+  setPage?: (v: number) => void;
+  limit?: number;
   total?: number;
-  setPage?: (p: number) => void;
-  onMap: (v: T, i: number, onSelect: S) => React.ReactNode;
+  onMap: (item: T, onSelect: (value: T) => void, selections: S) => React.ReactNode;
   loading?: boolean;
-  onSelect: S;
+  onSelect: (value: T) => void;
   data: T[];
+  selections: S;
 };
 
 export const SimpleSelector = <T, S>({
   placeholder,
   search,
   setSearch,
-  limit,
-  page,
+  page = 1,
+  limit = 10,
+  total = 0,
   setPage,
-  total,
   onMap,
   onSelect,
   data,
   loading,
+  selections,
 }: SimpleSelectorProps<T, S>) => {
+  // Calculate pagination limits
+  const hasNextPage = page * limit < total;
+  const hasPrevPage = page > 1;
+
+  // Handle next/prev page
+  const nextPage = () => hasNextPage && setPage?.(page + 1);
+  const prevPage = () => hasPrevPage && setPage?.(page - 1);
+
+  // Reset page when search changes
+  useEffect(() => setPage?.(1), [search]);
+
   return (
-    <>
-      <VStack gap={2} alignItems={"flex-start"}>
-        {setSearch ? (
-          <Input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder={placeholder ?? "Search"}
-            width={"full"}
-          />
-        ) : null}
+    <VStack gap={2} alignItems="flex-start" width="full">
+      {setSearch && (
+        <Input
+          value={search || ""}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder={placeholder ?? "Search"}
+          width="full"
+        />
+      )}
 
-        {data.length > 0 ? (
-          data.map((v, i) => onMap(v, i, onSelect))
-        ) : search ? (
-          <Text>No results found</Text>
-        ) : loading ? (
-          "Loading ......"
-        ) : (
-          <Text>No data found</Text>
-        )}
-
-        <HStack>
-          {total !== undefined ? <Text>{total} Total</Text> : null}
-
-          {setPage ? (
-            <HStack gap={2} alignItems={"center"}>
-              <Button>Prev</Button>
-              <Button>Next</Button>
-            </HStack>
-          ) : null}
+      {loading ? (
+        <HStack justify="center" width="full">
+          <Spinner size="md" />
+          <Text>Loading...</Text>
         </HStack>
-      </VStack>
-    </>
+      ) : data.length > 0 ? (
+        <VStack alignItems="flex-start">
+          {data.map((item) => onMap(item, onSelect, selections))}
+        </VStack>
+      ) : (
+        <Text>{search ? "No results found" : "No data available"}</Text>
+      )}
+
+      {setPage && (
+        <HStack width="full" justify="space-between" mt={2}>
+          <Button disabled={!hasPrevPage} onClick={prevPage}>
+            Prev
+          </Button>
+          <Text>
+            Page {page} / {Math.ceil(total / limit)}
+          </Text>
+          <Button disabled={!hasNextPage} onClick={nextPage}>
+            Next
+          </Button>
+        </HStack>
+      )}
+    </VStack>
   );
 };

@@ -207,20 +207,23 @@ const PopoverBox = ({ addRole, children, sdk }: PopoverBoxProps) => {
   const [open, setOpen] = useState(false);
   const [comp, setComp] = useState<React.JSX.Element>();
 
+  const handleRoleClick = (role?: string, component?: React.JSX.Element | null) => {
+    if (component) {
+      setComp(component);
+      setOpen(true);
+    } else {
+      addRole(role!);
+    }
+  };
+
   const roles = [
-    { role: "Any", onClick: () => addRole("any") },
-    { role: "All Guests", onClick: () => addRole("all_guests") },
-    { role: "All Users", onClick: () => addRole("all_users") },
-    {
-      role: "Select Users",
-      onClick: () => {
-        setComp(<UserRole addRole={addRole} sdk={sdk} />);
-        setOpen(true);
-      },
-    },
-    { role: "Select Teams", onClick: () => addRole("select_teams") },
-    { role: "Label", onClick: () => addRole("label") },
-    { role: "Custom Permission", onClick: () => addRole("custom_permission") },
+    { label: "Any", role: "any", component: null },
+    { label: "All Guests", role: "guests", component: null },
+    { label: "All Users", role: "users", component: null },
+    { label: "Select Users", component: <UserRole addRole={addRole} sdk={sdk} /> },
+    { label: "Select Teams", component: null },
+    { label: "Label", component: null },
+    { label: "Custom Permission", component: null },
   ];
 
   return (
@@ -231,16 +234,15 @@ const PopoverBox = ({ addRole, children, sdk }: PopoverBoxProps) => {
           <PopoverArrow />
           <PopoverBody>
             <VStack>
-              {roles.map((role, index) => (
-                <PopoverTrigger asChild>
+              {roles.map(({ role, component, label }, index) => (
+                <PopoverTrigger asChild key={index}>
                   <Button
-                    key={index}
                     variant="ghost"
                     width="full"
                     justifyContent="flex-start"
-                    onClick={role.onClick}
+                    onClick={() => handleRoleClick(role, component)}
                   >
-                    {role.role}
+                    {label}
                   </Button>
                 </PopoverTrigger>
               ))}
@@ -249,10 +251,14 @@ const PopoverBox = ({ addRole, children, sdk }: PopoverBoxProps) => {
         </PopoverContent>
       </PopoverRoot>
 
-      <DialogRoot lazyMount open={open} onOpenChange={(e) => setOpen(e.open)}>
-        <DialogContent>
-          <DialogBody>{comp}</DialogBody>
-        </DialogContent>
+      <DialogRoot
+        lazyMount
+        open={open}
+        onOpenChange={(e) => setOpen(e.open)}
+        placement="center"
+        size="lg"
+      >
+        {comp}
       </DialogRoot>
     </>
   );
