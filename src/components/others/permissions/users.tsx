@@ -16,9 +16,10 @@ import {
 export type UserRoleProps = {
   addRole: (role: string) => void;
   onClose: VoidFunction;
+  groups: Map<string, any>;
 } & Pick<PermissionsEditorProps, "sdk">;
 
-export const UserRole = ({ addRole, sdk, onClose }: UserRoleProps) => {
+export const UserRole = ({ addRole, sdk, onClose, groups }: UserRoleProps) => {
   const fetchUsers = async (search: string | undefined, limit: number, offset: number) => {
     let queris = [];
     queris.push(Query.limit(limit), Query.offset(offset));
@@ -39,42 +40,46 @@ export const UserRole = ({ addRole, sdk, onClose }: UserRoleProps) => {
     <>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Select Users</DialogTitle>
+          <DialogTitle>Select users</DialogTitle>
           <DialogDescription>
-            Select users to assign roles. Use the search bar to filter users by name.
+            Grant access to any authenticated or anonymous user.
           </DialogDescription>
         </DialogHeader>
         <DialogBody>
           <SimpleSelector
             placeholder="Search users by name, email, phone or ID"
             {...rest}
-            onMap={(user, toggleSelection, selections) => (
-              <HStack
-                key={user.$id}
-                gap={6}
-                alignItems="center"
-                width="full"
-                borderBottom={"1px solid"}
-                borderColor={"bg.muted"}
-                px={4}
-                py={2}
-              >
-                <Checkbox
-                  checked={selections.includes(user.$id)}
-                  onCheckedChange={() => toggleSelection(user.$id)}
+            onMap={(user, toggleSelection, selections) => {
+              const isExists = groups.has(`user:${user.$id}`);
+              return (
+                <HStack
+                  key={user.$id}
+                  gap={6}
+                  alignItems="center"
+                  width="full"
+                  borderBottom={"1px solid"}
+                  borderColor={"bg.muted"}
+                  px={4}
+                  py={2}
                 >
-                  <HStack gap={2} alignItems="center">
-                    <Avatar src={sdk.avatars.getInitials(user.name)} />
-                    <VStack alignItems="flex-start" gap={0}>
-                      <Text textStyle="sm">{user.name}</Text>
-                      <Text textStyle="xs" color={"fg.subtle"}>
-                        {user.$id}
-                      </Text>
-                    </VStack>
-                  </HStack>
-                </Checkbox>
-              </HStack>
-            )}
+                  <Checkbox
+                    disabled={isExists}
+                    checked={isExists ? true : selections.includes(user.$id)}
+                    onCheckedChange={() => toggleSelection(user.$id)}
+                  >
+                    <HStack gap={2} alignItems="center">
+                      <Avatar src={sdk.avatars.getInitials(user.name)} />
+                      <VStack alignItems="flex-start" gap={0}>
+                        <Text textStyle="sm">{user.name}</Text>
+                        <Text textStyle="xs" color={"fg.subtle"}>
+                          {user.$id}
+                        </Text>
+                      </VStack>
+                    </HStack>
+                  </Checkbox>
+                </HStack>
+              );
+            }}
           />
         </DialogBody>
         <DialogFooter>
@@ -82,7 +87,7 @@ export const UserRole = ({ addRole, sdk, onClose }: UserRoleProps) => {
             <Button variant="outline">Cancel</Button>
           </DialogActionTrigger>
           <Button disabled={rest.selections.length === 0} onClick={onSave}>
-            Select
+            Add
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -11,19 +11,12 @@ import { LuPlus } from "react-icons/lu";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { CloseButton } from "@/components/ui/close-button";
 import { sdkForConsole, sdkForProject } from "@/lib/sdk";
-import {
-  DialogActionTrigger,
-  DialogBody,
-  DialogCloseTrigger,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogRoot,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { DialogRoot } from "@/components/ui/dialog";
 import { UserRole } from "./users";
 import { TeamRole } from "./teams";
+import { RoleHover } from "./row";
+import { LabelRole } from "./label";
+import { CustomRole } from "./custom";
 
 export type Permission = {
   create: boolean;
@@ -156,7 +149,9 @@ export const PermissionsEditor = ({
               <Table.Body>
                 {[...groups].sort(sortRoles).map(([role, permission]) => (
                   <Table.Row key={role}>
-                    <Table.Cell truncate>{role}</Table.Cell>
+                    <Table.Cell truncate>
+                      <RoleHover role={role} sdk={sdk} />
+                    </Table.Cell>
                     {withCreate && (
                       <Table.Cell>
                         <Checkbox
@@ -189,7 +184,7 @@ export const PermissionsEditor = ({
                   </Table.Row>
                 ))}
                 <Table.Row width="full">
-                  <PopoverBox addRole={addRole} sdk={sdk}>
+                  <PopoverBox addRole={addRole} sdk={sdk} groups={groups}>
                     <Button variant="subtle" size="sm" width="full">
                       <LuPlus />
                       Add Role
@@ -201,7 +196,7 @@ export const PermissionsEditor = ({
           </Table.ScrollArea>
         ) : (
           <Card title="Permissions" minHeight="160" radius="l-4" center fillWidth>
-            <PopoverBox addRole={addRole} sdk={sdk}>
+            <PopoverBox addRole={addRole} sdk={sdk} groups={groups}>
               <IconButton variant="secondary" size="m">
                 <LuPlus />
               </IconButton>
@@ -216,9 +211,10 @@ export const PermissionsEditor = ({
 export type PopoverBoxProps = {
   addRole: (role: string) => void;
   children: React.ReactNode;
+  groups: Map<string, Permission>;
 } & Pick<PermissionsEditorProps, "sdk">;
 
-const PopoverBox = ({ addRole, children, sdk }: PopoverBoxProps) => {
+const PopoverBox = ({ addRole, children, sdk, groups }: PopoverBoxProps) => {
   const [open, setOpen] = useState(false);
   const [comp, setComp] = useState<React.JSX.Element>();
 
@@ -237,14 +233,24 @@ const PopoverBox = ({ addRole, children, sdk }: PopoverBoxProps) => {
     { label: "All Users", role: "users", component: null },
     {
       label: "Select Users",
-      component: <UserRole addRole={addRole} sdk={sdk} onClose={() => setOpen(false)} />,
+      component: (
+        <UserRole addRole={addRole} sdk={sdk} onClose={() => setOpen(false)} groups={groups} />
+      ),
     },
     {
       label: "Select Teams",
-      component: <TeamRole addRole={addRole} sdk={sdk} onClose={() => setOpen(false)} />,
+      component: (
+        <TeamRole addRole={addRole} sdk={sdk} onClose={() => setOpen(false)} groups={groups} />
+      ),
     },
-    { label: "Label", component: null },
-    { label: "Custom Permission", component: null },
+    {
+      label: "Label",
+      component: <LabelRole addRole={addRole} onClose={() => setOpen(false)} groups={groups} />,
+    },
+    {
+      label: "Custom Permission",
+      component: <CustomRole addRole={addRole} onClose={() => setOpen(false)} groups={groups} />,
+    },
   ];
 
   return (

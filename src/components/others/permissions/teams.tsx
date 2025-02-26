@@ -16,9 +16,10 @@ import {
 export type TeamRoleProps = {
   addRole: (role: string) => void;
   onClose: VoidFunction;
+  groups: Map<string, any>;
 } & Pick<PermissionsEditorProps, "sdk">;
 
-export const TeamRole = ({ addRole, sdk, onClose }: TeamRoleProps) => {
+export const TeamRole = ({ addRole, sdk, onClose, groups }: TeamRoleProps) => {
   const fetchTeams = async (search: string | undefined, limit: number, offset: number) => {
     let queris = [];
     queris.push(Query.limit(limit), Query.offset(offset));
@@ -39,42 +40,48 @@ export const TeamRole = ({ addRole, sdk, onClose }: TeamRoleProps) => {
     <>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Select Team</DialogTitle>
+          <DialogTitle>Select teams</DialogTitle>
           <DialogDescription>
-            Select team to assign roles. Use the search bar to filter team by name.
+            You can grant access to any member of a specific team by selecting the team from the
+            list below. To grant access to team members with specific roles, please set a custom
+            permission.
           </DialogDescription>
         </DialogHeader>
         <DialogBody>
           <SimpleSelector
             placeholder="Search teams by name or ID"
             {...rest}
-            onMap={(team, toggleSelection, selections) => (
-              <HStack
-                key={team.$id}
-                gap={6}
-                alignItems="center"
-                width="full"
-                borderBottom={"1px solid"}
-                borderColor={"bg.muted"}
-                px={4}
-                py={2}
-              >
-                <Checkbox
-                  checked={selections.includes(team.$id)}
-                  onCheckedChange={() => toggleSelection(team.$id)}
+            onMap={(team, toggleSelection, selections) => {
+              const isExists = groups.has(`team:${team.$id}`);
+              return (
+                <HStack
+                  key={team.$id}
+                  gap={6}
+                  alignItems="center"
+                  width="full"
+                  borderBottom={"1px solid"}
+                  borderColor={"bg.muted"}
+                  px={4}
+                  py={2}
                 >
-                  <HStack gap={2} alignItems="center">
-                    <Avatar src={sdk.avatars.getInitials(team.name)} />
-                    <VStack alignItems="flex-start" gap={0}>
-                      <Text textStyle="sm">{team.name}</Text>
-                      <Text textStyle="xs" color={"fg.subtle"}>
-                        {team.$id}
-                      </Text>
-                    </VStack>
-                  </HStack>
-                </Checkbox>
-              </HStack>
-            )}
+                  <Checkbox
+                    disabled={isExists}
+                    checked={isExists ? true : selections.includes(team.$id)}
+                    onCheckedChange={() => toggleSelection(team.$id)}
+                  >
+                    <HStack gap={2} alignItems="center">
+                      <Avatar src={sdk.avatars.getInitials(team.name)} />
+                      <VStack alignItems="flex-start" gap={0}>
+                        <Text textStyle="sm">{team.name}</Text>
+                        <Text textStyle="xs" color={"fg.subtle"}>
+                          {team.$id}
+                        </Text>
+                      </VStack>
+                    </HStack>
+                  </Checkbox>
+                </HStack>
+              );
+            }}
           />
         </DialogBody>
         <DialogFooter>
@@ -82,7 +89,7 @@ export const TeamRole = ({ addRole, sdk, onClose }: TeamRoleProps) => {
             <Button variant="outline">Cancel</Button>
           </DialogActionTrigger>
           <Button disabled={rest.selections.length === 0} onClick={onSave}>
-            Select
+            Add
           </Button>
         </DialogFooter>
       </DialogContent>
