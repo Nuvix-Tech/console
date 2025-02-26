@@ -17,6 +17,11 @@ const DatabaseSingleLayout: React.FC<Props> = ({ children, databaseId }) => {
   projectState.sidebar.middle = null;
   projectState.sidebar.last = <DatbaseSidebar />;
 
+  dbPageState._update = async () => {
+    const db = await sdk?.databases.get(databaseId);
+    dbPageState.database = db;
+  }
+
   async function get() {
     if (!sdk) return;
     let db = await sdk?.databases.get(databaseId);

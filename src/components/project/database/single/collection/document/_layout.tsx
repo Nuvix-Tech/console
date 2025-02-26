@@ -18,14 +18,26 @@ export const DocumentLayout: React.FC<Props> = ({
 }) => {
   const { sdk } = getProjectState();
   projectState.sidebar.first = null;
+
+  documentPageState._update = async () => {
+    const doc = await sdk?.databases.getDocument(databaseId, collectionId, documentId)
+    documentPageState.document = doc;
+  }
+
   useEffect(() => {
     if (!sdk) {
       return;
     }
-    sdk.databases
-      .getDocument(databaseId, collectionId, documentId)
-      .then((v) => (documentPageState.document = v))
-      .catch(notFound);
+    async function get() {
+      try {
+        const doc = await sdk?.databases.getDocument(databaseId, collectionId, documentId)
+        documentPageState.document = doc;
+        documentPageState.loading = false;
+      } catch (e: any) {
+        if (e.code === 404) notFound();
+      }
+    }
+    get();
   }, [sdk, databaseId, collectionId, documentId]);
 
   return <>{children}</>;

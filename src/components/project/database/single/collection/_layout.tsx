@@ -16,12 +16,23 @@ export const CollectionLayout: React.FC<Props> = ({ children, databaseId, collec
   projectState.sidebar.first = <CollectionSidebar />;
   projectState.sidebar.middle = <CollectionsSiderbar />;
 
+  collectionPageState._update = async () => {
+    const coll = await sdk?.databases.getCollection(databaseId, collectionId)
+    collectionPageState.collection = coll;
+  }
+
   useEffect(() => {
     if (!sdk) return;
-    sdk?.databases
-      .getCollection(databaseId, collectionId)
-      .then((v) => (collectionPageState.collection = v))
-      .catch(() => notFound());
+    async function get() {
+      try {
+        const coll = await sdk?.databases.getCollection(databaseId, collectionId)
+        collectionPageState.collection = coll;
+        collectionPageState.loading = false;
+      } catch (e: any) {
+        if (e.code === 404) notFound();
+      }
+    }
+    get();
   }, [sdk, databaseId, collectionId]);
 
   return <>{children}</>;
