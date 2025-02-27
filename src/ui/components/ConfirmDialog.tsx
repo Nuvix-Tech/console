@@ -1,8 +1,18 @@
 "use client";
 import type React from "react";
-import { Button, Dialog } from ".";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { Button, ConfirmDialogProps } from ".";
 
-interface ConfirmDialogProps {
+interface ConfirmProps extends Pick<ConfirmDialogProps, 'button'> {
   isOpen: boolean;
   title?: React.ReactNode;
   description?: React.ReactNode;
@@ -12,10 +22,10 @@ interface ConfirmDialogProps {
   confirmText?: string;
   confirmVariant?: "danger" | "primary" | "secondary" | "tertiary";
   handleConfirm: (value: boolean) => void;
-  onClose: () => void;
+  onClose: (o: boolean) => void;
 }
 
-const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
+const ConfirmDialog: React.FC<ConfirmProps> = ({
   isOpen,
   title,
   description,
@@ -26,38 +36,38 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   cancleVariant = "tertiary",
   confirmVariant = "primary",
   handleConfirm,
+  button,
 }) => {
   return (
-    <Dialog
-      isOpen={isOpen}
-      title={title}
-      description={description}
-      children={node}
-      maxWidth={28}
-      onClose={onClose}
-      footer={
-        <>
-          <Button
-            size="m"
-            variant={cancleVariant}
+    <AlertDialog open={isOpen} onOpenChange={onClose}>
+      <AlertDialogContent className="max-w-1/2">
+        <AlertDialogHeader>
+          {title && <AlertDialogTitle>{title}</AlertDialogTitle>}
+          {description && <AlertDialogDescription>
+            {description}
+          </AlertDialogDescription>}
+        </AlertDialogHeader>
+        {node}
+        <AlertDialogFooter>
+          <AlertDialogCancel
             onClick={() => {
               handleConfirm(false);
             }}
+            {...button?.cancle}
           >
             {cancleText ?? "Cancle"}
-          </Button>
-          <Button
-            size="m"
-            variant={confirmVariant}
+          </AlertDialogCancel>
+          <AlertDialogAction
             onClick={() => {
               handleConfirm(true);
             }}
+            {...button?.ok}
           >
-            {confirmText ?? "Ok"}
-          </Button>
-        </>
-      }
-    />
+            {confirmText ?? 'Continue'}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
 

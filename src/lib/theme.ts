@@ -1,6 +1,9 @@
 import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
 
 const config = defineConfig({
+  preflight: false,
+  disableLayers: true,
+  cssVarsPrefix: 'rl',
   theme: {
     //   tokens: {
     //     colors: {

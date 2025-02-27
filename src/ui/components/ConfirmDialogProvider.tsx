@@ -1,8 +1,9 @@
 "use client";
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { ConfirmDialog } from "./ConfirmDialog";
+import { AlertDialogAction, AlertDialogCancel } from "@/components/ui/alert-dialog";
 
-interface ConfirmDialogProps {
+export interface ConfirmDialogProps {
   title?: React.ReactNode;
   description?: React.ReactNode;
   element?: React.ReactNode;
@@ -15,6 +16,10 @@ interface ConfirmDialogProps {
     text?: string;
     variant?: "danger" | "primary" | "secondary" | "tertiary";
   };
+  button?: {
+    cancle?: React.ComponentProps<typeof AlertDialogCancel>;
+    ok?: React.ComponentProps<typeof AlertDialogAction>;
+  }
 }
 
 interface ConfirmContextType {
@@ -38,8 +43,8 @@ interface ConfirmProviderProps {
 export const ConfirmProvider: React.FC<ConfirmProviderProps> = ({ children }) => {
   const [confirmState, setConfirmState] = useState<
     | (ConfirmDialogProps & {
-        resolve: (result: boolean) => void;
-      })
+      resolve: (result: boolean) => void;
+    })
     | null
   >(null);
 
@@ -59,9 +64,11 @@ export const ConfirmProvider: React.FC<ConfirmProviderProps> = ({ children }) =>
   const modal = (
     <ConfirmDialog
       isOpen={!!confirmState}
-      onClose={() => {
-        confirmState?.onClose?.();
-        setConfirmState(null);
+      onClose={(o: boolean) => {
+        if (!o) {
+          confirmState?.onClose?.();
+          setConfirmState(null);
+        }
       }}
       title={confirmState?.title}
       description={confirmState?.description}
