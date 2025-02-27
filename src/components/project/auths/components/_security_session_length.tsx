@@ -6,9 +6,9 @@ import {
   CardBoxTitle,
 } from "@/components/others/card";
 import { Form, SubmitButton } from "@/components/others/forms";
-import { Field } from "@/components/ui/field";
-import { NativeSelectField, NativeSelectRoot } from "@/components/ui/native-select";
-import { NumberInputField, NumberInputRoot } from "@/components/ui/number-input";
+import { Field } from "@/components/cui/field";
+import { NativeSelectField, NativeSelectRoot } from "@/components/cui/native-select";
+import { NumberInputField, NumberInputRoot } from "@/components/cui/number-input";
 import { useTimeUnitPair } from "@/lib/helpers/unit";
 import { sdkForConsole } from "@/lib/sdk";
 import { getProjectState } from "@/state/project-state";

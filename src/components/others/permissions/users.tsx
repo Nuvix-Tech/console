@@ -3,7 +3,7 @@ import { PermissionsEditorProps } from "./permissions";
 import { Query } from "@nuvix/console";
 import { SimpleSelector, usePaginatedSelector } from "../simple-selector";
 import { Button, DialogHeader, DialogTitle, HStack, Text, VStack } from "@chakra-ui/react";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@/components/cui/checkbox";
 import { Avatar } from "@/ui/components";
 import {
   DialogActionTrigger,
@@ -11,7 +11,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogFooter,
-} from "@/components/ui/dialog";
+} from "@/components/cui/dialog";
 
 export type UserRoleProps = {
   addRole: (role: string) => void;

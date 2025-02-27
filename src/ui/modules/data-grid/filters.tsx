@@ -6,8 +6,8 @@ import {
   PopoverContent,
   PopoverRoot,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { Checkbox } from "@/components/ui/checkbox";
+} from "@/components/cui/popover";
+import { Checkbox } from "@/components/cui/checkbox";
 import { LuColumns3, LuFilter } from "react-icons/lu";
 
 export const ColumnSelector = (props: ButtonProps) => {

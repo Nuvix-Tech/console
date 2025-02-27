@@ -2,7 +2,7 @@ import React from "react";
 import { useDataGrid } from "./provider";
 import { ButtonProps } from "@chakra-ui/react";
 import { ActionBar, Button, Portal } from "@chakra-ui/react";
-import { CloseButton } from "@/components/ui/close-button";
+import { CloseButton } from "@/components/cui/close-button";
 
 type Props = {
   actions?: React.ReactNode;

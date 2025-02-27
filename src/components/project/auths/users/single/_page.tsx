@@ -1,7 +1,7 @@
 "use client";
 import { IDChip, TopCard, UserStatus } from "@/components/others";
-import { Avatar } from "@/components/ui/avatar";
-import { SkeletonText } from "@/components/ui/skeleton";
+import { Avatar } from "@/components/cui/avatar";
+import { SkeletonText } from "@/components/cui/skeleton";
 import { formatDate } from "@/lib/utils";
 import { getUserPageState, userPageState } from "@/state/page";
 import { getProjectState } from "@/state/project-state";
@@ -14,7 +14,7 @@ import {
   PopoverContent,
   PopoverRoot,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/components/cui/popover";
 import { getStatus } from "@/components/others/user";
 import {
   DeleteUser,

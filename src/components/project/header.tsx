@@ -12,7 +12,7 @@ import {
   SelectRoot,
   SelectTrigger,
   SelectValueText,
-} from "@/components/ui/select";
+} from "@/components/cui/select";
 import { appState, getAppState } from "@/state/app-state";
 import {
   DrawerActionTrigger,
@@ -25,7 +25,7 @@ import {
   DrawerRoot,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer";
+} from "@/components/cui/drawer";
 import { FirstSidebar, SecondSidebar } from "./sidebar";
 import { Models } from "@nuvix/console";
 import { getProjectState } from "@/state/project-state";

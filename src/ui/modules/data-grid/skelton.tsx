@@ -1,4 +1,4 @@
-import { SkeletonCircle, SkeletonText } from "@/components/ui/skeleton";
+import { SkeletonCircle, SkeletonText } from "@/components/cui/skeleton";
 import { HStack, Skeleton, Stack } from "@chakra-ui/react";
 
 export const DataGridSkelton = ({

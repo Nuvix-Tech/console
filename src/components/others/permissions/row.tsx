@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { HStack, Text, VStack, Spinner } from "@chakra-ui/react";
-import { Avatar } from "@/components/ui/avatar";
+import { Avatar } from "@/components/cui/avatar";
 import {
   HoverCardArrow,
   HoverCardContent,
   HoverCardRoot,
   HoverCardTrigger,
-} from "@/components/ui/hover-card";
+} from "@/components/cui/hover-card";
 import { Models } from "@nuvix/console";
 import { sdkForConsole, sdkForProject } from "@/lib/sdk";
 import { Line } from "@/ui/components";

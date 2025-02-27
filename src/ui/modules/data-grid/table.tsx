@@ -2,9 +2,9 @@
 import React from "react";
 import { flexRender } from "@tanstack/react-table";
 import { Table, Progress } from "@chakra-ui/react";
-import { ProgressBar } from "@/components/ui/progress";
+import { ProgressBar } from "@/components/cui/progress";
 import { useDataGrid } from "./provider";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@/components/cui/checkbox";
 import { SHOW_TABLE_BORDER } from "@/lib/constants";
 import { useRouter } from "next/navigation";
 

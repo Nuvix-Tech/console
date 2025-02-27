@@ -10,8 +10,8 @@ import {
   ClipboardInput,
   ClipboardLabel,
   ClipboardRoot,
-} from "@/components/ui/clipboard";
-import { InputGroup } from "@/components/ui/input-group";
+} from "@/components/cui/clipboard";
+import { InputGroup } from "@/components/cui/input-group";
 import { API_ENDPOINT } from "@/lib/constants";
 import { getProjectState } from "@/state/project-state";
 import { Button } from "@chakra-ui/react";

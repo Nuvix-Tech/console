@@ -6,8 +6,8 @@ import {
   DialogContent,
   DialogDescription,
   DialogFooter,
-} from "@/components/ui/dialog";
-import { Field } from "@/components/ui/field";
+} from "@/components/cui/dialog";
+import { Field } from "@/components/cui/field";
 
 export type LabelProps = {
   addRole: (label: string) => void;

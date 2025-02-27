@@ -4,7 +4,7 @@ import {
   SelectRoot,
   SelectTrigger,
   SelectValueText,
-} from "@/components/ui/select";
+} from "@/components/cui/select";
 import { createListCollection } from "@chakra-ui/react";
 import { Row } from "@/ui/components";
 import { useDataGrid } from "./provider";

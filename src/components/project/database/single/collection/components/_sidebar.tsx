@@ -1,4 +1,4 @@
-import { Tooltip } from "@/components/ui/tooltip";
+import { Tooltip } from "@/components/cui/tooltip";
 import { getCollectionPageState, getDbPageState } from "@/state/page";
 import { getProjectState } from "@/state/project-state";
 import { IconButton, Line } from "@/ui/components";

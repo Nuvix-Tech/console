@@ -4,7 +4,7 @@ import React from "react";
 import { DeleteTeam, UpdateName, UpdatePrefs } from "./components";
 import { IDChip, TopCard } from "@/components/others";
 import { HStack, Stack, Text, VStack } from "@chakra-ui/react";
-import { Avatar } from "@/components/ui/avatar";
+import { Avatar } from "@/components/cui/avatar";
 import { getTeamPageState } from "@/state/page";
 import { getProjectState } from "@/state/project-state";
 import { formatDate } from "@/lib/utils";

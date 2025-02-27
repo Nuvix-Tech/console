@@ -5,14 +5,14 @@ import { Models, Query } from "@nuvix/console";
 import React from "react";
 import { Row } from "@/ui/components";
 import { ColumnDef } from "@tanstack/react-table";
-import { Tooltip } from "@/components/ui/tooltip";
+import { Tooltip } from "@/components/cui/tooltip";
 import { Badge, Text } from "@chakra-ui/react";
 import { formatDate } from "@/lib/utils";
 import { DataGrid, DataGridSkelton, SearchAndCreate } from "@/ui/modules/data-grid";
 import { useSearchParams } from "next/navigation";
 import { EmptyState } from "@/ui/modules/layout/empty-state";
 import { EmptySearch } from "@/ui/modules/layout";
-import { CopyID } from "@/components/ui/copy-id";
+import { CopyID } from "@/components/cui/copy-id";
 
 const UsersPage = () => {
   const state = getProjectState();

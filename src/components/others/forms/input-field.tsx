@@ -1,13 +1,13 @@
 import React, { Fragment, PropsWithChildren, useEffect, useState } from "react";
 import { VStack, HStack, Input, Button, Box, Text, InputProps, Stack } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
-import { Field, FieldProps } from "@/components/ui/field";
-import { PasswordInput } from "@/components/ui/password-input";
+import { Field, FieldProps } from "@/components/cui/field";
+import { PasswordInput } from "@/components/cui/password-input";
 import { Chip, Switch, SwitchProps, TagInput, TagInputProps } from "@/ui/components";
-import { CloseButton } from "@/components/ui/close-button";
+import { CloseButton } from "@/components/cui/close-button";
 import { LuPlus } from "react-icons/lu";
-import { RadioGroup } from "@/components/ui/radio";
-import { NumberInputField, NumberInputProps, NumberInputRoot } from "@/components/ui/number-input";
+import { RadioGroup } from "@/components/cui/radio";
+import { NumberInputField, NumberInputProps, NumberInputRoot } from "@/components/cui/number-input";
 
 interface Props {
   name: string;

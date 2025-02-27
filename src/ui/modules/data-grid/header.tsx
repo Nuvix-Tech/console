@@ -1,5 +1,5 @@
-import { CloseButton } from "@/components/ui/close-button";
-import { InputGroup } from "@/components/ui/input-group";
+import { CloseButton } from "@/components/cui/close-button";
+import { InputGroup } from "@/components/cui/input-group";
 import { Row } from "@/ui/components";
 import { Button, ButtonProps, Input } from "@chakra-ui/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";

@@ -3,7 +3,7 @@ import {
   PaginationNextTrigger,
   PaginationPrevTrigger,
   PaginationRoot,
-} from "@/components/ui/pagination";
+} from "@/components/cui/pagination";
 import { HStack } from "@chakra-ui/react";
 import { useDataGrid } from "./provider";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";

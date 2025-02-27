@@ -4,7 +4,7 @@ import { Column } from "@/ui/components";
 import { Models, Query } from "@nuvix/console";
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { Tooltip } from "@/components/ui/tooltip";
+import { Tooltip } from "@/components/cui/tooltip";
 import { Heading, Text } from "@chakra-ui/react";
 import { formatDate } from "@/lib/utils";
 import { DataGrid, DataGridSkelton, SearchAndCreate } from "@/ui/modules/data-grid";

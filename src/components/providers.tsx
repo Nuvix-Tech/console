@@ -1,6 +1,6 @@
 "use client";
 
-import { Provider } from "./ui/provider";
+import { Provider } from "./cui/provider";
 import { AppProgressProvider as ProgressProvider } from "@bprogress/next";
 
 export default function Providers({ children }: { children: React.ReactNode }) {

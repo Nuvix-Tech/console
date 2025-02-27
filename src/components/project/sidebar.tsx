@@ -4,7 +4,7 @@ import { Column, Line, RevealFx, Row, ToggleButton } from "@/ui/components";
 import { usePathname } from "next/navigation";
 import { getProjectState } from "@/state/project-state";
 import * as React from "react";
-import { useColorMode } from "../ui/color-mode";
+import { useColorMode } from "../cui/color-mode";
 
 export interface ProjectSidebarData {
   name: string;

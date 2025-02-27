@@ -1,6 +1,6 @@
 "use client";
-import { Avatar } from "@/components/ui/avatar";
-import { SkeletonText } from "@/components/ui/skeleton";
+import { Avatar } from "@/components/cui/avatar";
+import { SkeletonText } from "@/components/cui/skeleton";
 import { getUserPageState, userPageState } from "@/state/page";
 import { getProjectState, projectState } from "@/state/project-state";
 import { Line, Row } from "@/ui/components";

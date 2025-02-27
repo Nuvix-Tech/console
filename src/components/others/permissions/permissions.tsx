@@ -4,14 +4,14 @@ import {
   PopoverContent,
   PopoverArrow,
   PopoverBody,
-} from "@/components/ui/popover";
+} from "@/components/cui/popover";
 import { Card, Checkbox, IconButton } from "@/ui/components";
 import { Button, Table, Text, VStack } from "@chakra-ui/react";
 import { LuPlus } from "react-icons/lu";
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { CloseButton } from "@/components/ui/close-button";
+import { CloseButton } from "@/components/cui/close-button";
 import { sdkForConsole, sdkForProject } from "@/lib/sdk";
-import { DialogRoot } from "@/components/ui/dialog";
+import { DialogRoot } from "@/components/cui/dialog";
 import { UserRole } from "./users";
 import { TeamRole } from "./teams";
 import { RoleHover } from "./row";

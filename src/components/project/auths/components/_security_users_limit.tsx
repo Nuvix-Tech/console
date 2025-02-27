@@ -6,8 +6,8 @@ import {
   CardBoxTitle,
 } from "@/components/others/card";
 import { Form, RadioField, SubmitButton } from "@/components/others/forms";
-import { NumberInputField, NumberInputRoot } from "@/components/ui/number-input";
-import { Radio } from "@/components/ui/radio";
+import { NumberInputField, NumberInputRoot } from "@/components/cui/number-input";
+import { Radio } from "@/components/cui/radio";
 import { sdkForConsole } from "@/lib/sdk";
 import { getProjectState } from "@/state/project-state";
 import { useToast } from "@/ui/components";

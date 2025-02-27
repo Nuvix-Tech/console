@@ -5,7 +5,7 @@ import { Column, useConfirm, useToast } from "@/ui/components";
 import { Models, Query } from "@nuvix/console";
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { Tooltip } from "@/components/ui/tooltip";
+import { Tooltip } from "@/components/cui/tooltip";
 import { HStack, Heading, Text } from "@chakra-ui/react";
 import { formatDate } from "@/lib/utils";
 import {

@@ -4,7 +4,7 @@ import {
   SelectRoot,
   SelectTrigger,
   SelectValueText,
-} from "@/components/ui/select";
+} from "@/components/cui/select";
 import { Row } from "@/ui/components";
 import { createListCollection } from "@chakra-ui/react";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -14,7 +14,7 @@ import {
   PaginationNextTrigger,
   PaginationPrevTrigger,
   PaginationRoot,
-} from "@/components/ui/pagination";
+} from "@/components/cui/pagination";
 
 export type PaginationProps = {
   /**
