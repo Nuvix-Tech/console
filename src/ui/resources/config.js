@@ -5,7 +5,7 @@ const baseURL = "https://nuvix.com";
 // default customization applied to the HTML in the main layout.tsx
 const style = {
   theme: "dark", // dark | light
-  neutral: "gray", // sand | gray | slate
+  neutral: "slate", // sand | gray | slate
   brand: "custom", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan
   accent: "indigo", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan
   solid: "contrast", // color | contrast | inverse

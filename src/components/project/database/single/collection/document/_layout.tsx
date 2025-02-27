@@ -1,4 +1,5 @@
 "use client";
+import { HeaderCard } from "@/components/project/components";
 import { documentPageState } from "@/state/page";
 import { getProjectState, projectState } from "@/state/project-state";
 import { notFound } from "next/navigation";
@@ -40,5 +41,9 @@ export const DocumentLayout: React.FC<Props> = ({
     get();
   }, [sdk, databaseId, collectionId, documentId]);
 
-  return <>{children}</>;
+  return (
+    <>
+      {children}
+    </>
+  );
 };

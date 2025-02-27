@@ -10,6 +10,13 @@ import { PermissionField } from "@/components/others/permissions";
 import { getCollectionPageState, getDbPageState, getDocumentPageState } from "@/state/page";
 import { getProjectState } from "@/state/project-state";
 import { Feedback, useToast } from "@/ui/components";
+import { Info } from "lucide-react"
+
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert"
 import React from "react";
 import * as y from "yup";
 
@@ -76,12 +83,12 @@ export const UpdatePermissions: React.FC = () => {
               {collection.documentSecurity ? (
                 <PermissionField name="permissions" withCreate sdk={sdk} />
               ) : (
-                <Feedback
-                  variant="info"
-                  icon
-                  title="Document Security Disabled"
-                  description="To assign document-specific permissions, enable document security in the collection settings. Otherwise, only collection-level permissions will apply."
-                />
+                <Alert>
+                  <Info className="h-4 w-4" />
+                  <AlertTitle>Document Security Disabled</AlertTitle>
+                  <AlertDescription>
+                    To assign document-specific permissions, enable document security in the collection settings. Otherwise, only collection-level permissions will apply.      </AlertDescription>
+                </Alert>
               )}
             </CardBoxItem>
           </CardBoxBody>
