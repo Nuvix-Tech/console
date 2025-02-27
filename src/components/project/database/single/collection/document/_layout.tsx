@@ -1,7 +1,8 @@
 "use client";
 import { HeaderCard } from "@/components/project/components";
-import { documentPageState } from "@/state/page";
+import { documentPageState, getDocumentPageState } from "@/state/page";
 import { getProjectState, projectState } from "@/state/project-state";
+import { Column } from "@/ui/components";
 import { notFound } from "next/navigation";
 import React, { PropsWithChildren, useEffect } from "react";
 
@@ -18,7 +19,8 @@ export const DocumentLayout: React.FC<Props> = ({
   documentId,
 }) => {
   const { sdk } = getProjectState();
-  projectState.sidebar.first = null;
+  const { document } = getDocumentPageState();
+  // projectState.sidebar.first = null;
 
   documentPageState._update = async () => {
     const doc = await sdk?.databases.getDocument(databaseId, collectionId, documentId);
@@ -43,7 +45,10 @@ export const DocumentLayout: React.FC<Props> = ({
 
   return (
     <>
-      {children}
+      <Column fill>
+        <HeaderCard title="Document" id={document?.$id}  />
+        {children}
+      </Column>
     </>
   );
 };
