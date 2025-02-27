@@ -71,6 +71,7 @@ const Feedback = forwardRef<HTMLDivElement, FeedbackProps>(
                   <Flex fillWidth paddingY="4">
                     <Text
                       variant="heading-strong-m"
+                      size="xs"
                       onBackground={`${variant}-medium`}
                       role="heading"
                       aria-level={4}
@@ -93,7 +94,7 @@ const Feedback = forwardRef<HTMLDivElement, FeedbackProps>(
               )}
               {description && (
                 <Flex fillWidth>
-                  <Text variant="body-default-s" onBackground={`${variant}-medium`}>
+                  <Text variant="body-default-s" size="xs" onBackground={`${variant}-weak`}>
                     {description}
                   </Text>
                 </Flex>
