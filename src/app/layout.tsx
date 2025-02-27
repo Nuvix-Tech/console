@@ -1,7 +1,7 @@
-import "./globals.css";
 import "@appwrite.io/pink-icons";
 import "@/ui/styles/index.scss";
 import "@/ui/tokens/index.scss";
+import "./globals.css";
 
 import Providers from "@/components/providers";
 import classNames from "classnames";

@@ -10,7 +10,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { Button, ConfirmDialogProps } from ".";
+import { ConfirmDialogProps } from ".";
 
 interface ConfirmProps extends Pick<ConfirmDialogProps, 'button'> {
   isOpen: boolean;
@@ -40,7 +40,7 @@ const ConfirmDialog: React.FC<ConfirmProps> = ({
 }) => {
   return (
     <AlertDialog open={isOpen} onOpenChange={onClose}>
-      <AlertDialogContent className="max-w-1/2">
+      <AlertDialogContent>
         <AlertDialogHeader>
           {title && <AlertDialogTitle>{title}</AlertDialogTitle>}
           {description && <AlertDialogDescription>
