@@ -17,6 +17,7 @@ export const DataMapper = <T,>({ attributes, document }: DataMapperProps<T>) => 
               name={att.key}
               label={att.key}
               required={att.required}
+              nullable={!att.required}
               size={(att as any)?.size}
             />
           </UpdateField>

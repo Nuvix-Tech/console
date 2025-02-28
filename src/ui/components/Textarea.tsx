@@ -12,6 +12,7 @@ import React, {
 import { Flex, Text } from ".";
 import useDebounce from "../hooks/useDebounce";
 import styles from "./Input.module.scss";
+import { Checkbox } from "@/components/cui/checkbox";
 
 interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   id: string;
@@ -36,8 +37,9 @@ interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   labelAsPlaceholder?: boolean;
   resize?: "horizontal" | "vertical" | "both" | "none";
   validate?: (value: ReactNode) => ReactNode | null;
-  canNull?: boolean;
+  nullable?: boolean;
   isNull?: boolean;
+  max?: number;
 }
 
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
@@ -61,14 +63,16 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       onBlur,
       onChange,
       style,
-      canNull = false,
+      nullable = false,
       isNull = false,
+      max = 0,
       ...props
     },
     ref,
   ) => {
     const [isFocused, setIsFocused] = useState(false);
     const [isFilled, setIsFilled] = useState(!!props.value);
+    const [prev, setPrev] = useState<any>();
     const [_null, setNull] = useState(isNull);
     const [validationError, setValidationError] = useState<ReactNode | null>(null);
     const [height, setHeight] = useState<number | undefined>(undefined);
@@ -83,6 +87,10 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      if (_null) {
+        setNull(false);
+        setPrev(undefined);
+      }
       if (lines === "auto") {
         adjustHeight();
       }
@@ -176,10 +184,10 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
               {hasPrefix}
             </Flex>
           )}
-          <Flex fillWidth direction="column" position="relative">
+          <Flex fillWidth direction={max < 50 ? "row" : "column"} position="relative">
             <textarea
               {...props}
-              value={_null ? '' : props.value}
+              value={_null ? "" : props.value}
               ref={(node) => {
                 if (typeof ref === "function") {
                   ref(node);
@@ -216,6 +224,46 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
               </Text>
             )}
             {children && children}
+            <Flex
+              horizontal="end"
+              gap={max > 50 ? "20" : "8"}
+              paddingY="4"
+              paddingRight={max > 50 ? "20" : "8"}
+              vertical="center"
+            >
+              {max && (props.value?.toString().length ?? 0) > 0 && (
+                <Text variant="body-default-xs" onBackground="neutral-weak" wrap="nowrap">
+                  {props.value?.toString().length || 0} / {max}
+                </Text>
+              )}
+              {nullable && (
+                <Checkbox
+                  size="xs"
+                  variant="subtle"
+                  checked={_null}
+                  onCheckedChange={(e) => {
+                    setNull(!!e.checked);
+                    if (e.checked) {
+                      setPrev(props.value);
+                      onChange?.({
+                        target: {
+                          name: id,
+                          value: null,
+                        },
+                      } as any);
+                    } else
+                      onChange?.({
+                        target: {
+                          name: id,
+                          value: prev,
+                        },
+                      } as any);
+                  }}
+                >
+                  NULL
+                </Checkbox>
+              )}
+            </Flex>
           </Flex>
           {hasSuffix && (
             <Flex paddingRight="12" className={styles.suffix}>
