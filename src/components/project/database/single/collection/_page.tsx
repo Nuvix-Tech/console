@@ -64,9 +64,6 @@ const CollectionPage: React.FC<Props> = ({ databaseId, collectionId }: Props) =>
     get();
   }, [get]); // Depend only on `get`
 
-  if (database?.$id !== databaseId) return;
-  if (collection?.$id !== collectionId) return;
-
   const path = `/console/project/${project?.$id}/databases/${database?.$id}/collection/${collection?.$id}/document`;
 
   const columns = React.useMemo(
