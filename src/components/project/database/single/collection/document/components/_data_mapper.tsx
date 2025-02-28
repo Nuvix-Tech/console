@@ -13,7 +13,12 @@ export const DataMapper = <T,>({ attributes, document }: DataMapperProps<T>) => 
       case "string":
         return (
           <UpdateField name={att.key} value={document[att.key as keyof T]} key={i}>
-            <InputField name={att.key} label={att.key} required={att.required} />
+            <InputField
+              name={att.key}
+              label={att.key}
+              required={att.required}
+              size={(att as any)?.size}
+            />
           </UpdateField>
         );
       default:

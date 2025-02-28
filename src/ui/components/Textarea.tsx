@@ -36,6 +36,8 @@ interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   labelAsPlaceholder?: boolean;
   resize?: "horizontal" | "vertical" | "both" | "none";
   validate?: (value: ReactNode) => ReactNode | null;
+  canNull?: boolean;
+  isNull?: boolean;
 }
 
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
@@ -59,12 +61,15 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       onBlur,
       onChange,
       style,
+      canNull = false,
+      isNull = false,
       ...props
     },
     ref,
   ) => {
     const [isFocused, setIsFocused] = useState(false);
     const [isFilled, setIsFilled] = useState(!!props.value);
+    const [_null, setNull] = useState(isNull);
     const [validationError, setValidationError] = useState<ReactNode | null>(null);
     const [height, setHeight] = useState<number | undefined>(undefined);
     const textareaRef = React.useRef<HTMLTextAreaElement>(null);
@@ -174,6 +179,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           <Flex fillWidth direction="column" position="relative">
             <textarea
               {...props}
+              value={_null ? '' : props.value}
               ref={(node) => {
                 if (typeof ref === "function") {
                   ref(node);
