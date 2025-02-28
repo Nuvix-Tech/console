@@ -3,7 +3,7 @@ import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
 const config = defineConfig({
   preflight: false,
   disableLayers: true,
-  cssVarsPrefix: 'rl',
+  cssVarsPrefix: "rl",
   // globalCss: {
   //   html: {
   //     colorPalette: "slate", // Change this to any color palette you prefer

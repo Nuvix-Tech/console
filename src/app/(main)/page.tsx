@@ -20,8 +20,8 @@ import { BackgroundLines } from "@/components/ui/background-lines";
 export default function Home() {
   return (
     <>
-        <BackgroundLines className="h-full n-relative">
-      <Column fillWidth paddingY="80" paddingX="s" horizontal="center" flex={1}>
+      <BackgroundLines className="h-full n-relative">
+        <Column fillWidth paddingY="80" paddingX="s" horizontal="center" flex={1}>
           <Fade
             zIndex={3}
             pattern={{
@@ -154,11 +154,22 @@ export default function Home() {
                     In Devlopment
                   </Text>
                 </InlineCode>
-                <Heading wrap="balance" variant="display-default-l" align="center" marginBottom="16">
+                <Heading
+                  wrap="balance"
+                  variant="display-default-l"
+                  align="center"
+                  marginBottom="16"
+                >
                   Welcome to Console
                 </Heading>
                 <Text>Click below button to access the dashboard</Text>
-                <Button id="readDocs" label="Console" href="/console" variant="secondary" arrowIcon />
+                <Button
+                  id="readDocs"
+                  label="Console"
+                  href="/console"
+                  variant="secondary"
+                  arrowIcon
+                />
               </Column>
             </Column>
             {/* CODE PREVIEW */}
@@ -229,8 +240,8 @@ export default function Home() {
               </Column>
             </TiltFx>
           </Column>
-      </Column>
-        </BackgroundLines>
+        </Column>
+      </BackgroundLines>
     </>
   );
 }

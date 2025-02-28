@@ -5,7 +5,7 @@ import { appState } from "@/state/app-state";
 import { Row } from "@/ui/components";
 import { Spinner } from "@chakra-ui/react";
 import { Models } from "@nuvix/console";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@bprogress/next";
 import { useEffect } from "react";
 
 export default function Page() {

@@ -31,7 +31,7 @@ type Props = {
   collectionId: string;
 };
 
-const CollectionPage: React.FC<Props> = () => {
+const CollectionPage: React.FC<Props> = ({ databaseId, collectionId }: Props) => {
   const state = getProjectState();
   const { database } = getDbPageState();
   const { collection } = getCollectionPageState();
@@ -47,6 +47,9 @@ const CollectionPage: React.FC<Props> = () => {
   const confirm = useConfirm();
   const { addToast } = useToast();
   const { canWriteDocuments } = permissions;
+
+  if (database?.$id !== databaseId) return;
+  if (collection?.$id !== collectionId) return;
 
   const get = React.useCallback(async () => {
     if (!sdk || !database || !collection) return;

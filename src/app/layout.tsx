@@ -125,13 +125,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             }}
           />
         </head>
-        <ConfirmProvider>
-          <ToastProvider>
-            <Column suppressHydrationWarning as="body" fillWidth margin="0" padding="0">
-              <Providers>{children}</Providers>
-            </Column>
-          </ToastProvider>
-        </ConfirmProvider>
+        <ToastProvider>
+          <Column suppressHydrationWarning as="body" fillWidth margin="0" padding="0">
+            <Providers>
+              <ConfirmProvider>
+                {children}
+              </ConfirmProvider>
+            </Providers>
+          </Column>
+        </ToastProvider>
       </Flex>
     </>
   );

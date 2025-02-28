@@ -1,5 +1,5 @@
+import { useRouter } from "@bprogress/next";
 import { Button, EmptyState, VStack } from "@chakra-ui/react";
-import { useRouter } from "next/navigation";
 import { HiColorSwatch } from "react-icons/hi";
 
 interface EmptySearchProps {

@@ -24,7 +24,7 @@ import { EmptyState } from "@/ui/modules/layout/empty-state";
 import { EmptySearch } from "@/ui/modules/layout";
 import { IDChip } from "@/components/others";
 
-const DatabaseSinglePage = () => {
+const DatabaseSinglePage = ({ databaseId }: { databaseId: string }) => {
   const state = getProjectState();
   const { database } = getDbPageState();
   const { sdk, project, permissions } = state;
@@ -40,6 +40,8 @@ const DatabaseSinglePage = () => {
   const confirm = useConfirm();
   const { addToast } = useToast();
   const { canWriteDatabases } = permissions;
+
+  if (database?.$id !== databaseId) return;
 
   projectState.sidebar.first = null;
   projectState.sidebar.middle = null;

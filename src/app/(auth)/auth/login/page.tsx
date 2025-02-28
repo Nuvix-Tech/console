@@ -15,7 +15,7 @@ import {
   Text,
   useToast,
 } from "@/ui/components";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@bprogress/next";
 import React, { useState } from "react";
 
 export default function Login() {

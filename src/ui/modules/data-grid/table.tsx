@@ -6,7 +6,7 @@ import { ProgressBar } from "@/components/cui/progress";
 import { useDataGrid } from "./provider";
 import { Checkbox } from "@/components/cui/checkbox";
 import { SHOW_TABLE_BORDER } from "@/lib/constants";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@bprogress/next";
 
 const TheTable = <T,>() => {
   const { table, loading, showCheckbox, stickyCheckBox } = useDataGrid<T>();

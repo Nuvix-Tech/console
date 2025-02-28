@@ -1,6 +1,6 @@
 "use client";
 import type React from "react";
-import { Button, DialogDescription } from "@chakra-ui/react"
+import { Button, DialogDescription } from "@chakra-ui/react";
 import {
   DialogActionTrigger,
   DialogBody,
@@ -10,10 +10,10 @@ import {
   DialogHeader,
   DialogRoot,
   DialogTitle,
-} from "@/components/cui/dialog"
+} from "@/components/cui/dialog";
 import { ConfirmDialogProps } from ".";
 
-interface ConfirmProps extends Pick<ConfirmDialogProps, 'button'> {
+interface ConfirmProps extends Pick<ConfirmDialogProps, "button"> {
   isOpen: boolean;
   title?: React.ReactNode;
   description?: React.ReactNode;
@@ -42,16 +42,13 @@ const ConfirmDialog: React.FC<ConfirmProps> = ({
       <DialogContent>
         <DialogHeader>
           {title && <DialogTitle>{title}</DialogTitle>}
-          {description && <DialogDescription>
-            {description}
-          </DialogDescription>}
+          {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
-        {node ? <DialogBody>
-          {node}
-        </DialogBody> : null}
+        {node ? <DialogBody>{node}</DialogBody> : null}
         <DialogFooter>
           <DialogActionTrigger asChild>
-            <Button variant="outline"
+            <Button
+              variant="outline"
               onClick={() => {
                 handleConfirm(false);
               }}
@@ -60,10 +57,13 @@ const ConfirmDialog: React.FC<ConfirmProps> = ({
               {cancleText ?? "Cancle"}
             </Button>
           </DialogActionTrigger>
-          <Button onClick={() => {
-            handleConfirm(true);
-          }} {...button?.ok}>
-            {confirmText ?? 'Continue'}
+          <Button
+            onClick={() => {
+              handleConfirm(true);
+            }}
+            {...button?.ok}
+          >
+            {confirmText ?? "Continue"}
           </Button>
         </DialogFooter>
         <DialogCloseTrigger />

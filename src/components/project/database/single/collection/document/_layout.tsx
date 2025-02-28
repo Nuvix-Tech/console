@@ -46,7 +46,7 @@ export const DocumentLayout: React.FC<Props> = ({
   return (
     <>
       <Column fill>
-        <LayoutTop title="Document" id={document?.$id}  />
+        <LayoutTop title="Document" id={document?.$id} />
         {children}
       </Column>
     </>

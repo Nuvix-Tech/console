@@ -19,7 +19,7 @@ export interface ConfirmDialogProps {
   button?: {
     cancle?: React.ComponentProps<typeof Button>;
     ok?: React.ComponentProps<typeof Button>;
-  }
+  };
 }
 
 interface ConfirmContextType {
@@ -43,8 +43,8 @@ interface ConfirmProviderProps {
 export const ConfirmProvider: React.FC<ConfirmProviderProps> = ({ children }) => {
   const [confirmState, setConfirmState] = useState<
     | (ConfirmDialogProps & {
-      resolve: (result: boolean) => void;
-    })
+        resolve: (result: boolean) => void;
+      })
     | null
   >(null);
 
@@ -65,8 +65,8 @@ export const ConfirmProvider: React.FC<ConfirmProviderProps> = ({ children }) =>
     <ConfirmDialog
       isOpen={!!confirmState}
       onClose={() => {
-          confirmState?.onClose?.();
-          setConfirmState(null);
+        confirmState?.onClose?.();
+        setConfirmState(null);
       }}
       title={confirmState?.title}
       description={confirmState?.description}
