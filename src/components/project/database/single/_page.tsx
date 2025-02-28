@@ -41,8 +41,6 @@ const DatabaseSinglePage = ({ databaseId }: { databaseId: string }) => {
   const { addToast } = useToast();
   const { canWriteDatabases } = permissions;
 
-  if (database?.$id !== databaseId) return;
-
   projectState.sidebar.first = null;
   projectState.sidebar.middle = null;
 
@@ -59,6 +57,8 @@ const DatabaseSinglePage = ({ databaseId }: { databaseId: string }) => {
   React.useEffect(() => {
     get();
   }, [sdk, limit, page, search, database]);
+
+  if (database?.$id !== databaseId) return;
 
   const path = `/console/project/${project?.$id}/databases/${database?.$id}/collection`;
 
