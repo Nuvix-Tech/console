@@ -1,14 +1,17 @@
 "use client";
-import { getDocumentPageState } from "@/state/page";
+import { getCollectionPageState, getDocumentPageState } from "@/state/page";
+import { DataMapper } from "./components";
 
 export const DocumentData = () => {
   const { document } = getDocumentPageState();
-  if (!document) return;
+  const { collection } = getCollectionPageState();
+
+  if (!document || !collection) return;
 
   return (
     <>
       {JSON.stringify(document)}
-      hello data
+      <DataMapper attributes={collection.attributes as any} document={document} />
     </>
   );
 };

@@ -3,9 +3,10 @@ import { getCollectionPageState, getDbPageState } from "@/state/page";
 import { getProjectState } from "@/state/project-state";
 import { IconButton, Line } from "@/ui/components";
 import { SidebarGroup } from "@/ui/modules/layout/navigation";
+import { useRouter } from "@bprogress/next";
 import { Button, VStack } from "@chakra-ui/react";
 import { Models } from "@nuvix/console";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 
 const CollectionSidebar = () => {
@@ -106,7 +107,7 @@ const Collections = ({ collections }: { collections: Models.Collection[] }) => {
           width="full"
           key={c.$id}
           justifyContent="flex-start"
-          variant={selectedCollection?.$id === c.$id ? "surface" : "plain"}
+          variant={selectedCollection?.$id === c.$id ? "surface" : "ghost"}
           onClick={() =>
             router.push(
               `/console/project/${project?.$id}/databases/${database!.$id}/collection/${c.$id}`,

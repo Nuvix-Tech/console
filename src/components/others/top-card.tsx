@@ -15,6 +15,7 @@ const TopCard = ({ children, minHeight = 16 }: PropsWithChildren<Props>) => {
       radius="l"
       padding="12"
       overflow="hidden"
+      fillWidth
     >
       <Background
         position="absolute"
