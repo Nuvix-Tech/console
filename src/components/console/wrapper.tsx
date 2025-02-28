@@ -1,6 +1,6 @@
 "use client";
 import { sdkForConsole } from "@/lib/sdk";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@bprogress/next";
 import type React from "react";
 import { useEffect, useState } from "react";
 import LoadingUI from "../loading";

@@ -1,10 +1,10 @@
 "use client";
-import { HeaderCard } from "@/components/project/components";
 import { documentPageState, getDocumentPageState } from "@/state/page";
 import { getProjectState, projectState } from "@/state/project-state";
 import { Column } from "@/ui/components";
 import { notFound } from "next/navigation";
 import React, { PropsWithChildren, useEffect } from "react";
+import { LayoutTop } from "./components";
 
 type Props = PropsWithChildren & {
   databaseId: string;
@@ -46,7 +46,7 @@ export const DocumentLayout: React.FC<Props> = ({
   return (
     <>
       <Column fill>
-        <HeaderCard title="Document" id={document?.$id}  />
+        <LayoutTop title="Document" id={document?.$id}  />
         {children}
       </Column>
     </>

@@ -1,27 +1,27 @@
 import React from "react";
-import { Button, Card } from "@chakra-ui/react"
+import { Button, Card, Stack } from "@chakra-ui/react"
 import { Tabs } from "@chakra-ui/react"
 import { IDChip } from "@/components/others";
 import { useRouter } from "@bprogress/next";
 
-interface HeaderCardProps {
+interface LayoutTopProps {
     title: string;
     id?: string;
 }
 
-export const HeaderCard: React.FC<HeaderCardProps> = ({ title, id }) => {
+export const LayoutTop: React.FC<LayoutTopProps> = ({ title, id }) => {
     const { push } = useRouter();
     return (
         <>
-            <Card.Root variant='subtle' rounded='none'>
-                <Card.Body gap="2">
-                    <Card.Title mt="2">{title}</Card.Title>
+            <Card.Root variant='subtle' rounded='lg' mx="28" flexDirection='row' my="8">
+                <Stack direction='column'>
+                    <Card.Title>{title}</Card.Title>
                     {id && <Card.Description>
                         <IDChip id={id} />
                     </Card.Description>}
-                </Card.Body>
+                </Stack>
                 {/* <Card.Footer> */}
-                <Tabs.Root variant='line'>
+                <Tabs.Root variant='subtle' onChange={(e) => { alert(e.target) }}>
                     <Tabs.List>
                         <Tabs.Trigger value="oerview">
                             Overview

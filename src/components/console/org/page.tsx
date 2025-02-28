@@ -6,7 +6,7 @@ import { Button, Column, Grid, Row } from "@/ui/components";
 import { Pagination } from "@/ui/modules/table/paggination";
 import { Heading } from "@chakra-ui/react";
 import { Query, type Models } from "@nuvix/console";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@bprogress/next";
 import { useEffect, useState } from "react";
 
 type Props = {

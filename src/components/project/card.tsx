@@ -1,6 +1,6 @@
 import { Button, Card, Column, Icon, Row, Tag, Text } from "@/ui/components";
 import type { Models } from "@nuvix/console";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@bprogress/next";
 import { IoIosAppstore } from "react-icons/io";
 import { MdAndroid } from "react-icons/md";
 import { RxCode } from "react-icons/rx";

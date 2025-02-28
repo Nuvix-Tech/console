@@ -21,17 +21,18 @@ export const CollectionLayout: React.FC<Props> = ({ children, databaseId, collec
     collectionPageState.collection = coll;
   };
 
-  useEffect(() => {
+  async function get() {
     if (!sdk) return;
-    async function get() {
-      try {
-        const coll = await sdk?.databases.getCollection(databaseId, collectionId);
-        collectionPageState.collection = coll;
-        collectionPageState.loading = false;
-      } catch (e: any) {
-        if (e.code === 404) notFound();
-      }
+    try {
+      const coll = await sdk?.databases.getCollection(databaseId, collectionId);
+      collectionPageState.collection = coll;
+      collectionPageState.loading = false;
+    } catch (e: any) {
+      if (e.code === 404) notFound();
     }
+  }
+
+  useEffect(() => {
     get();
   }, [sdk, databaseId, collectionId]);
 

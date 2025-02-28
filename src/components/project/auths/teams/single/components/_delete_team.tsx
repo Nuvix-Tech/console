@@ -3,7 +3,7 @@ import { getTeamPageState } from "@/state/page";
 import { getProjectState } from "@/state/project-state";
 import { Avatar, useConfirm, useToast } from "@/ui/components";
 import { Button, Text, VStack } from "@chakra-ui/react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@bprogress/next";
 import { useState } from "react";
 
 export const DeleteTeam = () => {

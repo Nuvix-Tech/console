@@ -1,7 +1,7 @@
 "use client";
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { ConfirmDialog } from "./ConfirmDialog";
-import { AlertDialogAction, AlertDialogCancel } from "@/components/ui/alert-dialog";
+import { Button } from "@chakra-ui/react";
 
 export interface ConfirmDialogProps {
   title?: React.ReactNode;
@@ -17,8 +17,8 @@ export interface ConfirmDialogProps {
     variant?: "danger" | "primary" | "secondary" | "tertiary";
   };
   button?: {
-    cancle?: React.ComponentProps<typeof AlertDialogCancel>;
-    ok?: React.ComponentProps<typeof AlertDialogAction>;
+    cancle?: React.ComponentProps<typeof Button>;
+    ok?: React.ComponentProps<typeof Button>;
   }
 }
 
@@ -64,11 +64,9 @@ export const ConfirmProvider: React.FC<ConfirmProviderProps> = ({ children }) =>
   const modal = (
     <ConfirmDialog
       isOpen={!!confirmState}
-      onClose={(o: boolean) => {
-        if (!o) {
+      onClose={() => {
           confirmState?.onClose?.();
           setConfirmState(null);
-        }
       }}
       title={confirmState?.title}
       description={confirmState?.description}

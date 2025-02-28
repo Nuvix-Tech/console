@@ -15,7 +15,7 @@ import { InputGroup } from "@/components/cui/input-group";
 import { API_ENDPOINT } from "@/lib/constants";
 import { getProjectState } from "@/state/project-state";
 import { Button } from "@chakra-ui/react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@bprogress/next";
 import React from "react";
 import { LuExternalLink } from "react-icons/lu";
 

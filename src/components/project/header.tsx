@@ -2,7 +2,8 @@
 
 import { sdkForConsole } from "@/lib/sdk";
 import { Badge, Column, Logo, NavIcon, Row, ToggleButton } from "@/ui/components";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { useRouter } from "@bprogress/next";
 import type React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Avatar, HStack, Stack, Text, createListCollection } from "@chakra-ui/react";
