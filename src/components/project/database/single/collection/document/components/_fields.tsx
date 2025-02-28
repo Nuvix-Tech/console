@@ -8,6 +8,7 @@ import { CloseButton } from "@/components/cui/close-button";
 import { LuPlus } from "react-icons/lu";
 import { RadioGroup } from "@/components/cui/radio";
 import { NumberInputField, NumberInputProps, NumberInputRoot } from "@/components/cui/number-input";
+import { InputGroup } from "@/components/cui/input-group";
 
 interface Props {
   name: string;
