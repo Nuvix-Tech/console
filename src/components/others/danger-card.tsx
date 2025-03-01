@@ -1,4 +1,12 @@
-import { Card, Separator, Stack, Text } from "@chakra-ui/react";
+import { Stack } from "@chakra-ui/react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Card as TheCard } from "@/ui/components";
 import React from "react";
 
@@ -14,35 +22,28 @@ export function DangerCard(props: DangerCardProps) {
 
   return (
     <>
-      <Card.Root variant={"outline"} borderColor={{ _light: "red.400", _dark: "red.700" }}>
-        <Card.Body>
+      <Card className="border-red-600">
+        <CardContent>
           <Stack
             direction={{ base: "column", mdOnly: "column", lg: "row" }}
             gap={4}
             justifyContent={"space-between"}
           >
             <Stack direction={"column"} maxW={{ base: "full", mdOnly: "full", lg: "5/12" }}>
-              <Card.Title color={"fg.error"}>{props.title}</Card.Title>
-              <Text textStyle={"sm"} color={"fg.subtle"}>
-                {props.description}
-              </Text>
+              <CardTitle >{props.title}</CardTitle>
+              <CardDescription>{props.description}</CardDescription>
             </Stack>
             <TheCard radius="m-4" padding="12" gap="20" direction="row" vertical="center" fillWidth>
               {children}
             </TheCard>
           </Stack>
-        </Card.Body>
+        </CardContent>
         {actions ? (
           <>
-            <Separator
-              variant={"dashed"}
-              paddingBottom={"6"}
-              borderColor={{ _light: "red.400", _dark: "red.700" }}
-            />
-            <Card.Footer justifyContent={"flex-end"}>{actions}</Card.Footer>
+            <CardFooter>{actions}</CardFooter>
           </>
         ) : null}
-      </Card.Root>
+      </Card>
     </>
   );
 }

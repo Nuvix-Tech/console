@@ -1,5 +1,6 @@
 import React, { Fragment, PropsWithChildren, useEffect, useState } from "react";
-import { VStack, HStack, Input, Button, Box, Text, InputProps, Stack } from "@chakra-ui/react";
+import { VStack, HStack, Button, Box, Text, InputProps, Stack } from "@chakra-ui/react";
+import { Input } from "@/ui/components"
 import { useFormikContext } from "formik";
 import { Field, FieldProps } from "@/components/cui/field";
 import { PasswordInput } from "@/components/cui/password-input";
