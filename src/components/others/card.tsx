@@ -1,5 +1,13 @@
-import { Card, Separator, Stack, StackProps, Text, TextProps } from "@chakra-ui/react";
 import React, { PropsWithChildren } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Stack, StackProps } from "@chakra-ui/react";
 
 interface InfoCardProps {}
 
@@ -12,15 +20,15 @@ export const CardBox = (props: UpdateCardProps) => {
 
   return (
     <>
-      <Card.Root variant={"outline"}>
-        <Card.Body>{children}</Card.Body>
+      <Card>
+        <CardContent>{children}</CardContent>
         {actions ? (
           <>
-            <Separator variant={"dashed"} paddingBottom={"6"} />
-            <Card.Footer justifyContent={"flex-end"}>{actions}</Card.Footer>{" "}
+            {/* <Separator variant={"dashed"} paddingBottom={"6"} /> */}
+            <CardFooter className={"flex-end"}>{actions}</CardFooter>{" "}
           </>
         ) : null}
-      </Card.Root>
+      </Card>
     </>
   );
 };
@@ -33,10 +41,10 @@ export const CardBoxItem = (props: StackProps) => {
   return <Stack maxW={{ base: "full", md: "1/2" }} width={"full"} {...props} />;
 };
 
-export const CardBoxTitle = (props: Card.TitleProps) => {
-  return <Card.Title {...props} />;
+export const CardBoxTitle = (props: any) => {
+  return <CardTitle {...props} />;
 };
 
-export const CardBoxDesc = (props: TextProps) => {
-  return <Text textStyle={"sm"} color={"fg.muted"} {...props} />;
+export const CardBoxDesc = (props: any) => {
+  return <CardDescription {...props} />;
 };
