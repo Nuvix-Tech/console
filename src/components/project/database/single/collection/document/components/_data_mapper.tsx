@@ -1,62 +1,70 @@
 import { Models } from "@nuvix/console";
 import { UpdateField } from "./_data_field";
-import { InputField } from ".";
+import { DynamicField, FIELD_TYPES } from ".";
+import * as y from "yup";
 
-type Attributes = Models.AttributeString | Models.AttributeInteger | Models.AttributeBoolean;
+type AttributeTypes = Models.AttributeString | Models.AttributeInteger | Models.AttributeBoolean;
+
 interface DataMapperProps<T = Models.Document> {
   document: T;
-  attributes: Attributes[];
+  attributes: AttributeTypes[];
 }
 
 export const DataMapper = <T,>({ attributes, document }: DataMapperProps<T>) => {
-  return attributes.map((att, i) => {
-    switch (att.type) {
+  return attributes.map((attribute, index) => {
+    const commonProps = {
+      name: attribute.key,
+      nullable: !attribute.required,
+      isArray: attribute.array,
+      type: "string" as (typeof FIELD_TYPES)[number],
+      options: !attribute.required ? [{ value: "null", label: "NULL" }] : [],
+    };
+
+    switch (attribute.type) {
       case "string":
-        let _attribute = att as Models.AttributeString;
+        if ("format" in attribute) {
+          switch (attribute.format) {
+            case "email":
+              commonProps.type = "email";
+              break;
+            case "url":
+              commonProps.type = "url";
+              break;
+            case "enum":
+              commonProps.type = "enum";
+              commonProps.options.push(
+                ...(attribute as Models.AttributeEnum).elements.map((v) => ({
+                  value: v,
+                  label: v,
+                })),
+              );
+              break;
+          }
+        }
         return (
-          <UpdateField name={att.key} value={document[att.key as keyof T]} key={i}>
-            <InputField
-              name={att.key}
-              label={att.key}
-              required={att.required}
-              nullable={!att.required}
-              isArray={att.array}
-              size={(att as any)?.size}
-            />
+          <UpdateField name={attribute.key} value={document[attribute.key as keyof T]} key={index}>
+            <DynamicField {...commonProps} size={(attribute as Models.AttributeString)?.size} />
           </UpdateField>
         );
       case "integer":
-        let attribute = att as Models.AttributeInteger;
         return (
-          <UpdateField name={attribute.key} value={document[attribute.key as keyof T]} key={i}>
-            <InputField
-              name={attribute.key}
-              label={attribute.key}
-              required={attribute.required}
-              nullable={!attribute.required}
-              isArray={attribute.array}
-              min={attribute.min}
-              max={attribute.max}
+          <UpdateField name={attribute.key} value={document[attribute.key as keyof T]} key={index}>
+            <DynamicField
+              {...commonProps}
+              min={(attribute as Models.AttributeInteger).min}
+              max={(attribute as Models.AttributeInteger).max}
               type="integer"
             />
           </UpdateField>
         );
       case "boolean":
-        let boolAttribute = att as Models.AttributeBoolean;
+        commonProps.options.push(
+          { value: "true", label: "True" },
+          { value: "false", label: "False" },
+        );
         return (
-          <UpdateField
-            name={boolAttribute.key}
-            value={document[boolAttribute.key as keyof T]}
-            key={i}
-          >
-            <InputField
-              name={boolAttribute.key}
-              label={boolAttribute.key}
-              required={boolAttribute.required}
-              nullable={!boolAttribute.required}
-              isArray={boolAttribute.array}
-              type="boolean"
-            />
+          <UpdateField name={attribute.key} value={document[attribute.key as keyof T]} key={index}>
+            <DynamicField {...commonProps} type="boolean" />
           </UpdateField>
         );
       default:

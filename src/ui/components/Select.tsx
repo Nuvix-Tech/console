@@ -22,6 +22,7 @@ interface SelectProps
   searchable?: boolean;
   className?: string;
   style?: React.CSSProperties;
+  nullable?: boolean;
 }
 
 const Select = forwardRef<HTMLDivElement, SelectProps>(
@@ -38,6 +39,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
       floatingPlacement,
       className,
       style,
+      nullable = false,
       ...rest
     },
     ref,
@@ -169,7 +171,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
               textOverflow: "ellipsis",
               ...style,
             }}
-            value={value}
+            value={nullable && value === null ? "null" : value}
             onFocus={handleFocus}
             onKeyDown={handleKeyDown}
             readOnly
@@ -231,7 +233,10 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
                       option.onClick?.(option.value);
                       handleSelect(option.value);
                     }}
-                    selected={option.value === value}
+                    selected={
+                      option.value === value ||
+                      (nullable && value == null && option.value === "null")
+                    }
                     highlighted={index === highlightedIndex}
                     tabIndex={-1}
                   />

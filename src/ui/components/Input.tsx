@@ -15,8 +15,8 @@ import useDebounce from "../hooks/useDebounce";
 import styles from "./Input.module.scss";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  id: string;
-  label: string;
+  id?: string;
+  label?: string;
   height?: "s" | "m";
   error?: boolean;
   errorMessage?: ReactNode;
