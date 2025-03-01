@@ -36,8 +36,9 @@ export const DynamicField = (props: Props) => {
 
   const handleChange = (index: number, value: any) => {
     if (isArray) {
-      const newArray = Array.isArray(values[name]) ? [...values[name]] : [];
-      newArray[index] = value;
+      let newArray = values[name]
+        ? values[name].map((item: any, i: number) => (i === index ? value : item))
+        : [];
       setFieldValue(name, newArray);
     } else {
       setFieldValue(name, value);
@@ -57,12 +58,16 @@ export const DynamicField = (props: Props) => {
     }
   };
 
+  const commonProps: any = {
+    max: props.size,
+  };
+
   const getFieldComponent = () => {
     switch (type) {
       case "integer":
         return NumberField;
       case "boolean":
-        return SelectField;
+        return SelectBooleanField;
       case "enum":
         return SelectField;
       case "relationship":
@@ -75,9 +80,6 @@ export const DynamicField = (props: Props) => {
   };
 
   const FieldComponent = getFieldComponent();
-  const commonProps = {
-    max: props.size,
-  };
   return (
     <Field
       errorText={errors[name] && touched[name] ? (errors[name] as string) : undefined}
@@ -86,18 +88,25 @@ export const DynamicField = (props: Props) => {
       required={!nullable}
     >
       {isArray ? (
-        (values[name] || [""]).map((item: any, index: number) => (
-          <HStack key={index} width="full">
-            <FieldComponent
-              {...commonProps}
-              value={item}
-              onChange={(e: any) => handleChange(index, e.target.value)}
-              options={options}
-              nullable={nullable}
-            />
-            <CloseButton onClick={() => handleRemoveField(index)} />
-          </HStack>
-        ))
+        (() => {
+          const items = values[name] || [""];
+          const elements = [];
+          for (let index = 0; index < items.length; index++) {
+            elements.push(
+              <HStack key={index} width="full">
+                <FieldComponent
+                  {...commonProps}
+                  value={items[index]}
+                  onChange={(e: any) => handleChange(index, e.target.value)}
+                  options={options}
+                  nullable={nullable}
+                />
+                <CloseButton onClick={() => handleRemoveField(index)} />
+              </HStack>,
+            );
+          }
+          return elements;
+        })()
       ) : (
         <FieldComponent
           {...commonProps}
@@ -127,19 +136,40 @@ const NumberField = ({ value, onChange, ...props }: any) => {
   );
 };
 
-const SelectField = ({ value, onChange, options = [], parseBool, nullable, ...props }: any) => {
+const SelectField = ({ value, onChange, options = [], nullable, ...props }: any) => {
   const _onChange = (v: string) => {
     if ((v === null || v === "null") && nullable) {
       onChange({ target: { value: null } });
     } else {
-      if (parseBool) {
-        onChange({ target: { value: v === "true" } });
-      } else {
-        onChange({ target: { value: v } });
-      }
+      onChange({ target: { value: v } });
     }
   };
-  return <Select value={value} options={options} onSelect={_onChange} {...props} />;
+  return (
+    <Select
+      value={value == null ? "null" : value}
+      options={options}
+      onSelect={_onChange}
+      {...props}
+    />
+  );
+};
+
+const SelectBooleanField = ({ value, onChange, options = [], nullable, ...props }: any) => {
+  const _onChange = (v: string) => {
+    if ((v === null || v === "null") && nullable) {
+      onChange({ target: { value: null } });
+    } else {
+      onChange({ target: { value: v === "true" } });
+    }
+  };
+  return (
+    <Select
+      value={value == null ? "null" : value == true ? "true" : "false"}
+      options={options}
+      onSelect={_onChange}
+      {...props}
+    />
+  );
 };
 
 const RelationshipField = ({ value, onChange, ...props }: any) => {
