@@ -1,16 +1,15 @@
 "use client";
 import type React from "react";
-import { Button, DialogDescription } from "@chakra-ui/react";
 import {
-  DialogActionTrigger,
-  DialogBody,
-  DialogCloseTrigger,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogRoot,
-  DialogTitle,
-} from "@/components/cui/dialog";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { ConfirmDialogProps } from ".";
 
 interface ConfirmProps extends Pick<ConfirmDialogProps, "button"> {
@@ -23,7 +22,7 @@ interface ConfirmProps extends Pick<ConfirmDialogProps, "button"> {
   confirmText?: string;
   confirmVariant?: "danger" | "primary" | "secondary" | "tertiary";
   handleConfirm: (value: boolean) => void;
-  onClose: () => void;
+  onClose: (o: boolean) => void;
 }
 
 const ConfirmDialog: React.FC<ConfirmProps> = ({
@@ -38,37 +37,35 @@ const ConfirmDialog: React.FC<ConfirmProps> = ({
   button,
 }) => {
   return (
-    <DialogRoot role="alertdialog" open={isOpen} onOpenChange={onClose}>
-      <DialogContent>
-        <DialogHeader>
-          {title && <DialogTitle>{title}</DialogTitle>}
-          {description && <DialogDescription>{description}</DialogDescription>}
-        </DialogHeader>
-        {node ? <DialogBody>{node}</DialogBody> : null}
-        <DialogFooter>
-          <DialogActionTrigger asChild>
-            <Button
-              variant="outline"
-              onClick={() => {
-                handleConfirm(false);
-              }}
-              {...button?.cancle}
-            >
-              {cancleText ?? "Cancle"}
-            </Button>
-          </DialogActionTrigger>
-          <Button
+    <AlertDialog open={isOpen} onOpenChange={onClose}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          {title && <AlertDialogTitle>{title}</AlertDialogTitle>}
+          {description && <AlertDialogDescription>{description}</AlertDialogDescription>}
+        </AlertDialogHeader>
+        {node}
+        <AlertDialogFooter>
+          <AlertDialogCancel
+            onClick={() => {
+              handleConfirm(false);
+            }}
+            {...button?.cancle}
+          >
+            {" "}
+            {cancleText ?? "Cancle"}
+          </AlertDialogCancel>
+          <AlertDialogAction
             onClick={() => {
               handleConfirm(true);
             }}
             {...button?.ok}
           >
+            {" "}
             {confirmText ?? "Continue"}
-          </Button>
-        </DialogFooter>
-        <DialogCloseTrigger />
-      </DialogContent>
-    </DialogRoot>
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
 
