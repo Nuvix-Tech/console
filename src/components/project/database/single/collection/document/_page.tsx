@@ -34,7 +34,7 @@ const DocumentPage: React.FC<Props> = ({ id, databaseId, collectionId, documentI
 
   return (
     <Column gap="20" padding="20" fillWidth>
-      <MetaData />
+      {/* <MetaData /> */}
 
       <UpdatePermissions />
       <DeleteDocument />

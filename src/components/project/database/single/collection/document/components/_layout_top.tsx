@@ -1,5 +1,5 @@
 import React from "react";
-import { Stack } from "@chakra-ui/react";
+import { Stack, Text } from "@chakra-ui/react";
 import { Tabs } from "@chakra-ui/react";
 import { IDChip, TopCard } from "@/components/others";
 import { useRouter } from "@bprogress/next";
@@ -7,6 +7,7 @@ import { Row } from "@/ui/components";
 import { usePathname } from "next/navigation";
 import { getCollectionPageState, getDbPageState, getDocumentPageState } from "@/state/page";
 import { getProjectState } from "@/state/project-state";
+import { formatDate } from "@/lib/utils";
 
 interface LayoutTopProps {
   title: string;
@@ -28,23 +29,29 @@ export const LayoutTop: React.FC<LayoutTopProps> = ({ title, id }) => {
       <Row margin="20">
         <TopCard minHeight={4}>
           <Stack direction="column" width="full" zIndex="1">
-            {title}
             {id && <IDChip id={id} />}
-          </Stack>
-          <Row fill vertical="end" horizontal="end">
             <Tabs.Root
-              variant="enclosed"
-              defaultValue="overview"
-              value={path.split("/")[-1] ?? "overview"}
+              variant="plain"
+              defaultValue=""
+              value={path.split("/")[path.split("/").length - 1] || ""}
               onValueChange={(v) => push(`${url}/${v.value}`)}
             >
               <Tabs.List>
-                <Tabs.Trigger value="overview">Overview</Tabs.Trigger>
+                <Tabs.Trigger value="">Overview</Tabs.Trigger>
                 <Tabs.Trigger value="data">Data</Tabs.Trigger>
                 <Tabs.Trigger value="activity">Activity</Tabs.Trigger>
               </Tabs.List>
             </Tabs.Root>
-          </Row>
+          </Stack>
+
+          <Stack direction="column" width="full" zIndex="1" align="end" justify="end">
+            <Text color="fg.muted" textStyle="sm">
+              Created: {formatDate(document?.$createdAt)}
+            </Text>
+            <Text color="fg.muted" textStyle="sm">
+              Last updated: {formatDate(document?.$updatedAt)}
+            </Text>
+          </Stack>
         </TopCard>
       </Row>
     </>

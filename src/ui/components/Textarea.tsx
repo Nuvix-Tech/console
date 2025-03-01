@@ -15,8 +15,8 @@ import styles from "./Input.module.scss";
 import { Checkbox } from "@/components/cui/checkbox";
 
 interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
-  id: string;
-  label: string;
+  id?: string;
+  label?: string;
   lines?: number | "auto";
   error?: boolean;
   errorMessage?: ReactNode;
@@ -177,6 +177,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             styles.base,
             lines !== "auto" && styles.textareaBase,
             radius === "none" ? "radius-none" : radius ? `radius-l-${radius}` : "radius-l",
+            max < 50 && "after:!content-none",
           )}
         >
           {hasPrefix && (
@@ -187,7 +188,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           <Flex fillWidth direction={max < 50 ? "row" : "column"} position="relative">
             <textarea
               {...props}
-              value={_null ? "" : props.value}
+              value={_null ? "" : props.value === null ? "" : props.value}
               ref={(node) => {
                 if (typeof ref === "function") {
                   ref(node);
@@ -197,7 +198,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
                 textareaRef.current = node;
               }}
               id={id}
-              rows={typeof lines === "number" ? lines : 1}
+              rows={max > 50 ? (typeof lines === "number" ? lines : 1) : 1}
               placeholder={labelAsPlaceholder ? label : props.placeholder}
               onFocus={handleFocus}
               onBlur={handleBlur}
@@ -208,6 +209,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
                 ...style,
                 resize: lines === "auto" ? "none" : resize,
                 height: height ? `${height}rem` : "auto",
+                minHeight: "46px",
               }}
               onChange={handleChange}
             />
@@ -239,7 +241,6 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
               {nullable && (
                 <Checkbox
                   size="xs"
-                  variant="subtle"
                   checked={_null}
                   onCheckedChange={(e) => {
                     setNull(!!e.checked);
@@ -260,7 +261,9 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
                       } as any);
                   }}
                 >
-                  NULL
+                  <Text variant="body-default-xs" onBackground="neutral-weak" wrap="nowrap">
+                    NULL
+                  </Text>
                 </Checkbox>
               )}
             </Flex>

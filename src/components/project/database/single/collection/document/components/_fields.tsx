@@ -1,50 +1,85 @@
-import React, { Fragment, PropsWithChildren, useEffect, useRef, useState } from "react";
+import React, { useMemo, useRef } from "react";
 import { VStack, HStack, Input, Button, Box, Text, Stack } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 import { Field, FieldProps } from "@/components/cui/field";
-import {
-  Chip,
-  Switch,
-  SwitchProps,
-  TagInput,
-  TagInputProps,
-  Textarea,
-  TextareaProps,
-} from "@/ui/components";
+import { NumberInput, Select, Textarea, TextareaProps } from "@/ui/components";
 import { CloseButton } from "@/components/cui/close-button";
 import { LuPlus } from "react-icons/lu";
-import { RadioGroup } from "@/components/cui/radio";
-import { NumberInputField, NumberInputProps, NumberInputRoot } from "@/components/cui/number-input";
 
 interface Props {
   name: string;
   size?: number; // Max allowed size (character limit)
   nullable?: boolean;
+  isArray?: boolean;
+  type?: "string" | "integer" | "boolean" | "enum";
+  elements?: any[];
+  min?: number;
+  max?: number;
 }
 
 type InputFieldProps = FieldProps & Omit<TextareaProps, "name" | "id" | "label"> & Props;
 
 export const InputField = (props: InputFieldProps) => {
-  const { label, errorText, helperText, optionalText, size = 0, ...rest } = props;
-  const { values, errors, touched, handleBlur, setFieldValue } =
-    useFormikContext<Record<string, string | number>>();
+  const {
+    label,
+    helperText,
+    optionalText,
+    isArray,
+    type = "string",
+    elements = [],
+    ...rest
+  } = props;
+  const { values, errors, touched, setFieldValue } =
+    useFormikContext<Record<string, string | string[]>>();
 
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  const [rows, setRows] = useState(1);
-  const minRows = 1;
-  const maxRows = Math.max(5, Math.ceil(size / 100)); // Adjust max rows based on size
+  const handleChange = (index: number, value: string) => {
+    if (isArray) {
+      const newArray = Array.isArray(values[rest.name]) ? [...(values[rest.name] as string[])] : [];
+      newArray[index] = value;
+      setFieldValue(rest.name, newArray);
+    } else {
+      setFieldValue(rest.name, value);
+    }
+  };
 
-  useEffect(() => {
-    if (!textareaRef.current || size < 80) return;
-    const textarea = textareaRef.current;
-    const lineHeight = parseInt(window.getComputedStyle(textarea).lineHeight, 10) || 20;
-    const currentLines = (values[rest.name]?.toString() || "").split("\n").length;
-    const scrollHeight = textarea.scrollHeight;
-    const computedRows = Math.ceil(scrollHeight / lineHeight);
-    const finalRows = Math.max(minRows, Math.max(computedRows, currentLines));
-    const safeRows = Math.min(maxRows, finalRows);
-    setRows(safeRows);
-  }, [values[rest.name]]);
+  const handleAddField = () => {
+    if (isArray) {
+      const newArray = Array.isArray(values[rest.name])
+        ? [...(values[rest.name] as string[]), ""]
+        : [""];
+      setFieldValue(rest.name, newArray);
+    }
+  };
+
+  const handleRemoveField = (index: number) => {
+    if (isArray) {
+      const newArray = Array.isArray(values[rest.name])
+        ? (values[rest.name] as string[]).filter((_, i) => i !== index)
+        : [];
+      setFieldValue(rest.name, newArray);
+    }
+  };
+
+  let TheComp;
+  switch (type) {
+    case "string":
+      TheComp = TheTextarea;
+      break;
+    case "integer":
+      TheComp = TheNumberField;
+      break;
+    case "boolean":
+      props.nullable && elements.push({ value: "null", label: "Null" });
+      elements.push({ value: "true", label: "True" }, { value: "false", label: "False" });
+      TheComp = TheSelectField;
+      break;
+    case "enum":
+      TheComp = TheSelectField;
+      break;
+    default:
+      TheComp = TheTextarea;
+      break;
+  }
 
   return (
     <>
@@ -57,267 +92,102 @@ export const InputField = (props: InputFieldProps) => {
         {...{ label, optionalText }}
         {...rest}
       >
-        <Textarea
-          ref={textareaRef}
-          label=""
-          width="full"
-          placeholder={typeof label === "string" ? label : undefined}
-          value={values[rest.name]}
-          onChange={(e) => setFieldValue(rest.name, e.target.value)}
-          onBlur={handleBlur as any}
-          lines={rows ?? "auto"}
-          maxLength={size}
-          max={size}
-          {...(rest as any)}
-        />
-      </Field>
-    </>
-  );
-};
-
-export const InputNumberField = (props: NumberInputProps & Props & FieldProps) => {
-  const { label, errorText, helperText, optionalText, ...rest } = props;
-  const { values, errors, touched, handleBlur, setFieldValue } =
-    useFormikContext<Record<string, string>>();
-
-  return (
-    <>
-      <Field
-        width={"full"}
-        errorText={errors[rest.name] && touched[rest.name] ? errors[rest.name] : undefined}
-        invalid={!!(errors[rest.name] && touched[rest.name])}
-        helperText={helperText}
-        {...{ label, optionalText }}
-      >
-        <NumberInputRoot
-          width={"full"}
-          value={values[rest.name]}
-          onValueChange={(e) => setFieldValue(rest.name, Number(e.value))}
-          onBlur={handleBlur}
-          {...rest}
-        >
-          <NumberInputField placeholder={typeof label === "string" ? label : undefined} />
-        </NumberInputRoot>
-      </Field>
-    </>
-  );
-};
-
-export const InputSwitchField = (
-  props: Omit<SwitchProps, "onToggle" | "isChecked"> & Props & Partial<FieldProps>,
-) => {
-  const { errorText, helperText, optionalText, ...rest } = props;
-  const { values, errors, touched, handleBlur, setFieldValue } =
-    useFormikContext<Record<string, string>>();
-
-  return (
-    <>
-      <Field
-        width={"full"}
-        errorText={errors[rest.name] && touched[rest.name] ? errors[rest.name] : undefined}
-        invalid={!!(errors[rest.name] && touched[rest.name])}
-        helperText={helperText}
-        {...{ optionalText }}
-      >
-        <Switch
-          isChecked={!!values[rest.name]}
-          onToggle={(() => setFieldValue(rest.name, !!!values[rest.name])) as any}
-          onBlur={handleBlur}
-          {...(rest as any)}
-        />
-      </Field>
-    </>
-  );
-};
-
-type InputTagFieldProps = FieldProps &
-  Omit<TagInputProps, "onChange" | "value" | "id"> &
-  Props & {
-    suggestion?: string[];
-    removeOnSelect?: boolean;
-  };
-
-export const InputTagField = (props: InputTagFieldProps) => {
-  const {
-    label,
-    errorText,
-    helperText,
-    optionalText,
-    suggestion = [],
-    removeOnSelect,
-    ...rest
-  } = props;
-  const { values, errors, touched, handleBlur, setFieldValue } =
-    useFormikContext<Record<string, string[]>>();
-
-  return (
-    <>
-      <Field
-        width={"full"}
-        errorText={errors[rest.name] && touched[rest.name] ? errors[rest.name] : undefined}
-        invalid={!!(errors[rest.name] && touched[rest.name])}
-        helperText={helperText}
-        {...{ label, optionalText }}
-      >
-        <VStack width="full" gap="3">
-          <TagInput
-            id={rest.name}
+        {isArray ? (
+          (Array.isArray(values[rest.name]) ? (values[rest.name] as string[]) : [""]).map(
+            (item, index) => (
+              <HStack key={index} width="full">
+                <TheComp
+                  value={item}
+                  onChange={(e) => handleChange(index, e.target.value)}
+                  elements={elements}
+                  {...rest}
+                />
+                <CloseButton onClick={() => handleRemoveField(index)} />
+              </HStack>
+            ),
+          )
+        ) : (
+          <TheComp
             value={values[rest.name]}
-            label={typeof label === "string" ? label : rest.name}
-            error={!!(errors[rest.name] && touched[rest.name])}
-            onBlur={handleBlur}
+            onChange={(e) => handleChange(0, e.target.value)}
+            elements={elements}
             {...rest}
-            onChange={(v) => setFieldValue(rest.name, v)}
           />
-          {suggestion.length ? (
-            <>
-              <Stack gap={"4"} flexWrap="wrap" direction={"row"}>
-                {suggestion
-                  .filter((v) => !removeOnSelect || !values[rest.name].includes(v))
-                  .map((s, i) => (
-                    <Chip
-                      label={s}
-                      key={i}
-                      onClick={() => {
-                        const newValue = removeOnSelect
-                          ? [...values[rest.name], s]
-                          : values[rest.name].includes(s)
-                            ? values[rest.name].filter((val) => val !== s)
-                            : [...values[rest.name], s];
-                        setFieldValue(rest.name, newValue);
-                      }}
-                      prefixIcon="plus"
-                      selected={false}
-                    />
-                  ))}
-              </Stack>
-            </>
-          ) : null}
-        </VStack>
+        )}
       </Field>
+
+      {isArray && (
+        <Button
+          type="button"
+          size="sm"
+          width="auto"
+          variant="plain"
+          justifyContent="flex-start"
+          onClick={handleAddField}
+        >
+          <LuPlus size={20} />
+          Add Item
+        </Button>
+      )}
     </>
   );
 };
 
-interface InputObjectFieldProps extends FieldProps {
-  name: string;
-  label?: string;
-  helperText?: string;
-  optionalText?: string;
+interface TheFieldProps {
+  value: string | any;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement> | any) => void;
+  size?: number;
 }
 
-type Values = { key: string; value: string }[];
-
-export const InputObjectField: React.FC<InputObjectFieldProps> = ({
-  label,
-  errorText,
-  helperText,
-  optionalText,
-  name,
-  ...rest
-}) => {
-  const [_values, setValues] = useState<Values>([]);
-  const { values, errors, touched, setFieldValue, initialValues } =
-    useFormikContext<Record<string, { [key: string]: string }>>();
-
-  useEffect(() => {
-    const values: Record<string, string> = {};
-    _values.map(({ key, value }) => key && (values[key] = value));
-    setFieldValue(name, values);
-  }, [_values]);
-
-  useEffect(() => {
-    let values: Values = [];
-    Object.entries(initialValues[name] ?? {}).map(([key, value], i) =>
-      values.push({ key: key, value: value }),
-    );
-    setValues(values.length ? values : [{ key: "", value: "" }]);
-  }, [initialValues]);
-
-  const handleFieldChange = (key: "key" | "value", value: string, index: number) => {
-    const newValues: Values = [..._values];
-    newValues[index][key] = value;
-    setValues(newValues);
-  };
-
-  const handleAddField = () => {
-    setValues([..._values, { key: "", value: "" }]);
-  };
-
-  const handleDeleteField = (index: number) => {
-    const newValues: Values = [..._values];
-    newValues.splice(index, 1);
-    setValues(newValues);
-  };
+export const TheTextarea = ({ value, onChange, size = 0, ...rest }: TheFieldProps) => {
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const rows = useMemo(() => {
+    const minRows = 1;
+    const maxRows = Math.max(5, Math.ceil(size / 10)); // Adjust max rows
+    const estimatedRows = Math.ceil(size / 110); // Rough estimate of needed rows
+    return Math.min(maxRows, Math.max(minRows, estimatedRows));
+  }, [size]);
 
   return (
-    <Field
-      width="full"
-      errorText={
-        touched[name] && errors[name] ? (
-          <Box>
-            {Object.entries(errors[name] ?? {}).map(([key, message]) => (
-              <Text key={key} color="red.500" fontSize="sm">
-                {message as string}
-              </Text>
-            ))}
-          </Box>
-        ) : undefined
-      }
-      invalid={!!(errors[name] && touched[name])}
-      helperText={helperText}
-      {...{ optionalText }}
-    >
-      <VStack width="full" gap={2} alignItems={"flex-start"}>
-        <HStack width="full" gap={2} paddingEnd={"8"}>
-          <Field label="Key" required />
-          <Field label="Value" required />
-        </HStack>
-        <VStack width="full" gap={2}>
-          {_values.map(({ key, value }, i) => (
-            <Fragment key={i}>
-              <HStack width="full" gap={4}>
-                <Input
-                  placeholder="Enter Key"
-                  size={"xs"}
-                  value={key}
-                  onChange={(e) => handleFieldChange("key", e.target.value, i)}
-                />
-
-                <Input
-                  placeholder="Enter Value"
-                  size={"xs"}
-                  value={value}
-                  onChange={(e) => handleFieldChange("value", e.target.value, i)}
-                />
-
-                <CloseButton
-                  size={"xs"}
-                  onClick={() => handleDeleteField(i)}
-                  disabled={_values.length === 1}
-                />
-              </HStack>
-            </Fragment>
-          ))}
-        </VStack>
-        <Button variant={"ghost"} colorPalette={"fg"} size="xs" onClick={handleAddField}>
-          <LuPlus />
-          Add Field
-        </Button>
-      </VStack>
-    </Field>
+    <Textarea
+      ref={textareaRef}
+      label=""
+      placeholder="Enter text..."
+      value={value}
+      onChange={onChange}
+      lines={rows ?? "auto"}
+      maxLength={size}
+      max={size}
+      {...rest}
+    />
   );
 };
 
-type RadioFieldProps = Props & PropsWithChildren;
-
-export const RadioField = (props: RadioFieldProps) => {
-  const { children, ...rest } = props;
-  const { values, setFieldValue } = useFormikContext<Record<string, string>>();
-
+export const TheNumberField = ({ onChange, ...props }: TheFieldProps) => {
   return (
-    <RadioGroup value={values[rest.name]} onValueChange={(e) => setFieldValue(rest.name, e.value)}>
-      {children}
-    </RadioGroup>
+    <>
+      <NumberInput
+        id=""
+        label=""
+        onChange={(v) => onChange({ target: { value: v } })}
+        {...(props as any)}
+      />
+    </>
+  );
+};
+
+const TheSelectField = ({
+  onChange,
+  elements = [],
+  ...props
+}: TheFieldProps & { elements?: { value: string; label: string; description?: string }[] }) => {
+  return (
+    <Select
+      id=""
+      label=""
+      {...props}
+      options={elements}
+      onSelect={(v) => onChange({ target: { value: v } })}
+    />
   );
 };

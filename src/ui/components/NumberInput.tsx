@@ -3,10 +3,11 @@
 import classNames from "classnames";
 import type React from "react";
 import { forwardRef, useState } from "react";
-import { Input } from ".";
+import { Input, Text } from ".";
 import { Flex } from ".";
 import { IconButton } from ".";
 import styles from "./NumberInput.module.scss";
+import { Checkbox } from "@/components/cui/checkbox";
 
 interface NumberInputProps
   extends Omit<React.ComponentProps<typeof Input>, "type" | "value" | "onChange"> {
@@ -16,21 +17,32 @@ interface NumberInputProps
   max?: number;
   step?: number;
   padStart?: number;
+  nullable?: boolean;
+  isNull?: boolean;
 }
 
 const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
-  ({ value, onChange, min, max, step = 1, padStart, ...props }, ref) => {
+  (
+    { value, onChange, min, max, step = 1, nullable = false, isNull = false, padStart, ...props },
+    ref,
+  ) => {
     const [localValue, setLocalValue] = useState<string>(
       padStart && value !== undefined
         ? value.toString().padStart(padStart, "0")
         : (value?.toString() ?? ""),
     );
+    const [prev, setPrev] = useState<any>();
+    const [_null, setNull] = useState(isNull);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (_null) {
+        setNull(false);
+        setPrev(undefined);
+      }
       const newValue = e.target.value;
       setLocalValue(newValue);
 
-      const numValue = Number.parseFloat(newValue);
+      const numValue = Number.parseFloat(newValue || "0");
       if (!isNaN(numValue) && onChange) {
         onChange(numValue);
       }
@@ -45,6 +57,10 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
     };
 
     const increment = () => {
+      if (_null) {
+        setNull(false);
+        setPrev(undefined);
+      }
       const currentValue = Number.parseFloat(localValue) || 0;
       const newValue = currentValue + step;
       if (max === undefined || newValue <= max) {
@@ -53,6 +69,10 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
     };
 
     const decrement = () => {
+      if (_null) {
+        setNull(false);
+        setPrev(undefined);
+      }
       const currentValue = Number.parseFloat(localValue) || 0;
       const newValue = currentValue - step;
       if (min === undefined || newValue >= min) {
@@ -65,13 +85,31 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
         {...props}
         ref={ref}
         type="number"
-        value={localValue}
+        value={_null ? "" : localValue}
         onChange={handleChange}
         min={min}
         max={max}
         step={step}
         hasSuffix={
           <>
+            {nullable && (
+              <Checkbox
+                size="xs"
+                marginRight="2"
+                checked={_null}
+                onCheckedChange={(e) => {
+                  setNull(!!e.checked);
+                  if (e.checked) {
+                    setPrev(value);
+                    onChange?.(null as any);
+                  } else onChange?.(prev as any);
+                }}
+              >
+                <Text variant="body-default-xs" onBackground="neutral-weak" wrap="nowrap">
+                  NULL
+                </Text>
+              </Checkbox>
+            )}
             <Flex minWidth={1.25}></Flex>
             <Flex
               position="absolute"
@@ -89,6 +127,7 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
                 className={classNames(styles.stepper, "transition-micro-medium")}
               >
                 <IconButton
+                  type="button"
                   icon="chevronUp"
                   variant="ghost"
                   size="s"
@@ -102,6 +141,7 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
                 className={classNames(styles.stepper, "transition-micro-medium")}
               >
                 <IconButton
+                  type="button"
                   icon="chevronDown"
                   variant="ghost"
                   size="s"
