@@ -59,7 +59,7 @@ export const UpdatePrefs = () => {
               </CardBoxDesc>
             </CardBoxItem>
             <CardBoxItem>
-              <InputObjectField label={"Preferences"} name="prefs" />
+              <InputObjectField name="prefs" />
             </CardBoxItem>
           </CardBoxBody>
         </CardBox>

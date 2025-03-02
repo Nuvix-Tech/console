@@ -206,13 +206,13 @@ export const InputObjectField: React.FC<InputObjectFieldProps> = ({
       <FormControl>
         <div className="w-full flex flex-col gap-2 items-start">
           <div className="w-full flex gap-2 pr-8">
-            <FormLabel>Key</FormLabel>
-            <FormLabel>Value</FormLabel>
+            <FormLabel className="w-full">Key</FormLabel>
+            <FormLabel className="w-full">Value</FormLabel>
           </div>
           <div className="w-full flex flex-col gap-2">
             {_values.map(({ key, value }, i) => (
               <Fragment key={i}>
-                <div className="w-full flex gap-4">
+                <div className="w-full flex gap-4 items-center">
                   <Input
                     placeholder="Enter Key"
                     height="s"
@@ -237,8 +237,8 @@ export const InputObjectField: React.FC<InputObjectFieldProps> = ({
               </Fragment>
             ))}
           </div>
-          <Button type="button" variant="ghost" className="text-xs" onClick={handleAddField}>
-            <LuPlus />
+          <Button type="button" variant="ghost" className="text-sm" onClick={handleAddField}>
+            <LuPlus size={18} />
             Add Field
           </Button>
         </div>

@@ -44,7 +44,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     {
       id,
       label,
-      height = "s",
+      height = "m",
       error = false,
       errorMessage,
       description,

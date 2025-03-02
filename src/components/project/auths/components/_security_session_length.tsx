@@ -12,7 +12,7 @@ import { NumberInputField, NumberInputRoot } from "@/components/cui/number-input
 import { useTimeUnitPair } from "@/lib/helpers/unit";
 import { sdkForConsole } from "@/lib/sdk";
 import { getProjectState } from "@/state/project-state";
-import { useToast } from "@/ui/components";
+import { NumberInput, Select, useToast } from "@/ui/components";
 import { Group } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 import React from "react";
@@ -87,26 +87,13 @@ export const SessionInput = () => {
 
   return (
     <Group gap={6}>
-      <Field label="Length">
-        <NumberInputRoot
-          min={0}
-          value={value.toString()}
-          onValueChange={(e) => setValue(Number(e.value))}
-        >
-          <NumberInputField />
-        </NumberInputRoot>
-      </Field>
-      <Field label="Time period">
-        <NativeSelectRoot>
-          <NativeSelectField value={unit} onChange={(e) => setUnit(e.currentTarget.value)}>
-            {units.map((u, _) => (
-              <option key={_} value={u.name}>
-                {u.name}
-              </option>
-            ))}
-          </NativeSelectField>
-        </NativeSelectRoot>
-      </Field>
+      <NumberInput label="Length" min={0} value={value} onChange={(v) => setValue(v)} />
+      <Select
+        label="Time Period"
+        value={unit}
+        onSelect={(v) => setUnit(v)}
+        options={units.map((u) => ({ label: u.name, value: u.name }))}
+      />
     </Group>
   );
 };

@@ -63,7 +63,7 @@ export const UpdateLabels = () => {
               <InputTagField
                 label={"labels"}
                 name="labels"
-                helperText="Only alphanumeric characters are allowed."
+                description="Only alphanumeric characters are allowed."
                 suggestion={["admin", "vip", "pro", "vendor"]}
               />
             </CardBoxItem>
