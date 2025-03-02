@@ -30,8 +30,7 @@ interface Props extends Omit<InputProps, "onChange" | "value" | "id"> {
 
 const Wrapper = ({ Field, ...props }: { Field: any }) => {
   const { name, label, placeholder, description, ...rest } = props as Props;
-  const { values, handleBlur, handleChange } =
-    useFormikContext<Record<string, string | number>>();
+  const { values, handleBlur, handleChange } = useFormikContext<Record<string, string | number>>();
 
   return (
     <FormItem>
@@ -50,29 +49,33 @@ const Wrapper = ({ Field, ...props }: { Field: any }) => {
       {description && <FormDescription>{description} </FormDescription>}
       <FormMessage field={name} />
     </FormItem>
-  )
-}
+  );
+};
 
 type InputFieldProps = Props;
 
 export const InputField = (props: InputFieldProps) => {
   const InputComponent = props.type === "password" ? PasswordInput : Input;
-  const { setFieldValue, values } =
-    useFormikContext<Record<string, string | number>>();
+  const { setFieldValue, values } = useFormikContext<Record<string, string | number>>();
 
   return <Wrapper Field={InputComponent} {...props} />;
-}
+};
 
 export const InputNumberField = (props: Props & NumberInputProps) => {
-  const { setFieldValue, values } =
-    useFormikContext<Record<string, string | number>>();
-  return <Wrapper Field={NumberInput} onChange={(v: number) => setFieldValue(props.name, v)} value={values[props.name] && Number(values[props.name])} {...props} />;
+  const { setFieldValue, values } = useFormikContext<Record<string, string | number>>();
+  return (
+    <Wrapper
+      Field={NumberInput}
+      onChange={(v: number) => setFieldValue(props.name, v)}
+      value={values[props.name] && Number(values[props.name])}
+      {...props}
+    />
+  );
 };
 
 export const InputSwitchField = (props: Omit<SwitchProps, "onToggle" | "isChecked"> & Props) => {
-  const { name, label, placeholder, description, ...rest } = props
-  const { values, handleBlur, setFieldValue } =
-    useFormikContext<Record<string, boolean>>();
+  const { name, label, placeholder, description, ...rest } = props;
+  const { values, handleBlur, setFieldValue } = useFormikContext<Record<string, boolean>>();
 
   return (
     <FormItem>
@@ -95,7 +98,6 @@ type InputTagFieldProps = Omit<TagInputProps, "onChange" | "value" | "id"> &
     suggestion?: string[];
     removeOnSelect?: boolean;
   };
-
 
 export const InputTagField = (props: InputTagFieldProps) => {
   const { suggestion = [], removeOnSelect, name, label, placeholder, description, ...rest } = props;
@@ -259,6 +261,8 @@ export const RadioField = (props: RadioFieldProps) => {
       <FormControl>
         <RadioGroup
           onValueChange={handleChange}
+          defaultValue={values[rest.name]}
+          name={rest.name}
           value={values[rest.name]}
           className="flex flex-col space-y-1"
         >

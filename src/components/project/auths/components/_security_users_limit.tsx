@@ -6,11 +6,9 @@ import {
   CardBoxTitle,
 } from "@/components/others/card";
 import { Form, RadioField, SubmitButton } from "@/components/others/forms";
-import { NumberInputField, NumberInputRoot } from "@/components/cui/number-input";
-import { Radio } from "@/components/cui/radio";
 import { sdkForConsole } from "@/lib/sdk";
 import { getProjectState } from "@/state/project-state";
-import { useToast } from "@/ui/components";
+import { NumberInput, useToast } from "@/ui/components";
 import { Badge, HStack, VStack } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 import React from "react";
@@ -19,7 +17,7 @@ import { RadioGroupItem } from "@/components/ui/radio-group";
 
 const schema = y.object({
   limit: y.number().min(0).optional(),
-  selected: y.string()
+  selected: y.string(),
 });
 
 export const UsersLimit: React.FC = () => {
@@ -32,11 +30,11 @@ export const UsersLimit: React.FC = () => {
       <Form
         initialValues={{
           selected: project?.authLimit === 0 ? "1" : "2",
-          limit: project?.authLimit,
+          limit: project?.authLimit ?? 0,
         }}
         enableReinitialize
         validationSchema={schema}
-        onSubmit={async (values) => {
+        onSubmit={async (values, { resetForm }) => {
           try {
             await projects.updateAuthLimit(project?.$id!, Number(values.limit) ?? 0);
             addToast({
@@ -44,6 +42,7 @@ export const UsersLimit: React.FC = () => {
               message: "Users limit updated.",
             });
             await _update();
+            resetForm();
           } catch (e: any) {
             addToast({
               variant: "danger",
@@ -83,22 +82,27 @@ export const UsersLimit: React.FC = () => {
 };
 
 export const Radio2 = () => {
-  const { values, setFieldValue } = useFormikContext<Record<string, string>>();
+  const { values, setFieldValue } = useFormikContext<Record<string, string | number>>();
 
   return (
     <>
       <HStack gap={4}>
-        <RadioGroupItem value="2" />
+        <RadioGroupItem
+          value="2"
+          onClick={() => {
+            setFieldValue("selected", "2");
+            setFieldValue("limit", 100);
+          }}
+        />
         Limited
-        <NumberInputRoot
-          defaultValue="100"
+        <NumberInput
           min={0}
           disabled={values.selected === "1"}
-          value={values.selected === "1" ? "100" : undefined}
-          onValueChange={(e) => setFieldValue("limit", Number(e.value))}
-        >
-          <NumberInputField />
-        </NumberInputRoot>
+          value={values.selected === "1" ? 100 : (values.limit as number)}
+          onChange={(v) => setFieldValue("limit", Number(v))}
+          labelAsPlaceholder
+          height="s"
+        />
       </HStack>
     </>
   );
@@ -110,7 +114,13 @@ export const Radio1 = () => {
   return (
     <>
       <HStack gap={2}>
-        <RadioGroupItem value="1" onClick={() => { setFieldValue("limit", 0); setFieldValue("selected", '1'); }} />
+        <RadioGroupItem
+          value="1"
+          onClick={() => {
+            setFieldValue("limit", 0);
+            setFieldValue("selected", "1");
+          }}
+        />
         Unlimited
         <Badge variant={"surface"}>recommended</Badge>
       </HStack>
