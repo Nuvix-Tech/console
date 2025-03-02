@@ -34,7 +34,7 @@ export const DynamicField = (props: Props) => {
   const { name, isArray, type = "string", options = [], nullable, label } = props;
   const { values, errors, touched, setFieldValue } = useFormikContext<Record<string, any>>();
 
-  const handleChange = (index: number, value: any) => {
+  const handleChange = (index: number, value: string | number | boolean | null) => {
     if (isArray) {
       const newArray = values[name] ? [...values[name]] : [];
       newArray[index] = value;
@@ -94,7 +94,7 @@ export const DynamicField = (props: Props) => {
             onRemove={() => handleRemoveField(index)}
             {...commonProps}
             value={item}
-            onChange={(e: any) => handleChange(index, e.target.value)}
+            onChange={handleChange}
             options={options}
             nullable={nullable}
             index={index}
