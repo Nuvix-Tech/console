@@ -33,7 +33,6 @@ export const InputField = (props: InputFieldProps) => {
         {...rest}
       >
         <TheComp
-          width={"full"}
           placeholder={typeof label === "string" ? label : undefined}
           value={values[rest.name]}
           onChange={handleChange}
@@ -249,14 +248,12 @@ export const InputObjectField: React.FC<InputObjectFieldProps> = ({
               <HStack width="full" gap={4}>
                 <Input
                   placeholder="Enter Key"
-                  size={"xs"}
                   value={key}
                   onChange={(e) => handleFieldChange("key", e.target.value, i)}
                 />
 
                 <Input
                   placeholder="Enter Value"
-                  size={"xs"}
                   value={value}
                   onChange={(e) => handleFieldChange("value", e.target.value, i)}
                 />
