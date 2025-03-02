@@ -1,7 +1,6 @@
 "use client";
 import { IDChip, TopCard, UserStatus } from "@/components/others";
 import { Avatar } from "@/components/cui/avatar";
-import { SkeletonText } from "@/components/cui/skeleton";
 import { formatDate } from "@/lib/utils";
 import { getUserPageState, userPageState } from "@/state/page";
 import { getProjectState } from "@/state/project-state";
