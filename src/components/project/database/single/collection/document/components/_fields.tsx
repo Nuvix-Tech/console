@@ -97,6 +97,7 @@ export const DynamicField = (props: Props) => {
             onChange={(e: any) => handleChange(index, e.target.value)}
             options={options}
             nullable={nullable}
+            index={index}
           />
         ))
       ) : (
@@ -118,10 +119,10 @@ export const DynamicField = (props: Props) => {
   );
 };
 
-const ArrayComp = ({ FieldComponent, onRemove, ...props }: any) => {
+const ArrayComp = ({ FieldComponent, onRemove, index, ...props }: any) => {
   return (
     <HStack width="full">
-      <FieldComponent {...props} />
+      <FieldComponent {...props} onChange={(e: any) => props.onChange(index, e.target.value)} />
       <CloseButton onClick={onRemove} />
     </HStack>
   );
