@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from "react";
+import React from "react";
 import { VStack, HStack, Button } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 import { Field } from "@/components/cui/field";
@@ -36,9 +36,8 @@ export const DynamicField = (props: Props) => {
 
   const handleChange = (index: number, value: any) => {
     if (isArray) {
-      let newArray = values[name]
-        ? values[name].map((item: any, i: number) => (i === index ? value : item))
-        : [];
+      const newArray = values[name] ? [...values[name]] : [];
+      newArray[index] = value;
       setFieldValue(name, newArray);
     } else {
       setFieldValue(name, value);
@@ -88,24 +87,18 @@ export const DynamicField = (props: Props) => {
       required={!nullable}
     >
       {isArray ? (
-        (() => {
-          const items = values[name] || [""];
-          const elements = [];
-          for (let index = 0; index < items.length; index++) {
-            elements.push(
-              <ArrayComp key={index} onRemove={() => handleRemoveField(index)}
-                {...commonProps}
-                value={items[index]}
-                onChange={(e: any) => {
-                  handleChange(index, e.target.value)
-                }}
-                options={options}
-                nullable={nullable}
-              />
-            );
-          }
-          return elements;
-        })()
+        values[name]?.map((item: any, index: number) => (
+          <ArrayComp
+            key={index}
+            FieldComponent={FieldComponent}
+            onRemove={() => handleRemoveField(index)}
+            {...commonProps}
+            value={item}
+            onChange={(e: any) => handleChange(index, e.target.value)}
+            options={options}
+            nullable={nullable}
+          />
+        ))
       ) : (
         <FieldComponent
           {...commonProps}
@@ -126,16 +119,13 @@ export const DynamicField = (props: Props) => {
 };
 
 const ArrayComp = ({ FieldComponent, onRemove, ...props }: any) => {
-
   return (
     <HStack width="full">
-      <FieldComponent
-        {...props}
-      />
+      <FieldComponent {...props} />
       <CloseButton onClick={onRemove} />
     </HStack>
-  )
-}
+  );
+};
 
 const TextareaField = ({ value, onChange, ...props }: any) => {
   return <Textarea placeholder="Enter text..." {...props} value={value} onChange={onChange} />;
