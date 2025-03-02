@@ -38,8 +38,9 @@ export const DocumentSecurity: React.FC = () => {
               database.$id,
               collection.$id,
               collection.name,
-              undefined,
+              collection.$permissions,
               values.is,
+              collection.enabled,
             );
             addToast({
               variant: "success",

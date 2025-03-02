@@ -40,6 +40,8 @@ export const UpdatePermissions: React.FC = () => {
               collection.$id,
               collection.name,
               values.permissions,
+              collection.documentSecurity,
+              collection.enabled,
             );
             addToast({
               variant: "success",

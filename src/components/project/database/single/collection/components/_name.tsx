@@ -3,6 +3,7 @@ import { Form, InputField, SubmitButton } from "@/components/others/forms";
 import { getCollectionPageState, getDbPageState } from "@/state/page";
 import { getProjectState } from "@/state/project-state";
 import { useToast } from "@/ui/components";
+import { ColorPickerValueSwatch } from "@chakra-ui/react";
 import React from "react";
 import * as y from "yup";
 
@@ -28,7 +29,14 @@ export const UpdateName: React.FC = () => {
         validationSchema={schema}
         onSubmit={async (values) => {
           try {
-            await sdk.databases.updateCollection(database.$id, collection.$id, values.name);
+            await sdk.databases.updateCollection(
+              database.$id,
+              collection.$id,
+              values.name,
+              collection.$permissions,
+              collection.documentSecurity,
+              collection.enabled,
+            );
             addToast({
               variant: "success",
               message: "Collection name updated.",

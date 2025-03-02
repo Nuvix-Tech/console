@@ -12,7 +12,7 @@ import { Column, ConfirmProvider, Flex, ToastProvider } from "@/ui/components";
 import { baseURL, meta, og, schema, social, style } from "@/ui/resources/config";
 
 import { Inter } from "next/font/google";
-import { Roboto_Mono, Space_Grotesk } from "next/font/google";
+import { Roboto_Mono, Open_Sans } from "next/font/google";
 
 const primary = Inter({
   variable: "--font-primary",
@@ -31,10 +31,11 @@ type FontConfig = {
 };
 
 const secondary: FontConfig | undefined = undefined;
-const tertiary = Space_Grotesk({
+const tertiary = Open_Sans({
   variable: "--font-tertiary",
   subsets: ["latin"],
   display: "swap",
+  weight: ["500", "600", "700"],
 });
 
 /*

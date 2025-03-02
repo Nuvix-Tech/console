@@ -185,7 +185,7 @@ export const PermissionsEditor = ({
                 ))}
                 <Table.Row width="full">
                   <PopoverBox addRole={addRole} sdk={sdk} groups={groups}>
-                    <Button variant="subtle" size="sm" width="full">
+                    <Button variant="ghost" size="sm" width="full">
                       <LuPlus />
                       Add Role
                     </Button>
