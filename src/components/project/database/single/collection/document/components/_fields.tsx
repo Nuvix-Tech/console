@@ -93,16 +93,15 @@ export const DynamicField = (props: Props) => {
           const elements = [];
           for (let index = 0; index < items.length; index++) {
             elements.push(
-              <HStack key={index} width="full">
-                <FieldComponent
-                  {...commonProps}
-                  value={items[index]}
-                  onChange={(e: any) => handleChange(index, e.target.value)}
-                  options={options}
-                  nullable={nullable}
-                />
-                <CloseButton onClick={() => handleRemoveField(index)} />
-              </HStack>,
+              <ArrayComp key={index} onRemove={() => handleRemoveField(index)}
+                {...commonProps}
+                value={items[index]}
+                onChange={(e: any) => {
+                  handleChange(index, e.target.value)
+                }}
+                options={options}
+                nullable={nullable}
+              />
             );
           }
           return elements;
@@ -126,13 +125,25 @@ export const DynamicField = (props: Props) => {
   );
 };
 
+const ArrayComp = ({ FieldComponent, onRemove, ...props }: any) => {
+
+  return (
+    <HStack width="full">
+      <FieldComponent
+        {...props}
+      />
+      <CloseButton onClick={onRemove} />
+    </HStack>
+  )
+}
+
 const TextareaField = ({ value, onChange, ...props }: any) => {
-  return <Textarea placeholder="Enter text..." value={value} onChange={onChange} {...props} />;
+  return <Textarea placeholder="Enter text..." {...props} value={value} onChange={onChange} />;
 };
 
 const NumberField = ({ value, onChange, ...props }: any) => {
   return (
-    <NumberInput value={value} onChange={(v) => onChange({ target: { value: v } })} {...props} />
+    <NumberInput {...props} value={value} onChange={(v) => onChange({ target: { value: v } })} />
   );
 };
 
@@ -146,10 +157,10 @@ const SelectField = ({ value, onChange, options = [], nullable, ...props }: any)
   };
   return (
     <Select
+      {...props}
       value={value == null ? "null" : value}
       options={options}
       onSelect={_onChange}
-      {...props}
     />
   );
 };
@@ -164,10 +175,10 @@ const SelectBooleanField = ({ value, onChange, options = [], nullable, ...props 
   };
   return (
     <Select
+      {...props}
       value={value == null ? "null" : value == true ? "true" : "false"}
       options={options}
       onSelect={_onChange}
-      {...props}
     />
   );
 };

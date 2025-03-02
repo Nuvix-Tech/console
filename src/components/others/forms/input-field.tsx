@@ -33,7 +33,7 @@ const Wrapper = ({ Field, ...props }: { Field: any }) => {
   const { values, handleBlur, handleChange } = useFormikContext<Record<string, string | number>>();
 
   return (
-    <FormItem>
+    <FormItem {...props as Props}>
       {label && <FormLabel>{label}</FormLabel>}
       <FormControl>
         <Field
@@ -78,9 +78,10 @@ export const InputSwitchField = (props: Omit<SwitchProps, "onToggle" | "isChecke
   const { values, handleBlur, setFieldValue } = useFormikContext<Record<string, boolean>>();
 
   return (
-    <FormItem>
+    <FormItem {...props}>
       <FormControl>
         <Switch
+          label={label}
           onBlur={handleBlur}
           isChecked={values[name]}
           onToggle={(() => setFieldValue(name, !values[name])) as any}
@@ -106,7 +107,7 @@ export const InputTagField = (props: InputTagFieldProps) => {
   const id = React.useId();
 
   return (
-    <FormItem>
+    <FormItem {...props}>
       {label && <FormLabel>{label}</FormLabel>}
       <FormControl>
         <div className="flex flex-col gap-2 w-full">
@@ -167,7 +168,7 @@ export const InputObjectField: React.FC<InputObjectFieldProps> = ({
   ...rest
 }) => {
   const [_values, setValues] = useState<Values>([]);
-  const { values, errors, touched, setFieldValue, initialValues } =
+  const { setFieldValue, initialValues } =
     useFormikContext<Record<string, { [key: string]: string }>>();
 
   useEffect(() => {
@@ -191,17 +192,20 @@ export const InputObjectField: React.FC<InputObjectFieldProps> = ({
   };
 
   const handleAddField = () => {
-    setValues([..._values, { key: "", value: "" }]);
+    setValues((prev) => [...prev, { key: "", value: "" }]);
   };
 
   const handleDeleteField = (index: number) => {
     const newValues: Values = [..._values];
     newValues.splice(index, 1);
     setValues(newValues);
+    if (newValues.length === 0) {
+      handleAddField();
+    }
   };
 
   return (
-    <FormItem>
+    <FormItem name={name} {...rest}>
       {label && <FormLabel>{label}</FormLabel>}
       <FormControl>
         <div className="w-full flex flex-col gap-2 items-start">
@@ -230,8 +234,9 @@ export const InputObjectField: React.FC<InputObjectFieldProps> = ({
                   />
 
                   <CloseButton
+                    type="button"
                     onClick={() => handleDeleteField(i)}
-                    disabled={_values.length === 1}
+                  // disabled={_values.length === 1}
                   />
                 </div>
               </Fragment>
@@ -256,7 +261,7 @@ export const RadioField = (props: RadioFieldProps) => {
   const { values, handleChange } = useFormikContext<Record<string, string>>();
 
   return (
-    <FormItem>
+    <FormItem {...props}>
       {rest.label && <FormLabel>{rest.label}</FormLabel>}
       <FormControl>
         <RadioGroup
