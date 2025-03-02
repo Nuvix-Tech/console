@@ -15,9 +15,11 @@ import { Badge, HStack, VStack } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 import React from "react";
 import * as y from "yup";
+import { RadioGroupItem } from "@/components/ui/radio-group";
 
 const schema = y.object({
   limit: y.number().min(0).optional(),
+  selected: y.string()
 });
 
 export const UsersLimit: React.FC = () => {
@@ -84,8 +86,9 @@ export const Radio2 = () => {
   const { values, setFieldValue } = useFormikContext<Record<string, string>>();
 
   return (
-    <Radio value="2">
+    <>
       <HStack gap={4}>
+        <RadioGroupItem value="2" />
         Limited
         <NumberInputRoot
           defaultValue="100"
@@ -97,19 +100,20 @@ export const Radio2 = () => {
           <NumberInputField />
         </NumberInputRoot>
       </HStack>
-    </Radio>
+    </>
   );
 };
 
 export const Radio1 = () => {
-  const { values, setFieldValue } = useFormikContext<Record<string, string>>();
+  const { setFieldValue } = useFormikContext<Record<string, string>>();
 
   return (
-    <Radio value="1" onClick={() => setFieldValue("limit", 0)}>
+    <>
       <HStack gap={2}>
+        <RadioGroupItem value="1" onClick={() => { setFieldValue("limit", 0); setFieldValue("selected", '1'); }} />
         Unlimited
         <Badge variant={"surface"}>recommended</Badge>
       </HStack>
-    </Radio>
+    </>
   );
 };

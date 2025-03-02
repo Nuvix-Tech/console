@@ -1,185 +1,164 @@
 import React, { Fragment, PropsWithChildren, useEffect, useState } from "react";
-import { VStack, HStack, Button, Box, Text, InputProps, Stack } from "@chakra-ui/react";
-import { Input } from "@/ui/components"
 import { useFormikContext } from "formik";
-import { Field, FieldProps } from "@/components/cui/field";
-import { PasswordInput } from "@/components/cui/password-input";
-import { Chip, Switch, SwitchProps, TagInput, TagInputProps } from "@/ui/components";
-import { CloseButton } from "@/components/cui/close-button";
+import {
+  Chip,
+  CloseButton,
+  InputProps,
+  NumberInput,
+  NumberInputProps,
+  PasswordInput,
+  Switch,
+  SwitchProps,
+  TagInput,
+  TagInputProps,
+} from "@/ui/components";
 import { LuPlus } from "react-icons/lu";
-import { RadioGroup } from "@/components/cui/radio";
-import { NumberInputField, NumberInputProps, NumberInputRoot } from "@/components/cui/number-input";
+import { Button } from "@/components/ui/button";
+import {
+  FormControl,
+  FormDescription,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/ui/components";
+import { RadioGroup } from "@/components/ui/radio-group";
 
-interface Props {
+interface Props extends Omit<InputProps, "onChange" | "value" | "id"> {
   name: string;
 }
 
-type InputFieldProps = FieldProps & Omit<InputProps, "name"> & Props;
-
-export const InputField = (props: InputFieldProps) => {
-  const { label, errorText, helperText, optionalText, ...rest } = props;
-  const { values, errors, touched, handleBlur, handleChange } =
+const Wrapper = ({ Field, ...props }: { Field: any }) => {
+  const { name, label, placeholder, description, ...rest } = props as Props;
+  const { values, handleBlur, handleChange } =
     useFormikContext<Record<string, string | number>>();
-  const TheComp = rest.type === "password" ? PasswordInput : Input;
 
   return (
-    <>
-      <Field
-        width={"full"}
-        errorText={errors[rest.name] && touched[rest.name] ? errors[rest.name] : undefined}
-        invalid={!!(errors[rest.name] && touched[rest.name])}
-        helperText={helperText}
-        {...{ label, optionalText }}
-        {...rest}
-      >
-        <TheComp
-          placeholder={typeof label === "string" ? label : undefined}
-          value={values[rest.name]}
+    <FormItem>
+      {label && <FormLabel>{label}</FormLabel>}
+      <FormControl>
+        <Field
+          name={name}
+          placeholder={placeholder ?? label}
+          value={values[name]}
           onChange={handleChange}
           onBlur={handleBlur}
+          labelAsPlaceholder
           {...rest}
         />
-      </Field>
-    </>
-  );
+      </FormControl>
+      {description && <FormDescription>{description} </FormDescription>}
+      <FormMessage field={name} />
+    </FormItem>
+  )
+}
+
+type InputFieldProps = Props;
+
+export const InputField = (props: InputFieldProps) => {
+  const InputComponent = props.type === "password" ? PasswordInput : Input;
+  const { setFieldValue, values } =
+    useFormikContext<Record<string, string | number>>();
+
+  return <Wrapper Field={InputComponent} {...props} />;
+}
+
+export const InputNumberField = (props: Props & NumberInputProps) => {
+  const { setFieldValue, values } =
+    useFormikContext<Record<string, string | number>>();
+  return <Wrapper Field={NumberInput} onChange={(v: number) => setFieldValue(props.name, v)} value={values[props.name] && Number(values[props.name])} {...props} />;
 };
 
-export const InputNumberField = (props: NumberInputProps & Props & FieldProps) => {
-  const { label, errorText, helperText, optionalText, ...rest } = props;
-  const { values, errors, touched, handleBlur, setFieldValue } =
-    useFormikContext<Record<string, string>>();
+export const InputSwitchField = (props: Omit<SwitchProps, "onToggle" | "isChecked"> & Props) => {
+  const { name, label, placeholder, description, ...rest } = props
+  const { values, handleBlur, setFieldValue } =
+    useFormikContext<Record<string, boolean>>();
 
   return (
-    <>
-      <Field
-        width={"full"}
-        errorText={errors[rest.name] && touched[rest.name] ? errors[rest.name] : undefined}
-        invalid={!!(errors[rest.name] && touched[rest.name])}
-        helperText={helperText}
-        {...{ label, optionalText }}
-      >
-        <NumberInputRoot
-          width={"full"}
-          value={values[rest.name]}
-          onValueChange={(e) => setFieldValue(rest.name, Number(e.value))}
-          onBlur={handleBlur}
-          {...rest}
-        >
-          <NumberInputField placeholder={typeof label === "string" ? label : undefined} />
-        </NumberInputRoot>
-      </Field>
-    </>
-  );
-};
-
-export const InputSwitchField = (
-  props: Omit<SwitchProps, "onToggle" | "isChecked"> & Props & Partial<FieldProps>,
-) => {
-  const { errorText, helperText, optionalText, ...rest } = props;
-  const { values, errors, touched, handleBlur, setFieldValue } =
-    useFormikContext<Record<string, string>>();
-
-  return (
-    <>
-      <Field
-        width={"full"}
-        errorText={errors[rest.name] && touched[rest.name] ? errors[rest.name] : undefined}
-        invalid={!!(errors[rest.name] && touched[rest.name])}
-        helperText={helperText}
-        {...{ optionalText }}
-      >
+    <FormItem>
+      <FormControl>
         <Switch
-          isChecked={!!values[rest.name]}
-          onToggle={(() => setFieldValue(rest.name, !!!values[rest.name])) as any}
           onBlur={handleBlur}
-          {...(rest as any)}
+          isChecked={values[name]}
+          onToggle={(() => setFieldValue(name, !values[name])) as any}
+          {...rest}
         />
-      </Field>
-    </>
+      </FormControl>
+      {description && <FormDescription>{description} </FormDescription>}
+      <FormMessage field={name} />
+    </FormItem>
   );
 };
 
-type InputTagFieldProps = FieldProps &
-  Omit<TagInputProps, "onChange" | "value" | "id"> &
+type InputTagFieldProps = Omit<TagInputProps, "onChange" | "value" | "id"> &
   Props & {
     suggestion?: string[];
     removeOnSelect?: boolean;
   };
 
+
 export const InputTagField = (props: InputTagFieldProps) => {
-  const {
-    label,
-    errorText,
-    helperText,
-    optionalText,
-    suggestion = [],
-    removeOnSelect,
-    ...rest
-  } = props;
+  const { suggestion = [], removeOnSelect, name, label, placeholder, description, ...rest } = props;
   const { values, errors, touched, handleBlur, setFieldValue } =
     useFormikContext<Record<string, string[]>>();
+  const id = React.useId();
 
   return (
-    <>
-      <Field
-        width={"full"}
-        errorText={errors[rest.name] && touched[rest.name] ? errors[rest.name] : undefined}
-        invalid={!!(errors[rest.name] && touched[rest.name])}
-        helperText={helperText}
-        {...{ label, optionalText }}
-      >
-        <VStack width="full" gap="3">
+    <FormItem>
+      {label && <FormLabel>{label}</FormLabel>}
+      <FormControl>
+        <div className="flex flex-col gap-2 w-full">
           <TagInput
-            id={rest.name}
-            value={values[rest.name]}
-            label={typeof label === "string" ? label : rest.name}
-            error={!!(errors[rest.name] && touched[rest.name])}
-            onBlur={handleBlur}
+            id={id}
+            value={values[name]}
+            error={!!(errors[name] && touched[name])}
             {...rest}
-            onChange={(v) => setFieldValue(rest.name, v)}
+            onBlur={handleBlur}
+            onChange={(v) => setFieldValue(name, v)}
           />
           {suggestion.length ? (
             <>
-              <Stack gap={"4"} flexWrap="wrap" direction={"row"}>
+              <div className="flex flex-wrap gap-2">
                 {suggestion
-                  .filter((v) => !removeOnSelect || !values[rest.name].includes(v))
+                  .filter((v) => !removeOnSelect || !values.name.includes(v))
                   .map((s, i) => (
                     <Chip
                       label={s}
                       key={i}
                       onClick={() => {
                         const newValue = removeOnSelect
-                          ? [...values[rest.name], s]
-                          : values[rest.name].includes(s)
-                            ? values[rest.name].filter((val) => val !== s)
-                            : [...values[rest.name], s];
-                        setFieldValue(rest.name, newValue);
+                          ? [...values[name], s]
+                          : values[name].includes(s)
+                            ? values[name].filter((val) => val !== s)
+                            : [...values[name], s];
+                        setFieldValue(name, newValue);
                       }}
                       prefixIcon="plus"
                       selected={false}
                     />
                   ))}
-              </Stack>
+              </div>
             </>
           ) : null}
-        </VStack>
-      </Field>
-    </>
+        </div>
+      </FormControl>
+      {description && <FormDescription>{description} </FormDescription>}
+      <FormMessage />
+    </FormItem>
   );
 };
 
-interface InputObjectFieldProps extends FieldProps {
+interface InputObjectFieldProps {
   name: string;
   label?: string;
   helperText?: string;
   optionalText?: string;
 }
 
-type Values = { key: string; value: string }[];
+type Values = { key: string; value: string | any }[];
 
 export const InputObjectField: React.FC<InputObjectFieldProps> = ({
   label,
-  errorText,
   helperText,
   optionalText,
   name,
@@ -220,59 +199,51 @@ export const InputObjectField: React.FC<InputObjectFieldProps> = ({
   };
 
   return (
-    <Field
-      width="full"
-      errorText={
-        touched[name] && errors[name] ? (
-          <Box>
-            {Object.entries(errors[name] ?? {}).map(([key, message]) => (
-              <Text key={key} color="red.500" fontSize="sm">
-                {message as string}
-              </Text>
+    <FormItem>
+      {label && <FormLabel>{label}</FormLabel>}
+      <FormControl>
+        <div className="w-full flex flex-col gap-2 items-start">
+          <div className="w-full flex gap-2 pr-8">
+            <FormLabel>Key</FormLabel>
+            <FormLabel>Value</FormLabel>
+          </div>
+          <div className="w-full flex flex-col gap-2">
+            {_values.map(({ key, value }, i) => (
+              <Fragment key={i}>
+                <div className="w-full flex gap-4">
+                  <Input
+                    placeholder="Enter Key"
+                    height="s"
+                    labelAsPlaceholder
+                    value={key}
+                    onChange={(e) => handleFieldChange("key", e.target.value, i)}
+                  />
+
+                  <Input
+                    placeholder="Enter Value"
+                    height="s"
+                    labelAsPlaceholder
+                    value={value}
+                    onChange={(e) => handleFieldChange("value", e.target.value, i)}
+                  />
+
+                  <CloseButton
+                    onClick={() => handleDeleteField(i)}
+                    disabled={_values.length === 1}
+                  />
+                </div>
+              </Fragment>
             ))}
-          </Box>
-        ) : undefined
-      }
-      invalid={!!(errors[name] && touched[name])}
-      helperText={helperText}
-      {...{ optionalText }}
-    >
-      <VStack width="full" gap={2} alignItems={"flex-start"}>
-        <HStack width="full" gap={2} paddingEnd={"8"}>
-          <Field label="Key" required />
-          <Field label="Value" required />
-        </HStack>
-        <VStack width="full" gap={2}>
-          {_values.map(({ key, value }, i) => (
-            <Fragment key={i}>
-              <HStack width="full" gap={4}>
-                <Input
-                  placeholder="Enter Key"
-                  value={key}
-                  onChange={(e) => handleFieldChange("key", e.target.value, i)}
-                />
-
-                <Input
-                  placeholder="Enter Value"
-                  value={value}
-                  onChange={(e) => handleFieldChange("value", e.target.value, i)}
-                />
-
-                <CloseButton
-                  size={"xs"}
-                  onClick={() => handleDeleteField(i)}
-                  disabled={_values.length === 1}
-                />
-              </HStack>
-            </Fragment>
-          ))}
-        </VStack>
-        <Button variant={"ghost"} colorPalette={"fg"} size="xs" onClick={handleAddField}>
-          <LuPlus />
-          Add Field
-        </Button>
-      </VStack>
-    </Field>
+          </div>
+          <Button type="button" variant="ghost" className="text-xs" onClick={handleAddField}>
+            <LuPlus />
+            Add Field
+          </Button>
+        </div>
+      </FormControl>
+      {helperText && <FormDescription>{helperText}</FormDescription>}
+      <FormMessage />
+    </FormItem>
   );
 };
 
@@ -280,11 +251,22 @@ type RadioFieldProps = Props & PropsWithChildren;
 
 export const RadioField = (props: RadioFieldProps) => {
   const { children, ...rest } = props;
-  const { values, setFieldValue } = useFormikContext<Record<string, string>>();
+  const { values, handleChange } = useFormikContext<Record<string, string>>();
 
   return (
-    <RadioGroup value={values[rest.name]} onValueChange={(e) => setFieldValue(rest.name, e.value)}>
-      {children}
-    </RadioGroup>
+    <FormItem>
+      {rest.label && <FormLabel>{rest.label}</FormLabel>}
+      <FormControl>
+        <RadioGroup
+          onValueChange={handleChange}
+          value={values[rest.name]}
+          className="flex flex-col space-y-1"
+        >
+          {children}
+        </RadioGroup>
+      </FormControl>
+      {rest.description && <FormDescription>{rest.description}</FormDescription>}
+      <FormMessage />
+    </FormItem>
   );
 };

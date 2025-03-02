@@ -9,7 +9,7 @@ import { IconButton } from ".";
 import styles from "./NumberInput.module.scss";
 import { Checkbox } from "@/components/cui/checkbox";
 
-interface NumberInputProps
+export interface NumberInputProps
   extends Omit<React.ComponentProps<typeof Input>, "type" | "value" | "onChange"> {
   value?: number;
   onChange?: (value: number) => void;
