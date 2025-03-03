@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Stack, StackProps } from "@chakra-ui/react";
+import { Separator } from "../ui/separator";
 
 interface InfoCardProps {}
 
@@ -24,8 +25,8 @@ export const CardBox = (props: UpdateCardProps) => {
         <CardContent>{children}</CardContent>
         {actions ? (
           <>
-            {/* <Separator variant={"dashed"} paddingBottom={"6"} /> */}
-            <CardFooter className={"flex-end"}>{actions}</CardFooter>{" "}
+            <Separator />
+            <CardFooter className={"justify-end"}>{actions}</CardFooter>{" "}
           </>
         ) : null}
       </Card>

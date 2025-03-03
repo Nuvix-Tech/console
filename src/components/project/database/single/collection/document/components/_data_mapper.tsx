@@ -49,6 +49,7 @@ export const DataMapper = <T,>({ attributes, document }: DataMapperProps<T>) => 
             name={attribute.key}
             value={document[attribute.key as keyof T]}
             key={index}
+            attribute={attribute}
           >
             <DynamicField {...commonProps} size={(attribute as Models.AttributeString)?.size} />
           </UpdateField>
@@ -60,6 +61,7 @@ export const DataMapper = <T,>({ attributes, document }: DataMapperProps<T>) => 
             schema={schema}
             value={document[attribute.key as keyof T]}
             key={index}
+            attribute={attribute}
           >
             <DynamicField
               {...commonProps}
@@ -80,6 +82,7 @@ export const DataMapper = <T,>({ attributes, document }: DataMapperProps<T>) => 
             name={attribute.key}
             value={document[attribute.key as keyof T]}
             key={index}
+            attribute={attribute}
           >
             <DynamicField {...commonProps} type="boolean" />
           </UpdateField>

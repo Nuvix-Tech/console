@@ -103,11 +103,10 @@ export const DynamicField = (props: Props) => {
                 {...commonProps}
                 value={item}
                 onChange={onChange}
-                onBulr={handleBlur}
+                onBlur={handleBlur}
                 options={options}
                 nullable={nullable}
                 index={index}
-                // labelAsPlaceholder
               />
               <CloseButton onClick={() => handleRemoveField(index)} />
             </HStack>
@@ -121,7 +120,7 @@ export const DynamicField = (props: Props) => {
           onChange={(e: any) => handleChange(0, e.target.value)}
           options={options}
           nullable={nullable}
-          onBulr={handleBlur}
+          onBlur={handleBlur}
         />
       )}
 
