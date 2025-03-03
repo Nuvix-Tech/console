@@ -78,6 +78,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     const [height, setHeight] = useState<number | undefined>(undefined);
     const textareaRef = React.useRef<HTMLTextAreaElement>(null);
     const debouncedValue = useDebounce(props.value, 1000);
+    const checkBoxId = React.useId();
 
     const adjustHeight = () => {
       if (textareaRef.current) {
@@ -241,6 +242,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
               {nullable && (
                 <Checkbox
                   size="xs"
+                  id={checkBoxId}
                   checked={_null}
                   onCheckedChange={(e) => {
                     setNull(!!e.checked);
@@ -252,13 +254,14 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
                           value: null,
                         },
                       } as any);
-                    } else
+                    } else {
                       onChange?.({
                         target: {
                           name: id,
                           value: prev,
                         },
                       } as any);
+                    }
                   }}
                 >
                   <Text variant="body-default-xs" onBackground="neutral-weak" wrap="nowrap">

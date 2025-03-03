@@ -33,7 +33,7 @@ const Wrapper = ({ Field, ...props }: { Field: any }) => {
   const { values, handleBlur, handleChange } = useFormikContext<Record<string, string | number>>();
 
   return (
-    <FormItem {...props as Props}>
+    <FormItem {...(props as Props)}>
       {label && <FormLabel>{label}</FormLabel>}
       <FormControl>
         <Field
@@ -236,7 +236,7 @@ export const InputObjectField: React.FC<InputObjectFieldProps> = ({
                   <CloseButton
                     type="button"
                     onClick={() => handleDeleteField(i)}
-                  // disabled={_values.length === 1}
+                    // disabled={_values.length === 1}
                   />
                 </div>
               </Fragment>

@@ -58,10 +58,6 @@ export const DataMapper = <T,>({ attributes, document }: DataMapperProps<T>) => 
           </UpdateField>
         );
       case "boolean":
-        commonProps.options.push(
-          { value: "true", label: "True" },
-          { value: "false", label: "False" },
-        );
         return (
           <UpdateField name={attribute.key} value={document[attribute.key as keyof T]} key={index}>
             <DynamicField {...commonProps} type="boolean" />

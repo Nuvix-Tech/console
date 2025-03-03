@@ -6,14 +6,13 @@ import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { useFormikContext } from "formik";
 
-
 const useFormField = () => {
   const itemContext = React.useContext(FormItemContext);
   const { id, ...rest } = itemContext;
 
   return {
     id,
-    ...rest
+    ...rest,
   };
 };
 
@@ -24,7 +23,10 @@ type FormItemContextValue = {
 
 const FormItemContext = React.createContext<FormItemContextValue>({} as FormItemContextValue);
 
-function FormItem({ className, ...props }: React.ComponentProps<"div"> & Omit<FormItemContextValue, "id">) {
+function FormItem({
+  className,
+  ...props
+}: React.ComponentProps<"div"> & Omit<FormItemContextValue, "id">) {
   const id = React.useId();
 
   return (
