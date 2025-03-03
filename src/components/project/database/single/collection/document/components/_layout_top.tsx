@@ -1,6 +1,6 @@
 import React from "react";
 import { Stack, Text } from "@chakra-ui/react";
-import { Tabs } from "@chakra-ui/react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { IDChip, TopCard } from "@/components/others";
 import { useRouter } from "@bprogress/next";
 import { Row } from "@/ui/components";
@@ -22,29 +22,28 @@ export const LayoutTop: React.FC<LayoutTopProps> = ({ title, id }) => {
   const path = usePathname();
   const { push } = useRouter();
 
-  const url = `/console/project/${project?.$id}/databases/${database?.$id}/collection/${collection?.$id}/document/${document?.$id}`;
+  const url = `/console/project/${project?.$id}/databases/${database?.$id}/collection/${collection?.$id}/document/`;
 
   return (
     <>
       <Row margin="20">
         <TopCard minHeight={4}>
-          <Stack direction="column" width="full" zIndex="1">
+          <Stack direction={{ base: "column-reverse", md: "column" }} width="full" zIndex="1">
             {id && <IDChip id={id} />}
-            <Tabs.Root
-              variant="plain"
-              defaultValue=""
-              value={path.split("/")[path.split("/").length - 1] || ""}
-              onValueChange={(v) => push(`${url}/${v.value}`)}
+            <Tabs
+              defaultValue={document?.$id || "#"}
+              value={path.split("/")[path.split("/").length - 1] || document?.$id}
+              onValueChange={(v) => push(`${url}/${v}`)}
             >
-              <Tabs.List>
-                <Tabs.Trigger value="">Overview</Tabs.Trigger>
-                <Tabs.Trigger value="data">Data</Tabs.Trigger>
-                <Tabs.Trigger value="activity">Activity</Tabs.Trigger>
-              </Tabs.List>
-            </Tabs.Root>
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value={document?.$id || "#"}>Document</TabsTrigger>
+                <TabsTrigger value="details">Access & Security</TabsTrigger>
+                <TabsTrigger value="activity">Activity</TabsTrigger>
+              </TabsList>
+            </Tabs>
           </Stack>
 
-          <Stack direction="column" width="full" zIndex="1" align="end" justify="end">
+          <Stack direction="column" width="full" zIndex="1" align={{ base: "start", lg: "end" }} justify={{ base: "start", lg: "end" }}>
             <Text color="fg.muted" textStyle="sm">
               Created: {formatDate(document?.$createdAt)}
             </Text>
