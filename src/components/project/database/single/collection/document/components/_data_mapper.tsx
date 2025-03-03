@@ -13,6 +13,7 @@ interface DataMapperProps<T = Models.Document> {
 
 export const DataMapper = <T,>({ attributes, document }: DataMapperProps<T>) => {
   return attributes.map((attribute, index) => {
+    let schema = generateYupSchema([attribute]);
     const commonProps = {
       name: attribute.key,
       nullable: !attribute.required,
@@ -42,7 +43,6 @@ export const DataMapper = <T,>({ attributes, document }: DataMapperProps<T>) => 
               break;
           }
         }
-        let schema = generateYupSchema([attribute]);
         return (
           <UpdateField
             schema={schema}
@@ -55,7 +55,12 @@ export const DataMapper = <T,>({ attributes, document }: DataMapperProps<T>) => 
         );
       case "integer":
         return (
-          <UpdateField name={attribute.key} value={document[attribute.key as keyof T]} key={index}>
+          <UpdateField
+            name={attribute.key}
+            schema={schema}
+            value={document[attribute.key as keyof T]}
+            key={index}
+          >
             <DynamicField
               {...commonProps}
               min={(attribute as Models.AttributeInteger).min}
@@ -70,7 +75,12 @@ export const DataMapper = <T,>({ attributes, document }: DataMapperProps<T>) => 
           { value: "false", label: "False" },
         ];
         return (
-          <UpdateField name={attribute.key} value={document[attribute.key as keyof T]} key={index}>
+          <UpdateField
+            schema={schema}
+            name={attribute.key}
+            value={document[attribute.key as keyof T]}
+            key={index}
+          >
             <DynamicField {...commonProps} type="boolean" />
           </UpdateField>
         );
