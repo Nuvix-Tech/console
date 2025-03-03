@@ -13,6 +13,7 @@ import {
 import { Flex, Text } from ".";
 import useDebounce from "../hooks/useDebounce";
 import styles from "./Input.module.scss";
+import { Checkbox } from "@/components/cui/checkbox";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   id?: string;
@@ -37,6 +38,9 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   hasSuffix?: ReactNode;
   labelAsPlaceholder?: boolean;
   validate?: (value: ReactNode) => ReactNode | null;
+  nullable?: boolean;
+  isNull?: boolean;
+  max?: number;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -58,6 +62,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       onFocus,
       onBlur,
       validate,
+      nullable = false,
+      isNull = false,
+      max = 0,
+      onChange,
       ...props
     },
     ref,
@@ -65,6 +73,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     const [isFocused, setIsFocused] = useState(false);
     const [isFilled, setIsFilled] = useState(!!props.value);
     const [validationError, setValidationError] = useState<ReactNode | null>(null);
+    const [prev, setPrev] = useState<any>();
+    const [_null, setNull] = useState(isNull);
     const debouncedValue = useDebounce(props.value, 1000);
     const checkBoxId = React.useId();
 
@@ -81,6 +91,14 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         setIsFilled(false);
       }
       if (onBlur) onBlur(event);
+    };
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (_null) {
+        setNull(false);
+        setPrev(undefined);
+      }
+      if (onChange) onChange(event);
     };
 
     useEffect(() => {
@@ -164,6 +182,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               placeholder={labelAsPlaceholder ? label : props.placeholder}
               onFocus={handleFocus}
               onBlur={handleBlur}
+              onChange={handleChange}
+              value={_null ? "" : props.value === null ? "" : props.value}
               className={inputClassNames}
               aria-describedby={displayError ? `${id}-error` : undefined}
               aria-invalid={!!displayError}
@@ -181,6 +201,49 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               </Text>
             )}
             {children}
+          </Flex>
+
+          <Flex horizontal="end" gap={"8"} paddingY="4" paddingRight={"8"} vertical="center">
+            {max !== 0 && (props.value?.toString().length ?? 0) > 0 && (
+              <Text variant="body-default-xs" onBackground="neutral-weak" wrap="nowrap">
+                {props.value?.toString().length || 0} / {max}
+              </Text>
+            )}
+            {nullable && (
+              <Checkbox
+                size="xs"
+                ids={{
+                  root: checkBoxId,
+                  control: `${checkBoxId}-input`,
+                  label: `${checkBoxId}-label`,
+                  hiddenInput: `${checkBoxId}-hidden-input`,
+                }}
+                checked={_null}
+                onCheckedChange={(e) => {
+                  setNull(!!e.checked);
+                  if (e.checked) {
+                    setPrev(props.value);
+                    onChange?.({
+                      target: {
+                        name: id,
+                        value: null,
+                      },
+                    } as any);
+                  } else {
+                    onChange?.({
+                      target: {
+                        name: id,
+                        value: prev,
+                      },
+                    } as any);
+                  }
+                }}
+              >
+                <Text variant="body-default-xs" onBackground="neutral-weak" wrap="nowrap">
+                  NULL
+                </Text>
+              </Checkbox>
+            )}
           </Flex>
           {hasSuffix && (
             <Flex paddingRight="12" className={styles.suffix}>

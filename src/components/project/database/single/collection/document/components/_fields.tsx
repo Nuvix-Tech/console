@@ -2,7 +2,7 @@ import React from "react";
 import { VStack, HStack, Button } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 import { Field } from "@/components/cui/field";
-import { NumberInput, Select, Textarea } from "@/ui/components";
+import { Input, NumberInput, Select, Textarea } from "@/ui/components";
 import { CloseButton } from "@/components/cui/close-button";
 import { LuPlus } from "react-icons/lu";
 
@@ -32,7 +32,8 @@ interface Props {
 
 export const DynamicField = (props: Props) => {
   const { name, isArray, type = "string", options = [], nullable, label } = props;
-  const { values, errors, touched, setFieldValue } = useFormikContext<Record<string, any>>();
+  const { values, errors, touched, setFieldValue, handleBlur } =
+    useFormikContext<Record<string, any>>();
   const id = React.useId();
   const handleChange = (index: number, value: string | number | boolean | null) => {
     if (isArray) {
@@ -81,15 +82,8 @@ export const DynamicField = (props: Props) => {
   const FieldComponent = getFieldComponent();
   return (
     <Field
-      ids={{
-        root: id,
-        errorText: `${id}-error`,
-        control: `${id}-input`,
-        label: `${id}-label`,
-        helperText: `${id}-helper`,
-      }}
-      errorText={errors[name] && touched[name] ? (errors[name] as string) : undefined}
-      invalid={!!(errors[name] && touched[name])}
+      errorText={errors[name] ? (errors[name] as string) : undefined}
+      invalid={!!errors[name]}
       label={label ?? name}
       required={!nullable}
     >
@@ -103,6 +97,7 @@ export const DynamicField = (props: Props) => {
                 {...commonProps}
                 value={item}
                 onChange={onChange}
+                onBulr={handleBlur}
                 options={options}
                 nullable={nullable}
                 index={index}
@@ -120,6 +115,7 @@ export const DynamicField = (props: Props) => {
           onChange={(e: any) => handleChange(0, e.target.value)}
           options={options}
           nullable={nullable}
+          onBulr={handleBlur}
         />
       )}
 
@@ -133,7 +129,11 @@ export const DynamicField = (props: Props) => {
 };
 
 const TextareaField = ({ value, onChange, ...props }: any) => {
-  return <Textarea placeholder="Enter text..." {...props} value={value} onChange={onChange} />;
+  return props.max < 50 ? (
+    <Input placeholder="Enter text..." {...props} value={value} onChange={onChange} />
+  ) : (
+    <Textarea lines={5} placeholder="Enter text..." {...props} value={value} onChange={onChange} />
+  );
 };
 
 const NumberField = ({ value, onChange, ...props }: any) => {

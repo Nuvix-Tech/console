@@ -234,7 +234,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
               paddingRight={max > 50 ? "20" : "8"}
               vertical="center"
             >
-              {max && (props.value?.toString().length ?? 0) > 0 && (
+              {max !== 0 && (props.value?.toString().length ?? 0) > 0 && (
                 <Text variant="body-default-xs" onBackground="neutral-weak" wrap="nowrap">
                   {props.value?.toString().length || 0} / {max}
                 </Text>

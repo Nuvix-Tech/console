@@ -2,6 +2,7 @@ import { Models } from "@nuvix/console";
 import { UpdateField } from "./_data_field";
 import { DynamicField, FIELD_TYPES } from ".";
 import * as y from "yup";
+import { generateYupSchema } from "./_utils";
 
 type AttributeTypes = Models.AttributeString | Models.AttributeInteger | Models.AttributeBoolean;
 
@@ -41,8 +42,14 @@ export const DataMapper = <T,>({ attributes, document }: DataMapperProps<T>) => 
               break;
           }
         }
+        let schema = generateYupSchema([attribute]);
         return (
-          <UpdateField name={attribute.key} value={document[attribute.key as keyof T]} key={index}>
+          <UpdateField
+            schema={schema}
+            name={attribute.key}
+            value={document[attribute.key as keyof T]}
+            key={index}
+          >
             <DynamicField {...commonProps} size={(attribute as Models.AttributeString)?.size} />
           </UpdateField>
         );
@@ -58,6 +65,10 @@ export const DataMapper = <T,>({ attributes, document }: DataMapperProps<T>) => 
           </UpdateField>
         );
       case "boolean":
+        commonProps.options = [
+          { value: "true", label: "True" },
+          { value: "false", label: "False" },
+        ];
         return (
           <UpdateField name={attribute.key} value={document[attribute.key as keyof T]} key={index}>
             <DynamicField {...commonProps} type="boolean" />
