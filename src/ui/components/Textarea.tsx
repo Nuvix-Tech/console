@@ -242,7 +242,12 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
               {nullable && (
                 <Checkbox
                   size="xs"
-                  id={checkBoxId}
+                  ids={{
+                    root: checkBoxId,
+                    control: `${checkBoxId}-input`,
+                    label: `${checkBoxId}-label`,
+                    hiddenInput: `${checkBoxId}-hidden-input`,
+                  }}
                   checked={_null}
                   onCheckedChange={(e) => {
                     setNull(!!e.checked);

@@ -1,7 +1,7 @@
 "use client";
 
 import classNames from "classnames";
-import type React from "react";
+import React from "react";
 import {
   type InputHTMLAttributes,
   type ReactNode,
@@ -66,6 +66,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     const [isFilled, setIsFilled] = useState(!!props.value);
     const [validationError, setValidationError] = useState<ReactNode | null>(null);
     const debouncedValue = useDebounce(props.value, 1000);
+    const checkBoxId = React.useId();
 
     const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
       setIsFocused(true);

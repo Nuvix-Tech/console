@@ -33,7 +33,7 @@ interface Props {
 export const DynamicField = (props: Props) => {
   const { name, isArray, type = "string", options = [], nullable, label } = props;
   const { values, errors, touched, setFieldValue } = useFormikContext<Record<string, any>>();
-
+  const id = React.useId();
   const handleChange = (index: number, value: string | number | boolean | null) => {
     if (isArray) {
       const newArray = values[name] ? [...values[name]] : [];
@@ -81,29 +81,41 @@ export const DynamicField = (props: Props) => {
   const FieldComponent = getFieldComponent();
   return (
     <Field
+      ids={{
+        root: id,
+        errorText: `${id}-error`,
+        control: `${id}-input`,
+        label: `${id}-label`,
+        helperText: `${id}-helper`,
+      }}
       errorText={errors[name] && touched[name] ? (errors[name] as string) : undefined}
       invalid={!!(errors[name] && touched[name])}
       label={label ?? name}
       required={!nullable}
     >
       {isArray ? (
-        values[name]?.map((item: any, index: number) => (
-          <ArrayComp
-            key={index}
-            FieldComponent={FieldComponent}
-            onRemove={() => handleRemoveField(index)}
-            isNull={item === null}
-            {...commonProps}
-            value={item}
-            onChange={handleChange}
-            options={options}
-            nullable={nullable}
-            index={index}
-          />
-        ))
+        values[name]?.map((item: any, index: number) => {
+          const onChange = (e: any) => handleChange(index, e.target.value);
+          return (
+            <HStack width="full" key={index}>
+              <FieldComponent
+                isNull={item === null}
+                {...commonProps}
+                value={item}
+                onChange={onChange}
+                options={options}
+                nullable={nullable}
+                index={index}
+                // labelAsPlaceholder
+              />
+              <CloseButton onClick={() => handleRemoveField(index)} />
+            </HStack>
+          );
+        })
       ) : (
         <FieldComponent
           {...commonProps}
+          isNull={values[name] === null}
           value={values[name]}
           onChange={(e: any) => handleChange(0, e.target.value)}
           options={options}
@@ -120,27 +132,17 @@ export const DynamicField = (props: Props) => {
   );
 };
 
-const ArrayComp = ({ FieldComponent, onRemove, index, ...props }: any) => {
-  const handleChange = (e: any) => {
-    const value = e?.target?.value ?? null; // Ensure null is correctly handled
-    props.onChange(index, value); // Ensure index is passed correctly
-  };
-
-  return (
-    <HStack width="full">
-      <FieldComponent {...props} onChange={handleChange} />
-      <CloseButton onClick={onRemove} />
-    </HStack>
-  );
-};
-
 const TextareaField = ({ value, onChange, ...props }: any) => {
   return <Textarea placeholder="Enter text..." {...props} value={value} onChange={onChange} />;
 };
 
 const NumberField = ({ value, onChange, ...props }: any) => {
   return (
-    <NumberInput {...props} value={value} onChange={(v) => onChange({ target: { value: v } })} />
+    <NumberInput
+      {...props}
+      value={value}
+      onChange={(v) => onChange({ target: { value: v ?? Number(v) } })}
+    />
   );
 };
 

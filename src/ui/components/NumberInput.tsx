@@ -1,13 +1,14 @@
 "use client";
 
 import classNames from "classnames";
-import type React from "react";
+import React from "react";
 import { forwardRef, useState } from "react";
 import { Input, Text } from ".";
 import { Flex } from ".";
 import { IconButton } from ".";
 import styles from "./NumberInput.module.scss";
 import { Checkbox } from "@/components/cui/checkbox";
+import { LuChevronDown, LuChevronUp } from "react-icons/lu";
 
 export interface NumberInputProps
   extends Omit<React.ComponentProps<typeof Input>, "type" | "value" | "onChange"> {
@@ -33,6 +34,7 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
     );
     const [prev, setPrev] = useState<any>();
     const [_null, setNull] = useState(isNull);
+    const checkBoxId = React.useId();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (_null) {
@@ -95,6 +97,12 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
             {nullable && (
               <Checkbox
                 size="xs"
+                ids={{
+                  root: checkBoxId,
+                  control: `${checkBoxId}-input`,
+                  label: `${checkBoxId}-label`,
+                  hiddenInput: `${checkBoxId}-hidden-input`,
+                }}
                 marginRight="2"
                 checked={_null}
                 onCheckedChange={(e) => {
@@ -128,12 +136,13 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
               >
                 <IconButton
                   type="button"
-                  icon="chevronUp"
                   variant="ghost"
                   size="s"
                   onClick={increment}
                   aria-label="Increment value"
-                />
+                >
+                  <LuChevronUp />
+                </IconButton>
               </Flex>
               <Flex
                 fillHeight
@@ -142,12 +151,13 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
               >
                 <IconButton
                   type="button"
-                  icon="chevronDown"
                   variant="ghost"
                   size="s"
                   onClick={decrement}
                   aria-label="Decrement value"
-                />
+                >
+                  <LuChevronDown />
+                </IconButton>
               </Flex>
             </Flex>
           </>

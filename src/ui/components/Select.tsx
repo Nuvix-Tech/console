@@ -2,7 +2,7 @@
 
 import type { Placement } from "@floating-ui/react-dom";
 import classNames from "classnames";
-import type React from "react";
+import React from "react";
 import { type ReactNode, forwardRef, useEffect, useRef, useState } from "react";
 import { DropdownWrapper, Flex, Icon, IconButton, Input, type InputProps, Option } from ".";
 import type { DropdownWrapperProps } from "./DropdownWrapper";
@@ -54,6 +54,8 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
     const [searchQuery, setSearchQuery] = useState("");
     const selectRef = useRef<HTMLDivElement | null>(null);
     const clearButtonRef = useRef<HTMLButtonElement>(null);
+    const _id = React.useId();
+    rest.id = rest.id ?? _id;
 
     const handleFocus = () => {
       setIsFocused(true);
