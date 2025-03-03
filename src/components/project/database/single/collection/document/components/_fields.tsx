@@ -59,7 +59,7 @@ export const DynamicField = (props: Props) => {
   };
 
   const commonProps: any = {
-    max: props.size,
+    maxLength: props.size,
   };
 
   const getFieldComponent = () => {
@@ -82,6 +82,12 @@ export const DynamicField = (props: Props) => {
   const FieldComponent = getFieldComponent();
   return (
     <Field
+      ids={{
+        root: id,
+        errorText: `${id}-error`,
+        label: `${id}-label`,
+        control: `${id}-input`,
+      }}
       errorText={errors[name] ? (errors[name] as string) : undefined}
       invalid={!!errors[name]}
       label={label ?? name}
@@ -129,10 +135,22 @@ export const DynamicField = (props: Props) => {
 };
 
 const TextareaField = ({ value, onChange, ...props }: any) => {
-  return props.max < 50 ? (
-    <Input placeholder="Enter text..." {...props} value={value} onChange={onChange} />
+  return props.maxLength > 50 ? (
+    <Textarea
+      lines={5}
+      placeholder={`Start typing...`}
+      {...props}
+      value={value}
+      onChange={onChange}
+    />
   ) : (
-    <Textarea lines={5} placeholder="Enter text..." {...props} value={value} onChange={onChange} />
+    <Input
+      labelAsPlaceholder
+      placeholder="Enter value"
+      {...props}
+      value={value}
+      onChange={onChange}
+    />
   );
 };
 
@@ -141,6 +159,7 @@ const NumberField = ({ value, onChange, ...props }: any) => {
     <NumberInput
       {...props}
       value={value}
+      labelAsPlaceholder
       onChange={(v) => onChange({ target: { value: v ?? Number(v) } })}
     />
   );
@@ -157,6 +176,7 @@ const SelectField = ({ value, onChange, options = [], nullable, ...props }: any)
   return (
     <Select
       {...props}
+      labelAsPlaceholder
       value={value == null ? "null" : value}
       options={options}
       onSelect={_onChange}
@@ -175,6 +195,7 @@ const SelectBooleanField = ({ value, onChange, options = [], nullable, ...props 
   return (
     <Select
       {...props}
+      labelAsPlaceholder
       value={value == null ? "null" : value == true ? "true" : "false"}
       options={options}
       onSelect={_onChange}

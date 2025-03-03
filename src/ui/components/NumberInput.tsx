@@ -18,8 +18,6 @@ export interface NumberInputProps
   max?: number;
   step?: number;
   padStart?: number;
-  nullable?: boolean;
-  isNull?: boolean;
 }
 
 const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(

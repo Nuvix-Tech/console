@@ -8,6 +8,7 @@ import { DropdownWrapper, Flex, Icon, IconButton, Input, type InputProps, Option
 import type { DropdownWrapperProps } from "./DropdownWrapper";
 import inputStyles from "./Input.module.scss";
 import type { OptionProps } from "./Option";
+import { ChevronsUpDown } from "lucide-react";
 
 type SelectOptionType = Omit<OptionProps, "selected">;
 
@@ -154,6 +155,8 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
       };
     }, []);
 
+    const label = options.find((option) => option.value === value)?.label;
+
     return (
       <DropdownWrapper
         fillWidth
@@ -173,7 +176,13 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
               textOverflow: "ellipsis",
               ...style,
             }}
-            value={nullable && value === null ? "null" : value}
+            value={
+              nullable && value === null
+                ? "NULL"
+                : typeof label === "string" && label
+                  ? label
+                  : value
+            }
             onFocus={handleFocus}
             onKeyDown={handleKeyDown}
             readOnly
@@ -184,6 +193,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
             })}
             aria-haspopup="listbox"
             aria-expanded={isDropdownOpen}
+            hasSuffix={<ChevronsUpDown size={20} />}
           />
         }
         dropdown={

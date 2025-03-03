@@ -65,7 +65,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       style,
       nullable = false,
       isNull = false,
-      max = 0,
+      maxLength: max = 0,
       ...props
     },
     ref,
@@ -206,6 +206,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
               className={textareaClassNames}
               aria-describedby={displayError ? `${id}-error` : undefined}
               aria-invalid={!!displayError}
+              maxLength={max}
               style={{
                 ...style,
                 resize: lines === "auto" ? "none" : resize,
@@ -234,7 +235,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
               paddingRight={max > 50 ? "20" : "8"}
               vertical="center"
             >
-              {max !== 0 && (props.value?.toString().length ?? 0) > 0 && (
+              {max && max !== 0 && (props.value?.toString().length ?? 0) > 0 && (
                 <Text variant="body-default-xs" onBackground="neutral-weak" wrap="nowrap">
                   {props.value?.toString().length || 0} / {max}
                 </Text>
