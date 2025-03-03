@@ -48,7 +48,7 @@ const CollectionPage: React.FC<Props> = ({ databaseId, collectionId }: Props) =>
   const { addToast } = useToast();
   const { canWriteDocuments } = permissions;
 
-  const get = React.useCallback(async () => {
+  const get = async () => {
     if (!sdk || !database || !collection) return;
     setLoading(true);
     try {
@@ -58,11 +58,11 @@ const CollectionPage: React.FC<Props> = ({ databaseId, collectionId }: Props) =>
     } finally {
       setLoading(false);
     }
-  }, [sdk, database, collection, limit, page]);
+  }
 
   React.useEffect(() => {
     get();
-  }, [get]);
+  }, [sdk, database, collection, limit, page]);
 
   const path = `/console/project/${project?.$id}/databases/${database?.$id}/collection/${collection?.$id}/document`;
 

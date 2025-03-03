@@ -2,16 +2,17 @@ import React from "react";
 import { PermissionsEditorProps } from "./permissions";
 import { Query } from "@nuvix/console";
 import { SimpleSelector, usePaginatedSelector } from "../simple-selector";
-import { Button, DialogHeader, DialogTitle, HStack, Text, VStack } from "@chakra-ui/react";
+import { Button, HStack, Text, VStack } from "@chakra-ui/react";
 import { Checkbox } from "@/components/cui/checkbox";
 import { Avatar } from "@/ui/components";
 import {
-  DialogActionTrigger,
-  DialogBody,
   DialogContent,
   DialogDescription,
   DialogFooter,
-} from "@/components/cui/dialog";
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 
 export type UserRoleProps = {
   addRole: (role: string) => void;
@@ -38,14 +39,13 @@ export const UserRole = ({ addRole, sdk, onClose, groups }: UserRoleProps) => {
 
   return (
     <>
-      <DialogContent>
         <DialogHeader>
           <DialogTitle>Select users</DialogTitle>
           <DialogDescription>
             Grant access to any authenticated or anonymous user.
           </DialogDescription>
         </DialogHeader>
-        <DialogBody>
+        <DialogContent>
           <SimpleSelector
             placeholder="Search users by name, email, phone or ID"
             {...rest}
@@ -81,16 +81,15 @@ export const UserRole = ({ addRole, sdk, onClose, groups }: UserRoleProps) => {
               );
             }}
           />
-        </DialogBody>
+        </DialogContent>
         <DialogFooter>
-          <DialogActionTrigger asChild>
+          <DialogTrigger asChild>
             <Button variant="outline">Cancel</Button>
-          </DialogActionTrigger>
+          </DialogTrigger>
           <Button disabled={rest.selections.length === 0} onClick={onSave}>
             Add
           </Button>
         </DialogFooter>
-      </DialogContent>
     </>
   );
 };

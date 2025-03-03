@@ -11,7 +11,9 @@ import { LuPlus } from "react-icons/lu";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { CloseButton } from "@/components/cui/close-button";
 import { sdkForConsole, sdkForProject } from "@/lib/sdk";
-import { DialogRoot } from "@/components/cui/dialog";
+import {
+  Dialog,
+} from "@/components/ui/dialog"
 import { UserRole } from "./users";
 import { TeamRole } from "./teams";
 import { RoleHover } from "./row";
@@ -122,8 +124,8 @@ export const PermissionsEditor = ({
     <>
       <VStack width={"full"} position="relative" alignItems={"flex-start"}>
         {groups.size > 0 ? (
-          <Table.ScrollArea borderRadius="xl">
-            <Table.Root tableLayout="fixed" variant="outline" bg={"bg.muted"}>
+          <Table.ScrollArea borderRadius="lg" border='1px solid' borderColor='border.muted'>
+            <Table.Root tableLayout="fixed" variant="line" bg={"bg"}>
               <Table.Header>
                 <Table.Row>
                   <Table.ColumnHeader width="28" textTransform="uppercase" color="fg.muted">
@@ -289,17 +291,12 @@ const PopoverBox = ({ addRole, children, sdk, groups }: PopoverBoxProps) => {
         </PopoverContent>
       </PopoverRoot>
 
-      <DialogRoot
-        lazyMount
-        unmountOnExit
+      <Dialog
         open={open}
-        onOpenChange={(e) => setOpen(e.open)}
-        placement="center"
-        size="md"
-        closeOnInteractOutside={false}
+        onOpenChange={(o) => setOpen(o)}
       >
         {comp}
-      </DialogRoot>
+      </Dialog>
     </>
   );
 };
