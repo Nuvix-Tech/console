@@ -13,6 +13,7 @@ import { useSearchParams } from "next/navigation";
 import { EmptyState } from "@/ui/modules/layout/empty-state";
 import { EmptySearch } from "@/ui/modules/layout";
 import { CopyID } from "@/components/cui/copy-id";
+import { IDChip } from "@/components/others";
 
 const UsersPage = () => {
   const state = getProjectState();
@@ -59,10 +60,10 @@ const UsersPage = () => {
           </Row>
         );
       },
+      size: 150,
       meta: {
         href: (row) => `${authPath}/users/${row.$id}`,
       },
-      size: 150,
     },
     {
       header: "Identifiers",
@@ -74,6 +75,14 @@ const UsersPage = () => {
           </Tooltip>
         );
       },
+    },
+    {
+      header: "User ID",
+      accessorKey: "$id",
+      cell(props) {
+        return <IDChip id={props.getValue<string>().slice(0, 12) + "..."} hideIcon />;
+      },
+      size: 160,
     },
     {
       header: "Status",
@@ -101,7 +110,7 @@ const UsersPage = () => {
             size="lg"
             borderRadius={"2xl"}
             colorPalette={
-              status === "blocked" ? "red" : status.startsWith("verified") ? "green" : "gray"
+              status === "blocked" ? "red" : status.startsWith("verified") ? "green" : "slate"
             }
           >
             {status}
@@ -109,18 +118,11 @@ const UsersPage = () => {
         );
       },
     },
-    {
-      header: "ID",
-      accessorKey: "$id",
-      cell(props) {
-        return <CopyID id={props.getValue<string>()} text="User ID" />;
-      },
-    },
-    {
-      header: "Labels",
-      maxSize: 100,
-      accessorKey: "labels",
-    },
+    // {
+    //   header: "Labels",
+    //   maxSize: 100,
+    //   accessorKey: "labels",
+    // },
     {
       header: "Joined",
       accessorKey: "$createdAt",

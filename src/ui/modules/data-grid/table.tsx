@@ -14,11 +14,11 @@ const TheTable = <T,>() => {
   const checkBoxWidth = 12;
 
   return (
-    <Table.ScrollArea borderWidth="1px" borderRadius={"lg"} width="full">
+    <Table.ScrollArea borderWidth="1px" borderRadius={"md"} width="full">
       <Table.Root
-        size="md"
-        variant="outline"
-        borderRadius={"lg"}
+        size="lg"
+        variant="line"
+        borderRadius={"md"}
         // tableLayout='fixed'
         interactive
         overflow="auto"
@@ -47,7 +47,7 @@ const TheTable = <T,>() => {
                   maxWidth={checkBoxWidth}
                   position={stickyCheckBox ? "sticky" : "relative"}
                   left={stickyCheckBox ? "0" : "auto"}
-                  bg={stickyCheckBox ? "bg.muted" : "inherit"}
+                  bg={stickyCheckBox ? "bg" : "inherit"}
                   borderBottom={0}
                   zIndex={3}
                 >
@@ -69,7 +69,7 @@ const TheTable = <T,>() => {
                   textTransform={"uppercase"}
                   textOverflow={"ellipsis"}
                   overflow={"hidden"}
-                  className="neutral-on-background-medium"
+                  className="neutral-on-background-weak"
                   fontSize={"sm"}
                   paddingX="2"
                   whiteSpace={"nowrap"}
@@ -85,7 +85,7 @@ const TheTable = <T,>() => {
             </Table.Row>
           ))}
           {loading ? (
-            <Progress.Root size={"xs"} value={null} position={"absolute"} width={"full"}>
+            <Progress.Root size={"xs"} value={null} width={"full"}>
               <ProgressBar height={0.5} />
             </Progress.Root>
           ) : null}
@@ -101,13 +101,17 @@ const TheTable = <T,>() => {
                 key={row.id}
                 borderRadius={0}
                 gap={0}
+                borderBottom={"1px solid"}
+                borderColor="border.muted"
                 _hover={{
                   bg: "bg.muted",
                   cursor: "pointer",
+                  borderColor: "border",
                 }}
                 _focus={{
                   bg: "bg.subtle",
                   cursor: "pointer",
+                  borderColor: "border",
                 }}
                 onClick={(e) => {
                   const target = e.target as HTMLElement;
@@ -115,11 +119,11 @@ const TheTable = <T,>() => {
                     caller && push(caller(row.original));
                   }
                 }}
-                // onKeyDown={(e) => {
-                //   if ((e.key === "Enter" || e.key === " ") && caller) {
-                //     push(caller(row.original))
-                //   }
-                // }}
+                onKeyDown={(e) => {
+                  if ((e.key === "Enter" || e.key === " ") && caller) {
+                    push(caller(row.original));
+                  }
+                }}
                 tabIndex={caller ? 0 : -1}
                 role={caller && "button"}
                 cursor={caller && "pointer"}
@@ -134,7 +138,7 @@ const TheTable = <T,>() => {
                     maxWidth={checkBoxWidth}
                     position={stickyCheckBox ? "sticky" : "relative"}
                     left={stickyCheckBox ? "0" : "auto"}
-                    bg={stickyCheckBox ? "bg.subtle" : "inherit"}
+                    bg={stickyCheckBox ? "bg" : "inherit"}
                     zIndex={3}
                   >
                     <Checkbox
@@ -156,6 +160,7 @@ const TheTable = <T,>() => {
                     alignContent={"center"}
                     overflow={"hidden"}
                     whiteSpace={"nowrap"}
+                    borderBottom={0}
                     width={cell.column.columnDef.size ?? "full"}
                     minWidth={cell.column.columnDef.minSize}
                     maxWidth={cell.column.columnDef.maxSize}

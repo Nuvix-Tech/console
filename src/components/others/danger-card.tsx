@@ -22,7 +22,7 @@ export function DangerCard(props: DangerCardProps) {
 
   return (
     <>
-      <Card className="border-red-600">
+      <Card className="border-destructive">
         <CardContent>
           <Stack
             direction={{ base: "column", mdOnly: "column", lg: "row" }}

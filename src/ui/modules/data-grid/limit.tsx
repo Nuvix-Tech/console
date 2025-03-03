@@ -1,11 +1,10 @@
 import {
+  Select,
   SelectContent,
   SelectItem,
-  SelectRoot,
   SelectTrigger,
-  SelectValueText,
-} from "@/components/cui/select";
-import { createListCollection } from "@chakra-ui/react";
+  SelectValue,
+} from "@/components/ui/select";
 import { Row } from "@/ui/components";
 import { useDataGrid } from "./provider";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
@@ -22,35 +21,30 @@ export const SelectLimit = () => {
     push(path + "?" + params.toString());
   };
 
-  const pages = createListCollection({
-    items: ["6", "12", "24", "48", "96"],
-  });
+  const pages = ["6", "12", "24", "48", "96"];
 
   return (
     <>
       <Row vertical="center" gap="12">
-        <SelectRoot
-          collection={pages}
-          size="sm"
-          width="80px"
+        <Select
           disabled={loading}
-          value={[table.getState().pagination.pageSize.toString()]}
-          onValueChange={(details) => {
-            const [value] = details.value;
+          defaultValue={table.getState().pagination.pageSize.toString()}
+          value={table.getState().pagination.pageSize.toString()}
+          onValueChange={(value) => {
             onPageSizeChange(parseInt(value));
           }}
         >
-          <SelectTrigger>
-            <SelectValueText placeholder="Select Limit" />
+          <SelectTrigger className="w-[80px]">
+            <SelectValue placeholder="Select Limit" />
           </SelectTrigger>
           <SelectContent>
-            {pages.items.map((page) => (
-              <SelectItem item={page} key={page}>
+            {pages.map((page) => (
+              <SelectItem value={page} key={page}>
                 {page}
               </SelectItem>
             ))}
           </SelectContent>
-        </SelectRoot>
+        </Select>
         <p className="text"> Total results: {table.getRowCount()}</p>
       </Row>
     </>

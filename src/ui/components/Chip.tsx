@@ -74,14 +74,18 @@ const Chip: React.FC<ChipProps> = forwardRef<HTMLDivElement, ChipProps>(
         aria-pressed={selected}
         cursor="interactive"
         transition="micro-medium"
-        className={classNames(styles.chip, {
-          [styles.selected]: selected,
-          [styles.unselected]: !selected,
-        })}
+        className={classNames(
+          styles.chip,
+          {
+            [styles.selected]: selected,
+            [styles.unselected]: !selected,
+          },
+          "overflow-ellipsis ",
+        )}
         {...rest}
       >
         {prefixIcon && <Icon name={prefixIcon} size="s" />}
-        <Flex paddingX="8" paddingY="2">
+        <Flex paddingX="8" paddingY="2" fillWidth>
           <Text variant="body-default-s">{label || children}</Text>
         </Flex>
         {onRemove && (

@@ -43,7 +43,13 @@ export const LayoutTop: React.FC<LayoutTopProps> = ({ title, id }) => {
             </Tabs>
           </Stack>
 
-          <Stack direction="column" width="full" zIndex="1" align={{ base: "start", lg: "end" }} justify={{ base: "start", lg: "end" }}>
+          <Stack
+            direction="column"
+            width="full"
+            zIndex="1"
+            align={{ base: "start", lg: "end" }}
+            justify={{ base: "start", lg: "end" }}
+          >
             <Text color="fg.muted" textStyle="sm">
               Created: {formatDate(document?.$createdAt)}
             </Text>

@@ -127,7 +127,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           />
         </head>
         <ToastProvider>
-          <Column suppressHydrationWarning as="body" fillWidth margin="0" padding="0">
+          <Column
+            suppressHydrationWarning
+            as="body"
+            fillWidth
+            margin="0"
+            padding="0"
+            background="page"
+          >
             <Providers>
               <ConfirmProvider>{children}</ConfirmProvider>
             </Providers>
