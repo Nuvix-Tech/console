@@ -12,7 +12,6 @@ import { DataGrid, DataGridSkelton, SearchAndCreate } from "@/ui/modules/data-gr
 import { useSearchParams } from "next/navigation";
 import { EmptyState } from "@/ui/modules/layout/empty-state";
 import { EmptySearch } from "@/ui/modules/layout";
-import { CopyID } from "@/components/cui/copy-id";
 import { IDChip } from "@/components/others";
 
 const UsersPage = () => {

@@ -58,11 +58,11 @@ const CollectionPage: React.FC<Props> = ({ databaseId, collectionId }: Props) =>
     } finally {
       setLoading(false);
     }
-  }, [sdk, database?.$id, collection?.$id, limit, page]); // Only depend on IDs to prevent unnecessary calls
+  }, [sdk, database, collection, limit, page]);
 
   React.useEffect(() => {
     get();
-  }, [get]); // Depend only on `get`
+  }, [get]);
 
   const path = `/console/project/${project?.$id}/databases/${database?.$id}/collection/${collection?.$id}/document`;
 

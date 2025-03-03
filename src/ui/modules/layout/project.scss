@@ -14,6 +14,11 @@
     width: calc(100% - 60px) !important;
   }
 
+  .show-sidebar-small .project-main {
+    margin-left: 220px !important;
+    width: calc(100% - 220px) !important;
+  }
+
   .show-sidebar.show-sidebar-large .project-main {
     margin-left: 285px !important;
     width: calc(100% - 285px) !important;

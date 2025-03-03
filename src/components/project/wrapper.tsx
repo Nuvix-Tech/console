@@ -10,7 +10,7 @@ export default function ProjectWrapper({
   children,
   id,
 }: { children: React.ReactNode; id: string }) {
-  const { project, showSubSidebar } = getProjectState();
+  const { project, showSubSidebar, sidebar } = getProjectState();
   const { projects, organizations } = sdkForConsole;
 
   projectState._update = async () => {
@@ -35,7 +35,13 @@ export default function ProjectWrapper({
     <>
       <div
         id="project"
-        className={classNames(`project show-sidebar`, { "show-sidebar-large": showSubSidebar })}
+        className={classNames(
+          `project show-sidebar`,
+          { "show-sidebar-large": !!(sidebar.first || sidebar.middle || sidebar.last) },
+          {
+            "show-sidebar-small": !(sidebar.first || sidebar.middle || sidebar.last),
+          },
+        )}
       >
         {children}
       </div>

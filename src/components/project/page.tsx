@@ -1,5 +1,5 @@
 "use client";
-import { getProjectState } from "@/state/project-state";
+import { getProjectState, projectState } from "@/state/project-state";
 import { Background, Chip, Column, Feedback, Heading, Line, Row, Skeleton } from "@/ui/components";
 import React from "react";
 import { IDChip } from "../others";
@@ -11,6 +11,9 @@ type ProjectPageProps = {
 export default function ProjectPage({ id }: ProjectPageProps) {
   const state = getProjectState();
   const { project } = state;
+  const { sidebar } = projectState;
+
+  sidebar.first = sidebar.middle = sidebar.last = null;
 
   React.useEffect(() => {
     const projectElement = document.getElementById("project");

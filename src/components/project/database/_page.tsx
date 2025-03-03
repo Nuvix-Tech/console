@@ -15,6 +15,8 @@ import { IDChip } from "@/components/others";
 
 const DatabasePage = () => {
   const state = getProjectState();
+  const { sidebar } = projectState;
+  sidebar.first = sidebar.middle = sidebar.last = null;
   const { sdk, project, permissions } = state;
   const [loading, setLoading] = React.useState(true);
   const [databases, setDatabases] = React.useState<Models.DatabaseList>({
@@ -26,8 +28,6 @@ const DatabasePage = () => {
   const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
   const search = searchParams.get("search");
   const { canWriteDatabases } = permissions;
-
-  projectState.sidebar.first = null;
 
   React.useEffect(() => {
     if (!sdk) return;

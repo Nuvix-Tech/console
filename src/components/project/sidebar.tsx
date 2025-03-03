@@ -54,7 +54,7 @@ interface FirstSidebarProps {
 export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarProps) => {
   const [showFullSidebar, setShowFullSidebar] = React.useState(false);
   const pathname = usePathname() ?? "";
-  const { project } = getProjectState();
+  const { project, sidebar } = getProjectState();
   const { setColorMode } = useColorMode();
 
   const id = project?.$id;
@@ -98,10 +98,12 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
     setColorMode(theme);
   };
 
+  const showSubSidebar = sidebar.first || sidebar.middle || sidebar.last;
+
   return (
     <>
       <Column
-        maxWidth={alwaysFull ? undefined : showFullSidebar ? 14 : 4}
+        maxWidth={alwaysFull ? undefined : showFullSidebar || !showSubSidebar ? 14 : 4}
         fill
         paddingY="32"
         position={alwaysFull ? "relative" : "absolute"}
@@ -113,7 +115,7 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
           borderRightWidth: border ? 1 : 0,
         }}
         zIndex={10}
-        className={`sidebar-small ${showFullSidebar ? "sidebar-small-open" : ""}`}
+        className={`sidebar-small ${showFullSidebar || !showSubSidebar ? "sidebar-small-open" : ""}`}
         background={noBg ? "transparent" : "surface"}
         onMouseEnter={() => setShowFullSidebar(true)}
         onMouseLeave={() => setShowFullSidebar(false)}
@@ -123,7 +125,7 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
             <SidebarSmallButton
               key={index}
               item={item}
-              showFullSidebar={showFullSidebar || !!alwaysFull}
+              showFullSidebar={showFullSidebar || !showSubSidebar || !!alwaysFull}
               selected={item.active ?? pathname.includes(item.href ?? "")}
             />
           ))}
@@ -138,7 +140,7 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
               href: `/console/project/${id}/settings`,
               icon: <span className="icon-cog" />,
             }}
-            showFullSidebar={showFullSidebar || !!alwaysFull}
+            showFullSidebar={showFullSidebar || !showSubSidebar || !!alwaysFull}
             selected={pathname === `/console/project/${id}/settings`}
           />
 
@@ -152,7 +154,7 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
               },
               icon: <span className="icon-sun" />,
             }}
-            showFullSidebar={showFullSidebar || !!alwaysFull}
+            showFullSidebar={showFullSidebar || !showSubSidebar || !!alwaysFull}
           />
         </Column>
       </Column>
@@ -189,15 +191,42 @@ export const SecondSidebar = ({ noMarg, noBg, border = true }: SecondSidebarProp
           className="sidebar-large"
         >
           <Column fillWidth gap="s" paddingBottom="56">
-            <RevealFx direction="column" fillWidth gap="s" horizontal="start" trigger speed="fast">
-              {sidebar.first}
-            </RevealFx>
-            <RevealFx direction="column" fillWidth gap="s" horizontal="start" trigger speed="fast">
-              {sidebar.middle}
-            </RevealFx>
-            <RevealFx direction="column" fillWidth gap="s" horizontal="start" trigger speed="fast">
-              {sidebar.last}
-            </RevealFx>
+            {sidebar.first && (
+              <RevealFx
+                direction="column"
+                fillWidth
+                gap="s"
+                horizontal="start"
+                trigger
+                speed="fast"
+              >
+                {sidebar.first}
+              </RevealFx>
+            )}
+            {sidebar.middle && (
+              <RevealFx
+                direction="column"
+                fillWidth
+                gap="s"
+                horizontal="start"
+                trigger
+                speed="fast"
+              >
+                {sidebar.middle}
+              </RevealFx>
+            )}
+            {sidebar.last && (
+              <RevealFx
+                direction="column"
+                fillWidth
+                gap="s"
+                horizontal="start"
+                trigger
+                speed="fast"
+              >
+                {sidebar.last}
+              </RevealFx>
+            )}
           </Column>
         </Column>
       ) : null}
