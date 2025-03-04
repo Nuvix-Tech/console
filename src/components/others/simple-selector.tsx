@@ -1,6 +1,9 @@
-import { Button, HStack, Input, Text, VStack, Spinner } from "@chakra-ui/react";
+import { HStack, Text, VStack, Spinner } from "@chakra-ui/react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import React, { useState, useEffect, useCallback } from "react";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
+import { SearchIcon } from "lucide-react";
 
 export type SimpleSelectorProps<T> = {
   placeholder?: string;
@@ -47,14 +50,18 @@ export const SimpleSelector = <T,>({
   useEffect(() => setPage?.(1), [search]);
 
   return (
-    <VStack gap={4} alignItems="flex-start" width="full">
+    <VStack gap={3} alignItems="flex-start" width="full">
       {setSearch && (
-        <Input
-          value={search || ""}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder={placeholder ?? "Search"}
-          width="full"
-        />
+        <div className="border-2 !border-l-0 !border-r-0 rounded-none px-4 flex items-center h-12 w-full">
+          <SearchIcon className="size-4 opacity-80" />
+          <Input
+            value={search || ""}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={placeholder ?? "Search"}
+            width="full"
+            className="border-0"
+          />
+        </div>
       )}
 
       {loading ? (
@@ -64,22 +71,31 @@ export const SimpleSelector = <T,>({
       ) : null}
 
       {data.length > 0 ? (
-        <VStack alignItems="flex-start" width="full">
+        <VStack alignItems="flex-start" width="full" px="4" gap={0}>
           {data.map((item) => onMap(item, toggleSelection, selections))}
         </VStack>
       ) : (
-        <Text>{search ? "No results found" : loading && "No data available"}</Text>
+        <Text mx="auto" textStyle="sm" color="var(--neutral-on-background-weak)">
+          {search ? "No results found" : !loading && "No data available"}
+        </Text>
       )}
 
       {setPage && (
-        <HStack width="full" justify="space-between" mt={2}>
+        <HStack
+          width="full"
+          justify="space-between"
+          mt={4}
+          borderY={"2px solid"}
+          borderColor="border.muted"
+          height="40px"
+        >
           <Button disabled={!hasPrevPage} onClick={prevPage} size="sm" variant="ghost">
             <LuChevronLeft />
             Prev
           </Button>
-          <Text>
+          <p className="text-primary/60">
             Page {page} / {Math.ceil(total / limit)}
-          </Text>
+          </p>
           <Button disabled={!hasNextPage} onClick={nextPage} size="sm" variant="ghost">
             Next
             <LuChevronRight />

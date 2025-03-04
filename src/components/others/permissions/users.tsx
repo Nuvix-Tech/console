@@ -5,14 +5,8 @@ import { SimpleSelector, usePaginatedSelector } from "../simple-selector";
 import { Button, HStack, Text, VStack } from "@chakra-ui/react";
 import { Checkbox } from "@/components/cui/checkbox";
 import { Avatar } from "@/ui/components";
-import {
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+import { DialogTrigger } from "@/components/ui/dialog";
+import { SelectBox1, SelectDialog } from "../select-dialog";
 
 export type UserRoleProps = {
   addRole: (role: string) => void;
@@ -39,57 +33,40 @@ export const UserRole = ({ addRole, sdk, onClose, groups }: UserRoleProps) => {
 
   return (
     <>
-        <DialogHeader>
-          <DialogTitle>Select users</DialogTitle>
-          <DialogDescription>
-            Grant access to any authenticated or anonymous user.
-          </DialogDescription>
-        </DialogHeader>
-        <DialogContent>
-          <SimpleSelector
-            placeholder="Search users by name, email, phone or ID"
-            {...rest}
-            onMap={(user, toggleSelection, selections) => {
-              const isExists = groups.has(`user:${user.$id}`);
-              return (
-                <HStack
-                  key={user.$id}
-                  gap={6}
-                  alignItems="center"
-                  width="full"
-                  borderBottom={"1px solid"}
-                  borderColor={"bg.muted"}
-                  px={4}
-                  py={2}
-                >
-                  <Checkbox
-                    disabled={isExists}
-                    checked={isExists ? true : selections.includes(user.$id)}
-                    onCheckedChange={() => toggleSelection(user.$id)}
-                  >
-                    <HStack gap={2} alignItems="center">
-                      <Avatar src={sdk.avatars.getInitials(user.name)} />
-                      <VStack alignItems="flex-start" gap={0}>
-                        <Text textStyle="sm">{user.name}</Text>
-                        <Text textStyle="xs" color={"fg.subtle"}>
-                          {user.$id}
-                        </Text>
-                      </VStack>
-                    </HStack>
-                  </Checkbox>
-                </HStack>
-              );
-            }}
-          />
-        </DialogContent>
-        <DialogFooter>
-          <DialogTrigger asChild>
-            <Button variant="outline">Cancel</Button>
-          </DialogTrigger>
-          <Button disabled={rest.selections.length === 0} onClick={onSave}>
-            Add
-          </Button>
-        </DialogFooter>
+      <SelectDialog
+        title="Select users"
+        description="Grant access to any authenticated or anonymous user."
+        actions={
+          <>
+            <DialogTrigger asChild>
+              <Button variant="outline">Cancel</Button>
+            </DialogTrigger>
+            <Button disabled={rest.selections.length === 0} onClick={onSave}>
+              Add
+            </Button>
+          </>
+        }
+      >
+        <SimpleSelector
+          placeholder="Search users by name, email, phone or ID"
+          {...rest}
+          onMap={(user, toggleSelection, selections) => {
+            const isExists = groups.has(`user:${user.$id}`);
+            return (
+              <HStack key={user.$id} alignItems="center" width="full">
+                <SelectBox1
+                  title={user.name}
+                  desc={user.$id}
+                  src={sdk.avatars.getInitials(user.name)}
+                  checked={isExists ? true : selections.includes(user.$id)}
+                  disabled={isExists}
+                  onClick={() => toggleSelection(user.$id)}
+                />
+              </HStack>
+            );
+          }}
+        />
+      </SelectDialog>
     </>
   );
 };

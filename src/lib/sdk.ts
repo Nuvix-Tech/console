@@ -24,7 +24,9 @@ import {
 } from "@nuvix/console";
 
 const API_URL =
-  process.env.PUBLIC_NUVIX_ENDPOINT ?? process.env.NUVIX_ENDPOINT ?? "https://strapi.collegejaankaar.in/v1";
+  process.env.PUBLIC_NUVIX_ENDPOINT ??
+  process.env.NUVIX_ENDPOINT ??
+  "https://strapi.collegejaankaar.in/v1";
 
 const clientConsole = new Client().setEndpoint(API_URL).setProject("console");
 

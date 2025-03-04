@@ -1,13 +1,7 @@
 import React from "react";
-import { Button, DialogHeader, DialogTitle, Input } from "@chakra-ui/react";
-import {
-  DialogActionTrigger,
-  DialogBody,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/cui/dialog";
+import { Button, Input } from "@chakra-ui/react";
 import { Field } from "@/components/cui/field";
+import { SelectDialog } from "../select-dialog";
 
 export type LabelProps = {
   addRole: (label: string) => void;
@@ -27,27 +21,23 @@ export const LabelRole = ({ addRole, onClose, groups }: LabelProps) => {
 
   return (
     <>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Label</DialogTitle>
-          <DialogDescription>
-            Use labels to grant access to users associated with the specified label.
-          </DialogDescription>
-        </DialogHeader>
-        <DialogBody>
+      <SelectDialog
+        title="Label"
+        description="Use labels to grant access to users associated with the specified label."
+        actions={
+          <>
+            <Button disabled={!label || groups.has(`label:${label}`)} onClick={onSave}>
+              Add
+            </Button>
+          </>
+        }
+      >
+        <div className="px-4">
           <Field label="Label" helperText="Only alphanumeric characters are allowed.">
             <Input width="full" value={label} onChange={(e) => setLabel(e.target.value)} />
           </Field>
-        </DialogBody>
-        <DialogFooter>
-          <DialogActionTrigger asChild>
-            <Button variant="outline">Cancel</Button>
-          </DialogActionTrigger>
-          <Button disabled={!label || groups.has(`label:${label}`)} onClick={onSave}>
-            Add
-          </Button>
-        </DialogFooter>
-      </DialogContent>
+        </div>
+      </SelectDialog>
     </>
   );
 };

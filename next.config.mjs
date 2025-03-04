@@ -8,6 +8,9 @@ const nextConfig = {
     remotePatterns: [
       {
         hostname: 'api.nuvix.in'
+      },
+      {
+        hostname: "strapi.collegejaankaar.in"
       }
     ]
   },

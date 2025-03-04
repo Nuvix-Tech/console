@@ -58,7 +58,7 @@ const CollectionPage: React.FC<Props> = ({ databaseId, collectionId }: Props) =>
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   React.useEffect(() => {
     get();
