@@ -1,8 +1,9 @@
 import "@/ui/modules/layout/project.scss";
 import { ProjectSidebar } from "@/components/project/sidebar";
 import ProjectWrapper from "@/components/project/wrapper";
-import { Row } from "@/ui/components";
+import { Column } from "@/ui/components";
 import type React from "react";
+import { Footer } from "@/components/footer";
 
 export default async function ({
   children,
@@ -14,9 +15,10 @@ export default async function ({
     <>
       <ProjectWrapper id={id}>
         <ProjectSidebar />
-        <Row fill className="project-main">
+        <Column fill className="project-main">
           {children}
-        </Row>
+          <Footer />
+        </Column>
       </ProjectWrapper>
     </>
   );

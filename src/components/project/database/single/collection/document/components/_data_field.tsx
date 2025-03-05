@@ -10,19 +10,8 @@ import { getCollectionPageState, getDbPageState, getDocumentPageState } from "@/
 import { getProjectState } from "@/state/project-state";
 import { useToast } from "@/ui/components";
 import React from "react";
-import {
-  Text,
-  Hash,
-  CheckCircle,
-  List,
-  Link,
-  AtSign,
-  Users,
-  Calendar,
-  Globe,
-  Brackets,
-} from "lucide-react";
 import { FIELD_TYPES } from "./_fields";
+import { AttributeIcon } from "../../components";
 
 interface Props {
   name: string;
@@ -88,7 +77,7 @@ export const UpdateField: React.FC<Props> = ({ name, value, schema, children, at
           <CardBoxBody>
             <CardBoxItem gap={"4"}>
               <div className="flex items-center gap-2">
-                {TypeIcon(getFieldType(attribute), attribute.array)}
+                {AttributeIcon(attribute, attribute.array)}
                 <CardBoxTitle>{name}</CardBoxTitle>
               </div>
               <CardBoxDesc>{getFieldDescription(name, attribute)}</CardBoxDesc>
@@ -98,31 +87,6 @@ export const UpdateField: React.FC<Props> = ({ name, value, schema, children, at
         </CardBox>
       </Form>
     </>
-  );
-};
-
-const TypeIcon = (type: (typeof FIELD_TYPES)[number], isArray: boolean) => {
-  const icons = {
-    string: <Text size={16} />,
-    integer: <Hash size={16} />,
-    boolean: <CheckCircle size={16} />,
-    enum: <List size={16} />,
-    url: <Link size={16} />,
-    email: <AtSign size={16} />,
-    relationship: <Users size={16} />,
-    datetime: <Calendar size={16} />,
-    ip: <Globe size={16} />,
-  };
-
-  return (
-    <div className="flex items-center gap-2 size-8 bg-muted rounded-full relative justify-center">
-      {icons[type]}
-      {isArray && (
-        <div className="absolute bottom-0 right-0">
-          <Brackets size={10} />
-        </div>
-      )}
-    </div>
   );
 };
 

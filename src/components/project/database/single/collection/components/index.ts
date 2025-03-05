@@ -4,3 +4,4 @@ export * from "./_top_enable";
 export * from "./_delete";
 export * from "./_name";
 export * from "./_permissions";
+export * from "./_attribute_icon";

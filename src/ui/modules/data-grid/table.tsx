@@ -8,7 +8,11 @@ import { Checkbox } from "@/components/cui/checkbox";
 import { SHOW_TABLE_BORDER } from "@/lib/constants";
 import { useRouter } from "@bprogress/next";
 
-const TheTable = <T,>() => {
+type Props = {
+  interactive?: boolean;
+};
+
+const TheTable = <T,>({ interactive = true }: Props) => {
   const { table, loading, showCheckbox, stickyCheckBox } = useDataGrid<T>();
   const { push } = useRouter();
   const checkBoxWidth = 12;
@@ -20,7 +24,7 @@ const TheTable = <T,>() => {
         variant="line"
         borderRadius={"md"}
         // tableLayout='fixed'
-        interactive
+        interactive={interactive}
         overflow="auto"
         showColumnBorder={SHOW_TABLE_BORDER}
       >
@@ -103,16 +107,18 @@ const TheTable = <T,>() => {
                 gap={0}
                 borderBottom={"1px solid"}
                 borderColor="border.muted"
-                _hover={{
-                  bg: "bg.muted",
-                  cursor: "pointer",
-                  borderColor: "border",
-                }}
-                _focus={{
-                  bg: "bg.subtle",
-                  cursor: "pointer",
-                  borderColor: "border",
-                }}
+                {...(interactive && {
+                  _hover: {
+                    bg: "bg.muted",
+                    cursor: "pointer",
+                    borderColor: "border",
+                  },
+                  _focus: {
+                    bg: "bg.subtle",
+                    cursor: "pointer",
+                    borderColor: "border",
+                  },
+                })}
                 onClick={(e) => {
                   const target = e.target as HTMLElement;
                   if (!target.closest("[data-action]")) {

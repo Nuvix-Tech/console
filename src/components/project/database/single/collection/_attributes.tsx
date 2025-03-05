@@ -1,24 +1,27 @@
 "use client";
 import { getDbPageState } from "@/state/page";
-import { getProjectState, projectState } from "@/state/project-state";
+import { getProjectState } from "@/state/project-state";
 import { Column, useConfirm, useToast } from "@/ui/components";
-import { Models, Query } from "@nuvix/console";
+import { Models } from "@nuvix/console";
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Tooltip } from "@/components/cui/tooltip";
-import { HStack, Heading, Text } from "@chakra-ui/react";
-import { formatDate } from "@/lib/utils";
-import {
-  ActionButton,
-  DataActionBar,
-  DataGridProvider,
-  DataGridSkelton,
-  Paggination,
-  SearchAndCreate,
-  SelectLimit,
-  Table,
-} from "@/ui/modules/data-grid";
+import { Heading, Text } from "@chakra-ui/react";
+import { DataGridProvider, DataGridSkelton, SearchAndCreate, Table } from "@/ui/modules/data-grid";
 import { EmptyState } from "@/ui/modules/layout/empty-state";
+import { AttributeIcon } from "./components";
+import { Badge } from "@/components/ui/badge";
+import { Status } from "@/components/cui/status";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { HiDotsVertical } from "react-icons/hi";
+import { Ellipsis } from "lucide-react";
 
 type Props = {
   databaseId: string;
@@ -28,7 +31,7 @@ type Props = {
 export const AttributesPage: React.FC<Props> = ({ databaseId, collectionId }) => {
   const state = getProjectState();
   const { database } = getDbPageState();
-  const { sdk, project, permissions } = state;
+  const { sdk, permissions } = state;
   const [loading, setLoading] = React.useState(true);
   const [attributeList, setAttributeList] = React.useState<Models.AttributeList>({
     attributes: [],
@@ -52,28 +55,77 @@ export const AttributesPage: React.FC<Props> = ({ databaseId, collectionId }) =>
 
   if (database?.$id !== databaseId) return;
 
-  const path = `/console/project/${project?.$id}/databases/${database?.$id}/collection`;
-
   const columns: ColumnDef<Models.AttributeString>[] = [
     {
-      header: "Name",
+      header: "Key",
       accessorKey: "key",
-      minSize: 250,
+      minSize: 300,
+      cell: (props) => {
+        const attr = props.row.original;
+
+        return (
+          <div className="flex items-center gap-2 justify-between w-full">
+            <div className="flex items-center gap-4">
+              {AttributeIcon(attr, attr.array!)}
+              <p className="text-sm line-clamp-1 overflow-ellipsis">{attr.key}</p>
+            </div>
+            {attr.status !== "available" ? (
+              <Status
+                value={["deleting", "stuck", "failed"].includes(attr.status) ? "error" : "warning"}
+                size="sm"
+              >
+                {attr.status}
+              </Status>
+            ) : (
+              attr.required && <Badge variant="secondary">Required</Badge>
+            )}
+          </div>
+        );
+      },
     },
     {
       header: "Type",
       accessorKey: "type",
-      minSize: 250,
+      minSize: 100,
+      cell: (props) => {
+        const attr = props.row.original;
+        return (
+          <p className="capitalize">
+            {attr.type} {attr.array ? "[]" : ""}
+          </p>
+        );
+      },
     },
     {
-      header: "Required",
-      accessorKey: "required",
-      minSize: 250,
-    },
-    {
-      header: "Default",
+      header: "Default Value",
       accessorKey: "default",
       minSize: 250,
+      cell: (props) => {
+        const attr = props.row.original;
+        return <p className="">{attr.default ?? "-"}</p>;
+      },
+    },
+    {
+      header: "",
+      accessorKey: "_",
+      size: 16,
+      minSize: 16,
+      cell: (props) => {
+        const attribute = props.row.original;
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger className="mx-auto">
+              <Ellipsis />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Profile</DropdownMenuItem>
+              <DropdownMenuItem>Billing</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
     },
   ];
 
@@ -126,7 +178,6 @@ export const AttributesPage: React.FC<Props> = ({ databaseId, collectionId }) =>
         data={attributeList.attributes}
         rowCount={attributeList.total}
         loading={loading}
-        showCheckbox
       >
         <SearchAndCreate
           button={{ text: "Create Attribute", allowed: canWriteDatabases }}
@@ -137,16 +188,7 @@ export const AttributesPage: React.FC<Props> = ({ databaseId, collectionId }) =>
           <DataGridSkelton />
         ) : attributeList.total > 0 ? (
           <>
-            <Table />
-            <DataActionBar
-              actions={
-                <>
-                  <ActionButton colorPalette="red" onClick={onDelete}>
-                    Delete
-                  </ActionButton>
-                </>
-              }
-            />
+            <Table interactive={false} />
           </>
         ) : (
           <EmptyState title="No Attributes" description="No Attributes have been created yet." />
