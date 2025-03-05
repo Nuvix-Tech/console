@@ -1,27 +1,20 @@
 "use client";
 
 import { sdkForConsole } from "@/lib/sdk";
-import { Badge, Column, Logo, NavIcon, Row, ToggleButton } from "@/ui/components";
+import { Badge, Column, Logo, NavIcon, Row } from "@/ui/components";
 import { usePathname } from "next/navigation";
 import type React from "react";
 import { useRef } from "react";
-import { Avatar, HStack, Stack, Text } from "@chakra-ui/react";
 import { appState, getAppState } from "@/state/app-state";
 import {
-  DrawerActionTrigger,
   DrawerBackdrop,
   DrawerBody,
   DrawerCloseTrigger,
   DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
   DrawerRoot,
-  DrawerTitle,
-  DrawerTrigger,
 } from "@/components/cui/drawer";
 import { FirstSidebar, SecondSidebar } from "./sidebar";
 import { HeaderOrganization, HeaderProject } from "./components";
-import { LuInfo } from "react-icons/lu";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { UserProfile } from "../_profile";
@@ -35,7 +28,6 @@ interface HeaderProps {
 
 const ProjectHeader: React.FC<HeaderProps> = () => {
   const { organization, isDrawerOpen, isSecondMenuOpen, user } = getAppState();
-  const { avatars } = sdkForConsole;
   const pathname = usePathname() ?? "";
   const headerRef = useRef<any>(null);
 

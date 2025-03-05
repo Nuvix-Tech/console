@@ -48,7 +48,7 @@ export const OrganizationPage = ({ id, searchParams }: Props) => {
 
   return (
     <Row fillWidth center>
-      <Column maxWidth={"l"} fillWidth fillHeight>
+      <Column maxWidth={"l"} fillWidth fillHeight gap="12">
         <Row horizontal="space-between" vertical="center">
           <Heading size="xl">Projects</Heading>
           <Button prefixIcon="plus" onClick={() => push("/create-project")}>

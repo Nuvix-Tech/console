@@ -5,18 +5,24 @@ import { usePathname } from "next/navigation";
 import { GoArrowUpRight } from "react-icons/go";
 import { IoLogOutOutline } from "react-icons/io5";
 
-const ConsoleSidebar: React.FC = ({}) => {
+type Props = {
+  inMobile?: boolean;
+};
+
+const ConsoleSidebar: React.FC<Props> = ({ inMobile }) => {
   const pathname = usePathname() ?? "";
 
   return (
     <Column
-      maxWidth={16}
+      maxWidth={inMobile ? undefined : 16}
       fillHeight
       paddingX="16"
       paddingY="32"
       gap="m"
-      background="page"
-      border="neutral-weak"
+      hide={inMobile ? undefined : "s"}
+      background={inMobile ? "transparent" : "surface"}
+      borderRight={inMobile ? undefined : "neutral-medium"}
+      position={inMobile ? "relative" : "fixed"}
     >
       <Column fill paddingX="xs" gap="m">
         <Column gap="4">

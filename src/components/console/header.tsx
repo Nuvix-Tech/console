@@ -1,20 +1,27 @@
 "use client";
 
 import { sdkForConsole } from "@/lib/sdk";
-import { Badge, Logo, NavIcon, Row, ToggleButton } from "@/ui/components";
+import { Badge, Column, Logo, NavIcon, Row } from "@/ui/components";
 import { usePathname } from "next/navigation";
 import type React from "react";
 import { useRef } from "react";
-import { Avatar, HStack, Stack, Text } from "@chakra-ui/react";
 import { appState, getAppState } from "@/state/app-state";
 import {
-  DrawerBackdrop,
-  DrawerBody,
-  DrawerCloseTrigger,
+  Drawer,
+  DrawerClose,
   DrawerContent,
-  DrawerRoot,
-} from "@/components/cui/drawer";
-import { FirstSidebar } from "../project/sidebar";
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+
+import Link from "next/link";
+import { Button } from "../ui/button";
+import { UserProfile } from "../_profile";
+import { Stack } from "@chakra-ui/react";
+import { ConsoleSidebar } from "@/ui/modules/layout/ConsoleSidebar";
 
 interface HeaderProps {
   authenticated?: boolean;
@@ -24,8 +31,7 @@ interface HeaderProps {
 }
 
 const ConsoleHeader: React.FC<HeaderProps> = () => {
-  const { organization, isDrawerOpen, user } = getAppState();
-  const { avatars } = sdkForConsole;
+  const { organization, isDrawerOpen } = getAppState();
   const pathname = usePathname() ?? "";
   const headerRef = useRef<any>(null);
 
@@ -44,67 +50,46 @@ const ConsoleHeader: React.FC<HeaderProps> = () => {
         background="surface"
         ref={headerRef}
       >
-        <Row hide="s">
-          <div className="is-only-dark">
-            <Logo icon={false} size="s" wordmarkSrc="/trademark/nuvix-logo-dark.svg" />
-          </div>
-          <div className="is-only-light">
-            <Logo icon={false} size="s" wordmarkSrc="/trademark/nuvix-logo-light.svg" />
-          </div>
-        </Row>
-        <Row gap="4" vertical="center" show="s">
-          <NavIcon
-            isActive={isDrawerOpen}
-            onClick={() => (appState.isDrawerOpen = !appState.isDrawerOpen)}
-          />
-          <Logo wordmark={false} size="l" iconSrc="/trademark/nuvix.svg" />
-        </Row>
-        <Badge
-          effect
-          hide="s"
-          arrow={false}
-          paddingX="16"
-          paddingY="4"
-          title="DEV"
-          horizontal="center"
-        />
-        <Row fillWidth vertical="center" horizontal="space-between">
-          <Row fillWidth>
-            <Row fillWidth hide="s" gap="4" paddingX="l" vertical="center">
-              <ToggleButton selected={pathname === "/apps"} label="Support" />
-              <ToggleButton selected={pathname === "/resources"} label="Feedback" />
+        <Stack direction="row" alignItems="center" justifyContent="space-between" width="full">
+          <Row gap="4" vertical="center">
+            <Row show="s">
+              <NavIcon
+                isActive={isDrawerOpen}
+                onClick={() => (appState.isDrawerOpen = !appState.isDrawerOpen)}
+              />
+            </Row>
+            <Link href="/console">
+              <div className="is-only-dark">
+                <Logo icon={false} size="m" wordmarkSrc="/trademark/nuvix-logo-dark.svg" />
+              </div>
+              <div className="is-only-light">
+                <Logo icon={false} size="m" wordmarkSrc="/trademark/nuvix-logo-light.svg" />
+              </div>
+            </Link>
+          </Row>
+
+          <Row fillWidth vertical="center" horizontal="space-between">
+            <Row fillWidth vertical="center" horizontal="end" gap="12">
+              <div className="flex items-center gap-3">
+                <Button variant="outline" className="hidden sm:flex">
+                  Feedback
+                </Button>
+                <div className="flex items-center gap-0.5">
+                  <Button variant="link">Help</Button>
+                  <Button variant="link">Docs</Button>
+                </div>
+              </div>
+              <UserProfile />
             </Row>
           </Row>
-          <Row as="nav">
-            <Row minWidth={10}>
-              <HStack key={user?.email} gap="4">
-                <Avatar.Root size={"sm"}>
-                  <Avatar.Fallback name={user?.name} />
-                  <Avatar.Image src={avatars.getInitials(user?.name, 96, 96)} />
-                </Avatar.Root>
-                <Stack gap="0">
-                  <Text textStyle={"sm"} fontWeight="medium">
-                    {user?.name}
-                  </Text>
-                  <Text color="fg.muted" textStyle="sm">
-                    {organization?.name}
-                  </Text>
-                </Stack>
-              </HStack>
-            </Row>
-          </Row>
-        </Row>
+        </Stack>
       </Row>
 
-      <DrawerRoot open={isDrawerOpen} onOpenChange={(e) => (appState.isDrawerOpen = e.open)}>
-        <DrawerBackdrop />
+      <Drawer open={isDrawerOpen} onOpenChange={(open) => (appState.isDrawerOpen = open)}>
         <DrawerContent>
-          <DrawerBody>
-            <FirstSidebar alwaysFull noBg border={false} />
-          </DrawerBody>
-          <DrawerCloseTrigger />
+          <ConsoleSidebar inMobile />
         </DrawerContent>
-      </DrawerRoot>
+      </Drawer>
     </>
   );
 };

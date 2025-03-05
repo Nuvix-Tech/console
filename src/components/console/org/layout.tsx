@@ -3,6 +3,7 @@
 import { sdkForConsole } from "@/lib/sdk";
 import { AvatarGroup, Button, Column, Heading, Row, SegmentedControl, Tag } from "@/ui/components";
 import { ConsoleSidebar } from "@/ui/modules/layout/ConsoleSidebar";
+import { Stack } from "@chakra-ui/react";
 import type { Models } from "@nuvix/console";
 import { useEffect, useState } from "react";
 
@@ -81,7 +82,7 @@ export default function OrgLayout({ children, id }: { children: React.ReactNode;
             </Row>
           </Row>
           </Column> */}
-        <Row fillWidth paddingX="l" paddingY="s" gap="l">
+        <Row fillWidth paddingX="l" paddingY="s" gap="l" className="md:ml-64">
           {children}
         </Row>
       </Row>
