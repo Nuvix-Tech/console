@@ -15,8 +15,10 @@ export default async function ({
     <>
       <ProjectWrapper id={id}>
         <ProjectSidebar />
-        <Column fill className="project-main">
-          {children}
+        <Column className="project-main" vertical="space-between">
+          <Column fill className="min-h-svh">
+            {children}
+          </Column>
           <Footer />
         </Column>
       </ProjectWrapper>

@@ -39,7 +39,7 @@ const TheTable = <T,>({ interactive = true }: Props) => {
               width="full"
               borderBottom={0.5}
               borderStyle={"solid"}
-              borderColor={"border"}
+              borderColor={"border.muted"}
             >
               {showCheckbox ? (
                 <Table.ColumnHeader
@@ -75,7 +75,7 @@ const TheTable = <T,>({ interactive = true }: Props) => {
                   overflow={"hidden"}
                   className="neutral-on-background-weak"
                   fontSize={"sm"}
-                  paddingX="2"
+                  paddingX="4"
                   whiteSpace={"nowrap"}
                   width={header.column.columnDef.size ?? "auto"}
                   minWidth={header.column.columnDef.minSize}

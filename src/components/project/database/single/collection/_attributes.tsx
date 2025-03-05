@@ -6,8 +6,14 @@ import { Models } from "@nuvix/console";
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Tooltip } from "@/components/cui/tooltip";
-import { Heading, Text } from "@chakra-ui/react";
-import { DataGridProvider, DataGridSkelton, SearchAndCreate, Table } from "@/ui/modules/data-grid";
+import { Heading, Stack, Text } from "@chakra-ui/react";
+import {
+  CreateButton,
+  DataGridProvider,
+  DataGridSkelton,
+  SearchAndCreate,
+  Table,
+} from "@/ui/modules/data-grid";
 import { EmptyState } from "@/ui/modules/layout/empty-state";
 import { AttributeIcon } from "./components";
 import { Badge } from "@/components/ui/badge";
@@ -16,8 +22,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { HiDotsVertical } from "react-icons/hi";
@@ -115,13 +119,12 @@ export const AttributesPage: React.FC<Props> = ({ databaseId, collectionId }) =>
         return (
           <DropdownMenu>
             <DropdownMenuTrigger className="mx-auto">
-              <Ellipsis />
+              <Ellipsis size={18} />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Billing</DropdownMenuItem>
+              <DropdownMenuItem>Update</DropdownMenuItem>
+              <DropdownMenuItem> Create Index </DropdownMenuItem>
+              <DropdownMenuItem>Delete</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -166,12 +169,22 @@ export const AttributesPage: React.FC<Props> = ({ databaseId, collectionId }) =>
 
   return (
     <Column paddingX="16" fillWidth>
-      <Column vertical="center" horizontal="start" marginBottom="24" marginTop="12" paddingX="8">
-        <Heading size="2xl">Attributes</Heading>
-        <Text fontSize={"sm"} color="fg.subtle">
-          Attributes are used to manage the data within a database.
-        </Text>
-      </Column>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        width="full"
+        alignItems="center"
+        marginBottom="12"
+        marginTop="8"
+      >
+        <Column vertical="center" horizontal="start" paddingX="8">
+          <Heading size="2xl">Attributes</Heading>
+          <Text fontSize={"sm"} color="fg.subtle">
+            Attributes are used to manage the data in a collection.
+          </Text>
+        </Column>
+        <CreateButton label="Create Attribute" />
+      </Stack>
 
       <DataGridProvider<any>
         columns={columns}
@@ -179,11 +192,6 @@ export const AttributesPage: React.FC<Props> = ({ databaseId, collectionId }) =>
         rowCount={attributeList.total}
         loading={loading}
       >
-        <SearchAndCreate
-          button={{ text: "Create Attribute", allowed: canWriteDatabases }}
-          placeholder="Search by name or ID"
-        />
-
         {loading && !attributeList.total ? (
           <DataGridSkelton />
         ) : attributeList.total > 0 ? (

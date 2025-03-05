@@ -41,10 +41,10 @@ export function HeaderProject() {
           variant="ghost"
           role="combobox"
           aria-expanded={open}
-          className="w-[150px] justify-between"
+          className="max-w-42 gap-3 justify-between"
         >
           {project ? list.find((p) => p.$id === project.$id)?.name : "Select project..."}
-          <ChevronsUpDown className="opacity-50" />
+          <ChevronsUpDown className="opacity-40" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">

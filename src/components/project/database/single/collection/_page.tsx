@@ -53,7 +53,7 @@ const CollectionPage: React.FC<Props> = ({ databaseId, collectionId }: Props) =>
     setLoading(true);
     try {
       const queries: string[] = [Query.limit(limit), Query.offset((page - 1) * limit)];
-      const docs = await sdk.databases.listDocuments(database.$id, collection.$id, queries);
+      const docs = await sdk.databases.listDocuments(databaseId, collectionId, queries);
       setDocumentList(docs);
     } finally {
       setLoading(false);
@@ -62,7 +62,7 @@ const CollectionPage: React.FC<Props> = ({ databaseId, collectionId }: Props) =>
 
   React.useEffect(() => {
     get();
-  }, [sdk, database, collection, limit, page]);
+  }, [sdk, databaseId, collectionId, limit, page]);
 
   const path = `/console/project/${project?.$id}/databases/${database?.$id}/collection/${collection?.$id}/document`;
 

@@ -41,12 +41,12 @@ export function HeaderOrganization() {
           variant="ghost"
           role="combobox"
           aria-expanded={open}
-          className="w-[150px] justify-between"
+          className="justify-between gap-3 max-w-42"
         >
           {organization
             ? orgs.find((org) => org.$id === organization.$id)?.name
             : "Select organization..."}
-          <ChevronsUpDown className="opacity-50" />
+          <ChevronsUpDown className="opacity-40" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">

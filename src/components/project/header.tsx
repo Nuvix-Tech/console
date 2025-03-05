@@ -22,6 +22,9 @@ import {
 import { FirstSidebar, SecondSidebar } from "./sidebar";
 import { HeaderOrganization, HeaderProject } from "./components";
 import { LuInfo } from "react-icons/lu";
+import Link from "next/link";
+import { Button } from "../ui/button";
+import { UserProfile } from "../_profile";
 
 interface HeaderProps {
   authenticated?: boolean;
@@ -53,14 +56,16 @@ const ProjectHeader: React.FC<HeaderProps> = () => {
         ref={headerRef}
       >
         <Row>
-          <div className="is-only-dark">
-            <Logo icon={false} size="s" wordmarkSrc="/trademark/nuvix-logo-dark.svg" />
-          </div>
-          <div className="is-only-light">
-            <Logo icon={false} size="s" wordmarkSrc="/trademark/nuvix-logo-light.svg" />
-          </div>
+          <Link href="/console">
+            <div className="is-only-dark">
+              <Logo icon={false} size="s" wordmarkSrc="/trademark/nuvix-logo-dark.svg" />
+            </div>
+            <div className="is-only-light">
+              <Logo icon={false} size="s" wordmarkSrc="/trademark/nuvix-logo-light.svg" />
+            </div>
+          </Link>
         </Row>
-        <Badge
+        {/* <Badge
           effect
           hide="s"
           arrow={false}
@@ -68,16 +73,24 @@ const ProjectHeader: React.FC<HeaderProps> = () => {
           paddingY="4"
           title="DEV"
           horizontal="center"
-        />
+        /> */}
         <Row fillWidth vertical="center" horizontal="space-between">
           <Row vertical="center" gap={"2"}>
+            <span className="text-gray-300 dark:text-gray-700 text-2xl">/</span>
             <HeaderOrganization />
-            <span className="text-gray-300 dark:text-gray-700">/</span>
+            <span className="text-gray-300 dark:text-gray-700 text-2xl">/</span>
             <HeaderProject />
           </Row>
-          <Row fillWidth vertical="center" horizontal="end" gap="4">
-            <ToggleButton selected={pathname === "/resources"} label="Feedback" />
-            <LuInfo />
+          <Row fillWidth vertical="center" horizontal="end" gap="12">
+            <div className="flex items-center gap-3">
+              {organization?.billingPlan === "tier-0" ? <Button>Upgrade</Button> : null}
+              <Button variant="outline">Feedback</Button>
+              <div className="flex items-center gap-0.5">
+                <Button variant="link">Help</Button>
+                <Button variant="link">Docs</Button>
+              </div>
+            </div>
+            <UserProfile />
           </Row>
           {/* <Row as="nav">
             <Row minWidth={10}>
