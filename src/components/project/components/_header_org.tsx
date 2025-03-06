@@ -60,7 +60,7 @@ export function HeaderOrganization() {
                   key={org.$id}
                   value={org.$id}
                   onSelect={(currentValue) => {
-                    push(`/console/organizations/${currentValue}`);
+                    push(`/organizations/${currentValue}`);
                     setOpen(false);
                   }}
                 >

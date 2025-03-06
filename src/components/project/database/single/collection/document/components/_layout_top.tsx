@@ -22,7 +22,7 @@ export const LayoutTop: React.FC<LayoutTopProps> = ({ title, id }) => {
   const path = usePathname();
   const { push } = useRouter();
 
-  const url = `/console/project/${project?.$id}/databases/${database?.$id}/collection/${collection?.$id}/document/`;
+  const url = `/project/${project?.$id}/databases/${database?.$id}/collection/${collection?.$id}/document/`;
 
   return (
     <>

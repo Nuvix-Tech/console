@@ -24,7 +24,7 @@ const MembershipPage = () => {
   const { addToast } = useToast();
   const confirm = useConfirm();
 
-  const authPath = `/console/project/${project?.$id}/authentication`;
+  const authPath = `/project/${project?.$id}/authentication`;
 
   async function get() {
     setLoading(true);

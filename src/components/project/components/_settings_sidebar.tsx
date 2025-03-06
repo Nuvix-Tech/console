@@ -8,7 +8,7 @@ const SettingsSidebar = () => {
   const path = usePathname();
 
   const resolveHref = (value?: string) =>
-    `/console/project/${project?.$id}/settings${value ? `/${value}` : ""}`;
+    `/project/${project?.$id}/settings${value ? `/${value}` : ""}`;
   const resolveIsSelected = (value?: string) => path.includes(resolveHref(value));
 
   return (

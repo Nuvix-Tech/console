@@ -42,7 +42,7 @@ const Page = () => {
     fetchTeams();
   }, [sdk, limit, page, search]);
 
-  const authPath = `/console/project/${project?.$id}/authentication`;
+  const authPath = `/project/${project?.$id}/authentication`;
 
   const columns: ColumnDef<Models.Team<any>>[] = [
     {

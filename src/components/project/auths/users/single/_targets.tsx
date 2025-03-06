@@ -20,7 +20,7 @@ const TargetPage = () => {
   const { sdk, project } = getProjectState();
   const { addToast } = useToast();
 
-  const authPath = `/console/project/${project?.$id}/authentication`;
+  const authPath = `/project/${project?.$id}/authentication`;
 
   async function get() {
     setLoading(true);

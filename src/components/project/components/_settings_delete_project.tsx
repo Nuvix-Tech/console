@@ -34,7 +34,7 @@ export const DeleteProject = () => {
           variant: "success",
           message: "Project deleted successfully",
         });
-        replace(`/console`);
+        replace(``);
       } catch (e: any) {
         addToast({
           variant: "danger",

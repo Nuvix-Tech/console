@@ -37,7 +37,7 @@ const SidebarAddon = ({ teamId }: { teamId: string }) => {
   if (team?.$id !== teamId) return;
 
   const resolveHref = (value?: string) =>
-    `/console/project/${project?.$id}/authentication/teams/${teamId}${value ? `/${value}` : ""}`;
+    `/project/${project?.$id}/authentication/teams/${teamId}${value ? `/${value}` : ""}`;
   const resolveIsSelected = (value?: string) => path.includes(resolveHref(value));
 
   return (

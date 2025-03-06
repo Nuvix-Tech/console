@@ -48,7 +48,7 @@ const ProjectHeader: React.FC<HeaderProps> = () => {
         ref={headerRef}
       >
         <Row>
-          <Link href="/console">
+          <Link href="/">
             <div className="is-only-dark">
               <Logo icon={false} size="s" wordmarkSrc="/trademark/nuvix-logo-dark.svg" />
             </div>

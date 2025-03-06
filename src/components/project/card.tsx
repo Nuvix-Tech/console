@@ -16,7 +16,7 @@ export const ProjectCard = ({ project }: { project: Models.Project }) => {
       vertical="space-between"
       padding="l"
       minHeight={14}
-      onClick={() => push(`/console/project/${project.$id}`)}
+      onClick={() => push(`/project/${project.$id}`)}
     >
       <Column gap="2" vertical="center">
         {project.platforms.length ? (
@@ -37,7 +37,7 @@ export const ProjectCard = ({ project }: { project: Models.Project }) => {
             ))}
           </Row>
         ) : (
-          <Button href={`/console/project/${project.$id}/settings`} size="s" variant="secondary">
+          <Button href={`/project/${project.$id}/settings`} size="s" variant="secondary">
             Add app
           </Button>
         )}

@@ -14,8 +14,7 @@ function Wrapper({
   const state = getProjectState();
   const pathname = usePathname() ?? "";
 
-  const resolveHref = (path: string) =>
-    `/console/project/${state.project?.$id}/authentication/${path}`;
+  const resolveHref = (path: string) => `/project/${state.project?.$id}/authentication/${path}`;
   const resolveIsSelected = (value: string) => pathname.includes(resolveHref(value));
 
   projectState.sidebar.middle = (

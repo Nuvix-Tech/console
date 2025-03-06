@@ -62,34 +62,34 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
   const sideNav: SidebarItem[] = [
     {
       name: "Overview",
-      href: `/console/project/${id}`,
+      href: `/project/${id}`,
       icon: <span className="icon-chart-bar" />,
-      active: pathname === `/console/project/${id}`,
+      active: pathname === `/project/${id}`,
     },
     {
       name: "Authentication",
-      href: `/console/project/${id}/authentication/users`,
-      active: pathname.includes(`/console/project/${id}/authentication`),
+      href: `/project/${id}/authentication/users`,
+      active: pathname.includes(`/project/${id}/authentication`),
       icon: <span className="icon-users" />,
     },
     {
       name: "Database",
-      href: `/console/project/${id}/databases`,
+      href: `/project/${id}/databases`,
       icon: <span className="icon-database" />,
     },
     {
       name: "Storage",
-      href: `/console/project/${id}/storage`,
+      href: `/project/${id}/storage`,
       icon: <span className="icon-folder" />,
     },
     {
       name: "Functions",
-      href: `/console/project/${id}/functions`,
+      href: `/project/${id}/functions`,
       icon: <span className="icon-sparkles" />,
     },
     {
       name: "Messaging",
-      href: `/console/project/${id}/messaging`,
+      href: `/project/${id}/messaging`,
       icon: <span className="icon-chat-alt-2" />,
     },
   ];
@@ -137,11 +137,11 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
           <SidebarSmallButton
             item={{
               name: "Settings",
-              href: `/console/project/${id}/settings`,
+              href: `/project/${id}/settings`,
               icon: <span className="icon-cog" />,
             }}
             showFullSidebar={showFullSidebar || !showSubSidebar || !!alwaysFull}
-            selected={pathname === `/console/project/${id}/settings`}
+            selected={pathname === `/project/${id}/settings`}
           />
 
           <SidebarSmallButton

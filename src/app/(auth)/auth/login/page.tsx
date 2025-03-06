@@ -43,7 +43,7 @@ export default function Login() {
         variant: "success",
         message: "You have successfully logged in.",
       });
-      replace("/console");
+      replace("/");
     } catch (e: any) {
       addToast({
         variant: "danger",

@@ -44,7 +44,7 @@ const DatabasePage = () => {
     get();
   }, [sdk, limit, page, search]);
 
-  const path = `/console/project/${project?.$id}/databases`;
+  const path = `/project/${project?.$id}/databases`;
 
   const columns: ColumnDef<Models.Database>[] = [
     {

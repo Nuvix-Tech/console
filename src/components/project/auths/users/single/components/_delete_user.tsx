@@ -33,7 +33,7 @@ export const DeleteUser = () => {
           variant: "success",
           message: "User deleted successfully",
         });
-        replace(`/console/project/${project?.$id}/authentication/users`);
+        replace(`/project/${project?.$id}/authentication/users`);
       } catch (e: any) {
         addToast({
           variant: "danger",

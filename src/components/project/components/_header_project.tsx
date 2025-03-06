@@ -58,7 +58,7 @@ export function HeaderProject() {
                   key={p.$id}
                   value={p.$id}
                   onSelect={(currentValue) => {
-                    push(`/console/project/${currentValue}`);
+                    push(`/project/${currentValue}`);
                     setOpen(false);
                   }}
                 >

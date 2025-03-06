@@ -37,9 +37,7 @@ export const DeleteDocument = () => {
           variant: "success",
           message: "Document deleted successfully",
         });
-        replace(
-          `/console/project/${project?.$id}/databases/${database.$id}/collection/${collection.$id}`,
-        );
+        replace(`/project/${project?.$id}/databases/${database.$id}/collection/${collection.$id}`);
       } catch (e: any) {
         addToast({
           variant: "danger",

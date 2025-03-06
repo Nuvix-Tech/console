@@ -36,7 +36,7 @@ export const ProjectInfo: React.FC = () => {
               variant="surface"
               alignSelf="flex-start"
               mt="auto"
-              onClick={() => push(`/console/project/${project?.$id}/apis`)}
+              onClick={() => push(`/project/${project?.$id}/apis`)}
             >
               API Keys
               <LuExternalLink />

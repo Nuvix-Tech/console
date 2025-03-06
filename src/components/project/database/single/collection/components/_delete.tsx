@@ -36,7 +36,7 @@ export const DeleteCollection = () => {
           variant: "success",
           message: "Collection deleted successfully",
         });
-        replace(`/console/project/${project?.$id}/databases/${database.$id}`);
+        replace(`/project/${project?.$id}/databases/${database.$id}`);
       } catch (e: any) {
         addToast({
           variant: "danger",

@@ -16,7 +16,7 @@ const CollectionSidebar = () => {
   const path = usePathname();
 
   const resolveHref = (value?: string) =>
-    `/console/project/${project?.$id}/databases/${database?.$id}/collection/${collection?.$id}${value ? `/${value}` : ""}`;
+    `/project/${project?.$id}/databases/${database?.$id}/collection/${collection?.$id}${value ? `/${value}` : ""}`;
   const resolveIsSelected = (value?: string) => path.includes(resolveHref(value));
 
   return (
@@ -109,9 +109,7 @@ const Collections = ({ collections }: { collections: Models.Collection[] }) => {
           justifyContent="flex-start"
           variant={selectedCollection?.$id === c.$id ? "surface" : "ghost"}
           onClick={() =>
-            router.push(
-              `/console/project/${project?.$id}/databases/${database!.$id}/collection/${c.$id}`,
-            )
+            router.push(`/project/${project?.$id}/databases/${database!.$id}/collection/${c.$id}`)
           }
         >
           {c.name}

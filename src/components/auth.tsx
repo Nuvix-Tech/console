@@ -17,7 +17,7 @@ const AuthWrapper: React.FC<{ children: React.ReactNode; isConsole?: boolean }> 
     const fetchUser = async () => {
       try {
         const user = await account.get();
-        push("/console");
+        push("/");
       } catch (e) {
         setIsLoading(false);
       }

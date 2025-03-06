@@ -60,7 +60,7 @@ const DatabaseSinglePage = ({ databaseId }: { databaseId: string }) => {
 
   if (database?.$id !== databaseId) return;
 
-  const path = `/console/project/${project?.$id}/databases/${database?.$id}/collection`;
+  const path = `/project/${project?.$id}/databases/${database?.$id}/collection`;
 
   const columns: ColumnDef<Models.Collection>[] = [
     {

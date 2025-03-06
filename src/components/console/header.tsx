@@ -58,7 +58,7 @@ const ConsoleHeader: React.FC<HeaderProps> = () => {
                 onClick={() => (appState.isDrawerOpen = !appState.isDrawerOpen)}
               />
             </Row>
-            <Link href="/console">
+            <Link href="/">
               <div className="is-only-dark">
                 <Logo icon={false} size="m" wordmarkSrc="/trademark/nuvix-logo-dark.svg" />
               </div>

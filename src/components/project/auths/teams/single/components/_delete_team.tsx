@@ -32,7 +32,7 @@ export const DeleteTeam = () => {
           variant: "success",
           message: "Team deleted successfully",
         });
-        replace(`/console/project/${project?.$id}/authentication/teams`);
+        replace(`/project/${project?.$id}/authentication/teams`);
       } catch (e: any) {
         addToast({
           variant: "danger",

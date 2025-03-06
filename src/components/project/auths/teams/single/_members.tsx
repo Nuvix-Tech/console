@@ -30,7 +30,7 @@ const MembersPage = () => {
   const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
   const search = searchParams.get("search");
 
-  const authPath = `/console/project/${project?.$id}/authentication`;
+  const authPath = `/project/${project?.$id}/authentication`;
 
   async function get(queries?: string[], search?: string) {
     setLoading(true);

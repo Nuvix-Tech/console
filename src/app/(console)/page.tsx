@@ -30,7 +30,7 @@ export default function Page() {
       if (!org) {
         const orgs = await organizations.list();
         if (orgs.total === 0) {
-          replace("/console/onboarding");
+          replace("/onboarding");
           return;
         }
 
@@ -41,7 +41,7 @@ export default function Page() {
       }
       const scopes = await organizations.getScopes(org!.$id);
       appState.scopes = scopes;
-      replace(`/console/organization/${org?.$id}`);
+      replace(`/organization/${org?.$id}`);
     }
 
     fetchUser();
