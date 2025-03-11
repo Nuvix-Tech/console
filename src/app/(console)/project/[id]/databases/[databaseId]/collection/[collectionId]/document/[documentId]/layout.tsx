@@ -12,9 +12,5 @@ type Props = {
 export default async function ({ children, params }: PropsWithChildren & PropsWithParams<Props>) {
   const props = await params;
 
-  return (
-    <Suspense>
-      <DocumentLayout {...props}>{children}</DocumentLayout>
-    </Suspense>
-  );
+  return <DocumentLayout {...props}>{children}</DocumentLayout>;
 }

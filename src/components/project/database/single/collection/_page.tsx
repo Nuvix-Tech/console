@@ -49,7 +49,7 @@ const CollectionPage: React.FC<Props> = ({ databaseId, collectionId }: Props) =>
   const { canWriteDocuments } = permissions;
 
   const get = async () => {
-    if (!sdk || !database || !collection) return;
+    if (!sdk || !databaseId || !collectionId) return;
     setLoading(true);
     try {
       const queries: string[] = [Query.limit(limit), Query.offset((page - 1) * limit)];

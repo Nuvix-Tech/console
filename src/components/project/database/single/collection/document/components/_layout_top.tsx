@@ -22,8 +22,9 @@ export const LayoutTop: React.FC<LayoutTopProps> = ({ title, id }) => {
   const path = usePathname();
   const { push } = useRouter();
 
-  const url = `/project/${project?.$id}/databases/${database?.$id}/collection/${collection?.$id}/document/`;
+  const url = `/project/${project?.$id}/databases/${database?.$id}/collection/${collection?.$id}/document/${document?.$id}`;
 
+  const value = path.split("/")[path.split("/").length - 1];
   return (
     <>
       <Row margin="20">
@@ -31,14 +32,14 @@ export const LayoutTop: React.FC<LayoutTopProps> = ({ title, id }) => {
           <Stack direction={{ base: "column-reverse", md: "column" }} width="full" zIndex="1">
             {id && <IDChip id={id} />}
             <Tabs
-              defaultValue={document?.$id || "#"}
-              value={path.split("/")[path.split("/").length - 1] || document?.$id}
+              defaultValue={""}
+              value={value === document?.$id ? "" : value}
               onValueChange={(v) => push(`${url}/${v}`)}
             >
               <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value={document?.$id || "#"}>Document</TabsTrigger>
-                <TabsTrigger value="details">Access & Security</TabsTrigger>
-                <TabsTrigger value="activity">Activity</TabsTrigger>
+                <TabsTrigger value={""}>Document</TabsTrigger>
+                <TabsTrigger value={`details`}>Access & Security</TabsTrigger>
+                <TabsTrigger value={`logs`}>Activity</TabsTrigger>
               </TabsList>
             </Tabs>
           </Stack>

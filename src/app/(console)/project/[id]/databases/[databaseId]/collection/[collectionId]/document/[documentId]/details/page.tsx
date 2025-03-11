@@ -1,5 +1,9 @@
 import { DocumentDetails } from "@/components/project/database/single/collection/document";
 
-export default function () {
-  return <DocumentDetails />;
+export default function DocumentDetailsPage() {
+  return (
+    <>
+      <DocumentDetails />
+    </>
+  );
 }
