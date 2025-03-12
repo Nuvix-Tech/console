@@ -78,7 +78,7 @@ export default function Login() {
       className="flex flex-col items-center size-full gap-5 justigy-center"
     >
       <Logo size="l" wordmark={false} iconSrc="/favicon.ico" />
-      <Heading as="h3" variant="display-default-s" align="center">
+      <Heading as="h3" variant="display-default-xs" align="center">
         Welcome back
       </Heading>
       <Text onBackground="neutral-medium">

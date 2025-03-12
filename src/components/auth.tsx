@@ -13,19 +13,19 @@ const AuthWrapper: React.FC<{ children: React.ReactNode; isConsole?: boolean }> 
   const { account } = sdkForConsole;
   const { push } = useRouter();
 
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     try {
-  //       const user = await account.get();
-  //       push("/");
-  //     } catch (e) {
-  //       setIsLoading(false);
-  //     }
-  //   };
-  //   fetchUser();
-  // }, []);
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const user = await account.get();
+        push("/");
+      } catch (e) {
+        setIsLoading(false);
+      }
+    };
+    fetchUser();
+  }, []);
 
-  return <>{!isLoading ? <LoadingUI /> : children}</>;
+  return <>{isLoading ? <LoadingUI /> : children}</>;
 };
 
 export default AuthWrapper;

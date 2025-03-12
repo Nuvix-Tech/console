@@ -13,7 +13,7 @@ export default function RegisterPage() {
       <div className="w-full max-w-md space-y-6">
         <div className="flex flex-col items-center">
           <Logo size="l" wordmark={false} iconSrc="/favicon.ico" />
-          <Heading as="h3" variant="display-default-s" align="center" className="mt-6">
+          <Heading as="h3" variant="display-default-xs" align="center" className="mt-6">
             Get Started
           </Heading>
           <Text onBackground="neutral-medium" className="mt-2">

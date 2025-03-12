@@ -3,15 +3,16 @@ import { Formik, FormikConfig, FormikValues } from "formik";
 
 type Form = {
   children: React.ReactNode;
+  className?: string;
 };
 
 function Form<Values extends FormikValues = FormikValues, ExtraProps = {}>(
   props: FormikConfig<Values> & ExtraProps & Form,
 ): React.JSX.Element {
-  const { children, ...rest } = props;
+  const { children, className, ...rest } = props;
   return (
     <Formik {...rest}>
-      {(props: any) => <form onSubmit={props.handleSubmit}>{children}</form>}
+      {(props: any) => <form className={className} onSubmit={props.handleSubmit}>{children}</form>}
     </Formik>
   );
 }
