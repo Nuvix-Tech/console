@@ -48,7 +48,7 @@
     "class-variance-authority": "^0.7.1",
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
-    "cmdk": "1.0.0",
+    "cmdk": "^1.0.4",
     "compressorjs": "^1.2.1",
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.5.2",
