@@ -30,7 +30,7 @@ export default function Page() {
       if (!org) {
         const orgs = await organizations.list();
         if (orgs.total === 0) {
-          replace("/onboarding");
+          replace("/create-organization");
           return;
         }
 

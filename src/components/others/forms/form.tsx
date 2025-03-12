@@ -12,7 +12,11 @@ function Form<Values extends FormikValues = FormikValues, ExtraProps = {}>(
   const { children, className, ...rest } = props;
   return (
     <Formik {...rest}>
-      {(props: any) => <form className={className} onSubmit={props.handleSubmit}>{children}</form>}
+      {(props: any) => (
+        <form className={className} onSubmit={props.handleSubmit}>
+          {children}
+        </form>
+      )}
     </Formik>
   );
 }

@@ -17,7 +17,10 @@ export default function RegisterPage() {
             Get Started
           </Heading>
           <Text onBackground="neutral-medium" className="mt-2">
-            Create a new account or <Link href="/auth/login" className="font-medium hover:underline">log in</Link>
+            Create a new account or{" "}
+            <Link href="/auth/login" className="font-medium hover:underline">
+              log in
+            </Link>
           </Text>
         </div>
 
@@ -25,7 +28,14 @@ export default function RegisterPage() {
           <RegisterForm />
 
           <Text onBackground="neutral-medium" className="mt-4 text-sm text-center">
-            By creating an account, you agree to our <Link href="/terms" className="font-medium hover:underline">Terms of Service</Link> and <Link href="/privacy" className="font-medium hover:underline">Privacy Policy</Link>
+            By creating an account, you agree to our{" "}
+            <Link href="/terms" className="font-medium hover:underline">
+              Terms of Service
+            </Link>{" "}
+            and{" "}
+            <Link href="/privacy" className="font-medium hover:underline">
+              Privacy Policy
+            </Link>
           </Text>
         </div>
       </div>

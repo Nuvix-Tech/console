@@ -16,7 +16,7 @@ import { sdkForConsole } from "@/lib/sdk";
 
 export function UserProfile() {
   const { user } = getAppState();
-  const { avatars } = sdkForConsole;
+  const { avatars, account } = sdkForConsole;
 
   return user ? (
     <DropdownMenu>
@@ -37,7 +37,7 @@ export function UserProfile() {
           <DropdownMenuItem className="py-2.5 px-3">Create Team</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => account.deleteSession("current").then()}>
           Log out
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>
