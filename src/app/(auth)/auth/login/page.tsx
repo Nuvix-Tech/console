@@ -1,3 +1,5 @@
+// Suggested code may be subject to a license. Learn more: ~LicenseLog:1658189366.
+// Suggested code may be subject to a license. Learn more: ~LicenseLog:3172598790.
 "use client";
 import { APP_NAME } from "@/lib/constants";
 import { sdkForConsole } from "@/lib/sdk";
@@ -17,80 +19,104 @@ import {
 } from "@/ui/components";
 import { useRouter } from "@bprogress/next";
 import React, { useState } from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const { addToast } = useToast();
   const { account } = sdkForConsole;
-
   const { replace } = useRouter();
 
-  const validateLogin = () => {
+  const validateEmail = () => {
+    if (!email) return "Email cannot be empty.";
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!regex.test(email)) {
-      return "Email and / or password is invalid.";
-    }
+    if (!regex.test(email)) return "Invalid email format.";
+    return null;
+  };
+
+  const validatePassword = (password: string) => {
+    if (!password) return "Password cannot be empty.";
+    if (password.length < 8) return "Password must be at least 8 characters long.";
+    if (!/[a-z]/.test(password)) return "Password must contain a lowercase letter.";
+    if (!/[A-Z]/.test(password)) return "Password must contain an uppercase letter.";
+    if (!/[^a-zA-Z0-9]/.test(password)) return "Password must contain a special character.";
+    return null;
+  };
+
+  const validateLogin = () => {
+    const emailValidation = validateEmail();
+    if (emailValidation) return emailValidation;
+    if (!password) return "Password cannot be empty.";
+
     return null;
   };
 
   async function onSubmit() {
     setLoading(true);
+    setError("");
     try {
-      const res = await account.createEmailPasswordSession(email, password);
-      addToast({
-        variant: "success",
-        message: "You have successfully logged in.",
-      });
+      await account.createEmailPasswordSession(email, password);
+      addToast({ variant: "success", message: "Successfully logged in." });
       replace("/");
     } catch (e: any) {
-      addToast({
-        variant: "danger",
-        message: e.message,
-      });
+      setError(e.message);
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <>
-      <Logo wordmark={false} size="l" />
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="flex flex-col items-center size-full gap-5 justigy-center"
+    >
+      <Logo size="l" wordmark={false} iconSrc="/favicon.ico" />
       <Heading as="h3" variant="display-default-s" align="center">
-        Welcome to {APP_NAME}
+        Welcome back
       </Heading>
-      <Text onBackground="neutral-medium" marginBottom="24">
-        Log in or
-        <SmartLink href="/auth/register">sign up</SmartLink>
+      <Text onBackground="neutral-medium">
+        Sign in to your account or <Link href="/auth/register">sign up</Link>
       </Text>
-      <Column gap="-1" fillWidth>
+
+      {error && (
+        <Alert variant="destructive" title="Error">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
+      <Column gap="16" fillWidth paddingY="8">
         <Input
           id="email"
           label="Email"
+          type="email"
           labelAsPlaceholder
           onChange={(e) => setEmail(e.target.value)}
           value={email}
-          validate={validateLogin}
-          errorMessage={false}
-          radius="top"
+          validate={validateEmail}
         />
         <PasswordInput
-          autoComplete="new-password"
           id="password"
           label="Password"
           labelAsPlaceholder
-          radius="bottom"
           onChange={(e) => setPassword(e.target.value)}
           value={password}
-          validate={validateLogin}
+          validate={() => validatePassword(password)}
+          onKeyDown={(e) => e.key === "Enter" && onSubmit()}
         />
-        <Flex horizontal="end" paddingTop="8">
-          <SmartLink color="gray" href="/auth/forgot-password">
+        <Flex horizontal="end">
+          <SmartLink href="/auth/forgot-password" className="!text-gray-500">
             Forgot password?
           </SmartLink>
         </Flex>
       </Column>
+
       <Button
         id="login"
         label="Log in"
@@ -99,32 +125,26 @@ export default function Login() {
         loading={loading}
         fillWidth
         onClick={onSubmit}
+        className="hover:shadow-lg hover:bg-opacity-90"
       />
-      <Row fillWidth paddingY="24">
-        <Row onBackground="neutral-weak" fillWidth gap="24" vertical="center">
-          <Line />*<Line />
-        </Row>
+
+      <Row fillWidth paddingY="8" vertical="center" gap="8">
+        <Line />
+        <Text onBackground="neutral-weak">OR</Text>
+        <Line />
       </Row>
-      <Column fillWidth gap="8">
-        {/* <Button
-          label="Continue with Google"
-          fillWidth
-          variant="secondary"
-          weight="default"
-          prefixIcon="google"
-          size="l"
-        /> */}
-        <Button
-          label="Continue with GitHub"
-          fillWidth
-          disabled={true}
-          // loading={loading}
-          variant="secondary"
-          weight="default"
-          prefixIcon="github"
-          size="l"
-        />
-      </Column>
-    </>
+
+      <Button
+        label="Continue with GitHub"
+        fillWidth
+        variant="secondary"
+        weight="default"
+        prefixIcon="github"
+        size="l"
+        onClick={() => {
+          /* GitHub auth logic here */
+        }}
+      />
+    </motion.div>
   );
 }

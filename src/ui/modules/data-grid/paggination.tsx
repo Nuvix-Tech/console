@@ -51,17 +51,21 @@ export const Paggination = () => {
 
 export const PagginationWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
-    <HStack
-      justifyContent="space-between"
-      alignItems="center"
-      pos="fixed"
-      className="page-background"
-      bottom="0"
-      py="2"
-      zIndex={5}
-      width="-webkit-fill-available"
-    >
-      {children}
-    </HStack>
+    <div className="relative">
+      <HStack
+        justifyContent="space-between"
+        alignItems="center"
+        pos="fixed"
+        className="page-background"
+        bottom="0"
+        right="0"
+        left={{ base: 0, lg: "300px" }}
+        py="2"
+        zIndex={5}
+        width="full"
+      >
+        {children}
+      </HStack>
+    </div>
   );
 };
