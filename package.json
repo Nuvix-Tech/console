@@ -16,7 +16,7 @@
     "@emotion/react": "^11.14.0",
     "@floating-ui/react-dom": "^2.1.1",
     "@hookform/resolvers": "^4.1.2",
-    "@nuvix/console": "^0.0.5",
+    "@nuvix/console": "^0.0.5-alpha.1",
     "@radix-ui/react-accordion": "^1.2.3",
     "@radix-ui/react-alert-dialog": "^1.1.6",
     "@radix-ui/react-aspect-ratio": "^1.1.2",

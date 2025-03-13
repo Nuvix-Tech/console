@@ -2,6 +2,7 @@ import {
   Account,
   Assistant,
   Avatars,
+  Billing,
   Client,
   Console,
   ConsoleAccount,
@@ -63,7 +64,7 @@ const sdkForConsole = {
   migrations: new Migrations(clientConsole),
   console: new Console(clientConsole),
   assistant: new Assistant(clientConsole),
-  // billing: new Billing(clientConsole),
+  billing: new Billing(clientConsole),
   // sources: new Sources(clientConsole),
   organizations: new Organizations(clientConsole),
 };
