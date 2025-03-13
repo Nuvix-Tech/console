@@ -6,9 +6,11 @@ import { type ReactNode, forwardRef } from "react";
 import { Icon } from ".";
 import { ElementType } from "./ElementType";
 
+type IconProps = React.ComponentProps<typeof Icon>
+
 interface CommonProps {
-  prefixIcon?: string;
-  suffixIcon?: string;
+  prefixIcon?: IconProps['name'];
+  suffixIcon?: IconProps['name'];
   fillWidth?: boolean;
   iconSize?: "xs" | "s" | "m" | "l" | "xl";
   selected?: boolean;
@@ -55,15 +57,15 @@ const SmartLink = forwardRef<HTMLAnchorElement, SmartLinkProps>(
       }),
       style: !unstyled
         ? {
-            ...(selected && {
-              textDecoration: "underline",
-            }),
-            ...style,
-          }
+          ...(selected && {
+            textDecoration: "underline",
+          }),
+          ...style,
+        }
         : {
-            textDecoration: "none",
-            ...style,
-          },
+          textDecoration: "none",
+          ...style,
+        },
       ...props,
     };
 
