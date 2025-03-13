@@ -1,5 +1,6 @@
 "use client";
 
+import { getAppState } from "@/state/app-state";
 import { Column, Icon, IconButton, Line, Row, Tag, Text, ToggleButton } from "@/ui/components";
 import { usePathname } from "next/navigation";
 import { GoArrowUpRight } from "react-icons/go";
@@ -11,133 +12,165 @@ type Props = {
 
 const ConsoleSidebar: React.FC<Props> = ({ inMobile }) => {
   const pathname = usePathname() ?? "";
+  const { organization } = getAppState();
 
   return (
     <Column
       maxWidth={inMobile ? undefined : 16}
       fillHeight
-      paddingX="16"
-      paddingY="32"
-      gap="m"
+      paddingX={inMobile ? "16" : "0"}
+      paddingY="20"
+      gap="xs"
       hide={inMobile ? undefined : "s"}
       background={inMobile ? "transparent" : "surface"}
       borderRight={inMobile ? undefined : "neutral-medium"}
       position={inMobile ? "relative" : "fixed"}
+      role="navigation"
+      aria-label="Console Sidebar"
+      overflowY="auto"
     >
-      <Column fill paddingX="xs" gap="m">
-        <Column gap="4">
-          <Row fillWidth horizontal="space-between" vertical="center" paddingY="8" paddingX="16">
-            <Text variant="body-default-xs" onBackground="neutral-weak">
-              Projects
-            </Text>
-            <IconButton tooltip="Create" variant="secondary" icon="plus" size="s" />
-          </Row>
-          <ToggleButton fillWidth justifyContent="flex-start" selected={pathname === "projects"}>
-            <Row padding="4" gap="12" vertical="center" textVariant="label-default-s">
-              <Line width="16" />
-              All Projects
-            </Row>
-          </ToggleButton>
+      <Column fill gap="m" paddingBottom="40">
+        {/* Projects Section */}
+        <Column gap="4" className="mx-4">
+          <SidebarTitle title="Projects" />
+          <SidebarItem
+            label="All Projects"
+            selected={pathname.split("/")[-1] === organization?.$id}
+          />
+          <SidebarItem label="New Project" selected={pathname.split("/")[1] === "new-project"} />
         </Column>
 
-        <Line />
+        <Line background="neutral-alpha-weak" />
 
-        <Column fillWidth gap="4">
-          <Text
-            variant="body-default-xs"
-            onBackground="neutral-weak"
-            marginBottom="8"
-            marginLeft="16"
-          >
-            Account
-          </Text>
-          <ToggleButton fillWidth justifyContent="flex-start" selected={false}>
-            <Row padding="4" vertical="center" gap="12" textVariant="label-default-s">
-              <Icon name="PiHouseDuotone" onBackground="neutral-weak" size="xs" />
-              Preferences
-            </Row>
-          </ToggleButton>
-          <ToggleButton fillWidth justifyContent="flex-start" selected={pathname === "analytics"}>
-            <Row padding="4" vertical="center" gap="12" textVariant="label-default-s">
-              <Icon name="PiTrendUpDuotone" onBackground="neutral-weak" size="xs" />
-              Audit Logs
-            </Row>
-          </ToggleButton>
-          {/* <ToggleButton
-            style={{
-              position: "relative",
-            }}
-            fillWidth
-            justifyContent="flex-start"
+        {/* Account Section */}
+        <Column gap="4" className="mx-4">
+          <SectionHeader label={organization?.name ?? "Organization"} />
+          <SidebarItem label="Members" selected={false} />
+          <SidebarItem label="Billing" selected={pathname === "analytics"} />
+          <SidebarItem label="Settings" selected={pathname === "reports"} />
+        </Column>
+
+        <Line background="neutral-alpha-weak" />
+
+        {/* Account Section */}
+        <Column gap="4" className="mx-4">
+          <SectionHeader label="Account" />
+          <SidebarItem label="Preferences" selected={false} />
+          <SidebarItem label="Audit Logs" selected={pathname === "analytics"} />
+          {/* Uncomment if needed */}
+          {/* <SidebarItem
+            label="Reports"
+            icon="PiNotebookDuotone"
             selected={pathname === "reports"}
-          >
-            <Row padding="4" vertical="center" gap="12" textVariant="label-default-s">
-              <Icon name="PiNotebookDuotone" onBackground="neutral-weak" size="xs" />
-              Reports
-              <Tag variant="neutral" size="s" position="absolute" right="8">
-                New
-              </Tag>
-            </Row>
-          </ToggleButton> */}
+            tag="New"
+          /> */}
         </Column>
 
-        <Line />
+        <Line background="neutral-alpha-weak" />
 
-        <Column fillWidth gap="4">
-          <Text
-            variant="body-default-xs"
-            onBackground="neutral-weak"
-            marginBottom="8"
-            marginLeft="16"
-          >
-            Documentation
-          </Text>
-          <ToggleButton fillWidth justifyContent="flex-start" selected={false}>
-            <Row padding="4" vertical="center" gap="12" textVariant="label-default-s">
-              <Icon name={GoArrowUpRight} onBackground="neutral-weak" size="xs" />
-              Guides
-            </Row>
-          </ToggleButton>
-          <ToggleButton fillWidth justifyContent="flex-start" selected={pathname === "analytics"}>
-            <Row padding="4" vertical="center" gap="12" textVariant="label-default-s">
-              <Icon name={GoArrowUpRight} onBackground="neutral-weak" size="xs" />
-              API Reference
-            </Row>
-          </ToggleButton>
-          {/* <ToggleButton
-            style={{
-              position: "relative",
-            }}
-            fillWidth
-            justifyContent="flex-start"
-            selected={pathname === "reports"}
-          >
-            <Row padding="4" vertical="center" gap="12" textVariant="label-default-s">
-              <Icon name="PiNotebookDuotone" onBackground="neutral-weak" size="xs" />
-              Reports
-              <Tag variant="neutral" size="s" position="absolute" right="8">
-                New
-              </Tag>
-            </Row>
-          </ToggleButton> */}
+        {/* Documentation Section */}
+        <Column gap="4" className="mx-4">
+          <SectionHeader label="Documentation" />
+          <SidebarItem label="Guides" icon={GoArrowUpRight} selected={false} />
+          <SidebarItem
+            label="API Reference"
+            icon={GoArrowUpRight}
+            selected={pathname === "analytics"}
+          />
         </Column>
 
-        <Line />
-
-        <Column fillWidth gap="4">
-          <ToggleButton fillWidth justifyContent="flex-start" selected={pathname === "permissions"}>
-            <Row padding="4" gap="12" vertical="center" textVariant="label-default-s">
-              <Icon name={IoLogOutOutline} onBackground="neutral-weak" size="xs" />
-              Logout
-            </Row>
-          </ToggleButton>
-        </Column>
-
-        <Line />
+        <Line background="neutral-alpha-weak" />
       </Column>
     </Column>
   );
 };
 
-ConsoleSidebar.displayName = "Sidebar";
+// Reusable Sidebar Item Component
+type SidebarItemProps = {
+  label: string;
+  icon?: string | React.ElementType;
+  selected: boolean;
+  tag?: string;
+};
+
+const SidebarItem = ({ label, selected, icon: IICON, tag }: SidebarItemProps) => {
+  return (
+    <ToggleButton
+      size="l"
+      fillWidth
+      justifyContent="flex-start"
+      selected={selected}
+      role="menuitem"
+      aria-label={label}
+    >
+      <Row padding="4" vertical="center" gap="12" textVariant="label-default-m">
+        {IICON && (
+          <Icon
+            name={<IICON size={18} />}
+            onBackground="neutral-weak"
+            size="s"
+            aria-hidden="true"
+            className="-ml-2"
+          />
+        )}
+        {label}
+        {tag && (
+          <Tag variant="neutral" size="s" position="absolute" right="8">
+            {tag}
+          </Tag>
+        )}
+      </Row>
+    </ToggleButton>
+  );
+};
+
+// Reusable Section Header Component
+type SectionHeaderProps = {
+  label: string;
+};
+
+const SectionHeader = ({ label }: SectionHeaderProps) => {
+  return (
+    <Text
+      variant="body-default-s"
+      onBackground="neutral-weak"
+      marginBottom="8"
+      marginLeft="8"
+      aria-label={label}
+    >
+      {label}
+    </Text>
+  );
+};
+
+// Reusable Sidebar Title Component
+type SidebarTitleProps = {
+  title: string;
+  button?: {
+    icon?: string;
+    tooltip?: string;
+    onClick?: () => void;
+  };
+};
+
+const SidebarTitle = ({ title, button }: SidebarTitleProps) => {
+  return (
+    <Row fillWidth horizontal="space-between" vertical="center" paddingBottom="8" marginLeft="8">
+      <Text variant="body-default-s" onBackground="neutral-weak">
+        {title}
+      </Text>
+      {button && (
+        <IconButton
+          tooltip={button.tooltip}
+          variant="secondary"
+          icon={button.icon}
+          size="s"
+          aria-label={button.tooltip}
+        />
+      )}
+    </Row>
+  );
+};
+
+ConsoleSidebar.displayName = "ConsoleSidebar";
 export { ConsoleSidebar };
