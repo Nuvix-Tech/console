@@ -59,7 +59,10 @@ export const OrganizationPage = ({ id, searchParams }: Props) => {
 
         {!loading && !projectList.projects.length ? (
           <>
-            <EmptyState title="Project" />
+            <EmptyState
+              title="No Projects Yet"
+              description="Create a project to start managing your resources."
+            />
           </>
         ) : null}
 
