@@ -8,7 +8,8 @@ import { Query, type Models } from "@nuvix/console";
 import { useRouter } from "@bprogress/next";
 import { useEffect, useState } from "react";
 import { EmptyState } from "@/components/_empty_state";
-import { DataGridProvider, Pagination } from "@/ui/modules/data-grid";
+import { DataGridProvider, Pagination, SelectLimit } from "@/ui/modules/data-grid";
+import { CreateProject } from "@/components/wizard";
 
 type Props = {
   id: string;
@@ -21,6 +22,7 @@ export const OrganizationPage = ({ id, searchParams }: Props) => {
     total: 0,
   });
   const [loading, setLoading] = useState(true);
+  const [showCreateProject, setShowCreateProject] = useState(false);
   const { projects: projectApi } = sdkForConsole;
   const { push } = useRouter();
   const limit = searchParams.limit ? Number(searchParams.limit) : 6;
@@ -51,7 +53,7 @@ export const OrganizationPage = ({ id, searchParams }: Props) => {
       <Column maxWidth={"l"} fillWidth fillHeight gap="12">
         <Row horizontal="space-between" vertical="center">
           <Heading size="xl">Projects</Heading>
-          <Button prefixIcon="plus" onClick={() => push("/create-project")}>
+          <Button prefixIcon="plus" onClick={() => setShowCreateProject(true)}>
             Create project
           </Button>
         </Row>
@@ -63,7 +65,7 @@ export const OrganizationPage = ({ id, searchParams }: Props) => {
               description="Create a project to start managing resources."
               primary={{
                 label: "Create Project",
-                onClick: () => push("/create-project"),
+                onClick: () => setShowCreateProject(true),
               }}
               secondary={{
                 label: "Learn more",
@@ -93,8 +95,16 @@ export const OrganizationPage = ({ id, searchParams }: Props) => {
             )}
           </Grid>
 
-          <Pagination />
+          <Row horizontal="space-between" vertical="center">
+            <SelectLimit />
+            <Pagination />
+          </Row>
         </DataGridProvider>
+
+        <CreateProject
+          open={showCreateProject}
+          onOpenChange={(d) => setShowCreateProject(d.open)}
+        />
       </Column>
     </Row>
   );

@@ -21,8 +21,8 @@ export const EmptyState = ({ title, description, primary, secondary }: EmptyStat
       alignItems="center"
       gap={4}
     >
-      <SmartImage src="/images/empty-dark.svg" alt="Empty state" height={15} width={17.5} />
-      <Stack gap={2}>
+      <SmartImage src="/images/empty-dark.svg" alt="Empty state" height={15} width={20.5} />
+      <Stack gap={2} justifyContent="center" alignItems="center">
         <Text textStyle="xl" fontWeight="bold">
           {title}
         </Text>
@@ -32,7 +32,7 @@ export const EmptyState = ({ title, description, primary, secondary }: EmptyStat
           </Text>
         )}
       </Stack>
-      <Stack direction="row" gap={2}>
+      <Stack direction="row" gap={4}>
         {primary && <Button {...primary} />}
         {secondary && <Button variant="secondary" {...secondary} />}
       </Stack>
