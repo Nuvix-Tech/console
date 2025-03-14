@@ -3,12 +3,12 @@ import { ProjectCard } from "@/components/project/card";
 import { GridSkelton } from "@/components/skelton";
 import { sdkForConsole } from "@/lib/sdk";
 import { Button, Column, Grid, Row } from "@/ui/components";
-import { Pagination } from "@/ui/modules/table/paggination";
 import { Heading } from "@chakra-ui/react";
 import { Query, type Models } from "@nuvix/console";
 import { useRouter } from "@bprogress/next";
 import { useEffect, useState } from "react";
 import { EmptyState } from "@/components/_empty_state";
+import { DataGridProvider, Pagination } from "@/ui/modules/data-grid";
 
 type Props = {
   id: string;
@@ -23,14 +23,13 @@ export const OrganizationPage = ({ id, searchParams }: Props) => {
   const [loading, setLoading] = useState(true);
   const { projects: projectApi } = sdkForConsole;
   const { push } = useRouter();
+  const limit = searchParams.limit ? Number(searchParams.limit) : 6;
+  const page = searchParams.page ? Number(searchParams.page) : 1;
 
   useEffect(() => {
     const fetchProjects = async () => {
       setLoading(true);
       try {
-        const limit = searchParams.limit ? Number(searchParams.limit) : 6;
-        const page = searchParams.page ? Number(searchParams.page) : 1;
-
         const projects = await projectApi.list([
           Query.limit(limit),
           Query.equal("teamId", id),
@@ -45,7 +44,7 @@ export const OrganizationPage = ({ id, searchParams }: Props) => {
     };
 
     fetchProjects();
-  }, [id, searchParams]);
+  }, [id, limit, page]);
 
   return (
     <Row fillWidth center>
@@ -60,27 +59,42 @@ export const OrganizationPage = ({ id, searchParams }: Props) => {
         {!loading && !projectList.projects.length ? (
           <>
             <EmptyState
-              title="No Projects Yet"
-              description="Create a project to start managing your resources."
+              title="No Projects Available"
+              description="Create a project to start managing resources."
+              primary={{
+                label: "Create Project",
+                onClick: () => push("/create-project"),
+              }}
+              secondary={{
+                label: "Learn more",
+                onClick: () => {
+                  /* TODO: Add learn more link */
+                },
+              }}
             />
           </>
         ) : null}
 
-        <Grid gap="l" marginTop="l" columns={2}>
-          {loading ? (
-            <GridSkelton limit={2} />
-          ) : (
-            projectList.projects.map((project) => (
-              <ProjectCard key={project.$id} project={project} />
-            ))
-          )}
-        </Grid>
+        <DataGridProvider
+          columns={[]}
+          data={projectList.projects}
+          manualPagination
+          rowCount={projectList.total}
+          loading={loading}
+          state={{ pagination: { pageIndex: page, pageSize: limit } }}
+        >
+          <Grid gap="l" marginTop="l" columns={2}>
+            {loading ? (
+              <GridSkelton limit={2} />
+            ) : (
+              projectList.projects.map((project) => (
+                <ProjectCard key={project.$id} project={project} />
+              ))
+            )}
+          </Grid>
 
-        <Pagination
-          totalItems={projectList.total}
-          currentPage={searchParams.page ? Number(searchParams.page) : 1}
-          itemsPerPage={searchParams.limit ? Number(searchParams.limit) : 6}
-        />
+          <Pagination />
+        </DataGridProvider>
       </Column>
     </Row>
   );

@@ -65,7 +65,7 @@ const IdentityPage = () => {
           data={identities.identities}
           rowCount={identities.total}
           loading={loading}
-          showPaggination={false}
+          showPagination={false}
         />
       ) : (
         <EmptyState title="No Identities" description="No identities have been created yet." />

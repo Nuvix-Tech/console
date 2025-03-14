@@ -101,7 +101,7 @@ const SessionPage = () => {
           data={sessions.sessions}
           rowCount={sessions.total}
           loading={loading}
-          showPaggination={false}
+          showPagination={false}
         />
       ) : (
         <EmptyState title="No Sessions" description="No sessions have been created yet." />

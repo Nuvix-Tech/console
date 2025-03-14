@@ -73,7 +73,7 @@ const TargetPage = () => {
           data={targets.targets}
           rowCount={targets.total}
           loading={loading}
-          showPaggination={false}
+          showPagination={false}
         />
       ) : (
         <EmptyState title="No Targets" description="No targets have been created yet." />

@@ -21,15 +21,17 @@ export const EmptyState = ({ title, description, primary, secondary }: EmptyStat
       alignItems="center"
       gap={4}
     >
-      <SmartImage src="/images/empty-dark.svg" alt="Empty state" height={242} />
-      <Text textStyle="xl" fontWeight="bold">
-        {title}
-      </Text>
-      {description && (
-        <Text textStyle="sm" color="text.subtle">
-          {description}
+      <SmartImage src="/images/empty-dark.svg" alt="Empty state" height={15} width={17.5} />
+      <Stack gap={2}>
+        <Text textStyle="xl" fontWeight="bold">
+          {title}
         </Text>
-      )}
+        {description && (
+          <Text textStyle="sm" color="text.subtle">
+            {description}
+          </Text>
+        )}
+      </Stack>
       <Stack direction="row" gap={2}>
         {primary && <Button {...primary} />}
         {secondary && <Button variant="secondary" {...secondary} />}

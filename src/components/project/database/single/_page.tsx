@@ -14,7 +14,7 @@ import {
   DataActionBar,
   DataGridProvider,
   DataGridSkelton,
-  Paggination,
+  Pagination,
   SearchAndCreate,
   SelectLimit,
   Table,
@@ -174,7 +174,7 @@ const DatabaseSinglePage = ({ databaseId }: { databaseId: string }) => {
                 <Table />
                 <HStack marginTop="6" justifyContent="space-between" alignItems="center">
                   <SelectLimit />
-                  <Paggination />
+                  <Pagination />
                 </HStack>
                 <DataActionBar
                   actions={

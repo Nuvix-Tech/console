@@ -15,8 +15,8 @@ import {
   DataGridProvider,
   DataGridSkelton,
   Filter,
-  Paggination,
-  PagginationWrapper,
+  Pagination,
+  PaginationWrapper,
   SelectLimit,
   Table,
 } from "@/ui/modules/data-grid";
@@ -176,10 +176,10 @@ const CollectionPage: React.FC<Props> = ({ databaseId, collectionId }: Props) =>
               </HStack>
             </HStack>
             <Table />
-            <PagginationWrapper>
+            <PaginationWrapper>
               <SelectLimit />
-              <Paggination />
-            </PagginationWrapper>
+              <Pagination />
+            </PaginationWrapper>
           </>
         ) : (
           <EmptyState title="No Documents" description="No documents have been created yet." />

@@ -146,7 +146,7 @@ const MembershipPage = () => {
           data={memberships.memberships}
           rowCount={memberships.total}
           loading={loading}
-          showPaggination={false}
+          showPagination={false}
         />
       ) : (
         <EmptyState title="No Memberships" description="No memberships have been created yet." />

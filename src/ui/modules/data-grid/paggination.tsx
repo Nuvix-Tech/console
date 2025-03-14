@@ -8,7 +8,7 @@ import { HStack } from "@chakra-ui/react";
 import { useDataGrid } from "./provider";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
-export const Paggination = () => {
+export const Pagination = () => {
   const { table, loading } = useDataGrid();
   const searchParams = useSearchParams();
   const path = usePathname();
@@ -49,7 +49,7 @@ export const Paggination = () => {
   );
 };
 
-export const PagginationWrapper = ({ children }: { children: React.ReactNode }) => {
+export const PaginationWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="relative">
       <HStack
