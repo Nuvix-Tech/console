@@ -1,14 +1,20 @@
 import { ConsoleHeader } from "@/components/console/header";
-import { Row } from "@/ui/components";
+import { ConsoleSidebar } from "@/ui/modules/layout/ConsoleSidebar";
+import { Stack } from "@chakra-ui/react";
 import React from "react";
 
 export default function ({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <ConsoleHeader />
-      <Row fill position="relative" top="64" as={"main"} style={{ display: "block" }}>
-        {children}
-      </Row>
+      <Stack position="relative" as={"aside"} className="w-[280px]">
+        <ConsoleSidebar />
+      </Stack>
+      <Stack className="flex-1" height="full" position="relative" as={"main"}>
+        <ConsoleHeader />
+        <Stack height={"calc(100% - 64px)"} overflowY="auto" direction="column">
+          {children}
+        </Stack>
+      </Stack>
     </>
   );
 }

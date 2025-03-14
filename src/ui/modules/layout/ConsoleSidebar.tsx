@@ -16,15 +16,16 @@ const ConsoleSidebar: React.FC<Props> = ({ inMobile }) => {
 
   return (
     <Column
-      maxWidth={inMobile ? undefined : 16}
+      // maxWidth={inMobile ? undefined : 16}
+      fillWidth
       fillHeight
       paddingX={inMobile ? "16" : "0"}
       paddingY="20"
       gap="xs"
       hide={inMobile ? undefined : "s"}
       background={inMobile ? "transparent" : "surface"}
-      borderRight={inMobile ? undefined : "neutral-medium"}
-      position={inMobile ? "relative" : "fixed"}
+      radius="l"
+      // position={inMobile ? "relative" : "fixed"}
       role="navigation"
       aria-label="Console Sidebar"
       overflowY="auto"

@@ -8,6 +8,7 @@ import { Heading } from "@chakra-ui/react";
 import { Query, type Models } from "@nuvix/console";
 import { useRouter } from "@bprogress/next";
 import { useEffect, useState } from "react";
+import { EmptyState } from "@/components/_empty_state";
 
 type Props = {
   id: string;
@@ -55,6 +56,12 @@ export const OrganizationPage = ({ id, searchParams }: Props) => {
             Create project
           </Button>
         </Row>
+
+        {!loading && !projectList.projects.length ? (
+          <>
+            <EmptyState title="Project" />
+          </>
+        ) : null}
 
         <Grid gap="l" marginTop="l" columns={2}>
           {loading ? (

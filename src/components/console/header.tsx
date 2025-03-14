@@ -39,10 +39,8 @@ const ConsoleHeader: React.FC<HeaderProps> = () => {
     <>
       <Row
         as="header"
-        borderBottom="neutral-medium"
         fillWidth
-        position="fixed"
-        zIndex={10}
+        radius="l"
         gap="12"
         paddingX="m"
         height="64"

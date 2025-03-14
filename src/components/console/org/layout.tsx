@@ -1,5 +1,6 @@
 "use client";
 
+import { TopCard } from "@/components/others";
 import { sdkForConsole } from "@/lib/sdk";
 import { AvatarGroup, Button, Column, Heading, Row, SegmentedControl, Tag } from "@/ui/components";
 import { ConsoleSidebar } from "@/ui/modules/layout/ConsoleSidebar";
@@ -24,10 +25,9 @@ export default function OrgLayout({ children, id }: { children: React.ReactNode;
 
   return (
     <>
-      <Row fillHeight>
-        <ConsoleSidebar />
-        {/* <Column fillWidth padding="l" gap="l">
-          <Row maxHeight={12} fillHeight background="neutral-alpha-weak" direction="column" horizontal="center" vertical="space-between" paddingTop="l">
+      <Column fillHeight>
+        {/* <TopCard minHeight={12}>
+          <Row fillWidth direction="column" horizontal="center" vertical="space-between" paddingTop="l">
             <Row fillWidth maxWidth={'l'} horizontal="space-between" vertical="center">
               <Row vertical="center" gap="s">
                 <Heading size="xl" as={'h2'}>{organization?.name}</Heading>
@@ -81,11 +81,11 @@ export default function OrgLayout({ children, id }: { children: React.ReactNode;
               ]} onToggle={() => { }} bottomRadius="xs" />
             </Row>
           </Row>
-          </Column> */}
-        <Row fillWidth paddingX="l" paddingY="s" gap="l" className="md:ml-64">
+        </TopCard> */}
+        <Row fillWidth paddingX="l" paddingY="s" gap="l">
           {children}
         </Row>
-      </Row>
+      </Column>
     </>
   );
 }
