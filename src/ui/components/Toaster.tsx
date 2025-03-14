@@ -33,7 +33,7 @@ const Toaster: React.FC<ToasterProps> = ({ toasts, removeToast }) => {
       maxWidth={32}
       className={styles.toastContainer}
       style={{
-        zIndex: 1000,
+        zIndex: 10000,
       }}
     >
       {toasts.map((toast, index, array) => (

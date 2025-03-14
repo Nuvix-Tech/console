@@ -35,8 +35,8 @@ export interface SidebarItemGroup {
 const ProjectSidebar: React.FC = () => {
   return (
     <>
-      <Row className="sidebar">
-        <Row gap="0" fill position="relative">
+      <Row className="sidebar" fill>
+        <Row gap="4" fill position="relative">
           <FirstSidebar />
           <SecondSidebar />
         </Row>
@@ -103,29 +103,28 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
   return (
     <>
       <Column
-        maxWidth={alwaysFull ? undefined : showFullSidebar || !showSubSidebar ? 14 : 4}
+        maxWidth={alwaysFull ? undefined : !showSubSidebar ? undefined : 4}
         fill
         paddingY="32"
-        position={alwaysFull ? "relative" : "absolute"}
+        // position={alwaysFull ? "relative" : "absolute"}
         vertical="space-between"
         overflowX="hidden"
-        border={"neutral-medium"}
+        // border={"neutral-medium"}
         style={{
           borderWidth: 0,
-          borderRightWidth: border ? 1 : 0,
+          // borderRightWidth: border ? 1 : 0,
         }}
+        radius="l"
         zIndex={10}
-        className={`sidebar-small ${showFullSidebar || !showSubSidebar ? "sidebar-small-open" : ""}`}
+        className={`sidebar-small ${!showSubSidebar ? "sidebar-small-open" : ""}`}
         background={noBg ? "transparent" : "surface"}
-        onMouseEnter={() => setShowFullSidebar(true)}
-        onMouseLeave={() => setShowFullSidebar(false)}
       >
         <Column fillWidth paddingX="xs" gap="m">
           {sideNav.map((item, index) => (
             <SidebarSmallButton
               key={index}
               item={item}
-              showFullSidebar={showFullSidebar || !showSubSidebar || !!alwaysFull}
+              showFullSidebar={!showSubSidebar || !!alwaysFull}
               selected={item.active ?? pathname.includes(item.href ?? "")}
             />
           ))}
@@ -140,7 +139,7 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
               href: `/project/${id}/settings`,
               icon: <span className="icon-cog" />,
             }}
-            showFullSidebar={showFullSidebar || !showSubSidebar || !!alwaysFull}
+            showFullSidebar={!showSubSidebar || !!alwaysFull}
             selected={pathname === `/project/${id}/settings`}
           />
 
@@ -154,7 +153,7 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
               },
               icon: <span className="icon-sun" />,
             }}
-            showFullSidebar={showFullSidebar || !showSubSidebar || !!alwaysFull}
+            showFullSidebar={!showSubSidebar || !!alwaysFull}
           />
         </Column>
       </Column>
@@ -177,17 +176,18 @@ export const SecondSidebar = ({ noMarg, noBg, border = true }: SecondSidebarProp
         <Column
           fillWidth
           paddingY="12"
-          marginLeft={noMarg ? "0" : "64"}
+          // marginLeft={noMarg ? "0" : "64"}
           gap="m"
           position="relative"
-          background={noBg ? "transparent" : "page"}
-          border="neutral-medium"
+          background={noBg ? "transparent" : "surface"}
+          // border="neutral-medium"
           overflowX="hidden"
           overflowY="auto"
           style={{
             borderWidth: 0,
-            borderRightWidth: border ? 1 : 0,
+            // borderRightWidth: border ? 1 : 0,
           }}
+          radius="l"
           className="sidebar-large"
         >
           <Column fillWidth gap="s" paddingBottom="56">

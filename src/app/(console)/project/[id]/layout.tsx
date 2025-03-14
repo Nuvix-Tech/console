@@ -14,7 +14,7 @@ export default async function ({
   return (
     <>
       <ProjectWrapper id={id}>
-        <ProjectSidebar />
+        {/* <ProjectSidebar /> */}
         <Column className="project-main" vertical="space-between">
           <Column fill className="min-h-svh">
             {children}

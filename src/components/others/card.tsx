@@ -21,11 +21,11 @@ export const CardBox = (props: UpdateCardProps) => {
 
   return (
     <>
-      <Card>
+      <Card className="surface-background neutral-border-alpha-medium">
         <CardContent>{children}</CardContent>
         {actions ? (
           <>
-            <Separator />
+            <Separator className="neutral-background-alpha-weak" />
             <CardFooter className={"justify-end"}>{actions}</CardFooter>{" "}
           </>
         ) : null}

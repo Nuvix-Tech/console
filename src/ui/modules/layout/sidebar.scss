@@ -12,10 +12,10 @@
 
 @media (min-width: 768px) {
   .sidebar {
-    position: fixed;
+    // position: fixed;
     z-index: 10;
     display: none;
-    height: calc(100% - 54px);
+    // height: calc(100% - 54px);
   }
 
   .show-sidebar .sidebar {

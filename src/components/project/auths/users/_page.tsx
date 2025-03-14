@@ -10,9 +10,9 @@ import { Badge, Text } from "@chakra-ui/react";
 import { formatDate } from "@/lib/utils";
 import { DataGrid, DataGridSkelton, SearchAndCreate } from "@/ui/modules/data-grid";
 import { useSearchParams } from "next/navigation";
-import { EmptyState } from "@/ui/modules/layout/empty-state";
 import { EmptySearch } from "@/ui/modules/layout";
 import { IDChip } from "@/components/others";
+import { EmptyState } from "@/components/_empty_state";
 
 const UsersPage = () => {
   const state = getProjectState();

@@ -1,21 +1,28 @@
 import { ProjectHeader } from "@/components/project/header";
-import { Row } from "@/ui/components";
+import { Stack } from "@chakra-ui/react";
+import { ProjectSidebar } from "@/components/project/sidebar";
 import React from "react";
+import { ProjectLayout } from "@/components/project";
 
 export default function ({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <ProjectHeader />
-      <Row
-        fill
-        position="relative"
-        top="64"
-        as={"main"}
-        style={{ display: "block" }}
-        className="console-main"
-      >
-        {children}
-      </Row>
+      <ProjectLayout>
+        <Stack
+          position="relative"
+          as={"aside"}
+          className="md:w-[280px] md:flex hidden"
+          height="full"
+        >
+          <ProjectSidebar />
+        </Stack>
+      </ProjectLayout>
+      <Stack className="flex-1" height="full" position="relative" as={"main"}>
+        <ProjectHeader />
+        <Stack height={"calc(100% - 64px)"} overflowY="auto" direction="column">
+          {children}
+        </Stack>
+      </Stack>
     </>
   );
 }

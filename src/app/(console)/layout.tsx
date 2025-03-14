@@ -10,15 +10,15 @@ export default function ({ children }: { children: React.ReactNode }) {
           <Background
             position="absolute"
             gradient={{
-              colorEnd: "static-transparent",
-              colorStart: "neutral-alpha-strong",
+              colorEnd: "neutral-alpha-medium",
+              colorStart: "brand-alpha-strong",
               display: true,
-              height: 100,
+              height: 50,
               opacity: 80,
               tilt: 20,
-              width: 150,
-              x: 0,
-              y: 0,
+              width: 50,
+              x: 20,
+              y: 20,
             }}
             dots={{
               color: "brand-alpha-strong",

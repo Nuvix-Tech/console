@@ -31,20 +31,5 @@ export default function ProjectWrapper({
     });
   }, [id]);
 
-  return (
-    <>
-      <div
-        id="project"
-        className={classNames(
-          `project show-sidebar`,
-          { "show-sidebar-large": !!(sidebar.first || sidebar.middle || sidebar.last) },
-          {
-            "show-sidebar-small": !(sidebar.first || sidebar.middle || sidebar.last),
-          },
-        )}
-      >
-        {children}
-      </div>
-    </>
-  );
+  return <>{children}</>;
 }

@@ -36,10 +36,11 @@ const ProjectHeader: React.FC<HeaderProps> = () => {
       <Row
         hide="s"
         as="header"
-        borderBottom="neutral-medium"
+        // borderBottom="neutral-medium"
         fillWidth
-        position="fixed"
-        zIndex={10}
+        // position="fixed"
+        // zIndex={10}
+        radius="l"
         gap="12"
         paddingX="m"
         height="64"
@@ -76,7 +77,9 @@ const ProjectHeader: React.FC<HeaderProps> = () => {
           <Row fillWidth vertical="center" horizontal="end" gap="12">
             <div className="flex items-center gap-3">
               {organization?.billingPlan === "tier-0" ? <Button>Upgrade</Button> : null}
-              <Button variant="outline">Feedback</Button>
+              <Button variant="outline" className="bg-transparent">
+                Feedback
+              </Button>
               <div className="flex items-center gap-0.5">
                 <Button variant="link">Help</Button>
                 <Button variant="link">Docs</Button>

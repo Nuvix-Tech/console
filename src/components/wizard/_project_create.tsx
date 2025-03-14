@@ -31,6 +31,7 @@ export const CreateProject: React.FC<CreateProjectProps> = ({ children, ...props
         id && id.length > 6 ? id : ID.unique(),
         name,
         organization.$id,
+        "fra" as any,
       );
       addToast({
         variant: "success",
