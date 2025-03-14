@@ -17,25 +17,28 @@ export const CreateProject: React.FC<CreateProjectProps> = ({ children, ...props
           <Dialog.Positioner>
             <Dialog.Content>
               <Dialog.Body>
-                <Flex gap={6}>
+                <Flex gap={6} p={12}>
                   <Box flex="1">
-                    <Text fontSize="xl" fontWeight="bold" mb={2}>
-                      Enter Project Details
+                    <Text fontSize="2xl" fontWeight="bold" mb={2}>
+                      Let's Create Your Next Project
                     </Text>
-                    <Text fontSize="sm" color="gray.600">
-                      Fill in the details below to create a new project.
+
+                    <Text fontSize="xl" color="fg.subtle" mb={6}>
+                      Provide a project name to get started.
                     </Text>
 
                     <div className="space-y-4">
-                      <Input label="Project Name" />
-                      <Input placeholder="Optional" label="Project ID" />
+                      <Input label="Project Name" labelAsPlaceholder />
                     </div>
 
-                    <Text fontSize="sm" color="gray.600">
-                      Describe your project briefly.
-                    </Text>
+                    <Flex justify="flex-end" mt={6}>
+                      <Button>
+                        Continue
+                      </Button>
+                    </Flex>
                   </Box>
-                  <Box flex="1">
+                  <Box flex="1" h="full">
+                    <CloseButton position="absolute" top={4} right={4} />
                     <Image
                       src="https://via.placeholder.com/400x300"
                       alt="Project Preview"
@@ -45,15 +48,6 @@ export const CreateProject: React.FC<CreateProjectProps> = ({ children, ...props
                   </Box>
                 </Flex>
               </Dialog.Body>
-              <Dialog.Footer>
-                <Dialog.ActionTrigger asChild>
-                  <Button variant="outline">Cancel</Button>
-                </Dialog.ActionTrigger>
-                <Button>Create</Button>
-              </Dialog.Footer>
-              <Dialog.CloseTrigger asChild>
-                <CloseButton size="sm" />
-              </Dialog.CloseTrigger>
             </Dialog.Content>
           </Dialog.Positioner>
         </Portal>
