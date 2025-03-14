@@ -76,6 +76,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     const [_null, setNull] = useState(isNull);
     const debouncedValue = useDebounce(props.value, 1000);
     const checkBoxId = React.useId();
+    id = id ?? React.useId();
 
     const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
       setIsFocused(true);
@@ -178,11 +179,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               {...props}
               ref={ref}
               id={id}
-              placeholder={labelAsPlaceholder ? label : props.placeholder}
+              placeholder={labelAsPlaceholder ? (label ?? props.placeholder) : props.placeholder}
               onFocus={handleFocus}
               onBlur={handleBlur}
               onChange={handleChange}
               value={_null ? "" : props.value === null ? "" : props.value}
+              maxLength={max}
               className={inputClassNames}
               aria-describedby={displayError ? `${id}-error` : undefined}
               aria-invalid={!!displayError}

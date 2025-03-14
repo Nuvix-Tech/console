@@ -2,6 +2,7 @@
 
 import { TopCard } from "@/components/others";
 import { sdkForConsole } from "@/lib/sdk";
+import { appState } from "@/state/app-state";
 import { AvatarGroup, Button, Column, Heading, Row, SegmentedControl, Tag } from "@/ui/components";
 import { ConsoleSidebar } from "@/ui/modules/layout/ConsoleSidebar";
 import { Stack } from "@chakra-ui/react";
@@ -9,17 +10,11 @@ import type { Models } from "@nuvix/console";
 import { useEffect, useState } from "react";
 
 export default function OrgLayout({ children, id }: { children: React.ReactNode; id: string }) {
-  const [organization, setOrganization] = useState<Models.Organization<any>>();
-  const [memberships, setMemberships] = useState<Models.Membership[]>([]);
   const { organizations, avatars } = sdkForConsole;
 
   useEffect(() => {
     organizations.get(id).then((org) => {
-      setOrganization(org);
-    });
-
-    organizations.listMemberships(id).then((memberships) => {
-      setMemberships(memberships.memberships);
+      appState.organization = org;
     });
   }, [id]);
 
