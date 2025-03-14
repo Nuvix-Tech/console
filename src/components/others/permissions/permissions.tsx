@@ -122,10 +122,10 @@ export const PermissionsEditor = ({
     <>
       <VStack width={"full"} position="relative" alignItems={"flex-start"}>
         {groups.size > 0 ? (
-          <Table.ScrollArea borderRadius="lg" border="1px solid" borderColor="border.muted">
-            <Table.Root tableLayout="fixed" variant="line" bg={"bg"}>
+          <Table.ScrollArea borderRadius="lg" border="1px solid" borderColor="var(--surface-border)">
+            <Table.Root tableLayout="fixed" variant="line" bg={"var(--surface-background)"}>
               <Table.Header>
-                <Table.Row>
+                <Table.Row bg="transparent" borderColor={"var(--surface-border)"}>
                   <Table.ColumnHeader width="28" textTransform="uppercase" color="fg.muted">
                     Role
                   </Table.ColumnHeader>
@@ -148,7 +148,7 @@ export const PermissionsEditor = ({
               </Table.Header>
               <Table.Body>
                 {[...groups].sort(sortRoles).map(([role, permission]) => (
-                  <Table.Row key={role}>
+                  <Table.Row key={role} bg="transparent" borderColor={"var(--surface-border)"}>
                     <Table.Cell truncate>
                       <RoleHover role={role} sdk={sdk} />
                     </Table.Cell>
@@ -185,7 +185,7 @@ export const PermissionsEditor = ({
                 ))}
                 <Table.Row width="full">
                   <PopoverBox addRole={addRole} sdk={sdk} groups={groups}>
-                    <Button variant="ghost" size="sm" width="full">
+                    <Button variant="ghost" size="sm" width="full" bg="transparent">
                       <LuPlus />
                       Add Role
                     </Button>

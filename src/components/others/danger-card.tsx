@@ -22,7 +22,7 @@ export function DangerCard(props: DangerCardProps) {
 
   return (
     <>
-      <Card className="border-destructive">
+      <Card className="neutral-background-alpha-weak danger-border-alpha-medium">
         <CardContent>
           <Stack
             direction={{ base: "column", mdOnly: "column", lg: "row" }}

@@ -18,7 +18,7 @@ const TheTable = <T,>({ interactive = true }: Props) => {
   const checkBoxWidth = 12;
 
   return (
-    <Table.ScrollArea borderWidth="1px" borderRadius={"md"} width="full">
+    <Table.ScrollArea borderWidth="1px" borderRadius={"md"} width="full" className="neutral-background-alpha-weak neutral-border-alpha-medium">
       <Table.Root
         size="lg"
         variant="line"
@@ -37,9 +37,9 @@ const TheTable = <T,>({ interactive = true }: Props) => {
               alignItems={"center"}
               position={"relative"}
               width="full"
+              className="neutral-background-alpha-weak neutral-border-alpha-medium"
               borderBottom={0.5}
               borderStyle={"solid"}
-              borderColor={"border.muted"}
             >
               {showCheckbox ? (
                 <Table.ColumnHeader
@@ -51,7 +51,7 @@ const TheTable = <T,>({ interactive = true }: Props) => {
                   maxWidth={checkBoxWidth}
                   position={stickyCheckBox ? "sticky" : "relative"}
                   left={stickyCheckBox ? "0" : "auto"}
-                  bg={stickyCheckBox ? "bg" : "inherit"}
+                  className={stickyCheckBox ? "neutral-background-alpha-weak" : ""}
                   borderBottom={0}
                   zIndex={3}
                 >
@@ -106,12 +106,10 @@ const TheTable = <T,>({ interactive = true }: Props) => {
                 borderRadius={0}
                 gap={0}
                 borderBottom={"1px solid"}
-                borderColor="border.muted"
+                className="neutral-border-alpha-medium"
                 {...(interactive && {
                   _hover: {
-                    bg: "bg.muted",
                     cursor: "pointer",
-                    borderColor: "border",
                   },
                   _focus: {
                     bg: "bg.subtle",
@@ -144,7 +142,7 @@ const TheTable = <T,>({ interactive = true }: Props) => {
                     maxWidth={checkBoxWidth}
                     position={stickyCheckBox ? "sticky" : "relative"}
                     left={stickyCheckBox ? "0" : "auto"}
-                    bg={stickyCheckBox ? "bg" : "inherit"}
+                    className={stickyCheckBox ? "neutral-background-alpha-weak" : ""}
                     zIndex={3}
                   >
                     <Checkbox
