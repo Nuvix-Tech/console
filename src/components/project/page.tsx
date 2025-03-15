@@ -15,13 +15,6 @@ export default function ProjectPage({ id }: ProjectPageProps) {
 
   sidebar.first = sidebar.middle = sidebar.last = null;
 
-  React.useEffect(() => {
-    const projectElement = document.getElementById("project");
-    if (projectElement) {
-      projectElement.classList.remove("show-sidebar-large");
-    }
-  }, []);
-
   return (
     <>
       <Row fill>

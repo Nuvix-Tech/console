@@ -61,13 +61,6 @@ function Wrapper({
     </>
   );
 
-  useEffect(() => {
-    const elementProject = document.getElementById("project");
-    if (elementProject) {
-      elementProject.classList.add("show-sidebar-large");
-    }
-  }, []);
-
   return <>{children}</>;
 }
 

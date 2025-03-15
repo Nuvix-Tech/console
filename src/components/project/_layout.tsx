@@ -9,14 +9,7 @@ export const ProjectLayout = ({ children }: PropsWithChildren) => {
   return (
     <div
       id="project"
-      className={classNames(
-        `project show-sidebar`,
-        { "show-sidebar-large": !!(sidebar.first || sidebar.middle || sidebar.last) },
-        {
-          "show-sidebar-small": !(sidebar.first || sidebar.middle || sidebar.last),
-        },
-      )}
-    >
+      className={classNames(`project show-sidebar show-sidebar-large`)} >
       {children}
     </div>
   );

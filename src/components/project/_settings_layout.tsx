@@ -7,13 +7,6 @@ const SettingsLayout: React.FC<PropsWithChildren> = ({ children }) => {
   projectState.sidebar.first = null;
   projectState.sidebar.middle = <SettingsSidebar />;
 
-  React.useEffect(() => {
-    const elementProject = document.getElementById("project");
-    if (elementProject) {
-      elementProject.classList.add("show-sidebar-large");
-    }
-  }, []);
-
   return children;
 };
 
