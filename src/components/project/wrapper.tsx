@@ -19,18 +19,21 @@ export default function ProjectWrapper({
 
   const fetcher = async (id: string) => {
     let project = await projects.get(id);
-    projectState.project = project;
-    projectState.sdk = getProjectSdk(project.$id);
-    projectState.initialfetching = false;
     const org = await organizations.get(project.teamId);
-    appState.organization = org;
     const scopes = await organizations.getScopes(project.teamId);
-    appState.scopes = scopes;
-    projectState.scopes = scopes;
-    return project;
+    return { project, org, scopes };
   };
 
   const { data } = useSWR(id, fetcher);
+
+  const project: any = data?.project;
+
+  projectState.project = project;
+  projectState.sdk = getProjectSdk(project.$id);
+  projectState.initialfetching = false;
+  appState.organization = data?.org!;
+  appState.scopes = data?.scopes!;
+  projectState.scopes = data?.scopes!;
 
   return <>{children}</>;
 }
