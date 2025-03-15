@@ -12,7 +12,7 @@ import { DataGridProvider, DataGridSkelton, Search, Table } from "@/ui/modules/d
 import { CreateButton, IDChip, PageContainer, PageHeading } from "@/components/others";
 import { EmptyState } from "@/components";
 import { useQuery } from "@/hooks/useQuery";
-import useSWR from "swr";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 const UsersPage = () => {
   const state = getProjectState();
@@ -22,21 +22,19 @@ const UsersPage = () => {
 
   projectState.sidebar.first = null;
 
-  const fetcher = React.useCallback(async (props: any) => {
-    const [sdk, limit, page, search] = props;
+  const fetcher = React.useCallback(async () => {
     if (!sdk) {
-      return new Promise<never>(() => {});
+      return new Promise<never>(() => { });
     }
     const queries: string[] = [];
     queries.push(Query.limit(limit), Query.offset((page - 1) * limit));
     return await sdk.users.list(queries, search ?? undefined);
   }, []);
 
-  const { data, isLoading, error } = useSWR<Models.UserList<any>>(
-    [sdk, limit, page, search],
-    fetcher,
-    { suspense: true },
-  );
+  const { data, isLoading, error } = useSuspenseQuery({
+    queryKey: [sdk, limit, page, search],
+    queryFn: fetcher
+  });
 
   const users = data ?? {
     users: [],

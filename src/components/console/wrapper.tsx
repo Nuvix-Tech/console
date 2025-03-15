@@ -5,7 +5,12 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import LoadingUI from "../loading";
 import { appState } from "@/state/app-state";
-import { SWRConfig } from "swr";
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 const ConsoleWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -23,16 +28,14 @@ const ConsoleWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) =
       }
     };
     fetchUser();
-  }, []);
+  }, [replace]);
+
+  console.log("🔥 SOMETHIN IN CONSOLE WRAPPER");
 
   return (
-    <SWRConfig
-      value={{
-        suspense: true,
-      }}
-    >
+    <QueryClientProvider client={queryClient}>
       {isLoading ? <LoadingUI /> : children}
-    </SWRConfig>
+    </QueryClientProvider>
   );
 };
 

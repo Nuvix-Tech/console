@@ -1,10 +1,10 @@
 "use client";
 
 import { getProjectSdk, sdkForConsole } from "@/lib/sdk";
-import React from "react";
+import React, { useEffect } from "react";
 import { projectState } from "@/state/project-state";
 import { appState } from "@/state/app-state";
-import useSWR from "swr";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 export default function ProjectWrapper({
   children,
@@ -24,16 +24,24 @@ export default function ProjectWrapper({
     return { project, org, scopes };
   };
 
-  const { data } = useSWR(id, fetcher);
-
-  const project: any = data?.project;
-
-  projectState.project = project;
-  projectState.sdk = getProjectSdk(project.$id);
-  projectState.initialfetching = false;
-  appState.organization = data?.org!;
-  appState.scopes = data?.scopes!;
-  projectState.scopes = data?.scopes!;
+  const { data, isFetching } = useSuspenseQuery({
+    queryKey: ["project", id], // Ensure `id` is stable
+    queryFn: () => fetcher(id),
+  });
+  console.log("Fetching:", isFetching, id, data);
+  console.log('HRLRLRORRIRIRIR')
+  // ✅ Use useEffect to update project state properly
+  // useEffect(() => {
+  //   console.log("Updated Project Data:", data);
+  //   if (data) {
+      projectState.project = data.project;
+      projectState.sdk = getProjectSdk(data.project.$id);
+      projectState.initialfetching = false;
+      appState.organization = data.org;
+      appState.scopes = data.scopes;
+      projectState.scopes = data.scopes;
+  //   }
+  // }, [data]); // Runs only when `data` changes
 
   return <>{children}</>;
 }
