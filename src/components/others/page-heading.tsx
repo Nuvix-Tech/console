@@ -1,0 +1,24 @@
+import { Column, Row } from "@/ui/components";
+import { Heading, Stack, Text } from "@chakra-ui/react";
+
+type PageHeadingProps = {
+  heading: string;
+  description?: string;
+  right?: React.ReactNode;
+};
+
+export const PageHeading = ({ heading, description, right }: PageHeadingProps) => {
+  return (
+    <Row marginBottom="24" marginTop="12" paddingX="8" fillWidth>
+      <Stack direction="row" justifyContent="space-between" alignItems="center" gap={4}>
+        <Column vertical="center" horizontal="start">
+          <Heading size="2xl">{heading}</Heading>
+          <Text fontSize="sm" color="fg.subtle">
+            {description}
+          </Text>
+        </Column>
+        {right}
+      </Stack>
+    </Row>
+  );
+};

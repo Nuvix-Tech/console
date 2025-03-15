@@ -43,7 +43,6 @@ export const IndexesPage: React.FC<Props> = ({ databaseId, collectionId }) => {
   });
   const confirm = useConfirm();
   const { addToast } = useToast();
-  const { canWriteDatabases } = permissions;
 
   const get = async () => {
     if (!sdk || !database) return;

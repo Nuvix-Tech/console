@@ -1,12 +1,12 @@
 "use client";
+import React from "react";
 import { getCollectionPageState, getDbPageState } from "@/state/page";
 import { getProjectState } from "@/state/project-state";
-import { Column, useConfirm, useToast } from "@/ui/components";
+import { useConfirm, useToast } from "@/ui/components";
 import { Models, Query } from "@nuvix/console";
-import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Tooltip } from "@/components/cui/tooltip";
-import { HStack, Heading, Text } from "@chakra-ui/react";
+import { HStack } from "@chakra-ui/react";
 import { formatDate } from "@/lib/utils";
 import {
   ActionButton,
@@ -20,11 +20,10 @@ import {
   SelectLimit,
   Table,
 } from "@/ui/modules/data-grid";
-import { useSearchParams } from "next/navigation";
-import { IDChip } from "@/components/others";
+import { CreateButton, IDChip, PageContainer, PageHeading } from "@/components/others";
 import { LuTrash2 } from "react-icons/lu";
-import { CreateButton } from "@/ui/modules/data-grid";
-import { EmptyState } from "@/components/_empty_state";
+import { EmptyState } from "@/components";
+import { useQuery } from "@/hooks/useQuery";
 
 type Props = {
   databaseId: string;
@@ -41,12 +40,10 @@ const CollectionPage: React.FC<Props> = ({ databaseId, collectionId }: Props) =>
     documents: [],
     total: 0,
   });
-  const searchParams = useSearchParams();
-  const limit = searchParams.get("limit") ? Number(searchParams.get("limit")) : 12;
-  const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
+  const { limit, page, hasQuery } = useQuery();
   const confirm = useConfirm();
   const { addToast } = useToast();
-  const { canWriteDocuments } = permissions;
+  const { canCreateDocuments, canDeleteDocuments } = permissions;
 
   const get = async () => {
     if (!sdk || !databaseId || !collectionId) return;
@@ -143,13 +140,12 @@ const CollectionPage: React.FC<Props> = ({ databaseId, collectionId }: Props) =>
   );
 
   return (
-    <Column paddingX="16" fillWidth>
-      <Column vertical="center" horizontal="start" marginBottom="24" marginTop="12" paddingX="8">
-        <Heading size="2xl">Documents</Heading>
-        <Text fontSize={"sm"} color="fg.subtle">
-          Documents are used to manage the data within a collection.
-        </Text>
-      </Column>
+    <PageContainer>
+      <PageHeading
+        heading="Documents"
+        description="Manage your collection’s data using documents."
+        right={<CreateButton hasPermission={canCreateDocuments} label="Create Document" />}
+      />
 
       <DataGridProvider<Models.Document>
         columns={columns}
@@ -162,28 +158,32 @@ const CollectionPage: React.FC<Props> = ({ databaseId, collectionId }: Props) =>
           pagination: { pageIndex: page, pageSize: limit },
         }}
         hiddenIds={hiddenIds}
-        showCheckbox
+        showCheckbox={canDeleteDocuments}
       >
-        {loading && !documentList.total ? (
-          <DataGridSkelton />
-        ) : documentList.total > 0 || page > 1 ? (
+        <DataGridSkelton loading={loading && !documentList.total} />
+
+        <EmptyState
+          show={documentList.total === 0 && !loading && !hasQuery}
+          title="No Documents"
+          description="No documents have been created yet."
+        />
+
+        {(documentList.total > 0 || hasQuery) && (
           <>
             <HStack mb="6" justifyContent="space-between" alignItems="center">
               <Filter />
               <HStack gap="8" alignItems="center">
                 <ColumnSelector />
-                <CreateButton label="Create Document" size={"sm"} />
               </HStack>
             </HStack>
-            <Table />
+            <Table noResults={documentList.total === 0 && hasQuery} />
             <PaginationWrapper>
               <SelectLimit />
               <Pagination />
             </PaginationWrapper>
           </>
-        ) : (
-          <EmptyState title="No Documents" description="No documents have been created yet." />
         )}
+
         <DataActionBar
           actions={
             <>
@@ -195,7 +195,7 @@ const CollectionPage: React.FC<Props> = ({ databaseId, collectionId }: Props) =>
           }
         />
       </DataGridProvider>
-    </Column>
+    </PageContainer>
   );
 };
 

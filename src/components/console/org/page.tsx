@@ -7,7 +7,7 @@ import { Heading } from "@chakra-ui/react";
 import { Query, type Models } from "@nuvix/console";
 import { useRouter } from "@bprogress/next";
 import { useEffect, useState } from "react";
-import { EmptyState } from "@/components/_empty_state";
+import { EmptyState } from "@/components";
 import { DataGridProvider, Pagination, SelectLimit } from "@/ui/modules/data-grid";
 import { CreateProject } from "@/components/wizard";
 
@@ -61,6 +61,7 @@ export const OrganizationPage = ({ id, searchParams }: Props) => {
         {!loading && !projectList.projects.length ? (
           <>
             <EmptyState
+              show
               title="No Projects Available"
               description="Create a project to start managing resources."
               primary={{

@@ -4,72 +4,164 @@ import { useProxy } from "valtio/utils";
 
 export interface AppPermission {
   canReadSessions: boolean;
-  canWriteSessions: boolean;
+  canCreateSessions: boolean;
+  canUpdateSessions: boolean;
+  canDeleteSessions: boolean;
+
   canReadUsers: boolean;
-  canWriteUsers: boolean;
+  canCreateUsers: boolean;
+  canUpdateUsers: boolean;
+  canDeleteUsers: boolean;
+
   canReadTeams: boolean;
-  canWriteTeams: boolean;
+  canCreateTeams: boolean;
+  canUpdateTeams: boolean;
+  canDeleteTeams: boolean;
+
   canReadDatabases: boolean;
-  canWriteDatabases: boolean;
+  canCreateDatabases: boolean;
+  canUpdateDatabases: boolean;
+  canDeleteDatabases: boolean;
+
   canReadCollections: boolean;
-  canWriteCollections: boolean;
+  canCreateCollections: boolean;
+  canUpdateCollections: boolean;
+  canDeleteCollections: boolean;
+
   canReadAttributes: boolean;
-  canWriteAttributes: boolean;
+  canCreateAttributes: boolean;
+  canUpdateAttributes: boolean;
+  canDeleteAttributes: boolean;
+
   canReadIndexes: boolean;
-  canWriteIndexes: boolean;
+  canCreateIndexes: boolean;
+  canUpdateIndexes: boolean;
+  canDeleteIndexes: boolean;
+
   canReadDocuments: boolean;
-  canWriteDocuments: boolean;
+  canCreateDocuments: boolean;
+  canUpdateDocuments: boolean;
+  canDeleteDocuments: boolean;
+
   canReadFiles: boolean;
-  canWriteFiles: boolean;
+  canCreateFiles: boolean;
+  canUpdateFiles: boolean;
+  canDeleteFiles: boolean;
+
   canReadBuckets: boolean;
-  canWriteBuckets: boolean;
+  canCreateBuckets: boolean;
+  canUpdateBuckets: boolean;
+  canDeleteBuckets: boolean;
+
   canReadFunctions: boolean;
-  canWriteFunctions: boolean;
+  canCreateFunctions: boolean;
+  canUpdateFunctions: boolean;
+  canDeleteFunctions: boolean;
+
   canReadExecution: boolean;
-  canWriteExecution: boolean;
+  canCreateExecution: boolean;
+  canUpdateExecution: boolean;
+  canDeleteExecution: boolean;
+
   canReadLocale: boolean;
   canReadAvatars: boolean;
   canReadHealth: boolean;
   canReadProviders: boolean;
-  canWriteProviders: boolean;
+  canCreateProviders: boolean;
+  canUpdateProviders: boolean;
+  canDeleteProviders: boolean;
+
   canReadMessages: boolean;
-  canWriteMessages: boolean;
+  canCreateMessages: boolean;
+  canUpdateMessages: boolean;
+  canDeleteMessages: boolean;
+
   canReadTopics: boolean;
-  canWriteTopics: boolean;
+  canCreateTopics: boolean;
+  canUpdateTopics: boolean;
+  canDeleteTopics: boolean;
+
   canReadSubscribers: boolean;
-  canWriteSubscribers: boolean;
+  canCreateSubscribers: boolean;
+  canUpdateSubscribers: boolean;
+  canDeleteSubscribers: boolean;
+
   canReadTargets: boolean;
-  canWriteTargets: boolean;
+  canCreateTargets: boolean;
+  canUpdateTargets: boolean;
+  canDeleteTargets: boolean;
+
   canReadRules: boolean;
-  canWriteRules: boolean;
+  canCreateRules: boolean;
+  canUpdateRules: boolean;
+  canDeleteRules: boolean;
+
   canReadMigrations: boolean;
-  canWriteMigrations: boolean;
+  canCreateMigrations: boolean;
+  canUpdateMigrations: boolean;
+  canDeleteMigrations: boolean;
+
   canReadVcs: boolean;
-  canWriteVcs: boolean;
+  canCreateVcs: boolean;
+  canUpdateVcs: boolean;
+  canDeleteVcs: boolean;
+
   canReadAssistant: boolean;
   canReadGlobal: boolean;
-  canWritePublic: boolean;
+  canCreatePublic: boolean;
+  canUpdatePublic: boolean;
+  canDeletePublic: boolean;
+
   canReadHome: boolean;
-  canWriteConsole: boolean;
+  canCreateConsole: boolean;
+  canUpdateConsole: boolean;
+  canDeleteConsole: boolean;
+
   canReadGraphql: boolean;
-  canWriteOrganizations: boolean;
+  canCreateOrganizations: boolean;
+  canUpdateOrganizations: boolean;
+  canDeleteOrganizations: boolean;
+
   canReadAccount: boolean;
   canReadProjects: boolean;
-  canWriteProjects: boolean;
+  canCreateProjects: boolean;
+  canUpdateProjects: boolean;
+  canDeleteProjects: boolean;
+
   canReadPlatforms: boolean;
-  canWritePlatforms: boolean;
+  canCreatePlatforms: boolean;
+  canUpdatePlatforms: boolean;
+  canDeletePlatforms: boolean;
+
   canReadKeys: boolean;
-  canWriteKeys: boolean;
+  canCreateKeys: boolean;
+  canUpdateKeys: boolean;
+  canDeleteKeys: boolean;
+
   canReadWebhooks: boolean;
-  canWriteWebhooks: boolean;
+  canCreateWebhooks: boolean;
+  canUpdateWebhooks: boolean;
+  canDeleteWebhooks: boolean;
+
   canReadPolicies: boolean;
-  canWritePolicies: boolean;
+  canCreatePolicies: boolean;
+  canUpdatePolicies: boolean;
+  canDeletePolicies: boolean;
+
   canReadArchives: boolean;
-  canWriteArchives: boolean;
+  canCreateArchives: boolean;
+  canUpdateArchives: boolean;
+  canDeleteArchives: boolean;
+
   canReadRestorations: boolean;
-  canWriteRestorations: boolean;
+  canCreateRestorations: boolean;
+  canUpdateRestorations: boolean;
+  canDeleteRestorations: boolean;
+
   canReadBilling: boolean;
-  canWriteBilling: boolean;
+  canCreateBilling: boolean;
+  canUpdateBilling: boolean;
+  canDeleteBilling: boolean;
 }
 
 class AppState {
@@ -81,72 +173,163 @@ class AppState {
   get permissions() {
     return {
       canReadSessions: this.scopes.scopes.includes("sessions.read"),
-      canWriteSessions: this.scopes.scopes.includes("sessions.write"),
+      canCreateSessions: this.scopes.scopes.includes("sessions.create"),
+      canUpdateSessions: this.scopes.scopes.includes("sessions.update"),
+      canDeleteSessions: this.scopes.scopes.includes("sessions.delete"),
+
       canReadUsers: this.scopes.scopes.includes("users.read"),
-      canWriteUsers: this.scopes.scopes.includes("users.write"),
+      canCreateUsers: this.scopes.scopes.includes("users.create"),
+      canUpdateUsers: this.scopes.scopes.includes("users.update"),
+      canDeleteUsers: this.scopes.scopes.includes("users.delete"),
+
       canReadTeams: this.scopes.scopes.includes("teams.read"),
-      canWriteTeams: this.scopes.scopes.includes("teams.write"),
+      canCreateTeams: this.scopes.scopes.includes("teams.create"),
+      canUpdateTeams: this.scopes.scopes.includes("teams.update"),
+      canDeleteTeams: this.scopes.scopes.includes("teams.delete"),
+
       canReadDatabases: this.scopes.scopes.includes("databases.read"),
-      canWriteDatabases: this.scopes.scopes.includes("databases.write"),
+      canCreateDatabases: this.scopes.scopes.includes("databases.create"),
+      canUpdateDatabases: this.scopes.scopes.includes("databases.update"),
+      canDeleteDatabases: this.scopes.scopes.includes("databases.delete"),
+
       canReadCollections: this.scopes.scopes.includes("collections.read"),
-      canWriteCollections: this.scopes.scopes.includes("collections.write"),
+      canCreateCollections: this.scopes.scopes.includes("collections.create"),
+      canUpdateCollections: this.scopes.scopes.includes("collections.update"),
+      canDeleteCollections: this.scopes.scopes.includes("collections.delete"),
+
       canReadAttributes: this.scopes.scopes.includes("attributes.read"),
-      canWriteAttributes: this.scopes.scopes.includes("attributes.write"),
+      canCreateAttributes: this.scopes.scopes.includes("attributes.create"),
+      canUpdateAttributes: this.scopes.scopes.includes("attributes.update"),
+      canDeleteAttributes: this.scopes.scopes.includes("attributes.delete"),
+
       canReadIndexes: this.scopes.scopes.includes("indexes.read"),
-      canWriteIndexes: this.scopes.scopes.includes("indexes.write"),
+      canCreateIndexes: this.scopes.scopes.includes("indexes.create"),
+      canUpdateIndexes: this.scopes.scopes.includes("indexes.update"),
+      canDeleteIndexes: this.scopes.scopes.includes("indexes.delete"),
+
       canReadDocuments: this.scopes.scopes.includes("documents.read"),
-      canWriteDocuments: this.scopes.scopes.includes("documents.write"),
+      canCreateDocuments: this.scopes.scopes.includes("documents.create"),
+      canUpdateDocuments: this.scopes.scopes.includes("documents.update"),
+      canDeleteDocuments: this.scopes.scopes.includes("documents.delete"),
+
       canReadFiles: this.scopes.scopes.includes("files.read"),
-      canWriteFiles: this.scopes.scopes.includes("files.write"),
+      canCreateFiles: this.scopes.scopes.includes("files.create"),
+      canUpdateFiles: this.scopes.scopes.includes("files.update"),
+      canDeleteFiles: this.scopes.scopes.includes("files.delete"),
+
       canReadBuckets: this.scopes.scopes.includes("buckets.read"),
-      canWriteBuckets: this.scopes.scopes.includes("buckets.write"),
+      canCreateBuckets: this.scopes.scopes.includes("buckets.create"),
+      canUpdateBuckets: this.scopes.scopes.includes("buckets.update"),
+      canDeleteBuckets: this.scopes.scopes.includes("buckets.delete"),
+
       canReadFunctions: this.scopes.scopes.includes("functions.read"),
-      canWriteFunctions: this.scopes.scopes.includes("functions.write"),
+      canCreateFunctions: this.scopes.scopes.includes("functions.create"),
+      canUpdateFunctions: this.scopes.scopes.includes("functions.update"),
+      canDeleteFunctions: this.scopes.scopes.includes("functions.delete"),
+
       canReadExecution: this.scopes.scopes.includes("execution.read"),
-      canWriteExecution: this.scopes.scopes.includes("execution.write"),
+      canCreateExecution: this.scopes.scopes.includes("execution.create"),
+      canUpdateExecution: this.scopes.scopes.includes("execution.update"),
+      canDeleteExecution: this.scopes.scopes.includes("execution.delete"),
+
       canReadLocale: this.scopes.scopes.includes("locale.read"),
       canReadAvatars: this.scopes.scopes.includes("avatars.read"),
       canReadHealth: this.scopes.scopes.includes("health.read"),
       canReadProviders: this.scopes.scopes.includes("providers.read"),
-      canWriteProviders: this.scopes.scopes.includes("providers.write"),
+      canCreateProviders: this.scopes.scopes.includes("providers.create"),
+      canUpdateProviders: this.scopes.scopes.includes("providers.update"),
+      canDeleteProviders: this.scopes.scopes.includes("providers.delete"),
+
       canReadMessages: this.scopes.scopes.includes("messages.read"),
-      canWriteMessages: this.scopes.scopes.includes("messages.write"),
+      canCreateMessages: this.scopes.scopes.includes("messages.create"),
+      canUpdateMessages: this.scopes.scopes.includes("messages.update"),
+      canDeleteMessages: this.scopes.scopes.includes("messages.delete"),
+
       canReadTopics: this.scopes.scopes.includes("topics.read"),
-      canWriteTopics: this.scopes.scopes.includes("topics.write"),
+      canCreateTopics: this.scopes.scopes.includes("topics.create"),
+      canUpdateTopics: this.scopes.scopes.includes("topics.update"),
+      canDeleteTopics: this.scopes.scopes.includes("topics.delete"),
+
       canReadSubscribers: this.scopes.scopes.includes("subscribers.read"),
-      canWriteSubscribers: this.scopes.scopes.includes("subscribers.write"),
+      canCreateSubscribers: this.scopes.scopes.includes("subscribers.create"),
+      canUpdateSubscribers: this.scopes.scopes.includes("subscribers.update"),
+      canDeleteSubscribers: this.scopes.scopes.includes("subscribers.delete"),
+
       canReadTargets: this.scopes.scopes.includes("targets.read"),
-      canWriteTargets: this.scopes.scopes.includes("targets.write"),
+      canCreateTargets: this.scopes.scopes.includes("targets.create"),
+      canUpdateTargets: this.scopes.scopes.includes("targets.update"),
+      canDeleteTargets: this.scopes.scopes.includes("targets.delete"),
+
       canReadRules: this.scopes.scopes.includes("rules.read"),
-      canWriteRules: this.scopes.scopes.includes("rules.write"),
+      canCreateRules: this.scopes.scopes.includes("rules.create"),
+      canUpdateRules: this.scopes.scopes.includes("rules.update"),
+      canDeleteRules: this.scopes.scopes.includes("rules.delete"),
+
       canReadMigrations: this.scopes.scopes.includes("migrations.read"),
-      canWriteMigrations: this.scopes.scopes.includes("migrations.write"),
+      canCreateMigrations: this.scopes.scopes.includes("migrations.create"),
+      canUpdateMigrations: this.scopes.scopes.includes("migrations.update"),
+      canDeleteMigrations: this.scopes.scopes.includes("migrations.delete"),
+
       canReadVcs: this.scopes.scopes.includes("vcs.read"),
-      canWriteVcs: this.scopes.scopes.includes("vcs.write"),
+      canCreateVcs: this.scopes.scopes.includes("vcs.create"),
+      canUpdateVcs: this.scopes.scopes.includes("vcs.update"),
+      canDeleteVcs: this.scopes.scopes.includes("vcs.delete"),
+
       canReadAssistant: this.scopes.scopes.includes("assistant.read"),
       canReadGlobal: this.scopes.scopes.includes("global"),
-      canWritePublic: this.scopes.scopes.includes("public"),
+      canCreatePublic: this.scopes.scopes.includes("public.create"),
+      canUpdatePublic: this.scopes.scopes.includes("public.update"),
+      canDeletePublic: this.scopes.scopes.includes("public.delete"),
       canReadHome: this.scopes.scopes.includes("home"),
-      canWriteConsole: this.scopes.scopes.includes("console"),
+      canCreateConsole: this.scopes.scopes.includes("console.create"),
+      canUpdateConsole: this.scopes.scopes.includes("console.update"),
+      canDeleteConsole: this.scopes.scopes.includes("console.delete"),
       canReadGraphql: this.scopes.scopes.includes("graphql"),
-      canWriteOrganizations: this.scopes.scopes.includes("organizations.write"),
+
+      canCreateOrganizations: this.scopes.scopes.includes("organizations.create"),
+      canUpdateOrganizations: this.scopes.scopes.includes("organizations.update"),
+      canDeleteOrganizations: this.scopes.scopes.includes("organizations.delete"),
+
       canReadAccount: this.scopes.scopes.includes("account"),
       canReadProjects: this.scopes.scopes.includes("projects.read"),
-      canWriteProjects: this.scopes.scopes.includes("projects.write"),
+      canCreateProjects: this.scopes.scopes.includes("projects.create"),
+      canUpdateProjects: this.scopes.scopes.includes("projects.update"),
+      canDeleteProjects: this.scopes.scopes.includes("projects.delete"),
+
       canReadPlatforms: this.scopes.scopes.includes("platforms.read"),
-      canWritePlatforms: this.scopes.scopes.includes("platforms.write"),
+      canCreatePlatforms: this.scopes.scopes.includes("platforms.create"),
+      canUpdatePlatforms: this.scopes.scopes.includes("platforms.update"),
+      canDeletePlatforms: this.scopes.scopes.includes("platforms.delete"),
+
       canReadKeys: this.scopes.scopes.includes("keys.read"),
-      canWriteKeys: this.scopes.scopes.includes("keys.write"),
+      canCreateKeys: this.scopes.scopes.includes("keys.create"),
+      canUpdateKeys: this.scopes.scopes.includes("keys.update"),
+      canDeleteKeys: this.scopes.scopes.includes("keys.delete"),
+
       canReadWebhooks: this.scopes.scopes.includes("webhooks.read"),
-      canWriteWebhooks: this.scopes.scopes.includes("webhooks.write"),
+      canCreateWebhooks: this.scopes.scopes.includes("webhooks.create"),
+      canUpdateWebhooks: this.scopes.scopes.includes("webhooks.update"),
+      canDeleteWebhooks: this.scopes.scopes.includes("webhooks.delete"),
+
       canReadPolicies: this.scopes.scopes.includes("policies.read"),
-      canWritePolicies: this.scopes.scopes.includes("policies.write"),
+      canCreatePolicies: this.scopes.scopes.includes("policies.create"),
+      canUpdatePolicies: this.scopes.scopes.includes("policies.update"),
+      canDeletePolicies: this.scopes.scopes.includes("policies.delete"),
+
       canReadArchives: this.scopes.scopes.includes("archives.read"),
-      canWriteArchives: this.scopes.scopes.includes("archives.write"),
+      canCreateArchives: this.scopes.scopes.includes("archives.create"),
+      canUpdateArchives: this.scopes.scopes.includes("archives.update"),
+      canDeleteArchives: this.scopes.scopes.includes("archives.delete"),
+
       canReadRestorations: this.scopes.scopes.includes("restorations.read"),
-      canWriteRestorations: this.scopes.scopes.includes("restorations.write"),
+      canCreateRestorations: this.scopes.scopes.includes("restorations.create"),
+      canUpdateRestorations: this.scopes.scopes.includes("restorations.update"),
+      canDeleteRestorations: this.scopes.scopes.includes("restorations.delete"),
+
       canReadBilling: this.scopes.scopes.includes("billing.read"),
-      canWriteBilling: this.scopes.scopes.includes("billing.write"),
+      canCreateBilling: this.scopes.scopes.includes("billing.create"),
+      canUpdateBilling: this.scopes.scopes.includes("billing.update"),
+      canDeleteBilling: this.scopes.scopes.includes("billing.delete"),
     };
   }
 

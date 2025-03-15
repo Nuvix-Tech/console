@@ -12,7 +12,7 @@ import { DataGrid, DataGridSkelton, SearchAndCreate } from "@/ui/modules/data-gr
 import { useSearchParams } from "next/navigation";
 import { EmptySearch } from "@/ui/modules/layout";
 import { IDChip } from "@/components/others";
-import { EmptyState } from "@/components/_empty_state";
+import { EmptyState } from "@/components";
 
 const UsersPage = () => {
   const state = getProjectState();
@@ -26,7 +26,7 @@ const UsersPage = () => {
   const limit = searchParams.get("limit") ? Number(searchParams.get("limit")) : 12;
   const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
   const search = searchParams.get("search");
-  const { canWriteProjects } = permissions;
+  const { canCreateProjects } = permissions;
 
   projectState.sidebar.first = null;
 
@@ -162,7 +162,7 @@ const UsersPage = () => {
       ) : users.total > 0 || !!search || page > 1 ? (
         <>
           <SearchAndCreate
-            button={{ text: "Create User", allowed: canWriteProjects }}
+            button={{ text: "Create User", allowed: canCreateProjects }}
             placeholder="Search by name, email, phone or ID"
           />
 
@@ -186,7 +186,7 @@ const UsersPage = () => {
           )}
         </>
       ) : (
-        <EmptyState title="No Users" description="No users have been created yet." />
+        <EmptyState show title="No Users" description="No users have been created yet." />
       )}
     </Column>
   );

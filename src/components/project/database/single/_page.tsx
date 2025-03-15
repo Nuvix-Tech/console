@@ -39,7 +39,7 @@ const DatabaseSinglePage = ({ databaseId }: { databaseId: string }) => {
   const search = searchParams.get("search");
   const confirm = useConfirm();
   const { addToast } = useToast();
-  const { canWriteDatabases } = permissions;
+  const { canCreateDatabases } = permissions;
 
   projectState.sidebar.first = null;
   projectState.sidebar.middle = null;
@@ -161,7 +161,7 @@ const DatabaseSinglePage = ({ databaseId }: { databaseId: string }) => {
         showCheckbox
       >
         <SearchAndCreate
-          button={{ text: "Create Collection", allowed: canWriteDatabases }}
+          button={{ text: "Create Collection", allowed: canCreateDatabases }}
           placeholder="Search by name or ID"
         />
 

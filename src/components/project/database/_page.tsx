@@ -27,7 +27,7 @@ const DatabasePage = () => {
   const limit = searchParams.get("limit") ? Number(searchParams.get("limit")) : 6;
   const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
   const search = searchParams.get("search");
-  const { canWriteDatabases } = permissions;
+  const { canCreateDatabases } = permissions;
 
   React.useEffect(() => {
     if (!sdk) return;
@@ -105,7 +105,7 @@ const DatabasePage = () => {
       ) : databases.total > 0 || !!search || page > 1 ? (
         <>
           <SearchAndCreate
-            button={{ text: "Create Database", allowed: canWriteDatabases }}
+            button={{ text: "Create Database", allowed: canCreateDatabases }}
             placeholder="Search ID"
           />
 

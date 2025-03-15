@@ -10,9 +10,10 @@ import { useRouter } from "@bprogress/next";
 
 type Props = {
   interactive?: boolean;
+  noResults?: boolean;
 };
 
-const TheTable = <T,>({ interactive = true }: Props) => {
+const TheTable = <T,>({ interactive = true, noResults }: Props) => {
   const { table, loading, showCheckbox, stickyCheckBox } = useDataGrid<T>();
   const { push } = useRouter();
   const checkBoxWidth = 12;
