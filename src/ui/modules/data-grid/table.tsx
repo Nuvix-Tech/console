@@ -18,7 +18,12 @@ const TheTable = <T,>({ interactive = true }: Props) => {
   const checkBoxWidth = 12;
 
   return (
-    <Table.ScrollArea borderWidth="1px" borderRadius={"md"} width="full" className="neutral-background-alpha-weak neutral-border-alpha-medium">
+    <Table.ScrollArea
+      borderWidth="1px"
+      borderRadius={"md"}
+      width="full"
+      className="neutral-background-alpha-weak neutral-border-alpha-medium"
+    >
       <Table.Root
         size="lg"
         variant="line"
@@ -37,7 +42,8 @@ const TheTable = <T,>({ interactive = true }: Props) => {
               alignItems={"center"}
               position={"relative"}
               width="full"
-              className="neutral-background-alpha-weak neutral-border-alpha-medium"
+              className="!bg-transparent neutral-border-alpha-medium"
+              borderColor={"var(--neutral-alpha-medium) !important"}
               borderBottom={0.5}
               borderStyle={"solid"}
             >
@@ -49,9 +55,10 @@ const TheTable = <T,>({ interactive = true }: Props) => {
                   width={checkBoxWidth}
                   minWidth={checkBoxWidth}
                   maxWidth={checkBoxWidth}
+                  height={12}
                   position={stickyCheckBox ? "sticky" : "relative"}
                   left={stickyCheckBox ? "0" : "auto"}
-                  className={stickyCheckBox ? "neutral-background-alpha-weak" : ""}
+                  className={stickyCheckBox ? "neutral-background-strong" : ""}
                   borderBottom={0}
                   zIndex={3}
                 >
@@ -107,14 +114,16 @@ const TheTable = <T,>({ interactive = true }: Props) => {
                 gap={0}
                 borderBottom={"1px solid"}
                 className="neutral-border-alpha-medium"
+                bg="transparent"
+                borderColor={"var(--neutral-alpha-medium) !important"}
                 {...(interactive && {
                   _hover: {
                     cursor: "pointer",
+                    bg: "var(--neutral-alpha-medium) !important",
                   },
                   _focus: {
-                    bg: "bg.subtle",
+                    bg: "var(--surface-background) !important",
                     cursor: "pointer",
-                    borderColor: "border",
                   },
                 })}
                 onClick={(e) => {
@@ -142,7 +151,8 @@ const TheTable = <T,>({ interactive = true }: Props) => {
                     maxWidth={checkBoxWidth}
                     position={stickyCheckBox ? "sticky" : "relative"}
                     left={stickyCheckBox ? "0" : "auto"}
-                    className={stickyCheckBox ? "neutral-background-alpha-weak" : ""}
+                    className={stickyCheckBox ? "neutral-background-strong" : ""}
+                    borderWidth={0}
                     zIndex={3}
                   >
                     <Checkbox

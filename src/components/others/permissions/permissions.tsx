@@ -6,7 +6,7 @@ import {
   PopoverBody,
 } from "@/components/cui/popover";
 import { Card, Checkbox, IconButton } from "@/ui/components";
-import { Button, Table, Text, VStack } from "@chakra-ui/react";
+import { Table, Text, VStack } from "@chakra-ui/react";
 import { LuPlus } from "react-icons/lu";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { CloseButton } from "@/components/cui/close-button";
@@ -17,6 +17,7 @@ import { TeamRole } from "./teams";
 import { RoleHover } from "./row";
 import { LabelRole } from "./label";
 import { CustomRole } from "./custom";
+import { Button } from "@/components/ui/button";
 
 export type Permission = {
   create: boolean;
@@ -122,7 +123,11 @@ export const PermissionsEditor = ({
     <>
       <VStack width={"full"} position="relative" alignItems={"flex-start"}>
         {groups.size > 0 ? (
-          <Table.ScrollArea borderRadius="lg" border="1px solid" borderColor="var(--surface-border)">
+          <Table.ScrollArea
+            borderRadius="lg"
+            border="1px solid"
+            borderColor="var(--surface-border)"
+          >
             <Table.Root tableLayout="fixed" variant="line" bg={"var(--surface-background)"}>
               <Table.Header>
                 <Table.Row bg="transparent" borderColor={"var(--surface-border)"}>
@@ -183,9 +188,9 @@ export const PermissionsEditor = ({
                     </Table.Cell>
                   </Table.Row>
                 ))}
-                <Table.Row width="full">
+                <Table.Row width="full" bg="transparent">
                   <PopoverBox addRole={addRole} sdk={sdk} groups={groups}>
-                    <Button variant="ghost" size="sm" width="full" bg="transparent">
+                    <Button variant="ghost" size="sm">
                       <LuPlus />
                       Add Role
                     </Button>
@@ -276,9 +281,8 @@ const PopoverBox = ({ addRole, children, sdk, groups }: PopoverBoxProps) => {
                 <PopoverTrigger key={index} width="full">
                   <Button
                     variant="ghost"
-                    width="full"
-                    justifyContent="flex-start"
                     onClick={() => handleRoleClick(role, component)}
+                    className="w-full justify-start"
                   >
                     {label}
                   </Button>

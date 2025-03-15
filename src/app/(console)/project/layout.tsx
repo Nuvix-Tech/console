@@ -11,13 +11,18 @@ export default function ({ children }: { children: React.ReactNode }) {
         <Stack
           position="relative"
           as={"aside"}
-          className="md:w-[280px] md:flex hidden"
+          className="md:w-[17.5rem] lg:flex hidden"
           height="full"
         >
           <ProjectSidebar />
         </Stack>
       </ProjectLayout>
-      <Stack className="flex-1" height="full" position="relative" as={"main"}>
+      <Stack
+        className="flex-1 w-full lg:max-w-[calc(100%-18.5rem)]"
+        height="full"
+        position="relative"
+        as={"main"}
+      >
         <ProjectHeader />
         <Stack height={"calc(100% - 64px)"} overflowY="auto" direction="column">
           {children}

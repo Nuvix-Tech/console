@@ -36,10 +36,25 @@ export const LayoutTop: React.FC<LayoutTopProps> = ({ title, id }) => {
               value={value === document?.$id ? "" : value}
               onValueChange={(v) => push(`${url}/${v}`)}
             >
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value={""}>Document</TabsTrigger>
-                <TabsTrigger value={`details`}>Access & Security</TabsTrigger>
-                <TabsTrigger value={`logs`}>Activity</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-3 neutral-background-alpha-medium">
+                <TabsTrigger
+                  value={""}
+                  className={`data-[state=active]:bg-[var(--neutral-alpha-medium)]`}
+                >
+                  Document
+                </TabsTrigger>
+                <TabsTrigger
+                  value={`details`}
+                  className={`data-[state=active]:bg-[var(--neutral-alpha-medium))]`}
+                >
+                  Access & Security
+                </TabsTrigger>
+                <TabsTrigger
+                  value={`logs`}
+                  className={`data-[state=active]:bg-[var(--neutral-alpha-medium)]`}
+                >
+                  Activity
+                </TabsTrigger>
               </TabsList>
             </Tabs>
           </Stack>
