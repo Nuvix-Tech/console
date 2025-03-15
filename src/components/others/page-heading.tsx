@@ -9,8 +9,14 @@ type PageHeadingProps = {
 
 export const PageHeading = ({ heading, description, right }: PageHeadingProps) => {
   return (
-    <Row marginBottom="24" marginTop="12" paddingX="8" fillWidth>
-      <Stack direction="row" justifyContent="space-between" alignItems="center" gap={4}>
+    <Row marginBottom="24" marginTop="12" fillWidth>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        gap={4}
+        width="full"
+      >
         <Column vertical="center" horizontal="start">
           <Heading size="2xl">{heading}</Heading>
           <Text fontSize="sm" color="fg.subtle">

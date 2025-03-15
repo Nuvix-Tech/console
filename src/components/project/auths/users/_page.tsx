@@ -6,44 +6,43 @@ import React from "react";
 import { Row } from "@/ui/components";
 import { ColumnDef } from "@tanstack/react-table";
 import { Tooltip } from "@/components/cui/tooltip";
-import { Badge, Text } from "@chakra-ui/react";
+import { Badge, HStack, Text } from "@chakra-ui/react";
 import { formatDate } from "@/lib/utils";
-import { DataGrid, DataGridSkelton, SearchAndCreate } from "@/ui/modules/data-grid";
-import { useSearchParams } from "next/navigation";
-import { EmptySearch } from "@/ui/modules/layout";
-import { IDChip } from "@/components/others";
+import { DataGridProvider, DataGridSkelton, Search, Table } from "@/ui/modules/data-grid";
+import { CreateButton, IDChip, PageContainer, PageHeading } from "@/components/others";
 import { EmptyState } from "@/components";
+import { useQuery } from "@/hooks/useQuery";
+import useSWR from "swr";
 
 const UsersPage = () => {
   const state = getProjectState();
   const { sdk, project, permissions } = state;
-  const [loading, setLoading] = React.useState(true);
-  const [users, setUsers] = React.useState<Models.UserList<any>>({
-    users: [],
-    total: 0,
-  });
-  const searchParams = useSearchParams();
-  const limit = searchParams.get("limit") ? Number(searchParams.get("limit")) : 12;
-  const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
-  const search = searchParams.get("search");
-  const { canCreateProjects } = permissions;
+  const { limit, page, search, hasQuery } = useQuery();
+  const { canCreateUsers } = permissions;
 
   projectState.sidebar.first = null;
 
-  React.useEffect(() => {
-    if (!sdk) return;
-    setLoading(true);
+  const fetcher = React.useCallback(async (props: any) => {
+    const [sdk, limit, page, search] = props;
+    if (!sdk) {
+      return new Promise<never>(() => {});
+    }
     const queries: string[] = [];
-
     queries.push(Query.limit(limit), Query.offset((page - 1) * limit));
-    const fetchUsers = async () => {
-      const users = await sdk.users.list(queries, search ?? undefined);
-      setUsers(users);
-      setLoading(false);
-    };
+    return await sdk.users.list(queries, search ?? undefined);
+  }, []);
 
-    fetchUsers();
-  }, [sdk, limit, page, search]);
+  const { data, isLoading, error } = useSWR<Models.UserList<any>>(
+    [sdk, limit, page, search],
+    fetcher,
+    { suspense: true },
+  );
+
+  const users = data ?? {
+    users: [],
+    total: 0,
+  };
+  console.log(data, isLoading, error);
 
   const authPath = `/project/${project?.$id}/authentication`;
 
@@ -150,45 +149,45 @@ const UsersPage = () => {
   ];
 
   return (
-    <Column paddingX="16" fillWidth>
-      <Row vertical="center" horizontal="start" marginBottom="24" marginTop="12" paddingX="8">
-        <Text fontSize={"2xl"} as={"h2"} fontWeight={"semibold"}>
-          Users
-        </Text>
-      </Row>
+    <PageContainer>
+      <PageHeading
+        heading="Users"
+        description="Manage your project’s users."
+        right={<CreateButton hasPermission={canCreateUsers} label="Create User" />}
+      />
 
-      {loading && !users.total ? (
-        <DataGridSkelton />
-      ) : users.total > 0 || !!search || page > 1 ? (
-        <>
-          <SearchAndCreate
-            button={{ text: "Create User", allowed: canCreateProjects }}
-            placeholder="Search by name, email, phone or ID"
-          />
+      <DataGridProvider<Models.User<any>>
+        columns={columns}
+        data={data?.users ?? []}
+        manualPagination
+        rowCount={data?.total}
+        loading={isLoading}
+        state={{
+          pagination: { pageIndex: page, pageSize: limit },
+        }}
+      >
+        {/* <DataGridSkelton loading={loading && !users.total && !hasQuery} /> */}
 
-          {users.total > 0 ? (
-            <DataGrid<Models.User<any>>
-              columns={columns}
-              data={users.users}
-              manualPagination
-              rowCount={users.total}
-              loading={loading}
-              state={{ pagination: { pageIndex: page, pageSize: limit } }}
-            />
-          ) : (
-            search && (
-              <EmptySearch
-                title={`Sorry, we couldn't find '${search}'`}
-                description="There are no users that match your search."
-                clearSearch
-              />
-            )
-          )}
-        </>
-      ) : (
-        <EmptyState show title="No Users" description="No users have been created yet." />
-      )}
-    </Column>
+        <EmptyState
+          show={users.total === 0 && !isLoading && !hasQuery}
+          title="No Users"
+          description="No users have been created yet."
+        />
+
+        {(users.total > 0 || hasQuery) && (
+          <>
+            <HStack mb="6" justifyContent="space-between" alignItems="center">
+              <Search placeholder="Search by name, email, phone or ID" />
+            </HStack>
+            <Table noResults={users.total === 0 && hasQuery} />
+            {/* <PaginationWrapper>
+              <SelectLimit />
+              <Pagination />
+            </PaginationWrapper> */}
+          </>
+        )}
+      </DataGridProvider>
+    </PageContainer>
   );
 };
 

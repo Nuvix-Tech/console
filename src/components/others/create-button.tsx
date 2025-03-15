@@ -8,5 +8,5 @@ type CreateButtonProps = {
 } & ButtonProps;
 
 export const CreateButton = ({ hasPermission, label, icon, ...props }: CreateButtonProps) => {
-  return hasPermission && <Button {...props} />;
+  return hasPermission && <Button label={label} {...props} />;
 };

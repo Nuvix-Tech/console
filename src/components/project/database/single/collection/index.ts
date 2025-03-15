@@ -1,3 +1,4 @@
+"use client";
 export * from "./_layout";
 export * from "./_page";
 export * from "./_settings";

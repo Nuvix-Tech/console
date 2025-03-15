@@ -1,3 +1,4 @@
+"use client";
 import { SkeletonCircle, SkeletonText } from "@/components/cui/skeleton";
 import { HStack, Skeleton, Stack } from "@chakra-ui/react";
 
