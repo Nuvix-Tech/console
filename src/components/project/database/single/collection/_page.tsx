@@ -21,10 +21,10 @@ import {
   Table,
 } from "@/ui/modules/data-grid";
 import { useSearchParams } from "next/navigation";
-import { EmptyState } from "@/ui/modules/layout/empty-state";
 import { IDChip } from "@/components/others";
 import { LuTrash2 } from "react-icons/lu";
 import { CreateButton } from "@/ui/modules/data-grid";
+import { EmptyState } from "@/components/_empty_state";
 
 type Props = {
   databaseId: string;

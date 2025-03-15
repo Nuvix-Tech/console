@@ -7,9 +7,7 @@ export const ProjectLayout = ({ children }: PropsWithChildren) => {
   const { sidebar } = getProjectState();
 
   return (
-    <div
-      id="project"
-      className={classNames(`project show-sidebar show-sidebar-large`)} >
+    <div id="project" className={classNames(`project show-sidebar show-sidebar-large`)}>
       {children}
     </div>
   );

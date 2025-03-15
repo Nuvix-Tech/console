@@ -14,11 +14,12 @@ export const EmptyState = ({ title, description, primary, secondary }: EmptyStat
       width="full"
       height="md"
       border="1px dashed"
-      borderColor="border.subtle"
+      borderColor={"var(--neutral-alpha-medium)"}
       borderRadius="l2"
       direction="column"
       justifyContent="center"
       alignItems="center"
+      className="neutral-background-alpha-weak"
       gap={4}
     >
       <SmartImage src="/images/empty-dark.svg" alt="Empty state" height={15} width={20.5} />

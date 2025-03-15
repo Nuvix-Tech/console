@@ -113,7 +113,7 @@ const TheTable = <T,>({ interactive = true }: Props) => {
                 borderRadius={0}
                 gap={0}
                 borderBottom={"1px solid"}
-                className="neutral-border-alpha-medium"
+                className="neutral-border-alpha-medium last:!border-0"
                 bg="transparent"
                 borderColor={"var(--neutral-alpha-medium) !important"}
                 {...(interactive && {
