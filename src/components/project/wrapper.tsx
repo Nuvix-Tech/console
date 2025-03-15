@@ -2,15 +2,14 @@
 
 import { getProjectSdk, sdkForConsole } from "@/lib/sdk";
 import React from "react";
-import { getProjectState, projectState } from "@/state/project-state";
+import { projectState } from "@/state/project-state";
 import { appState } from "@/state/app-state";
-import classNames from "classnames";
+import useSWR from "swr";
 
 export default function ProjectWrapper({
   children,
   id,
 }: { children: React.ReactNode; id: string }) {
-  const { project, showSubSidebar, sidebar } = getProjectState();
   const { projects, organizations } = sdkForConsole;
 
   projectState._update = async () => {
@@ -18,18 +17,20 @@ export default function ProjectWrapper({
     projectState.project = p;
   };
 
-  React.useEffect(() => {
-    projects.get(id).then((project) => {
-      projectState.project = project;
-      projectState.sdk = getProjectSdk(project.$id);
-      projectState.initialfetching = false;
-      organizations.get(project.teamId).then((org) => (appState.organization = org));
-      organizations.getScopes(project.teamId).then((scopes) => {
-        appState.scopes = scopes;
-        projectState.scopes = scopes; // TODO: get form project sdk after server updation
-      });
-    });
-  }, [id]);
+  const fetcher = async (id: string) => {
+    let project = await projects.get(id);
+    projectState.project = project;
+    projectState.sdk = getProjectSdk(project.$id);
+    projectState.initialfetching = false;
+    const org = await organizations.get(project.teamId);
+    appState.organization = org;
+    const scopes = await organizations.getScopes(project.teamId);
+    appState.scopes = scopes;
+    projectState.scopes = scopes;
+    return project;
+  };
+
+  const { data } = useSWR(id, fetcher);
 
   return <>{children}</>;
 }

@@ -5,6 +5,7 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import LoadingUI from "../loading";
 import { appState } from "@/state/app-state";
+import { SWRConfig } from "swr";
 
 const ConsoleWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -24,7 +25,15 @@ const ConsoleWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) =
     fetchUser();
   }, []);
 
-  return <>{isLoading ? <LoadingUI /> : children}</>;
+  return (
+    <SWRConfig
+      value={{
+        suspense: true,
+      }}
+    >
+      {isLoading ? <LoadingUI /> : children}
+    </SWRConfig>
+  );
 };
 
 export default ConsoleWrapper;
