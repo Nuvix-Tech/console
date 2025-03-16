@@ -6,24 +6,22 @@ import {
   CardBoxTitle,
 } from "@/components/others/card";
 import { Form, SubmitButton } from "@/components/others/forms";
-import { Field } from "@/components/cui/field";
-import { NativeSelectField, NativeSelectRoot } from "@/components/cui/native-select";
-import { NumberInputField, NumberInputRoot } from "@/components/cui/number-input";
 import { useTimeUnitPair } from "@/lib/helpers/unit";
 import { sdkForConsole } from "@/lib/sdk";
-import { getProjectState } from "@/state/project-state";
 import { NumberInput, Select, useToast } from "@/ui/components";
 import { Group } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 import React from "react";
 import * as y from "yup";
+import { useProjectStore } from "@/lib/store";
 
 const schema = y.object({
   length: y.number().min(0).optional(),
 });
 
 export const SessionDuration: React.FC = () => {
-  const { project, _update } = getProjectState();
+  const project = useProjectStore.use.project?.();
+  const refresh = useProjectStore.use.update();
   const { projects } = sdkForConsole;
   const { addToast } = useToast();
 
@@ -42,7 +40,7 @@ export const SessionDuration: React.FC = () => {
               variant: "success",
               message: "Session duration updated.",
             });
-            await _update();
+            await refresh();
           } catch (e: any) {
             addToast({
               variant: "danger",

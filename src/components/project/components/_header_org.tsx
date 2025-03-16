@@ -14,13 +14,13 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { getAppState } from "@/state/app-state";
 import { sdkForConsole } from "@/lib/sdk";
 import { useRouter } from "@bprogress/next";
 import { Models } from "@nuvix/console";
+import { useAppStore } from "@/lib/store";
 
 export function HeaderOrganization() {
-  const { organization } = getAppState();
+  const organization = useAppStore.use.organization?.();
   const { organizations: orgApi } = sdkForConsole;
   const [orgs, setOrgs] = React.useState<Models.Organization<any>[]>();
   const { push } = useRouter();

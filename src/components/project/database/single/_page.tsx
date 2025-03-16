@@ -1,13 +1,11 @@
 "use client";
 
-import { getDbPageState } from "@/state/page";
-import { getProjectState, projectState } from "@/state/project-state";
-import { Column, useConfirm, useToast } from "@/ui/components";
+import { useConfirm, useToast } from "@/ui/components";
 import { Models, Query } from "@nuvix/console";
-import React from "react";
+import React, { useEffect } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Tooltip } from "@/components/cui/tooltip";
-import { HStack, Heading, Text } from "@chakra-ui/react";
+import { HStack } from "@chakra-ui/react";
 import { formatDate } from "@/lib/utils";
 import {
   ActionButton,
@@ -19,30 +17,31 @@ import {
   SelectLimit,
   Table,
 } from "@/ui/modules/data-grid";
-import { useSearchParams } from "next/navigation";
-import { EmptyState } from "@/ui/modules/layout/empty-state";
 import { EmptySearch } from "@/ui/modules/layout";
-import { IDChip } from "@/components/others";
+import { IDChip, PageContainer, PageHeading } from "@/components/others";
+import { useDatabaseStore, useProjectStore } from "@/lib/store";
+import { useSearchQuery } from "@/hooks/useQuery";
+import { EmptyState } from "@/components/_empty_state";
 
 const DatabaseSinglePage = ({ databaseId }: { databaseId: string }) => {
-  const state = getProjectState();
-  const { database } = getDbPageState();
-  const { sdk, project, permissions } = state;
+  const sdk = useProjectStore.use.sdk?.();
+  const project = useProjectStore.use.project?.();
+  const permissions = useProjectStore.use.permissions();
+  const setSidebarNull = useProjectStore.use.setSidebarNull();
+  const database = useDatabaseStore.use.database?.();
   const [loading, setLoading] = React.useState(true);
   const [collectionList, setCollectionList] = React.useState<Models.CollectionList>({
     collections: [],
     total: 0,
   });
-  const searchParams = useSearchParams();
-  const limit = searchParams.get("limit") ? Number(searchParams.get("limit")) : 6;
-  const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
-  const search = searchParams.get("search");
+  const { limit, page, search } = useSearchQuery();
   const confirm = useConfirm();
   const { addToast } = useToast();
-  const { canCreateDatabases } = permissions;
+  const { canCreateDatabases } = permissions();
 
-  projectState.sidebar.first = null;
-  projectState.sidebar.middle = null;
+  useEffect(() => {
+    setSidebarNull("first", "middle");
+  }, []);
 
   const get = async () => {
     if (!sdk || !database) return;
@@ -143,13 +142,11 @@ const DatabaseSinglePage = ({ databaseId }: { databaseId: string }) => {
   };
 
   return (
-    <Column paddingX="16" fillWidth>
-      <Column vertical="center" horizontal="start" marginBottom="24" marginTop="12" paddingX="8">
-        <Heading size="2xl">Collections</Heading>
-        <Text fontSize={"sm"} color="fg.subtle">
-          Collections are used to manage the data within a database.
-        </Text>
-      </Column>
+    <PageContainer>
+      <PageHeading
+        heading="Collections"
+        description="Collections are groups of documents that are stored together in a database. Each collection is a separate entity and can have its own set of documents."
+      />
 
       <DataGridProvider<Models.Collection>
         columns={columns}
@@ -197,10 +194,14 @@ const DatabaseSinglePage = ({ databaseId }: { databaseId: string }) => {
             )}
           </>
         ) : (
-          <EmptyState title="No Collections" description="No collections have been created yet." />
+          <EmptyState
+            show
+            title="No Collections"
+            description="No collections have been created yet."
+          />
         )}
       </DataGridProvider>
-    </Column>
+    </PageContainer>
   );
 };
 

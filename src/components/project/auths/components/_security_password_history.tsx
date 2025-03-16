@@ -7,7 +7,7 @@ import {
 } from "@/components/others/card";
 import { Form, InputNumberField, SubmitButton } from "@/components/others/forms";
 import { sdkForConsole } from "@/lib/sdk";
-import { getProjectState } from "@/state/project-state";
+import { useProjectStore } from "@/lib/store";
 import { Column, Switch, useToast } from "@/ui/components";
 import { Text } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
@@ -21,7 +21,8 @@ const schema = y.object({
 type TSchema = y.InferType<typeof schema>;
 
 export const PasswordHistory: React.FC = () => {
-  const { project, _update } = getProjectState();
+  const project = useProjectStore.use.project?.();
+  const refresh = useProjectStore.use.update();
   const { projects } = sdkForConsole;
   const { addToast } = useToast();
 
@@ -40,7 +41,7 @@ export const PasswordHistory: React.FC = () => {
               variant: "success",
               message: "Password history updated successfully.",
             });
-            await _update();
+            await refresh();
           } catch (e: any) {
             addToast({
               variant: "danger",

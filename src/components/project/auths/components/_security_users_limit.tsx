@@ -7,13 +7,13 @@ import {
 } from "@/components/others/card";
 import { Form, RadioField, SubmitButton } from "@/components/others/forms";
 import { sdkForConsole } from "@/lib/sdk";
-import { getProjectState } from "@/state/project-state";
 import { NumberInput, useToast } from "@/ui/components";
 import { Badge, HStack, VStack } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 import React from "react";
 import * as y from "yup";
 import { RadioGroupItem } from "@/components/ui/radio-group";
+import { useProjectStore } from "@/lib/store";
 
 const schema = y.object({
   limit: y.number().min(0).optional(),
@@ -21,7 +21,8 @@ const schema = y.object({
 });
 
 export const UsersLimit: React.FC = () => {
-  const { project, _update } = getProjectState();
+  const project = useProjectStore.use.project?.();
+  const refresh = useProjectStore.use.update();
   const { projects } = sdkForConsole;
   const { addToast } = useToast();
 
@@ -41,7 +42,7 @@ export const UsersLimit: React.FC = () => {
               variant: "success",
               message: "Users limit updated.",
             });
-            await _update();
+            await refresh();
             resetForm();
           } catch (e: any) {
             addToast({

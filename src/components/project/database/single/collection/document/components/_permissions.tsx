@@ -7,24 +7,30 @@ import {
 } from "@/components/others/card";
 import { Form, SubmitButton } from "@/components/others/forms";
 import { PermissionField } from "@/components/others/permissions";
-import { getCollectionPageState, getDbPageState, getDocumentPageState } from "@/state/page";
-import { getProjectState } from "@/state/project-state";
-import { Feedback, useToast } from "@/ui/components";
+import { useToast } from "@/ui/components";
 import { Info } from "lucide-react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import React from "react";
 import * as y from "yup";
+import {
+  useCollectionStore,
+  useDatabaseStore,
+  useDocumentStore,
+  useProjectStore,
+} from "@/lib/store";
 
 const schema = y.object({
   permissions: y.array(),
 });
 
 export const UpdatePermissions: React.FC = () => {
-  const { database } = getDbPageState();
-  const { collection } = getCollectionPageState();
-  const { document, _update } = getDocumentPageState();
-  const { sdk } = getProjectState();
+  const document = useDocumentStore.use.document?.();
+  const refresh = useDocumentStore.use.refresh();
+  const sdk = useProjectStore.use.sdk?.();
+  const collection = useCollectionStore.use.collection?.();
+  const database = useDatabaseStore.use.database?.();
+
   const { addToast } = useToast();
 
   if (!database || !collection || !document || !sdk) return;
@@ -50,7 +56,7 @@ export const UpdatePermissions: React.FC = () => {
               variant: "success",
               message: "Document permissions updated.",
             });
-            await _update();
+            await refresh();
           } catch (e: any) {
             addToast({
               variant: "danger",

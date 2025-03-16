@@ -1,6 +1,5 @@
 import { Tooltip } from "@/components/cui/tooltip";
-import { getCollectionPageState, getDbPageState } from "@/state/page";
-import { getProjectState } from "@/state/project-state";
+import { useCollectionStore, useDatabaseStore, useProjectStore } from "@/lib/store";
 import { IconButton, Line } from "@/ui/components";
 import { SidebarGroup } from "@/ui/modules/layout/navigation";
 import { useRouter } from "@bprogress/next";
@@ -10,9 +9,10 @@ import { usePathname } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 
 const CollectionSidebar = () => {
-  const { project } = getProjectState();
-  const { database } = getDbPageState();
-  const { collection } = getCollectionPageState();
+  const project = useProjectStore.use.project?.();
+  const collection = useCollectionStore.use.collection?.();
+  const database = useDatabaseStore.use.database?.();
+
   const path = usePathname();
 
   const resolveHref = (value?: string) =>
@@ -63,8 +63,9 @@ const CollectionSidebar = () => {
 };
 
 const CollectionsSiderbar = () => {
-  const { sdk } = getProjectState();
-  const { database } = getDbPageState();
+  const sdk = useProjectStore.use.sdk?.();
+  const database = useDatabaseStore.use.database?.();
+
   const [collections, setCollections] = useState<Models.Collection[]>([]);
 
   useEffect(() => {
@@ -93,9 +94,10 @@ const CollectionsSiderbar = () => {
 };
 
 const Collections = ({ collections }: { collections: Models.Collection[] }) => {
-  const { project } = getProjectState();
-  const { database } = getDbPageState();
-  const { collection: selectedCollection } = getCollectionPageState();
+  const selectedCollection = useCollectionStore.use.collection?.();
+  const database = useDatabaseStore.use.database?.();
+  const project = useProjectStore.use.project?.();
+
   const path = usePathname();
   const router = useRouter();
 

@@ -1,23 +1,22 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { getUserPageState } from "@/state/page";
-import { getProjectState } from "@/state/project-state";
 import { Models } from "@nuvix/console";
 import { ColumnDef } from "@tanstack/react-table";
-import { Chip, Column, Row, useToast } from "@/ui/components";
-import { IconButton, Text } from "@chakra-ui/react";
+import { useToast } from "@/ui/components";
 import { DataGrid, DataGridSkelton } from "@/ui/modules/data-grid";
-import { EmptyState } from "@/ui/modules/layout";
-import { LuTrash2 } from "react-icons/lu";
+import { useProjectStore, useUserStore } from "@/lib/store";
+import { EmptyState } from "@/components/_empty_state";
+import { PageContainer, PageHeading } from "@/components/others";
 
 const TargetPage = () => {
   const [targets, setTargets] = useState<Models.TargetList>({
     targets: [],
     total: 0,
   });
-  const { user } = getUserPageState();
   const [loading, setLoading] = React.useState(true);
-  const { sdk, project } = getProjectState();
+  const project = useProjectStore.use.project?.();
+  const sdk = useProjectStore.use.sdk?.();
+  const user = useUserStore.use.user?.();
   const { addToast } = useToast();
 
   const authPath = `/project/${project?.$id}/authentication`;
@@ -58,12 +57,11 @@ const TargetPage = () => {
   ];
 
   return (
-    <Column paddingX="16" fillWidth>
-      <Row vertical="center" horizontal="start" marginBottom="24" marginTop="12" paddingX="8">
-        <Text fontSize={"2xl"} as={"h2"} fontWeight={"semibold"}>
-          Targets
-        </Text>
-      </Row>
+    <PageContainer>
+      <PageHeading
+        heading="Targets"
+        description="Manage authentication targets associated with this user. Targets represent the different authentication methods or providers linked to user accounts."
+      />
 
       {loading && !targets.total ? (
         <DataGridSkelton />
@@ -76,9 +74,9 @@ const TargetPage = () => {
           showPagination={false}
         />
       ) : (
-        <EmptyState title="No Targets" description="No targets have been created yet." />
+        <EmptyState show title="No Targets" description="No targets have been created yet." />
       )}
-    </Column>
+    </PageContainer>
   );
 };
 

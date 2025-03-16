@@ -6,9 +6,9 @@ import { CustomID } from "../_custom_id";
 import * as y from "yup";
 import { sdkForConsole } from "@/lib/sdk";
 import { ID } from "@nuvix/console";
-import { getAppState } from "@/state/app-state";
 import { useRouter } from "@bprogress/next";
 import { useToast } from "@/ui/components";
+import { useAppStore } from "@/lib/store";
 
 type CreateProjectProps = {
   children?: React.ReactNode;
@@ -21,7 +21,7 @@ const schema = y.object().shape({
 
 export const CreateProject: React.FC<CreateProjectProps> = ({ children, ...props }) => {
   const { projects } = sdkForConsole;
-  const { organization } = getAppState();
+  const organization = useAppStore.use.organization?.();
   const { push } = useRouter();
   const { addToast } = useToast();
 
@@ -30,7 +30,7 @@ export const CreateProject: React.FC<CreateProjectProps> = ({ children, ...props
       const project = await projects.create(
         id && id.length > 6 ? id : ID.unique(),
         name,
-        organization.$id,
+        organization!.$id,
         "fra" as any,
       );
       addToast({

@@ -1,7 +1,6 @@
 import { Models } from "@nuvix/console";
 import { UpdateField } from "./_data_field";
 import { DynamicField, FIELD_TYPES } from ".";
-import * as y from "yup";
 import { generateYupSchema } from "./_utils";
 
 type AttributeTypes = Models.AttributeString | Models.AttributeInteger | Models.AttributeBoolean;

@@ -1,7 +1,5 @@
 "use client";
-import React from "react";
-import { Column } from "@/ui/components";
-import { Heading, Text } from "@chakra-ui/react";
+import React, { useEffect } from "react";
 import {
   SessionDuration,
   UsersLimit,
@@ -11,22 +9,20 @@ import {
   PersonalData,
   SessionAlerts,
 } from "./components";
-import { projectState } from "@/state/project-state";
+import { useProjectStore } from "@/lib/store";
+import { PageContainer, PageHeading } from "@/components/others";
 
 const SecurityPage: React.FC = () => {
-  projectState.sidebar.first = null;
+  const setSidebarNull = useProjectStore.use.setSidebarNull();
+  useEffect(() => setSidebarNull("first"), []);
 
   return (
     <>
-      <Column gap="20" fillWidth padding="20">
-        <Column gap="4">
-          <Heading as={"h2"} size={"xl"}>
-            Security
-          </Heading>
-          <Text textStyle="sm" color="fg.subtle">
-            Configure security settings for your project.
-          </Text>
-        </Column>
+      <PageContainer>
+        <PageHeading
+          heading="Security"
+          description="Configure security settings for your project."
+        />
 
         <UsersLimit />
         <SessionDuration />
@@ -35,7 +31,7 @@ const SecurityPage: React.FC = () => {
         <PasswordDictionary />
         <PersonalData />
         <SessionAlerts />
-      </Column>
+      </PageContainer>
     </>
   );
 };

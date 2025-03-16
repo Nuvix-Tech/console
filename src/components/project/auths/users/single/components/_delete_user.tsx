@@ -1,16 +1,16 @@
 import { DangerCard } from "@/components/others/danger-card";
 import { formatDate } from "@/lib/utils";
-import { getUserPageState } from "@/state/page";
-import { getProjectState } from "@/state/project-state";
 import { Avatar, useConfirm, useToast } from "@/ui/components";
 import { Button, Text, VStack } from "@chakra-ui/react";
 import { useRouter } from "@bprogress/next";
 import { useState } from "react";
+import { useProjectStore, useUserStore } from "@/lib/store";
 
 export const DeleteUser = () => {
-  const { user } = getUserPageState();
   const [loading, setLoading] = useState(false);
-  const { sdk, project } = getProjectState();
+  const project = useProjectStore.use.project?.();
+  const sdk = useProjectStore.use.sdk?.();
+  const user = useUserStore.use.user?.();
   const { addToast } = useToast();
   const { replace } = useRouter();
   const confirm = useConfirm();

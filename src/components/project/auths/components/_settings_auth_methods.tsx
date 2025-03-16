@@ -6,14 +6,15 @@ import {
   CardBoxTitle,
 } from "@/components/others/card";
 import { sdkForConsole } from "@/lib/sdk";
-import { getProjectState } from "@/state/project-state";
+import { useProjectStore } from "@/lib/store";
 import { Switch, useToast } from "@/ui/components";
 import { AuthMethod } from "@nuvix/console";
 import React from "react";
 
 export const AuthMethods: React.FC = () => {
   const [loading, setLoading] = React.useState<AuthMethod | null>(null);
-  const { project, _update } = getProjectState();
+  const project = useProjectStore.use.project?.();
+  const refresh = useProjectStore.use.update();
   const { projects } = sdkForConsole;
   const { addToast } = useToast();
 
@@ -24,7 +25,7 @@ export const AuthMethods: React.FC = () => {
         variant: "success",
         message: message,
       });
-      await _update();
+      await refresh();
     } catch (e: any) {
       addToast({
         variant: "danger",

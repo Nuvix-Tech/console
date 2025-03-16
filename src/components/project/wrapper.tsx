@@ -3,7 +3,7 @@
 import { getProjectSdk, sdkForConsole } from "@/lib/sdk";
 import React, { useEffect, useMemo } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useApp, useProject } from "@/lib/store";
+import { useAppStore, useProjectStore } from "@/lib/store";
 
 export default function ProjectWrapper({
   children,
@@ -11,8 +11,11 @@ export default function ProjectWrapper({
 }: { children: React.ReactNode; id: string }) {
   const { projects, organizations } = sdkForConsole;
 
-  const { setOrganization, setScopes } = useApp()
-  const { setProject, setScopes: setProjectScopes, setUpdateFn } = useProject()
+  const setOrganization = useAppStore.use.setOrganization();
+  const setScopes = useAppStore.use.setScopes();
+  const setProject = useProjectStore.use.setProject();
+  const setProjectScopes = useProjectStore.use.setScopes();
+  const setUpdateFn = useProjectStore.use.setUpdateFn();
 
   // const fetcher = useMemo(
   //   () =>
@@ -25,23 +28,23 @@ export default function ProjectWrapper({
   // });
 
   // console.log("Fetching:", isFetching, id, data);
-  console.log('RENDERING THE CONSOLE WRAPPER')
+  console.log("RENDERING THE CONSOLE WRAPPER");
 
   useEffect(() => {
     async function get() {
       let project = await projects.get(id);
       const org = await organizations.get(project.teamId);
       const scopes = await organizations.getScopes(project.teamId);
-      setProject(project)
+      setProject(project);
       setOrganization(org);
       setScopes(scopes);
       setUpdateFn(async () => {
         let p = await projects.get(id);
-        setProject(p)
+        setProject(p);
       });
       setProjectScopes(scopes);
     }
-    get()
+    get();
   }, [id]);
 
   return <>{children}</>;

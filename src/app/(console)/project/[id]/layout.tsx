@@ -12,12 +12,12 @@ export default async function ({
 
   return (
     <>
-        <ProjectWrapper id={id}>
-          <Column className="project-main" vertical="space-between">
-            <Column className="!min-h-svh">{children}</Column>
-            <Footer />
-          </Column>
-        </ProjectWrapper>
+      <ProjectWrapper id={id}>
+        <Column className="project-main" vertical="space-between">
+          <Column className="!min-h-svh">{children}</Column>
+          <Footer />
+        </Column>
+      </ProjectWrapper>
     </>
   );
 }

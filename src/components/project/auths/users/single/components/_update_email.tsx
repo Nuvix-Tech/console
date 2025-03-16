@@ -6,19 +6,19 @@ import {
   CardBoxItem,
   CardBoxTitle,
 } from "@/components/others/card";
-import { getUserPageState } from "@/state/page";
 import { Code } from "@chakra-ui/react";
 import * as y from "yup";
-import { getProjectState } from "@/state/project-state";
 import { useToast } from "@/ui/components";
+import { useProjectStore, useUserStore } from "@/lib/store";
 
 const schema = y.object({
   email: y.string().email(),
 });
 
 export const UpdateEmail = () => {
-  const { user, _update } = getUserPageState();
-  const { sdk } = getProjectState();
+  const sdk = useProjectStore.use.sdk?.();
+  const refresh = useUserStore.use.refresh();
+  const user = useUserStore.use.user?.();
   const { addToast } = useToast();
 
   return (
@@ -36,7 +36,7 @@ export const UpdateEmail = () => {
               variant: "success",
               message: "User email has been updated successfully.",
             });
-            await _update();
+            await refresh();
           } catch (e: any) {
             addToast({
               variant: "danger",

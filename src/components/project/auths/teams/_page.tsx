@@ -1,33 +1,33 @@
 "use client";
-import { getProjectState, projectState } from "@/state/project-state";
-import { Avatar, Column } from "@/ui/components";
+import { Avatar } from "@/ui/components";
 import { Models, Query } from "@nuvix/console";
-import React from "react";
+import React, { useEffect } from "react";
 import { Row } from "@/ui/components";
 import { ColumnDef } from "@tanstack/react-table";
 import { Tooltip } from "@/components/cui/tooltip";
 import { Text } from "@chakra-ui/react";
 import { formatDate } from "@/lib/utils";
 import { DataGrid, DataGridSkelton, SearchAndCreate } from "@/ui/modules/data-grid";
-import { useSearchParams } from "next/navigation";
-import { EmptySearch, EmptyState } from "@/ui/modules/layout";
+import { EmptySearch } from "@/ui/modules/layout";
+import { useProjectStore } from "@/lib/store";
+import { EmptyState } from "@/components";
+import { PageContainer, PageHeading } from "@/components/others";
+import { useSearchQuery } from "@/hooks/useQuery";
 
 const Page = () => {
-  const state = getProjectState();
-  const { sdk, project } = state;
+  const sdk = useProjectStore.use.sdk?.();
+  const project = useProjectStore.use.project?.();
+  const setSidebarNull = useProjectStore.use.setSidebarNull();
   const [loading, setLoading] = React.useState(true);
   const [teams, setTeams] = React.useState<Models.TeamList<any>>({
     teams: [],
     total: 0,
   });
-  const searchParams = useSearchParams();
-  const limit = searchParams.get("limit") ? Number(searchParams.get("limit")) : 12;
-  const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
-  const search = searchParams.get("search");
+  const { limit, page, search } = useSearchQuery();
 
-  projectState.sidebar.first = null;
+  useEffect(() => setSidebarNull("first"), []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!sdk) return;
     setLoading(true);
     const queries: string[] = [];
@@ -80,12 +80,11 @@ const Page = () => {
   ];
 
   return (
-    <Column paddingX="16" fillWidth>
-      <Row vertical="center" horizontal="start" marginBottom="24" marginTop="12" paddingX="8">
-        <Text fontSize={"2xl"} as={"h2"} fontWeight={"semibold"}>
-          Teams
-        </Text>
-      </Row>
+    <PageContainer>
+      <PageHeading
+        heading="Teams"
+        description="Manage and organize users into teams for better access control and collaboration"
+      />
 
       {loading && !teams.total ? (
         <DataGridSkelton />
@@ -113,9 +112,9 @@ const Page = () => {
           )}
         </>
       ) : (
-        <EmptyState title="No teams found" />
+        <EmptyState show title="No teams found" />
       )}
-    </Column>
+    </PageContainer>
   );
 };
 

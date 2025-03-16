@@ -1,11 +1,10 @@
-import { getDbPageState } from "@/state/page";
-import { getProjectState } from "@/state/project-state";
+import { useDatabaseStore, useProjectStore } from "@/lib/store";
 import { SidebarGroup } from "@/ui/modules/layout/navigation";
 import { usePathname } from "next/navigation";
 
 const DatbaseSidebar = () => {
-  const { project } = getProjectState();
-  const { database } = getDbPageState();
+  const project = useProjectStore.use.project?.();
+  const database = useDatabaseStore.use.database?.();
   const path = usePathname();
 
   const resolveHref = (value?: string) =>

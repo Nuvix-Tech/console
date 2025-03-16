@@ -1,15 +1,15 @@
 import { DangerCard } from "@/components/others/danger-card";
 import { sdkForConsole } from "@/lib/sdk";
 import { formatDate } from "@/lib/utils";
-import { getProjectState } from "@/state/project-state";
 import { useConfirm, useToast } from "@/ui/components";
 import { Button, Text, VStack } from "@chakra-ui/react";
 import { useRouter } from "@bprogress/next";
 import { useState } from "react";
+import { useProjectStore } from "@/lib/store";
 
 export const DeleteProject = () => {
   const [loading, setLoading] = useState(false);
-  const { project } = getProjectState();
+  const project = useProjectStore.use.project?.();
   const { projects } = sdkForConsole;
   const { addToast } = useToast();
   const { replace } = useRouter();

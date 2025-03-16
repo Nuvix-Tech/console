@@ -1,26 +1,27 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { getUserPageState } from "@/state/page";
-import { getProjectState } from "@/state/project-state";
 import { Models } from "@nuvix/console";
 import { ColumnDef } from "@tanstack/react-table";
-import { Column, Row, useConfirm, useToast } from "@/ui/components";
+import { Row, useConfirm, useToast } from "@/ui/components";
 import { Avatar } from "@/components/cui/avatar";
 import { IconButton, Text } from "@chakra-ui/react";
 import { Tooltip } from "@/components/cui/tooltip";
 import { formatDate } from "@/lib/utils";
 import { LuTrash2 } from "react-icons/lu";
 import { DataGrid, DataGridSkelton } from "@/ui/modules/data-grid";
-import { EmptyState } from "@/ui/modules/layout";
+import { useProjectStore, useUserStore } from "@/lib/store";
+import { PageContainer, PageHeading } from "@/components/others";
+import { EmptyState } from "@/components";
 
 const MembershipPage = () => {
   const [memberships, setMemberships] = useState<Models.MembershipList>({
     memberships: [],
     total: 0,
   });
-  const { user } = getUserPageState();
   const [loading, setLoading] = React.useState(true);
-  const { sdk, project } = getProjectState();
+  const project = useProjectStore.use.project?.();
+  const sdk = useProjectStore.use.sdk?.();
+  const user = useUserStore.use.user?.();
   const { addToast } = useToast();
   const confirm = useConfirm();
 
@@ -131,12 +132,11 @@ const MembershipPage = () => {
   ];
 
   return (
-    <Column paddingX="16" fillWidth>
-      <Row vertical="center" horizontal="start" marginBottom="24" marginTop="12" paddingX="8">
-        <Text fontSize={"2xl"} as={"h2"} fontWeight={"semibold"}>
-          Memberships
-        </Text>
-      </Row>
+    <PageContainer>
+      <PageHeading
+        heading="Memberships"
+        description="Memberships represent the roles a user has across multiple teams. A user can belong to multiple teams with different roles."
+      />
 
       {loading && !memberships.total ? (
         <DataGridSkelton />
@@ -149,9 +149,13 @@ const MembershipPage = () => {
           showPagination={false}
         />
       ) : (
-        <EmptyState title="No Memberships" description="No memberships have been created yet." />
+        <EmptyState
+          show
+          title="No Memberships"
+          description="This user is not a member of any teams yet."
+        />
       )}
-    </Column>
+    </PageContainer>
   );
 };
 

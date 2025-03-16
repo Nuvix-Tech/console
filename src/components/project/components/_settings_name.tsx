@@ -1,16 +1,17 @@
 import { Form, InputField, SubmitButton } from "@/components/others/forms";
 import { CardBox, CardBoxBody, CardBoxItem, CardBoxTitle } from "@/components/others/card";
 import * as y from "yup";
-import { getProjectState } from "@/state/project-state";
 import { useToast } from "@/ui/components";
 import { sdkForConsole } from "@/lib/sdk";
+import { useProjectStore } from "@/lib/store";
 
 const schema = y.object({
   name: y.string().max(256),
 });
 
 export const UpdateName = () => {
-  const { project, _update } = getProjectState();
+  const project = useProjectStore.use.project?.();
+  const refresh = useProjectStore.use.update?.();
   const { addToast } = useToast();
   const { projects } = sdkForConsole;
 
@@ -29,7 +30,7 @@ export const UpdateName = () => {
               variant: "success",
               message: "Project name has been updated.",
             });
-            await _update();
+            await refresh();
           } catch (e: any) {
             addToast({
               variant: "danger",

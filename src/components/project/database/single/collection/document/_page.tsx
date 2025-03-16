@@ -1,7 +1,7 @@
 "use client";
-import { getCollectionPageState, getDbPageState, getDocumentPageState } from "@/state/page";
+import { useCollectionStore, useDatabaseStore, useDocumentStore } from "@/lib/store";
 import { DataMapper } from "./components";
-import { Column } from "@/ui/components";
+import { PageContainer } from "@/components/others";
 
 type Props = {
   id: string;
@@ -11,9 +11,9 @@ type Props = {
 };
 
 export const DocumentPage: React.FC<Props> = ({ id, databaseId, collectionId, documentId }) => {
-  const { document } = getDocumentPageState();
-  const { collection } = getCollectionPageState();
-  const { database } = getDbPageState();
+  const document = useDocumentStore.use.document?.();
+  const collection = useCollectionStore.use.collection?.();
+  const database = useDatabaseStore.use.database?.();
 
   if (
     document?.$id !== documentId ||
@@ -24,9 +24,9 @@ export const DocumentPage: React.FC<Props> = ({ id, databaseId, collectionId, do
 
   return (
     <>
-      <Column gap="20" paddingX="20">
+      <PageContainer>
         <DataMapper attributes={collection.attributes as any} document={document} />
-      </Column>
+      </PageContainer>
     </>
   );
 };

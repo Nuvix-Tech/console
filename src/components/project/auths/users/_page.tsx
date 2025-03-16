@@ -1,5 +1,4 @@
 "use client";
-import { getProjectState, projectState } from "@/state/project-state";
 import { Avatar, Column } from "@/ui/components";
 import { Models, Query } from "@nuvix/console";
 import React, { useEffect, useState } from "react";
@@ -11,14 +10,17 @@ import { formatDate } from "@/lib/utils";
 import { DataGridProvider, DataGridSkelton, Search, Table } from "@/ui/modules/data-grid";
 import { CreateButton, IDChip, PageContainer, PageHeading } from "@/components/others";
 import { EmptyState } from "@/components";
-import { useQuery } from "@/hooks/useQuery";
+import { useSearchQuery } from "@/hooks/useQuery";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { useProjectStore } from "@/lib/store";
 
 const UsersPage = () => {
-  const state = getProjectState();
-  const { sdk, project, permissions } = state;
-  const { limit, page, search, hasQuery } = useQuery();
-  const { canCreateUsers } = permissions;
+  const project = useProjectStore.use.project?.();
+  const sdk = useProjectStore.use.sdk?.();
+  const permissions = useProjectStore.use.permissions?.();
+  const setSidebarNull = useProjectStore.use.setSidebarNull();
+  const { limit, page, search, hasQuery } = useSearchQuery();
+  const { canCreateUsers } = permissions();
   const [users, setUsers] = useState<{
     users: Models.User<any>[];
     total: number;
@@ -28,12 +30,11 @@ const UsersPage = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
 
-
-  projectState.sidebar.first = null;
+  useEffect(() => setSidebarNull("first"), []);
 
   const fetcher = React.useCallback(async () => {
     if (!sdk) {
-      return new Promise<never>(() => { });
+      return new Promise<never>(() => {});
     }
     const queries: string[] = [];
     queries.push(Query.limit(limit), Query.offset((page - 1) * limit));
@@ -41,10 +42,10 @@ const UsersPage = () => {
   }, [sdk, limit, page, search]);
 
   useEffect(() => {
-    fetcher()
-  }, [fetcher])
+    fetcher();
+  }, [fetcher]);
 
-  console.log("RERENDERING **")
+  console.log("RERENDERING **");
 
   const authPath = `/project/${project?.$id}/authentication`;
 

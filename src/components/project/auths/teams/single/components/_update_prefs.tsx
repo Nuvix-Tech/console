@@ -6,18 +6,18 @@ import {
   CardBoxItem,
   CardBoxTitle,
 } from "@/components/others/card";
-import { getTeamPageState } from "@/state/page";
 import * as y from "yup";
-import { getProjectState } from "@/state/project-state";
 import { useToast } from "@/ui/components";
+import { useProjectStore, useTeamStore } from "@/lib/store";
 
 const schema = y.object({
   prefs: y.object(),
 });
 
 export const UpdatePrefs = () => {
-  const { team, _update } = getTeamPageState();
-  const { sdk } = getProjectState();
+  const sdk = useProjectStore.use.sdk?.();
+  const refresh = useTeamStore.use.refresh();
+  const team = useTeamStore.use.team?.();
   const { addToast } = useToast();
 
   return (
@@ -35,7 +35,7 @@ export const UpdatePrefs = () => {
               variant: "success",
               message: "Team prefs have been updated successfully.",
             });
-            await _update();
+            await refresh();
           } catch (e: any) {
             addToast({
               variant: "danger",

@@ -2,18 +2,19 @@
 import { Background, Chip, Column, Feedback, Heading, Line, Row, Skeleton } from "@/ui/components";
 import React, { useEffect } from "react";
 import { IDChip } from "../others";
-import { useProject } from "@/lib/store";
+import { useProjectStore } from "@/lib/store";
 
 type ProjectPageProps = {
   id: string;
 };
 
 export default function ProjectPage({ id }: ProjectPageProps) {
-  const { project, setSidebarNull } = useProject();
+  const project = useProjectStore.use.project?.();
+  const setSidebarNull = useProjectStore.use.setSidebarNull();
 
   useEffect(() => {
-    setSidebarNull()
-  }, [])
+    setSidebarNull();
+  }, []);
 
   return (
     <>

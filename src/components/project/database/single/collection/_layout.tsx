@@ -1,9 +1,8 @@
 "use client";
-import { collectionPageState } from "@/state/page";
-import { getProjectState, projectState } from "@/state/project-state";
 import { notFound } from "next/navigation";
 import React, { PropsWithChildren, useEffect } from "react";
 import { CollectionSidebar, CollectionsSiderbar } from "./components";
+import { useCollectionStore, useProjectStore } from "@/lib/store";
 
 type Props = PropsWithChildren & {
   databaseId: string;
@@ -11,22 +10,29 @@ type Props = PropsWithChildren & {
 };
 
 export const CollectionLayout: React.FC<Props> = ({ children, databaseId, collectionId }) => {
-  const { sdk } = getProjectState();
+  const sdk = useProjectStore.use.sdk?.();
+  const setSidebar = useProjectStore.use.setSidebar();
+  const setRefreshFn = useCollectionStore.use.setRefresh();
+  const setCollection = useCollectionStore.use.setCollection();
+  const setLoading = useCollectionStore.use.setLoading();
 
-  projectState.sidebar.first = <CollectionSidebar />;
-  projectState.sidebar.middle = <CollectionsSiderbar />;
+  const first = <CollectionSidebar />;
+  const middle = <CollectionsSiderbar />;
 
-  collectionPageState._update = async () => {
-    const coll = await sdk?.databases.getCollection(databaseId, collectionId);
-    collectionPageState.collection = coll;
-  };
+  useEffect(() => {
+    setSidebar({ first, middle });
+    setRefreshFn(async () => {
+      const coll = await sdk?.databases.getCollection(databaseId, collectionId);
+      setCollection(coll);
+    });
+  }, [setRefreshFn]);
 
   async function get() {
     if (!sdk) return;
     try {
       const coll = await sdk?.databases.getCollection(databaseId, collectionId);
-      collectionPageState.collection = coll;
-      collectionPageState.loading = false;
+      setCollection(coll);
+      setLoading(false);
     } catch (e: any) {
       if (e.code === 404) notFound();
     }

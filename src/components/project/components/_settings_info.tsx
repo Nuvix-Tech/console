@@ -13,14 +13,14 @@ import {
 } from "@/components/cui/clipboard";
 import { InputGroup } from "@/components/cui/input-group";
 import { API_ENDPOINT } from "@/lib/constants";
-import { getProjectState } from "@/state/project-state";
 import { Button } from "@chakra-ui/react";
 import { useRouter } from "@bprogress/next";
 import React from "react";
 import { LuExternalLink } from "react-icons/lu";
+import { useProjectStore } from "@/lib/store";
 
 export const ProjectInfo: React.FC = () => {
-  const { project } = getProjectState();
+  const project = useProjectStore.use.project?.();
   const { push } = useRouter();
 
   return (

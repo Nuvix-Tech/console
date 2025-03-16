@@ -1,6 +1,4 @@
 "use client";
-import { Column } from "@/ui/components";
-import { Heading, Text } from "@chakra-ui/react";
 import React from "react";
 import {
   DeleteCollection,
@@ -9,25 +7,21 @@ import {
   UpdateName,
   UpdatePermissions,
 } from "./components";
+import { PageContainer, PageHeading } from "@/components/others";
 
 const SettingsPage: React.FC = () => {
   return (
-    <Column gap="20" fillWidth padding="20">
-      <Column gap="4">
-        <Heading as={"h2"} size={"xl"}>
-          Settings
-        </Heading>
-        <Text textStyle="sm" color="fg.subtle">
-          Manage collection settings, including metadata and document security options.
-        </Text>
-      </Column>
-
+    <PageContainer>
+      <PageHeading
+        heading="Settings"
+        description="Configure the collection settings, permissions, and more."
+      />
       <MetaEnable />
       <UpdateName />
       <UpdatePermissions />
       <DocumentSecurity />
       <DeleteCollection />
-    </Column>
+    </PageContainer>
   );
 };
 

@@ -4,11 +4,8 @@ import { useRouter } from "@bprogress/next";
 import type React from "react";
 import { useEffect, useState } from "react";
 import LoadingUI from "../loading";
-import {
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query';
-import { useApp } from "@/lib/store";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useAppStore } from "@/lib/store";
 
 const queryClient = new QueryClient();
 
@@ -16,7 +13,7 @@ const ConsoleWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) =
   const [isLoading, setIsLoading] = useState(true);
   const { account } = sdkForConsole;
   const { replace } = useRouter();
-  const { setUser } = useApp()
+  const setUser = useAppStore.use.setUser();
 
   useEffect(() => {
     const fetchUser = async () => {

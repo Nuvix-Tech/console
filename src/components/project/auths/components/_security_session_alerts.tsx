@@ -6,13 +6,14 @@ import {
   CardBoxTitle,
 } from "@/components/others/card";
 import { sdkForConsole } from "@/lib/sdk";
-import { getProjectState } from "@/state/project-state";
+import { useProjectStore } from "@/lib/store";
 import { Switch, useToast } from "@/ui/components";
 import React from "react";
 
 export const SessionAlerts: React.FC = () => {
   const [loading, setLoading] = React.useState(false);
-  const { project, _update } = getProjectState();
+  const project = useProjectStore.use.project?.();
+  const refresh = useProjectStore.use.update();
   const { projects } = sdkForConsole;
   const { addToast } = useToast();
 
@@ -25,7 +26,7 @@ export const SessionAlerts: React.FC = () => {
         variant: "success",
         message: "Session alerts updated successfully.",
       });
-      await _update();
+      await refresh();
     } catch (e: any) {
       addToast({
         variant: "danger",

@@ -1,23 +1,24 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { getUserPageState } from "@/state/page";
-import { getProjectState } from "@/state/project-state";
 import { Models } from "@nuvix/console";
 import { ColumnDef } from "@tanstack/react-table";
-import { Chip, Column, Row, useToast } from "@/ui/components";
-import { Button, IconButton, Text } from "@chakra-ui/react";
+import { Chip, Row, useToast } from "@/ui/components";
+import { IconButton, Text } from "@chakra-ui/react";
 import { DataGrid, DataGridSkelton } from "@/ui/modules/data-grid";
-import { EmptyState } from "@/ui/modules/layout";
 import { LuTrash2 } from "react-icons/lu";
+import { useProjectStore, useUserStore } from "@/lib/store";
+import { EmptyState } from "@/components/_empty_state";
+import { PageContainer, PageHeading } from "@/components/others";
 
 const SessionPage = () => {
   const [sessions, setSessions] = useState<Models.SessionList>({
     sessions: [],
     total: 0,
   });
-  const { user } = getUserPageState();
   const [loading, setLoading] = React.useState(true);
-  const { sdk, project } = getProjectState();
+  const project = useProjectStore.use.project?.();
+  const sdk = useProjectStore.use.sdk?.();
+  const user = useUserStore.use.user?.();
   const { addToast } = useToast();
 
   const authPath = `/project/${project?.$id}/authentication`;
@@ -86,12 +87,8 @@ const SessionPage = () => {
   ];
 
   return (
-    <Column paddingX="16" fillWidth>
-      <Row vertical="center" horizontal="start" marginBottom="24" marginTop="12" paddingX="8">
-        <Text fontSize={"2xl"} as={"h2"} fontWeight={"semibold"}>
-          Sessions
-        </Text>
-      </Row>
+    <PageContainer>
+      <PageHeading heading="Sessions" description="Manage and view all active user sessions." />
 
       {loading && !sessions.total ? (
         <DataGridSkelton />
@@ -101,12 +98,16 @@ const SessionPage = () => {
           data={sessions.sessions}
           rowCount={sessions.total}
           loading={loading}
-          showPagination={false}
+          showPagination={true}
         />
       ) : (
-        <EmptyState title="No Sessions" description="No sessions have been created yet." />
+        <EmptyState
+          show
+          title="No Active Sessions"
+          description="There are currently no active sessions for this user."
+        />
       )}
-    </Column>
+    </PageContainer>
   );
 };
 

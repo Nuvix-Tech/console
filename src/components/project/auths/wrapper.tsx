@@ -1,23 +1,23 @@
 "use client";
-
-import { getProjectState, projectState } from "@/state/project-state";
 import { usePathname } from "next/navigation";
 import { Line } from "@/ui/components";
 import { SidebarGroup } from "@/ui/modules/layout/navigation";
 import { useEffect } from "react";
+import { useProjectStore } from "@/lib/store";
 
 function Wrapper({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const state = getProjectState();
+  const project = useProjectStore.use.project?.();
+  const setSidebar = useProjectStore.use.setSidebar?.();
   const pathname = usePathname() ?? "";
 
-  const resolveHref = (path: string) => `/project/${state.project?.$id}/authentication/${path}`;
+  const resolveHref = (path: string) => `/project/${project?.$id}/authentication/${path}`;
   const resolveIsSelected = (value: string) => pathname.includes(resolveHref(value));
 
-  projectState.sidebar.middle = (
+  const middle = (
     <>
       <SidebarGroup
         title="Manage"
@@ -60,6 +60,10 @@ function Wrapper({
       />
     </>
   );
+
+  useEffect(() => {
+    setSidebar({ middle });
+  }, []);
 
   return <>{children}</>;
 }

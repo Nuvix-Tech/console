@@ -1,20 +1,9 @@
 "use client";
-import { getDbPageState } from "@/state/page";
-import { getProjectState } from "@/state/project-state";
-import { Column, useConfirm, useToast } from "@/ui/components";
+import { useConfirm, useToast } from "@/ui/components";
 import { Models } from "@nuvix/console";
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { Tooltip } from "@/components/cui/tooltip";
-import { Heading, Stack, Text } from "@chakra-ui/react";
-import {
-  CreateButton,
-  DataGridProvider,
-  DataGridSkelton,
-  SearchAndCreate,
-  Table,
-} from "@/ui/modules/data-grid";
-import { EmptyState } from "@/ui/modules/layout/empty-state";
+import { CreateButton, DataGridProvider, DataGridSkelton, Table } from "@/ui/modules/data-grid";
 import { AttributeIcon } from "./components";
 import { Badge } from "@/components/ui/badge";
 import { Status } from "@/components/cui/status";
@@ -24,8 +13,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { HiDotsVertical } from "react-icons/hi";
 import { Ellipsis } from "lucide-react";
+import { useDatabaseStore, useProjectStore } from "@/lib/store";
+import { PageContainer, PageHeading } from "@/components/others";
+import { EmptyState } from "@/components/_empty_state";
 
 type Props = {
   databaseId: string;
@@ -33,9 +24,9 @@ type Props = {
 };
 
 export const AttributesPage: React.FC<Props> = ({ databaseId, collectionId }) => {
-  const state = getProjectState();
-  const { database } = getDbPageState();
-  const { sdk, permissions } = state;
+  const sdk = useProjectStore.use.sdk?.();
+  const database = useDatabaseStore.use.database?.();
+
   const [loading, setLoading] = React.useState(true);
   const [attributeList, setAttributeList] = React.useState<Models.AttributeList>({
     attributes: [],
@@ -167,23 +158,12 @@ export const AttributesPage: React.FC<Props> = ({ databaseId, collectionId }) =>
   };
 
   return (
-    <Column paddingX="16" fillWidth>
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        width="full"
-        alignItems="center"
-        marginBottom="12"
-        marginTop="8"
-      >
-        <Column vertical="center" horizontal="start" paddingX="8">
-          <Heading size="2xl">Attributes</Heading>
-          <Text fontSize={"sm"} color="fg.subtle">
-            Attributes are used to manage the data in a collection.
-          </Text>
-        </Column>
-        <CreateButton label="Create Attribute" />
-      </Stack>
+    <PageContainer>
+      <PageHeading
+        heading="Attributes"
+        description="Attributes are the fields that make up a document in a collection. Each attribute has a key, type, and optional default value."
+        right={<CreateButton label="Create Attribute" />}
+      />
 
       <DataGridProvider<any>
         columns={columns}
@@ -198,9 +178,13 @@ export const AttributesPage: React.FC<Props> = ({ databaseId, collectionId }) =>
             <Table interactive={false} />
           </>
         ) : (
-          <EmptyState title="No Attributes" description="No Attributes have been created yet." />
+          <EmptyState
+            show
+            title="No Attributes"
+            description="No Attributes have been created yet."
+          />
         )}
       </DataGridProvider>
-    </Column>
+    </PageContainer>
   );
 };

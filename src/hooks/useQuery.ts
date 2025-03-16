@@ -16,3 +16,5 @@ export const useQuery = ({ limit: _limit }: QueryParams = {}) => {
 
   return { limit, page, hasQuery, search };
 };
+
+export { useQuery as useSearchQuery };

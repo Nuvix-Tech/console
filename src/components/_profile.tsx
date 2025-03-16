@@ -12,10 +12,10 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { sdkForConsole } from "@/lib/sdk";
-import { useApp } from "@/lib/store";
+import { useAppStore } from "@/lib/store";
 
 export function UserProfile() {
-  const { user } = useApp();
+  const user = useAppStore.use.user();
   const { avatars, account } = sdkForConsole;
 
   return user ? (

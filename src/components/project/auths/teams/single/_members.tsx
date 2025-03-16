@@ -1,34 +1,33 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { getTeamPageState } from "@/state/page";
-import { getProjectState } from "@/state/project-state";
 import { Models, Query } from "@nuvix/console";
 import { ColumnDef } from "@tanstack/react-table";
-import { Column, Row, useConfirm, useToast } from "@/ui/components";
+import { Row, useConfirm, useToast } from "@/ui/components";
 import { Avatar } from "@/components/cui/avatar";
 import { IconButton, Text } from "@chakra-ui/react";
 import { Tooltip } from "@/components/cui/tooltip";
 import { formatDate } from "@/lib/utils";
 import { LuTrash2 } from "react-icons/lu";
 import { DataGrid, DataGridSkelton, SearchAndCreate } from "@/ui/modules/data-grid";
-import { EmptyState, EmptySearch } from "@/ui/modules/layout";
-import { useSearchParams } from "next/navigation";
+import { EmptySearch } from "@/ui/modules/layout";
+import { useProjectStore, useTeamStore } from "@/lib/store";
+import { useSearchQuery } from "@/hooks/useQuery";
+import { PageContainer, PageHeading } from "@/components/others";
+import { EmptyState } from "@/components";
 
 const MembersPage = () => {
   const [members, setMembers] = useState<Models.MembershipList>({
     memberships: [],
     total: 0,
   });
-  const { team } = getTeamPageState();
   const [loading, setLoading] = React.useState(true);
-  const { sdk, project } = getProjectState();
+  const sdk = useProjectStore.use.sdk?.();
+  const project = useProjectStore.use.project?.();
+  const team = useTeamStore.use.team?.();
   const { addToast } = useToast();
   const confirm = useConfirm();
 
-  const searchParams = useSearchParams();
-  const limit = searchParams.get("limit") ? Number(searchParams.get("limit")) : 12;
-  const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
-  const search = searchParams.get("search");
+  const { limit, page, search } = useSearchQuery();
 
   const authPath = `/project/${project?.$id}/authentication`;
 
@@ -139,12 +138,8 @@ const MembersPage = () => {
   ];
 
   return (
-    <Column paddingX="16" fillWidth>
-      <Row vertical="center" horizontal="start" marginBottom="24" marginTop="12" paddingX="8">
-        <Text fontSize={"2xl"} as={"h2"} fontWeight={"semibold"}>
-          Members
-        </Text>
-      </Row>
+    <PageContainer>
+      <PageHeading heading="Members" description="Manage the members of this team." />
 
       {loading && !members.total ? (
         <DataGridSkelton />
@@ -172,9 +167,9 @@ const MembersPage = () => {
           )}
         </>
       ) : (
-        <EmptyState title="No Members" description="No members have been created yet." />
+        <EmptyState show title="No Members" description="No members have been created yet." />
       )}
-    </Column>
+    </PageContainer>
   );
 };
 

@@ -21,7 +21,7 @@ import { Button } from "../ui/button";
 import { UserProfile } from "../_profile";
 import { Stack } from "@chakra-ui/react";
 import { ConsoleSidebar } from "@/ui/modules/layout/ConsoleSidebar";
-import { useApp } from "@/lib/store";
+import { useAppStore } from "@/lib/store";
 
 interface HeaderProps {
   authenticated?: boolean;
@@ -31,7 +31,9 @@ interface HeaderProps {
 }
 
 const ConsoleHeader: React.FC<HeaderProps> = () => {
-  const { organization, isDrawerOpen, setIsDrawerOpen } = useApp();
+  const organization = useAppStore.use.organization?.();
+  const isDrawerOpen = useAppStore.use.isDrawerOpen();
+  const setIsDrawerOpen = useAppStore.use.setIsDrawerOpen();
   const pathname = usePathname() ?? "";
   const headerRef = useRef<any>(null);
 
@@ -51,10 +53,7 @@ const ConsoleHeader: React.FC<HeaderProps> = () => {
         <Stack direction="row" alignItems="center" justifyContent="space-between" width="full">
           <Row gap="4" vertical="center">
             <Row show="s">
-              <NavIcon
-                isActive={isDrawerOpen}
-                onClick={() => setIsDrawerOpen(!isDrawerOpen)}
-              />
+              <NavIcon isActive={isDrawerOpen} onClick={() => setIsDrawerOpen(!isDrawerOpen)} />
             </Row>
             <Link href="/">
               <div className="is-only-dark">

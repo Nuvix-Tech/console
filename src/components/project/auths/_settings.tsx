@@ -1,26 +1,23 @@
 "use client";
-import { projectState } from "@/state/project-state";
-import { Column } from "@/ui/components";
-import { Heading, Text } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { AuthMethods } from "./components";
+import { useProjectStore } from "@/lib/store";
+import { PageContainer, PageHeading } from "@/components/others";
 
 const SettingsPage: React.FC = () => {
-  projectState.sidebar.first = null;
+  const setSidebarNull = useProjectStore.use.setSidebarNull();
+
+  useEffect(() => setSidebarNull("first"), []);
 
   return (
-    <Column gap="20" fillWidth padding="20">
-      <Column gap="4">
-        <Heading as={"h2"} size={"xl"}>
-          Settings
-        </Heading>
-        <Text textStyle="sm" color="fg.subtle">
-          Configure the authentication methods your project will use.
-        </Text>
-      </Column>
+    <PageContainer>
+      <PageHeading
+        heading="Settings"
+        description="Configure the authentication methods your project will use."
+      />
 
       <AuthMethods />
-    </Column>
+    </PageContainer>
   );
 };
 

@@ -25,9 +25,7 @@ export default function ({ children }: { children: React.ReactNode }) {
       >
         <ProjectHeader />
         <Stack height={"calc(100% - 64px)"} overflowY="auto" direction="column">
-          <Suspense fallback={<div>Loading... [PROJECT] #TEST</div>}>
-            {children}
-          </Suspense>
+          <Suspense fallback={<div>Loading... [PROJECT] #TEST</div>}>{children}</Suspense>
         </Stack>
       </Stack>
     </>

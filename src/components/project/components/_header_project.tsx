@@ -17,10 +17,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { sdkForConsole } from "@/lib/sdk";
 import { useRouter } from "@bprogress/next";
 import { Models } from "@nuvix/console";
-import { getProjectState } from "@/state/project-state";
+import { useProjectStore } from "@/lib/store";
 
 export function HeaderProject() {
-  const { project } = getProjectState();
+  const project = useProjectStore.use.project?.();
   const { projects } = sdkForConsole;
   const [list, setList] = React.useState<Models.Project[]>();
   const { push } = useRouter();

@@ -2,8 +2,9 @@ import type { Models } from "@nuvix/console";
 import React from "react";
 import { getProjectSdk, sdkForProject } from "../sdk";
 import { ProjectSidebarData, SidebarItem, SidebarItemGroup } from "@/components/project/sidebar";
-import { create } from 'zustand'
+import { create } from "zustand";
 import { AppPermission } from "./app";
+import { createSelectors } from ".";
 
 export interface ProjectContextData {
   project: Models.Project;
@@ -25,8 +26,8 @@ export const ProjectContext = React.createContext<{
   update: (data: Partial<ProjectContextData>) => void;
 }>({
   data: {},
-  dispatch: () => { },
-  update: () => { },
+  dispatch: () => {},
+  update: () => {},
 });
 
 interface Sidebar {
@@ -36,7 +37,7 @@ interface Sidebar {
 }
 
 interface ProjectStore {
-  initialfetching: boolean;
+  initialFetching: boolean;
   project?: Models.Project;
   sdk?: typeof sdkForProject;
   scopes: Models.Roles;
@@ -45,40 +46,57 @@ interface ProjectStore {
   sidebarItems: (SidebarItemGroup | SidebarItem)[];
   sidebar: Sidebar;
   permissions: () => AppPermission;
-  _update: () => Promise<void>;
+  update: () => Promise<void>;
   setSidebar: (data: Sidebar) => void;
-  setSidebarNull: (...v: (keyof Sidebar)[]) => void;
+  setSidebarNull: (...keys: (keyof Sidebar)[]) => void;
   setShowSidebar: (show: boolean) => void;
   setProject: (project: Models.Project) => void;
   setSdk: (sdk: typeof sdkForProject) => void;
   setScopes: (scopes: Models.Roles) => void;
-  setUpdateFn: (v: any) => void;
+  setUpdateFn: (fn: () => Promise<void>) => void;
 }
 
 const useProject = create<ProjectStore>((set, get) => ({
-  initialfetching: true,
+  initialFetching: true,
   scopes: { roles: ["any"], scopes: [] },
-  _update: async () => { },
   showSidebar: false,
-  setSdk: (sdk) => set({ sdk }),
-  setProject: (project) => {
-    set({
-      project,
-      sdk: getProjectSdk(project.$id),
-      initialfetching: false,
-    })
-  },
-  setScopes: (scopes: Models.Roles) => set(() => ({ scopes: scopes })),
-  setShowSidebar: (show) => {
-    set({ showSidebar: show });
-  },
+  showSubSidebar: false,
   sidebarItems: [],
   sidebar: {
     first: null,
     middle: null,
     last: null,
   },
-  showSubSidebar: false,
+  update: async () => {},
+  setSdk: (sdk) => set({ sdk }),
+  setProject: (project) => {
+    set({
+      project,
+      sdk: getProjectSdk(project.$id),
+      initialFetching: false,
+    });
+  },
+  setScopes: (scopes) => set({ scopes }),
+  setShowSidebar: (show) => set({ showSidebar: show }),
+  setSidebar(data) {
+    set({ sidebar: data });
+  },
+  setUpdateFn(fn: () => Promise<void>) {
+    set({ update: fn });
+  },
+  setSidebarNull(...keys) {
+    set((state) => {
+      const sidebar = { ...state.sidebar };
+      if (keys.length) {
+        keys.forEach((key) => {
+          sidebar[key] = null;
+        });
+      } else {
+        sidebar.first = sidebar.middle = sidebar.last = null;
+      }
+      return { sidebar };
+    });
+  },
   permissions: () => {
     const { scopes } = get();
     return {
@@ -242,27 +260,8 @@ const useProject = create<ProjectStore>((set, get) => ({
       canDeleteBilling: scopes.scopes.includes("billing.delete"),
     };
   },
-  setSidebar(data) {
-    set({ sidebar: data });
-  },
-  setUpdateFn(v) {
-    set({ _update: v })
-  },
-  setSidebarNull(v) {
-    set((state) => {
-      const sidebar = { ...state.sidebar };
-      if (v && v.length) {
-        for (const _v of v) {
-          sidebar[_v as keyof Sidebar] = null;
-        }
-      } else {
-        sidebar.first = null;
-        sidebar.middle = null;
-        sidebar.last = null;
-      }
-      return { sidebar };
-    });
-  },
-}))
+}));
 
-export { useProject }
+const useProjectStore = createSelectors(useProject);
+
+export { useProject, useProjectStore };

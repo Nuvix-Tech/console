@@ -1,12 +1,13 @@
 "use client";
-import { projectState } from "@/state/project-state";
-import React, { PropsWithChildren } from "react";
+import { useProjectStore } from "@/lib/store";
+import React, { PropsWithChildren, useEffect } from "react";
 
 const DatabaseLayout: React.FC<PropsWithChildren> = ({ children }) => {
-  projectState.showSubSidebar = false;
-  projectState.sidebar.last = null;
-  projectState.sidebar.first = null;
-  projectState.sidebar.middle = null;
+  const setSidebarNull = useProjectStore.use.setSidebarNull();
+
+  useEffect(() => {
+    setSidebarNull();
+  }, []);
 
   return <>{children}</>;
 };

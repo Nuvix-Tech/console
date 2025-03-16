@@ -1,8 +1,7 @@
 "use client";
 import { Avatar } from "@/components/cui/avatar";
 import { SkeletonText } from "@/components/cui/skeleton";
-import { getTeamPageState, teamPageState } from "@/state/page";
-import { getProjectState, projectState } from "@/state/project-state";
+import { useProjectStore, useTeamStore } from "@/lib/store";
 import { Line, Row } from "@/ui/components";
 import { SidebarGroup } from "@/ui/modules/layout/navigation";
 import { Text } from "@chakra-ui/react";
@@ -10,17 +9,25 @@ import { usePathname } from "next/navigation";
 import React, { PropsWithChildren, useEffect } from "react";
 
 const Layout: React.FC<PropsWithChildren<{ teamId: string }>> = ({ children, teamId }) => {
-  const { sdk } = getProjectState();
-  teamPageState._update = async () => {
-    teamPageState.team = await sdk?.teams.get(teamId)!;
-  };
-  projectState.sidebar.first = <SidebarAddon teamId={teamId} />;
+  const sdk = useProjectStore.use.sdk?.();
+  const setSidebar = useProjectStore.use.setSidebar();
+  const setRefreshFn = useTeamStore.use.setRefresh();
+  const setTeam = useTeamStore.use.setTeam();
+
+  const first = <SidebarAddon teamId={teamId} />;
+
+  useEffect(() => {
+    setSidebar({ first });
+    setRefreshFn(async () => {
+      setTeam(await sdk?.teams.get(teamId));
+    });
+  }, []);
 
   useEffect(() => {
     if (!sdk) return;
     const fetchTeam = async () => {
       const team = await sdk.teams.get(teamId);
-      teamPageState.team = team;
+      setTeam(team);
     };
 
     fetchTeam();
@@ -30,8 +37,9 @@ const Layout: React.FC<PropsWithChildren<{ teamId: string }>> = ({ children, tea
 };
 
 const SidebarAddon = ({ teamId }: { teamId: string }) => {
-  const { sdk, project } = getProjectState();
-  const { team } = getTeamPageState();
+  const sdk = useProjectStore.use.sdk?.();
+  const team = useTeamStore.use.team?.();
+  const project = useProjectStore.use.project?.();
   const path = usePathname();
 
   if (team?.$id !== teamId) return;

@@ -1,7 +1,5 @@
 "use client";
 import React from "react";
-import { getCollectionPageState, getDbPageState } from "@/state/page";
-import { getProjectState } from "@/state/project-state";
 import { useConfirm, useToast } from "@/ui/components";
 import { Models, Query } from "@nuvix/console";
 import { ColumnDef } from "@tanstack/react-table";
@@ -23,7 +21,8 @@ import {
 import { CreateButton, IDChip, PageContainer, PageHeading } from "@/components/others";
 import { LuTrash2 } from "react-icons/lu";
 import { EmptyState } from "@/components";
-import { useQuery } from "@/hooks/useQuery";
+import { useSearchQuery } from "@/hooks/useQuery";
+import { useCollectionStore, useDatabaseStore, useProjectStore } from "@/lib/store";
 
 type Props = {
   databaseId: string;
@@ -31,19 +30,21 @@ type Props = {
 };
 
 const CollectionPage: React.FC<Props> = ({ databaseId, collectionId }: Props) => {
-  const state = getProjectState();
-  const { database } = getDbPageState();
-  const { collection } = getCollectionPageState();
-  const { sdk, project, permissions } = state;
+  const sdk = useProjectStore.use.sdk?.();
+  const project = useProjectStore.use.project?.();
+  const permissions = useProjectStore.use.permissions();
+  const collection = useCollectionStore.use.collection?.();
+  const database = useDatabaseStore.use.database?.();
+
   const [loading, setLoading] = React.useState(true);
   const [documentList, setDocumentList] = React.useState<Models.DocumentList<any>>({
     documents: [],
     total: 0,
   });
-  const { limit, page, hasQuery } = useQuery();
+  const { limit, page, hasQuery } = useSearchQuery();
   const confirm = useConfirm();
   const { addToast } = useToast();
-  const { canCreateDocuments, canDeleteDocuments } = permissions;
+  const { canCreateDocuments, canDeleteDocuments } = permissions();
 
   const get = async () => {
     if (!sdk || !databaseId || !collectionId) return;
@@ -143,7 +144,7 @@ const CollectionPage: React.FC<Props> = ({ databaseId, collectionId }: Props) =>
     <PageContainer>
       <PageHeading
         heading="Documents"
-        description="Manage your collection’s data using documents."
+        description="View and manage documents in this collection."
         right={<CreateButton hasPermission={canCreateDocuments} label="Create Document" />}
       />
 

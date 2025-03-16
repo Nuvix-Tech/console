@@ -6,12 +6,16 @@ import {
   CardBoxTitle,
 } from "@/components/others/card";
 import { Form, SubmitButton } from "@/components/others/forms";
-import { getCollectionPageState, getDbPageState, getDocumentPageState } from "@/state/page";
-import { getProjectState } from "@/state/project-state";
 import { useToast } from "@/ui/components";
 import React from "react";
 import { FIELD_TYPES } from "./_fields";
 import { AttributeIcon } from "../../components";
+import {
+  useCollectionStore,
+  useDatabaseStore,
+  useDocumentStore,
+  useProjectStore,
+} from "@/lib/store";
 
 interface Props {
   name: string;
@@ -29,10 +33,12 @@ export const getFieldType = (attribute: {
 };
 
 export const UpdateField: React.FC<Props> = ({ name, value, schema, children, attribute }) => {
-  const { database } = getDbPageState();
-  const { collection } = getCollectionPageState();
-  const { document, _update } = getDocumentPageState();
-  const { sdk } = getProjectState();
+  const document = useDocumentStore.use.document?.();
+  const refresh = useDocumentStore.use.refresh();
+  const sdk = useProjectStore.use.sdk?.();
+  const collection = useCollectionStore.use.collection?.();
+  const database = useDatabaseStore.use.database?.();
+
   const { addToast } = useToast();
 
   if (!sdk || !database || !collection || !document) return;
@@ -58,7 +64,7 @@ export const UpdateField: React.FC<Props> = ({ name, value, schema, children, at
               variant: "success",
               message: "Document data updated.",
             });
-            await _update();
+            await refresh();
           } catch (e: any) {
             addToast({
               variant: "danger",

@@ -6,8 +6,7 @@ import {
   CardBoxTitle,
 } from "@/components/others/card";
 import { Form, InputSwitchField, SubmitButton } from "@/components/others/forms";
-import { getCollectionPageState, getDbPageState } from "@/state/page";
-import { getProjectState } from "@/state/project-state";
+import { useCollectionStore, useDatabaseStore, useProjectStore } from "@/lib/store";
 import { useToast } from "@/ui/components";
 import React from "react";
 import * as y from "yup";
@@ -17,9 +16,11 @@ const schema = y.object({
 });
 
 export const DocumentSecurity: React.FC = () => {
-  const { database } = getDbPageState();
-  const { collection, _update } = getCollectionPageState();
-  const { sdk } = getProjectState();
+  const sdk = useProjectStore.use.sdk?.();
+  const refresh = useCollectionStore.use.refresh();
+  const collection = useCollectionStore.use.collection?.();
+  const database = useDatabaseStore.use.database?.();
+
   const { addToast } = useToast();
 
   if (!database || !collection || !sdk) return;
@@ -46,7 +47,7 @@ export const DocumentSecurity: React.FC = () => {
               variant: "success",
               message: "Document security updated.",
             });
-            await _update();
+            await refresh();
           } catch (e: any) {
             addToast({
               variant: "danger",

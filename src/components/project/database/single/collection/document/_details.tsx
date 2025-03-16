@@ -7,27 +7,27 @@ import {
   CardBoxTitle,
 } from "@/components/others/card";
 import { formatDate } from "@/lib/utils";
-import { getDocumentPageState } from "@/state/page";
-import { Column } from "@/ui/components";
 import React from "react";
 import { UpdatePermissions } from "./components";
 import { DeleteDocument } from "./components/_delete";
+import { PageContainer } from "@/components/others";
+import { useDocumentStore } from "@/lib/store";
 
 const DocumentDetails: React.FC = () => {
-  const { document } = getDocumentPageState();
+  const document = useDocumentStore.use.document?.();
 
   if (!document) return;
 
   return (
-    <Column gap="20" padding="20" fillWidth>
+    <PageContainer>
       <UpdatePermissions />
       <DeleteDocument />
-    </Column>
+    </PageContainer>
   );
 };
 
 const MetaData = () => {
-  const { document } = getDocumentPageState();
+  const document = useDocumentStore.use.document?.();
 
   return (
     <CardBox>

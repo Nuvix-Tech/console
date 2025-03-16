@@ -1,13 +1,11 @@
 "use client";
-import { Column } from "@/ui/components";
 import React from "react";
 import { DeleteTeam, UpdateName, UpdatePrefs } from "./components";
-import { IDChip, TopCard } from "@/components/others";
+import { IDChip, PageContainer, TopCard } from "@/components/others";
 import { HStack, Stack, Text, VStack } from "@chakra-ui/react";
 import { Avatar } from "@/components/cui/avatar";
-import { getTeamPageState } from "@/state/page";
-import { getProjectState } from "@/state/project-state";
 import { formatDate } from "@/lib/utils";
+import { useProjectStore, useTeamStore } from "@/lib/store";
 
 interface TeamProps {
   id: string;
@@ -16,19 +14,19 @@ interface TeamProps {
 const SingleTeam: React.FC<TeamProps> = ({ id }) => {
   return (
     <>
-      <Column fillWidth gap="20" paddingX="12" paddingY="20">
+      <PageContainer>
         <TeamInfo />
         <UpdateName />
         <UpdatePrefs />
         <DeleteTeam />
-      </Column>
+      </PageContainer>
     </>
   );
 };
 
 const TeamInfo = () => {
-  const { team } = getTeamPageState();
-  const { sdk } = getProjectState();
+  const sdk = useProjectStore.use.sdk?.();
+  const team = useTeamStore.use.team?.();
 
   return (
     <TopCard minHeight={8}>

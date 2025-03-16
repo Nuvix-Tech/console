@@ -1,9 +1,7 @@
 "use client";
-import { IDChip, TopCard, UserStatus } from "@/components/others";
+import { IDChip, PageContainer, TopCard, UserStatus } from "@/components/others";
 import { Avatar } from "@/components/cui/avatar";
 import { formatDate } from "@/lib/utils";
-import { getUserPageState, userPageState } from "@/state/page";
-import { getProjectState } from "@/state/project-state";
 import { Column, Row, useToast } from "@/ui/components";
 import { Button, ButtonProps, HStack, Skeleton, Stack, Text, VStack } from "@chakra-ui/react";
 import React, { useState } from "react";
@@ -24,14 +22,15 @@ import {
   UpdatePhone,
   UpdatePrefs,
 } from "./components";
+import { useProjectStore, useUserStore } from "@/lib/store";
 
 const UserPage: React.FC<{ id: string }> = ({ id }) => {
-  const { user } = getUserPageState();
+  const user = useUserStore.use.user?.();
 
   return (
     <>
       {user ? (
-        <Column fillWidth gap="20" paddingX="12" paddingY="20">
+        <PageContainer>
           <TopUserInfo />
           <UpdateName />
           <UpdateEmail />
@@ -40,7 +39,7 @@ const UserPage: React.FC<{ id: string }> = ({ id }) => {
           <UpdateLabels />
           <UpdatePrefs />
           <DeleteUser />
-        </Column>
+        </PageContainer>
       ) : (
         <>
           <Column fillWidth gap="20" paddingX="12" paddingY="20">
@@ -55,30 +54,29 @@ const UserPage: React.FC<{ id: string }> = ({ id }) => {
 };
 
 const TopUserInfo = () => {
-  const { user, _update } = getUserPageState();
-  const { sdk } = getProjectState();
+  const user = useUserStore.use.user?.();
+  const refresh = useUserStore.use.refresh();
+  const sdk = useProjectStore.use.sdk?.();
   const status = getStatus(user);
   const { addToast } = useToast();
 
   const onBlockUnblock = async () => {
     try {
-      let _user: any;
       if (status === "blocked") {
         await sdk?.users.updateStatus(user?.$id!, true);
-        await _update();
         addToast({
           variant: "success",
           message: "You have successfully unblocked this user.",
         });
+        await refresh();
       } else {
         await sdk?.users.updateStatus(user?.$id!, false);
-        await _update();
         addToast({
           variant: "success",
           message: "You have successfully blocked this user.",
         });
+        await refresh();
       }
-      _user && (userPageState.user = _user);
     } catch (e: any) {
       addToast({
         variant: "danger",
@@ -102,7 +100,7 @@ const TopUserInfo = () => {
           message: "You have successfully verified this user's phone.",
         });
       }
-      await _update();
+      await refresh();
     } catch (e: any) {
       addToast({
         variant: "danger",
@@ -126,7 +124,7 @@ const TopUserInfo = () => {
           message: "You have successfully unverified this user's phone.",
         });
       }
-      await _update();
+      await refresh();
     } catch (e: any) {
       addToast({
         variant: "danger",

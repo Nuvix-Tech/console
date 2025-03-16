@@ -1,10 +1,11 @@
 "use client";
-import { projectState } from "@/state/project-state";
-import React from "react";
+import { useProjectStore } from "@/lib/store";
+import React, { useEffect } from "react";
 
 const UsersLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { sidebar } = projectState;
-  sidebar.last = null;
+  const setSidebarNull = useProjectStore.use.setSidebarNull();
+
+  useEffect(() => setSidebarNull("last"), []);
 
   return <>{children}</>;
 };

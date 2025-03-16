@@ -1,15 +1,15 @@
 import { DangerCard } from "@/components/others/danger-card";
-import { getTeamPageState } from "@/state/page";
-import { getProjectState } from "@/state/project-state";
 import { Avatar, useConfirm, useToast } from "@/ui/components";
 import { Button, Text, VStack } from "@chakra-ui/react";
 import { useRouter } from "@bprogress/next";
 import { useState } from "react";
+import { useProjectStore, useTeamStore } from "@/lib/store";
 
 export const DeleteTeam = () => {
-  const { team } = getTeamPageState();
   const [loading, setLoading] = useState(false);
-  const { sdk, project } = getProjectState();
+  const sdk = useProjectStore.use.sdk?.();
+  const project = useProjectStore.use.project?.();
+  const team = useTeamStore.use.team?.();
   const { addToast } = useToast();
   const { replace } = useRouter();
   const confirm = useConfirm();

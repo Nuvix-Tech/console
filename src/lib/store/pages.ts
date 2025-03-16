@@ -1,86 +1,114 @@
 import { Models } from "@nuvix/console";
 import { create } from "zustand";
+import { createSelectors } from ".";
 
-interface UserPageStore {
+/**
+ * Base interface for page state common across all stores.
+ */
+interface PageState {
+  loading: boolean;
+  setLoading: (isLoading: boolean) => void;
+}
+
+/**
+ * Common update functionality for the pages.
+ */
+interface Updatable {
+  refresh: () => Promise<void>;
+  setRefresh: (refreshFn: () => Promise<void>) => void;
+}
+
+/**
+ * Store for the user page.
+ */
+interface UserStore extends PageState, Updatable {
   user?: Models.User<Record<string, any>>;
   setUser: (user?: Models.User<Record<string, any>>) => void;
-  loading: boolean;
-  setLoading: (loading: boolean) => void;
-  update: () => Promise<void>; // this is an example, it will be useful later
-  setUpdateFn: (update: () => Promise<void>) => void;
 }
 
-export const useUserPageStore = create<UserPageStore>((set) => ({
-  setUser: (user) => set({ user }),
+export const useUser = create<UserStore>((set) => ({
   loading: true,
-  setLoading: (loading) => set({ loading }),
-  update: async () => {},
-  setUpdateFn: (update) => set({ update }),
+  user: undefined,
+  setUser: (user) => set({ user }),
+  setLoading: (isLoading) => set({ loading: isLoading }),
+  refresh: async () => {},
+  setRefresh: (refreshFn) => set({ refresh: refreshFn }),
 }));
 
-interface TeamPageStore {
+export const useUserStore = createSelectors(useUser);
+
+/**
+ * Store for the team page.
+ */
+interface TeamStore extends PageState, Updatable {
   team?: Models.Team<Record<string, any>>;
   setTeam: (team?: Models.Team<Record<string, any>>) => void;
-  loading: boolean;
-  setLoading: (loading: boolean) => void;
-  update: () => Promise<void>; // this is an example, it will be useful later
-  setUpdateFn: (update: () => Promise<void>) => void;
 }
 
-export const useTeamPageStore = create<TeamPageStore>((set) => ({
-  setTeam: (team) => set({ team }),
+export const useTeam = create<TeamStore>((set) => ({
   loading: true,
-  setLoading: (loading) => set({ loading }),
-  update: async () => {},
-  setUpdateFn: (update) => set({ update }),
+  team: undefined,
+  setTeam: (team) => set({ team }),
+  setLoading: (isLoading) => set({ loading: isLoading }),
+  refresh: async () => {},
+  setRefresh: (refreshFn) => set({ refresh: refreshFn }),
 }));
 
-type UpdateProps = { update: () => Promise<any | void>; setUpdateFn: (update: () => Promise<any | void>) => void };
+export const useTeamStore = createSelectors(useTeam);
 
-interface DatabasePageStore {
+/**
+ * Store for the database page.
+ */
+interface DatabaseStore extends PageState, Updatable {
   database?: Models.Database;
   setDatabase: (database?: Models.Database) => void;
-  loading: boolean;
-  setUpdateFn: (update: () => Promise<void>) => void;
-  setLoading: (loading: boolean) => void;
 }
 
-export const useDbPageStore = create<DatabasePageStore & UpdateProps>((set) => ({
+export const useDatabase = create<DatabaseStore>((set) => ({
   loading: true,
+  database: undefined,
   setDatabase: (database) => set({ database }),
-  setLoading: (loading) => set({ loading }),
-  setUpdateFn: (update) => set({ update }),
-  update: async () => {},
+  setLoading: (isLoading) => set({ loading: isLoading }),
+  refresh: async () => {},
+  setRefresh: (refreshFn) => set({ refresh: refreshFn }),
 }));
 
-interface CollectionPageStore {
+export const useDatabaseStore = createSelectors(useDatabase);
+
+/**
+ * Store for the collection page.
+ */
+interface CollectionStore extends PageState, Updatable {
   collection?: Models.Collection;
   setCollection: (collection?: Models.Collection) => void;
-  setUpdateFn: (update: () => Promise<void>) => void;
-  loading: boolean;
-  setLoading: (loading: boolean) => void;
 }
 
-export const useCollectionPageStore = create<CollectionPageStore & UpdateProps>((set) => ({
+export const useCollection = create<CollectionStore>((set) => ({
   loading: true,
+  collection: undefined,
   setCollection: (collection) => set({ collection }),
-  setLoading: (loading) => set({ loading }),
-  setUpdateFn: (update) => set({ update }),
-  update: async () => {},
+  setLoading: (isLoading) => set({ loading: isLoading }),
+  refresh: async () => {},
+  setRefresh: (refreshFn) => set({ refresh: refreshFn }),
 }));
 
-interface DocumentPageStore<T = unknown> {
-  document?: T extends Models.Document ? T : Models.Document;
-  setDocument: (document?: T extends Models.Document ? T : Models.Document) => void;
-  setUpdateFn: (update: () => Promise<void>) => void;
-  loading: boolean;
-  setLoading: (loading: boolean) => void;
+export const useCollectionStore = createSelectors(useCollection);
+
+/**
+ * Store for the document page.
+ */
+interface DocumentStore<T = Models.Document> extends PageState, Updatable {
+  document?: T;
+  setDocument: (document?: T) => void;
 }
 
-export const useDocumentPageStore = create<DocumentPageStore & UpdateProps>((set) => ({
+export const useDocument = create<DocumentStore>((set) => ({
   loading: true,
+  document: undefined,
   setDocument: (document) => set({ document }),
-  setLoading: (loading) => set({ loading }),
-  setUpdateFn: (update) => set({ update }),
-  update: async () => {},
+  setLoading: (isLoading) => set({ loading: isLoading }),
+  refresh: async () => {},
+  setRefresh: (refreshFn) => set({ refresh: refreshFn }),
 }));
+
+export const useDocumentStore = createSelectors(useDocument);

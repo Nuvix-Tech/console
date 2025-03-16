@@ -1,6 +1,6 @@
 "use client";
 
-import { getAppState } from "@/state/app-state";
+import { useAppStore } from "@/lib/store";
 import { Column, Icon, IconButton, Line, Row, Tag, Text, ToggleButton } from "@/ui/components";
 import { usePathname } from "next/navigation";
 import { GoArrowUpRight } from "react-icons/go";
@@ -12,7 +12,7 @@ type Props = {
 
 const ConsoleSidebar: React.FC<Props> = ({ inMobile }) => {
   const pathname = usePathname() ?? "";
-  const { organization } = getAppState();
+  const organization = useAppStore.use.organization?.();
 
   return (
     <Column

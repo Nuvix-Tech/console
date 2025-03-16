@@ -5,9 +5,13 @@ import { IDChip, TopCard } from "@/components/others";
 import { useRouter } from "@bprogress/next";
 import { Row } from "@/ui/components";
 import { usePathname } from "next/navigation";
-import { getCollectionPageState, getDbPageState, getDocumentPageState } from "@/state/page";
-import { getProjectState } from "@/state/project-state";
 import { formatDate } from "@/lib/utils";
+import {
+  useCollectionStore,
+  useDatabaseStore,
+  useDocumentStore,
+  useProjectStore,
+} from "@/lib/store";
 
 interface LayoutTopProps {
   title: string;
@@ -15,10 +19,11 @@ interface LayoutTopProps {
 }
 
 export const LayoutTop: React.FC<LayoutTopProps> = ({ title, id }) => {
-  const { project } = getProjectState();
-  const { database } = getDbPageState();
-  const { collection } = getCollectionPageState();
-  const { document } = getDocumentPageState();
+  const document = useDocumentStore.use.document?.();
+  const collection = useCollectionStore.use.collection?.();
+  const database = useDatabaseStore.use.database?.();
+  const project = useProjectStore.use.project?.();
+
   const path = usePathname();
   const { push } = useRouter();
 

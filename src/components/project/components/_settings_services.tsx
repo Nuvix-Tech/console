@@ -6,16 +6,17 @@ import {
   CardBoxItem,
   CardBoxTitle,
 } from "@/components/others/card";
-import { getProjectState } from "@/state/project-state";
 import { Line, Switch, useConfirm, useToast } from "@/ui/components";
 import { sdkForConsole } from "@/lib/sdk";
 import { ApiService } from "@nuvix/console";
 import { Button, HStack, VStack } from "@chakra-ui/react";
+import { useProjectStore } from "@/lib/store";
 
 export const UpdateServices = () => {
   const [loading, setLoading] = React.useState<ApiService | false>(false);
   const [disabled, setDisabled] = React.useState(false);
-  const { project, _update } = getProjectState();
+  const project = useProjectStore.use.project?.();
+  const refresh = useProjectStore.use.update?.();
   const { addToast } = useToast();
   const confirm = useConfirm();
   const { projects } = sdkForConsole;
@@ -27,7 +28,7 @@ export const UpdateServices = () => {
         variant: "success",
         message: message,
       });
-      await _update();
+      await refresh();
     } catch (e: any) {
       addToast({
         variant: "danger",

@@ -2,7 +2,7 @@
 
 import { TopCard } from "@/components/others";
 import { sdkForConsole } from "@/lib/sdk";
-import { useApp } from "@/lib/store";
+import { useAppStore } from "@/lib/store";
 import { AvatarGroup, Button, Column, Heading, Row, SegmentedControl, Tag } from "@/ui/components";
 import { ConsoleSidebar } from "@/ui/modules/layout/ConsoleSidebar";
 import { Stack } from "@chakra-ui/react";
@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 
 export default function OrgLayout({ children, id }: { children: React.ReactNode; id: string }) {
   const { organizations, avatars } = sdkForConsole;
-  const { setOrganization } = useApp();
+  const setOrganization = useAppStore.use.setOrganization();
 
   useEffect(() => {
     organizations.get(id).then((org) => {

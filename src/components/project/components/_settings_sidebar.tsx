@@ -1,10 +1,10 @@
-import { getProjectState } from "@/state/project-state";
+import { useProjectStore } from "@/lib/store";
 import { Line } from "@/ui/components";
 import { SidebarGroup } from "@/ui/modules/layout/navigation";
 import { usePathname } from "next/navigation";
 
 const SettingsSidebar = () => {
-  const { project } = getProjectState();
+  const project = useProjectStore.use.project?.();
   const path = usePathname();
 
   const resolveHref = (value?: string) =>

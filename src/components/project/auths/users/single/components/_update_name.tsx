@@ -1,17 +1,17 @@
 import { Form, InputField, SubmitButton } from "@/components/others/forms";
 import { CardBox, CardBoxBody, CardBoxItem, CardBoxTitle } from "@/components/others/card";
-import { getUserPageState } from "@/state/page";
 import * as y from "yup";
-import { getProjectState } from "@/state/project-state";
 import { useToast } from "@/ui/components";
+import { useProjectStore, useUserStore } from "@/lib/store";
 
 const schema = y.object({
   name: y.string().max(256),
 });
 
 export const UpdateName = () => {
-  const { user, _update } = getUserPageState();
-  const { sdk } = getProjectState();
+  const sdk = useProjectStore.use.sdk?.();
+  const refresh = useUserStore.use.refresh();
+  const user = useUserStore.use.user?.();
   const { addToast } = useToast();
 
   return (
@@ -29,7 +29,7 @@ export const UpdateName = () => {
               variant: "success",
               message: "User name has been updated successfully.",
             });
-            await _update();
+            await refresh();
           } catch (e: any) {
             addToast({
               variant: "danger",

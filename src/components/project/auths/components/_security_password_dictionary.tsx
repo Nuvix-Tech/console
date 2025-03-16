@@ -7,7 +7,7 @@ import {
 } from "@/components/others/card";
 import { Form, InputSwitchField, SubmitButton } from "@/components/others/forms";
 import { sdkForConsole } from "@/lib/sdk";
-import { getProjectState } from "@/state/project-state";
+import { useProjectStore } from "@/lib/store";
 import { useToast } from "@/ui/components";
 import React from "react";
 import * as y from "yup";
@@ -17,7 +17,8 @@ const schema = y.object({
 });
 
 export const PasswordDictionary: React.FC = () => {
-  const { project, _update } = getProjectState();
+  const project = useProjectStore.use.project?.();
+  const refresh = useProjectStore.use.update();
   const { projects } = sdkForConsole;
   const { addToast } = useToast();
 
@@ -36,7 +37,7 @@ export const PasswordDictionary: React.FC = () => {
               variant: "success",
               message: "Password dictionary updated successfully.",
             });
-            await _update();
+            await refresh();
           } catch (e: any) {
             addToast({
               variant: "danger",

@@ -1,15 +1,16 @@
 "use client";
-
 import { sdkForConsole } from "@/lib/sdk";
-import { appState } from "@/state/app-state";
 import { Row } from "@/ui/components";
 import { Spinner } from "@chakra-ui/react";
 import { Models } from "@nuvix/console";
 import { useRouter } from "@bprogress/next";
 import { useEffect } from "react";
+import { useAppStore } from "@/lib/store";
 
 export default function Page() {
-  const { user } = appState;
+  const user = useAppStore.use.user();
+  const setUser = useAppStore.use.setUser();
+  const setScopes = useAppStore.use.setScopes();
   const { organizations, account } = sdkForConsole;
 
   const { replace } = useRouter();
@@ -34,13 +35,15 @@ export default function Page() {
           return;
         }
 
-        appState.user = await account.updatePrefs({
-          ...user.prefs,
-          organization: orgs.teams?.[0]?.$id,
-        });
+        setUser(
+          await account.updatePrefs({
+            ...user.prefs,
+            organization: orgs.teams?.[0]?.$id,
+          }),
+        );
       }
       const scopes = await organizations.getScopes(org!.$id);
-      appState.scopes = scopes;
+      setScopes(scopes);
       replace(`/organization/${org?.$id}`);
     }
 

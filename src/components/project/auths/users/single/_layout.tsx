@@ -1,8 +1,7 @@
 "use client";
 import { Avatar } from "@/components/cui/avatar";
 import { SkeletonText } from "@/components/cui/skeleton";
-import { getUserPageState, userPageState } from "@/state/page";
-import { getProjectState, projectState } from "@/state/project-state";
+import { useProjectStore, useUserStore } from "@/lib/store";
 import { Line, Row } from "@/ui/components";
 import { SidebarGroup } from "@/ui/modules/layout/navigation";
 import { Text } from "@chakra-ui/react";
@@ -10,17 +9,24 @@ import { usePathname } from "next/navigation";
 import React, { PropsWithChildren, useEffect } from "react";
 
 const SingleLayout: React.FC<PropsWithChildren<{ userId: string }>> = ({ children, userId }) => {
-  const { sdk } = getProjectState();
-  userPageState._update = async () => {
-    userPageState.user = await sdk?.users.get(userId);
-  };
-  projectState.sidebar.first = <SidebarAddon userId={userId} />;
+  const setSidebar = useProjectStore.use.setSidebar();
+  const sdk = useProjectStore.use.sdk?.();
+  const setRefreshFn = useUserStore.use.setRefresh();
+  const setUser = useUserStore.use.setUser();
+  const first = <SidebarAddon userId={userId} />;
+
+  useEffect(() => {
+    setSidebar({ first });
+    setRefreshFn(async () => {
+      setUser(await sdk?.users.get(userId));
+    });
+  }, []);
 
   useEffect(() => {
     if (!sdk) return;
     const fetchUser = async () => {
       const user = await sdk.users.get(userId);
-      userPageState.user = user;
+      setUser(user);
     };
 
     fetchUser();
@@ -30,8 +36,9 @@ const SingleLayout: React.FC<PropsWithChildren<{ userId: string }>> = ({ childre
 };
 
 const SidebarAddon = ({ userId }: { userId: string }) => {
-  const { sdk, project } = getProjectState();
-  const { user } = getUserPageState();
+  const sdk = useProjectStore.use.sdk?.();
+  const project = useProjectStore.use.project?.();
+  const user = useUserStore.use.user?.();
   const path = usePathname();
 
   if (user?.$id !== userId) return;

@@ -1,17 +1,17 @@
 import { DangerCard } from "@/components/others/danger-card";
 import { formatDate } from "@/lib/utils";
-import { getCollectionPageState, getDbPageState } from "@/state/page";
-import { getProjectState } from "@/state/project-state";
 import { useConfirm, useToast } from "@/ui/components";
 import { Button, Text, VStack } from "@chakra-ui/react";
 import { useRouter } from "@bprogress/next";
 import { useState } from "react";
+import { useCollectionStore, useDatabaseStore, useProjectStore } from "@/lib/store";
 
 export const DeleteCollection = () => {
-  const { database } = getDbPageState();
-  const { collection } = getCollectionPageState();
+  const sdk = useProjectStore.use.sdk?.();
+  const project = useProjectStore.use.project?.();
+  const collection = useCollectionStore.use.collection?.();
+  const database = useDatabaseStore.use.database?.();
   const [loading, setLoading] = useState(false);
-  const { sdk, project } = getProjectState();
   const { addToast } = useToast();
   const { replace } = useRouter();
   const confirm = useConfirm();

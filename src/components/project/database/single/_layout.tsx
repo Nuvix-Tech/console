@@ -1,33 +1,36 @@
 "use client";
-import { dbPageState } from "@/state/page";
-import { getProjectState, projectState } from "@/state/project-state";
 import { notFound } from "next/navigation";
 import React, { PropsWithChildren, useEffect } from "react";
 import { DatbaseSidebar } from "./components";
+import { useDatabaseStore, useProjectStore } from "@/lib/store";
 
 type Props = PropsWithChildren & {
   databaseId: string;
 };
 
 const DatabaseSingleLayout: React.FC<Props> = ({ children, databaseId }) => {
-  const { sdk } = getProjectState();
+  const sdk = useProjectStore.use.sdk?.();
+  const setSidebarNull = useProjectStore.use.setSidebarNull();
+  const setSidebar = useProjectStore.use.setSidebar();
+  const setRefreshFn = useDatabaseStore.use.setRefresh();
+  const setDatabase = useDatabaseStore.use.setDatabase();
+  const setLoading = useDatabaseStore.use.setLoading();
+  const last = <DatbaseSidebar />;
 
-  projectState.showSubSidebar = true;
-  projectState.sidebar.first = null;
-  projectState.sidebar.middle = null;
-  projectState.sidebar.last = <DatbaseSidebar />;
-
-  dbPageState._update = async () => {
-    const db = await sdk?.databases.get(databaseId);
-    dbPageState.database = db;
-  };
+  useEffect(() => {
+    setSidebarNull("first", "middle");
+    setSidebar({ last });
+    setRefreshFn(async () => {
+      setDatabase(await sdk?.databases.get(databaseId));
+    });
+  }, []);
 
   async function get() {
     if (!sdk) return;
     let db = await sdk?.databases.get(databaseId);
     if (db) {
-      dbPageState.database = db;
-      dbPageState.loading = false;
+      setDatabase(db);
+      setLoading(false);
       return db;
     } else {
       notFound();

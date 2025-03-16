@@ -1,22 +1,9 @@
 "use client";
-import { getDbPageState } from "@/state/page";
-import { getProjectState } from "@/state/project-state";
-import { Column, useConfirm, useToast } from "@/ui/components";
+import { useConfirm, useToast } from "@/ui/components";
 import { Models } from "@nuvix/console";
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { Tooltip } from "@/components/cui/tooltip";
-import { Heading, Stack, Text } from "@chakra-ui/react";
-import {
-  CreateButton,
-  DataGridProvider,
-  DataGridSkelton,
-  SearchAndCreate,
-  Table,
-} from "@/ui/modules/data-grid";
-import { EmptyState } from "@/ui/modules/layout/empty-state";
-import { AttributeIcon } from "./components";
-import { Badge } from "@/components/ui/badge";
+import { CreateButton, DataGridProvider, DataGridSkelton, Table } from "@/ui/modules/data-grid";
 import { Status } from "@/components/cui/status";
 import {
   DropdownMenu,
@@ -24,8 +11,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { HiDotsVertical } from "react-icons/hi";
 import { Ellipsis } from "lucide-react";
+import { useDatabaseStore, useProjectStore } from "@/lib/store";
+import { PageContainer, PageHeading } from "@/components/others";
+import { EmptyState } from "@/components/_empty_state";
 
 type Props = {
   databaseId: string;
@@ -33,9 +22,9 @@ type Props = {
 };
 
 export const IndexesPage: React.FC<Props> = ({ databaseId, collectionId }) => {
-  const state = getProjectState();
-  const { database } = getDbPageState();
-  const { sdk, permissions } = state;
+  const sdk = useProjectStore.use.sdk?.();
+  const database = useDatabaseStore.use.database?.();
+
   const [loading, setLoading] = React.useState(true);
   const [indexesList, setIndexesList] = React.useState<Models.IndexList>({
     indexes: [],
@@ -166,23 +155,12 @@ export const IndexesPage: React.FC<Props> = ({ databaseId, collectionId }) => {
   };
 
   return (
-    <Column paddingX="16" fillWidth>
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        width="full"
-        alignItems="center"
-        marginBottom="12"
-        marginTop="8"
-      >
-        <Column vertical="center" horizontal="start" paddingX="8">
-          <Heading size="2xl">Indexes</Heading>
-          <Text fontSize={"sm"} color="fg.subtle">
-            indexes are used to manage the data in a collection.
-          </Text>
-        </Column>
-        <CreateButton label="Create Index" />
-      </Stack>
+    <PageContainer>
+      <PageHeading
+        heading="Indexes"
+        description="Indexes are used to quickly locate data without having to search every document in a collection."
+        right={<CreateButton label="Create Index" />}
+      />
 
       <DataGridProvider<any>
         columns={columns}
@@ -197,9 +175,9 @@ export const IndexesPage: React.FC<Props> = ({ databaseId, collectionId }) => {
             <Table interactive={false} />
           </>
         ) : (
-          <EmptyState title="No Indexes" description="No Indexes have been created yet." />
+          <EmptyState show title="No Indexes" description="No Indexes have been created yet." />
         )}
       </DataGridProvider>
-    </Column>
+    </PageContainer>
   );
 };

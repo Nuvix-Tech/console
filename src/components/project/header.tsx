@@ -17,7 +17,7 @@ import { HeaderOrganization, HeaderProject } from "./components";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { UserProfile } from "../_profile";
-import { useApp } from "@/lib/store";
+import { useAppStore } from "@/lib/store";
 
 interface HeaderProps {
   authenticated?: boolean;
@@ -27,7 +27,11 @@ interface HeaderProps {
 }
 
 const ProjectHeader: React.FC<HeaderProps> = () => {
-  const { organization, isDrawerOpen, isSecondMenuOpen, setIsDrawerOpen, setIsSecondMenuOpen } = useApp();
+  const organization = useAppStore.use.organization?.();
+  const isDrawerOpen = useAppStore.use.isDrawerOpen();
+  const isSecondMenuOpen = useAppStore.use.isSecondMenuOpen();
+  const setIsDrawerOpen = useAppStore.use.setIsDrawerOpen();
+  const setIsSecondMenuOpen = useAppStore.use.setIsSecondMenuOpen();
   const pathname = usePathname() ?? "";
   const headerRef = useRef<any>(null);
 
@@ -128,10 +132,7 @@ const ProjectHeader: React.FC<HeaderProps> = () => {
           <Row fillWidth vertical="center" horizontal="end">
             <Row as="nav">
               <Row>
-                <NavIcon
-                  isActive={isDrawerOpen}
-                  onClick={() => setIsDrawerOpen(!isDrawerOpen)}
-                />
+                <NavIcon isActive={isDrawerOpen} onClick={() => setIsDrawerOpen(!isDrawerOpen)} />
                 {/* <Avatar.Root size={'sm'}>
                   <Avatar.Fallback name={user?.name} />
                   <Avatar.Image src={avatars.getInitials(user?.name, 96, 96)} />
