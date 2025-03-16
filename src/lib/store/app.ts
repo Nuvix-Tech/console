@@ -1,7 +1,7 @@
 "use client";
 import { create } from "zustand";
 import { Models } from "@nuvix/console";
-import { createSelectors } from ".";
+import { createSelectors } from "../utils";
 
 export interface AppPermission {
   canReadSessions: boolean;

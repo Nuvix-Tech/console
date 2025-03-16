@@ -5,7 +5,7 @@ import { getProjectSdk, sdkForProject } from "../sdk";
 import { ProjectSidebarData, SidebarItem, SidebarItemGroup } from "@/components/project/sidebar";
 import { create } from "zustand";
 import { AppPermission } from "./app";
-import { createSelectors } from ".";
+import { createSelectors } from "../utils";
 
 export interface ProjectContextData {
   project: Models.Project;

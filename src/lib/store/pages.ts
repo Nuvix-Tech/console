@@ -1,7 +1,7 @@
 "use client";
 import { Models } from "@nuvix/console";
 import { create } from "zustand";
-import { createSelectors } from ".";
+import { createSelectors } from "../utils";
 
 /**
  * Base interface for page state common across all stores.
