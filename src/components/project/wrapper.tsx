@@ -1,10 +1,9 @@
 "use client";
 
 import { getProjectSdk, sdkForConsole } from "@/lib/sdk";
-import React, { useEffect } from "react";
-import { projectState } from "@/state/project-state";
-import { appState } from "@/state/app-state";
+import React, { useEffect, useMemo } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { useApp, useProject } from "@/lib/store";
 
 export default function ProjectWrapper({
   children,
@@ -12,36 +11,38 @@ export default function ProjectWrapper({
 }: { children: React.ReactNode; id: string }) {
   const { projects, organizations } = sdkForConsole;
 
-  projectState._update = async () => {
-    let p = await projects.get(id);
-    projectState.project = p;
-  };
+  const { setOrganization, setScopes } = useApp()
+  const { setProject, setScopes: setProjectScopes, setUpdateFn } = useProject()
 
-  const fetcher = async (id: string) => {
-    let project = await projects.get(id);
-    const org = await organizations.get(project.teamId);
-    const scopes = await organizations.getScopes(project.teamId);
-    return { project, org, scopes };
-  };
+  // const fetcher = useMemo(
+  //   () =>
+  //     [projects, organizations],
+  // );
 
-  const { data, isFetching } = useSuspenseQuery({
-    queryKey: ["project", id], // Ensure `id` is stable
-    queryFn: () => fetcher(id),
-  });
-  console.log("Fetching:", isFetching, id, data);
-  console.log('HRLRLRORRIRIRIR')
-  // ✅ Use useEffect to update project state properly
-  // useEffect(() => {
-  //   console.log("Updated Project Data:", data);
-  //   if (data) {
-      projectState.project = data.project;
-      projectState.sdk = getProjectSdk(data.project.$id);
-      projectState.initialfetching = false;
-      appState.organization = data.org;
-      appState.scopes = data.scopes;
-      projectState.scopes = data.scopes;
-  //   }
-  // }, [data]); // Runs only when `data` changes
+  // const { data, isFetching } = useSuspenseQuery({
+  //   queryKey: ["project", id],
+  //   queryFn: () => fetcher(id),
+  // });
+
+  // console.log("Fetching:", isFetching, id, data);
+  console.log('RENDERING THE CONSOLE WRAPPER')
+
+  useEffect(() => {
+    async function get() {
+      let project = await projects.get(id);
+      const org = await organizations.get(project.teamId);
+      const scopes = await organizations.getScopes(project.teamId);
+      setProject(project)
+      setOrganization(org);
+      setScopes(scopes);
+      setUpdateFn(async () => {
+        let p = await projects.get(id);
+        setProject(p)
+      });
+      setProjectScopes(scopes);
+    }
+    get()
+  }, [id]);
 
   return <>{children}</>;
 }

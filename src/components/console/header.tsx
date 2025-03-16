@@ -5,7 +5,6 @@ import { Badge, Column, Logo, NavIcon, Row } from "@/ui/components";
 import { usePathname } from "next/navigation";
 import type React from "react";
 import { useRef } from "react";
-import { appState, getAppState } from "@/state/app-state";
 import {
   Drawer,
   DrawerClose,
@@ -22,6 +21,7 @@ import { Button } from "../ui/button";
 import { UserProfile } from "../_profile";
 import { Stack } from "@chakra-ui/react";
 import { ConsoleSidebar } from "@/ui/modules/layout/ConsoleSidebar";
+import { useApp } from "@/lib/store";
 
 interface HeaderProps {
   authenticated?: boolean;
@@ -31,7 +31,7 @@ interface HeaderProps {
 }
 
 const ConsoleHeader: React.FC<HeaderProps> = () => {
-  const { organization, isDrawerOpen } = getAppState();
+  const { organization, isDrawerOpen, setIsDrawerOpen } = useApp();
   const pathname = usePathname() ?? "";
   const headerRef = useRef<any>(null);
 
@@ -53,7 +53,7 @@ const ConsoleHeader: React.FC<HeaderProps> = () => {
             <Row show="s">
               <NavIcon
                 isActive={isDrawerOpen}
-                onClick={() => (appState.isDrawerOpen = !appState.isDrawerOpen)}
+                onClick={() => setIsDrawerOpen(!isDrawerOpen)}
               />
             </Row>
             <Link href="/">
@@ -83,7 +83,7 @@ const ConsoleHeader: React.FC<HeaderProps> = () => {
         </Stack>
       </Row>
 
-      <Drawer open={isDrawerOpen} onOpenChange={(open) => (appState.isDrawerOpen = open)}>
+      <Drawer open={isDrawerOpen} onOpenChange={(open) => setIsDrawerOpen(open)}>
         <DrawerContent>
           <ConsoleSidebar inMobile />
         </DrawerContent>

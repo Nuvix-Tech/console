@@ -9,13 +9,13 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { getAppState } from "@/state/app-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { sdkForConsole } from "@/lib/sdk";
+import { useApp } from "@/lib/store";
 
 export function UserProfile() {
-  const { user } = getAppState();
+  const { user } = useApp();
   const { avatars, account } = sdkForConsole;
 
   return user ? (

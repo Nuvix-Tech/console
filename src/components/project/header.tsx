@@ -5,7 +5,6 @@ import { Badge, Column, Logo, NavIcon, Row } from "@/ui/components";
 import { usePathname } from "next/navigation";
 import type React from "react";
 import { useRef } from "react";
-import { appState, getAppState } from "@/state/app-state";
 import {
   DrawerBackdrop,
   DrawerBody,
@@ -18,6 +17,7 @@ import { HeaderOrganization, HeaderProject } from "./components";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { UserProfile } from "../_profile";
+import { useApp } from "@/lib/store";
 
 interface HeaderProps {
   authenticated?: boolean;
@@ -27,7 +27,7 @@ interface HeaderProps {
 }
 
 const ProjectHeader: React.FC<HeaderProps> = () => {
-  const { organization, isDrawerOpen, isSecondMenuOpen, user } = getAppState();
+  const { organization, isDrawerOpen, isSecondMenuOpen, setIsDrawerOpen, setIsSecondMenuOpen } = useApp();
   const pathname = usePathname() ?? "";
   const headerRef = useRef<any>(null);
 
@@ -130,7 +130,7 @@ const ProjectHeader: React.FC<HeaderProps> = () => {
               <Row>
                 <NavIcon
                   isActive={isDrawerOpen}
-                  onClick={() => (appState.isDrawerOpen = !appState.isDrawerOpen)}
+                  onClick={() => setIsDrawerOpen(!isDrawerOpen)}
                 />
                 {/* <Avatar.Root size={'sm'}>
                   <Avatar.Fallback name={user?.name} />
@@ -145,7 +145,7 @@ const ProjectHeader: React.FC<HeaderProps> = () => {
           <Row gap="4" vertical="center">
             <NavIcon
               isActive={isSecondMenuOpen}
-              onClick={() => (appState.isSecondMenuOpen = !appState.isSecondMenuOpen)}
+              onClick={() => setIsSecondMenuOpen(!isSecondMenuOpen)}
             />
             {organization?.name}
           </Row>
@@ -165,7 +165,7 @@ const ProjectHeader: React.FC<HeaderProps> = () => {
         </Row>
       </Column>
 
-      <DrawerRoot open={isDrawerOpen} onOpenChange={(e) => (appState.isDrawerOpen = e.open)}>
+      <DrawerRoot open={isDrawerOpen} onOpenChange={(e) => setIsDrawerOpen(e.open)}>
         <DrawerBackdrop />
         <DrawerContent>
           <DrawerBody>
@@ -177,7 +177,7 @@ const ProjectHeader: React.FC<HeaderProps> = () => {
 
       <DrawerRoot
         open={isSecondMenuOpen}
-        onOpenChange={(e) => (appState.isSecondMenuOpen = e.open)}
+        onOpenChange={(e) => setIsSecondMenuOpen(e.open)}
         placement="bottom"
       >
         <DrawerBackdrop />

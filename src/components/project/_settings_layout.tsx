@@ -1,11 +1,19 @@
 "use client";
-import { projectState } from "@/state/project-state";
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, useEffect } from "react";
 import { SettingsSidebar } from "./components";
+import { useProject } from "@/lib/store";
 
 const SettingsLayout: React.FC<PropsWithChildren> = ({ children }) => {
-  projectState.sidebar.first = null;
-  projectState.sidebar.middle = <SettingsSidebar />;
+  const { setSidebar, setSidebarNull } = useProject()
+
+  useEffect(
+    () => {
+      setSidebarNull('first'),
+        setSidebar({
+          middle: <SettingsSidebar />
+        })
+    }, []
+  )
 
   return children;
 };

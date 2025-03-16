@@ -2,9 +2,9 @@
 import "@/ui/modules/layout/sidebar.scss";
 import { Column, Line, RevealFx, Row, ToggleButton } from "@/ui/components";
 import { usePathname } from "next/navigation";
-import { getProjectState } from "@/state/project-state";
 import * as React from "react";
 import { useColorMode } from "../cui/color-mode";
+import { useProject } from "@/lib/store";
 
 export interface ProjectSidebarData {
   name: string;
@@ -54,7 +54,7 @@ interface FirstSidebarProps {
 export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarProps) => {
   const [showFullSidebar, setShowFullSidebar] = React.useState(false);
   const pathname = usePathname() ?? "";
-  const { project, sidebar } = getProjectState();
+  const { project, sidebar } = useProject();
   const { setColorMode } = useColorMode();
 
   const id = project?.$id;
@@ -168,7 +168,7 @@ interface SecondSidebarProps {
 }
 
 export const SecondSidebar = ({ noMarg, noBg, border = true }: SecondSidebarProps) => {
-  const { sidebar } = getProjectState();
+  const { sidebar } = useProject();
 
   return (
     <>

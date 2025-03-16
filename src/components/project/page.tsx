@@ -1,19 +1,19 @@
 "use client";
-import { getProjectState, projectState } from "@/state/project-state";
 import { Background, Chip, Column, Feedback, Heading, Line, Row, Skeleton } from "@/ui/components";
-import React from "react";
+import React, { useEffect } from "react";
 import { IDChip } from "../others";
+import { useProject } from "@/lib/store";
 
 type ProjectPageProps = {
   id: string;
 };
 
 export default function ProjectPage({ id }: ProjectPageProps) {
-  const state = getProjectState();
-  const { project } = state;
-  const { sidebar } = projectState;
+  const { project, setSidebarNull } = useProject();
 
-  sidebar.first = sidebar.middle = sidebar.last = null;
+  useEffect(() => {
+    setSidebarNull()
+  }, [])
 
   return (
     <>

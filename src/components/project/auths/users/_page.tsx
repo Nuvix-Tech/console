@@ -2,7 +2,7 @@
 import { getProjectState, projectState } from "@/state/project-state";
 import { Avatar, Column } from "@/ui/components";
 import { Models, Query } from "@nuvix/console";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Row } from "@/ui/components";
 import { ColumnDef } from "@tanstack/react-table";
 import { Tooltip } from "@/components/cui/tooltip";
@@ -19,6 +19,15 @@ const UsersPage = () => {
   const { sdk, project, permissions } = state;
   const { limit, page, search, hasQuery } = useQuery();
   const { canCreateUsers } = permissions;
+  const [users, setUsers] = useState<{
+    users: Models.User<any>[];
+    total: number;
+  }>({
+    users: [],
+    total: 0,
+  });
+  const [isLoading, setIsLoading] = useState(false);
+
 
   projectState.sidebar.first = null;
 
@@ -29,18 +38,13 @@ const UsersPage = () => {
     const queries: string[] = [];
     queries.push(Query.limit(limit), Query.offset((page - 1) * limit));
     return await sdk.users.list(queries, search ?? undefined);
-  }, []);
+  }, [sdk, limit, page, search]);
 
-  const { data, isLoading, error } = useSuspenseQuery({
-    queryKey: [sdk, limit, page, search],
-    queryFn: fetcher
-  });
+  useEffect(() => {
+    fetcher()
+  }, [fetcher])
 
-  const users = data ?? {
-    users: [],
-    total: 0,
-  };
-  console.log(data, isLoading, error);
+  console.log("RERENDERING **")
 
   const authPath = `/project/${project?.$id}/authentication`;
 
@@ -156,9 +160,9 @@ const UsersPage = () => {
 
       <DataGridProvider<Models.User<any>>
         columns={columns}
-        data={data?.users ?? []}
+        data={users?.users ?? []}
         manualPagination
-        rowCount={data?.total}
+        rowCount={users?.total}
         loading={isLoading}
         state={{
           pagination: { pageIndex: page, pageSize: limit },
