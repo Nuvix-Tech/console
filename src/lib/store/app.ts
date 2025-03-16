@@ -187,6 +187,7 @@ const useApp = create<AppStore>((set, get) => ({
   isDrawerOpen: false,
   isSecondMenuOpen: false,
   scopes: { roles: ["any"], scopes: [] },
+  organization: undefined as any,
   user: undefined as unknown as Models.User<any>,
 
   setIsDrawerOpen: (value: boolean) => set(() => ({ isDrawerOpen: value })),
