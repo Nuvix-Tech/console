@@ -14,6 +14,7 @@ const ConsoleWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) =
   const { account } = sdkForConsole;
   const { replace } = useRouter();
   const setUser = useAppStore.use.setUser();
+  const user = useAppStore.use.user();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -29,7 +30,6 @@ const ConsoleWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) =
   }, []);
 
   console.log("🔥 SOMETHIN IN CONSOLE WRAPPER");
-
   return (
     <QueryClientProvider client={queryClient}>
       {isLoading ? <LoadingUI /> : children}

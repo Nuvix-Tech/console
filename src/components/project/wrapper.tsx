@@ -1,7 +1,6 @@
 "use client";
-
-import { getProjectSdk, sdkForConsole } from "@/lib/sdk";
-import React, { useEffect, useMemo } from "react";
+import { sdkForConsole } from "@/lib/sdk";
+import React, { useEffect } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useAppStore, useProjectStore } from "@/lib/store";
 
@@ -17,35 +16,33 @@ export default function ProjectWrapper({
   const setProjectScopes = useProjectStore.use.setScopes();
   const setUpdateFn = useProjectStore.use.setUpdateFn();
 
-  // const fetcher = useMemo(
-  //   () =>
-  //     [projects, organizations],
-  // );
+  async function fetcher() {
+    let project = await projects.get(id);
+    const org = await organizations.get(project.teamId);
+    const scopes = await organizations.getScopes(project.teamId);
+    return { project, org, scopes };
+  }
 
-  // const { data, isFetching } = useSuspenseQuery({
-  //   queryKey: ["project", id],
-  //   queryFn: () => fetcher(id),
-  // });
+  const { data, isFetching } = useSuspenseQuery({
+    queryKey: ["project", id],
+    queryFn: () => fetcher(),
+  });
 
-  // console.log("Fetching:", isFetching, id, data);
-  console.log("RENDERING THE CONSOLE WRAPPER");
+  console.log("Fetching:", isFetching, id, data);
+  console.log("RENDERING THE CONSOLE WRAPPER", id);
 
   useEffect(() => {
-    async function get() {
-      let project = await projects.get(id);
-      const org = await organizations.get(project.teamId);
-      const scopes = await organizations.getScopes(project.teamId);
-      setProject(project);
-      setOrganization(org);
-      setScopes(scopes);
-      setUpdateFn(async () => {
-        let p = await projects.get(id);
-        setProject(p);
-      });
-      setProjectScopes(scopes);
-    }
-    get();
-  }, [id]);
+    if (!data) return;
+    const { project, org, scopes } = data;
+    setProject(project);
+    setOrganization(org);
+    setScopes(scopes);
+    setUpdateFn(async () => {
+      let p = await projects.get(id);
+      setProject(p);
+    });
+    setProjectScopes(scopes);
+  }, [data]);
 
   return <>{children}</>;
 }

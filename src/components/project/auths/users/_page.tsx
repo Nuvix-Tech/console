@@ -16,34 +16,24 @@ import { useProjectStore } from "@/lib/store";
 
 const UsersPage = () => {
   const project = useProjectStore.use.project?.();
-  const sdk = useProjectStore.use.sdk?.();
+  const sdk = useProjectStore.use.sdk();
   const permissions = useProjectStore.use.permissions?.();
   const setSidebarNull = useProjectStore.use.setSidebarNull();
   const { limit, page, search, hasQuery } = useSearchQuery();
   const { canCreateUsers } = permissions();
-  const [users, setUsers] = useState<{
-    users: Models.User<any>[];
-    total: number;
-  }>({
-    users: [],
-    total: 0,
-  });
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => setSidebarNull("first"), []);
 
-  const fetcher = React.useCallback(async () => {
-    if (!sdk) {
-      return new Promise<never>(() => {});
-    }
+  const fetcher = async () => {
     const queries: string[] = [];
     queries.push(Query.limit(limit), Query.offset((page - 1) * limit));
     return await sdk.users.list(queries, search ?? undefined);
-  }, [sdk, limit, page, search]);
+  };
 
-  useEffect(() => {
-    fetcher();
-  }, [fetcher]);
+  const { data, isFetching } = useSuspenseQuery({
+    queryKey: ["users", page, limit, search],
+    queryFn: fetcher,
+  });
 
   console.log("RERENDERING **");
 
@@ -161,10 +151,10 @@ const UsersPage = () => {
 
       <DataGridProvider<Models.User<any>>
         columns={columns}
-        data={users?.users ?? []}
+        data={data.users ?? []}
         manualPagination
-        rowCount={users?.total}
-        loading={isLoading}
+        rowCount={data.total}
+        loading={isFetching}
         state={{
           pagination: { pageIndex: page, pageSize: limit },
         }}
@@ -172,17 +162,17 @@ const UsersPage = () => {
         {/* <DataGridSkelton loading={loading && !users.total && !hasQuery} /> */}
 
         <EmptyState
-          show={users.total === 0 && !isLoading && !hasQuery}
+          show={data.total === 0 && !isFetching && !hasQuery}
           title="No Users"
           description="No users have been created yet."
         />
 
-        {(users.total > 0 || hasQuery) && (
+        {(data.total > 0 || hasQuery) && (
           <>
             <HStack mb="6" justifyContent="space-between" alignItems="center">
               <Search placeholder="Search by name, email, phone or ID" />
             </HStack>
-            <Table noResults={users.total === 0 && hasQuery} />
+            <Table noResults={data.total === 0 && hasQuery} />
             {/* <PaginationWrapper>
               <SelectLimit />
               <Pagination />

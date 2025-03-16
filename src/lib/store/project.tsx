@@ -38,8 +38,8 @@ interface Sidebar {
 
 interface ProjectStore {
   initialFetching: boolean;
-  project?: Models.Project;
-  sdk?: typeof sdkForProject;
+  project: Models.Project;
+  sdk: typeof sdkForProject;
   scopes: Models.Roles;
   showSidebar: boolean;
   showSubSidebar: boolean;
@@ -67,11 +67,13 @@ const useProject = create<ProjectStore>((set, get) => ({
     middle: null,
     last: null,
   },
+  sdk: undefined as any,
+  project: null as any,
   update: async () => {},
   setSdk: (sdk) => set({ sdk }),
   setProject: (project) => {
     set({
-      project,
+      project: project,
       sdk: getProjectSdk(project.$id),
       initialFetching: false,
     });
