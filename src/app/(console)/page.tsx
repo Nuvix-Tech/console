@@ -5,12 +5,10 @@ import { Spinner } from "@chakra-ui/react";
 import { Models } from "@nuvix/console";
 import { useRouter } from "@bprogress/next";
 import { useEffect } from "react";
-import { useAppStore } from "@/lib/store";
+import { useApp } from "@/lib/store";
 
 export default function Page() {
-  const user = useAppStore.use.user();
-  const setUser = useAppStore.use.setUser();
-  const setScopes = useAppStore.use.setScopes();
+  const { user, setUser, setScopes } = useApp((state) => state);
   const { organizations, account } = sdkForConsole;
 
   const { replace } = useRouter();

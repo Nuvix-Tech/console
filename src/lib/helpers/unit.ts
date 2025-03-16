@@ -1,5 +1,4 @@
-import { proxy, useSnapshot } from "valtio";
-import { useRef } from "react";
+import { create } from "zustand";
 
 type Unit<T = string> = {
   name: T;
@@ -12,9 +11,10 @@ type ValueUnitState<T = string> = {
   baseValue: number;
   setUnit: (newUnit: T) => void;
   setValue: (newValue: number) => void;
+  units: Unit<T>[];
 };
 
-function createValueUnitStore<T = string>(initialValue: number, units: Unit<T>[]) {
+function createValueUnitStore<T = string>(initialValue: number, units: Unit<T>[], set: (arg0: Partial<ValueUnitState<T>>) => void, get: () => ValueUnitState<T>) {
   if (!units.some((u) => u.value === 1)) {
     throw new Error("Units must have a value of 1");
   }
@@ -23,33 +23,38 @@ function createValueUnitStore<T = string>(initialValue: number, units: Unit<T>[]
   }
 
   const sortedUnits = [...units].sort((a, b) => b.value - a.value);
-  const state = proxy<ValueUnitState<T>>({
+  const state: ValueUnitState<T> = {
     value: initialValue,
     unit: sortedUnits[sortedUnits.length - 1].name,
     baseValue: initialValue * sortedUnits[sortedUnits.length - 1].value,
     setUnit(newUnit: T) {
-      const prevUnit = units.find((u) => u.name === state.unit);
+      const prevUnit = units.find((u) => u.name === get().unit);
       const newUnitObj = units.find((u) => u.name === newUnit);
       if (!prevUnit || !newUnitObj) return;
 
-      const unitInBase = state.value * prevUnit.value;
-      state.unit = newUnit;
-      state.value = unitInBase / newUnitObj.value;
-      state.baseValue = unitInBase;
+      const unitInBase = get().value * prevUnit.value;
+      set({
+        unit: newUnit,
+        value: unitInBase / newUnitObj.value,
+        baseValue: unitInBase,
+      });
     },
     setValue(newValue: number) {
-      state.value = newValue;
-      state.baseValue = newValue * (units.find((u) => u.name === state.unit)?.value || 1);
+      set({
+        value: newValue,
+        baseValue: newValue * (units.find((u) => u.name === get().unit)?.value || 1),
+      });
     },
-  });
+    units
+  };
 
-  return { state, units };
+  return { ...state, units };
 }
 
 function useValueUnitPair<T = string>(initialValue: number, units: Unit<T>[]) {
-  const storeRef = useRef(createValueUnitStore(initialValue, units));
-  const snap = useSnapshot(storeRef.current.state);
-  return { ...snap, ...storeRef.current };
+  const useStore = create<ValueUnitState<T>>((set, get) => createValueUnitStore(initialValue, units, set, get));
+  const state = useStore();
+  return { ...state };
 }
 
 function useTimeUnitPair(initialValue = 0) {

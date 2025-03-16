@@ -9,7 +9,8 @@ type WithSelectors<S> = S extends { getState: () => infer T }
   ? S & { use: { [K in keyof T]: () => T[K] } }
   : never;
 
-export const createSelectors = <S extends UseBoundStore<StoreApi<object>>>(_store: S) => {
+export const createSelectors = <S extends UseBoundStore<StoreApi<object>>>(_store: S): WithSelectors<typeof _store> => {
+  if (typeof window === "undefined") return {} as WithSelectors<typeof _store>;
   let store = _store as WithSelectors<typeof _store>;
   store.use = {};
   for (let k of Object.keys(store.getState())) {

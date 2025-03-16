@@ -1,3 +1,4 @@
+"use client";
 import type { Models } from "@nuvix/console";
 import React from "react";
 import { getProjectSdk, sdkForProject } from "../sdk";

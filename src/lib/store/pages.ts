@@ -1,3 +1,4 @@
+"use client";
 import { Models } from "@nuvix/console";
 import { create } from "zustand";
 import { createSelectors } from ".";

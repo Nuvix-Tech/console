@@ -1,3 +1,4 @@
+"use client";
 import { create } from "zustand";
 import { Models } from "@nuvix/console";
 import { createSelectors } from ".";
@@ -187,8 +188,8 @@ const useApp = create<AppStore>((set, get) => ({
   isDrawerOpen: false,
   isSecondMenuOpen: false,
   scopes: { roles: ["any"], scopes: [] },
-  organization: undefined as any,
-  user: undefined as unknown as Models.User<any>,
+  organization: null as any,
+  user: null as unknown as Models.User<any>,
 
   setIsDrawerOpen: (value: boolean) => set(() => ({ isDrawerOpen: value })),
   setIsSecondMenuOpen: (value: boolean) => set(() => ({ isSecondMenuOpen: value })),
