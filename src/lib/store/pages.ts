@@ -23,7 +23,7 @@ interface Updatable {
  * Store for the user page.
  */
 interface UserStore extends PageState, Updatable {
-  user: Models.User<Record<string, any>>;
+  user?: Models.User<Record<string, any>>;
   setUser: (user?: Models.User<Record<string, any>>) => void;
 }
 
@@ -42,7 +42,7 @@ export const useUserStore = createSelectors(useUser);
  * Store for the team page.
  */
 interface TeamStore extends PageState, Updatable {
-  team: Models.Team<Record<string, any>>;
+  team?: Models.Team<Record<string, any>>;
   setTeam: (team?: Models.Team<Record<string, any>>) => void;
 }
 
@@ -61,7 +61,7 @@ export const useTeamStore = createSelectors(useTeam);
  * Store for the database page.
  */
 interface DatabaseStore extends PageState, Updatable {
-  database: Models.Database;
+  database?: Models.Database;
   setDatabase: (database?: Models.Database) => void;
 }
 
@@ -99,7 +99,7 @@ export const useCollectionStore = createSelectors(useCollection);
  * Store for the document page.
  */
 interface DocumentStore<T = Models.Document> extends PageState, Updatable {
-  document: T;
+  document?: T;
   setDocument: (document?: T) => void;
 }
 

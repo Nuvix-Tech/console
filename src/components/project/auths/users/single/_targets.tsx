@@ -18,11 +18,11 @@ const TargetPage = () => {
   const authPath = `/project/${project?.$id}/authentication`;
 
   const fetcher = async () => {
-    return await sdk.users.listTargets(user.$id);
+    return await sdk.users.listTargets(user!.$id);
   };
 
   const { data, isFetching } = useSuspenseQuery({
-    queryKey: ["targets", user.$id],
+    queryKey: ["targets", user?.$id],
     queryFn: fetcher,
   });
 

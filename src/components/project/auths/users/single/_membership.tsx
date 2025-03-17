@@ -17,7 +17,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 const MembershipPage = () => {
   const project = useProjectStore.use.project?.();
   const sdk = useProjectStore.use.sdk?.();
-  const user = useUserStore.use.user();
+  const user = useUserStore.use.user?.();
   const [deleting, setDeleting] = useState(false);
   const { addToast } = useToast();
   const confirm = useConfirm();
@@ -25,11 +25,11 @@ const MembershipPage = () => {
   const authPath = `/project/${project?.$id}/authentication`;
 
   const fetcher = async () => {
-    return await sdk.users.listMemberships(user.$id);
+    return await sdk.users.listMemberships(user!.$id);
   };
 
   const { data, isFetching, refetch } = useSuspenseQuery({
-    queryKey: ["memberships", user.$id],
+    queryKey: ["memberships", user?.$id],
     queryFn: fetcher,
   });
 

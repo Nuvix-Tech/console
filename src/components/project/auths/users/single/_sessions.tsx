@@ -20,11 +20,11 @@ const SessionPage = () => {
   const authPath = `/project/${project?.$id}/authentication`;
 
   const fetcher = async () => {
-    return await sdk.users.listSessions(user.$id);
+    return await sdk.users.listSessions(user!.$id);
   };
 
   const { data, isFetching } = useSuspenseQuery({
-    queryKey: ["sessions", user.$id],
+    queryKey: ["sessions", user?.$id],
     queryFn: fetcher,
   });
 
