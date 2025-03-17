@@ -94,7 +94,7 @@ const SessionPage = () => {
           description="There are currently no active sessions for this user."
         />
 
-        {(data.total > 0) && (
+        {data.total > 0 && (
           <>
             <Table />
           </>

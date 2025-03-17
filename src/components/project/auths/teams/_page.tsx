@@ -5,42 +5,33 @@ import React, { useEffect } from "react";
 import { Row } from "@/ui/components";
 import { ColumnDef } from "@tanstack/react-table";
 import { Tooltip } from "@/components/cui/tooltip";
-import { Text } from "@chakra-ui/react";
+import { HStack, Text } from "@chakra-ui/react";
 import { formatDate } from "@/lib/utils";
-import { DataGrid, DataGridSkelton, SearchAndCreate } from "@/ui/modules/data-grid";
-import { EmptySearch } from "@/ui/modules/layout";
+import { DataGridProvider, Pagination, Search, SelectLimit, Table } from "@/ui/modules/data-grid";
 import { useProjectStore } from "@/lib/store";
 import { EmptyState } from "@/components";
-import { PageContainer, PageHeading } from "@/components/others";
+import { CreateButton, PageContainer, PageHeading } from "@/components/others";
 import { useSearchQuery } from "@/hooks/useQuery";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 const Page = () => {
   const sdk = useProjectStore.use.sdk?.();
   const project = useProjectStore.use.project?.();
   const setSidebarNull = useProjectStore.use.setSidebarNull();
-  const [loading, setLoading] = React.useState(true);
-  const [teams, setTeams] = React.useState<Models.TeamList<any>>({
-    teams: [],
-    total: 0,
-  });
-  const { limit, page, search } = useSearchQuery();
+  const { limit, page, search, hasQuery } = useSearchQuery();
 
   useEffect(() => setSidebarNull("first"), []);
 
-  useEffect(() => {
-    if (!sdk) return;
-    setLoading(true);
+  const fetcher = async () => {
     const queries: string[] = [];
+    queries.push(Query.limit(limit), Query.offset((page - 1) * limit));
+    return await sdk.teams.list(queries, search ?? undefined);
+  };
 
-    queries.push(Query.limit(limit), Query.offset((page - 1) * limit), Query.orderDesc(""));
-    const fetchTeams = async () => {
-      const teams = await sdk.teams.list(queries, search ?? undefined);
-      setTeams(teams);
-      setLoading(false);
-    };
-
-    fetchTeams();
-  }, [sdk, limit, page, search]);
+  const { data, isFetching } = useSuspenseQuery({
+    queryKey: ["teams", page, limit, search],
+    queryFn: fetcher,
+  });
 
   const authPath = `/project/${project?.$id}/authentication`;
 
@@ -84,36 +75,39 @@ const Page = () => {
       <PageHeading
         heading="Teams"
         description="Manage and organize users into teams for better access control and collaboration"
+        right={<CreateButton hasPermission={true} label="Create Team" />}
       />
 
-      {loading && !teams.total ? (
-        <DataGridSkelton />
-      ) : teams.total > 0 || !!search || page > 1 ? (
-        <>
-          <SearchAndCreate button={{ text: "Create Team" }} placeholder="Search by name" />
+      <DataGridProvider<Models.Team<any>>
+        columns={columns}
+        data={data.teams}
+        manualPagination
+        rowCount={data.total}
+        loading={isFetching}
+        state={{
+          pagination: { pageIndex: page, pageSize: limit },
+        }}
+      >
+        <EmptyState
+          show={data.total === 0 && !isFetching && !hasQuery}
+          title="No teams found"
+          description="Create a team to organize users for better access control and collaboration."
+        />
 
-          {teams.total > 0 ? (
-            <DataGrid<Models.Team<any>>
-              columns={columns}
-              data={teams.teams}
-              manualPagination
-              rowCount={teams.total}
-              loading={loading}
-              state={{ pagination: { pageIndex: page, pageSize: limit } }}
-            />
-          ) : (
-            search && (
-              <EmptySearch
-                title={`Sorry, we couldn't find '${search}'`}
-                description="There are no teams that match your search."
-                clearSearch
-              />
-            )
-          )}
-        </>
-      ) : (
-        <EmptyState show title="No teams found" />
-      )}
+        {(data.total > 0 || hasQuery) && (
+          <>
+            <HStack justifyContent="space-between" alignItems="center">
+              <Search placeholder="Search by ID" />
+            </HStack>
+            <Table noResults={data.total === 0 && hasQuery} />
+
+            <HStack justifyContent="space-between" alignItems="center">
+              <SelectLimit />
+              <Pagination />
+            </HStack>
+          </>
+        )}
+      </DataGridProvider>
     </PageContainer>
   );
 };

@@ -5,6 +5,7 @@ import { useProjectStore, useTeamStore } from "@/lib/store";
 import { Line, Row } from "@/ui/components";
 import { SidebarGroup } from "@/ui/modules/layout/navigation";
 import { Text } from "@chakra-ui/react";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import React, { PropsWithChildren, useEffect } from "react";
 
@@ -23,15 +24,18 @@ const Layout: React.FC<PropsWithChildren<{ teamId: string }>> = ({ children, tea
     });
   }, []);
 
-  useEffect(() => {
-    if (!sdk) return;
-    const fetchTeam = async () => {
-      const team = await sdk.teams.get(teamId);
-      setTeam(team);
-    };
+  const fetcher = async () => {
+    return await sdk.teams.get(teamId);
+  };
 
-    fetchTeam();
-  }, [sdk, teamId]);
+  const { data } = useSuspenseQuery({
+    queryKey: ["team", teamId],
+    queryFn: fetcher,
+  });
+
+  useEffect(() => {
+    setTeam(data);
+  }, [data]);
 
   return <>{children}</>;
 };

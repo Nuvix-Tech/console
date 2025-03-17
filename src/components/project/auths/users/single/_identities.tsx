@@ -57,7 +57,7 @@ const IdentityPage = () => {
           description="No identities have been created yet."
         />
 
-        {(data.total > 0) && (
+        {data.total > 0 && (
           <>
             <Table />
           </>

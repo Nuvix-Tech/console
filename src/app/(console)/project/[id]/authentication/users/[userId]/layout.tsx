@@ -9,9 +9,9 @@ export default async function ({
 }: PropsWithChildren & PropsWithParams<{ userId: string }>) {
   const { userId } = await params;
 
-  return <Suspense fallback={<LayoutSkelton />}>
-    <UserLayout userId={userId}>
-      {children}
-    </UserLayout>
-  </Suspense>;
+  return (
+    <Suspense fallback={<LayoutSkelton />}>
+      <UserLayout userId={userId}>{children}</UserLayout>
+    </Suspense>
+  );
 }

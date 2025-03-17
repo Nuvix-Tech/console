@@ -68,7 +68,7 @@ const TargetPage = () => {
           description="No targets have been created yet."
         />
 
-        {(data.total > 0) && (
+        {data.total > 0 && (
           <>
             <Table />
           </>

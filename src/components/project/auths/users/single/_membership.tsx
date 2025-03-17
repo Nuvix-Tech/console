@@ -144,7 +144,7 @@ const MembershipPage = () => {
           description="This user is not a member of any teams yet."
         />
 
-        {(data.total > 0) && (
+        {data.total > 0 && (
           <>
             <Table />
           </>

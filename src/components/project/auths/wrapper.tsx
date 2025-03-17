@@ -1,5 +1,5 @@
 "use client";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { Line } from "@/ui/components";
 import { SidebarGroup } from "@/ui/modules/layout/navigation";
 import { useEffect } from "react";
@@ -10,11 +10,11 @@ function Wrapper({
 }: {
   children: React.ReactNode;
 }) {
-  const project = useProjectStore.use.project?.();
+  const params = useParams();
   const setSidebar = useProjectStore.use.setSidebar?.();
   const pathname = usePathname() ?? "";
 
-  const resolveHref = (path: string) => `/project/${project?.$id}/authentication/${path}`;
+  const resolveHref = (path: string) => `/project/${params.id}/authentication/${path}`;
   const resolveIsSelected = (value: string) => pathname.includes(resolveHref(value));
 
   const middle = (

@@ -1,49 +1,42 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Models, Query } from "@nuvix/console";
 import { ColumnDef } from "@tanstack/react-table";
 import { Row, useConfirm, useToast } from "@/ui/components";
 import { Avatar } from "@/components/cui/avatar";
-import { IconButton, Text } from "@chakra-ui/react";
+import { HStack, IconButton, Text } from "@chakra-ui/react";
 import { Tooltip } from "@/components/cui/tooltip";
 import { formatDate } from "@/lib/utils";
 import { LuTrash2 } from "react-icons/lu";
-import { DataGrid, DataGridSkelton, SearchAndCreate } from "@/ui/modules/data-grid";
-import { EmptySearch } from "@/ui/modules/layout";
+import { DataGridProvider, Pagination, Search, SelectLimit, Table } from "@/ui/modules/data-grid";
 import { useProjectStore, useTeamStore } from "@/lib/store";
 import { useSearchQuery } from "@/hooks/useQuery";
 import { PageContainer, PageHeading } from "@/components/others";
 import { EmptyState } from "@/components";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 const MembersPage = () => {
-  const [members, setMembers] = useState<Models.MembershipList>({
-    memberships: [],
-    total: 0,
-  });
-  const [loading, setLoading] = React.useState(true);
   const sdk = useProjectStore.use.sdk?.();
   const project = useProjectStore.use.project?.();
   const team = useTeamStore.use.team?.();
+  const [deleting, setDeleting] = useState(false);
   const { addToast } = useToast();
   const confirm = useConfirm();
 
-  const { limit, page, search } = useSearchQuery();
+  const { limit, page, search, hasQuery } = useSearchQuery();
 
   const authPath = `/project/${project?.$id}/authentication`;
 
-  async function get(queries?: string[], search?: string) {
-    setLoading(true);
-    let members = await sdk!.teams.listMemberships(team?.$id!, queries, search);
-    setMembers(members!);
-    setLoading(false);
-  }
-
-  useEffect(() => {
-    if (!team && !sdk) return;
+  const fetcher = async () => {
     const queries: string[] = [];
-    queries.push(Query.limit(limit), Query.offset((page - 1) * limit), Query.orderDesc(""));
-    get(queries, search ?? undefined);
-  }, [team, sdk, limit, page, search]);
+    queries.push(Query.limit(limit), Query.offset((page - 1) * limit));
+    return await sdk.teams.listMemberships(team?.$id!, queries, search ?? undefined);
+  };
+
+  const { data, isFetching, refetch } = useSuspenseQuery({
+    queryKey: ["members", page, limit, search],
+    queryFn: fetcher,
+  });
 
   const onDeleteMembersip = async (member: Models.Membership) => {
     if (
@@ -56,21 +49,21 @@ const MembersPage = () => {
         },
       })
     ) {
-      setLoading(true);
+      setDeleting(true);
       try {
         await sdk!.teams.deleteMembership(member.teamId, member.$id);
         addToast({
           variant: "success",
           message: "Membership successfully deleted.",
         });
-        await get();
+        await refetch();
       } catch (e: any) {
         addToast({
           variant: "danger",
           message: e.message,
         });
       } finally {
-        setLoading(false);
+        setDeleting(false);
       }
     }
   };
@@ -124,7 +117,7 @@ const MembersPage = () => {
           <IconButton
             size={"sm"}
             variant={"ghost"}
-            disabled={loading}
+            disabled={deleting}
             onClick={(e) => {
               e.preventDefault();
               onDeleteMembersip(props.row.original);
@@ -141,34 +134,36 @@ const MembersPage = () => {
     <PageContainer>
       <PageHeading heading="Members" description="Manage the members of this team." />
 
-      {loading && !members.total ? (
-        <DataGridSkelton />
-      ) : members.total > 0 || !!search || page > 1 ? (
-        <>
-          <SearchAndCreate button={{ text: "Create Membership" }} placeholder="Search by ID" />
+      <DataGridProvider<Models.Membership>
+        columns={columns}
+        data={data.memberships}
+        manualPagination
+        rowCount={data.total}
+        loading={isFetching}
+        state={{
+          pagination: { pageIndex: page, pageSize: limit },
+        }}
+      >
+        <EmptyState
+          show={data.total === 0 && !isFetching && !hasQuery}
+          title="No members found"
+          description="Add members to this team to collaborate and manage access control."
+        />
 
-          {members.total > 0 ? (
-            <DataGrid<Models.Membership>
-              columns={columns}
-              data={members.memberships}
-              rowCount={members.total}
-              loading={loading}
-              manualPagination
-              state={{ pagination: { pageIndex: page, pageSize: limit } }}
-            />
-          ) : (
-            search && (
-              <EmptySearch
-                title={`Sorry, we couldn't find '${search}'`}
-                description="There are no members that match your search."
-                clearSearch
-              />
-            )
-          )}
-        </>
-      ) : (
-        <EmptyState show title="No Members" description="No members have been created yet." />
-      )}
+        {(data.total > 0 || hasQuery) && (
+          <>
+            <HStack justifyContent="space-between" alignItems="center">
+              <Search placeholder="Search by ID" />
+            </HStack>
+            <Table noResults={data.total === 0 && hasQuery} />
+
+            <HStack justifyContent="space-between" alignItems="center">
+              <SelectLimit />
+              <Pagination />
+            </HStack>
+          </>
+        )}
+      </DataGridProvider>
     </PageContainer>
   );
 };
