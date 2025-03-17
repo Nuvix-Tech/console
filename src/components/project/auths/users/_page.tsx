@@ -35,8 +35,6 @@ const UsersPage = () => {
     queryFn: fetcher,
   });
 
-  console.log("RERENDERING **");
-
   const authPath = `/project/${project?.$id}/authentication`;
 
   const columns: ColumnDef<Models.User<any>>[] = [
@@ -145,7 +143,7 @@ const UsersPage = () => {
     <PageContainer>
       <PageHeading
         heading="Users"
-        description="Manage your project’s users."
+        description="Manage and monitor user accounts, verify status, and control access to your project."
         right={<CreateButton hasPermission={canCreateUsers} label="Create User" />}
       />
 
