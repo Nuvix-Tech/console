@@ -1,9 +1,9 @@
 "use client";
 import { Models, Query } from "@nuvix/console";
 import React, { useEffect } from "react";
-import { Column, Grid } from "@/ui/components";
-import { DataGridProvider, Pagination, SelectLimit, Table } from "@/ui/modules/data-grid";
-import { CreateButton, IDChip, PageContainer, PageHeading } from "@/components/others";
+import { Grid } from "@/ui/components";
+import { DataGridProvider, Pagination, SelectLimit } from "@/ui/modules/data-grid";
+import { CreateButton, PageContainer, PageHeading } from "@/components/others";
 import { useProjectStore } from "@/lib/store";
 import { useSearchQuery } from "@/hooks/useQuery";
 import { EmptyState } from "@/components/_empty_state";
@@ -34,8 +34,6 @@ const DatabasePage = () => {
     queryKey: ["users", page, limit, search],
     queryFn: fetcher,
   });
-
-  if (!data) return null;
 
   const path = `/project/${project?.$id}/databases`;
 

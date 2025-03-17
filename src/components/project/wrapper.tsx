@@ -23,13 +23,10 @@ export default function ProjectWrapper({
     return { project, org, scopes };
   }
 
-  const { data, isFetching } = useSuspenseQuery({
+  const { data } = useSuspenseQuery({
     queryKey: ["project", id],
     queryFn: () => fetcher(),
   });
-
-  console.log("Fetching:", isFetching, id, data);
-  console.log("RENDERING THE CONSOLE WRAPPER", id);
 
   useEffect(() => {
     if (!data) return;

@@ -143,7 +143,7 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
             selected={pathname === `/project/${id}/settings`}
           />
 
-          <SidebarSmallButton
+          {/* <SidebarSmallButton
             item={{
               name: "Appearance",
               onClick: () => {
@@ -154,7 +154,7 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
               icon: <span className="icon-sun" />,
             }}
             showFullSidebar={!showSubSidebar || !!alwaysFull}
-          />
+          /> */}
         </Column>
       </Column>
     </>

@@ -6,3 +6,4 @@ export * from "./_settings_delete_project";
 export * from "./_header_card";
 export * from "./_header_org";
 export * from "./_header_project";
+export * from "./_main_top";
