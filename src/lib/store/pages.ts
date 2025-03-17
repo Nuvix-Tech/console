@@ -80,7 +80,7 @@ export const useDatabaseStore = createSelectors(useDatabase);
  * Store for the collection page.
  */
 interface CollectionStore extends PageState, Updatable {
-  collection: Models.Collection;
+  collection?: Models.Collection;
   setCollection: (collection?: Models.Collection) => void;
 }
 

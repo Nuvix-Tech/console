@@ -17,7 +17,7 @@ export const DocumentPage: React.FC<Props> = () => {
   return (
     <>
       <PageContainer>
-        <DataMapper attributes={collection.attributes as any} document={document} />
+        <DataMapper attributes={collection?.attributes ?? ([] as any)} document={document} />
       </PageContainer>
     </>
   );

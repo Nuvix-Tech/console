@@ -24,7 +24,7 @@ export const CollectionLayout: React.FC<Props> = ({ children, databaseId, collec
       const coll = await sdk?.databases.getCollection(databaseId, collectionId);
       setCollection(coll);
     });
-  }, [setRefreshFn]);
+  }, []);
 
   const fetcher = async () => {
     return await sdk.databases.getCollection(databaseId, collectionId);
