@@ -10,12 +10,13 @@ function Wrapper({
 }: {
   children: React.ReactNode;
 }) {
-  const params = useParams();
+  const { id } = useParams();
   const setSidebar = useProjectStore.use.setSidebar?.();
-  const pathname = usePathname() ?? "";
+  const pathname = usePathname();
 
-  const resolveHref = (path: string) => `/project/${params.id}/authentication/${path}`;
-  const resolveIsSelected = (value: string) => pathname.includes(resolveHref(value));
+  const basePath = `/project/${id}/authentication/`;
+  const resolveHref = (path: string) => `${basePath}${path}`;
+  const resolveIsSelected = (path: string) => pathname.includes(resolveHref(path));
 
   const middle = (
     <>
@@ -43,18 +44,22 @@ function Wrapper({
           {
             label: "Security",
             href: resolveHref("security"),
+            isSelected: resolveIsSelected("security"),
           },
           {
             label: "Templates",
             href: resolveHref("templates"),
+            isSelected: resolveIsSelected("templates"),
           },
           {
             label: "Usage",
             href: resolveHref("usage"),
+            isSelected: resolveIsSelected("usage"),
           },
           {
             label: "Settings",
             href: resolveHref("settings"),
+            isSelected: resolveIsSelected("settings"),
           },
         ]}
       />
@@ -63,7 +68,7 @@ function Wrapper({
 
   useEffect(() => {
     setSidebar({ middle });
-  }, []);
+  }, [middle, setSidebar]);
 
   return <>{children}</>;
 }
