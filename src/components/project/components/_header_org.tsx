@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Row, Skeleton } from "@/ui/components";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -79,6 +79,8 @@ export function HeaderOrganization() {
       </PopoverContent>
     </Popover>
   ) : (
-    <Skeleton />
+    <Row width="128">
+      <Skeleton shape="line" fillWidth height="xl" />
+    </Row>
   );
 }

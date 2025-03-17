@@ -19,17 +19,18 @@ export const SelectLimit = () => {
   return (
     <>
       <Row vertical="center" gap="12">
-        <Select
-          width="80"
-          maxWidth={20}
-          labelAsPlaceholder
-          disabled={loading}
-          value={table.getState().pagination.pageSize.toString()}
-          onSelect={(value) => {
-            onPageSizeChange(parseInt(value));
-          }}
-          options={[...pages.map((page) => ({ label: page, value: page }))]}
-        />
+        <Row width={6}>
+          <Select
+            height="s"
+            labelAsPlaceholder
+            disabled={loading}
+            value={table.getState().pagination.pageSize.toString()}
+            onSelect={(value) => {
+              onPageSizeChange(parseInt(value));
+            }}
+            options={[...pages.map((page) => ({ label: page, value: page }))]}
+          />
+        </Row>
         <p className="text"> Total results: {table.getRowCount()}</p>
       </Row>
     </>

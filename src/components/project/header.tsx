@@ -1,6 +1,4 @@
 "use client";
-
-import { sdkForConsole } from "@/lib/sdk";
 import { Badge, Column, Logo, NavIcon, Row } from "@/ui/components";
 import { usePathname } from "next/navigation";
 import type React from "react";
@@ -73,9 +71,9 @@ const ProjectHeader: React.FC<HeaderProps> = () => {
         /> */}
         <Row fillWidth vertical="center" horizontal="space-between">
           <Row vertical="center" gap={"2"}>
-            <span className="text-gray-300 dark:text-gray-700 text-2xl">/</span>
+            <span className="text-[var(--neutral-alpha-strong)] text-2xl">/</span>
             <HeaderOrganization />
-            <span className="text-gray-300 dark:text-gray-700 text-2xl">/</span>
+            <span className="text-[var(--neutral-alpha-strong)] text-2xl">/</span>
             <HeaderProject />
           </Row>
           <Row fillWidth vertical="center" horizontal="end" gap="12">
