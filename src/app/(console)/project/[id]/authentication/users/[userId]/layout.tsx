@@ -1,6 +1,7 @@
 import { UserLayout } from "@/components/project/auths/users";
+import { LayoutSkelton } from "@/components/skeletons";
 import { PropsWithParams } from "@/types";
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, Suspense } from "react";
 
 export default async function ({
   params,
@@ -8,5 +9,9 @@ export default async function ({
 }: PropsWithChildren & PropsWithParams<{ userId: string }>) {
   const { userId } = await params;
 
-  return <UserLayout userId={userId}>{children}</UserLayout>;
+  return <Suspense fallback={<LayoutSkelton />}>
+    <UserLayout userId={userId}>
+      {children}
+    </UserLayout>
+  </Suspense>;
 }

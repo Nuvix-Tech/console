@@ -29,7 +29,7 @@ const MembershipPage = () => {
   };
 
   const { data, isFetching, refetch } = useSuspenseQuery({
-    queryKey: ["user", user.$id],
+    queryKey: ["memberships", user.$id],
     queryFn: fetcher,
   });
 

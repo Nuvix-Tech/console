@@ -1,19 +1,15 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Models } from "@nuvix/console";
 import { ColumnDef } from "@tanstack/react-table";
 import { useToast } from "@/ui/components";
-import { DataGrid, DataGridSkelton } from "@/ui/modules/data-grid";
+import { DataGridProvider, Table } from "@/ui/modules/data-grid";
 import { useProjectStore, useUserStore } from "@/lib/store";
 import { EmptyState } from "@/components/_empty_state";
 import { PageContainer, PageHeading } from "@/components/others";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 const TargetPage = () => {
-  const [targets, setTargets] = useState<Models.TargetList>({
-    targets: [],
-    total: 0,
-  });
-  const [loading, setLoading] = React.useState(true);
   const project = useProjectStore.use.project?.();
   const sdk = useProjectStore.use.sdk?.();
   const user = useUserStore.use.user?.();
@@ -21,17 +17,14 @@ const TargetPage = () => {
 
   const authPath = `/project/${project?.$id}/authentication`;
 
-  async function get() {
-    setLoading(true);
-    let targets = await sdk!.users.listTargets(user?.$id!);
-    setTargets(targets!);
-    setLoading(false);
-  }
+  const fetcher = async () => {
+    return await sdk.users.listTargets(user.$id);
+  };
 
-  useEffect(() => {
-    if (!user && !sdk) return;
-    get();
-  }, [user, sdk]);
+  const { data, isFetching } = useSuspenseQuery({
+    queryKey: ["targets", user.$id],
+    queryFn: fetcher,
+  });
 
   const columns: ColumnDef<Models.Target>[] = [
     {
@@ -63,19 +56,24 @@ const TargetPage = () => {
         description="Manage authentication targets associated with this user. Targets represent the different authentication methods or providers linked to user accounts."
       />
 
-      {loading && !targets.total ? (
-        <DataGridSkelton />
-      ) : targets.total > 0 ? (
-        <DataGrid<Models.Target>
-          columns={columns}
-          data={targets.targets}
-          rowCount={targets.total}
-          loading={loading}
-          showPagination={false}
+      <DataGridProvider<Models.Target>
+        columns={columns}
+        data={data.targets}
+        rowCount={data.total}
+        loading={isFetching}
+      >
+        <EmptyState
+          show={data.total === 0 && !isFetching}
+          title="No Targets"
+          description="No targets have been created yet."
         />
-      ) : (
-        <EmptyState show title="No Targets" description="No targets have been created yet." />
-      )}
+
+        {(data.total > 0) && (
+          <>
+            <Table />
+          </>
+        )}
+      </DataGridProvider>
     </PageContainer>
   );
 };
