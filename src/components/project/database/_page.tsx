@@ -1,9 +1,7 @@
 "use client";
 import { Models, Query } from "@nuvix/console";
 import React, { useEffect } from "react";
-import { ColumnDef } from "@tanstack/react-table";
-import { Tooltip } from "@/components/cui/tooltip";
-import { formatDate } from "@/lib/utils";
+import { Column, Grid } from "@/ui/components";
 import { DataGridProvider, Pagination, SelectLimit, Table } from "@/ui/modules/data-grid";
 import { CreateButton, IDChip, PageContainer, PageHeading } from "@/components/others";
 import { useProjectStore } from "@/lib/store";
@@ -11,6 +9,7 @@ import { useSearchQuery } from "@/hooks/useQuery";
 import { EmptyState } from "@/components/_empty_state";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { HStack } from "@chakra-ui/react";
+import { DatabaseCard } from "./components";
 
 const DatabasePage = () => {
   const setSidebarNull = useProjectStore.use.setSidebarNull();
@@ -36,52 +35,9 @@ const DatabasePage = () => {
     queryFn: fetcher,
   });
 
-  const path = `/project/${project?.$id}/databases`;
+  if (!data) return null;
 
-  const columns: ColumnDef<Models.Database>[] = [
-    {
-      header: "ID",
-      accessorKey: "$id",
-      minSize: 240,
-      cell(props) {
-        return <IDChip id={props.getValue<string>()} hideIcon />;
-      },
-      meta: {
-        href: (row) => `${path}/${row.$id}`,
-      },
-    },
-    {
-      header: "Name",
-      accessorKey: "name",
-      minSize: 150,
-    },
-    {
-      header: "Created At",
-      accessorKey: "$createdAt",
-      minSize: 180,
-      cell(props) {
-        const date = formatDate(props.getValue<string>());
-        return (
-          <Tooltip showArrow content={date}>
-            <span>{date}</span>
-          </Tooltip>
-        );
-      },
-    },
-    {
-      header: "Updated At",
-      accessorKey: "$updatedAt",
-      minSize: 180,
-      cell(props) {
-        const date = formatDate(props.getValue<string>());
-        return (
-          <Tooltip showArrow content={date}>
-            <span>{date}</span>
-          </Tooltip>
-        );
-      },
-    },
-  ];
+  const path = `/project/${project?.$id}/databases`;
 
   return (
     <PageContainer>
@@ -92,8 +48,8 @@ const DatabasePage = () => {
       />
 
       <DataGridProvider<Models.Database>
-        columns={columns}
-        data={data.databases}
+        columns={[]}
+        data={data.databases ?? []}
         manualPagination
         rowCount={data.total}
         loading={isFetching}
@@ -109,8 +65,11 @@ const DatabasePage = () => {
 
         {(data.total > 0 || hasQuery) && (
           <>
-            <Table noResults={data.total === 0 && hasQuery} />
-
+            <Grid gap="l" marginTop="l" columns={2} fillWidth>
+              {data.databases?.map((database) => (
+                <DatabaseCard database={database} key={database.$id} />
+              ))}
+            </Grid>
             <HStack justifyContent="space-between" alignItems="center">
               <SelectLimit />
               <Pagination />
