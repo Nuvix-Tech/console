@@ -11,10 +11,8 @@ import {
   ColumnSelector,
   DataActionBar,
   DataGridProvider,
-  DataGridSkelton,
   Filter,
   Pagination,
-  PaginationWrapper,
   SelectLimit,
   Table,
 } from "@/ui/modules/data-grid";
@@ -23,6 +21,7 @@ import { LuTrash2 } from "react-icons/lu";
 import { EmptyState } from "@/components";
 import { useSearchQuery } from "@/hooks/useQuery";
 import { useCollectionStore, useDatabaseStore, useProjectStore } from "@/lib/store";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 type Props = {
   databaseId: string;
@@ -35,34 +34,24 @@ const CollectionPage: React.FC<Props> = ({ databaseId, collectionId }: Props) =>
   const permissions = useProjectStore.use.permissions();
   const collection = useCollectionStore.use.collection?.();
   const database = useDatabaseStore.use.database?.();
-
-  const [loading, setLoading] = React.useState(true);
-  const [documentList, setDocumentList] = React.useState<Models.DocumentList<any>>({
-    documents: [],
-    total: 0,
-  });
+  const [deleting, setDeleting] = React.useState(false);
   const { limit, page, hasQuery } = useSearchQuery();
   const confirm = useConfirm();
   const { addToast } = useToast();
   const { canCreateDocuments, canDeleteDocuments } = permissions();
 
-  const get = async () => {
-    if (!sdk || !databaseId || !collectionId) return;
-    setLoading(true);
-    try {
-      const queries: string[] = [Query.limit(limit), Query.offset((page - 1) * limit)];
-      const docs = await sdk.databases.listDocuments(databaseId, collectionId, queries);
-      setDocumentList(docs);
-    } finally {
-      setLoading(false);
-    }
+  const fetcher = async () => {
+    const queries: string[] = [];
+    queries.push(Query.limit(limit), Query.offset((page - 1) * limit));
+    return await sdk.databases.listDocuments(databaseId, collectionId, queries);
   };
 
-  React.useEffect(() => {
-    get();
-  }, [sdk, databaseId, collectionId, limit, page]);
+  const { data, isFetching, refetch } = useSuspenseQuery({
+    queryKey: ["documents", databaseId, collectionId, page, limit],
+    queryFn: fetcher,
+  });
 
-  const path = `/project/${project?.$id}/databases/${database?.$id}/collection/${collection?.$id}/document`;
+  const path = `/project/${project?.$id}/databases/${databaseId}/collection/${collectionId}/document`;
 
   const columns = React.useMemo(
     () => [
@@ -119,7 +108,7 @@ const CollectionPage: React.FC<Props> = ({ databaseId, collectionId }: Props) =>
     });
 
     if (!sdk || !database || !collection || !shouldDelete) return;
-    setLoading(true);
+    setDeleting(true);
     const ids = values.map((v) => v.$id);
 
     try {
@@ -131,7 +120,7 @@ const CollectionPage: React.FC<Props> = ({ databaseId, collectionId }: Props) =>
       alert(collection.$id);
       addToast({ message: "Error deleting documents", variant: "danger" });
     } finally {
-      await get();
+      await refetch();
     }
   };
 
@@ -150,10 +139,10 @@ const CollectionPage: React.FC<Props> = ({ databaseId, collectionId }: Props) =>
 
       <DataGridProvider<Models.Document>
         columns={columns}
-        data={documentList.documents}
+        data={data.documents}
         manualPagination
-        rowCount={documentList.total}
-        loading={loading}
+        rowCount={data.total}
+        loading={isFetching}
         stickyCheckBox
         state={{
           pagination: { pageIndex: page, pageSize: limit },
@@ -161,27 +150,25 @@ const CollectionPage: React.FC<Props> = ({ databaseId, collectionId }: Props) =>
         hiddenIds={hiddenIds}
         showCheckbox={canDeleteDocuments}
       >
-        <DataGridSkelton loading={loading && !documentList.total} />
-
         <EmptyState
-          show={documentList.total === 0 && !loading && !hasQuery}
+          show={data.total === 0 && !isFetching && !hasQuery}
           title="No Documents"
           description="No documents have been created yet."
         />
 
-        {(documentList.total > 0 || hasQuery) && (
+        {(data.total > 0 || hasQuery) && (
           <>
-            <HStack mb="6" justifyContent="space-between" alignItems="center">
+            <HStack justifyContent="space-between" alignItems="center">
               <Filter />
               <HStack gap="8" alignItems="center">
                 <ColumnSelector />
               </HStack>
             </HStack>
-            <Table noResults={documentList.total === 0 && hasQuery} />
-            <PaginationWrapper>
+            <Table noResults={data.total === 0 && hasQuery} />
+            <HStack justifyContent="space-between" alignItems="center">
               <SelectLimit />
               <Pagination />
-            </PaginationWrapper>
+            </HStack>
           </>
         )}
 

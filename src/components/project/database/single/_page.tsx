@@ -11,17 +11,16 @@ import {
   ActionButton,
   DataActionBar,
   DataGridProvider,
-  DataGridSkelton,
   Pagination,
-  SearchAndCreate,
+  Search,
   SelectLimit,
   Table,
 } from "@/ui/modules/data-grid";
-import { EmptySearch } from "@/ui/modules/layout";
-import { IDChip, PageContainer, PageHeading } from "@/components/others";
+import { CreateButton, IDChip, PageContainer, PageHeading } from "@/components/others";
 import { useDatabaseStore, useProjectStore } from "@/lib/store";
 import { useSearchQuery } from "@/hooks/useQuery";
 import { EmptyState } from "@/components/_empty_state";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 const DatabaseSinglePage = ({ databaseId }: { databaseId: string }) => {
   const sdk = useProjectStore.use.sdk?.();
@@ -29,35 +28,27 @@ const DatabaseSinglePage = ({ databaseId }: { databaseId: string }) => {
   const permissions = useProjectStore.use.permissions();
   const setSidebarNull = useProjectStore.use.setSidebarNull();
   const database = useDatabaseStore.use.database?.();
-  const [loading, setLoading] = React.useState(true);
-  const [collectionList, setCollectionList] = React.useState<Models.CollectionList>({
-    collections: [],
-    total: 0,
-  });
-  const { limit, page, search } = useSearchQuery();
+  const [deleting, setDeleting] = React.useState(false);
+
+  const { limit, page, search, hasQuery } = useSearchQuery();
   const confirm = useConfirm();
   const { addToast } = useToast();
-  const { canCreateDatabases } = permissions();
+  const { canCreateCollections } = permissions();
 
   useEffect(() => {
     setSidebarNull("first", "middle");
   }, []);
 
-  const get = async () => {
-    if (!sdk || !database) return;
-    setLoading(true);
+  const fetcher = async () => {
     const queries: string[] = [];
     queries.push(Query.limit(limit), Query.offset((page - 1) * limit));
-    const cls = await sdk.databases.listCollections(database?.$id, queries, search ?? undefined);
-    setCollectionList(cls);
-    setLoading(false);
+    return await sdk.databases.listCollections(database?.$id!, queries, search ?? undefined);
   };
 
-  React.useEffect(() => {
-    get();
-  }, [sdk, limit, page, search, database]);
-
-  if (database?.$id !== databaseId) return;
+  const { data, isFetching, refetch } = useSuspenseQuery({
+    queryKey: ["collections", database?.$id, page, limit, search],
+    queryFn: fetcher,
+  });
 
   const path = `/project/${project?.$id}/databases/${database?.$id}/collection`;
 
@@ -117,7 +108,7 @@ const DatabaseSinglePage = ({ databaseId }: { databaseId: string }) => {
         },
       })
     ) {
-      setLoading(true);
+      setDeleting(true);
       const ids = values.map((v) => v.$id);
       if (!sdk) return;
       await Promise.all(
@@ -137,7 +128,7 @@ const DatabaseSinglePage = ({ databaseId }: { databaseId: string }) => {
           variant: "success",
         }),
       );
-      await get();
+      await refetch();
     }
   };
 
@@ -146,60 +137,47 @@ const DatabaseSinglePage = ({ databaseId }: { databaseId: string }) => {
       <PageHeading
         heading="Collections"
         description="Collections are groups of documents that are stored together in a database. Each collection is a separate entity and can have its own set of documents."
+        right={<CreateButton hasPermission={canCreateCollections} label="Create Collection" />}
       />
 
       <DataGridProvider<Models.Collection>
         columns={columns}
-        data={collectionList.collections}
+        data={data.collections}
         manualPagination
-        rowCount={collectionList.total}
-        loading={loading}
+        rowCount={data.total}
+        loading={isFetching}
         state={{ pagination: { pageIndex: page, pageSize: limit } }}
         showCheckbox
       >
-        <SearchAndCreate
-          button={{ text: "Create Collection", allowed: canCreateDatabases }}
-          placeholder="Search by name or ID"
+        <EmptyState
+          show={data.total === 0 && !isFetching && !hasQuery}
+          title="No Collections"
+          description="No collections have been created yet."
         />
 
-        {loading && !collectionList.total ? (
-          <DataGridSkelton />
-        ) : collectionList.total > 0 || !!search || page > 1 ? (
+        {(data.total > 0 || hasQuery) && (
           <>
-            {collectionList.total > 0 ? (
-              <>
-                <Table />
-                <HStack marginTop="6" justifyContent="space-between" alignItems="center">
-                  <SelectLimit />
-                  <Pagination />
-                </HStack>
-                <DataActionBar
-                  actions={
-                    <>
-                      <ActionButton<Models.Collection> colorPalette="red" onClick={onDelete}>
-                        Delete
-                      </ActionButton>
-                    </>
-                  }
-                />
-              </>
-            ) : (
-              search && (
-                <EmptySearch
-                  title={`Sorry, we couldn't find '${search}'`}
-                  description="There are no collections that match your search."
-                  clearSearch
-                />
-              )
-            )}
+            <HStack justifyContent="space-between" alignItems="center">
+              <Search placeholder="Search by ID" />
+            </HStack>
+            <Table noResults={data.total === 0 && hasQuery} />
+
+            <HStack justifyContent="space-between" alignItems="center">
+              <SelectLimit />
+              <Pagination />
+            </HStack>
           </>
-        ) : (
-          <EmptyState
-            show
-            title="No Collections"
-            description="No collections have been created yet."
-          />
         )}
+
+        <DataActionBar
+          actions={
+            <>
+              <ActionButton<Models.Collection> colorPalette="red" onClick={onDelete}>
+                Delete
+              </ActionButton>
+            </>
+          }
+        />
       </DataGridProvider>
     </PageContainer>
   );

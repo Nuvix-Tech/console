@@ -1,8 +1,8 @@
 "use client";
-import { notFound } from "next/navigation";
 import React, { PropsWithChildren, useEffect } from "react";
 import { DatbaseSidebar } from "./components";
 import { useDatabaseStore, useProjectStore } from "@/lib/store";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 type Props = PropsWithChildren & {
   databaseId: string;
@@ -13,7 +13,6 @@ const DatabaseSingleLayout: React.FC<Props> = ({ children, databaseId }) => {
   const setSidebar = useProjectStore.use.setSidebar();
   const setRefreshFn = useDatabaseStore.use.setRefresh();
   const setDatabase = useDatabaseStore.use.setDatabase();
-  const setLoading = useDatabaseStore.use.setLoading();
   const last = <DatbaseSidebar />;
 
   useEffect(() => {
@@ -23,21 +22,18 @@ const DatabaseSingleLayout: React.FC<Props> = ({ children, databaseId }) => {
     });
   }, []);
 
-  async function get() {
-    if (!sdk) return;
-    let db = await sdk?.databases.get(databaseId);
-    if (db) {
-      setDatabase(db);
-      setLoading(false);
-      return db;
-    } else {
-      notFound();
-    }
-  }
+  const fetcher = async () => {
+    return await sdk.databases.get(databaseId);
+  };
+
+  const { data } = useSuspenseQuery({
+    queryKey: ["database", databaseId],
+    queryFn: fetcher,
+  });
 
   useEffect(() => {
-    get();
-  }, [sdk]);
+    setDatabase(data);
+  }, [data]);
 
   return <>{children}</>;
 };

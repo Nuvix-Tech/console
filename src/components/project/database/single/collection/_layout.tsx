@@ -1,8 +1,8 @@
 "use client";
-import { notFound } from "next/navigation";
 import React, { PropsWithChildren, useEffect } from "react";
 import { CollectionSidebar, CollectionsSiderbar } from "./components";
 import { useCollectionStore, useProjectStore } from "@/lib/store";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 type Props = PropsWithChildren & {
   databaseId: string;
@@ -14,7 +14,6 @@ export const CollectionLayout: React.FC<Props> = ({ children, databaseId, collec
   const setSidebar = useProjectStore.use.setSidebar();
   const setRefreshFn = useCollectionStore.use.setRefresh();
   const setCollection = useCollectionStore.use.setCollection();
-  const setLoading = useCollectionStore.use.setLoading();
 
   const first = <CollectionSidebar />;
   const middle = <CollectionsSiderbar />;
@@ -27,20 +26,18 @@ export const CollectionLayout: React.FC<Props> = ({ children, databaseId, collec
     });
   }, [setRefreshFn]);
 
-  async function get() {
-    if (!sdk) return;
-    try {
-      const coll = await sdk?.databases.getCollection(databaseId, collectionId);
-      setCollection(coll);
-      setLoading(false);
-    } catch (e: any) {
-      if (e.code === 404) notFound();
-    }
-  }
+  const fetcher = async () => {
+    return await sdk.databases.getCollection(databaseId, collectionId);
+  };
+
+  const { data } = useSuspenseQuery({
+    queryKey: ["collection", databaseId, collectionId],
+    queryFn: fetcher,
+  });
 
   useEffect(() => {
-    get();
-  }, [sdk, databaseId, collectionId]);
+    setCollection(data);
+  }, [data]);
 
   return <>{children}</>;
 };

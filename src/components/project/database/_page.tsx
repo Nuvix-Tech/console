@@ -4,12 +4,13 @@ import React, { useEffect } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Tooltip } from "@/components/cui/tooltip";
 import { formatDate } from "@/lib/utils";
-import { DataGrid, DataGridSkelton, SearchAndCreate } from "@/ui/modules/data-grid";
-import { EmptySearch } from "@/ui/modules/layout";
-import { IDChip, PageContainer, PageHeading } from "@/components/others";
+import { DataGridProvider, Pagination, SelectLimit, Table } from "@/ui/modules/data-grid";
+import { CreateButton, IDChip, PageContainer, PageHeading } from "@/components/others";
 import { useProjectStore } from "@/lib/store";
 import { useSearchQuery } from "@/hooks/useQuery";
 import { EmptyState } from "@/components/_empty_state";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { HStack } from "@chakra-ui/react";
 
 const DatabasePage = () => {
   const setSidebarNull = useProjectStore.use.setSidebarNull();
@@ -21,29 +22,19 @@ const DatabasePage = () => {
   const sdk = useProjectStore.use.sdk?.();
   const project = useProjectStore.use.project?.();
   const permissions = useProjectStore.use.permissions();
-  const { limit, page, search } = useSearchQuery();
+  const { limit, page, search, hasQuery } = useSearchQuery();
   const { canCreateDatabases } = permissions();
 
-  const [loading, setLoading] = React.useState(true);
-  const [databases, setDatabases] = React.useState<Models.DatabaseList>({
-    databases: [],
-    total: 0,
-  });
-
-  useEffect(() => {
-    if (!sdk) return;
-    setLoading(true);
+  const fetcher = async () => {
     const queries: string[] = [];
-
     queries.push(Query.limit(limit), Query.offset((page - 1) * limit));
-    const get = async () => {
-      const dbs = await sdk.databases.list(queries, search ?? undefined);
-      setDatabases(dbs);
-      setLoading(false);
-    };
+    return await sdk.databases.list(queries, search ?? undefined);
+  };
 
-    get();
-  }, [sdk, limit, page, search]);
+  const { data, isFetching } = useSuspenseQuery({
+    queryKey: ["users", page, limit, search],
+    queryFn: fetcher,
+  });
 
   const path = `/project/${project?.$id}/databases`;
 
@@ -97,39 +88,36 @@ const DatabasePage = () => {
       <PageHeading
         heading="Databases"
         description="Databases are used to store and manage your data."
+        right={<CreateButton hasPermission={canCreateDatabases} label="Create Database" />}
       />
 
-      {loading && !databases.total ? (
-        <DataGridSkelton />
-      ) : databases.total > 0 || !!search || page > 1 ? (
-        <>
-          <SearchAndCreate
-            button={{ text: "Create Database", allowed: canCreateDatabases }}
-            placeholder="Search ID"
-          />
+      <DataGridProvider<Models.Database>
+        columns={columns}
+        data={data.databases}
+        manualPagination
+        rowCount={data.total}
+        loading={isFetching}
+        state={{
+          pagination: { pageIndex: page, pageSize: limit },
+        }}
+      >
+        <EmptyState
+          show={data.total === 0 && !isFetching && !hasQuery}
+          title="No Databases"
+          description="No databases have been created yet."
+        />
 
-          {databases.total > 0 ? (
-            <DataGrid<Models.Database>
-              columns={columns}
-              data={databases.databases}
-              manualPagination
-              rowCount={databases.total}
-              loading={loading}
-              state={{ pagination: { pageIndex: page, pageSize: limit } }}
-            />
-          ) : (
-            search && (
-              <EmptySearch
-                title={`Sorry, we couldn't find '${search}'`}
-                description="There are no databases that match your search."
-                clearSearch
-              />
-            )
-          )}
-        </>
-      ) : (
-        <EmptyState show title="No Databases" description="No databases have been created yet." />
-      )}
+        {(data.total > 0 || hasQuery) && (
+          <>
+            <Table noResults={data.total === 0 && hasQuery} />
+
+            <HStack justifyContent="space-between" alignItems="center">
+              <SelectLimit />
+              <Pagination />
+            </HStack>
+          </>
+        )}
+      </DataGridProvider>
     </PageContainer>
   );
 };

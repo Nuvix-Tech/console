@@ -1,9 +1,8 @@
 "use client";
-import { useConfirm, useToast } from "@/ui/components";
 import { Models } from "@nuvix/console";
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { CreateButton, DataGridProvider, DataGridSkelton, Table } from "@/ui/modules/data-grid";
+import { CreateButton, DataGridProvider, Table } from "@/ui/modules/data-grid";
 import { Status } from "@/components/cui/status";
 import {
   DropdownMenu,
@@ -12,9 +11,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Ellipsis } from "lucide-react";
-import { useDatabaseStore, useProjectStore } from "@/lib/store";
+import { useProjectStore } from "@/lib/store";
 import { PageContainer, PageHeading } from "@/components/others";
 import { EmptyState } from "@/components/_empty_state";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 type Props = {
   databaseId: string;
@@ -23,29 +23,15 @@ type Props = {
 
 export const IndexesPage: React.FC<Props> = ({ databaseId, collectionId }) => {
   const sdk = useProjectStore.use.sdk?.();
-  const database = useDatabaseStore.use.database?.();
 
-  const [loading, setLoading] = React.useState(true);
-  const [indexesList, setIndexesList] = React.useState<Models.IndexList>({
-    indexes: [],
-    total: 0,
-  });
-  const confirm = useConfirm();
-  const { addToast } = useToast();
-
-  const get = async () => {
-    if (!sdk || !database) return;
-    setLoading(true);
-    const cls = await sdk.databases.listIndexes(databaseId, collectionId);
-    setIndexesList(cls);
-    setLoading(false);
+  const fetcher = async () => {
+    return await sdk.databases.listIndexes(databaseId, collectionId);
   };
 
-  React.useEffect(() => {
-    get();
-  }, [sdk, database]);
-
-  if (database?.$id !== databaseId) return;
+  const { data, isFetching, refetch } = useSuspenseQuery({
+    queryKey: ["indexes", databaseId, collectionId],
+    queryFn: fetcher,
+  });
 
   const columns: ColumnDef<Models.Index>[] = [
     {
@@ -119,41 +105,6 @@ export const IndexesPage: React.FC<Props> = ({ databaseId, collectionId }) => {
     },
   ];
 
-  const onDelete = async (values: any[]) => {
-    if (
-      await confirm({
-        title: "Delete Attribute",
-        description: `Are you sure you want to delete ${values.length} collection(s)?`,
-        confirm: {
-          text: "Delete",
-          variant: "danger",
-        },
-      })
-    ) {
-      // setLoading(true);
-      // const ids = values.map((v) => v.$id);
-      // if (!sdk) return;
-      // await Promise.all(
-      //     ids.map(async (id) => {
-      //         try {
-      //             await sdk.databases.deleteAttribute(database?.$id!, id);
-      //         } catch (e) {
-      //             addToast({
-      //                 message: `Error deleting collection ${id}`,
-      //                 variant: "danger",
-      //             });
-      //         }
-      //     }),
-      // ).then((v) =>
-      //     addToast({
-      //         message: `Successfully deleted ${ids.length} collection(s)`,
-      //         variant: "success",
-      //     }),
-      // );
-      // await get();
-    }
-  };
-
   return (
     <PageContainer>
       <PageHeading
@@ -164,18 +115,20 @@ export const IndexesPage: React.FC<Props> = ({ databaseId, collectionId }) => {
 
       <DataGridProvider<any>
         columns={columns}
-        data={indexesList.indexes}
-        rowCount={indexesList.total}
-        loading={loading}
+        data={data.indexes}
+        rowCount={data.total}
+        loading={isFetching}
       >
-        {loading && !indexesList.total ? (
-          <DataGridSkelton />
-        ) : indexesList.total > 0 ? (
+        <EmptyState
+          show={data.total === 0 && !isFetching}
+          title="No Indexes"
+          description="No Indexes have been created yet."
+        />
+
+        {data.total > 0 && (
           <>
             <Table interactive={false} />
           </>
-        ) : (
-          <EmptyState show title="No Indexes" description="No Indexes have been created yet." />
         )}
       </DataGridProvider>
     </PageContainer>

@@ -1,9 +1,9 @@
 "use client";
 import { Column } from "@/ui/components";
-import { notFound } from "next/navigation";
 import React, { PropsWithChildren, useEffect } from "react";
 import { LayoutTop } from "./components";
 import { useDocumentStore, useProjectStore } from "@/lib/store";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 type Props = PropsWithChildren & {
   databaseId: string;
@@ -21,9 +21,6 @@ export const DocumentLayout: React.FC<Props> = ({
   const sdk = useProjectStore.use.sdk?.();
   const setRefreshFn = useDocumentStore.use.setRefresh();
   const setDocument = useDocumentStore.use.setDocument();
-  const setLoading = useDocumentStore.use.setLoading();
-
-  // projectState.sidebar.first = null;
 
   useEffect(() => {
     setRefreshFn(async () => {
@@ -32,21 +29,18 @@ export const DocumentLayout: React.FC<Props> = ({
     });
   }, []);
 
+  const fetcher = async () => {
+    return await sdk.databases.getDocument(databaseId, collectionId, documentId);
+  };
+
+  const { data } = useSuspenseQuery({
+    queryKey: ["document", databaseId, collectionId, documentId],
+    queryFn: fetcher,
+  });
+
   useEffect(() => {
-    if (!sdk) {
-      return;
-    }
-    async function get() {
-      try {
-        const doc = await sdk?.databases.getDocument(databaseId, collectionId, documentId);
-        setDocument(doc);
-        setLoading(false);
-      } catch (e: any) {
-        if (e.code === 404) notFound();
-      }
-    }
-    get();
-  }, [sdk, databaseId, collectionId, documentId]);
+    setDocument(data);
+  }, [data]);
 
   return (
     <>
