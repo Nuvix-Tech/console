@@ -1,37 +1,27 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Models } from "@nuvix/console";
 import { ColumnDef } from "@tanstack/react-table";
-import { useToast } from "@/ui/components";
-import { DataGrid, DataGridSkelton } from "@/ui/modules/data-grid";
-import { useProjectStore, useUserStore } from "@/lib/store";
+import { DataGridProvider, Table } from "@/ui/modules/data-grid";
+import { useProjectStore } from "@/lib/store";
 import { PageContainer, PageHeading } from "@/components/others";
 import { EmptyState } from "@/components/_empty_state";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 const IdentityPage = () => {
-  const [identities, setIdentities] = useState<Models.IdentityList>({
-    identities: [],
-    total: 0,
-  });
-  const [loading, setLoading] = React.useState(true);
   const project = useProjectStore.use.project?.();
   const sdk = useProjectStore.use.sdk?.();
-  const user = useUserStore.use.user?.();
-  const { addToast } = useToast();
 
   const authPath = `/project/${project?.$id}/authentication`;
 
-  async function get() {
-    setLoading(true);
-    let identities = await sdk!.users.listIdentities();
-    setIdentities(identities!);
-    setLoading(false);
-  }
+  const fetcher = async () => {
+    return await sdk.users.listIdentities();
+  };
 
-  useEffect(() => {
-    if (!user && !sdk) return;
-    get();
-  }, [user, sdk]);
+  const { data, isFetching } = useSuspenseQuery({
+    queryKey: ["identities"],
+    queryFn: fetcher,
+  });
 
   const columns: ColumnDef<Models.Identity>[] = [
     {
@@ -55,19 +45,24 @@ const IdentityPage = () => {
         description="Identities are the different ways you can authenticate with your account."
       />
 
-      {loading && !identities.total ? (
-        <DataGridSkelton />
-      ) : identities.total > 0 ? (
-        <DataGrid<Models.Identity>
-          columns={columns}
-          data={identities.identities}
-          rowCount={identities.total}
-          loading={loading}
-          showPagination={false}
+      <DataGridProvider<Models.Identity>
+        columns={columns}
+        data={data.identities ?? []}
+        rowCount={data.total}
+        loading={isFetching}
+      >
+        <EmptyState
+          show={data.total === 0 && !isFetching}
+          title="No Identities"
+          description="No identities have been created yet."
         />
-      ) : (
-        <EmptyState show title="No Identities" description="No identities have been created yet." />
-      )}
+
+        {(data.total > 0) && (
+          <>
+            <Table />
+          </>
+        )}
+      </DataGridProvider>
     </PageContainer>
   );
 };

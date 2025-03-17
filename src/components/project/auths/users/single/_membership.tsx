@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Models } from "@nuvix/console";
 import { ColumnDef } from "@tanstack/react-table";
 import { Row, useConfirm, useToast } from "@/ui/components";
@@ -8,36 +8,30 @@ import { IconButton, Text } from "@chakra-ui/react";
 import { Tooltip } from "@/components/cui/tooltip";
 import { formatDate } from "@/lib/utils";
 import { LuTrash2 } from "react-icons/lu";
-import { DataGrid, DataGridSkelton } from "@/ui/modules/data-grid";
+import { DataGridProvider, Table } from "@/ui/modules/data-grid";
 import { useProjectStore, useUserStore } from "@/lib/store";
 import { PageContainer, PageHeading } from "@/components/others";
 import { EmptyState } from "@/components";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 const MembershipPage = () => {
-  const [memberships, setMemberships] = useState<Models.MembershipList>({
-    memberships: [],
-    total: 0,
-  });
-  const [loading, setLoading] = React.useState(true);
   const project = useProjectStore.use.project?.();
   const sdk = useProjectStore.use.sdk?.();
-  const user = useUserStore.use.user?.();
+  const user = useUserStore.use.user();
+  const [deleting, setDeleting] = useState(false);
   const { addToast } = useToast();
   const confirm = useConfirm();
 
   const authPath = `/project/${project?.$id}/authentication`;
 
-  async function get() {
-    setLoading(true);
-    let memberships = await sdk!.users.listMemberships(user?.$id!);
-    setMemberships(memberships!);
-    setLoading(false);
-  }
+  const fetcher = async () => {
+    return await sdk.users.listMemberships(user.$id);
+  };
 
-  useEffect(() => {
-    if (!user && !sdk) return;
-    get();
-  }, [user, sdk]);
+  const { data, isFetching, refetch } = useSuspenseQuery({
+    queryKey: ["user", user.$id],
+    queryFn: fetcher,
+  });
 
   const onDeleteMembersip = async (member: Models.Membership) => {
     if (
@@ -50,21 +44,21 @@ const MembershipPage = () => {
         },
       })
     ) {
-      setLoading(true);
+      setDeleting(true);
       try {
         await sdk!.teams.deleteMembership(member.teamId, member.$id);
         addToast({
           variant: "success",
           message: "Membership successfully deleted.",
         });
-        await get();
+        await refetch();
       } catch (e: any) {
         addToast({
           variant: "danger",
           message: e.message,
         });
       } finally {
-        setLoading(false);
+        setDeleting(false);
       }
     }
   };
@@ -118,7 +112,7 @@ const MembershipPage = () => {
           <IconButton
             size={"sm"}
             variant={"ghost"}
-            disabled={loading}
+            disabled={deleting}
             onClick={(e) => {
               e.preventDefault();
               onDeleteMembersip(props.row.original);
@@ -138,23 +132,24 @@ const MembershipPage = () => {
         description="Memberships represent the roles a user has across multiple teams. A user can belong to multiple teams with different roles."
       />
 
-      {loading && !memberships.total ? (
-        <DataGridSkelton />
-      ) : memberships.total > 0 ? (
-        <DataGrid<Models.Membership>
-          columns={columns}
-          data={memberships.memberships}
-          rowCount={memberships.total}
-          loading={loading}
-          showPagination={false}
-        />
-      ) : (
+      <DataGridProvider<Models.Membership>
+        columns={columns}
+        data={data.memberships}
+        rowCount={data.total}
+        loading={isFetching}
+      >
         <EmptyState
-          show
+          show={data.total === 0 && !isFetching}
           title="No Memberships"
           description="This user is not a member of any teams yet."
         />
-      )}
+
+        {(data.total > 0) && (
+          <>
+            <Table />
+          </>
+        )}
+      </DataGridProvider>
     </PageContainer>
   );
 };

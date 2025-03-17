@@ -23,13 +23,13 @@ interface Updatable {
  * Store for the user page.
  */
 interface UserStore extends PageState, Updatable {
-  user?: Models.User<Record<string, any>>;
+  user: Models.User<Record<string, any>>;
   setUser: (user?: Models.User<Record<string, any>>) => void;
 }
 
 export const useUser = create<UserStore>((set) => ({
   loading: true,
-  user: undefined,
+  user: undefined as any,
   setUser: (user) => set({ user }),
   setLoading: (isLoading) => set({ loading: isLoading }),
   refresh: async () => {},
@@ -42,13 +42,13 @@ export const useUserStore = createSelectors(useUser);
  * Store for the team page.
  */
 interface TeamStore extends PageState, Updatable {
-  team?: Models.Team<Record<string, any>>;
+  team: Models.Team<Record<string, any>>;
   setTeam: (team?: Models.Team<Record<string, any>>) => void;
 }
 
 export const useTeam = create<TeamStore>((set) => ({
   loading: true,
-  team: undefined,
+  team: undefined as any,
   setTeam: (team) => set({ team }),
   setLoading: (isLoading) => set({ loading: isLoading }),
   refresh: async () => {},
@@ -61,13 +61,13 @@ export const useTeamStore = createSelectors(useTeam);
  * Store for the database page.
  */
 interface DatabaseStore extends PageState, Updatable {
-  database?: Models.Database;
+  database: Models.Database;
   setDatabase: (database?: Models.Database) => void;
 }
 
 export const useDatabase = create<DatabaseStore>((set) => ({
   loading: true,
-  database: undefined,
+  database: undefined as any,
   setDatabase: (database) => set({ database }),
   setLoading: (isLoading) => set({ loading: isLoading }),
   refresh: async () => {},
@@ -80,13 +80,13 @@ export const useDatabaseStore = createSelectors(useDatabase);
  * Store for the collection page.
  */
 interface CollectionStore extends PageState, Updatable {
-  collection?: Models.Collection;
+  collection: Models.Collection;
   setCollection: (collection?: Models.Collection) => void;
 }
 
 export const useCollection = create<CollectionStore>((set) => ({
   loading: true,
-  collection: undefined,
+  collection: undefined as any,
   setCollection: (collection) => set({ collection }),
   setLoading: (isLoading) => set({ loading: isLoading }),
   refresh: async () => {},
@@ -99,13 +99,13 @@ export const useCollectionStore = createSelectors(useCollection);
  * Store for the document page.
  */
 interface DocumentStore<T = Models.Document> extends PageState, Updatable {
-  document?: T;
+  document: T;
   setDocument: (document?: T) => void;
 }
 
 export const useDocument = create<DocumentStore>((set) => ({
   loading: true,
-  document: undefined,
+  document: undefined as any,
   setDocument: (document) => set({ document }),
   setLoading: (isLoading) => set({ loading: isLoading }),
   refresh: async () => {},

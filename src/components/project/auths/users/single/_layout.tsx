@@ -5,6 +5,7 @@ import { useProjectStore, useUserStore } from "@/lib/store";
 import { Line, Row } from "@/ui/components";
 import { SidebarGroup } from "@/ui/modules/layout/navigation";
 import { Text } from "@chakra-ui/react";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import React, { PropsWithChildren, useEffect } from "react";
 
@@ -22,15 +23,18 @@ const SingleLayout: React.FC<PropsWithChildren<{ userId: string }>> = ({ childre
     });
   }, []);
 
-  useEffect(() => {
-    if (!sdk) return;
-    const fetchUser = async () => {
-      const user = await sdk.users.get(userId);
-      setUser(user);
-    };
+  const fetcher = async () => {
+    return await sdk.users.get(userId);
+  };
 
-    fetchUser();
-  }, [sdk, userId]);
+  const { data } = useSuspenseQuery({
+    queryKey: ["user", userId],
+    queryFn: fetcher,
+  });
+
+  useEffect(() => {
+    setUser(data);
+  }, [data]);
 
   return <>{children}</>;
 };
