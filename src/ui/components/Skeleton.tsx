@@ -23,7 +23,7 @@ const Skeleton: React.FC<SkeletonProps> = forwardRef<HTMLDivElement, SkeletonPro
         {...props}
         ref={ref}
         style={style}
-        radius={shape === "line" || shape === "circle" ? "full" : undefined}
+        radius={shape === "line" || shape === "circle" ? "full" : props.radius}
         inline
         className={classNames(
           styles.skeleton,

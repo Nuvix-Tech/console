@@ -1,11 +1,4 @@
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Row } from "@/ui/components";
+import { Row, Select } from "@/ui/components";
 import { useDataGrid } from "./provider";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
@@ -27,24 +20,16 @@ export const SelectLimit = () => {
     <>
       <Row vertical="center" gap="12">
         <Select
+          width="80"
+          maxWidth={20}
+          labelAsPlaceholder
           disabled={loading}
-          defaultValue={table.getState().pagination.pageSize.toString()}
           value={table.getState().pagination.pageSize.toString()}
-          onValueChange={(value) => {
+          onSelect={(value) => {
             onPageSizeChange(parseInt(value));
           }}
-        >
-          <SelectTrigger className="w-[80px]">
-            <SelectValue placeholder="Select Limit" />
-          </SelectTrigger>
-          <SelectContent>
-            {pages.map((page) => (
-              <SelectItem value={page} key={page}>
-                {page}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          options={[...pages.map((page) => ({ label: page, value: page }))]}
+        />
         <p className="text"> Total results: {table.getRowCount()}</p>
       </Row>
     </>

@@ -7,6 +7,7 @@ import { useDataGrid } from "./provider";
 import { Checkbox } from "@/components/cui/checkbox";
 import { SHOW_TABLE_BORDER } from "@/lib/constants";
 import { useRouter } from "@bprogress/next";
+import { EmptyResults } from "./empty-results";
 
 type Props = {
   interactive?: boolean;
@@ -102,91 +103,95 @@ const TheTable = <T,>({ interactive = true, noResults }: Props) => {
             </Progress.Root>
           ) : null}
         </Table.Header>
-        <Table.Body>
-          {table.getRowModel().rows.map((row) => {
-            const caller = row.getAllCells()?.[0].column.columnDef.meta?.href;
-            return (
-              <Table.Row
-                display={"flex"}
-                justifyContent={"space-between"}
-                position="relative"
-                key={row.id}
-                borderRadius={0}
-                gap={0}
-                borderBottom={"1px solid"}
-                className="neutral-border-alpha-medium last:!border-0"
-                bg="transparent"
-                borderColor={"var(--neutral-alpha-medium) !important"}
-                {...(interactive && {
-                  _hover: {
-                    cursor: "pointer",
-                    bg: "var(--neutral-alpha-medium) !important",
-                  },
-                  _focus: {
-                    bg: "var(--surface-background) !important",
-                    cursor: "pointer",
-                  },
-                })}
-                onClick={(e) => {
-                  const target = e.target as HTMLElement;
-                  if (!target.closest("[data-action]")) {
-                    caller && push(caller(row.original));
-                  }
-                }}
-                onKeyDown={(e) => {
-                  if ((e.key === "Enter" || e.key === " ") && caller) {
-                    push(caller(row.original));
-                  }
-                }}
-                tabIndex={caller ? 0 : -1}
-                role={caller && "button"}
-                cursor={caller && "pointer"}
-              >
-                {showCheckbox ? (
-                  <Table.Cell
-                    alignContent="center"
-                    overflow="hidden"
-                    justifyContent="center"
-                    width={checkBoxWidth}
-                    minWidth={checkBoxWidth}
-                    maxWidth={checkBoxWidth}
-                    position={stickyCheckBox ? "sticky" : "relative"}
-                    left={stickyCheckBox ? "0" : "auto"}
-                    className={stickyCheckBox ? "neutral-background-strong" : ""}
-                    borderWidth={0}
-                    zIndex={3}
-                  >
-                    <Checkbox
-                      aria-label="Select row"
-                      data-action="checkbox"
-                      checked={row.getIsSelected()}
-                      disabled={!row.getCanSelect()}
-                      cursor="checkbox"
-                      onCheckedChange={({ checked }) =>
-                        row.toggleSelected(checked === "indeterminate" ? undefined : checked)
-                      }
-                    />
-                  </Table.Cell>
-                ) : null}
-                {row.getVisibleCells().map((cell) => (
-                  <Table.Cell
-                    key={cell.id}
-                    textOverflow={"ellipsis"}
-                    alignContent={"center"}
-                    overflow={"hidden"}
-                    whiteSpace={"nowrap"}
-                    borderBottom={0}
-                    width={cell.column.columnDef.size ?? "full"}
-                    minWidth={cell.column.columnDef.minSize}
-                    maxWidth={cell.column.columnDef.maxSize}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </Table.Cell>
-                ))}
-              </Table.Row>
-            );
-          })}
-        </Table.Body>
+        {!noResults ? (
+          <Table.Body>
+            {table.getRowModel().rows.map((row) => {
+              const caller = row.getAllCells()?.[0].column.columnDef.meta?.href;
+              return (
+                <Table.Row
+                  display={"flex"}
+                  justifyContent={"space-between"}
+                  position="relative"
+                  key={row.id}
+                  borderRadius={0}
+                  gap={0}
+                  borderBottom={"1px solid"}
+                  className="neutral-border-alpha-medium last:!border-0"
+                  bg="transparent"
+                  borderColor={"var(--neutral-alpha-medium) !important"}
+                  {...(interactive && {
+                    _hover: {
+                      cursor: "pointer",
+                      bg: "var(--neutral-alpha-medium) !important",
+                    },
+                    _focus: {
+                      bg: "var(--surface-background) !important",
+                      cursor: "pointer",
+                    },
+                  })}
+                  onClick={(e) => {
+                    const target = e.target as HTMLElement;
+                    if (!target.closest("[data-action]")) {
+                      caller && push(caller(row.original));
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if ((e.key === "Enter" || e.key === " ") && caller) {
+                      push(caller(row.original));
+                    }
+                  }}
+                  tabIndex={caller ? 0 : -1}
+                  role={caller && "button"}
+                  cursor={caller && "pointer"}
+                >
+                  {showCheckbox ? (
+                    <Table.Cell
+                      alignContent="center"
+                      overflow="hidden"
+                      justifyContent="center"
+                      width={checkBoxWidth}
+                      minWidth={checkBoxWidth}
+                      maxWidth={checkBoxWidth}
+                      position={stickyCheckBox ? "sticky" : "relative"}
+                      left={stickyCheckBox ? "0" : "auto"}
+                      className={stickyCheckBox ? "neutral-background-strong" : ""}
+                      borderWidth={0}
+                      zIndex={3}
+                    >
+                      <Checkbox
+                        aria-label="Select row"
+                        data-action="checkbox"
+                        checked={row.getIsSelected()}
+                        disabled={!row.getCanSelect()}
+                        cursor="checkbox"
+                        onCheckedChange={({ checked }) =>
+                          row.toggleSelected(checked === "indeterminate" ? undefined : checked)
+                        }
+                      />
+                    </Table.Cell>
+                  ) : null}
+                  {row.getVisibleCells().map((cell) => (
+                    <Table.Cell
+                      key={cell.id}
+                      textOverflow={"ellipsis"}
+                      alignContent={"center"}
+                      overflow={"hidden"}
+                      whiteSpace={"nowrap"}
+                      borderBottom={0}
+                      width={cell.column.columnDef.size ?? "full"}
+                      minWidth={cell.column.columnDef.minSize}
+                      maxWidth={cell.column.columnDef.maxSize}
+                    >
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </Table.Cell>
+                  ))}
+                </Table.Row>
+              );
+            })}
+          </Table.Body>
+        ) : (
+          <EmptyResults />
+        )}
       </Table.Root>
     </Table.ScrollArea>
   );

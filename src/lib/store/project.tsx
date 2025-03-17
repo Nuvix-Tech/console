@@ -82,7 +82,7 @@ const useProject = create<ProjectStore>((set, get) => ({
   setScopes: (scopes) => set({ scopes }),
   setShowSidebar: (show) => set({ showSidebar: show }),
   setSidebar(data) {
-    set({ sidebar: data });
+    set((prev) => ({ sidebar: { ...prev.sidebar, ...data } }));
   },
   setUpdateFn(fn: () => Promise<void>) {
     set({ update: fn });
