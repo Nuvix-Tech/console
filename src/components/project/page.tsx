@@ -12,8 +12,6 @@ export default function ProjectPage({ id }: ProjectPageProps) {
   const project = useProjectStore.use.project?.();
   const setSidebarNull = useProjectStore.use.setSidebarNull();
 
-  console.log("RENDERING PROJECT PAGE", project);
-
   useEffect(() => {
     setSidebarNull();
   }, []);

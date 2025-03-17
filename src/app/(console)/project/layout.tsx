@@ -3,6 +3,7 @@ import { Stack } from "@chakra-ui/react";
 import { ProjectSidebar } from "@/components/project/sidebar";
 import React, { Suspense } from "react";
 import { ProjectLayout } from "@/components/project";
+import { SkeletonProject } from "@/components/skeletons";
 
 export default function ({ children }: { children: React.ReactNode }) {
   return (
@@ -25,7 +26,7 @@ export default function ({ children }: { children: React.ReactNode }) {
       >
         <ProjectHeader />
         <Stack height={"calc(100% - 64px)"} overflowY="auto" direction="column">
-          <Suspense fallback={<div>Loading... [PROJECT] #TEST</div>}>{children}</Suspense>
+          <Suspense fallback={<SkeletonProject />}>{children}</Suspense>
         </Stack>
       </Stack>
     </>

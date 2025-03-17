@@ -10,7 +10,6 @@ type Props = PropsWithChildren & {
 
 const DatabaseSingleLayout: React.FC<Props> = ({ children, databaseId }) => {
   const sdk = useProjectStore.use.sdk?.();
-  const setSidebarNull = useProjectStore.use.setSidebarNull();
   const setSidebar = useProjectStore.use.setSidebar();
   const setRefreshFn = useDatabaseStore.use.setRefresh();
   const setDatabase = useDatabaseStore.use.setDatabase();
@@ -18,8 +17,7 @@ const DatabaseSingleLayout: React.FC<Props> = ({ children, databaseId }) => {
   const last = <DatbaseSidebar />;
 
   useEffect(() => {
-    setSidebarNull("first", "middle");
-    setSidebar({ last });
+    setSidebar({ last, first: null, middle: null });
     setRefreshFn(async () => {
       setDatabase(await sdk?.databases.get(databaseId));
     });

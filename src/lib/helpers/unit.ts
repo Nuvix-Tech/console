@@ -14,7 +14,12 @@ type ValueUnitState<T = string> = {
   units: Unit<T>[];
 };
 
-function createValueUnitStore<T = string>(initialValue: number, units: Unit<T>[], set: (arg0: Partial<ValueUnitState<T>>) => void, get: () => ValueUnitState<T>) {
+function createValueUnitStore<T = string>(
+  initialValue: number,
+  units: Unit<T>[],
+  set: (arg0: Partial<ValueUnitState<T>>) => void,
+  get: () => ValueUnitState<T>,
+) {
   if (!units.some((u) => u.value === 1)) {
     throw new Error("Units must have a value of 1");
   }
@@ -45,14 +50,16 @@ function createValueUnitStore<T = string>(initialValue: number, units: Unit<T>[]
         baseValue: newValue * (units.find((u) => u.name === get().unit)?.value || 1),
       });
     },
-    units
+    units,
   };
 
   return { ...state, units };
 }
 
 function useValueUnitPair<T = string>(initialValue: number, units: Unit<T>[]) {
-  const useStore = create<ValueUnitState<T>>((set, get) => createValueUnitStore(initialValue, units, set, get));
+  const useStore = create<ValueUnitState<T>>((set, get) =>
+    createValueUnitStore(initialValue, units, set, get),
+  );
   const state = useStore();
   return { ...state };
 }

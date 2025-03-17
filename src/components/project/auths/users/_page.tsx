@@ -1,13 +1,13 @@
 "use client";
-import { Avatar, Column } from "@/ui/components";
+import { Avatar } from "@/ui/components";
 import { Models, Query } from "@nuvix/console";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Row } from "@/ui/components";
 import { ColumnDef } from "@tanstack/react-table";
 import { Tooltip } from "@/components/cui/tooltip";
 import { Badge, HStack, Text } from "@chakra-ui/react";
 import { formatDate } from "@/lib/utils";
-import { DataGridProvider, DataGridSkelton, Search, Table } from "@/ui/modules/data-grid";
+import { DataGridProvider, Pagination, Search, SelectLimit, Table } from "@/ui/modules/data-grid";
 import { CreateButton, IDChip, PageContainer, PageHeading } from "@/components/others";
 import { EmptyState } from "@/components";
 import { useSearchQuery } from "@/hooks/useQuery";
@@ -159,8 +159,6 @@ const UsersPage = () => {
           pagination: { pageIndex: page, pageSize: limit },
         }}
       >
-        {/* <DataGridSkelton loading={loading && !users.total && !hasQuery} /> */}
-
         <EmptyState
           show={data.total === 0 && !isFetching && !hasQuery}
           title="No Users"
@@ -169,14 +167,15 @@ const UsersPage = () => {
 
         {(data.total > 0 || hasQuery) && (
           <>
-            <HStack mb="6" justifyContent="space-between" alignItems="center">
+            <HStack justifyContent="space-between" alignItems="center">
               <Search placeholder="Search by name, email, phone or ID" />
             </HStack>
             <Table noResults={data.total === 0 && hasQuery} />
-            {/* <PaginationWrapper>
+
+            <HStack justifyContent="space-between" alignItems="center">
               <SelectLimit />
               <Pagination />
-            </PaginationWrapper> */}
+            </HStack>
           </>
         )}
       </DataGridProvider>
