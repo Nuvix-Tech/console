@@ -32,7 +32,7 @@ export const LayoutTop: React.FC<LayoutTopProps> = ({ title, id }) => {
   const value = path.split("/")[path.split("/").length - 1];
   return (
     <>
-      <Row margin="20">
+      <Row marginY="20" fillWidth>
         <TopCard minHeight={4}>
           <Stack direction={{ base: "column-reverse", md: "column" }} width="full" zIndex="1">
             {id && <IDChip id={id} />}
@@ -50,7 +50,7 @@ export const LayoutTop: React.FC<LayoutTopProps> = ({ title, id }) => {
                 </TabsTrigger>
                 <TabsTrigger
                   value={`details`}
-                  className={`data-[state=active]:bg-[var(--neutral-alpha-medium))]`}
+                  className={`data-[state=active]:bg-[var(--neutral-alpha-medium)]`}
                 >
                   Access & Security
                 </TabsTrigger>

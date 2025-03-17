@@ -4,6 +4,7 @@ import React, { PropsWithChildren, useEffect } from "react";
 import { LayoutTop } from "./components";
 import { useDocumentStore, useProjectStore } from "@/lib/store";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { PageContainer } from "@/components/others";
 
 type Props = PropsWithChildren & {
   databaseId: string;
@@ -44,10 +45,10 @@ export const DocumentLayout: React.FC<Props> = ({
 
   return (
     <>
-      <Column fill>
+      <PageContainer>
         <LayoutTop title="Document" id={document?.$id} />
         {children}
-      </Column>
+      </PageContainer>
     </>
   );
 };
