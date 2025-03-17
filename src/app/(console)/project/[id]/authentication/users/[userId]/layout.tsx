@@ -9,6 +9,6 @@ export default async function ({
   const { userId } = await params;
 
   return (
-      <UserLayout userId={userId}>{children}</UserLayout>
+    <UserLayout userId={userId}>{children}</UserLayout>
   );
 }
