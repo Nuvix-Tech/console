@@ -31,7 +31,7 @@ const DatabasePage = () => {
   };
 
   const { data, isFetching } = useSuspenseQuery({
-    queryKey: ["users", page, limit, search],
+    queryKey: ["databases", page, limit, search],
     queryFn: fetcher,
   });
 
@@ -64,7 +64,7 @@ const DatabasePage = () => {
         {(data.total > 0 || hasQuery) && (
           <>
             <Grid gap="l" marginTop="l" columns={2} fillWidth>
-              {data.databases?.map((database) => (
+              {data.databases.map((database) => (
                 <DatabaseCard database={database} key={database.$id} />
               ))}
             </Grid>
