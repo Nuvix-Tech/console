@@ -6,15 +6,17 @@ interface FormDialogProps {
   dialog: Omit<React.ComponentProps<typeof Dialog>, "children">;
   form: Omit<React.ComponentProps<typeof Form>, "children">;
   children: React.ReactNode;
+  ref: any;
 }
 
-export const FormDialog = ({
+const FormDialogComponent = ({
   dialog: { footer, ...restDialog },
   form: { ...restForm },
   children,
+  ref,
 }: FormDialogProps) => {
   return (
-    <Dialog {...restDialog}>
+    <Dialog ref={ref} {...restDialog}>
       <Form {...restForm}>
         {children}
         <Flex
@@ -32,3 +34,7 @@ export const FormDialog = ({
     </Dialog>
   );
 };
+
+export const FormDialog = React.forwardRef<HTMLDivElement, FormDialogProps>((props, ref) => (
+  <FormDialogComponent ref={ref} {...props} />
+));

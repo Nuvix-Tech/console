@@ -117,7 +117,7 @@ const Collections = ({
   const router = useRouter();
 
   return (
-    <VStack justifyContent={"start"} alignItems={"start"} width="full" px="4" gap={2}>
+    <VStack justifyContent={"start"} alignItems={"start"} width="full" px="4" gap={1}>
       {isPending
         ? Array.from({ length: 3 }).map((_, i) => (
             <Row key={i} fillWidth height={"24"}>
@@ -130,7 +130,7 @@ const Collections = ({
               fillWidth
               key={c.$id}
               justifyContent="flex-start"
-              variant={selectedCollection?.$id === c.$id ? "secondary" : "secondary"}
+              variant={selectedCollection?.$id === c.$id ? "secondary" : "tertiary"}
               onClick={() =>
                 router.push(
                   `/project/${project?.$id}/databases/${database!.$id}/collection/${c.$id}`,

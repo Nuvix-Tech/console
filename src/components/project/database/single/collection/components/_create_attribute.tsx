@@ -42,33 +42,29 @@ export const CreateAttribute = ({ refetch }: { refetch: () => Promise<void> }) =
   const { canCreateAttributes } = useProjectStore.use.permissions()();
 
   const onClose = () => setSelectedType(null);
-
   const commonProps = { onClose, refetch };
-
-  const attributeFormMap: Record<string, React.ReactNode> = {
-    string: <StringAttributeForm isOpen={selectedType?.value === "string"} {...commonProps} />,
-    integer: <IntegerAttributeForm isOpen={selectedType?.value === "integer"} {...commonProps} />,
-    float: <FloatAttributeForm isOpen={selectedType?.value === "float"} {...commonProps} />,
-    boolean: <BooleanAttributeForm isOpen={selectedType?.value === "boolean"} {...commonProps} />,
-    datetime: (
-      <DatetimeAttributeForm isOpen={selectedType?.value === "datetime"} {...commonProps} />
-    ),
-    ip: <IpAttributeForm isOpen={selectedType?.value === "ip"} {...commonProps} />,
-    enum: <EnumAttributeForm isOpen={selectedType?.value === "enum"} {...commonProps} />,
-    url: <UrlAttributeForm isOpen={selectedType?.value === "url"} {...commonProps} />,
-    email: <EnumAttributeForm isOpen={selectedType?.value === "email"} {...commonProps} />,
-    relationship: (
-      <RelationshipAttributeForm isOpen={selectedType?.value === "relationship"} {...commonProps} />
-    ),
-  };
 
   return (
     <>
-      <PopoverRoot size="xs" open={open} onOpenChange={(open) => setOpen(open.open)}>
+      <PopoverRoot
+        size="xs"
+        open={open}
+        onOpenChange={(open) => setOpen(open.open)}
+        autoFocus={false}
+        unmountOnExit
+      >
         <PopoverTrigger>
-          <CreateButton hasPermission={true} label="Create Attribute" onClick={() => setOpen(true)} />
+          <CreateButton
+            hasPermission={true}
+            label="Create Attribute"
+            onClick={() => setOpen(true)}
+          />
         </PopoverTrigger>
-        <PopoverContent maxWidth="56" portalled={false}>
+        <PopoverContent
+          maxWidth="56"
+          portalled={false}
+          css={{ "--popover-bg": "var(--neutral-background-weak)" }}
+        >
           <PopoverArrow />
           <PopoverBody overflowY="auto">
             <div className="grid grid-cols-2 gap-2">
@@ -79,7 +75,10 @@ export const CreateAttribute = ({ refetch }: { refetch: () => Promise<void> }) =
                   fillWidth
                   justifyContent="flex-start"
                   size="s"
-                  onClick={() => { setSelectedType(type); setOpen(false) }}
+                  onClick={() => {
+                    setSelectedType(type);
+                    setOpen(false);
+                  }}
                 >
                   {type.label}
                 </Button>
@@ -88,7 +87,16 @@ export const CreateAttribute = ({ refetch }: { refetch: () => Promise<void> }) =
           </PopoverBody>
         </PopoverContent>
       </PopoverRoot>
-      {selectedType && attributeFormMap[selectedType.value]}
+      <StringAttributeForm isOpen={selectedType?.value === "string"} {...commonProps} />
+      <IntegerAttributeForm isOpen={selectedType?.value === "integer"} {...commonProps} />
+      <FloatAttributeForm isOpen={selectedType?.value === "float"} {...commonProps} />
+      <BooleanAttributeForm isOpen={selectedType?.value === "boolean"} {...commonProps} />
+      <DatetimeAttributeForm isOpen={selectedType?.value === "datetime"} {...commonProps} />
+      <IpAttributeForm isOpen={selectedType?.value === "ip"} {...commonProps} />
+      <EnumAttributeForm isOpen={selectedType?.value === "enum"} {...commonProps} />
+      <UrlAttributeForm isOpen={selectedType?.value === "url"} {...commonProps} />
+      <EnumAttributeForm isOpen={selectedType?.value === "email"} {...commonProps} />
+      <RelationshipAttributeForm isOpen={selectedType?.value === "relationship"} {...commonProps} />
     </>
   );
 };
