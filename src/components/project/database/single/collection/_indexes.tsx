@@ -3,7 +3,6 @@ import { Models } from "@nuvix/console";
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { CreateButton, DataGridProvider, Table } from "@/ui/modules/data-grid";
-import { Status } from "@/components/cui/status";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,13 +24,9 @@ type Props = {
 export const IndexesPage: React.FC<Props> = ({ databaseId, collectionId }) => {
   const sdk = useProjectStore.use.sdk?.();
 
-  const fetcher = async () => {
-    return await sdk.databases.listIndexes(databaseId, collectionId);
-  };
-
   const { data, isFetching, refetch } = useSuspenseQuery({
     queryKey: ["indexes", databaseId, collectionId],
-    queryFn: fetcher,
+    queryFn: async () => sdk?.databases.listIndexes(databaseId, collectionId),
   });
 
   const columns: ColumnDef<Models.Index>[] = [
@@ -39,21 +34,23 @@ export const IndexesPage: React.FC<Props> = ({ databaseId, collectionId }) => {
       header: "Key",
       accessorKey: "key",
       minSize: 300,
-      cell: (props) => {
-        const attr = props.row.original;
-
+      cell: ({ row }) => {
+        const index = row.original;
         return (
           <div className="flex items-center gap-2 justify-between w-full">
             <div className="flex items-center gap-4">
-              <p className="text-sm line-clamp-1 overflow-ellipsis">{attr.key}</p>
+              <p className="text-sm line-clamp-1 overflow-ellipsis">{index.key}</p>
             </div>
-            {attr.status !== "available" ? (
+            {index.status !== "available" && (
               <Tag
-                variant={["deleting", "stuck", "failed"].includes(attr.status) ? "danger" : "warning"}
+                className="uppercase"
+                variant={
+                  ["deleting", "stuck", "failed"].includes(index.status) ? "danger" : "warning"
+                }
               >
-                {attr.status}
+                {index.status}
               </Tag>
-            ) : null}
+            )}
           </div>
         );
       },
@@ -62,48 +59,40 @@ export const IndexesPage: React.FC<Props> = ({ databaseId, collectionId }) => {
       header: "Type",
       accessorKey: "type",
       minSize: 100,
-      cell: (props) => {
-        const attr = props.row.original;
-        return <p className="capitalize">{attr.type}</p>;
-      },
+      cell: ({ row }) => <p className="capitalize">{row.original.type}</p>,
     },
     {
       header: "Attributes",
       accessorKey: "attributes",
       minSize: 250,
-      cell: (props) => {
-        return <p className="">{props.getValue<string>()}</p>;
-      },
+      cell: ({ getValue }) => <p>{getValue<string>()}</p>,
     },
     {
       header: "ASC/DESC",
       accessorKey: "orders",
       minSize: 100,
-      cell: (props) => {
-        return <p className="">{props.getValue<string>()}</p>;
-      },
+      cell: ({ getValue }) => <p>{getValue<string>()}</p>,
     },
     {
       header: "",
       accessorKey: "_",
       size: 16,
       minSize: 16,
-      cell: (props) => {
-        const attribute = props.row.original;
-        return (
-          <DropdownMenu>
-            <DropdownMenuTrigger className="mx-auto">
-              <Ellipsis size={18} />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem>Overview</DropdownMenuItem>
-              <DropdownMenuItem>Delete</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        );
-      },
+      cell: ({ row }) => (
+        <DropdownMenu>
+          <DropdownMenuTrigger className="mx-auto">
+            <Ellipsis size={18} />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem>Overview</DropdownMenuItem>
+            <DropdownMenuItem>Delete</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
     },
   ];
+
+  const hasIndexes = data?.total > 0;
 
   return (
     <PageContainer>
@@ -113,23 +102,19 @@ export const IndexesPage: React.FC<Props> = ({ databaseId, collectionId }) => {
         right={<CreateButton label="Create Index" />}
       />
 
-      <DataGridProvider<any>
+      <DataGridProvider<Models.Index>
         columns={columns}
-        data={data.indexes}
-        rowCount={data.total}
+        data={data?.indexes || []}
+        rowCount={data?.total || 0}
         loading={isFetching}
       >
         <EmptyState
-          show={data.total === 0 && !isFetching}
+          show={!hasIndexes && !isFetching}
           title="No Indexes"
           description="No Indexes have been created yet."
         />
 
-        {data.total > 0 && (
-          <>
-            <Table interactive={false} />
-          </>
-        )}
+        {hasIndexes && <Table interactive={false} />}
       </DataGridProvider>
     </PageContainer>
   );

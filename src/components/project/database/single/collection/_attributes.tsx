@@ -4,7 +4,6 @@ import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { CreateButton, DataGridProvider, Table } from "@/ui/modules/data-grid";
 import { AttributeIcon } from "./components";
-import { Status } from "@/components/cui/status";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,94 +25,115 @@ type Props = {
 export const AttributesPage: React.FC<Props> = ({ databaseId, collectionId }) => {
   const sdk = useProjectStore.use.sdk?.();
 
-  const fetcher = async () => {
+  const fetcher = React.useCallback(async () => {
     return await sdk.databases.listAttributes(databaseId, collectionId);
-  };
+  }, [sdk, databaseId, collectionId]);
 
-  const { data, isFetching, refetch } = useSuspenseQuery({
+  const { data, isFetching } = useSuspenseQuery({
     queryKey: ["attributes", databaseId, collectionId],
     queryFn: fetcher,
+    staleTime: 30000, // 30 seconds
   });
 
-  const columns: ColumnDef<Models.AttributeString>[] = [
-    {
-      header: "Key",
-      accessorKey: "key",
-      minSize: 300,
-      cell: (props) => {
-        const attr = props.row.original;
+  const columns = React.useMemo<ColumnDef<Models.AttributeString>[]>(
+    () => [
+      {
+        header: "Key",
+        accessorKey: "key",
+        minSize: 300,
+        cell: ({ row }) => {
+          const attr = row.original;
+          const isUnavailable = attr.status !== "available";
 
-        return (
-          <div className="flex items-center gap-2 justify-between w-full">
-            <div className="flex items-center gap-4">
-              {AttributeIcon(attr, attr.array!)}
-              <p className="text-sm line-clamp-1 overflow-ellipsis">{attr.key}</p>
+          return (
+            <div className="flex items-center gap-2 justify-between w-full">
+              <div className="flex items-center gap-4">
+                {AttributeIcon(attr, Boolean(attr.array))}
+                <p className="text-sm line-clamp-1 overflow-ellipsis">{attr.key}</p>
+              </div>
+              {isUnavailable ? (
+                <Tag
+                  className="uppercase"
+                  variant={
+                    ["deleting", "stuck", "failed"].includes(attr.status) ? "danger" : "warning"
+                  }
+                >
+                  {attr.status}
+                </Tag>
+              ) : (
+                attr.required && (
+                  <Tag className="uppercase" variant="info">
+                    Required
+                  </Tag>
+                )
+              )}
             </div>
-            {attr.status !== "available" ? (
-              <Status
-                value={["deleting", "stuck", "failed"].includes(attr.status) ? "error" : "warning"}
-                size="sm"
-              >
-                {attr.status}
-              </Status>
-            ) : (
-              attr.required && <Tag variant="info">Required</Tag>
-            )}
-          </div>
-        );
+          );
+        },
       },
-    },
-    {
-      header: "Type",
-      accessorKey: "type",
-      minSize: 100,
-      cell: (props) => {
-        const attr = props.row.original;
-        return (
+      {
+        header: "Type",
+        accessorKey: "type",
+        minSize: 100,
+        cell: ({ row }) => (
           <p className="capitalize">
-            {attr.type} {attr.array ? "[]" : ""}
+            {row.original.type} {row.original.array ? "[]" : ""}
           </p>
-        );
+        ),
       },
-    },
-    {
-      header: "Default Value",
-      accessorKey: "default",
-      minSize: 250,
-      cell: (props) => {
-        const attr = props.row.original;
-        return <p className="">{attr.default ?? "-"}</p>;
+      {
+        header: "Default Value",
+        accessorKey: "default",
+        minSize: 250,
+        cell: ({ row }) => <p>{row.original.default ?? "-"}</p>,
       },
-    },
-    {
-      header: "",
-      accessorKey: "_",
-      size: 16,
-      minSize: 16,
-      cell: (props) => {
-        const attribute = props.row.original;
-        return (
+      {
+        header: "",
+        accessorKey: "_",
+        size: 16,
+        minSize: 16,
+        cell: ({ row }) => (
           <DropdownMenu>
-            <DropdownMenuTrigger className="mx-auto">
+            <DropdownMenuTrigger
+              className="mx-auto hover:bg-gray-100 rounded-full p-1"
+              aria-label="Actions"
+            >
               <Ellipsis size={18} />
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem>Update</DropdownMenuItem>
-              <DropdownMenuItem> Create Index </DropdownMenuItem>
-              <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => console.log("Update", row.original.key)}>
+                Update
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => console.log("Create Index", row.original.key)}>
+                Create Index
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-red-600"
+                onClick={() => console.log("Delete", row.original.key)}
+              >
+                Delete
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        );
+        ),
       },
-    },
-  ];
+    ],
+    [],
+  );
+
+  const hasAttributes = data.total > 0;
 
   return (
     <PageContainer>
       <PageHeading
         heading="Attributes"
         description="Attributes are the fields that make up a document in a collection. Each attribute has a key, type, and optional default value."
-        right={<CreateButton label="Create Attribute" />}
+        right={
+          <CreateButton
+            label="Create Attribute"
+            onClick={() => console.log("Create attribute clicked")}
+          />
+        }
       />
 
       <DataGridProvider<any>
@@ -123,16 +143,12 @@ export const AttributesPage: React.FC<Props> = ({ databaseId, collectionId }) =>
         loading={isFetching}
       >
         <EmptyState
-          show={data.total === 0 && !isFetching}
+          show={!hasAttributes && !isFetching}
           title="No Attributes"
           description="No attributes have been created yet."
         />
 
-        {data.total > 0 && (
-          <>
-            <Table interactive={false} />
-          </>
-        )}
+        {hasAttributes && <Table interactive={false} />}
       </DataGridProvider>
     </PageContainer>
   );
