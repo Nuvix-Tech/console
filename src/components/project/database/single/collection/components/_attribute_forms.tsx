@@ -1,15 +1,84 @@
 import { CustomID } from "@/components/_custom_id";
-import { FormDialog, InputField, SubmitButton } from "@/components/others/forms";
+import {
+  FormDialog,
+  InputField,
+  InputNumberField,
+  InputSwitchField,
+  SubmitButton,
+} from "@/components/others/forms";
 import { useCollectionStore, useDatabaseStore, useProjectStore } from "@/lib/store";
 import { Column, Row, useToast } from "@/ui/components";
 import * as y from "yup";
 import { AttributeIcon } from "./_attribute_icon";
+import { useFormikContext } from "formik";
 
 interface BaseProps {
   onClose: () => void;
   isOpen: boolean;
   refetch: () => Promise<void>;
 }
+
+const DefaultValueField = ({ type }: { type: string }) => {
+  const { values } = useFormikContext<{
+    required: boolean;
+    array: boolean;
+  }>();
+
+  const commonProps = {
+    name: "default",
+    label: "Default Value",
+    disabled: values.required || values.array,
+  };
+
+  switch (type) {
+    case "string":
+      return <InputField {...commonProps} nullable />;
+    case "integer":
+      return <InputNumberField {...commonProps} nullable />;
+    case "float":
+      return <InputNumberField {...commonProps} nullable />;
+    case "boolean":
+      return <InputSwitchField {...commonProps} nullable />;
+    case "datetime":
+      return <InputField {...commonProps} type="datetime-local" nullable />;
+    case "ip":
+      return <InputField {...commonProps} placeholder="192.168.1.1" nullable />;
+    case "url":
+      return <InputField {...commonProps} placeholder="https://example.com" nullable />;
+    case "email":
+      return <InputField {...commonProps} placeholder="user@example.com" type="email" nullable />;
+    default:
+      return <InputField {...commonProps} nullable />;
+  }
+};
+
+const RequiredField = () => {
+  const { values } = useFormikContext<{ array: boolean }>();
+
+  return (
+    <InputSwitchField
+      name="required"
+      label="Required"
+      description="Is this field required?"
+      reverse
+      disabled={values.array}
+    />
+  );
+};
+
+const ArrayField = () => {
+  const { values } = useFormikContext<{ required: boolean }>();
+
+  return (
+    <InputSwitchField
+      name="array"
+      label="Is Array"
+      description="Is this field an array?"
+      reverse
+      disabled={values.required}
+    />
+  );
+};
 
 export const StringAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
   const sdk = useProjectStore.use.sdk();
@@ -27,7 +96,9 @@ export const StringAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => 
         "Key must contain only alphanumeric, hyphen, non-leading underscore, period",
       ),
     size: y.number().positive().integer().required(),
-    default: y.string().nullable(),
+    default: y.string().when(["required", "array"], ([required, array], schema) => {
+      return required || array ? schema.nullable().transform(() => null) : schema.nullable();
+    }),
     required: y.boolean().default(false),
     array: y.boolean().default(false),
   });
@@ -77,9 +148,17 @@ export const StringAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => 
         },
       }}
     >
-      <Column paddingY="12" fillWidth gap="8">
-        <InputField name="name" label="Name" />
-        <CustomID name="id" label="Database ID" />
+      <Column paddingY="12" fillWidth gap="16">
+        <InputField
+          name="key"
+          label="Key"
+          required
+          description="Key must contain only alphanumeric, hyphen, non-leading underscore, period"
+        />
+        <InputNumberField name="size" label="Size" required />
+        <DefaultValueField type="string" />
+        <RequiredField />
+        <ArrayField />
       </Column>
     </FormDialog>
   );
@@ -154,13 +233,18 @@ export const IntegerAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) =>
         },
       }}
     >
-      <Column paddingY="12" fillWidth gap="8">
-        <InputField name="key" label="Key" />
-        <InputField name="default" label="Default Value" type="number" />
-        <InputField name="min" label="Minimum Value" type="number" />
-        <InputField name="max" label="Maximum Value" type="number" />
-        <InputField name="required" label="Required" type="checkbox" />
-        <InputField name="array" label="Is Array" type="checkbox" />
+      <Column paddingY="12" fillWidth gap="16">
+        <InputField
+          name="key"
+          label="Key"
+          required
+          description="Key must contain only alphanumeric, hyphen, non-leading underscore, period"
+        />
+        <DefaultValueField type="integer" />
+        <InputNumberField name="min" label="Minimum Value" nullable />
+        <InputNumberField name="max" label="Maximum Value" nullable />
+        <RequiredField />
+        <ArrayField />
       </Column>
     </FormDialog>
   );
