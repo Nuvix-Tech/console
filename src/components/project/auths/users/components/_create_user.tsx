@@ -1,7 +1,7 @@
 import { CustomID } from "@/components/_custom_id";
-import { Form, InputField, SubmitButton } from "@/components/others/forms";
+import { FormDialog, InputField, SubmitButton } from "@/components/others/forms";
 import { useProjectStore } from "@/lib/store";
-import { Column, Dialog, Flex, useToast } from "@/ui/components";
+import { Column, useToast } from "@/ui/components";
 import { useRouter } from "@bprogress/next";
 import { useParams } from "next/navigation";
 import * as y from "yup";
@@ -32,22 +32,24 @@ export const CreateUser = ({ onClose, isOpen }: CreateUserProps) => {
   const baseURL = `/project/${params.id}/authentication/users`;
 
   return (
-    <Dialog
-      isOpen={isOpen}
-      onClose={onClose}
-      title="Create User"
-      description="Add a new user to your project"
-    >
-      <Form<y.InferType<typeof schema>>
-        validationSchema={schema}
-        initialValues={{
+    <FormDialog
+      dialog={{
+        title: "Create User",
+        description: "Add a new user to your project",
+        isOpen,
+        onClose,
+        footer: <SubmitButton label="Create" />,
+      }}
+      form={{
+        validationSchema: schema,
+        initialValues: {
           id: "",
           email: "",
           phone: "",
           name: "",
           password: "",
-        }}
-        onSubmit={async (values) => {
+        },
+        onSubmit: async (values) => {
           try {
             let { id, email, phone, name, password } = values;
             id = id?.trim() || "unique()";
@@ -64,19 +66,16 @@ export const CreateUser = ({ onClose, isOpen }: CreateUserProps) => {
               variant: "danger",
             });
           }
-        }}
-      >
-        <Column paddingY="12" fillWidth gap="8">
-          <InputField name="name" label="Name" />
-          <InputField name="email" label="Email" />
-          <InputField name="phone" label="Phone" />
-          <InputField name="password" type="password" label="Password" />
-          <CustomID name="id" label="User ID" />
-        </Column>
-        <Flex borderTop="neutral-medium" as="footer" horizontal="end" padding="12" gap="8">
-          <SubmitButton>Create</SubmitButton>
-        </Flex>
-      </Form>
-    </Dialog>
+        },
+      }}
+    >
+      <Column paddingY="12" fillWidth gap="8">
+        <InputField name="name" label="Name" />
+        <InputField name="email" label="Email" />
+        <InputField name="phone" label="Phone" />
+        <InputField name="password" type="password" label="Password" />
+        <CustomID name="id" label="User ID" />
+      </Column>
+    </FormDialog>
   );
 };

@@ -1,7 +1,7 @@
 import { CustomID } from "@/components/_custom_id";
-import { Form, InputField, SubmitButton } from "@/components/others/forms";
+import { FormDialog, InputField, SubmitButton } from "@/components/others/forms";
 import { useProjectStore } from "@/lib/store";
-import { Column, Dialog, Flex, useToast } from "@/ui/components";
+import { Column, useToast } from "@/ui/components";
 import { useRouter } from "@bprogress/next";
 import { useParams } from "next/navigation";
 import * as y from "yup";
@@ -25,19 +25,21 @@ export const CreateTeam = ({ onClose, isOpen }: CreateTeamProps) => {
   const baseURL = `/project/${params.id}/authentication/teams`;
 
   return (
-    <Dialog
-      isOpen={isOpen}
-      onClose={onClose}
-      title="Create Team"
-      description="Add a new team to your project"
-    >
-      <Form<y.InferType<typeof schema>>
-        validationSchema={schema}
-        initialValues={{
+    <FormDialog
+      dialog={{
+        title: "Create Team",
+        description: "Add a new team to your project",
+        isOpen,
+        onClose,
+        footer: <SubmitButton label="Create" />,
+      }}
+      form={{
+        validationSchema: schema,
+        initialValues: {
           id: "",
           name: "",
-        }}
-        onSubmit={async (values) => {
+        },
+        onSubmit: async (values) => {
           try {
             let { id, name } = values;
             id = id?.trim() || "unique()";
@@ -54,16 +56,13 @@ export const CreateTeam = ({ onClose, isOpen }: CreateTeamProps) => {
               variant: "danger",
             });
           }
-        }}
-      >
-        <Column paddingY="12" fillWidth gap="8">
-          <InputField name="name" label="Name" />
-          <CustomID name="id" label="Team ID" />
-        </Column>
-        <Flex borderTop="neutral-medium" as="footer" horizontal="end" padding="12" gap="8">
-          <SubmitButton>Create</SubmitButton>
-        </Flex>
-      </Form>
-    </Dialog>
+        },
+      }}
+    >
+      <Column paddingY="12" fillWidth gap="8">
+        <InputField name="name" label="Name" />
+        <CustomID name="id" label="Team ID" />
+      </Column>
+    </FormDialog>
   );
 };
