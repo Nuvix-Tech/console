@@ -2,7 +2,17 @@ import { CreateButton } from "@/components/others";
 import { useProjectStore } from "@/lib/store";
 import { Popover, Portal } from "@chakra-ui/react";
 import React from "react";
-import { StringAttributeForm } from "./_attribute_forms";
+import {
+  BooleanAttributeForm,
+  DatetimeAttributeForm,
+  EnumAttributeForm,
+  FloatAttributeForm,
+  IntegerAttributeForm,
+  IpAttributeForm,
+  RelationshipAttributeForm,
+  StringAttributeForm,
+  UrlAttributeForm,
+} from "./_attribute_forms";
 import { Button } from "@/ui/components";
 
 const attributeTypes = [
@@ -28,28 +38,27 @@ export const CreateAttribute = ({ refetch }: { refetch: () => Promise<void> }) =
 
   const commonProps = { onClose, refetch };
 
-  // Create a map for all attribute types
   const attributeFormMap: Record<string, React.ReactNode> = {
     string: <StringAttributeForm isOpen={selectedType?.value === "string"} {...commonProps} />,
-    integer: <div>Integer Form</div>,
-    float: <div>Float Form</div>,
-    boolean: <div>Boolean Form</div>,
-    datetime: <div>Datetime Form</div>,
-    ip: <div>IP Form</div>,
-    enum: <div>Enum Form</div>,
-    url: <div>URL Form</div>,
-    email: <div>Email Form</div>,
-    relationship: <div>Relationship Form</div>,
+    integer: <IntegerAttributeForm isOpen={selectedType?.value === "integer"} {...commonProps} />,
+    float: <FloatAttributeForm isOpen={selectedType?.value === "float"} {...commonProps} />,
+    boolean: <BooleanAttributeForm isOpen={selectedType?.value === "boolean"} {...commonProps} />,
+    datetime: (
+      <DatetimeAttributeForm isOpen={selectedType?.value === "datetime"} {...commonProps} />
+    ),
+    ip: <IpAttributeForm isOpen={selectedType?.value === "ip"} {...commonProps} />,
+    enum: <EnumAttributeForm isOpen={selectedType?.value === "enum"} {...commonProps} />,
+    url: <UrlAttributeForm isOpen={selectedType?.value === "url"} {...commonProps} />,
+    email: <EnumAttributeForm isOpen={selectedType?.value === "email"} {...commonProps} />,
+    relationship: (
+      <RelationshipAttributeForm isOpen={selectedType?.value === "relationship"} {...commonProps} />
+    ),
   };
 
   return (
     <Popover.Root>
       <Popover.Trigger asChild>
-        <CreateButton
-          hasPermission={canCreateAttributes}
-          label="Create Attribute"
-          onClick={() => console.log("Create attribute clicked")}
-        />
+        <CreateButton hasPermission={true} label="Create Attribute" />
       </Popover.Trigger>
       <Portal>
         <Popover.Positioner>
