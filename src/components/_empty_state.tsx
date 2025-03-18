@@ -1,15 +1,24 @@
 import { ButtonProps, Button, SmartImage } from "@/ui/components";
 import { Stack, Text } from "@chakra-ui/react";
+import React from "react";
 
 type EmptyStateProps = {
   show: boolean;
   title: string;
   description?: string;
+  primaryComponent?: React.JSX.Element;
   primary?: ButtonProps;
   secondary?: ButtonProps;
 };
 
-export const EmptyState = ({ show, title, description, primary, secondary }: EmptyStateProps) => {
+export const EmptyState = ({
+  show,
+  title,
+  description,
+  primary,
+  secondary,
+  primaryComponent,
+}: EmptyStateProps) => {
   return (
     show && (
       <Stack
@@ -36,7 +45,7 @@ export const EmptyState = ({ show, title, description, primary, secondary }: Emp
           )}
         </Stack>
         <Stack direction="row" gap={4}>
-          {primary && <Button {...primary} />}
+          {primaryComponent ? primaryComponent : primary && <Button {...primary} />}
           {secondary && <Button variant="secondary" {...secondary} />}
         </Stack>
       </Stack>

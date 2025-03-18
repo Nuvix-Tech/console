@@ -11,19 +11,22 @@ import { LuTrash2 } from "react-icons/lu";
 import { DataGridProvider, Pagination, Search, SelectLimit, Table } from "@/ui/modules/data-grid";
 import { useProjectStore, useTeamStore } from "@/lib/store";
 import { useSearchQuery } from "@/hooks/useQuery";
-import { PageContainer, PageHeading } from "@/components/others";
+import { CreateButton, PageContainer, PageHeading } from "@/components/others";
 import { EmptyState } from "@/components";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { CreateMember } from "./components/_create_member";
 
 const MembersPage = () => {
   const sdk = useProjectStore.use.sdk?.();
   const project = useProjectStore.use.project?.();
+  const permissions = useProjectStore.use.permissions?.();
   const team = useTeamStore.use.team?.();
   const [deleting, setDeleting] = useState(false);
   const { addToast } = useToast();
   const confirm = useConfirm();
 
   const { limit, page, search, hasQuery } = useSearchQuery();
+  const { canUpdateTeams } = permissions();
 
   const authPath = `/project/${project?.$id}/authentication`;
 
@@ -130,9 +133,22 @@ const MembersPage = () => {
     },
   ];
 
+  const create = (
+    <CreateButton
+      hasPermission={canUpdateTeams}
+      label="Add Member"
+      component={CreateMember}
+      extraProps={{ refetch }}
+    />
+  );
+
   return (
     <PageContainer>
-      <PageHeading heading="Members" description="Manage the members of this team." />
+      <PageHeading
+        heading="Members"
+        description="Manage the members of this team."
+        right={create}
+      />
 
       <DataGridProvider<Models.Membership>
         columns={columns}
@@ -148,6 +164,7 @@ const MembersPage = () => {
           show={data.total === 0 && !isFetching && !hasQuery}
           title="No members found"
           description="Add members to this team to collaborate and manage access control."
+          primaryComponent={create}
         />
 
         {(data.total > 0 || hasQuery) && (
