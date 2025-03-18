@@ -9,7 +9,7 @@ import { useSearchQuery } from "@/hooks/useQuery";
 import { EmptyState } from "@/components/_empty_state";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { HStack } from "@chakra-ui/react";
-import { DatabaseCard } from "./components";
+import { CreateDatabase, DatabaseCard } from "./components";
 
 const DatabasePage = () => {
   const setSidebarNull = useProjectStore.use.setSidebarNull();
@@ -36,13 +36,20 @@ const DatabasePage = () => {
   });
 
   const path = `/project/${project?.$id}/databases`;
+  const create = (
+    <CreateButton
+      hasPermission={canCreateDatabases}
+      label="Create Database"
+      component={CreateDatabase}
+    />
+  );
 
   return (
     <PageContainer>
       <PageHeading
         heading="Databases"
         description="Databases are used to store and manage your data."
-        right={<CreateButton hasPermission={canCreateDatabases} label="Create Database" />}
+        right={create}
       />
 
       <DataGridProvider<Models.Database>
@@ -59,6 +66,7 @@ const DatabasePage = () => {
           show={data.total === 0 && !isFetching && !hasQuery}
           title="No Databases"
           description="No databases have been created yet."
+          primaryComponent={create}
         />
 
         {(data.total > 0 || hasQuery) && (

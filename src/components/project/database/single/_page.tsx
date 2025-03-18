@@ -21,6 +21,7 @@ import { useDatabaseStore, useProjectStore } from "@/lib/store";
 import { useSearchQuery } from "@/hooks/useQuery";
 import { EmptyState } from "@/components/_empty_state";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { CreateCollection } from "./components";
 
 const DatabaseSinglePage = ({ databaseId }: { databaseId: string }) => {
   const sdk = useProjectStore.use.sdk?.();
@@ -33,7 +34,7 @@ const DatabaseSinglePage = ({ databaseId }: { databaseId: string }) => {
   const { limit, page, search, hasQuery } = useSearchQuery();
   const confirm = useConfirm();
   const { addToast } = useToast();
-  const { canCreateCollections } = permissions();
+  const { canCreateCollections, canDeleteCollections } = permissions();
 
   useEffect(() => {
     setSidebarNull("first", "middle");
@@ -132,12 +133,20 @@ const DatabaseSinglePage = ({ databaseId }: { databaseId: string }) => {
     }
   };
 
+  const create = (
+    <CreateButton
+      hasPermission={canCreateCollections}
+      label="Create Collection"
+      component={CreateCollection}
+    />
+  );
+
   return (
     <PageContainer>
       <PageHeading
         heading="Collections"
         description="Collections are groups of documents that are stored together in a database. Each collection is a separate entity and can have its own set of documents."
-        right={<CreateButton hasPermission={canCreateCollections} label="Create Collection" />}
+        right={create}
       />
 
       <DataGridProvider<Models.Collection>
@@ -147,12 +156,13 @@ const DatabaseSinglePage = ({ databaseId }: { databaseId: string }) => {
         rowCount={data.total}
         loading={isFetching}
         state={{ pagination: { pageIndex: page, pageSize: limit } }}
-        showCheckbox
+        showCheckbox={canDeleteCollections}
       >
         <EmptyState
           show={data.total === 0 && !isFetching && !hasQuery}
           title="No Collections"
           description="No collections have been created yet."
+          primaryComponent={create}
         />
 
         {(data.total > 0 || hasQuery) && (
@@ -169,15 +179,17 @@ const DatabaseSinglePage = ({ databaseId }: { databaseId: string }) => {
           </>
         )}
 
-        <DataActionBar
-          actions={
-            <>
-              <ActionButton<Models.Collection> colorPalette="red" onClick={onDelete}>
-                Delete
-              </ActionButton>
-            </>
-          }
-        />
+        {canDeleteCollections && (
+          <DataActionBar
+            actions={
+              <>
+                <ActionButton<Models.Collection> colorPalette="red" onClick={onDelete}>
+                  Delete
+                </ActionButton>
+              </>
+            }
+          />
+        )}
       </DataGridProvider>
     </PageContainer>
   );

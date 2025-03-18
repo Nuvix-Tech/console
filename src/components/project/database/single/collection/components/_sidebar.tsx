@@ -1,12 +1,14 @@
 import { Tooltip } from "@/components/cui/tooltip";
 import { useCollectionStore, useDatabaseStore, useProjectStore } from "@/lib/store";
-import { IconButton, Line } from "@/ui/components";
+import { Button, IconButton, Line, Row, Skeleton } from "@/ui/components";
 import { SidebarGroup } from "@/ui/modules/layout/navigation";
 import { useRouter } from "@bprogress/next";
-import { Button, VStack } from "@chakra-ui/react";
+import { VStack } from "@chakra-ui/react";
 import { Models } from "@nuvix/console";
+import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { useState } from "react";
+import { CreateCollection } from "../../components";
 
 const CollectionSidebar = () => {
   const project = useProjectStore.use.project?.();
@@ -64,59 +66,80 @@ const CollectionSidebar = () => {
 
 const CollectionsSiderbar = () => {
   const sdk = useProjectStore.use.sdk?.();
+  const { canCreateCollections } = useProjectStore.use.permissions()();
   const database = useDatabaseStore.use.database?.();
+  const [isOpen, setIsOpen] = useState(false);
 
-  const [collections, setCollections] = useState<Models.Collection[]>([]);
+  const { data, isPending } = useQuery({
+    queryKey: ["collections-list", database?.$id],
+    queryFn: async () => {
+      if (!sdk || !database) return;
 
-  useEffect(() => {
-    if (!sdk || !database) return;
-
-    sdk.databases.listCollections(database!.$id).then((data) => {
-      setCollections(data.collections);
-    });
-  }, [sdk, database]);
+      return sdk.databases.listCollections(database!.$id);
+    },
+    enabled: !!sdk && !!database,
+  });
 
   return (
     <>
       <SidebarGroup
         title="Collections"
         action={
-          <Tooltip content="Create Collection" showArrow>
-            <IconButton variant="secondary" icon="plus" size="s" />
-          </Tooltip>
+          canCreateCollections && (
+            <>
+              <Tooltip content="Create Collection" showArrow>
+                <IconButton
+                  variant="secondary"
+                  icon="plus"
+                  size="s"
+                  onClick={() => setIsOpen(true)}
+                />
+              </Tooltip>
+              <CreateCollection isOpen={isOpen} onClose={() => setIsOpen(false)} />
+            </>
+          )
         }
         items={[]}
       />
-      <Collections collections={collections} />
+      <Collections collections={data?.collections} isPending={isPending} />
       <Line />
     </>
   );
 };
 
-const Collections = ({ collections }: { collections: Models.Collection[] }) => {
+const Collections = ({
+  collections,
+  isPending,
+}: { collections?: Models.Collection[]; isPending: boolean }) => {
   const selectedCollection = useCollectionStore.use.collection?.();
   const database = useDatabaseStore.use.database?.();
   const project = useProjectStore.use.project?.();
-
-  const path = usePathname();
   const router = useRouter();
 
   return (
-    <VStack justifyContent={"start"} alignItems={"start"} width="full" px="4">
-      {collections.map((c) => (
-        <Button
-          size="sm"
-          width="full"
-          key={c.$id}
-          justifyContent="flex-start"
-          variant={selectedCollection?.$id === c.$id ? "surface" : "ghost"}
-          onClick={() =>
-            router.push(`/project/${project?.$id}/databases/${database!.$id}/collection/${c.$id}`)
-          }
-        >
-          {c.name}
-        </Button>
-      ))}
+    <VStack justifyContent={"start"} alignItems={"start"} width="full" px="4" gap={2}>
+      {isPending
+        ? Array.from({ length: 3 }).map((_, i) => (
+            <Row key={i} fillWidth height={"24"}>
+              <Skeleton shape="block" radius="l" />
+            </Row>
+          ))
+        : collections?.map((c) => (
+            <Button
+              size="s"
+              fillWidth
+              key={c.$id}
+              justifyContent="flex-start"
+              variant={selectedCollection?.$id === c.$id ? "secondary" : "secondary"}
+              onClick={() =>
+                router.push(
+                  `/project/${project?.$id}/databases/${database!.$id}/collection/${c.$id}`,
+                )
+              }
+            >
+              {c.name}
+            </Button>
+          ))}
     </VStack>
   );
 };

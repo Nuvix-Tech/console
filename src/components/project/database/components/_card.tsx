@@ -34,7 +34,7 @@ export const DatabaseCard = ({ database }: DatabaseCardProps) => {
           </Text>
           <Database className="absolute right-4 opacity-10 size-28 rotate-45 bottom-4 neutral-on-background-weak" />
         </Column>
-        <div onClick={(e) => e.preventDefault()}>
+        <div onClick={(e) => e.preventDefault()} className="inline w-min">
           <IDChip id={database.$id} hideIcon />
         </div>
       </Card>

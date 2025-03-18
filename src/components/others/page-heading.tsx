@@ -17,9 +17,9 @@ export const PageHeading = ({ heading, description, right }: PageHeadingProps) =
         gap={4}
         width="full"
       >
-        <Column vertical="center" horizontal="start">
+        <Column vertical="center" horizontal="start" maxWidth={"l"}>
           <Heading size="2xl">{heading}</Heading>
-          <Text fontSize="sm" color="fg.subtle">
+          <Text fontSize="sm" color="var(--neutral-on-background-weak)">
             {description}
           </Text>
         </Column>
