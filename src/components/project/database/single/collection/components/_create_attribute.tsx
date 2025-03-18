@@ -1,6 +1,12 @@
 import { CreateButton } from "@/components/others";
 import { useProjectStore } from "@/lib/store";
-import { Popover, Portal } from "@chakra-ui/react";
+import {
+  PopoverRoot,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverBody,
+} from "@/components/cui/popover";
 import React from "react";
 import {
   BooleanAttributeForm,
@@ -32,6 +38,7 @@ export const CreateAttribute = ({ refetch }: { refetch: () => Promise<void> }) =
   const [selectedType, setSelectedType] = React.useState<(typeof attributeTypes)[number] | null>(
     null,
   );
+  const [open, setOpen] = React.useState(false);
   const { canCreateAttributes } = useProjectStore.use.permissions()();
 
   const onClose = () => setSelectedType(null);
@@ -56,32 +63,32 @@ export const CreateAttribute = ({ refetch }: { refetch: () => Promise<void> }) =
   };
 
   return (
-    <Popover.Root>
-      <Popover.Trigger asChild>
-        <CreateButton hasPermission={true} label="Create Attribute" />
-      </Popover.Trigger>
-      <Portal>
-        <Popover.Positioner>
-          <Popover.Content>
-            <Popover.Arrow />
-            <Popover.Body>
-              <div className="grid grid-cols-2 gap-2">
-                {attributeTypes.map((type) => (
-                  <Button
-                    key={type.value}
-                    variant="tertiary"
-                    size="s"
-                    onClick={() => setSelectedType(type)}
-                  >
-                    {type.label}
-                  </Button>
-                ))}
-              </div>
-              {selectedType && attributeFormMap[selectedType.value]}
-            </Popover.Body>
-          </Popover.Content>
-        </Popover.Positioner>
-      </Portal>
-    </Popover.Root>
+    <>
+      <PopoverRoot size="xs" open={open} onOpenChange={(open) => setOpen(open.open)}>
+        <PopoverTrigger>
+          <CreateButton hasPermission={true} label="Create Attribute" onClick={() => setOpen(true)} />
+        </PopoverTrigger>
+        <PopoverContent maxWidth="56" portalled={false}>
+          <PopoverArrow />
+          <PopoverBody overflowY="auto">
+            <div className="grid grid-cols-2 gap-2">
+              {attributeTypes.map((type) => (
+                <Button
+                  key={type.value}
+                  variant="tertiary"
+                  fillWidth
+                  justifyContent="flex-start"
+                  size="s"
+                  onClick={() => { setSelectedType(type); setOpen(false) }}
+                >
+                  {type.label}
+                </Button>
+              ))}
+            </div>
+          </PopoverBody>
+        </PopoverContent>
+      </PopoverRoot>
+      {selectedType && attributeFormMap[selectedType.value]}
+    </>
   );
 };
