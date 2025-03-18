@@ -10,6 +10,7 @@ type CreateButtonProps = {
 export const CreateButton = ({
   hasPermission,
   label,
+  children,
   component: Component,
   ...props
 }: CreateButtonProps) => {
@@ -18,8 +19,8 @@ export const CreateButton = ({
 
   return (
     <>
-      <Button label={label} {...props} onClick={(e: any) => Component ? setIsOpen(true) : props.onClick?.(e)}>
-        {props.children}
+      <Button {...props} onClick={(e: any) => (Component ? setIsOpen(true) : props.onClick?.(e))}>
+        {label ?? children}
         {Component && <Component onClose={() => setIsOpen(false)} isOpen={isOpen} />}
       </Button>
     </>

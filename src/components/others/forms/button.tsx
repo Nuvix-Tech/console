@@ -1,18 +1,15 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/ui/components";
 import { ButtonProps } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
-import { Loader2 } from "lucide-react";
 
 type Props = ButtonProps;
 
 export default function (props: Props) {
   const { ...rest } = props;
-
   const { isSubmitting, isValid, dirty } = useFormikContext();
 
   return (
-    <Button type="submit" disabled={!isValid || !dirty || isSubmitting}>
-      {isSubmitting ? <Loader2 className="animate-spin" /> : null}
+    <Button type="submit" disabled={!isValid || !dirty || isSubmitting} loading={isSubmitting}>
       {props.children}
     </Button>
   );

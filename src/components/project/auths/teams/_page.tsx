@@ -13,12 +13,15 @@ import { EmptyState } from "@/components";
 import { CreateButton, PageContainer, PageHeading } from "@/components/others";
 import { useSearchQuery } from "@/hooks/useQuery";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { CreateTeam } from "./components";
 
 const Page = () => {
   const sdk = useProjectStore.use.sdk?.();
   const project = useProjectStore.use.project?.();
+  const permissions = useProjectStore.use.permissions();
   const setSidebarNull = useProjectStore.use.setSidebarNull();
   const { limit, page, search, hasQuery } = useSearchQuery();
+  const { canCreateTeams } = permissions();
 
   useEffect(() => setSidebarNull("first"), []);
 
@@ -75,7 +78,9 @@ const Page = () => {
       <PageHeading
         heading="Teams"
         description="Manage and organize users into teams for better access control and collaboration"
-        right={<CreateButton hasPermission={true} label="Create Team" />}
+        right={
+          <CreateButton hasPermission={canCreateTeams} label="Create Team" component={CreateTeam} />
+        }
       />
 
       <DataGridProvider<Models.Team<any>>
