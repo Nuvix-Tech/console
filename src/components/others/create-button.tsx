@@ -4,9 +4,22 @@ import React from "react";
 type CreateButtonProps = {
   hasPermission: boolean;
   label: string;
-  icon?: React.ElementType;
+  component?: React.ElementType;
 } & ButtonProps;
 
-export const CreateButton = ({ hasPermission, label, icon, ...props }: CreateButtonProps) => {
-  return hasPermission && <Button label={label} {...props} />;
+export const CreateButton = ({
+  hasPermission,
+  label,
+  component: Component,
+  ...props
+}: CreateButtonProps) => {
+  if (!hasPermission) return null;
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  return (
+    <>
+      <Button label={label} {...props} />
+      {Component && <Component isOpen={isOpen} onClose={() => setIsOpen(false)} />}
+    </>
+  );
 };

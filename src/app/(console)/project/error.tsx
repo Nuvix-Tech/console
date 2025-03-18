@@ -17,9 +17,7 @@ export default function Error({ error, reset }: ErrorProps) {
     <div className="flex h-screen flex-col items-center justify-center gap-6 p-4">
       <h1 className="text-3xl font-bold">Oops! Something went wrong</h1>
       <p className="text-gray-600">We encountered an error while processing your request.</p>
-      {error.digest && (
-        <p className="text-sm text-gray-500">Error ID: {error.digest}</p>
-      )}
+      {error.digest && <p className="text-sm text-gray-500">Error ID: {error.digest}</p>}
       <div className="flex gap-4">
         <button
           onClick={reset}
@@ -27,7 +25,7 @@ export default function Error({ error, reset }: ErrorProps) {
         >
           Try again
         </button>
-        <Link 
+        <Link
           href="/project"
           className="rounded border border-gray-300 px-4 py-2 hover:bg-gray-100 transition-colors"
         >

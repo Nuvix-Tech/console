@@ -13,6 +13,7 @@ import { EmptyState } from "@/components";
 import { useSearchQuery } from "@/hooks/useQuery";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useProjectStore } from "@/lib/store";
+import { CreateUser } from "./components";
 
 const UsersPage = () => {
   const project = useProjectStore.use.project?.();
@@ -144,7 +145,9 @@ const UsersPage = () => {
       <PageHeading
         heading="Users"
         description="Manage and monitor user accounts, verify status, and control access to your project."
-        right={<CreateButton hasPermission={canCreateUsers} label="Create User" />}
+        right={
+          <CreateButton hasPermission={canCreateUsers} label="Create User" component={CreateUser} />
+        }
       />
 
       <DataGridProvider<Models.User<any>>
