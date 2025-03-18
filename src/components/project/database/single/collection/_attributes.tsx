@@ -2,8 +2,8 @@
 import { Models } from "@nuvix/console";
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { CreateButton, DataGridProvider, Table } from "@/ui/modules/data-grid";
-import { AttributeIcon } from "./components";
+import { DataGridProvider, Table } from "@/ui/modules/data-grid";
+import { AttributeIcon, CreateAttribute } from "./components";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,7 +29,7 @@ export const AttributesPage: React.FC<Props> = ({ databaseId, collectionId }) =>
     return await sdk.databases.listAttributes(databaseId, collectionId);
   }, [sdk, databaseId, collectionId]);
 
-  const { data, isFetching } = useSuspenseQuery({
+  const { data, isFetching, refetch } = useSuspenseQuery({
     queryKey: ["attributes", databaseId, collectionId],
     queryFn: fetcher,
     staleTime: 30000, // 30 seconds
@@ -128,12 +128,7 @@ export const AttributesPage: React.FC<Props> = ({ databaseId, collectionId }) =>
       <PageHeading
         heading="Attributes"
         description="Attributes are the fields that make up a document in a collection. Each attribute has a key, type, and optional default value."
-        right={
-          <CreateButton
-            label="Create Attribute"
-            onClick={() => console.log("Create attribute clicked")}
-          />
-        }
+        right={<CreateAttribute refetch={refetch as any} />}
       />
 
       <DataGridProvider<any>

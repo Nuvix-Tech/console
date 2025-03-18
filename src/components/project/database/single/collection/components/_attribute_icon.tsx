@@ -11,7 +11,7 @@ import {
   Brackets,
 } from "lucide-react";
 
-export const AttributeIcon = (attribute: any, isArray: boolean) => {
+export const AttributeIcon = (attribute: any, isArray: boolean = false) => {
   const icons = {
     string: <Text size={16} />,
     integer: <Hash size={16} />,
