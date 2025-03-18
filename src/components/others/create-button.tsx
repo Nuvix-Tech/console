@@ -18,8 +18,10 @@ export const CreateButton = ({
 
   return (
     <>
-      <Button label={label} {...props} />
-      {Component && <Component isOpen={isOpen} onClose={() => setIsOpen(false)} />}
+      <Button label={label} {...props} onClick={(e: any) => Component ? setIsOpen(true) : props.onClick?.(e)}>
+        {props.children}
+        {Component && <Component onClose={() => setIsOpen(false)} isOpen={isOpen} />}
+      </Button>
     </>
   );
 };
