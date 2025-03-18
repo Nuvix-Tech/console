@@ -4,7 +4,6 @@ import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { CreateButton, DataGridProvider, Table } from "@/ui/modules/data-grid";
 import { AttributeIcon } from "./components";
-import { Badge } from "@/components/ui/badge";
 import { Status } from "@/components/cui/status";
 import {
   DropdownMenu,
@@ -17,6 +16,7 @@ import { useProjectStore } from "@/lib/store";
 import { PageContainer, PageHeading } from "@/components/others";
 import { EmptyState } from "@/components/_empty_state";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { Tag } from "@/ui/components";
 
 type Props = {
   databaseId: string;
@@ -57,7 +57,7 @@ export const AttributesPage: React.FC<Props> = ({ databaseId, collectionId }) =>
                 {attr.status}
               </Status>
             ) : (
-              attr.required && <Badge variant="secondary">Required</Badge>
+              attr.required && <Tag variant="info">Required</Tag>
             )}
           </div>
         );

@@ -26,7 +26,7 @@ export const AttributeIcon = (attribute: any, isArray: boolean) => {
   const type = (attribute.format || attribute.type) as keyof typeof icons;
 
   return (
-    <div className="flex items-center gap-2 size-8 bg-muted rounded-full relative justify-center">
+    <div className="flex items-center gap-2 size-8 neutral-background-alpha-strong rounded-full relative justify-center">
       {icons[type]}
       {isArray && (
         <div className="absolute bottom-0 right-0">

@@ -15,6 +15,7 @@ import { useProjectStore } from "@/lib/store";
 import { PageContainer, PageHeading } from "@/components/others";
 import { EmptyState } from "@/components/_empty_state";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { Tag } from "@/ui/components";
 
 type Props = {
   databaseId: string;
@@ -47,12 +48,11 @@ export const IndexesPage: React.FC<Props> = ({ databaseId, collectionId }) => {
               <p className="text-sm line-clamp-1 overflow-ellipsis">{attr.key}</p>
             </div>
             {attr.status !== "available" ? (
-              <Status
-                value={["deleting", "stuck", "failed"].includes(attr.status) ? "error" : "warning"}
-                size="sm"
+              <Tag
+                variant={["deleting", "stuck", "failed"].includes(attr.status) ? "danger" : "warning"}
               >
                 {attr.status}
-              </Status>
+              </Tag>
             ) : null}
           </div>
         );
