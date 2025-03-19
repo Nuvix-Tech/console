@@ -1,4 +1,3 @@
-import { CustomID } from "@/components/_custom_id";
 import {
   FormDialog,
   InputField,
@@ -57,6 +56,7 @@ const RequiredField = () => {
 
   return (
     <InputSwitchField
+      className="gap-0"
       name="required"
       label="Required"
       description="Is this field required?"
@@ -71,9 +71,10 @@ const ArrayField = () => {
 
   return (
     <InputSwitchField
+      className="gap-0"
       name="array"
       label="Is Array"
-      description="Is this field an array?"
+      description="Allows storing multiple values of this type"
       reverse
       disabled={values.required}
     />
@@ -96,8 +97,9 @@ export const StringAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => 
         "Key must contain only alphanumeric, hyphen, non-leading underscore, period",
       ),
     size: y.number().positive().integer().required(),
-    default: y.string().when(["required", "array"], ([required, array], schema) => {
-      return required || array ? schema.nullable().transform(() => null) : schema.nullable();
+    default: y.string().nullable().when(['required', 'array'], {
+      is: (required: boolean, array: boolean) => required || array,
+      then: (schema) => schema.transform(() => null),
     }),
     required: y.boolean().default(false),
     array: y.boolean().default(false),
@@ -106,7 +108,7 @@ export const StringAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => 
   return (
     <FormDialog
       dialog={{
-        title: <Row gap="8">{AttributeIcon({ format: "string" })} Create String Attribute</Row>,
+        title: <Row gap="8">{AttributeIcon({ format: "string" })} String </Row>,
         description: "Create a new string attribute for this collection",
         isOpen,
         onClose,
@@ -189,7 +191,7 @@ export const IntegerAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) =>
   return (
     <FormDialog
       dialog={{
-        title: <Row gap="8">{AttributeIcon({ format: "integer" })} Create Integer Attribute</Row>,
+        title: <Row gap="8">{AttributeIcon({ format: "integer" })} Integer </Row>,
         description: "Create a new integer attribute for this collection",
         isOpen,
         onClose,
@@ -275,7 +277,7 @@ export const FloatAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
   return (
     <FormDialog
       dialog={{
-        title: <Row gap="8">{AttributeIcon({ format: "float" })} Create Float Attribute</Row>,
+        title: <Row gap="8">{AttributeIcon({ format: "float" })} Float </Row>,
         description: "Create a new float attribute for this collection",
         isOpen,
         onClose,
@@ -354,7 +356,7 @@ export const BooleanAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) =>
   return (
     <FormDialog
       dialog={{
-        title: <Row gap="8">{AttributeIcon({ format: "boolean" })} Create Boolean Attribute</Row>,
+        title: <Row gap="8">{AttributeIcon({ format: "boolean" })} Boolean </Row>,
         description: "Create a new boolean attribute for this collection",
         isOpen,
         onClose,
@@ -427,7 +429,7 @@ export const DatetimeAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) =
   return (
     <FormDialog
       dialog={{
-        title: <Row gap="8">{AttributeIcon({ format: "datetime" })} Create Datetime Attribute</Row>,
+        title: <Row gap="8">{AttributeIcon({ format: "datetime" })} Datetime </Row>,
         description: "Create a new datetime attribute for this collection",
         isOpen,
         onClose,
@@ -500,7 +502,7 @@ export const IpAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
   return (
     <FormDialog
       dialog={{
-        title: <Row gap="8">{AttributeIcon({ format: "ip" })} Create IP Address Attribute</Row>,
+        title: <Row gap="8">{AttributeIcon({ format: "ip" })} IP  Attribute</Row>,
         description: "Create a new IP address attribute for this collection",
         isOpen,
         onClose,
@@ -574,7 +576,7 @@ export const EnumAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
   return (
     <FormDialog
       dialog={{
-        title: <Row gap="8">{AttributeIcon({ format: "enum" })} Create Enum Attribute</Row>,
+        title: <Row gap="8">{AttributeIcon({ format: "enum" })} Enum </Row>,
         description: "Create a new enum attribute for this collection",
         isOpen,
         onClose,
@@ -651,7 +653,7 @@ export const UrlAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
   return (
     <FormDialog
       dialog={{
-        title: <Row gap="8">{AttributeIcon({ format: "url" })} Create URL Attribute</Row>,
+        title: <Row gap="8">{AttributeIcon({ format: "url" })} URL </Row>,
         description: "Create a new URL attribute for this collection",
         isOpen,
         onClose,
@@ -724,7 +726,7 @@ export const EmailAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
   return (
     <FormDialog
       dialog={{
-        title: <Row gap="8">{AttributeIcon({ format: "email" })} Create Email Attribute</Row>,
+        title: <Row gap="8">{AttributeIcon({ format: "email" })} Email </Row>,
         description: "Create a new email attribute for this collection",
         isOpen,
         onClose,
@@ -808,7 +810,7 @@ export const RelationshipAttributeForm = ({ onClose, isOpen, refetch }: BaseProp
       dialog={{
         title: (
           <Row gap="8">
-            {AttributeIcon({ format: "relationship" })} Create Relationship Attribute
+            {AttributeIcon({ format: "relationship" })} Relationship
           </Row>
         ),
         description: "Create a new relationship attribute for this collection",
@@ -861,12 +863,12 @@ export const RelationshipAttributeForm = ({ onClose, isOpen, refetch }: BaseProp
           name="relationType"
           label="Relation Type"
           type="select"
-          // options={[
-          //   { label: "One to One", value: "oneToOne" },
-          //   { label: "One to Many", value: "oneToMany" },
-          //   { label: "Many to One", value: "manyToOne" },
-          //   { label: "Many to Many", value: "manyToMany" },
-          // ]}
+        // options={[
+        //   { label: "One to One", value: "oneToOne" },
+        //   { label: "One to Many", value: "oneToMany" },
+        //   { label: "Many to One", value: "manyToOne" },
+        //   { label: "Many to Many", value: "manyToMany" },
+        // ]}
         />
         <InputField name="twoWay" label="Two-Way Relationship" type="checkbox" />
         <InputField name="twoWayKey" label="Two-Way Key" />
@@ -874,11 +876,11 @@ export const RelationshipAttributeForm = ({ onClose, isOpen, refetch }: BaseProp
           name="onDelete"
           label="On Delete Action"
           type="select"
-          // options={[
-          //   { label: "Cascade", value: "cascade" },
-          //   { label: "Restrict", value: "restrict" },
-          //   { label: "Set Null", value: "setNull" },
-          // ]}
+        // options={[
+        //   { label: "Cascade", value: "cascade" },
+        //   { label: "Restrict", value: "restrict" },
+        //   { label: "Set Null", value: "setNull" },
+        // ]}
         />
       </Column>
     </FormDialog>
