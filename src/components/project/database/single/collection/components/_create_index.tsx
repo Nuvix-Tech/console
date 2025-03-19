@@ -14,9 +14,28 @@ const generateSchema = () => {
   return y.object({
     key: y.string().required("Key is required"),
     type: y.string().oneOf(['key', 'unique', 'fulltext']).required("Index type is required"),
-    fields: y.array().of(
-      y.object()
-    ).min(1, "At least one field must be added")
+    fields: y.array()
+      .of(
+        y.mixed().test(
+          "is-valid-sort-field",
+          "Each attribute must have a valid sort order",
+          (value) => {
+            if (!value || typeof value !== 'object' || Array.isArray(value)) {
+              return false;
+            }
+
+            const keys = Object.keys(value);
+
+            if (keys.length !== 1) {
+              return false;
+            }
+
+            const sortValue = (value as any)[keys[0]];
+            return sortValue === 'asc' || sortValue === 'desc';
+          }
+        )
+      )
+      .min(1, "At least one field must be added")
   });
 };
 
@@ -46,13 +65,14 @@ export const CreateIndex = ({ onClose, isOpen, refetch }: CreateIndexProps) => {
           try {
             const { key, type, fields } = values;
 
-            console.log({ key, type, fields });
+            const { attributes, orders } = fields.reduce((acc: any, field: any) => {
+              const [key, value] = Object.entries(field)[0];
+              acc.attributes.push(key);
+              acc.orders.push(value);
+              return acc;
+            }, { attributes: [], orders: [] });
 
-            // Transform fields to the format expected by your SDK
-            // const indexFields = fields.reduce((acc, field) => {
-            //   acc[field.left] = field.right;
-            //   return acc;
-            // }, {});
+            await sdk.databases.createIndex(database?.$id!, collection.$id, key, type, attributes, orders);
 
             addToast({
               message: "Index created successfully",
