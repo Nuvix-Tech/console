@@ -5,10 +5,12 @@ import {
   List,
   Link,
   AtSign,
-  Users,
   Calendar,
   Globe,
   Brackets,
+  ArrowRight,
+  ArrowRightLeft,
+  ArrowUpRight,
 } from "lucide-react";
 
 export const AttributeIcon = (attribute: any, isArray: boolean = false) => {
@@ -19,7 +21,7 @@ export const AttributeIcon = (attribute: any, isArray: boolean = false) => {
     enum: <List size={16} />,
     url: <Link size={16} />,
     email: <AtSign size={16} />,
-    relationship: <Users size={16} />,
+    relationship: <ArrowUpRight size={16} />,
     datetime: <Calendar size={16} />,
     ip: <Globe size={16} />,
   };
@@ -28,11 +30,27 @@ export const AttributeIcon = (attribute: any, isArray: boolean = false) => {
   return (
     <div className="flex items-center gap-2 size-8 neutral-background-alpha-strong rounded-full relative justify-center">
       {icons[type]}
-      {isArray && (
+      {(isArray || type === 'relationship') && (
         <div className="absolute bottom-0 right-0">
-          <Brackets size={10} />
+          {isArray && <Brackets size={10} />}
+          {type === 'relationship' && (
+            <RelationshipIcon type={attribute?.twoWay ?
+              'twoWay' : 'oneWay'
+            } />
+          )}
         </div>
       )}
     </div>
   );
 };
+
+
+export const RelationshipIcon = ({ type }: { type: 'oneWay' | 'twoWay' }) => {
+  const icons = {
+    oneWay: <ArrowRight size={10} />,
+    twoWay: <ArrowRightLeft size={10} />
+
+  };
+
+  return icons[type];
+}

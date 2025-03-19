@@ -133,13 +133,27 @@ export const DynamicField = (props: Props) => {
   );
 };
 
-const TextareaField = ({ value, onChange, ...props }: any) => {
-  return props.maxLength > 50 ? (
+type FieldProps = {
+  value: any;
+  onChange: (event: { target: { value: any } }) => void;
+  isNull?: boolean;
+  nullable?: boolean;
+  maxLength?: number;
+  onBlur?: (event: React.FocusEvent) => void;
+  index?: number;
+}
+
+type SelectFieldProps = FieldProps & {
+  options: Array<{ value: string; label: string }>;
+}
+
+const TextareaField = ({ value, onChange, maxLength, ...props }: FieldProps) => {
+  return maxLength && maxLength > 50 ? (
     <Textarea
       lines={5}
-      placeholder={`Start typing...`}
+      placeholder="Start typing..."
       {...props}
-      value={value}
+      value={value ?? ""}
       onChange={onChange}
     />
   ) : (
@@ -147,24 +161,24 @@ const TextareaField = ({ value, onChange, ...props }: any) => {
       labelAsPlaceholder
       placeholder="Enter value"
       {...props}
-      value={value}
+      value={value ?? ""}
       onChange={onChange}
     />
   );
 };
 
-const NumberField = ({ value, onChange, ...props }: any) => {
+const NumberField = ({ value, onChange, ...props }: FieldProps) => {
   return (
     <NumberInput
       {...props}
       value={value}
       labelAsPlaceholder
-      onChange={(v) => onChange({ target: { value: v ?? Number(v) } })}
+      onChange={(v: number | null) => onChange({ target: { value: v } })}
     />
   );
 };
 
-export const SelectField = ({ value, onChange, options = [], nullable, ...props }: any) => {
+export const SelectField = ({ value, onChange, options = [], nullable, ...props }: SelectFieldProps & React.ComponentProps<typeof Select>) => {
   const _onChange = (v: string) => {
     if ((v === null || v === "null") && nullable) {
       onChange({ target: { value: null } });
@@ -183,7 +197,7 @@ export const SelectField = ({ value, onChange, options = [], nullable, ...props 
   );
 };
 
-export const SelectBooleanField = ({ value, onChange, options = [], nullable, ...props }: any) => {
+export const SelectBooleanField = ({ value, onChange, nullable, ...props }: SelectFieldProps) => {
   const _onChange = (v: string) => {
     if ((v === null || v === "null") && nullable) {
       onChange({ target: { value: null } });
@@ -191,28 +205,45 @@ export const SelectBooleanField = ({ value, onChange, options = [], nullable, ..
       onChange({ target: { value: v === "true" } });
     }
   };
+  
+  const booleanOptions = [
+    { value: "true", label: "True" },
+    { value: "false", label: "False" },
+  ];
+  
+  if (nullable) {
+    booleanOptions.unshift({ value: "null", label: "None" });
+  }
+  
   return (
     <Select
       {...props}
       labelAsPlaceholder
-      value={value == null ? "null" : value == true ? "true" : "false"}
-      options={options}
+      value={value == null ? "null" : value === true ? "true" : "false"}
+      options={booleanOptions}
       onSelect={_onChange}
     />
   );
 };
 
-const RelationshipField = ({ value, onChange, ...props }: any) => {
+const RelationshipField = ({ value, onChange, ...props }: FieldProps) => {
   return (
     <Select
-      value={value}
+      value={value ?? ""}
       options={[{ value: "1", label: "Relation 1" }]}
-      onSelect={(v) => onChange({ target: { value: v } })}
+      onSelect={(v: string) => onChange({ target: { value: v } })}
       {...props}
     />
   );
 };
 
-const DateTimeField = ({ value, onChange, ...props }: any) => {
-  return <input type="datetime-local" value={value} onChange={onChange} {...props} />;
+const DateTimeField = ({ value, onChange, ...props }: FieldProps) => {
+  return (
+    <input 
+      type="datetime-local" 
+      value={value ?? ""} 
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e)} 
+      {...props} 
+    />
+  );
 };

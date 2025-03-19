@@ -9,10 +9,12 @@ import {
 import { useCollectionStore, useDatabaseStore, useProjectStore } from "@/lib/store";
 import { Column, Row, useToast } from "@/ui/components";
 import * as y from "yup";
-import { AttributeIcon } from "./_attribute_icon";
+import { AttributeIcon, RelationshipIcon } from "./_attribute_icon";
 import { useFormikContext } from "formik";
 import { useEffect } from "react";
-import { SelectBooleanField, SelectField } from "../document/components";
+import { DynamicField, SelectField } from "../document/components";
+import { useQuery } from "@tanstack/react-query";
+import { RadioCardItem, RadioCardRoot } from "@/components/cui/radio-card";
 
 interface BaseProps {
   onClose: () => void;
@@ -21,7 +23,7 @@ interface BaseProps {
 }
 
 const DefaultValueField = ({ type }: { type: string }) => {
-  const { values, setFieldValue, handleBlur } = useFormikContext<{
+  const { values } = useFormikContext<{
     required: boolean;
     array: boolean;
     default: string | number | boolean;
@@ -43,25 +45,21 @@ const DefaultValueField = ({ type }: { type: string }) => {
       return <InputNumberField {...commonProps} />;
     case "boolean":
       return (
-        <SelectBooleanField
+        <DynamicField
           {...commonProps}
-          value={values.default}
-          onChange={(e: any) => setFieldValue("default", e.target.value)}
-          onBlur={handleBlur}
+          type="boolean"
           options={[
             { value: "null", label: "NULL" },
-            { value: true, label: "True" },
-            { value: false, label: "False" },
+            { value: "true", label: "True" },
+            { value: "false", label: "False" },
           ]}
         />
       );
     case "enum":
       return (
-        <SelectField
+        <DynamicField
           {...commonProps}
-          value={values.default}
-          onChange={(e: any) => setFieldValue("default", e.target.value)}
-          onBlur={handleBlur}
+          type="enum"
           options={[
             { value: "null", label: "NULL" },
             ...values.elements?.map((element: string) => ({
@@ -710,7 +708,7 @@ export const RelationshipAttributeForm = ({ onClose, isOpen, refetch }: BaseProp
   const sdk = useProjectStore.use.sdk();
   const database = useDatabaseStore.use.database!();
   const collection = useCollectionStore.use.collection!();
-  // TODO:--
+
   const schema = y.object({
     key: keyValidation,
     relatedCollection: y.string().required(),
@@ -721,22 +719,6 @@ export const RelationshipAttributeForm = ({ onClose, isOpen, refetch }: BaseProp
     }),
     onDelete: y.string().oneOf(["cascade", "restrict", "setNull"]).default("setNull"),
   });
-
-  const formFields = (
-    <>
-      <InputField
-        name="key"
-        label="Key"
-        required
-        description="Key must contain only alphanumeric, hyphen, non-leading underscore, period"
-      />
-      <InputField name="relatedCollection" label="Related Collection" required />
-      <InputField name="relationType" label="Relation Type" type="select" required />
-      <InputSwitchField name="twoWay" label="Two-Way Relationship" reverse className="gap-0" />
-      <InputField name="twoWayKey" label="Two-Way Key" />
-      <InputField name="onDelete" label="On Delete Action" type="select" required />
-    </>
-  );
 
   return (
     <AttributeFormBase
@@ -755,20 +737,130 @@ export const RelationshipAttributeForm = ({ onClose, isOpen, refetch }: BaseProp
         onDelete: "setNull",
       }}
       validationSchema={schema}
-      formFields={formFields}
+      formFields={<RelationshipAttributeFormFields />}
       submitAction={async (values) => {
         const { key, relatedCollection, relationType, twoWay, twoWayKey, onDelete } = values;
         await sdk.databases.createRelationshipAttribute(
           database!.$id,
           collection!.$id,
-          key,
           relatedCollection,
           relationType,
           twoWay,
+          key,
           twoWayKey,
-          onDelete, //TODO:--
+          onDelete,
         );
       }}
     />
   );
 };
+
+
+const RelationshipAttributeFormFields = () => {
+  const { values, setFieldValue } = useFormikContext<{
+    key: string;
+    relatedCollection: string;
+    relationType: "oneToOne" | "oneToMany" | "manyToOne" | "manyToMany";
+    twoWay: boolean;
+    twoWayKey: string;
+    onDelete: "cascade" | "restrict" | "setNull";
+  }>();
+  const sdk = useProjectStore.use.sdk();
+  const database = useDatabaseStore.use.database!();
+  const collection = useCollectionStore.use.collection!()!;
+
+  const { data, isPending } = useQuery({
+    queryKey: ["collections", database!.$id],
+    queryFn: async () => {
+      return await sdk.databases.listCollections(database!.$id);
+    },
+    enabled: !!database,
+  });
+
+  return (
+    <>
+      <RadioCardRoot gap={4} width={'full'} value={values.twoWay ? 'twoWay' : 'oneWay'} onValueChange={(d) => {
+        setFieldValue('twoWay', d.value === 'twoWay');
+        !values.twoWayKey && setFieldValue('twoWayKey', collection?.name);
+      }}>
+        <RadioCardItem
+          icon={<RelationshipIcon type="oneWay" />}
+          label="One-Way"
+          value="oneWay"
+          description="Creates a relationship that references the related collection only from this collection"
+        />
+        <RadioCardItem
+          icon={<RelationshipIcon type="twoWay" />}
+          label="Two-Way"
+          value="twoWay"
+          description="Creates a bidirectional relationship that allows navigation between both collections"
+        />
+      </RadioCardRoot>
+
+      <SelectField
+        name="relatedCollection"
+        label="Related Collection"
+        value={values.relatedCollection}
+        onChange={(value) => {
+          setFieldValue("relatedCollection", value.target.value);
+          !values.key && setFieldValue("key", data?.collections.find((c: any) => c.$id === value.target.value)?.name);
+        }}
+        required
+        options={data?.collections.map((collection: any) => ({
+          value: collection.$id,
+          label: `${collection.name} (${collection.$id})`,
+        })) ?? []}
+        searchable
+        emptyState="There are no collections that match your search"
+      />
+
+      {
+        values.relatedCollection && (
+          <>
+            <InputField
+              name="key"
+              label="Key"
+              required
+              description="Key must contain only alphanumeric, hyphen, non-leading underscore, period"
+            />
+
+            {
+              values.twoWay && (
+                <InputField
+                  name="twoWayKey"
+                  label="Key (Related Collection)"
+                  required
+                  description="Key must contain only alphanumeric, hyphen, non-leading underscore, period"
+                />
+              )
+            }
+
+            <DynamicField
+              name="relationType"
+              label="Relation Type"
+              type="enum"
+              options={[
+                { value: "oneToOne", label: "One to One" },
+                { value: "oneToMany", label: "One to Many" },
+                { value: "manyToOne", label: "Many to One" },
+                { value: "manyToMany", label: "Many to Many" },
+              ]}
+            />
+
+            <DynamicField
+              name="onDelete"
+              label="On Delete Action"
+              type="enum"
+              options={[
+                { value: "cascade", label: "Cascade" },
+                { value: "restrict", label: "Restrict" },
+                { value: "setNull", label: "Set Null" },
+              ]}
+            />
+
+          </>
+        )
+      }
+    </>
+  )
+}
