@@ -32,7 +32,7 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
         : (value?.toString() ?? ""),
     );
     const [prev, setPrev] = useState<any>();
-    const [_null, setNull] = useState(isNull);
+    const [_null, setNull] = useState(isNull || value === null);
     const checkBoxId = React.useId();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

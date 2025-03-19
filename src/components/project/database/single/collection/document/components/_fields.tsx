@@ -164,7 +164,7 @@ const NumberField = ({ value, onChange, ...props }: any) => {
   );
 };
 
-const SelectField = ({ value, onChange, options = [], nullable, ...props }: any) => {
+export const SelectField = ({ value, onChange, options = [], nullable, ...props }: any) => {
   const _onChange = (v: string) => {
     if ((v === null || v === "null") && nullable) {
       onChange({ target: { value: null } });
@@ -183,7 +183,7 @@ const SelectField = ({ value, onChange, options = [], nullable, ...props }: any)
   );
 };
 
-const SelectBooleanField = ({ value, onChange, options = [], nullable, ...props }: any) => {
+export const SelectBooleanField = ({ value, onChange, options = [], nullable, ...props }: any) => {
   const _onChange = (v: string) => {
     if ((v === null || v === "null") && nullable) {
       onChange({ target: { value: null } });

@@ -73,7 +73,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     const [isFilled, setIsFilled] = useState(!!props.value);
     const [validationError, setValidationError] = useState<ReactNode | null>(null);
     const [prev, setPrev] = useState<any>();
-    const [_null, setNull] = useState(isNull);
+    const [_null, setNull] = useState(isNull || props.value === null);
     const debouncedValue = useDebounce(props.value, 1000);
     const checkBoxId = React.useId();
     id = id ?? React.useId();
@@ -208,7 +208,13 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           </Flex>
 
           {hasSuffix ? (
-            <Flex paddingRight="12" className={styles.suffix}>
+            <Flex
+              paddingRight="12"
+              className={classNames(styles.suffix, {
+                "!bg-[var(--neutral-solid-strong)] !text-[var(--neutral-on-solid-weak)]":
+                  props.disabled,
+              })}
+            >
               {hasSuffix}
             </Flex>
           ) : (

@@ -3,6 +3,7 @@ import {
   InputField,
   InputNumberField,
   InputSwitchField,
+  InputTagField,
   SubmitButton,
 } from "@/components/others/forms";
 import { useCollectionStore, useDatabaseStore, useProjectStore } from "@/lib/store";
@@ -11,6 +12,7 @@ import * as y from "yup";
 import { AttributeIcon } from "./_attribute_icon";
 import { useFormikContext } from "formik";
 import { useEffect } from "react";
+import { SelectBooleanField, SelectField } from "../document/components";
 
 interface BaseProps {
   onClose: () => void;
@@ -19,38 +21,64 @@ interface BaseProps {
 }
 
 const DefaultValueField = ({ type }: { type: string }) => {
-  const { values } = useFormikContext<{
+  const { values, handleChange, handleBlur } = useFormikContext<{
     required: boolean;
     array: boolean;
+    default: string | number | boolean;
+    elements: string[];
   }>();
 
   const commonProps = {
     name: "default",
     label: "Default Value",
     disabled: values.required || values.array,
+    nullable: true,
   };
-
-  console.log(values, "______FROMIK");
 
   switch (type) {
     case "string":
-      return <InputField {...commonProps} nullable />;
+      return <InputField {...commonProps} />;
     case "integer":
-      return <InputNumberField {...commonProps} nullable />;
     case "float":
-      return <InputNumberField {...commonProps} nullable />;
+      return <InputNumberField {...commonProps} />;
     case "boolean":
-      return <InputSwitchField {...commonProps} nullable />;
+      return (
+        <SelectBooleanField
+          {...commonProps}
+          value={values.default}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          options={[
+            { value: true, label: "True" },
+            { value: false, label: "False" },
+          ]}
+        />
+      );
+    case "enum":
+      return (
+        <SelectField
+          {...commonProps}
+          value={values.default}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          options={
+            values.elements?.map((element: string) => ({
+              value: element,
+              label: element,
+            })) || []
+          }
+        />
+      );
     case "datetime":
-      return <InputField {...commonProps} type="datetime-local" nullable />;
+      return <InputField {...commonProps} type="datetime-local" />;
     case "ip":
-      return <InputField {...commonProps} placeholder="192.168.1.1" nullable />;
+      return <InputField {...commonProps} placeholder="192.168.1.1" />;
     case "url":
-      return <InputField {...commonProps} placeholder="https://example.com" nullable />;
+      return <InputField {...commonProps} placeholder="https://example.com" />;
     case "email":
-      return <InputField {...commonProps} placeholder="user@example.com" type="email" nullable />;
+      return <InputField {...commonProps} placeholder="user@example.com" type="email" />;
     default:
-      return <InputField {...commonProps} nullable />;
+      return <InputField {...commonProps} />;
   }
 };
 
@@ -98,21 +126,101 @@ const ArrayField = () => {
   );
 };
 
+const AttributeFormBase = ({
+  onClose,
+  isOpen,
+  refetch,
+  title,
+  format,
+  description,
+  initialValues,
+  validationSchema,
+  formFields,
+  submitAction,
+}: BaseProps & {
+  title: string;
+  format: string;
+  description: string;
+  initialValues: any;
+  validationSchema: any;
+  formFields: React.ReactNode;
+  submitAction: (values: any) => Promise<void>;
+}) => {
+  const { addToast } = useToast();
+
+  return (
+    <FormDialog
+      dialog={{
+        title: (
+          <Row gap="8">
+            {AttributeIcon({ format })} {title}
+          </Row>
+        ),
+        description: description,
+        isOpen,
+        onClose,
+        footer: <SubmitButton label="Create" />,
+      }}
+      form={{
+        validationSchema,
+        initialValues,
+        onSubmit: async (values) => {
+          try {
+            await submitAction(values);
+            addToast({
+              message: "Attribute created successfully",
+              variant: "success",
+            });
+            onClose();
+            await refetch();
+          } catch (error: any) {
+            addToast({
+              message: error.message,
+              variant: "danger",
+            });
+          }
+        },
+      }}
+    >
+      <Column paddingY="12" fillWidth gap="16">
+        {formFields}
+      </Column>
+    </FormDialog>
+  );
+};
+
+const keyValidation = y
+  .string()
+  .required()
+  .matches(
+    /^[a-zA-Z0-9][a-zA-Z0-9\-_.]*$/,
+    "Key must contain only alphanumeric, hyphen, non-leading underscore, period",
+  );
+
+const keyField = (
+  <InputField
+    name="key"
+    label="Key"
+    required
+    description="Key must contain only alphanumeric, hyphen, non-leading underscore, period"
+  />
+);
+
+const commonFormFields = (type: string) => (
+  <>
+    <DefaultValueField type={type} />
+    <RequiredField />
+    <ArrayField />
+  </>
+);
+
 export const StringAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
   const sdk = useProjectStore.use.sdk();
   const database = useDatabaseStore.use.database!();
   const collection = useCollectionStore.use.collection!();
 
-  const { addToast } = useToast();
-
   const schema = y.object({
-    key: y
-      .string()
-      .required()
-      .matches(
-        /^[a-zA-Z0-9][a-zA-Z0-9\-_.]*$/,
-        "Key must contain only alphanumeric, hyphen, non-leading underscore, period",
-      ),
+    key: keyValidation,
     size: y.number().positive().integer().required(),
     default: y
       .string()
@@ -125,64 +233,44 @@ export const StringAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => 
     array: y.boolean().default(false),
   });
 
+  const formFields = (
+    <>
+      {keyField}
+      <InputNumberField name="size" label="Size" required />
+      {commonFormFields("string")}
+    </>
+  );
+
   return (
-    <FormDialog
-      dialog={{
-        title: <Row gap="8">{AttributeIcon({ format: "string" })} String </Row>,
-        description: "Create a new string attribute for this collection",
-        isOpen,
-        onClose,
-        footer: <SubmitButton label="Create" />,
+    <AttributeFormBase
+      onClose={onClose}
+      isOpen={isOpen}
+      refetch={refetch}
+      title="String"
+      format="string"
+      description="Create a new string attribute for this collection"
+      initialValues={{
+        key: "",
+        size: null,
+        default: null,
+        required: false,
+        array: false,
       }}
-      form={{
-        validationSchema: schema,
-        initialValues: {
-          key: "",
-          size: null,
-          default: null,
-          required: false,
-          array: false,
-        },
-        onSubmit: async (values) => {
-          try {
-            const { key, size, default: defaultValue, required, array } = values;
-            await sdk.databases.createStringAttribute(
-              database!.$id,
-              collection!.$id,
-              key,
-              size,
-              required,
-              defaultValue,
-              array,
-            );
-            addToast({
-              message: "Attribute created successfully",
-              variant: "success",
-            });
-            onClose();
-            await refetch();
-          } catch (error: any) {
-            addToast({
-              message: error.message,
-              variant: "danger",
-            });
-          }
-        },
+      validationSchema={schema}
+      formFields={formFields}
+      submitAction={async (values) => {
+        const { key, size, default: defaultValue, required, array } = values;
+        await sdk.databases.createStringAttribute(
+          database!.$id,
+          collection!.$id,
+          key,
+          size,
+          required,
+          defaultValue,
+          array,
+        );
       }}
-    >
-      <Column paddingY="12" fillWidth gap="16">
-        <InputField
-          name="key"
-          label="Key"
-          required
-          description="Key must contain only alphanumeric, hyphen, non-leading underscore, period"
-        />
-        <InputNumberField name="size" label="Size" required />
-        <DefaultValueField type="string" />
-        <RequiredField />
-        <ArrayField />
-      </Column>
-    </FormDialog>
+    />
   );
 };
 
@@ -191,16 +279,8 @@ export const IntegerAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) =>
   const database = useDatabaseStore.use.database!();
   const collection = useCollectionStore.use.collection!();
 
-  const { addToast } = useToast();
-
   const schema = y.object({
-    key: y
-      .string()
-      .required()
-      .matches(
-        /^[a-zA-Z0-9][a-zA-Z0-9\-_.]*$/,
-        "Key must contain only alphanumeric, hyphen, non-leading underscore, period",
-      ),
+    key: keyValidation,
     default: y.number().integer().nullable(),
     required: y.boolean().default(false),
     array: y.boolean().default(false),
@@ -208,69 +288,49 @@ export const IntegerAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) =>
     max: y.number().integer().nullable(),
   });
 
+  const formFields = (
+    <>
+      {keyField}
+      <Row gap="8">
+        <InputNumberField name="min" label="Minimum" nullable />
+        <InputNumberField name="max" label="Maximum" nullable />
+      </Row>
+      {commonFormFields("integer")}
+    </>
+  );
+
   return (
-    <FormDialog
-      dialog={{
-        title: <Row gap="8">{AttributeIcon({ format: "integer" })} Integer </Row>,
-        description: "Create a new integer attribute for this collection",
-        isOpen,
-        onClose,
-        footer: <SubmitButton label="Create" />,
+    <AttributeFormBase
+      onClose={onClose}
+      isOpen={isOpen}
+      refetch={refetch}
+      title="Integer"
+      format="integer"
+      description="Create a new integer attribute for this collection"
+      initialValues={{
+        key: "",
+        default: null,
+        required: false,
+        array: false,
+        min: null,
+        max: null,
       }}
-      form={{
-        validationSchema: schema,
-        initialValues: {
-          key: "",
-          default: null,
-          required: false,
-          array: false,
-          min: null,
-          max: null,
-        },
-        onSubmit: async (values) => {
-          try {
-            const { key, default: defaultValue, required, array, min, max } = values;
-            await sdk.databases.createIntegerAttribute(
-              database!.$id,
-              collection!.$id,
-              key,
-              required,
-              min,
-              max,
-              defaultValue,
-              array,
-            );
-            addToast({
-              message: "Attribute created successfully",
-              variant: "success",
-            });
-            onClose();
-            await refetch();
-          } catch (error: any) {
-            addToast({
-              message: error.message,
-              variant: "danger",
-            });
-          }
-        },
+      validationSchema={schema}
+      formFields={formFields}
+      submitAction={async (values) => {
+        const { key, default: defaultValue, required, array, min, max } = values;
+        await sdk.databases.createIntegerAttribute(
+          database!.$id,
+          collection!.$id,
+          key,
+          required,
+          min,
+          max,
+          defaultValue,
+          array,
+        );
       }}
-    >
-      <Column paddingY="12" fillWidth gap="16">
-        <InputField
-          name="key"
-          label="Key"
-          required
-          description="Key must contain only alphanumeric, hyphen, non-leading underscore, period"
-        />
-        <Row gap="8">
-          <InputNumberField name="min" label="Minimum" nullable />
-          <InputNumberField name="max" label="Maximum" nullable />
-        </Row>
-        <DefaultValueField type="integer" />
-        <RequiredField />
-        <ArrayField />
-      </Column>
-    </FormDialog>
+    />
   );
 };
 
@@ -279,16 +339,8 @@ export const FloatAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
   const database = useDatabaseStore.use.database!();
   const collection = useCollectionStore.use.collection!();
 
-  const { addToast } = useToast();
-
   const schema = y.object({
-    key: y
-      .string()
-      .required()
-      .matches(
-        /^[a-zA-Z0-9][a-zA-Z0-9\-_.]*$/,
-        "Key must contain only alphanumeric, hyphen, non-leading underscore, period",
-      ),
+    key: keyValidation,
     default: y.number().nullable(),
     required: y.boolean().default(false),
     array: y.boolean().default(false),
@@ -296,62 +348,49 @@ export const FloatAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
     max: y.number().nullable(),
   });
 
+  const formFields = (
+    <>
+      {keyField}
+      <Row gap="8">
+        <InputNumberField name="min" label="Minimum" nullable />
+        <InputNumberField name="max" label="Maximum" nullable />
+      </Row>
+      {commonFormFields("float")}
+    </>
+  );
+
   return (
-    <FormDialog
-      dialog={{
-        title: <Row gap="8">{AttributeIcon({ format: "float" })} Float </Row>,
-        description: "Create a new float attribute for this collection",
-        isOpen,
-        onClose,
-        footer: <SubmitButton label="Create" />,
+    <AttributeFormBase
+      onClose={onClose}
+      isOpen={isOpen}
+      refetch={refetch}
+      title="Float"
+      format="float"
+      description="Create a new float attribute for this collection"
+      initialValues={{
+        key: "",
+        default: null,
+        required: false,
+        array: false,
+        min: null,
+        max: null,
       }}
-      form={{
-        validationSchema: schema,
-        initialValues: {
-          key: "",
-          default: null,
-          required: false,
-          array: false,
-          min: null,
-          max: null,
-        },
-        onSubmit: async (values) => {
-          try {
-            const { key, default: defaultValue, required, array, min, max } = values;
-            await sdk.databases.createFloatAttribute(
-              database!.$id,
-              collection!.$id,
-              key,
-              required,
-              defaultValue,
-              array,
-              min,
-              max,
-            );
-            addToast({
-              message: "Attribute created successfully",
-              variant: "success",
-            });
-            onClose();
-            await refetch();
-          } catch (error: any) {
-            addToast({
-              message: error.message,
-              variant: "danger",
-            });
-          }
-        },
+      validationSchema={schema}
+      formFields={formFields}
+      submitAction={async (values) => {
+        const { key, default: defaultValue, required, array, min, max } = values;
+        await sdk.databases.createFloatAttribute(
+          database!.$id,
+          collection!.$id,
+          key,
+          required,
+          min,
+          max,
+          defaultValue,
+          array,
+        );
       }}
-    >
-      <Column paddingY="12" fillWidth gap="8">
-        <InputField name="key" label="Key" />
-        <InputField name="default" label="Default Value" type="number" step="0.01" />
-        <InputField name="min" label="Minimum Value" type="number" step="0.01" />
-        <InputField name="max" label="Maximum Value" type="number" step="0.01" />
-        <InputField name="required" label="Required" type="checkbox" />
-        <InputField name="array" label="Is Array" type="checkbox" />
-      </Column>
-    </FormDialog>
+    />
   );
 };
 
@@ -360,71 +399,41 @@ export const BooleanAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) =>
   const database = useDatabaseStore.use.database!();
   const collection = useCollectionStore.use.collection!();
 
-  const { addToast } = useToast();
-
   const schema = y.object({
-    key: y
-      .string()
-      .required()
-      .matches(
-        /^[a-zA-Z0-9][a-zA-Z0-9\-_.]*$/,
-        "Key must contain only alphanumeric, hyphen, non-leading underscore, period",
-      ),
+    key: keyValidation,
     default: y.boolean().nullable(),
     required: y.boolean().default(false),
     array: y.boolean().default(false),
   });
 
   return (
-    <FormDialog
-      dialog={{
-        title: <Row gap="8">{AttributeIcon({ format: "boolean" })} Boolean </Row>,
-        description: "Create a new boolean attribute for this collection",
-        isOpen,
-        onClose,
-        footer: <SubmitButton label="Create" />,
+    <AttributeFormBase
+      onClose={onClose}
+      isOpen={isOpen}
+      refetch={refetch}
+      title="Boolean"
+      format="boolean"
+      description="Create a new boolean attribute for this collection"
+      initialValues={{
+        key: "",
+        default: null,
+        required: false,
+        array: false,
       }}
-      form={{
-        validationSchema: schema,
-        initialValues: {
-          key: "",
-          default: null,
-          required: false,
-          array: false,
-        },
-        onSubmit: async (values) => {
-          try {
-            const { key, default: defaultValue, required, array } = values;
-            await sdk.databases.createBooleanAttribute(
-              database!.$id,
-              collection!.$id,
-              key,
-              required,
-              defaultValue,
-              array,
-            );
-            addToast({
-              message: "Attribute created successfully",
-              variant: "success",
-            });
-            onClose();
-            await refetch();
-          } catch (error: any) {
-            addToast({
-              message: error.message,
-              variant: "danger",
-            });
-          }
-        },
+      validationSchema={schema}
+      formFields={commonFormFields("boolean")}
+      submitAction={async (values) => {
+        const { key, default: defaultValue, required, array } = values;
+        await sdk.databases.createBooleanAttribute(
+          database!.$id,
+          collection!.$id,
+          key,
+          required,
+          defaultValue,
+          array,
+        );
       }}
-    >
-      <Column paddingY="12" fillWidth gap="8">
-        <InputField name="key" label="Key" />
-        <InputField name="default" label="Default Value" type="checkbox" />
-        <InputField name="required" label="Required" type="checkbox" />
-        <InputField name="array" label="Is Array" type="checkbox" />
-      </Column>
-    </FormDialog>
+    />
   );
 };
 
@@ -433,71 +442,41 @@ export const DatetimeAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) =
   const database = useDatabaseStore.use.database!();
   const collection = useCollectionStore.use.collection!();
 
-  const { addToast } = useToast();
-
   const schema = y.object({
-    key: y
-      .string()
-      .required()
-      .matches(
-        /^[a-zA-Z0-9][a-zA-Z0-9\-_.]*$/,
-        "Key must contain only alphanumeric, hyphen, non-leading underscore, period",
-      ),
+    key: keyValidation,
     default: y.string().nullable(),
     required: y.boolean().default(false),
     array: y.boolean().default(false),
   });
 
   return (
-    <FormDialog
-      dialog={{
-        title: <Row gap="8">{AttributeIcon({ format: "datetime" })} Datetime </Row>,
-        description: "Create a new datetime attribute for this collection",
-        isOpen,
-        onClose,
-        footer: <SubmitButton label="Create" />,
+    <AttributeFormBase
+      onClose={onClose}
+      isOpen={isOpen}
+      refetch={refetch}
+      title="Datetime"
+      format="datetime"
+      description="Create a new datetime attribute for this collection"
+      initialValues={{
+        key: "",
+        default: null,
+        required: false,
+        array: false,
       }}
-      form={{
-        validationSchema: schema,
-        initialValues: {
-          key: "",
-          default: null,
-          required: false,
-          array: false,
-        },
-        onSubmit: async (values) => {
-          try {
-            const { key, default: defaultValue, required, array } = values;
-            await sdk.databases.createDatetimeAttribute(
-              database!.$id,
-              collection!.$id,
-              key,
-              required,
-              defaultValue,
-              array,
-            );
-            addToast({
-              message: "Attribute created successfully",
-              variant: "success",
-            });
-            onClose();
-            await refetch();
-          } catch (error: any) {
-            addToast({
-              message: error.message,
-              variant: "danger",
-            });
-          }
-        },
+      validationSchema={schema}
+      formFields={commonFormFields("datetime")}
+      submitAction={async (values) => {
+        const { key, default: defaultValue, required, array } = values;
+        await sdk.databases.createDatetimeAttribute(
+          database!.$id,
+          collection!.$id,
+          key,
+          required,
+          defaultValue,
+          array,
+        );
       }}
-    >
-      <Column paddingY="12" fillWidth gap="8">
-        <InputField name="key" label="Key" />
-        <InputField name="default" label="Default Value" type="datetime-local" />
-        <InputField name="required" label="Required" type="checkbox" />
-        <InputField name="array" label="Is Array" type="checkbox" />
-      </Column>
-    </FormDialog>
+    />
   );
 };
 
@@ -506,149 +485,41 @@ export const IpAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
   const database = useDatabaseStore.use.database!();
   const collection = useCollectionStore.use.collection!();
 
-  const { addToast } = useToast();
-
   const schema = y.object({
-    key: y
-      .string()
-      .required()
-      .matches(
-        /^[a-zA-Z0-9][a-zA-Z0-9\-_.]*$/,
-        "Key must contain only alphanumeric, hyphen, non-leading underscore, period",
-      ),
+    key: keyValidation,
     default: y.string().nullable(),
     required: y.boolean().default(false),
     array: y.boolean().default(false),
   });
 
   return (
-    <FormDialog
-      dialog={{
-        title: <Row gap="8">{AttributeIcon({ format: "ip" })} IP Attribute</Row>,
-        description: "Create a new IP address attribute for this collection",
-        isOpen,
-        onClose,
-        footer: <SubmitButton label="Create" />,
+    <AttributeFormBase
+      onClose={onClose}
+      isOpen={isOpen}
+      refetch={refetch}
+      title="IP Attribute"
+      format="ip"
+      description="Create a new IP address attribute for this collection"
+      initialValues={{
+        key: "",
+        default: null,
+        required: false,
+        array: false,
       }}
-      form={{
-        validationSchema: schema,
-        initialValues: {
-          key: "",
-          default: null,
-          required: false,
-          array: false,
-        },
-        onSubmit: async (values) => {
-          try {
-            const { key, default: defaultValue, required, array } = values;
-            await sdk.databases.createIpAttribute(
-              database!.$id,
-              collection!.$id,
-              key,
-              required,
-              defaultValue,
-              array,
-            );
-            addToast({
-              message: "Attribute created successfully",
-              variant: "success",
-            });
-            onClose();
-            await refetch();
-          } catch (error: any) {
-            addToast({
-              message: error.message,
-              variant: "danger",
-            });
-          }
-        },
+      validationSchema={schema}
+      formFields={commonFormFields("ip")}
+      submitAction={async (values) => {
+        const { key, default: defaultValue, required, array } = values;
+        await sdk.databases.createIpAttribute(
+          database!.$id,
+          collection!.$id,
+          key,
+          required,
+          defaultValue,
+          array,
+        );
       }}
-    >
-      <Column paddingY="12" fillWidth gap="8">
-        <InputField name="key" label="Key" />
-        <InputField name="default" label="Default Value" placeholder="192.168.1.1" />
-        <InputField name="required" label="Required" type="checkbox" />
-        <InputField name="array" label="Is Array" type="checkbox" />
-      </Column>
-    </FormDialog>
-  );
-};
-
-export const EnumAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
-  const sdk = useProjectStore.use.sdk();
-  const database = useDatabaseStore.use.database!();
-  const collection = useCollectionStore.use.collection!();
-
-  const { addToast } = useToast();
-
-  const schema = y.object({
-    key: y
-      .string()
-      .required()
-      .matches(
-        /^[a-zA-Z0-9][a-zA-Z0-9\-_.]*$/,
-        "Key must contain only alphanumeric, hyphen, non-leading underscore, period",
-      ),
-    elements: y.array().of(y.string()).min(1).required(),
-    default: y.string().nullable(),
-    required: y.boolean().default(false),
-    array: y.boolean().default(false),
-  });
-
-  return (
-    <FormDialog
-      dialog={{
-        title: <Row gap="8">{AttributeIcon({ format: "enum" })} Enum </Row>,
-        description: "Create a new enum attribute for this collection",
-        isOpen,
-        onClose,
-        footer: <SubmitButton label="Create" />,
-      }}
-      form={{
-        validationSchema: schema,
-        initialValues: {
-          key: "",
-          elements: [""],
-          default: null,
-          required: false,
-          array: false,
-        },
-        onSubmit: async (values) => {
-          try {
-            const { key, elements, default: defaultValue, required, array } = values;
-            await sdk.databases.createEnumAttribute(
-              database!.$id,
-              collection!.$id,
-              key,
-              elements,
-              required,
-              defaultValue,
-              array,
-            );
-            addToast({
-              message: "Attribute created successfully",
-              variant: "success",
-            });
-            onClose();
-            await refetch();
-          } catch (error: any) {
-            addToast({
-              message: error.message,
-              variant: "danger",
-            });
-          }
-        },
-      }}
-    >
-      <Column paddingY="12" fillWidth gap="8">
-        <InputField name="key" label="Key" />
-        {/* This would need to be replaced with a component that allows adding multiple enum elements */}
-        <InputField name="elements" label="Elements (comma separated)" />
-        <InputField name="default" label="Default Value" />
-        <InputField name="required" label="Required" type="checkbox" />
-        <InputField name="array" label="Is Array" type="checkbox" />
-      </Column>
-    </FormDialog>
+    />
   );
 };
 
@@ -657,71 +528,41 @@ export const UrlAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
   const database = useDatabaseStore.use.database!();
   const collection = useCollectionStore.use.collection!();
 
-  const { addToast } = useToast();
-
   const schema = y.object({
-    key: y
-      .string()
-      .required()
-      .matches(
-        /^[a-zA-Z0-9][a-zA-Z0-9\-_.]*$/,
-        "Key must contain only alphanumeric, hyphen, non-leading underscore, period",
-      ),
+    key: keyValidation,
     default: y.string().url().nullable(),
     required: y.boolean().default(false),
     array: y.boolean().default(false),
   });
 
   return (
-    <FormDialog
-      dialog={{
-        title: <Row gap="8">{AttributeIcon({ format: "url" })} URL </Row>,
-        description: "Create a new URL attribute for this collection",
-        isOpen,
-        onClose,
-        footer: <SubmitButton label="Create" />,
+    <AttributeFormBase
+      onClose={onClose}
+      isOpen={isOpen}
+      refetch={refetch}
+      title="URL"
+      format="url"
+      description="Create a new URL attribute for this collection"
+      initialValues={{
+        key: "",
+        default: null,
+        required: false,
+        array: false,
       }}
-      form={{
-        validationSchema: schema,
-        initialValues: {
-          key: "",
-          default: null,
-          required: false,
-          array: false,
-        },
-        onSubmit: async (values) => {
-          try {
-            const { key, default: defaultValue, required, array } = values;
-            await sdk.databases.createUrlAttribute(
-              database!.$id,
-              collection!.$id,
-              key,
-              required,
-              defaultValue,
-              array,
-            );
-            addToast({
-              message: "Attribute created successfully",
-              variant: "success",
-            });
-            onClose();
-            await refetch();
-          } catch (error: any) {
-            addToast({
-              message: error.message,
-              variant: "danger",
-            });
-          }
-        },
+      validationSchema={schema}
+      formFields={commonFormFields("url")}
+      submitAction={async (values) => {
+        const { key, default: defaultValue, required, array } = values;
+        await sdk.databases.createUrlAttribute(
+          database!.$id,
+          collection!.$id,
+          key,
+          required,
+          defaultValue,
+          array,
+        );
       }}
-    >
-      <Column paddingY="12" fillWidth gap="8">
-        <InputField name="key" label="Key" />
-        <InputField name="default" label="Default Value" placeholder="https://example.com" />
-        <InputField name="required" label="Required" type="checkbox" />
-        <InputField name="array" label="Is Array" type="checkbox" />
-      </Column>
-    </FormDialog>
+    />
   );
 };
 
@@ -730,76 +571,95 @@ export const EmailAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
   const database = useDatabaseStore.use.database!();
   const collection = useCollectionStore.use.collection!();
 
-  const { addToast } = useToast();
-
   const schema = y.object({
-    key: y
-      .string()
-      .required()
-      .matches(
-        /^[a-zA-Z0-9][a-zA-Z0-9\-_.]*$/,
-        "Key must contain only alphanumeric, hyphen, non-leading underscore, period",
-      ),
+    key: keyValidation,
     default: y.string().email().nullable(),
     required: y.boolean().default(false),
     array: y.boolean().default(false),
   });
 
   return (
-    <FormDialog
-      dialog={{
-        title: <Row gap="8">{AttributeIcon({ format: "email" })} Email </Row>,
-        description: "Create a new email attribute for this collection",
-        isOpen,
-        onClose,
-        footer: <SubmitButton label="Create" />,
+    <AttributeFormBase
+      onClose={onClose}
+      isOpen={isOpen}
+      refetch={refetch}
+      title="Email"
+      format="email"
+      description="Create a new email attribute for this collection"
+      initialValues={{
+        key: "",
+        default: null,
+        required: false,
+        array: false,
       }}
-      form={{
-        validationSchema: schema,
-        initialValues: {
-          key: "",
-          default: null,
-          required: false,
-          array: false,
-        },
-        onSubmit: async (values) => {
-          try {
-            const { key, default: defaultValue, required, array } = values;
-            await sdk.databases.createEmailAttribute(
-              database!.$id,
-              collection!.$id,
-              key,
-              required,
-              defaultValue,
-              array,
-            );
-            addToast({
-              message: "Attribute created successfully",
-              variant: "success",
-            });
-            onClose();
-            await refetch();
-          } catch (error: any) {
-            addToast({
-              message: error.message,
-              variant: "danger",
-            });
-          }
-        },
+      validationSchema={schema}
+      formFields={commonFormFields("email")}
+      submitAction={async (values) => {
+        const { key, default: defaultValue, required, array } = values;
+        await sdk.databases.createEmailAttribute(
+          database!.$id,
+          collection!.$id,
+          key,
+          required,
+          defaultValue,
+          array,
+        );
       }}
-    >
-      <Column paddingY="12" fillWidth gap="8">
-        <InputField name="key" label="Key" />
-        <InputField
-          name="default"
-          label="Default Value"
-          placeholder="user@example.com"
-          type="email"
-        />
-        <InputField name="required" label="Required" type="checkbox" />
-        <InputField name="array" label="Is Array" type="checkbox" />
-      </Column>
-    </FormDialog>
+    />
+  );
+};
+
+export const EnumAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
+  const sdk = useProjectStore.use.sdk();
+  const database = useDatabaseStore.use.database!();
+  const collection = useCollectionStore.use.collection!();
+
+  const schema = y.object({
+    key: keyValidation,
+    elements: y.array().of(y.string()).min(1).required(),
+    default: y.string().nullable(),
+    required: y.boolean().default(false),
+    array: y.boolean().default(false),
+  });
+
+  const formFields = (
+    <>
+      {keyField}
+      <InputTagField name="elements" label="Elements" required />
+      {commonFormFields("enum")}
+    </>
+  );
+
+  return (
+    <AttributeFormBase
+      onClose={onClose}
+      isOpen={isOpen}
+      refetch={refetch}
+      title="Enum"
+      format="enum"
+      description="Create a new enum attribute for this collection"
+      initialValues={{
+        key: "",
+        elements: [],
+        default: null,
+        required: false,
+        array: false,
+      }}
+      validationSchema={schema}
+      formFields={formFields}
+      submitAction={async (values) => {
+        const { key, elements, default: defaultValue, required, array } = values;
+        await sdk.databases.createEnumAttribute(
+          database!.$id,
+          collection!.$id,
+          key,
+          elements,
+          required,
+          defaultValue,
+          array,
+        );
+      }}
+    />
   );
 };
 
@@ -807,17 +667,9 @@ export const RelationshipAttributeForm = ({ onClose, isOpen, refetch }: BaseProp
   const sdk = useProjectStore.use.sdk();
   const database = useDatabaseStore.use.database!();
   const collection = useCollectionStore.use.collection!();
-
-  const { addToast } = useToast();
-
+  // TODO:--
   const schema = y.object({
-    key: y
-      .string()
-      .required()
-      .matches(
-        /^[a-zA-Z0-9][a-zA-Z0-9\-_.]*$/,
-        "Key must contain only alphanumeric, hyphen, non-leading underscore, period",
-      ),
+    key: keyValidation,
     relatedCollection: y.string().required(),
     relationType: y.string().oneOf(["oneToOne", "oneToMany", "manyToOne", "manyToMany"]).required(),
     twoWay: y.boolean().default(false),
@@ -827,80 +679,53 @@ export const RelationshipAttributeForm = ({ onClose, isOpen, refetch }: BaseProp
     onDelete: y.string().oneOf(["cascade", "restrict", "setNull"]).default("setNull"),
   });
 
+  const formFields = (
+    <>
+      <InputField
+        name="key"
+        label="Key"
+        required
+        description="Key must contain only alphanumeric, hyphen, non-leading underscore, period"
+      />
+      <InputField name="relatedCollection" label="Related Collection" required />
+      <InputField name="relationType" label="Relation Type" type="select" required />
+      <InputSwitchField name="twoWay" label="Two-Way Relationship" reverse className="gap-0" />
+      <InputField name="twoWayKey" label="Two-Way Key" />
+      <InputField name="onDelete" label="On Delete Action" type="select" required />
+    </>
+  );
+
   return (
-    <FormDialog
-      dialog={{
-        title: <Row gap="8">{AttributeIcon({ format: "relationship" })} Relationship</Row>,
-        description: "Create a new relationship attribute for this collection",
-        isOpen,
-        onClose,
-        footer: <SubmitButton label="Create" />,
+    <AttributeFormBase
+      onClose={onClose}
+      isOpen={isOpen}
+      refetch={refetch}
+      title="Relationship"
+      format="relationship"
+      description="Create a new relationship attribute for this collection"
+      initialValues={{
+        key: "",
+        relatedCollection: "",
+        relationType: "oneToOne",
+        twoWay: false,
+        twoWayKey: "",
+        onDelete: "setNull",
       }}
-      form={{
-        validationSchema: schema,
-        initialValues: {
-          key: "",
-          relatedCollection: "",
-          relationType: "oneToOne",
-          twoWay: false,
-          twoWayKey: "",
-          onDelete: "setNull",
-        },
-        onSubmit: async (values) => {
-          try {
-            const { key, relatedCollection, relationType, twoWay, twoWayKey, onDelete } = values;
-            await sdk.databases.createRelationshipAttribute(
-              database!.$id,
-              collection!.$id,
-              key,
-              relatedCollection,
-              relationType,
-              twoWay,
-              twoWayKey,
-              onDelete,
-            );
-            addToast({
-              message: "Attribute created successfully",
-              variant: "success",
-            });
-            onClose();
-            await refetch();
-          } catch (error: any) {
-            addToast({
-              message: error.message,
-              variant: "danger",
-            });
-          }
-        },
+      validationSchema={schema}
+      formFields={formFields}
+      submitAction={async (values) => {
+        const { key, relatedCollection, relationType, twoWay, twoWayKey, onDelete } = values;
+        await sdk.databases.createRelationshipAttribute(
+          database!.$id,
+          collection!.$id,
+          key,
+          relatedCollection,
+          relationType,
+          twoWay,
+          twoWayKey,
+          onDelete, //TODO:--
+        );
       }}
-    >
-      <Column paddingY="12" fillWidth gap="8">
-        <InputField name="key" label="Key" />
-        <InputField name="relatedCollection" label="Related Collection" />
-        <InputField
-          name="relationType"
-          label="Relation Type"
-          type="select"
-          // options={[
-          //   { label: "One to One", value: "oneToOne" },
-          //   { label: "One to Many", value: "oneToMany" },
-          //   { label: "Many to One", value: "manyToOne" },
-          //   { label: "Many to Many", value: "manyToMany" },
-          // ]}
-        />
-        <InputField name="twoWay" label="Two-Way Relationship" type="checkbox" />
-        <InputField name="twoWayKey" label="Two-Way Key" />
-        <InputField
-          name="onDelete"
-          label="On Delete Action"
-          type="select"
-          // options={[
-          //   { label: "Cascade", value: "cascade" },
-          //   { label: "Restrict", value: "restrict" },
-          //   { label: "Set Null", value: "setNull" },
-          // ]}
-        />
-      </Column>
-    </FormDialog>
+    />
   );
 };
