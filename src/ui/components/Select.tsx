@@ -32,6 +32,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
       options,
       value = "",
       onSelect,
+      labelAsPlaceholder,
       searchable = false,
       emptyState = "No results",
       minHeight,
@@ -55,8 +56,8 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
     const [searchQuery, setSearchQuery] = useState("");
     const selectRef = useRef<HTMLDivElement | null>(null);
     const clearButtonRef = useRef<HTMLButtonElement>(null);
-    const _id = React.useId();
-    rest.id = rest.id ?? _id;
+    // const _id = React.useId();
+    // rest.id = rest.id ?? _id;
 
     const handleFocus = () => {
       setIsFocused(true);
@@ -171,7 +172,8 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
         minHeight={minHeight}
         trigger={
           <Input
-            {...rest}
+            // {...rest}
+            labelAsPlaceholder={labelAsPlaceholder}
             style={{
               textOverflow: "ellipsis",
               ...style,

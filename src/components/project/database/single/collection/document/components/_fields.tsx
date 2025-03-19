@@ -33,7 +33,7 @@ interface Props {
 
 export const DynamicField = (props: Props) => {
   const { name, isArray, type = "string", options = [], nullable, label, ...rest } = props;
-  const { values, errors, touched, setFieldValue, handleBlur } =
+  const { values, errors, touched, setFieldValue, setFieldTouched } =
     useFormikContext<Record<string, any>>();
   const id = React.useId();
   const handleChange = (index: number, value: string | number | boolean | null) => {
@@ -90,8 +90,8 @@ export const DynamicField = (props: Props) => {
         label: `${id}-label`,
         control: `${id}-input`,
       }}
-      errorText={errors[name] ? (errors[name] as string) : undefined}
-      invalid={!!errors[name]}
+      errorText={errors[name] && touched[name] ? (errors[name] as string) : undefined}
+      invalid={!!errors[name] && !!touched[name]}
       label={label ?? name}
       required={!nullable}
     >
@@ -105,7 +105,7 @@ export const DynamicField = (props: Props) => {
                 {...commonProps}
                 value={item}
                 onChange={onChange}
-                onBlur={handleBlur}
+                onBlur={(e: any) => setFieldTouched(name, true)}
                 options={options}
                 nullable={nullable}
                 index={index}
@@ -122,7 +122,7 @@ export const DynamicField = (props: Props) => {
           onChange={(e: any) => handleChange(0, e.target.value)}
           options={options}
           nullable={nullable}
-          onBlur={handleBlur}
+          onBlur={(e: any) => setFieldTouched(name, true)}
         />
       )}
 
@@ -154,6 +154,7 @@ const TextareaField = ({ value, onChange, maxLength, ...props }: FieldProps) => 
     <Textarea
       lines={5}
       placeholder="Start typing..."
+      maxLength={maxLength}
       {...props}
       value={value ?? ""}
       onChange={onChange}
@@ -162,6 +163,7 @@ const TextareaField = ({ value, onChange, maxLength, ...props }: FieldProps) => 
     <Input
       labelAsPlaceholder
       placeholder="Enter value"
+      maxLength={maxLength}
       {...props}
       value={value ?? ""}
       onChange={onChange}
@@ -226,6 +228,7 @@ export const SelectBooleanField = ({ value, onChange, nullable, ...props }: Sele
   return (
     <Select
       {...props}
+      nullable={nullable}
       labelAsPlaceholder
       value={value == null ? "null" : value === true ? "true" : "false"}
       options={booleanOptions}

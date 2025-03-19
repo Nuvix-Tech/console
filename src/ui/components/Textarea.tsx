@@ -231,11 +231,14 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             <Flex
               horizontal="end"
               gap={max > 50 ? "20" : "8"}
-              paddingY="4"
+              paddingY="2"
+              position="absolute"
+              right="4"
+              bottom="2"
               paddingRight={max > 50 ? "20" : "8"}
               vertical="center"
             >
-              {max && max !== 0 && (props.value?.toString().length ?? 0) > 0 && (
+              {max !== 0 && max && (props.value?.toString().length ?? 0) > 0 && (
                 <Text variant="body-default-xs" onBackground="neutral-weak" wrap="nowrap">
                   {props.value?.toString().length || 0} / {max}
                 </Text>

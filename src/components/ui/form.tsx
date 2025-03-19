@@ -38,12 +38,12 @@ function FormItem({
 
 function FormLabel({ className, ...props }: React.ComponentProps<typeof LabelPrimitive.Root>) {
   const { name, id } = useFormField();
-  const { errors } = useFormikContext<Record<string, any>>();
+  const { errors, touched } = useFormikContext<Record<string, any>>();
 
   return (
     <Label
       data-slot="form-label"
-      data-error={!!errors[name]}
+      data-error={!!errors[name] && touched[name]}
       className={cn("data-[error=true]:text-destructive-foreground", className)}
       htmlFor={id}
       {...props}
@@ -80,9 +80,9 @@ function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
 
 function FormMessage({ className, ...props }: React.ComponentProps<"p"> & { field?: string }) {
   const { name } = useFormField();
-  const { errors } = useFormikContext<Record<string, any>>();
+  const { errors, touched } = useFormikContext<Record<string, any>>();
   // const formMessageId = React.useId();
-  const error = errors[name];
+  const error = touched[name] && errors[name];
   const body = error ? String(error ?? "") : props.children;
 
   if (!body) {

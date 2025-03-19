@@ -571,12 +571,6 @@ export const UrlAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
       validationSchema={schema}
       formFields={formFields}
       submitAction={async (values) => {
-        const formFields = (
-          <>
-            {keyField}
-            {commonFormFields("url")}
-          </>
-        );
         const { key, default: defaultValue, required, array } = values;
         await sdk.databases.createUrlAttribute(
           database!.$id,
