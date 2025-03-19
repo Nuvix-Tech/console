@@ -10,33 +10,21 @@ interface CreateIndexProps {
   refetch?: () => Promise<void>;
 }
 
-const generateSchema = () => {
-  return y.object({
-    key: y.string().required("Key is required"),
-    type: y.string().oneOf(["key", "unique", "fulltext"]).required("Index type is required"),
-    fields: y
-      .array()
-      .of(
-        y
-          .mixed()
-          .test("is-valid-sort-field", "Each attribute must have a valid sort order", (value) => {
-            if (!value || typeof value !== "object" || Array.isArray(value)) {
-              return false;
-            }
+const schema = y.object({
+  key: y.string().required("Key is required"),
+  type: y.string().oneOf(["key", "unique", "fulltext"]).required("Index type is required"),
+  fields: y
+    .object()
+    .test("is-valid-sort-field", "Each attribute must have a valid sort order", (value) => {
+      if (!value || Object.keys(value).length < 1) {
+        return false;
+      }
 
-            const keys = Object.keys(value);
-
-            if (keys.length !== 1) {
-              return false;
-            }
-
-            const sortValue = (value as any)[keys[0]];
-            return sortValue === "asc" || sortValue === "desc";
-          }),
-      )
-      .min(1, "At least one field must be added"),
-  });
-};
+      return Object.values(value).every((item) => {
+        return item === "asc" || item === "desc";
+      });
+    }),
+});
 
 export const CreateIndex = ({ onClose, isOpen, refetch }: CreateIndexProps) => {
   const sdk = useProjectStore.use.sdk();
@@ -54,25 +42,18 @@ export const CreateIndex = ({ onClose, isOpen, refetch }: CreateIndexProps) => {
         footer: <SubmitButton label="Create" />,
       }}
       form={{
-        validationSchema: generateSchema(),
+        validationSchema: schema,
         initialValues: {
           key: "",
           type: "key",
-          fields: [],
+          fields: {},
         },
         onSubmit: async (values) => {
           try {
             const { key, type, fields } = values;
 
-            const { attributes, orders } = fields.reduce(
-              (acc: any, field: any) => {
-                const [key, value] = Object.entries(field)[0];
-                acc.attributes.push(key);
-                acc.orders.push(value);
-                return acc;
-              },
-              { attributes: [], orders: [] },
-            );
+            const attributes = Object.keys(fields);
+            const orders = Object.values(fields) as string[];
 
             await sdk.databases.createIndex(
               database?.$id!,

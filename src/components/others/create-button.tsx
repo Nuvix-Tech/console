@@ -31,14 +31,14 @@ export const CreateButton: React.FC<CreateButtonProps> = ({
 
   return (
     <>
-      <Button {...props} onClick={handleClick}>
-        {label || children}
-      </Button>
       <div className="w-0 h-0 overflow-hidden">
         {Component && (
           <Component onClose={() => setIsOpen(false)} isOpen={isOpen} {...extraProps} />
         )}
       </div>
+      <Button {...props} onClick={handleClick}>
+        {label || children}
+      </Button>
     </>
   );
 };
