@@ -21,7 +21,7 @@ interface BaseProps {
 }
 
 const DefaultValueField = ({ type }: { type: string }) => {
-  const { values, handleChange, handleBlur } = useFormikContext<{
+  const { values, setFieldValue, handleBlur } = useFormikContext<{
     required: boolean;
     array: boolean;
     default: string | number | boolean;
@@ -46,9 +46,10 @@ const DefaultValueField = ({ type }: { type: string }) => {
         <SelectBooleanField
           {...commonProps}
           value={values.default}
-          onChange={handleChange}
+          onChange={(e: any) => setFieldValue("default", e.target.value)}
           onBlur={handleBlur}
           options={[
+            { value: "null", label: "NULL" },
             { value: true, label: "True" },
             { value: false, label: "False" },
           ]}
@@ -59,14 +60,15 @@ const DefaultValueField = ({ type }: { type: string }) => {
         <SelectField
           {...commonProps}
           value={values.default}
-          onChange={handleChange}
+          onChange={(e: any) => setFieldValue("default", e.target.value)}
           onBlur={handleBlur}
-          options={
-            values.elements?.map((element: string) => ({
+          options={[
+            { value: "null", label: "NULL" },
+            ...values.elements?.map((element: string) => ({
               value: element,
               label: element,
-            })) || []
-          }
+            })),
+          ]}
         />
       );
     case "datetime":
@@ -406,6 +408,13 @@ export const BooleanAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) =>
     array: y.boolean().default(false),
   });
 
+  const formFields = (
+    <>
+      {keyField}
+      {commonFormFields("boolean")}
+    </>
+  );
+
   return (
     <AttributeFormBase
       onClose={onClose}
@@ -421,7 +430,7 @@ export const BooleanAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) =>
         array: false,
       }}
       validationSchema={schema}
-      formFields={commonFormFields("boolean")}
+      formFields={formFields}
       submitAction={async (values) => {
         const { key, default: defaultValue, required, array } = values;
         await sdk.databases.createBooleanAttribute(
@@ -449,6 +458,13 @@ export const DatetimeAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) =
     array: y.boolean().default(false),
   });
 
+  const formFields = (
+    <>
+      {keyField}
+      {commonFormFields("datetime")}
+    </>
+  );
+
   return (
     <AttributeFormBase
       onClose={onClose}
@@ -464,7 +480,7 @@ export const DatetimeAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) =
         array: false,
       }}
       validationSchema={schema}
-      formFields={commonFormFields("datetime")}
+      formFields={formFields}
       submitAction={async (values) => {
         const { key, default: defaultValue, required, array } = values;
         await sdk.databases.createDatetimeAttribute(
@@ -492,6 +508,13 @@ export const IpAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
     array: y.boolean().default(false),
   });
 
+  const formFields = (
+    <>
+      {keyField}
+      {commonFormFields("ip")}
+    </>
+  );
+
   return (
     <AttributeFormBase
       onClose={onClose}
@@ -507,7 +530,7 @@ export const IpAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
         array: false,
       }}
       validationSchema={schema}
-      formFields={commonFormFields("ip")}
+      formFields={formFields}
       submitAction={async (values) => {
         const { key, default: defaultValue, required, array } = values;
         await sdk.databases.createIpAttribute(
@@ -535,6 +558,13 @@ export const UrlAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
     array: y.boolean().default(false),
   });
 
+  const formFields = (
+    <>
+      {keyField}
+      {commonFormFields("url")}
+    </>
+  );
+
   return (
     <AttributeFormBase
       onClose={onClose}
@@ -550,8 +580,14 @@ export const UrlAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
         array: false,
       }}
       validationSchema={schema}
-      formFields={commonFormFields("url")}
+      formFields={formFields}
       submitAction={async (values) => {
+        const formFields = (
+          <>
+            {keyField}
+            {commonFormFields("url")}
+          </>
+        );
         const { key, default: defaultValue, required, array } = values;
         await sdk.databases.createUrlAttribute(
           database!.$id,
@@ -578,6 +614,13 @@ export const EmailAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
     array: y.boolean().default(false),
   });
 
+  const formFields = (
+    <>
+      {keyField}
+      {commonFormFields("email")}
+    </>
+  );
+
   return (
     <AttributeFormBase
       onClose={onClose}
@@ -593,7 +636,7 @@ export const EmailAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
         array: false,
       }}
       validationSchema={schema}
-      formFields={commonFormFields("email")}
+      formFields={formFields}
       submitAction={async (values) => {
         const { key, default: defaultValue, required, array } = values;
         await sdk.databases.createEmailAttribute(
@@ -625,7 +668,7 @@ export const EnumAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
   const formFields = (
     <>
       {keyField}
-      <InputTagField name="elements" label="Elements" required />
+      <InputTagField name="elements" label="Elements" />
       {commonFormFields("enum")}
     </>
   );

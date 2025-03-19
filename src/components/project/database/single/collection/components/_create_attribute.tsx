@@ -11,6 +11,7 @@ import React from "react";
 import {
   BooleanAttributeForm,
   DatetimeAttributeForm,
+  EmailAttributeForm,
   EnumAttributeForm,
   FloatAttributeForm,
   IntegerAttributeForm,
@@ -95,7 +96,7 @@ export const CreateAttribute = ({ refetch }: { refetch: () => Promise<void> }) =
       <IpAttributeForm isOpen={selectedType?.value === "ip"} {...commonProps} />
       <EnumAttributeForm isOpen={selectedType?.value === "enum"} {...commonProps} />
       <UrlAttributeForm isOpen={selectedType?.value === "url"} {...commonProps} />
-      <EnumAttributeForm isOpen={selectedType?.value === "email"} {...commonProps} />
+      <EmailAttributeForm isOpen={selectedType?.value === "email"} {...commonProps} />
       <RelationshipAttributeForm isOpen={selectedType?.value === "relationship"} {...commonProps} />
     </>
   );
