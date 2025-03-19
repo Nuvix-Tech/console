@@ -1,19 +1,20 @@
 import React, { FormEvent, Fragment, PropsWithChildren, useEffect, useState } from "react";
 import { useFormikContext } from "formik";
 import {
+  Button,
   Chip,
   CloseButton,
   InputProps,
   NumberInput,
   NumberInputProps,
   PasswordInput,
+  Select,
   Switch,
   SwitchProps,
   TagInput,
   TagInputProps,
 } from "@/ui/components";
 import { LuPlus } from "react-icons/lu";
-import { Button } from "@/components/ui/button";
 import {
   FormControl,
   FormDescription,
@@ -243,19 +244,128 @@ export const InputObjectField: React.FC<InputObjectFieldProps> = ({
                   <CloseButton
                     type="button"
                     onClick={() => handleDeleteField(i)}
-                    // disabled={_values.length === 1}
+                  // disabled={_values.length === 1}
                   />
                 </div>
               </Fragment>
             ))}
           </div>
-          <Button type="button" variant="ghost" className="text-sm" onClick={handleAddField}>
+          <Button type="button" variant="tertiary" size="s" className="text-sm" onClick={handleAddField}>
             <LuPlus size={18} />
             Add Field
           </Button>
         </div>
       </FormControl>
       {helperText && <FormDescription>{helperText}</FormDescription>}
+      <FormMessage />
+    </FormItem>
+  );
+};
+
+type SelectObjectFieldInputProps = {
+  label: string;
+  options: React.ComponentProps<typeof Select>["options"];
+  placeholder?: string;
+}
+
+type SelectObjectFieldProps = Pick<InputObjectFieldProps, 'label' | 'name'> & {
+  left: SelectObjectFieldInputProps;
+  right: SelectObjectFieldInputProps;
+  description?: string;
+  addText?: string;
+};
+
+export const SelectObjectField: React.FC<SelectObjectFieldProps> = ({
+  label,
+  left,
+  right,
+  name,
+  description,
+  ...rest
+}) => {
+  const [_values, setValues] = useState<Values>([]);
+  const { setFieldValue, initialValues } =
+    useFormikContext<Record<string, { [key: string]: string }>>();
+
+  useEffect(() => {
+    const values: Record<string, string> = {};
+    _values.map(({ key, value }) => key && (values[key] = value));
+    setFieldValue(name, values);
+  }, [_values]);
+
+  useEffect(() => {
+    let values: Values = [];
+    Object.entries(initialValues[name] ?? {}).map(([key, value], i) =>
+      values.push({ key: key, value: value }),
+    );
+    setValues(values.length ? values : [{ key: "", value: "" }]);
+  }, [initialValues]);
+
+  const handleFieldChange = (key: "key" | "value", value: string, index: number) => {
+    const newValues: Values = [..._values];
+    newValues[index][key] = value;
+    setValues(newValues);
+  };
+
+  const handleAddField = () => {
+    setValues((prev) => [...prev, { key: "", value: "" }]);
+  };
+
+  const handleDeleteField = (index: number) => {
+    const newValues: Values = [..._values];
+    newValues.splice(index, 1);
+    setValues(newValues);
+    if (newValues.length === 0) {
+      handleAddField();
+    }
+  };
+
+  return (
+    <FormItem name={name} {...rest}>
+      {label && <FormLabel>{label}</FormLabel>}
+      <FormControl>
+        <div className="w-full flex flex-col gap-2 items-start">
+          <div className="w-full flex gap-2 pr-8">
+            <FormLabel className="w-full">{left.label}</FormLabel>
+            <FormLabel className="w-full">{right.label}</FormLabel>
+          </div>
+          <div className="w-full flex flex-col gap-2">
+            {_values.map(({ key, value }, i) => (
+              <Fragment key={i}>
+                <div className="w-full flex gap-4 items-center">
+                  <Select
+                    placeholder={left.placeholder}
+                    value={key}
+                    options={left.options}
+                    height="s"
+                    labelAsPlaceholder
+                    onSelect={(v) => handleFieldChange("key", v, i)}
+                  />
+                  <Select
+                    placeholder={right.placeholder}
+                    value={value}
+                    options={right.options}
+                    height="s"
+                    labelAsPlaceholder
+                    onSelect={(v) => handleFieldChange("value", v, i)}
+                  />
+
+                  <CloseButton
+                    type="button"
+                    onClick={() => handleDeleteField(i)}
+                  // disabled={_values.length === 1}
+                  />
+                </div>
+              </Fragment>
+            ))}
+          </div>
+          <Button type="button" size="s" variant="tertiary" className="text-sm" onClick={handleAddField}>
+            <LuPlus size={18} />
+            {rest.addText ?? "Add Field"}
+          </Button>
+        </div>
+      </FormControl>
+      {description && <FormDescription>{description}</FormDescription>}
       <FormMessage />
     </FormItem>
   );

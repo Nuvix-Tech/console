@@ -2,7 +2,7 @@
 import { Models } from "@nuvix/console";
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { CreateButton, DataGridProvider, Table } from "@/ui/modules/data-grid";
+import { DataGridProvider, Table } from "@/ui/modules/data-grid";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,10 +11,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Ellipsis } from "lucide-react";
 import { useProjectStore } from "@/lib/store";
-import { PageContainer, PageHeading } from "@/components/others";
+import { CreateButton, PageContainer, PageHeading } from "@/components/others";
 import { EmptyState } from "@/components/_empty_state";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Tag } from "@/ui/components";
+import { CreateIndex } from "./components/_create_index";
 
 type Props = {
   databaseId: string;
@@ -99,7 +100,7 @@ export const IndexesPage: React.FC<Props> = ({ databaseId, collectionId }) => {
       <PageHeading
         heading="Indexes"
         description="Indexes are used to quickly locate data without having to search every document in a collection."
-        right={<CreateButton label="Create Index" />}
+        right={<CreateButton hasPermission={true} component={CreateIndex} extraProps={{ refetch }} label="Create Index" />}
       />
 
       <DataGridProvider<Models.Index>
