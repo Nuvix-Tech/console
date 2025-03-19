@@ -53,7 +53,7 @@ export const CreateAttribute = ({ refetch }: { refetch: () => Promise<void> }) =
         autoFocus={false}
         unmountOnExit
       >
-        <PopoverTrigger>
+        <PopoverTrigger asChild>
           <CreateButton
             hasPermission={true}
             label="Create Attribute"

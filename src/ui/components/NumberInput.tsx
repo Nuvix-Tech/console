@@ -9,6 +9,7 @@ import { IconButton } from ".";
 import styles from "./NumberInput.module.scss";
 import { Checkbox } from "@/components/cui/checkbox";
 import { LuChevronDown, LuChevronUp } from "react-icons/lu";
+import { cn } from "@/lib/utils";
 
 export interface NumberInputProps
   extends Omit<React.ComponentProps<typeof Input>, "type" | "value" | "onChange"> {
@@ -101,8 +102,10 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
                   label: `${checkBoxId}-label`,
                   hiddenInput: `${checkBoxId}-hidden-input`,
                 }}
+                disabled={props.disabled}
                 marginRight="2"
                 checked={_null}
+                className="bg-transparent"
                 onCheckedChange={(e) => {
                   setNull(!!e.checked);
                   if (e.checked) {
@@ -123,8 +126,10 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
               top="0"
               direction="column"
               borderLeft="neutral-medium"
+              className={cn({
+                "!cursor-not-allowed !bg-[var(--neutral-solid-strong)]": props.disabled,
+              })}
               fillHeight
-              background="neutral-alpha-weak"
             >
               <Flex
                 fillHeight
@@ -135,6 +140,9 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
                 <IconButton
                   type="button"
                   variant="ghost"
+                  className={cn({
+                    "!cursor-not-allowed !bg-transparent": props.disabled,
+                  })}
                   size="s"
                   onClick={increment}
                   aria-label="Increment value"
@@ -150,6 +158,9 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
                 <IconButton
                   type="button"
                   variant="ghost"
+                  className={cn({
+                    "!cursor-not-allowed !bg-transparent": props.disabled,
+                  })}
                   size="s"
                   onClick={decrement}
                   aria-label="Decrement value"

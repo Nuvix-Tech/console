@@ -10,6 +10,7 @@ import { Column, Row, useToast } from "@/ui/components";
 import * as y from "yup";
 import { AttributeIcon } from "./_attribute_icon";
 import { useFormikContext } from "formik";
+import { useEffect } from "react";
 
 interface BaseProps {
   onClose: () => void;
@@ -28,6 +29,8 @@ const DefaultValueField = ({ type }: { type: string }) => {
     label: "Default Value",
     disabled: values.required || values.array,
   };
+
+  console.log(values, "______FROMIK");
 
   switch (type) {
     case "string":
@@ -52,7 +55,14 @@ const DefaultValueField = ({ type }: { type: string }) => {
 };
 
 const RequiredField = () => {
-  const { values } = useFormikContext<{ array: boolean }>();
+  const { values, setFieldValue } = useFormikContext<{ array: boolean; required: boolean }>();
+
+  useEffect(() => {
+    if (values.required) {
+      setFieldValue("array", false);
+      setFieldValue("default", null);
+    }
+  }, [values]);
 
   return (
     <InputSwitchField
@@ -67,7 +77,14 @@ const RequiredField = () => {
 };
 
 const ArrayField = () => {
-  const { values } = useFormikContext<{ required: boolean }>();
+  const { values, setFieldValue } = useFormikContext<{ required: boolean; array: boolean }>();
+
+  useEffect(() => {
+    if (values.array) {
+      setFieldValue("required", false);
+      setFieldValue("default", null);
+    }
+  }, [values]);
 
   return (
     <InputSwitchField
@@ -97,10 +114,13 @@ export const StringAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => 
         "Key must contain only alphanumeric, hyphen, non-leading underscore, period",
       ),
     size: y.number().positive().integer().required(),
-    default: y.string().nullable().when(['required', 'array'], {
-      is: (required: boolean, array: boolean) => required || array,
-      then: (schema) => schema.transform(() => null),
-    }),
+    default: y
+      .string()
+      .nullable()
+      .when(["required", "array"], {
+        is: (required: boolean, array: boolean) => required || array,
+        then: (schema) => schema.transform(() => null),
+      }),
     required: y.boolean().default(false),
     array: y.boolean().default(false),
   });
@@ -118,8 +138,8 @@ export const StringAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => 
         validationSchema: schema,
         initialValues: {
           key: "",
-          size: 0,
-          default: "",
+          size: null,
+          default: null,
           required: false,
           array: false,
         },
@@ -215,10 +235,10 @@ export const IntegerAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) =>
               collection!.$id,
               key,
               required,
-              defaultValue,
-              array,
               min,
               max,
+              defaultValue,
+              array,
             );
             addToast({
               message: "Attribute created successfully",
@@ -242,9 +262,11 @@ export const IntegerAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) =>
           required
           description="Key must contain only alphanumeric, hyphen, non-leading underscore, period"
         />
+        <Row gap="8">
+          <InputNumberField name="min" label="Minimum" nullable />
+          <InputNumberField name="max" label="Maximum" nullable />
+        </Row>
         <DefaultValueField type="integer" />
-        <InputNumberField name="min" label="Minimum Value" nullable />
-        <InputNumberField name="max" label="Maximum Value" nullable />
         <RequiredField />
         <ArrayField />
       </Column>
@@ -502,7 +524,7 @@ export const IpAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
   return (
     <FormDialog
       dialog={{
-        title: <Row gap="8">{AttributeIcon({ format: "ip" })} IP  Attribute</Row>,
+        title: <Row gap="8">{AttributeIcon({ format: "ip" })} IP Attribute</Row>,
         description: "Create a new IP address attribute for this collection",
         isOpen,
         onClose,
@@ -808,11 +830,7 @@ export const RelationshipAttributeForm = ({ onClose, isOpen, refetch }: BaseProp
   return (
     <FormDialog
       dialog={{
-        title: (
-          <Row gap="8">
-            {AttributeIcon({ format: "relationship" })} Relationship
-          </Row>
-        ),
+        title: <Row gap="8">{AttributeIcon({ format: "relationship" })} Relationship</Row>,
         description: "Create a new relationship attribute for this collection",
         isOpen,
         onClose,
@@ -863,12 +881,12 @@ export const RelationshipAttributeForm = ({ onClose, isOpen, refetch }: BaseProp
           name="relationType"
           label="Relation Type"
           type="select"
-        // options={[
-        //   { label: "One to One", value: "oneToOne" },
-        //   { label: "One to Many", value: "oneToMany" },
-        //   { label: "Many to One", value: "manyToOne" },
-        //   { label: "Many to Many", value: "manyToMany" },
-        // ]}
+          // options={[
+          //   { label: "One to One", value: "oneToOne" },
+          //   { label: "One to Many", value: "oneToMany" },
+          //   { label: "Many to One", value: "manyToOne" },
+          //   { label: "Many to Many", value: "manyToMany" },
+          // ]}
         />
         <InputField name="twoWay" label="Two-Way Relationship" type="checkbox" />
         <InputField name="twoWayKey" label="Two-Way Key" />
@@ -876,11 +894,11 @@ export const RelationshipAttributeForm = ({ onClose, isOpen, refetch }: BaseProp
           name="onDelete"
           label="On Delete Action"
           type="select"
-        // options={[
-        //   { label: "Cascade", value: "cascade" },
-        //   { label: "Restrict", value: "restrict" },
-        //   { label: "Set Null", value: "setNull" },
-        // ]}
+          // options={[
+          //   { label: "Cascade", value: "cascade" },
+          //   { label: "Restrict", value: "restrict" },
+          //   { label: "Set Null", value: "setNull" },
+          // ]}
         />
       </Column>
     </FormDialog>

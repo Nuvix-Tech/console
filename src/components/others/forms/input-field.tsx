@@ -1,4 +1,4 @@
-import React, { Fragment, PropsWithChildren, useEffect, useState } from "react";
+import React, { FormEvent, Fragment, PropsWithChildren, useEffect, useState } from "react";
 import { useFormikContext } from "formik";
 import {
   Chip,
@@ -56,7 +56,6 @@ type InputFieldProps = Props;
 
 export const InputField = (props: InputFieldProps) => {
   const InputComponent = props.type === "password" ? PasswordInput : Input;
-  const { setFieldValue, values } = useFormikContext<Record<string, string | number>>();
 
   return <Wrapper Field={InputComponent} {...props} />;
 };
@@ -66,8 +65,16 @@ export const InputNumberField = (props: Props & NumberInputProps) => {
   return (
     <Wrapper
       Field={NumberInput}
-      onChange={(v: number) => setFieldValue(props.name, v)}
-      value={values[props.name] && Number(values[props.name])}
+      onChange={(v: number | FormEvent<HTMLInputElement>) => {
+        let valueToSet: number | string = v as any;
+        if (v && typeof v !== "number") {
+          const parsedValue = Number((v.target as any).value);
+          valueToSet = isNaN(parsedValue) ? "" : parsedValue;
+        }
+
+        setFieldValue(props.name, valueToSet);
+      }}
+      value={values[props.name]}
       {...props}
     />
   );

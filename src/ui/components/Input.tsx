@@ -154,7 +154,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         <Flex
           transition="micro-medium"
           border="neutral-medium"
-          background="neutral-alpha-weak"
+          background={"neutral-alpha-weak"}
           position="relative"
           overflow="hidden"
           vertical="stretch"
@@ -167,6 +167,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               [styles.m]: height === "m",
             },
             radius === "none" ? "radius-none" : radius ? `radius-l-${radius}` : "radius-l",
+            {
+              "!bg-[var(--neutral-solid-strong)]": props.disabled,
+            },
           )}
         >
           {hasPrefix && (
@@ -225,6 +228,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                     hiddenInput: `${checkBoxId}-hidden-input`,
                   }}
                   checked={_null}
+                  disabled={props.disabled}
                   onCheckedChange={(e) => {
                     setNull(!!e.checked);
                     if (e.checked) {
