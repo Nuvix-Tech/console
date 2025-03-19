@@ -244,13 +244,19 @@ export const InputObjectField: React.FC<InputObjectFieldProps> = ({
                   <CloseButton
                     type="button"
                     onClick={() => handleDeleteField(i)}
-                  // disabled={_values.length === 1}
+                    // disabled={_values.length === 1}
                   />
                 </div>
               </Fragment>
             ))}
           </div>
-          <Button type="button" variant="tertiary" size="s" className="text-sm" onClick={handleAddField}>
+          <Button
+            type="button"
+            variant="tertiary"
+            size="s"
+            className="text-sm"
+            onClick={handleAddField}
+          >
             <LuPlus size={18} />
             Add Field
           </Button>
@@ -266,9 +272,9 @@ type SelectObjectFieldInputProps = {
   label: string;
   options: React.ComponentProps<typeof Select>["options"];
   placeholder?: string;
-}
+};
 
-type SelectObjectFieldProps = Pick<InputObjectFieldProps, 'label' | 'name'> & {
+type SelectObjectFieldProps = Pick<InputObjectFieldProps, "label" | "name"> & {
   left: SelectObjectFieldInputProps;
   right: SelectObjectFieldInputProps;
   description?: string;
@@ -353,13 +359,19 @@ export const SelectObjectField: React.FC<SelectObjectFieldProps> = ({
                   <CloseButton
                     type="button"
                     onClick={() => handleDeleteField(i)}
-                  // disabled={_values.length === 1}
+                    // disabled={_values.length === 1}
                   />
                 </div>
               </Fragment>
             ))}
           </div>
-          <Button type="button" size="s" variant="tertiary" className="text-sm" onClick={handleAddField}>
+          <Button
+            type="button"
+            size="s"
+            variant="tertiary"
+            className="text-sm"
+            onClick={handleAddField}
+          >
             <LuPlus size={18} />
             {rest.addText ?? "Add Field"}
           </Button>

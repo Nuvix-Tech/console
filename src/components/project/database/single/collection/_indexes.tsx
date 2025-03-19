@@ -3,19 +3,14 @@ import { Models } from "@nuvix/console";
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataGridProvider, Table } from "@/ui/modules/data-grid";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Ellipsis } from "lucide-react";
 import { useProjectStore } from "@/lib/store";
 import { CreateButton, PageContainer, PageHeading } from "@/components/others";
 import { EmptyState } from "@/components/_empty_state";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Tag } from "@/ui/components";
+import { Column, IconButton, Tag, Text } from "@/ui/components";
 import { CreateIndex } from "./components/_create_index";
+import { DropdownMenu, DropdownMenuItem } from "@/components/others/dropdown-menu";
 
 type Props = {
   databaseId: string;
@@ -80,14 +75,11 @@ export const IndexesPage: React.FC<Props> = ({ databaseId, collectionId }) => {
       size: 16,
       minSize: 16,
       cell: ({ row }) => (
-        <DropdownMenu>
-          <DropdownMenuTrigger className="mx-auto">
-            <Ellipsis size={18} />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
+        <DropdownMenu trigger={<IconButton icon={<Ellipsis />} size="s" variant="tertiary" />}>
+          <Column>
             <DropdownMenuItem>Overview</DropdownMenuItem>
             <DropdownMenuItem>Delete</DropdownMenuItem>
-          </DropdownMenuContent>
+          </Column>
         </DropdownMenu>
       ),
     },
@@ -100,7 +92,14 @@ export const IndexesPage: React.FC<Props> = ({ databaseId, collectionId }) => {
       <PageHeading
         heading="Indexes"
         description="Indexes are used to quickly locate data without having to search every document in a collection."
-        right={<CreateButton hasPermission={true} component={CreateIndex} extraProps={{ refetch }} label="Create Index" />}
+        right={
+          <CreateButton
+            hasPermission={true}
+            component={CreateIndex}
+            extraProps={{ refetch }}
+            label="Create Index"
+          />
+        }
       />
 
       <DataGridProvider<Models.Index>
@@ -115,7 +114,13 @@ export const IndexesPage: React.FC<Props> = ({ databaseId, collectionId }) => {
           description="No Indexes have been created yet."
         />
 
-        {hasIndexes && <Table interactive={false} />}
+        {hasIndexes && (
+          <>
+            <Table interactive={false} /> <Text variant="label-strong-m">
+              Total: {data.total}
+            </Text>{" "}
+          </>
+        )}
       </DataGridProvider>
     </PageContainer>
   );

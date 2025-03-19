@@ -13,14 +13,14 @@ interface CreateIndexProps {
 const generateSchema = () => {
   return y.object({
     key: y.string().required("Key is required"),
-    type: y.string().oneOf(['key', 'unique', 'fulltext']).required("Index type is required"),
-    fields: y.array()
+    type: y.string().oneOf(["key", "unique", "fulltext"]).required("Index type is required"),
+    fields: y
+      .array()
       .of(
-        y.mixed().test(
-          "is-valid-sort-field",
-          "Each attribute must have a valid sort order",
-          (value) => {
-            if (!value || typeof value !== 'object' || Array.isArray(value)) {
+        y
+          .mixed()
+          .test("is-valid-sort-field", "Each attribute must have a valid sort order", (value) => {
+            if (!value || typeof value !== "object" || Array.isArray(value)) {
               return false;
             }
 
@@ -31,11 +31,10 @@ const generateSchema = () => {
             }
 
             const sortValue = (value as any)[keys[0]];
-            return sortValue === 'asc' || sortValue === 'desc';
-          }
-        )
+            return sortValue === "asc" || sortValue === "desc";
+          }),
       )
-      .min(1, "At least one field must be added")
+      .min(1, "At least one field must be added"),
   });
 };
 
@@ -59,20 +58,30 @@ export const CreateIndex = ({ onClose, isOpen, refetch }: CreateIndexProps) => {
         initialValues: {
           key: "",
           type: "key",
-          fields: []
+          fields: [],
         },
         onSubmit: async (values) => {
           try {
             const { key, type, fields } = values;
 
-            const { attributes, orders } = fields.reduce((acc: any, field: any) => {
-              const [key, value] = Object.entries(field)[0];
-              acc.attributes.push(key);
-              acc.orders.push(value);
-              return acc;
-            }, { attributes: [], orders: [] });
+            const { attributes, orders } = fields.reduce(
+              (acc: any, field: any) => {
+                const [key, value] = Object.entries(field)[0];
+                acc.attributes.push(key);
+                acc.orders.push(value);
+                return acc;
+              },
+              { attributes: [], orders: [] },
+            );
 
-            await sdk.databases.createIndex(database?.$id!, collection.$id, key, type, attributes, orders);
+            await sdk.databases.createIndex(
+              database?.$id!,
+              collection.$id,
+              key,
+              type,
+              attributes,
+              orders,
+            );
 
             addToast({
               message: "Index created successfully",
@@ -90,39 +99,39 @@ export const CreateIndex = ({ onClose, isOpen, refetch }: CreateIndexProps) => {
         },
       }}
     >
-      <Column paddingY="12" fillWidth gap="8">
+      <Column paddingY="12" fillWidth gap="16">
         <InputField name="key" label="Key" />
 
         <DynamicField
           type="enum"
           name="type"
           options={[
-            { value: 'key', label: 'Key' },
-            { value: 'unique', label: 'Unique' },
-            { value: 'fulltext', label: 'Fulltext' },
+            { value: "key", label: "Key" },
+            { value: "unique", label: "Unique" },
+            { value: "fulltext", label: "Fulltext" },
           ]}
         />
 
         <SelectObjectField
           name="fields"
           left={{
-            label: 'Attribute',
+            label: "Attribute",
             options: [
-              { label: '$id', value: '$id' },
-              { label: '$createdAt', value: '$createdAt' },
-              { label: '$updatedAt', value: '$updatedAt' },
+              { label: "$id", value: "$id" },
+              { label: "$createdAt", value: "$createdAt" },
+              { label: "$updatedAt", value: "$updatedAt" },
               ...collection.attributes.map((attr: any) => ({
                 label: attr?.key,
                 value: attr?.key,
               })),
-            ]
+            ],
           }}
           right={{
-            label: 'Order',
+            label: "Order",
             options: [
-              { label: 'Ascending', value: 'asc' },
-              { label: 'Descending', value: 'desc' },
-            ]
+              { label: "Ascending", value: "asc" },
+              { label: "Descending", value: "desc" },
+            ],
           }}
           addText="Add Attribute"
         />

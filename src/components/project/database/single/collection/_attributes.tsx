@@ -4,18 +4,13 @@ import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataGridProvider, Table } from "@/ui/modules/data-grid";
 import { AttributeIcon, CreateAttribute } from "./components";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Ellipsis } from "lucide-react";
 import { useProjectStore } from "@/lib/store";
 import { PageContainer, PageHeading } from "@/components/others";
 import { EmptyState } from "@/components/_empty_state";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Tag } from "@/ui/components";
+import { Column, IconButton, Tag, Text } from "@/ui/components";
+import { DropdownMenu, DropdownMenuItem } from "@/components/others/dropdown-menu";
 
 type Props = {
   databaseId: string;
@@ -93,14 +88,8 @@ export const AttributesPage: React.FC<Props> = ({ databaseId, collectionId }) =>
         size: 16,
         minSize: 16,
         cell: ({ row }) => (
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              className="mx-auto hover:bg-gray-100 rounded-full p-1"
-              aria-label="Actions"
-            >
-              <Ellipsis size={18} />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+          <DropdownMenu trigger={<IconButton icon={<Ellipsis />} size="s" variant="tertiary" />}>
+            <Column>
               <DropdownMenuItem onClick={() => console.log("Update", row.original.key)}>
                 Update
               </DropdownMenuItem>
@@ -108,12 +97,12 @@ export const AttributesPage: React.FC<Props> = ({ databaseId, collectionId }) =>
                 Create Index
               </DropdownMenuItem>
               <DropdownMenuItem
-                className="text-red-600"
+                variant="danger"
                 onClick={() => console.log("Delete", row.original.key)}
               >
                 Delete
               </DropdownMenuItem>
-            </DropdownMenuContent>
+            </Column>
           </DropdownMenu>
         ),
       },
@@ -143,7 +132,13 @@ export const AttributesPage: React.FC<Props> = ({ databaseId, collectionId }) =>
           description="No attributes have been created yet."
         />
 
-        {hasAttributes && <Table interactive={false} />}
+        {hasAttributes && (
+          <>
+            <Table interactive={false} /> <Text variant="label-strong-m">
+              Total: {data.total}
+            </Text>{" "}
+          </>
+        )}
       </DataGridProvider>
     </PageContainer>
   );

@@ -9,7 +9,7 @@ import { ElementType } from "./ElementType";
 import iconStyles from "./IconButton.module.scss";
 
 interface CommonProps {
-  icon?: string;
+  icon?: React.ReactNode;
   id?: string;
   size?: "s" | "m" | "l";
   radius?:
