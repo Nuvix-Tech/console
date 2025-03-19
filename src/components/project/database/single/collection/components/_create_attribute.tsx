@@ -21,6 +21,7 @@ import {
   UrlAttributeForm,
 } from "./_attribute_forms";
 import { Button } from "@/ui/components";
+import { AttributeIcon } from "./_attribute_icon";
 
 const attributeTypes = [
   { label: "String", value: "string" },
@@ -62,7 +63,7 @@ export const CreateAttribute = ({ refetch }: { refetch: () => Promise<void> }) =
           />
         </PopoverTrigger>
         <PopoverContent
-          maxWidth="56"
+          maxWidth="88"
           portalled={false}
           css={{ "--popover-bg": "var(--neutral-background-weak)" }}
         >
@@ -72,6 +73,7 @@ export const CreateAttribute = ({ refetch }: { refetch: () => Promise<void> }) =
               {attributeTypes.map((type) => (
                 <Button
                   key={type.value}
+                  prefixIcon={AttributeIcon({ format: type.value }, false, 14)}
                   variant="tertiary"
                   fillWidth
                   justifyContent="flex-start"

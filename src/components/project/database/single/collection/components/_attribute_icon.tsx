@@ -13,17 +13,18 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 
-export const AttributeIcon = (attribute: any, isArray: boolean = false) => {
+export const AttributeIcon = (attribute: any, isArray: boolean = false, size: number = 16) => {
   const icons = {
-    string: <Text size={16} />,
-    integer: <Hash size={16} />,
-    boolean: <CheckCircle size={16} />,
-    enum: <List size={16} />,
-    url: <Link size={16} />,
-    email: <AtSign size={16} />,
-    relationship: <ArrowUpRight size={16} />,
-    datetime: <Calendar size={16} />,
-    ip: <Globe size={16} />,
+    string: <Text size={size} />,
+    integer: <Hash size={size} />,
+    float: <Hash size={size} />,
+    boolean: <CheckCircle size={size} />,
+    enum: <List size={size} />,
+    url: <Link size={size} />,
+    email: <AtSign size={size} />,
+    relationship: <ArrowUpRight size={size} />,
+    datetime: <Calendar size={size} />,
+    ip: <Globe size={size} />,
   };
   const type = (attribute.format || attribute.type) as keyof typeof icons;
   const isTwoWay = attribute?.twoWay ?? "-";

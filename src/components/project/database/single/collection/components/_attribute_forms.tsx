@@ -15,7 +15,7 @@ import { useEffect } from "react";
 import { DynamicField, SelectField } from "../document/components";
 import { useQuery } from "@tanstack/react-query";
 import { RadioCardItem, RadioCardRoot } from "@/components/cui/radio-card";
-import { Query } from "@nuvix/console";
+import { MoveHorizontal, MoveRight } from "lucide-react";
 
 interface BaseProps {
   onClose: () => void;
@@ -759,12 +759,10 @@ const RelationshipAttributeFormFields = () => {
   const database = useDatabaseStore.use.database!();
   const collection = useCollectionStore.use.collection!()!;
 
-  const { data, isPending } = useQuery({
+  const { data } = useQuery({
     queryKey: ["collections", database!.$id],
     queryFn: async () => {
-      return await sdk.databases.listCollections(database!.$id, [
-        Query.notEqual("$id", collection.$id),
-      ]);
+      return await sdk.databases.listCollections(database!.$id);
     },
     enabled: !!database,
   });
@@ -816,10 +814,12 @@ const RelationshipAttributeFormFields = () => {
         }}
         required
         options={
-          data?.collections.map((collection: any) => ({
-            value: collection.$id,
-            label: `${collection.name} (${collection.$id})`,
-          })) ?? []
+          data?.collections
+            .filter((c: any) => c.$id !== collection.$id)
+            .map((collection: any) => ({
+              value: collection.$id,
+              label: `${collection.name} (${collection.$id})`,
+            })) ?? []
         }
         searchable
         emptyState="There are no collections that match your search"
@@ -856,56 +856,54 @@ const RelationshipAttributeFormFields = () => {
           />
 
           <Column className="mt-2 mb-2">
-            <div className="text-sm font-medium mb-2">Relationship Visualization</div>
-            {values.relationType === "oneToOne" && (
-              <div className="p-3 bg-secondary rounded-md">
-                <p className="text-sm">
-                  One {collection.name} is related to one{" "}
-                  {data?.collections.find((c: any) => c.$id === values.relatedCollection)?.name}
-                </p>
-              </div>
-            )}
-            {values.relationType === "oneToMany" && (
-              <div className="p-3 bg-secondary rounded-md">
-                <p className="text-sm">
-                  One {collection.name} is related to many{" "}
-                  {data?.collections.find((c: any) => c.$id === values.relatedCollection)?.name}s
-                </p>
-              </div>
-            )}
-            {values.relationType === "manyToOne" && (
-              <div className="p-3 bg-secondary rounded-md">
-                <p className="text-sm">
-                  Many {collection.name}s can be related to one{" "}
-                  {data?.collections.find((c: any) => c.$id === values.relatedCollection)?.name}
-                </p>
-                {/* Specific highlight for Course-Teye6 relationship */}
-                {collection.name.toLowerCase() === "course" &&
-                  data?.collections
-                    .find((c: any) => c.$id === values.relatedCollection)
-                    ?.name.toLowerCase() === "teye6" && (
-                    <p className="text-sm mt-2 font-bold">
-                      This matches: Course contains one Teye6
-                    </p>
-                  )}
-                {collection.name.toLowerCase() === "teye6" &&
-                  data?.collections
-                    .find((c: any) => c.$id === values.relatedCollection)
-                    ?.name.toLowerCase() === "course" && (
-                    <p className="text-sm mt-2 font-bold">
-                      This matches: Teye6 belongs to many Courses
-                    </p>
-                  )}
-              </div>
-            )}
-            {values.relationType === "manyToMany" && (
-              <div className="p-3 bg-secondary rounded-md">
-                <p className="text-sm">
-                  Many {collection.name}s can be related to many{" "}
-                  {data?.collections.find((c: any) => c.$id === values.relatedCollection)?.name}s
-                </p>
-              </div>
-            )}
+            {(() => {
+              const relatedCollection = data?.collections.find(
+                (c: any) => c.$id === values.relatedCollection,
+              )?.name;
+              if (!relatedCollection) return null;
+
+              const relationships: Record<string, string[]> = {
+                oneToOne: values.twoWay
+                  ? [
+                      `${collection.name} can contain one ${relatedCollection}.`,
+                      `${relatedCollection} can belong to one ${collection.name}.`,
+                    ]
+                  : [`${collection.name} can contain one ${relatedCollection}.`],
+                oneToMany: [
+                  `${collection.name} can contain many ${relatedCollection}.`,
+                  `${relatedCollection} can belong to one ${collection.name}.`,
+                ],
+                manyToOne: [
+                  `${collection.name} can belong to one ${relatedCollection}.`,
+                  ...(values.twoWay
+                    ? [`${relatedCollection} can contain many ${collection.name}.`]
+                    : []),
+                ],
+                manyToMany: [
+                  `${collection.name} can contain many ${relatedCollection}.`,
+                  `${relatedCollection} can belong to many ${collection.name}.`,
+                ],
+              };
+
+              return (
+                <div className="p-3 bg-[var(--neutral-alpha-weak)] rounded-md text-sm text-center">
+                  <div className="flex items-center self-center mx-auto gap-4 w-min text-nowrap mb-2">
+                    {collection.name}
+                    {values.twoWay ? (
+                      <MoveHorizontal className="h-6 w-6" />
+                    ) : (
+                      <MoveRight className="h-6 w-6" />
+                    )}
+                    {relatedCollection}
+                  </div>
+                  {relationships[values.relationType]?.map((text, index) => (
+                    <div key={index}>
+                      <span className="font-medium">{text}</span>
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
           </Column>
 
           <DynamicField

@@ -23,8 +23,8 @@ interface CommonProps {
     | "bottom-left";
   label?: string;
   weight?: "default" | "strong";
-  prefixIcon?: string;
-  suffixIcon?: string;
+  prefixIcon?: React.ReactNode;
+  suffixIcon?: React.ReactNode;
   loading?: boolean;
   fillWidth?: boolean;
   justifyContent?: "flex-start" | "center" | "flex-end" | "space-between";
