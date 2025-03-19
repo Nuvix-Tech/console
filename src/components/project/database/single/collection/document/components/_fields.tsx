@@ -28,10 +28,11 @@ interface Props {
   options?: { value: string; label: string }[];
   min?: number;
   max?: number;
+  [key: string]: any;
 }
 
 export const DynamicField = (props: Props) => {
-  const { name, isArray, type = "string", options = [], nullable, label } = props;
+  const { name, isArray, type = "string", options = [], nullable, label, ...rest } = props;
   const { values, errors, touched, setFieldValue, handleBlur } =
     useFormikContext<Record<string, any>>();
   const id = React.useId();
@@ -60,6 +61,7 @@ export const DynamicField = (props: Props) => {
 
   const commonProps: any = {
     maxLength: props.size,
+    ...rest,
   };
 
   const getFieldComponent = () => {
@@ -141,11 +143,11 @@ type FieldProps = {
   maxLength?: number;
   onBlur?: (event: React.FocusEvent) => void;
   index?: number;
-}
+};
 
 type SelectFieldProps = FieldProps & {
   options: Array<{ value: string; label: string }>;
-}
+};
 
 const TextareaField = ({ value, onChange, maxLength, ...props }: FieldProps) => {
   return maxLength && maxLength > 50 ? (
@@ -178,7 +180,13 @@ const NumberField = ({ value, onChange, ...props }: FieldProps) => {
   );
 };
 
-export const SelectField = ({ value, onChange, options = [], nullable, ...props }: SelectFieldProps & React.ComponentProps<typeof Select>) => {
+export const SelectField = ({
+  value,
+  onChange,
+  options = [],
+  nullable,
+  ...props
+}: SelectFieldProps & React.ComponentProps<typeof Select>) => {
   const _onChange = (v: string) => {
     if ((v === null || v === "null") && nullable) {
       onChange({ target: { value: null } });
@@ -205,16 +213,16 @@ export const SelectBooleanField = ({ value, onChange, nullable, ...props }: Sele
       onChange({ target: { value: v === "true" } });
     }
   };
-  
+
   const booleanOptions = [
     { value: "true", label: "True" },
     { value: "false", label: "False" },
   ];
-  
+
   if (nullable) {
-    booleanOptions.unshift({ value: "null", label: "None" });
+    booleanOptions.unshift({ value: "null", label: "NULL" });
   }
-  
+
   return (
     <Select
       {...props}
@@ -239,11 +247,11 @@ const RelationshipField = ({ value, onChange, ...props }: FieldProps) => {
 
 const DateTimeField = ({ value, onChange, ...props }: FieldProps) => {
   return (
-    <input 
-      type="datetime-local" 
-      value={value ?? ""} 
-      onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e)} 
-      {...props} 
+    <input
+      type="datetime-local"
+      value={value ?? ""}
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e)}
+      {...props}
     />
   );
 };

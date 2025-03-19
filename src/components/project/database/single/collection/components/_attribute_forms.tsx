@@ -15,6 +15,7 @@ import { useEffect } from "react";
 import { DynamicField, SelectField } from "../document/components";
 import { useQuery } from "@tanstack/react-query";
 import { RadioCardItem, RadioCardRoot } from "@/components/cui/radio-card";
+import { Query } from "@nuvix/console";
 
 interface BaseProps {
   onClose: () => void;
@@ -44,17 +45,7 @@ const DefaultValueField = ({ type }: { type: string }) => {
     case "float":
       return <InputNumberField {...commonProps} />;
     case "boolean":
-      return (
-        <DynamicField
-          {...commonProps}
-          type="boolean"
-          options={[
-            { value: "null", label: "NULL" },
-            { value: "true", label: "True" },
-            { value: "false", label: "False" },
-          ]}
-        />
-      );
+      return <DynamicField {...commonProps} type="boolean" />;
     case "enum":
       return (
         <DynamicField
@@ -755,7 +746,6 @@ export const RelationshipAttributeForm = ({ onClose, isOpen, refetch }: BaseProp
   );
 };
 
-
 const RelationshipAttributeFormFields = () => {
   const { values, setFieldValue } = useFormikContext<{
     key: string;
@@ -772,17 +762,29 @@ const RelationshipAttributeFormFields = () => {
   const { data, isPending } = useQuery({
     queryKey: ["collections", database!.$id],
     queryFn: async () => {
-      return await sdk.databases.listCollections(database!.$id);
+      return await sdk.databases.listCollections(database!.$id, [
+        Query.notEqual("$id", collection.$id),
+      ]);
     },
     enabled: !!database,
   });
 
   return (
     <>
-      <RadioCardRoot gap={4} width={'full'} value={values.twoWay ? 'twoWay' : 'oneWay'} onValueChange={(d) => {
-        setFieldValue('twoWay', d.value === 'twoWay');
-        !values.twoWayKey && setFieldValue('twoWayKey', collection?.name);
-      }}>
+      <RadioCardRoot
+        flexDirection="row"
+        gap={4}
+        width={"full"}
+        value={values.twoWay ? "twoWay" : "oneWay"}
+        onValueChange={(d) => {
+          setFieldValue("twoWay", d.value === "twoWay");
+          !values.twoWayKey &&
+            setFieldValue(
+              "twoWayKey",
+              collection?.name?.replace(/[^a-zA-Z0-9]/g, "").toLowerCase() || "",
+            );
+        }}
+      >
         <RadioCardItem
           icon={<RelationshipIcon type="oneWay" />}
           label="One-Way"
@@ -803,64 +805,121 @@ const RelationshipAttributeFormFields = () => {
         value={values.relatedCollection}
         onChange={(value) => {
           setFieldValue("relatedCollection", value.target.value);
-          !values.key && setFieldValue("key", data?.collections.find((c: any) => c.$id === value.target.value)?.name);
+          !values.key &&
+            setFieldValue(
+              "key",
+              data?.collections
+                .find((c: any) => c.$id === value.target.value)
+                ?.name?.replace(/[^a-zA-Z0-9]/g, "")
+                .toLowerCase() || "",
+            );
         }}
         required
-        options={data?.collections.map((collection: any) => ({
-          value: collection.$id,
-          label: `${collection.name} (${collection.$id})`,
-        })) ?? []}
+        options={
+          data?.collections.map((collection: any) => ({
+            value: collection.$id,
+            label: `${collection.name} (${collection.$id})`,
+          })) ?? []
+        }
         searchable
         emptyState="There are no collections that match your search"
       />
 
-      {
-        values.relatedCollection && (
-          <>
+      {values.relatedCollection && (
+        <>
+          <InputField
+            name="key"
+            label="Key"
+            required
+            description="Key must contain only alphanumeric, hyphen, non-leading underscore, period"
+          />
+
+          {values.twoWay && (
             <InputField
-              name="key"
-              label="Key"
+              name="twoWayKey"
+              label="Key (Related Collection)"
               required
               description="Key must contain only alphanumeric, hyphen, non-leading underscore, period"
             />
+          )}
 
-            {
-              values.twoWay && (
-                <InputField
-                  name="twoWayKey"
-                  label="Key (Related Collection)"
-                  required
-                  description="Key must contain only alphanumeric, hyphen, non-leading underscore, period"
-                />
-              )
-            }
+          <DynamicField
+            name="relationType"
+            label="Relation Type"
+            type="enum"
+            options={[
+              { value: "oneToOne", label: "One to One" },
+              { value: "oneToMany", label: "One to Many" },
+              { value: "manyToOne", label: "Many to One" },
+              { value: "manyToMany", label: "Many to Many" },
+            ]}
+          />
 
-            <DynamicField
-              name="relationType"
-              label="Relation Type"
-              type="enum"
-              options={[
-                { value: "oneToOne", label: "One to One" },
-                { value: "oneToMany", label: "One to Many" },
-                { value: "manyToOne", label: "Many to One" },
-                { value: "manyToMany", label: "Many to Many" },
-              ]}
-            />
+          <Column className="mt-2 mb-2">
+            <div className="text-sm font-medium mb-2">Relationship Visualization</div>
+            {values.relationType === "oneToOne" && (
+              <div className="p-3 bg-secondary rounded-md">
+                <p className="text-sm">
+                  One {collection.name} is related to one{" "}
+                  {data?.collections.find((c: any) => c.$id === values.relatedCollection)?.name}
+                </p>
+              </div>
+            )}
+            {values.relationType === "oneToMany" && (
+              <div className="p-3 bg-secondary rounded-md">
+                <p className="text-sm">
+                  One {collection.name} is related to many{" "}
+                  {data?.collections.find((c: any) => c.$id === values.relatedCollection)?.name}s
+                </p>
+              </div>
+            )}
+            {values.relationType === "manyToOne" && (
+              <div className="p-3 bg-secondary rounded-md">
+                <p className="text-sm">
+                  Many {collection.name}s can be related to one{" "}
+                  {data?.collections.find((c: any) => c.$id === values.relatedCollection)?.name}
+                </p>
+                {/* Specific highlight for Course-Teye6 relationship */}
+                {collection.name.toLowerCase() === "course" &&
+                  data?.collections
+                    .find((c: any) => c.$id === values.relatedCollection)
+                    ?.name.toLowerCase() === "teye6" && (
+                    <p className="text-sm mt-2 font-bold">
+                      This matches: Course contains one Teye6
+                    </p>
+                  )}
+                {collection.name.toLowerCase() === "teye6" &&
+                  data?.collections
+                    .find((c: any) => c.$id === values.relatedCollection)
+                    ?.name.toLowerCase() === "course" && (
+                    <p className="text-sm mt-2 font-bold">
+                      This matches: Teye6 belongs to many Courses
+                    </p>
+                  )}
+              </div>
+            )}
+            {values.relationType === "manyToMany" && (
+              <div className="p-3 bg-secondary rounded-md">
+                <p className="text-sm">
+                  Many {collection.name}s can be related to many{" "}
+                  {data?.collections.find((c: any) => c.$id === values.relatedCollection)?.name}s
+                </p>
+              </div>
+            )}
+          </Column>
 
-            <DynamicField
-              name="onDelete"
-              label="On Delete Action"
-              type="enum"
-              options={[
-                { value: "cascade", label: "Cascade" },
-                { value: "restrict", label: "Restrict" },
-                { value: "setNull", label: "Set Null" },
-              ]}
-            />
-
-          </>
-        )
-      }
+          <DynamicField
+            name="onDelete"
+            label="On Delete Action"
+            type="enum"
+            options={[
+              { value: "cascade", label: "Cascade" },
+              { value: "restrict", label: "Restrict" },
+              { value: "setNull", label: "Set Null" },
+            ]}
+          />
+        </>
+      )}
     </>
-  )
-}
+  );
+};

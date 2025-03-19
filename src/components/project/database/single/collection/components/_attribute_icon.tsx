@@ -26,31 +26,25 @@ export const AttributeIcon = (attribute: any, isArray: boolean = false) => {
     ip: <Globe size={16} />,
   };
   const type = (attribute.format || attribute.type) as keyof typeof icons;
-
+  const isTwoWay = attribute?.twoWay ?? "-";
   return (
     <div className="flex items-center gap-2 size-8 neutral-background-alpha-strong rounded-full relative justify-center">
       {icons[type]}
-      {(isArray || type === 'relationship') && (
+      {(isArray || isTwoWay !== "-") && (
         <div className="absolute bottom-0 right-0">
           {isArray && <Brackets size={10} />}
-          {type === 'relationship' && (
-            <RelationshipIcon type={attribute?.twoWay ?
-              'twoWay' : 'oneWay'
-            } />
-          )}
+          {type === "relationship" && <RelationshipIcon type={isTwoWay ? "twoWay" : "oneWay"} />}
         </div>
       )}
     </div>
   );
 };
 
-
-export const RelationshipIcon = ({ type }: { type: 'oneWay' | 'twoWay' }) => {
+export const RelationshipIcon = ({ type }: { type: "oneWay" | "twoWay" }) => {
   const icons = {
     oneWay: <ArrowRight size={10} />,
-    twoWay: <ArrowRightLeft size={10} />
-
+    twoWay: <ArrowRightLeft size={10} />,
   };
 
   return icons[type];
-}
+};
