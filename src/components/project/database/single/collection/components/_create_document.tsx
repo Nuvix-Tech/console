@@ -111,7 +111,6 @@ const DataFields = ({ attributes }: DataMapperProps) => {
       <div className="flex flex-col gap-4">
         {attributes.map((attribute) => {
           const commonProps = {
-            key: attribute.key,
             name: attribute.key,
             showAbout: true,
             nullable: !attribute.required,
@@ -142,11 +141,16 @@ const DataFields = ({ attributes }: DataMapperProps) => {
                 }
               }
               return (
-                <DynamicField {...commonProps} size={(attribute as Models.AttributeString)?.size} />
+                <DynamicField
+                  key={attribute.key}
+                  {...commonProps}
+                  size={(attribute as Models.AttributeString)?.size}
+                />
               );
             case "integer":
               return (
                 <DynamicField
+                  key={attribute.key}
                   {...commonProps}
                   min={(attribute as Models.AttributeInteger).min}
                   max={(attribute as Models.AttributeInteger).max}
@@ -154,7 +158,7 @@ const DataFields = ({ attributes }: DataMapperProps) => {
                 />
               );
             case "boolean":
-              return <DynamicField {...commonProps} type="boolean" />;
+              return <DynamicField key={attribute.key} {...commonProps} type="boolean" />;
             default:
               return null;
           }
@@ -164,14 +168,23 @@ const DataFields = ({ attributes }: DataMapperProps) => {
   );
 };
 
-const PermissionsFields = () => {
-  const collection = useCollectionStore.use.collection?.();
+const PermissionsFields = React.memo(() => {
+  const collection = useCallback(() => {
+    return useCollectionStore.use.collection?.();
+  }, []);
+  const currentCollection = collection();
   const sdk = useProjectStore.use.sdk();
   const { setFieldValue, values } = useFormikContext<Record<string, string[]>>();
+  const handleChange = useCallback(
+    (updatedPermissions: string[]) => {
+      setFieldValue("permissions", updatedPermissions);
+    },
+    [setFieldValue],
+  );
 
   return (
     <div className="flex flex-col gap-4">
-      {!collection?.documentSecurity ? (
+      {!currentCollection?.documentSecurity ? (
         <Alert>
           <Info className="h-4 w-4" />
           <AlertTitle>Document Security Disabled</AlertTitle>
@@ -190,15 +203,15 @@ const PermissionsFields = () => {
         </Alert>
       )}
 
-      {collection?.documentSecurity && (
+      {currentCollection?.documentSecurity && (
         <div className="relative">
           <PermissionsEditor
             sdk={sdk}
             permissions={values.permissions ?? []}
-            onChange={(updatedPermissions) => setFieldValue("permissions", updatedPermissions)}
+            onChange={handleChange}
           />
         </div>
       )}
     </div>
   );
-};
+});
