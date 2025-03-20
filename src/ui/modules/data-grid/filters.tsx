@@ -21,7 +21,7 @@ export const ColumnSelector = (props: ButtonProps) => {
           <Button
             variant="secondary"
             {...props}
-            className="bg-[var(--neutral-alpha-weak)] items-center"
+            className="!bg-[var(--neutral-alpha-weak)] !items-center gap-4"
           >
             <LuColumns3 />
             Columns
@@ -59,7 +59,7 @@ export const Filter = (props: ButtonProps) => {
         <Button
           variant="secondary"
           {...props}
-          className="bg-[var(--neutral-alpha-weak)] items-center"
+          className="!bg-[var(--neutral-alpha-weak)] !items-center gap-4"
         >
           <LuFilter />
           Filters

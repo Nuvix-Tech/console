@@ -4,12 +4,12 @@ import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataGridProvider, Table } from "@/ui/modules/data-grid";
 import { AttributeIcon, CreateAttribute } from "./components";
-import { Delete, Ellipsis, Pencil, Trash } from "lucide-react";
-import { useProjectStore } from "@/lib/store";
+import { Ellipsis, Pencil, Trash } from "lucide-react";
+import { useCollectionStore, useDatabaseStore, useProjectStore } from "@/lib/store";
 import { PageContainer, PageHeading } from "@/components/others";
 import { EmptyState } from "@/components/_empty_state";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Column, IconButton, Tag, Text } from "@/ui/components";
+import { Column, IconButton, Tag, Text, useConfirm, useToast } from "@/ui/components";
 import { DropdownMenu, DropdownMenuItem } from "@/components/others/dropdown-menu";
 
 type Props = {
@@ -105,7 +105,7 @@ export const AttributesPage: React.FC<Props> = ({ databaseId, collectionId }) =>
               <DropdownMenuItem
                 prefixIcon={<Trash size={12} />}
                 variant="danger"
-                onClick={() => console.log("Delete", row.original.key)}
+                onClick={() => onDelete(row.original, refetch)}
               >
                 Delete
               </DropdownMenuItem>
@@ -150,3 +150,32 @@ export const AttributesPage: React.FC<Props> = ({ databaseId, collectionId }) =>
     </PageContainer>
   );
 };
+
+const onDelete = async (attribute: Models.AttributeString, refetch: () => Promise<any>) => {
+  const { addToast } = useToast();
+  const confirm = useConfirm();
+  const sdk = useProjectStore.use.sdk();
+  const database = useDatabaseStore.use.database?.()!;
+  const collection = useCollectionStore.use.collection?.()!;
+
+  const confirmed = await confirm({
+    title: "Delete Attribute",
+    description: `Are you sure you want to delete the attribute "${attribute.key}"?`,
+  });
+
+  if (!confirmed) return;
+
+  try {
+    await sdk.databases.deleteAttribute(database.$id, collection.$id, attribute.key);
+    addToast({
+      message: `The attribute "${attribute.key}" has been deleted.`,
+      variant: "success",
+    });
+    await refetch();
+  } catch (error: any) {
+    addToast({
+      message: error.message,
+      variant: "danger",
+    });
+  }
+}

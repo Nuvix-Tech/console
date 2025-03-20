@@ -4,11 +4,11 @@ import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataGridProvider, Table } from "@/ui/modules/data-grid";
 import { Ellipsis } from "lucide-react";
-import { useProjectStore } from "@/lib/store";
+import { useCollectionStore, useDatabaseStore, useProjectStore } from "@/lib/store";
 import { CreateButton, PageContainer, PageHeading } from "@/components/others";
 import { EmptyState } from "@/components/_empty_state";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Column, IconButton, Tag, Text } from "@/ui/components";
+import { Column, IconButton, Tag, Text, useConfirm, useToast } from "@/ui/components";
 import { CreateIndex } from "./components/_create_index";
 import { DropdownMenu, DropdownMenuItem } from "@/components/others/dropdown-menu";
 
@@ -78,7 +78,11 @@ export const IndexesPage: React.FC<Props> = ({ databaseId, collectionId }) => {
         <DropdownMenu trigger={<IconButton icon={<Ellipsis />} size="s" variant="tertiary" />}>
           <Column>
             <DropdownMenuItem>Overview</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => onDelete(row.original, refetch)}
+            >
+              Delete
+            </DropdownMenuItem>
           </Column>
         </DropdownMenu>
       ),
@@ -125,3 +129,33 @@ export const IndexesPage: React.FC<Props> = ({ databaseId, collectionId }) => {
     </PageContainer>
   );
 };
+
+
+const onDelete = async (index: Models.Index, refetch: () => Promise<any>) => {
+  const { addToast } = useToast();
+  const confirm = useConfirm();
+  const sdk = useProjectStore.use.sdk();
+  const database = useDatabaseStore.use.database?.()!;
+  const collection = useCollectionStore.use.collection?.()!;
+
+  const confirmed = await confirm({
+    title: "Delete Attribute",
+    description: `Are you sure you want to delete the index "${index.key}"?`,
+  });
+
+  if (!confirmed) return;
+
+  try {
+    await sdk.databases.deleteIndex(database.$id, collection.$id, index.key);
+    addToast({
+      message: `The index "${index.key}" has been deleted.`,
+      variant: "success",
+    });
+    await refetch();
+  } catch (error: any) {
+    addToast({
+      message: error.message,
+      variant: "danger",
+    });
+  }
+}
