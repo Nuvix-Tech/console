@@ -22,7 +22,7 @@ const schema = y.object({
       }
 
       return Object.values(value).every((item) => {
-        return item === "asc" || item === "desc";
+        return item === "ASC" || item === "DESC";
       });
     }),
 });
