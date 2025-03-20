@@ -17,11 +17,12 @@ export interface StepperProps {
   trigger?: React.ReactNode;
   title: string;
   form: Omit<React.ComponentProps<typeof Form>, "children">;
+  lastStep?: React.ReactNode;
 }
 
 export const StepperDrawer: React.FC<
   StepperProps & Omit<React.ComponentProps<typeof Drawer.Root>, "children">
-> = ({ steps, trigger, title, value, form, ...props }) => {
+> = ({ steps, trigger, title, value, form, lastStep, ...props }) => {
   return (
     <Drawer.Root {...props}>
       {trigger && <Drawer.Trigger asChild> {trigger} </Drawer.Trigger>}
@@ -32,15 +33,8 @@ export const StepperDrawer: React.FC<
             <Drawer.Content height="full">
               <StepsRootProvider value={value} height="full">
                 <Steps.Root height="full">
-                  <Drawer.Header>
+                  <Drawer.Header display="flex" flexDirection="column" gap={4}>
                     <Drawer.Title>{title}</Drawer.Title>
-                    <div className="absolute right-4 top-4">
-                      <Drawer.CloseTrigger asChild>
-                        <CloseButton size="sm" />
-                      </Drawer.CloseTrigger>
-                    </div>
-                  </Drawer.Header>
-                  <Drawer.Body>
                     <Steps.List>
                       {steps.map((step, index) => (
                         <Steps.Item key={index} index={index} title={step.title}>
@@ -54,7 +48,13 @@ export const StepperDrawer: React.FC<
                         </Steps.Item>
                       ))}
                     </Steps.List>
-
+                    <div className="absolute right-4 top-4">
+                      <Drawer.CloseTrigger asChild>
+                        <CloseButton size="sm" />
+                      </Drawer.CloseTrigger>
+                    </div>
+                  </Drawer.Header>
+                  <Drawer.Body>
                     {steps.map((step, index) => (
                       <Steps.Content key={index} index={index}>
                         {step.node}
@@ -62,12 +62,17 @@ export const StepperDrawer: React.FC<
                     ))}
                   </Drawer.Body>
                   <Drawer.Footer>
-                    <Steps.PrevTrigger asChild>
-                      <Button>Prev</Button>
-                    </Steps.PrevTrigger>
-                    <Steps.NextTrigger asChild>
-                      <Button>Next</Button>
-                    </Steps.NextTrigger>
+                    {value.hasPrevStep && (
+                      <Steps.PrevTrigger asChild>
+                        <Button>Prev</Button>
+                      </Steps.PrevTrigger>
+                    )}
+                    {value.hasNextStep && (
+                      <Steps.NextTrigger asChild>
+                        <Button>Next</Button>
+                      </Steps.NextTrigger>
+                    )}
+                    {value.count === value.value && lastStep}
                   </Drawer.Footer>
                 </Steps.Root>
               </StepsRootProvider>

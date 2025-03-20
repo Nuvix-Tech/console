@@ -1,52 +1,100 @@
-import { StepperDrawer } from "@/components/others/stepper";
+import React, { useCallback, useMemo } from "react";
 import { useSteps } from "@chakra-ui/react";
-import React from "react";
+import { StepperDrawer } from "@/components/others/stepper";
 import { Models } from "@nuvix/console";
+import { useCollectionStore, useDatabaseStore, useProjectStore } from "@/lib/store";
 import { DynamicField, FIELD_TYPES } from "../document/components";
 import { generateYupSchema } from "../document/components/_utils";
-import { useCollectionStore } from "@/lib/store";
+import { SubmitButton } from "@/components/others/forms";
+import { useToast } from "@/ui/components";
+import { PermissionsEditor } from "@/components/others/permissions";
+import { useFormikContext } from "formik";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Info } from "lucide-react";
 
 interface CreateDocumentProps {
   isOpen: boolean;
   onClose: () => void;
+  refetch: () => Promise<void>;
 }
 
-export const CreateDocument: React.FC<CreateDocumentProps> = ({ isOpen, onClose }) => {
+export const CreateDocument: React.FC<CreateDocumentProps> = ({ isOpen, onClose, refetch }) => {
   const collection = useCollectionStore.use.collection?.();
-  let schema = generateYupSchema((collection?.attributes as any) ?? []);
+  const sdk = useProjectStore.use.sdk();
+  const database = useDatabaseStore.use.database?.()!;
+  const schema = useMemo(
+    () => generateYupSchema((collection?.attributes as any) ?? []),
+    [collection],
+  );
+  const { addToast } = useToast();
 
-  const steps = [
-    {
-      title: "Data",
-      node: (
-        <div>
-          <DataComp attributes={(collection?.attributes as any) ?? []} />
-        </div>
-      ),
-    },
-    {
-      title: "Permissions",
-      node: <div>Permissions</div>,
-    },
-  ];
+  const steps = useMemo(
+    () => [
+      {
+        title: "Data",
+        node: <DataFields attributes={(collection?.attributes as any) ?? []} />,
+      },
+      {
+        title: "Permissions",
+        node: <PermissionsFields />,
+      },
+    ],
+    [collection],
+  );
 
-  const value = useSteps({ defaultStep: 0, linear: true, count: steps.length });
+  const initialValues = useMemo(() => {
+    const values = {} as any;
+    collection?.attributes.forEach((attr: any) => {
+      values[attr.key] = attr.default ?? null;
+    });
+    return values;
+  }, [collection]);
+
+  const stepperValue = useSteps({ defaultStep: 0, linear: true, count: steps.length });
+
+  const handleClose = useCallback(() => {
+    onClose();
+  }, [onClose]);
 
   return (
     <StepperDrawer
       form={{
-        initialValues: {},
-        onSubmit(values, formikHelpers) {},
+        initialValues: initialValues,
+        onSubmit: async (values) => {
+          try {
+            const id = values.id ?? "unique()";
+            const permissions = values.permissions ?? {};
+            delete values.id;
+            delete values.permissions;
+            await sdk.databases.createDocument(
+              database.$id,
+              collection!.$id,
+              id,
+              values,
+              permissions,
+            );
+            addToast({
+              message: "Document created",
+              variant: "success",
+            });
+            await refetch();
+            handleClose();
+          } catch (e: any) {
+            addToast({
+              message: e.message,
+              variant: "danger",
+            });
+          }
+        },
         validationSchema: schema,
       }}
+      lastStep={<SubmitButton label="Create" />}
       size="lg"
-      value={value}
+      value={stepperValue}
       steps={steps}
       title="Create Document"
       open={isOpen}
-      onOpenChange={(open) => {
-        onClose();
-      }}
+      onOpenChange={handleClose}
     />
   );
 };
@@ -57,55 +105,99 @@ interface DataMapperProps {
   attributes: AttributeTypes[];
 }
 
-const DataComp = ({ attributes }: DataMapperProps) => {
-  return attributes.map((attribute, index) => {
-    const commonProps = {
-      name: attribute.key,
-      nullable: !attribute.required,
-      isArray: attribute.array,
-      type: "string" as (typeof FIELD_TYPES)[number],
-      options: !attribute.required ? [{ value: "null", label: "NULL" }] : [],
-    };
+const DataFields = ({ attributes }: DataMapperProps) => {
+  return (
+    <>
+      <div className="flex flex-col gap-4">
+        {attributes.map((attribute) => {
+          const commonProps = {
+            key: attribute.key,
+            name: attribute.key,
+            nullable: !attribute.required,
+            isArray: attribute.array,
+            type: "string" as (typeof FIELD_TYPES)[number],
+            options: !attribute.required ? [{ value: "null", label: "NULL" }] : [],
+          };
 
-    switch (attribute.type) {
-      case "string":
-        if ("format" in attribute) {
-          switch (attribute.format) {
-            case "email":
-              commonProps.type = "email";
-              break;
-            case "url":
-              commonProps.type = "url";
-              break;
-            case "enum":
-              commonProps.type = "enum";
-              commonProps.options.push(
-                ...(attribute as Models.AttributeEnum).elements.map((v) => ({
-                  value: v,
-                  label: v,
-                })),
+          switch (attribute.type) {
+            case "string":
+              if ("format" in attribute) {
+                switch (attribute.format) {
+                  case "email":
+                    commonProps.type = "email";
+                    break;
+                  case "url":
+                    commonProps.type = "url";
+                    break;
+                  case "enum":
+                    commonProps.type = "enum";
+                    commonProps.options.push(
+                      ...(attribute as Models.AttributeEnum).elements.map((v) => ({
+                        value: v,
+                        label: v,
+                      })),
+                    );
+                    break;
+                }
+              }
+              return (
+                <DynamicField {...commonProps} size={(attribute as Models.AttributeString)?.size} />
               );
-              break;
+            case "integer":
+              return (
+                <DynamicField
+                  {...commonProps}
+                  min={(attribute as Models.AttributeInteger).min}
+                  max={(attribute as Models.AttributeInteger).max}
+                  type="integer"
+                />
+              );
+            case "boolean":
+              return <DynamicField {...commonProps} type="boolean" />;
+            default:
+              return null;
           }
-        }
-        return <DynamicField {...commonProps} size={(attribute as Models.AttributeString)?.size} />;
-      case "integer":
-        return (
-          <DynamicField
-            {...commonProps}
-            min={(attribute as Models.AttributeInteger).min}
-            max={(attribute as Models.AttributeInteger).max}
-            type="integer"
+        })}
+      </div>
+    </>
+  );
+};
+
+const PermissionsFields = () => {
+  const collection = useCollectionStore.use.collection?.();
+  const sdk = useProjectStore.use.sdk();
+  const { setFieldValue } = useFormikContext<Record<string, string[]>>();
+
+  return (
+    <div>
+      {!collection?.documentSecurity ? (
+        <Alert>
+          <Info className="h-4 w-4" />
+          <AlertTitle>Document Security Disabled</AlertTitle>
+          <AlertDescription>
+            To assign document-specific permissions, enable document security in the collection
+            settings. Otherwise, only collection-level permissions will apply.{" "}
+          </AlertDescription>
+        </Alert>
+      ) : (
+        <Alert>
+          <Info className="h-4 w-4" />
+          <AlertTitle>Document Security Enabled</AlertTitle>
+          <AlertDescription>
+            You can assign document-specific permissions to this document.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {collection?.documentSecurity && (
+        <div>
+          <PermissionsEditor
+            sdk={sdk}
+            permissions={[]}
+            onChange={(updatedPermissions) => setFieldValue("permissions", updatedPermissions)}
           />
-        );
-      case "boolean":
-        commonProps.options = [
-          { value: "true", label: "True" },
-          { value: "false", label: "False" },
-        ];
-        return <DynamicField {...commonProps} type="boolean" />;
-      default:
-        return null;
-    }
-  });
+        </div>
+      )}
+    </div>
+  );
 };
