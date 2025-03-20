@@ -1,7 +1,7 @@
 "use client";
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { ConfirmDialog } from "./ConfirmDialog";
-import { Button } from "@/components/ui/button";
+import { Button } from ".";
 
 export interface ConfirmDialogProps {
   title?: React.ReactNode;

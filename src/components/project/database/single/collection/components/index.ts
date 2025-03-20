@@ -6,3 +6,5 @@ export * from "./_name";
 export * from "./_permissions";
 export * from "./_attribute_icon";
 export * from "./_create_attribute";
+export * from "./_create_document";
+export * from "./_create_index";

@@ -1,16 +1,6 @@
 "use client";
 import type React from "react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { ConfirmDialogProps } from ".";
+import { Button, ConfirmDialogProps, Dialog } from ".";
 
 interface ConfirmProps extends Pick<ConfirmDialogProps, "button"> {
   isOpen: boolean;
@@ -22,7 +12,7 @@ interface ConfirmProps extends Pick<ConfirmDialogProps, "button"> {
   confirmText?: string;
   confirmVariant?: "danger" | "primary" | "secondary" | "tertiary";
   handleConfirm: (value: boolean) => void;
-  onClose: (o: boolean) => void;
+  onClose: () => void;
 }
 
 const ConfirmDialog: React.FC<ConfirmProps> = ({
@@ -37,15 +27,14 @@ const ConfirmDialog: React.FC<ConfirmProps> = ({
   button,
 }) => {
   return (
-    <AlertDialog open={isOpen} onOpenChange={onClose}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          {title && <AlertDialogTitle>{title}</AlertDialogTitle>}
-          {description && <AlertDialogDescription>{description}</AlertDialogDescription>}
-        </AlertDialogHeader>
-        {node}
-        <AlertDialogFooter>
-          <AlertDialogCancel
+    <Dialog
+      isOpen={isOpen}
+      onClose={onClose}
+      title={title}
+      description={description}
+      footer={
+        <>
+          <Button
             onClick={() => {
               handleConfirm(false);
             }}
@@ -53,8 +42,8 @@ const ConfirmDialog: React.FC<ConfirmProps> = ({
           >
             {" "}
             {cancleText ?? "Cancle"}
-          </AlertDialogCancel>
-          <AlertDialogAction
+          </Button>
+          <Button
             onClick={() => {
               handleConfirm(true);
             }}
@@ -62,10 +51,12 @@ const ConfirmDialog: React.FC<ConfirmProps> = ({
           >
             {" "}
             {confirmText ?? "Continue"}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+          </Button>
+        </>
+      }
+    >
+      {node}
+    </Dialog>
   );
 };
 

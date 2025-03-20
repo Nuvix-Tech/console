@@ -20,7 +20,7 @@ export const DropdownMenu = ({ trigger, children }: DropdownMenuProps) => {
       <PopoverContent
         maxWidth="48"
         portalled={true}
-        css={{ "--popover-bg": "var(--neutral-background-strong)" }}
+        css={{ "--popover-bg": "var(--neutral-background-weak)" }}
       >
         <PopoverArrow />
         <PopoverBody overflowY="auto">{children}</PopoverBody>

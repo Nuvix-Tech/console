@@ -8,6 +8,7 @@ interface CreateIndexProps {
   onClose: () => void;
   isOpen: boolean;
   refetch?: () => Promise<void>;
+  initialData?: Record<string, "ASC" | "DESC">;
 }
 
 const schema = y.object({
@@ -26,7 +27,7 @@ const schema = y.object({
     }),
 });
 
-export const CreateIndex = ({ onClose, isOpen, refetch }: CreateIndexProps) => {
+export const CreateIndex = ({ onClose, isOpen, refetch, initialData }: CreateIndexProps) => {
   const sdk = useProjectStore.use.sdk();
   const database = useDatabaseStore.use.database?.();
   const collection = useCollectionStore.use.collection?.()!;
@@ -46,7 +47,7 @@ export const CreateIndex = ({ onClose, isOpen, refetch }: CreateIndexProps) => {
         initialValues: {
           key: "",
           type: "key",
-          fields: {},
+          fields: initialData ?? {},
         },
         onSubmit: async (values) => {
           try {
@@ -110,8 +111,8 @@ export const CreateIndex = ({ onClose, isOpen, refetch }: CreateIndexProps) => {
           right={{
             label: "Order",
             options: [
-              { label: "Ascending", value: "asc" },
-              { label: "Descending", value: "desc" },
+              { label: "Ascending", value: "ASC" },
+              { label: "Descending", value: "DESC" },
             ],
           }}
           addText="Add Attribute"
