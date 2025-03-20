@@ -38,6 +38,7 @@ const ConfirmDialog: React.FC<ConfirmProps> = ({
             onClick={() => {
               handleConfirm(false);
             }}
+            variant="secondary"
             {...button?.cancle}
           >
             {" "}

@@ -4,7 +4,7 @@ import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataGridProvider, Table } from "@/ui/modules/data-grid";
 import { AttributeIcon, CreateAttribute } from "./components";
-import { Delete, Ellipsis, Pencil } from "lucide-react";
+import { Delete, Ellipsis, Pencil, Trash } from "lucide-react";
 import { useProjectStore } from "@/lib/store";
 import { PageContainer, PageHeading } from "@/components/others";
 import { EmptyState } from "@/components/_empty_state";
@@ -91,7 +91,7 @@ export const AttributesPage: React.FC<Props> = ({ databaseId, collectionId }) =>
           <DropdownMenu trigger={<IconButton icon={<Ellipsis />} size="s" variant="tertiary" />}>
             <Column>
               <DropdownMenuItem
-                prefixIcon={<Pencil />}
+                prefixIcon={<Pencil size={12} />}
                 onClick={() => console.log("Update", row.original.key)}
               >
                 Update
@@ -103,7 +103,7 @@ export const AttributesPage: React.FC<Props> = ({ databaseId, collectionId }) =>
                 Create Index
               </DropdownMenuItem>
               <DropdownMenuItem
-                prefixIcon={<Delete />}
+                prefixIcon={<Trash size={12} />}
                 variant="danger"
                 onClick={() => console.log("Delete", row.original.key)}
               >

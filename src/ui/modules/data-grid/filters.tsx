@@ -1,5 +1,5 @@
 import { useDataGrid } from "./provider";
-import { Button, ButtonProps, VStack } from "@chakra-ui/react";
+import { VStack } from "@chakra-ui/react";
 import {
   PopoverArrow,
   PopoverBody,
@@ -9,6 +9,7 @@ import {
 } from "@/components/cui/popover";
 import { Checkbox } from "@/components/cui/checkbox";
 import { LuColumns3, LuFilter } from "react-icons/lu";
+import { Button, ButtonProps } from "@/ui/components";
 
 export const ColumnSelector = (props: ButtonProps) => {
   const { table } = useDataGrid();
@@ -17,7 +18,11 @@ export const ColumnSelector = (props: ButtonProps) => {
     <>
       <PopoverRoot>
         <PopoverTrigger asChild>
-          <Button size="sm" variant="outline" {...props}>
+          <Button
+            variant="secondary"
+            {...props}
+            className="bg-[var(--neutral-alpha-weak)] items-center"
+          >
             <LuColumns3 />
             Columns
           </Button>
@@ -51,7 +56,11 @@ export const Filter = (props: ButtonProps) => {
   return (
     <PopoverRoot>
       <PopoverTrigger asChild>
-        <Button size="sm" variant="outline" {...props}>
+        <Button
+          variant="secondary"
+          {...props}
+          className="bg-[var(--neutral-alpha-weak)] items-center"
+        >
           <LuFilter />
           Filters
         </Button>
