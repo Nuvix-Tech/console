@@ -83,7 +83,7 @@ export const UpdatePermissions: React.FC = () => {
             </CardBoxItem>
             <CardBoxItem>
               {collection.documentSecurity ? (
-                <PermissionField name="permissions" withCreate sdk={sdk} />
+                <PermissionField name="permissions" sdk={sdk} />
               ) : (
                 <Alert>
                   <Info className="h-4 w-4" />

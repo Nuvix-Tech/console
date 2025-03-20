@@ -79,7 +79,7 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
     },
     {
       name: "Storage",
-      href: `/project/${id}/storage`,
+      href: `/project/${id}/buckets`,
       icon: <span className="icon-folder" />,
     },
     {

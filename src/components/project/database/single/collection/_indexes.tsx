@@ -18,12 +18,39 @@ type Props = {
 };
 
 export const IndexesPage: React.FC<Props> = ({ databaseId, collectionId }) => {
-  const sdk = useProjectStore.use.sdk?.();
+  const { addToast } = useToast();
+  const confirm = useConfirm();
+  const sdk = useProjectStore.use.sdk();
+  const database = useDatabaseStore.use.database?.()!;
+  const collection = useCollectionStore.use.collection?.()!;
 
   const { data, isFetching, refetch } = useSuspenseQuery({
     queryKey: ["indexes", databaseId, collectionId],
     queryFn: async () => sdk?.databases.listIndexes(databaseId, collectionId),
   });
+
+  const onDelete = async (index: Models.Index, refetch: () => Promise<any>) => {
+    const confirmed = await confirm({
+      title: "Delete Attribute",
+      description: `Are you sure you want to delete the index "${index.key}"?`,
+    });
+
+    if (!confirmed) return;
+
+    try {
+      await sdk.databases.deleteIndex(database.$id, collection.$id, index.key);
+      addToast({
+        message: `The index "${index.key}" has been deleted.`,
+        variant: "success",
+      });
+      await refetch();
+    } catch (error: any) {
+      addToast({
+        message: error.message,
+        variant: "danger",
+      });
+    }
+  };
 
   const columns: ColumnDef<Models.Index>[] = [
     {
@@ -78,9 +105,7 @@ export const IndexesPage: React.FC<Props> = ({ databaseId, collectionId }) => {
         <DropdownMenu trigger={<IconButton icon={<Ellipsis />} size="s" variant="tertiary" />}>
           <Column>
             <DropdownMenuItem>Overview</DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => onDelete(row.original, refetch)}
-            >
+            <DropdownMenuItem onClick={() => onDelete(row.original, refetch)}>
               Delete
             </DropdownMenuItem>
           </Column>
@@ -129,33 +154,3 @@ export const IndexesPage: React.FC<Props> = ({ databaseId, collectionId }) => {
     </PageContainer>
   );
 };
-
-
-const onDelete = async (index: Models.Index, refetch: () => Promise<any>) => {
-  const { addToast } = useToast();
-  const confirm = useConfirm();
-  const sdk = useProjectStore.use.sdk();
-  const database = useDatabaseStore.use.database?.()!;
-  const collection = useCollectionStore.use.collection?.()!;
-
-  const confirmed = await confirm({
-    title: "Delete Attribute",
-    description: `Are you sure you want to delete the index "${index.key}"?`,
-  });
-
-  if (!confirmed) return;
-
-  try {
-    await sdk.databases.deleteIndex(database.$id, collection.$id, index.key);
-    addToast({
-      message: `The index "${index.key}" has been deleted.`,
-      variant: "success",
-    });
-    await refetch();
-  } catch (error: any) {
-    addToast({
-      message: error.message,
-      variant: "danger",
-    });
-  }
-}

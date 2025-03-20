@@ -18,7 +18,11 @@ type Props = {
 };
 
 export const AttributesPage: React.FC<Props> = ({ databaseId, collectionId }) => {
-  const sdk = useProjectStore.use.sdk?.();
+  const { addToast } = useToast();
+  const confirm = useConfirm();
+  const sdk = useProjectStore.use.sdk();
+  const database = useDatabaseStore.use.database?.()!;
+  const collection = useCollectionStore.use.collection?.()!;
 
   const fetcher = React.useCallback(async () => {
     return await sdk.databases.listAttributes(databaseId, collectionId);
@@ -29,6 +33,29 @@ export const AttributesPage: React.FC<Props> = ({ databaseId, collectionId }) =>
     queryFn: fetcher,
     staleTime: 30000, // 30 seconds
   });
+
+  const onDelete = async (attribute: Models.AttributeString, refetch: () => Promise<any>) => {
+    const confirmed = await confirm({
+      title: "Delete Attribute",
+      description: `Are you sure you want to delete the attribute "${attribute.key}"?`,
+    });
+
+    if (!confirmed) return;
+
+    try {
+      await sdk.databases.deleteAttribute(database.$id, collection.$id, attribute.key);
+      addToast({
+        message: `The attribute "${attribute.key}" has been deleted.`,
+        variant: "success",
+      });
+      await refetch();
+    } catch (error: any) {
+      addToast({
+        message: error.message,
+        variant: "danger",
+      });
+    }
+  };
 
   const columns = React.useMemo<ColumnDef<Models.AttributeString>[]>(
     () => [
@@ -150,32 +177,3 @@ export const AttributesPage: React.FC<Props> = ({ databaseId, collectionId }) =>
     </PageContainer>
   );
 };
-
-const onDelete = async (attribute: Models.AttributeString, refetch: () => Promise<any>) => {
-  const { addToast } = useToast();
-  const confirm = useConfirm();
-  const sdk = useProjectStore.use.sdk();
-  const database = useDatabaseStore.use.database?.()!;
-  const collection = useCollectionStore.use.collection?.()!;
-
-  const confirmed = await confirm({
-    title: "Delete Attribute",
-    description: `Are you sure you want to delete the attribute "${attribute.key}"?`,
-  });
-
-  if (!confirmed) return;
-
-  try {
-    await sdk.databases.deleteAttribute(database.$id, collection.$id, attribute.key);
-    addToast({
-      message: `The attribute "${attribute.key}" has been deleted.`,
-      variant: "success",
-    });
-    await refetch();
-  } catch (error: any) {
-    addToast({
-      message: error.message,
-      variant: "danger",
-    });
-  }
-}
