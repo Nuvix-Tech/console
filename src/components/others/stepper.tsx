@@ -1,12 +1,12 @@
-import { Text } from "@/ui/components";
+import { Button, Text } from "@/ui/components";
 import {
-  Button,
   CloseButton,
   Drawer,
   Portal,
   UseStepsReturn,
   Steps,
   StepsRootProvider,
+  useStepsContext,
 } from "@chakra-ui/react";
 import React from "react";
 import { Form } from "./forms";
@@ -29,8 +29,8 @@ export const StepperDrawer: React.FC<
       <Portal>
         <Drawer.Backdrop />
         <Drawer.Positioner>
-          <Form {...form}>
-            <Drawer.Content height="full">
+          <Drawer.Content height="full" asChild>
+            <Form {...form} className="w-full">
               <StepsRootProvider value={value} height="full">
                 <Steps.Root height="full">
                   <Drawer.Header display="flex" flexDirection="column" gap={4}>
@@ -62,24 +62,34 @@ export const StepperDrawer: React.FC<
                     ))}
                   </Drawer.Body>
                   <Drawer.Footer>
-                    {value.hasPrevStep && (
-                      <Steps.PrevTrigger asChild>
-                        <Button>Prev</Button>
-                      </Steps.PrevTrigger>
-                    )}
-                    {value.hasNextStep && (
-                      <Steps.NextTrigger asChild>
-                        <Button>Next</Button>
-                      </Steps.NextTrigger>
-                    )}
-                    {value.count === value.value && lastStep}
+                    <Footer comp={lastStep} />
                   </Drawer.Footer>
                 </Steps.Root>
               </StepsRootProvider>
-            </Drawer.Content>
-          </Form>
+            </Form>
+          </Drawer.Content>
         </Drawer.Positioner>
       </Portal>
     </Drawer.Root>
+  );
+};
+
+const Footer = ({ comp }: { comp: React.ReactNode }) => {
+  const { count, hasNextStep, hasPrevStep, value } = useStepsContext();
+
+  return (
+    <>
+      {hasPrevStep && (
+        <Steps.PrevTrigger asChild>
+          <Button>Prev</Button>
+        </Steps.PrevTrigger>
+      )}
+      {hasNextStep && (
+        <Steps.NextTrigger asChild>
+          <Button>Next</Button>
+        </Steps.NextTrigger>
+      )}
+      {count === value && comp}
+    </>
   );
 };

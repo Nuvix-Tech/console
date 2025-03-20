@@ -63,7 +63,7 @@ export const CreateDocument: React.FC<CreateDocumentProps> = ({ isOpen, onClose,
         onSubmit: async (values) => {
           try {
             const id = values.id ?? "unique()";
-            const permissions = values.permissions ?? {};
+            const permissions = values.permissions ?? [];
             delete values.id;
             delete values.permissions;
             await sdk.databases.createDocument(
@@ -89,7 +89,7 @@ export const CreateDocument: React.FC<CreateDocumentProps> = ({ isOpen, onClose,
         validationSchema: schema,
       }}
       lastStep={<SubmitButton label="Create" />}
-      size="lg"
+      size="sm"
       value={stepperValue}
       steps={steps}
       title="Create Document"
@@ -113,6 +113,7 @@ const DataFields = ({ attributes }: DataMapperProps) => {
           const commonProps = {
             key: attribute.key,
             name: attribute.key,
+            showAbout: true,
             nullable: !attribute.required,
             isArray: attribute.array,
             type: "string" as (typeof FIELD_TYPES)[number],
@@ -166,10 +167,10 @@ const DataFields = ({ attributes }: DataMapperProps) => {
 const PermissionsFields = () => {
   const collection = useCollectionStore.use.collection?.();
   const sdk = useProjectStore.use.sdk();
-  const { setFieldValue } = useFormikContext<Record<string, string[]>>();
+  const { setFieldValue, values } = useFormikContext<Record<string, string[]>>();
 
   return (
-    <div>
+    <div className="flex flex-col gap-4">
       {!collection?.documentSecurity ? (
         <Alert>
           <Info className="h-4 w-4" />
@@ -190,10 +191,10 @@ const PermissionsFields = () => {
       )}
 
       {collection?.documentSecurity && (
-        <div>
+        <div className="relative">
           <PermissionsEditor
             sdk={sdk}
-            permissions={[]}
+            permissions={values.permissions ?? []}
             onChange={(updatedPermissions) => setFieldValue("permissions", updatedPermissions)}
           />
         </div>

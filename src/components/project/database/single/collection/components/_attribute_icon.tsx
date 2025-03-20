@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import {
   Text,
   Hash,
@@ -13,7 +14,12 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 
-export const AttributeIcon = (attribute: any, isArray: boolean = false, size: number = 16) => {
+export const AttributeIcon = (
+  attribute: any,
+  isArray: boolean = false,
+  size: number = 16,
+  className?: string,
+) => {
   const icons = {
     string: <Text size={size} />,
     integer: <Hash size={size} />,
@@ -29,7 +35,12 @@ export const AttributeIcon = (attribute: any, isArray: boolean = false, size: nu
   const type = (attribute.format || attribute.type) as keyof typeof icons;
   const isTwoWay = attribute?.twoWay ?? "-";
   return (
-    <div className="flex items-center gap-2 size-8 neutral-background-alpha-strong rounded-full relative justify-center">
+    <div
+      className={cn(
+        "flex items-center gap-2 size-8 neutral-background-alpha-strong rounded-full relative justify-center",
+        className,
+      )}
+    >
       {icons[type]}
       {(isArray || isTwoWay !== "-") && (
         <div className="absolute bottom-0 right-0">

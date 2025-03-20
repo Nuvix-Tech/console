@@ -271,9 +271,9 @@ const PopoverBox = ({ addRole, children, sdk, groups }: PopoverBoxProps) => {
 
   return (
     <>
-      <PopoverRoot size="xs">
+      <PopoverRoot size="xs" portalled={false}>
         <PopoverTrigger asChild>{children}</PopoverTrigger>
-        <PopoverContent maxWidth="56">
+        <PopoverContent maxWidth="56" css={{ "--popover-bg": "var(--neutral-background-weak)" }}>
           <PopoverArrow />
           <PopoverBody overflowY="auto">
             <VStack width="full">

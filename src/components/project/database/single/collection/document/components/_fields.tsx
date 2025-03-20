@@ -5,6 +5,7 @@ import { Field } from "@/components/cui/field";
 import { Input, NumberInput, Select, Textarea } from "@/ui/components";
 import { CloseButton } from "@/components/cui/close-button";
 import { LuPlus } from "react-icons/lu";
+import { AttributeIcon } from "../../components";
 
 export const FIELD_TYPES = [
   "string",
@@ -28,11 +29,21 @@ interface Props {
   options?: { value: string; label: string }[];
   min?: number;
   max?: number;
+  showAbout?: boolean;
   [key: string]: any;
 }
 
 export const DynamicField = (props: Props) => {
-  const { name, isArray, type = "string", options = [], nullable, label, ...rest } = props;
+  const {
+    name,
+    isArray,
+    type = "string",
+    options = [],
+    nullable,
+    label,
+    showAbout,
+    ...rest
+  } = props;
   const { values, errors, touched, setFieldValue, setFieldTouched } =
     useFormikContext<Record<string, any>>();
   const id = React.useId();
@@ -92,7 +103,12 @@ export const DynamicField = (props: Props) => {
       }}
       errorText={errors[name] && touched[name] ? (errors[name] as string) : undefined}
       invalid={!!errors[name] && !!touched[name]}
-      label={label ?? name}
+      label={
+        <div className="flex items-center gap-2">
+          {showAbout && <>{AttributeIcon({ format: type }, isArray, 12, "size-6")}</>}
+          {label ?? name}
+        </div>
+      }
       required={!nullable}
     >
       {isArray ? (

@@ -141,6 +141,9 @@ const CollectionPage: React.FC<Props> = ({ databaseId, collectionId }: Props) =>
             label="Create Document"
             component={CreateDocument}
             disabled={!collection?.attributes.length}
+            extraProps={{
+              refetch,
+            }}
           />
         }
       />
