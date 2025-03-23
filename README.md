@@ -46,7 +46,7 @@ To start using the Nuvix Console, run the following command:
 ```bash
 npm start
 ```
-This will start the development server and you can access the console at `http://localhost:3000`.
+
 
 ## Contributing
 
