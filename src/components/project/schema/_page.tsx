@@ -1,5 +1,5 @@
 "use client";
-import { Models, Query } from "@nuvix/console";
+import { Query } from "@nuvix/console";
 import React, { useEffect } from "react";
 import { Grid } from "@/ui/components";
 import { DataGridProvider, Pagination, SelectLimit } from "@/ui/modules/data-grid";
@@ -9,15 +9,15 @@ import { useSearchQuery } from "@/hooks/useQuery";
 import { EmptyState } from "@/components/_empty_state";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { HStack } from "@chakra-ui/react";
-import { CreateDatabase, DatabaseCard } from "./components";
+import { CreateDatabase, DatabaseCard } from "../database/components";
 import { _Models } from "@/lib/external-sdk";
 
 const DatabasePage = () => {
-  const setSidebarNull = useProjectStore.use.setSidebarNull();
+  // const setSidebarNull = useProjectStore.use.setSidebarNull();
 
-  useEffect(() => {
-    setSidebarNull();
-  }, []);
+  // useEffect(() => {
+  //   setSidebarNull();
+  // }, []);
 
   const sdk = useProjectStore.use.sdk?.();
   const project = useProjectStore.use.project?.();

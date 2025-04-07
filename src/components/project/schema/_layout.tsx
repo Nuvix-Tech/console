@@ -1,12 +1,15 @@
 "use client";
 import { useProjectStore } from "@/lib/store";
 import React, { PropsWithChildren, useEffect } from "react";
+import { DatbaseSidebar } from "./components/_sidebar";
 
 const DatabaseLayout: React.FC<PropsWithChildren> = ({ children }) => {
-  const setSidebarNull = useProjectStore.use.setSidebarNull();
+  const setSidebar = useProjectStore.use.setSidebar();
 
   useEffect(() => {
-    setSidebarNull();
+    setSidebar({
+      first: <DatbaseSidebar />,
+    });
   }, []);
 
   return <>{children}</>;

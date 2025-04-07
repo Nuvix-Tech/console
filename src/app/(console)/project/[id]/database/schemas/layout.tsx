@@ -1,11 +1,11 @@
-import { DatabaseLayout } from "@/components/project/database";
+import { DatabaseLayout } from "@/components/project/schema";
 import { Metadata } from "next";
 import React, { PropsWithChildren } from "react";
 
 export const metadata: Metadata = {
   title: {
-    absolute: "Document Schema",
-    template: "%s - Document Schema",
+    absolute: "Schemas",
+    template: "%s - Database",
   },
   description: "Manage your project document schemas",
 };

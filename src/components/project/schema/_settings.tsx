@@ -1,7 +1,7 @@
 "use client";
 import { PageContainer, PageHeading } from "@/components/others";
 import React from "react";
-import { UpdateName, DeleteDatabase, TopMeta } from "./components";
+import { UpdateName, DeleteDatabase, TopMeta } from "../database/components";
 
 export const SettingsPage = () => {
   return (

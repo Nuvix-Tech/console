@@ -1,4 +1,4 @@
-import { SettingsPage } from "@/components/project/database";
+import { SettingsPage } from "@/components/project/schema";
 
 export default function () {
   return <SettingsPage />;

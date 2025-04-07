@@ -1,4 +1,4 @@
-import { DatabasePage } from "@/components/project/database";
+import { DatabasePage } from "@/components/project/schema";
 import { PropsWithParams } from "@/types";
 import React from "react";
 

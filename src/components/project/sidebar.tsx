@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import * as React from "react";
 import { useColorMode } from "../cui/color-mode";
 import { useProjectStore } from "@/lib/store";
+import { Table2 } from "lucide-react";
 
 export interface ProjectSidebarData {
   name: string;
@@ -73,8 +74,13 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
       icon: <span className="icon-users" />,
     },
     {
+      name: "Collections",
+      href: `/project/${id}/d-schema`,
+      icon: <Table2 />,
+    },
+    {
       name: "Database",
-      href: `/project/${id}/databases`,
+      href: `/project/${id}/database/schemas`,
       icon: <span className="icon-database" />,
     },
     {
