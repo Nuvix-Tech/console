@@ -4,12 +4,12 @@ import React, { PropsWithChildren } from "react";
 
 export const metadata: Metadata = {
   title: {
-    absolute: "Databases",
-    template: "%s - Databases",
+    absolute: "Document Schema",
+    template: "%s - Document Schema",
   },
-  description: "Manage your project databases",
+  description: "Manage your project document schemas",
 };
 
-export default function ({ children }: PropsWithChildren) {
+export default function Layout({ children }: PropsWithChildren) {
   return <DatabaseLayout>{children}</DatabaseLayout>;
 }

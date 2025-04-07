@@ -30,12 +30,12 @@ export const DeleteDatabase = () => {
     ) {
       try {
         setLoading(true);
-        await sdk.databases.delete(database.$id);
+        // await sdk.databases.delete(database.$id);
         addToast({
           variant: "success",
           message: "Database deleted",
         });
-        replace(`/project/${project?.$id}/databases`);
+        replace(`/project/${project?.$id}/d-schema`);
       } catch (e: any) {
         addToast({
           variant: "danger",
@@ -56,7 +56,7 @@ export const DeleteDatabase = () => {
           variant={"surface"}
           colorPalette="red"
           loading={loading}
-          onClick={() => deleteDatabase(database.$id)}
+          // onClick={() => deleteDatabase(database.$id)}
           loadingText={"Deleting..."}
         >
           Delete
@@ -68,7 +68,7 @@ export const DeleteDatabase = () => {
           {database.name}
         </Text>
         <Text textStyle={{ base: "sm", mdOnly: "xs" }} color={"fg.muted"} truncate>
-          Last Updated: {formatDate(database.$updatedAt)}
+          {/* Last Updated: {formatDate(database.$updatedAt)} */}
         </Text>
       </VStack>
     </DangerCard>

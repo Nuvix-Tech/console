@@ -23,6 +23,7 @@ import {
   Users,
   Vcs,
 } from "@nuvix/console";
+import { Schema } from "./external-sdk";
 
 const API_URL =
   process.env.NEXT_PUBLIC_NUVIX_ENDPOINT ?? process.env.NUVIX_ENDPOINT ?? "https://api.nuvix.in/v1";
@@ -49,6 +50,7 @@ const sdkForProject = {
   vcs: new Vcs(clientProject),
   proxy: new Proxy(clientProject),
   migrations: new Migrations(clientProject),
+  schema: new Schema(clientProject),
 };
 
 const sdkForConsole = {

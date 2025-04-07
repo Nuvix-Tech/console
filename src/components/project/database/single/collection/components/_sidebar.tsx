@@ -18,7 +18,7 @@ const CollectionSidebar = () => {
   const path = usePathname();
 
   const resolveHref = (value?: string) =>
-    `/project/${project?.$id}/databases/${database?.$id}/collection/${collection?.$id}${value ? `/${value}` : ""}`;
+    `/project/${project?.$id}/d-schema/${database?.$id}/collection/${collection?.$id}${value ? `/${value}` : ""}`;
   const resolveIsSelected = (value?: string) => path.includes(resolveHref(value));
 
   return (
@@ -133,7 +133,7 @@ const Collections = ({
               variant={selectedCollection?.$id === c.$id ? "secondary" : "tertiary"}
               onClick={() =>
                 router.push(
-                  `/project/${project?.$id}/databases/${database!.$id}/collection/${c.$id}`,
+                  `/project/${project?.$id}/d-schema/${database!.$id}/collection/${c.$id}`,
                 )
               }
             >

@@ -43,15 +43,15 @@ const DatabaseSinglePage = ({ databaseId }: { databaseId: string }) => {
   const fetcher = async () => {
     const queries: string[] = [];
     queries.push(Query.limit(limit), Query.offset((page - 1) * limit));
-    return await sdk.databases.listCollections(database?.$id!, queries, search ?? undefined);
+    return await sdk.databases.listCollections(database?.name!, queries, search ?? undefined);
   };
 
   const { data, isFetching, refetch } = useSuspenseQuery({
-    queryKey: ["collections", database?.$id, page, limit, search],
+    queryKey: ["collections", database?.name, page, limit, search],
     queryFn: fetcher,
   });
 
-  const path = `/project/${project?.$id}/databases/${database?.$id}/collection`;
+  const path = `/project/${project?.$id}/d-schema/${database?.name}/collection`;
 
   const columns: ColumnDef<Models.Collection>[] = [
     {
@@ -115,7 +115,7 @@ const DatabaseSinglePage = ({ databaseId }: { databaseId: string }) => {
       await Promise.all(
         ids.map(async (id) => {
           try {
-            await sdk.databases.deleteCollection(database?.$id!, id);
+            await sdk.databases.deleteCollection(database?.name!, id);
           } catch (e) {
             addToast({
               message: `Error deleting collection ${id}`,

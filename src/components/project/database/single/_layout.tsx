@@ -18,12 +18,12 @@ const DatabaseSingleLayout: React.FC<Props> = ({ children, databaseId }) => {
   useEffect(() => {
     setSidebar({ last, first: null, middle: null });
     setRefreshFn(async () => {
-      setDatabase(await sdk?.databases.get(databaseId));
+      setDatabase(await sdk?.schema.get(databaseId));
     });
   }, []);
 
   const fetcher = async () => {
-    return await sdk.databases.get(databaseId);
+    return await sdk.schema.get(databaseId);
   };
 
   const { data } = useSuspenseQuery({

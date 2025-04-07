@@ -23,8 +23,8 @@ export const TopMeta: React.FC = () => {
             <CardBoxTitle>{database.name}</CardBoxTitle>
           </CardBoxItem>
           <CardBoxItem>
-            <CardBoxDesc>Created: {formatDate(database.$createdAt)}</CardBoxDesc>
-            <CardBoxDesc>Last updated: {formatDate(database.$updatedAt)}</CardBoxDesc>
+            {/* <CardBoxDesc>Created: {formatDate(database.$createdAt)}</CardBoxDesc>
+            <CardBoxDesc>Last updated: {formatDate(database.$updatedAt)}</CardBoxDesc> */}
           </CardBoxItem>
         </CardBoxBody>
       </CardBox>

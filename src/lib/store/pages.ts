@@ -2,6 +2,7 @@
 import { Models } from "@nuvix/console";
 import { create } from "zustand";
 import { createSelectors } from "../utils";
+import { _Models } from "../external-sdk";
 
 /**
  * Base interface for page state common across all stores.
@@ -61,8 +62,8 @@ export const useTeamStore = createSelectors(useTeam);
  * Store for the database page.
  */
 interface DatabaseStore extends PageState, Updatable {
-  database?: Models.Database;
-  setDatabase: (database?: Models.Database) => void;
+  database?: _Models.Schema;
+  setDatabase: (database?: _Models.Schema) => void;
 }
 
 export const useDatabase = create<DatabaseStore>((set) => ({

@@ -38,7 +38,7 @@ export const IndexesPage: React.FC<Props> = ({ databaseId, collectionId }) => {
     if (!confirmed) return;
 
     try {
-      await sdk.databases.deleteIndex(database.$id, collection.$id, index.key);
+      await sdk.databases.deleteIndex(database.name, collection.$id, index.key);
       addToast({
         message: `The index "${index.key}" has been deleted.`,
         variant: "success",

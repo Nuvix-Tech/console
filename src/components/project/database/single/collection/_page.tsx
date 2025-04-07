@@ -52,7 +52,7 @@ const CollectionPage: React.FC<Props> = ({ databaseId, collectionId }: Props) =>
     queryFn: fetcher,
   });
 
-  const path = `/project/${project?.$id}/databases/${databaseId}/collection/${collectionId}/document`;
+  const path = `/project/${project?.$id}/d-schema/${databaseId}/collection/${collectionId}/document`;
 
   const columns = React.useMemo(
     () => [
@@ -114,7 +114,7 @@ const CollectionPage: React.FC<Props> = ({ databaseId, collectionId }: Props) =>
 
     try {
       for (const id of ids) {
-        await sdk.databases.deleteDocument(database?.$id!, collection?.$id!, id);
+        await sdk.databases.deleteDocument(database?.name!, collection?.$id!, id);
       }
       addToast({ message: `Successfully deleted ${ids.length} document(s)`, variant: "success" });
     } catch (e) {

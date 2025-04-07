@@ -10,6 +10,7 @@ import { EmptyState } from "@/components/_empty_state";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { HStack } from "@chakra-ui/react";
 import { CreateDatabase, DatabaseCard } from "./components";
+import { _Models } from "@/lib/external-sdk";
 
 const DatabasePage = () => {
   const setSidebarNull = useProjectStore.use.setSidebarNull();
@@ -27,7 +28,7 @@ const DatabasePage = () => {
   const fetcher = async () => {
     const queries: string[] = [];
     queries.push(Query.limit(limit), Query.offset((page - 1) * limit));
-    return await sdk.databases.list(queries, search ?? undefined);
+    return await sdk.schema.list();
   };
 
   const { data, isFetching } = useSuspenseQuery({
@@ -35,11 +36,10 @@ const DatabasePage = () => {
     queryFn: fetcher,
   });
 
-  const path = `/project/${project?.$id}/databases`;
   const create = (
     <CreateButton
       hasPermission={canCreateDatabases}
-      label="Create Database"
+      label="Create Schema"
       component={CreateDatabase}
     />
   );
@@ -47,14 +47,14 @@ const DatabasePage = () => {
   return (
     <PageContainer>
       <PageHeading
-        heading="Databases"
-        description="Databases are used to store and manage your data."
+        heading="Schemas"
+        description="Schemas are used to store and manage your data."
         right={create}
       />
 
-      <DataGridProvider<Models.Database>
+      <DataGridProvider<_Models.Schema>
         columns={[]}
-        data={data.databases ?? []}
+        data={data.schemas ?? []}
         manualPagination
         rowCount={data.total}
         loading={isFetching}
@@ -72,8 +72,8 @@ const DatabasePage = () => {
         {(data.total > 0 || hasQuery) && (
           <>
             <Grid gap="l" marginTop="l" columns={2} fillWidth>
-              {data.databases.map((database) => (
-                <DatabaseCard database={database} key={database.$id} />
+              {data.schemas.map((schema) => (
+                <DatabaseCard database={schema} key={schema.name} />
               ))}
             </Grid>
             <HStack justifyContent="space-between" alignItems="center">

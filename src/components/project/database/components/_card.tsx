@@ -1,11 +1,11 @@
-import { Models } from "@nuvix/console";
 import { Card, Column, Row, SmartLink, Tag, Text } from "@/ui/components";
 import { IDChip } from "@/components/others";
 import { useParams } from "next/navigation";
 import { Database } from "lucide-react";
+import { _Models } from "@/lib/external-sdk";
 
 type DatabaseCardProps = {
-  database: Models.Database;
+  database: _Models.Schema;
 };
 
 export const DatabaseCard = ({ database }: DatabaseCardProps) => {
@@ -14,9 +14,9 @@ export const DatabaseCard = ({ database }: DatabaseCardProps) => {
   return (
     <SmartLink
       unstyled
-      key={database.$id}
+      key={database.name}
       fillWidth
-      href={`/project/${id}/databases/${database.$id}`}
+      href={`/project/${id}/d-schema/${database.name}`}
     >
       <Card
         radius="l-4"
@@ -35,7 +35,7 @@ export const DatabaseCard = ({ database }: DatabaseCardProps) => {
           <Database className="absolute right-4 opacity-10 size-28 rotate-45 bottom-4 neutral-on-background-weak" />
         </Column>
         <div onClick={(e) => e.preventDefault()} className="inline w-min">
-          <IDChip id={database.$id} hideIcon />
+          <IDChip id={database.name} hideIcon />
         </div>
       </Card>
     </SmartLink>

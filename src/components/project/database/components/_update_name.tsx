@@ -28,7 +28,7 @@ export const UpdateName: React.FC = () => {
         validationSchema={schema}
         onSubmit={async (values) => {
           try {
-            await sdk.databases.update(database.$id, values.name, database.enabled);
+            // await sdk.databases.update(database.$id, values.name, database.enabled);
             addToast({
               variant: "success",
               message: "Database updated",

@@ -22,7 +22,7 @@ export const CreateDatabase = ({ onClose, isOpen }: CreateDatabaseProps) => {
   const params = useParams();
   const { push } = useRouter();
 
-  const baseURL = `/project/${params.id}/databases`;
+  const baseURL = `/project/${params.id}/d-schema`;
 
   return (
     <FormDialog
@@ -43,13 +43,13 @@ export const CreateDatabase = ({ onClose, isOpen }: CreateDatabaseProps) => {
           try {
             let { id, name } = values;
             id = id?.trim() || "unique()";
-            const database = await sdk.databases.create(id, name);
+            const database = await sdk.schema.createTypeDocument(name, "");
             addToast({
               message: "Database has been successfully created",
               variant: "success",
             });
             onClose();
-            push(`${baseURL}/${database.$id}`);
+            push(`${baseURL}/${database.name}`);
           } catch (error: any) {
             addToast({
               message: error.message,
