@@ -1,19 +1,12 @@
 "use client";
 
-import { sdkForConsole } from "@/lib/sdk";
-import { Badge, Column, Logo, NavIcon, Row } from "@/ui/components";
+import { Logo, NavIcon, Row } from "@/ui/components";
 import { usePathname } from "next/navigation";
 import type React from "react";
 import { useRef } from "react";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
 } from "@/components/ui/drawer";
 
 import Link from "next/link";
@@ -68,7 +61,7 @@ const ConsoleHeader: React.FC<HeaderProps> = () => {
           <Row fillWidth vertical="center" horizontal="space-between">
             <Row fillWidth vertical="center" horizontal="end" gap="12">
               <div className="flex items-center gap-3">
-                <Button variant="outline" className="hidden sm:flex">
+                <Button variant="outline" className="bg-transparent">
                   Feedback
                 </Button>
                 <div className="flex items-center gap-0.5">

@@ -76,7 +76,7 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
     {
       name: "Collections",
       href: `/project/${id}/d-schema`,
-      icon: <Table2 />,
+      icon: <span className="icon-collections" />,
     },
     {
       name: "Database",

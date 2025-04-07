@@ -28,7 +28,6 @@ const ConsoleWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) =
     fetchUser();
   }, []);
 
-  console.log("🔥 SOMETHIN IN CONSOLE WRAPPER");
   return (
     <QueryClientProvider client={queryClient}>
       {isLoading ? <LoadingUI /> : children}
