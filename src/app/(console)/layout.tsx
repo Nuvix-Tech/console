@@ -40,7 +40,7 @@ export default function ({ children }: { children: React.ReactNode }) {
               color: "accent-solid-weak",
             }}
           />
-          <Row fill className="backdrop-blur" overflow="hidden" padding="8" gap="16">
+          <Row fill className="backdrop-blur-xl" overflow="hidden" padding="8" gap="16">
             {children}
           </Row>
         </Row>
