@@ -132,4 +132,4 @@ export const useBucket = create<BucketStore>((set) => ({
   setRefresh: (refreshFn) => set({ refresh: refreshFn }),
 }));
 
-export const useBucketStore = createSelectors(useDocument);
+export const useBucketStore = createSelectors(useBucket);

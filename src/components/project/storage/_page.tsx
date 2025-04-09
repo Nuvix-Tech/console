@@ -1,13 +1,81 @@
 "use client";
 import { FunctionComponent } from "react";
-import { Box, Heading, Text } from "@chakra-ui/react";
+import { CreateButton, PageContainer, PageHeading } from "@/components/others";
+import { DataGridProvider, Pagination, SelectLimit } from "@/ui/modules/data-grid";
+import { Models, Query } from "@nuvix/console";
+import { EmptyState } from "@/components";
+import { HStack } from "@chakra-ui/react";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { useProjectStore } from "@/lib/store";
+import { useSearchQuery } from "@/hooks/useQuery";
+import { Grid } from "@/ui/components";
+import { StorageCard } from "./components";
+import { CreateBucket } from "./components/_create_bucket";
 
 export const StoragePage: FunctionComponent = () => {
+  const sdk = useProjectStore.use.sdk?.();
+  const permissions = useProjectStore.use.permissions();
+  const { limit, page, search, hasQuery } = useSearchQuery();
+  const { canCreateDatabases } = permissions();
+
+  const fetcher = async () => {
+    const queries: string[] = [];
+    queries.push(Query.limit(limit), Query.offset((page - 1) * limit));
+    return await sdk.storage.listBuckets();
+  };
+
+  const { data, isFetching } = useSuspenseQuery({
+    queryKey: ["buckets", page, limit, search],
+    queryFn: fetcher,
+  });
+
+  const create = (
+    <CreateButton
+      hasPermission={canCreateDatabases}
+      label="Create Bucket"
+      component={CreateBucket}
+    />
+  );
+
   return (
-    <Box mt={8}>
-      <Heading size="lg">Storage</Heading>
-      <Text mt={4}>Manage your project's storage here.</Text>
-      {/* <StorageTable /> */}
-    </Box>
+    <PageContainer>
+      <PageHeading
+        heading="Buckets"
+        description="Buckets are used to store files in your project."
+        right={create}
+      />
+
+      <DataGridProvider<Models.Bucket>
+        columns={[]}
+        data={data.buckets ?? []}
+        manualPagination
+        rowCount={data.total}
+        loading={isFetching}
+        state={{
+          pagination: { pageIndex: page, pageSize: limit },
+        }}
+      >
+        <EmptyState
+          show={data.total === 0 && !isFetching && !hasQuery}
+          title="No Buckets"
+          description="No buckets have been created yet."
+          primaryComponent={create}
+        />
+
+        {(data.total > 0 || hasQuery) && (
+          <>
+            <Grid gap="l" marginTop="l" columns={2} fillWidth>
+              {data.buckets.map((bucket) => (
+                <StorageCard bucket={bucket} key={bucket.name} />
+              ))}
+            </Grid>
+            <HStack justifyContent="space-between" alignItems="center">
+              <SelectLimit />
+              <Pagination />
+            </HStack>
+          </>
+        )}
+      </DataGridProvider>
+    </PageContainer>
   );
 };
