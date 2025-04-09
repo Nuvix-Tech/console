@@ -1,3 +1,4 @@
+import { FilePage } from "@/components/project/storage/single/_file";
 import { PropsWithParams } from "@/types";
 
 export default async function ({
@@ -7,5 +8,5 @@ export default async function ({
   bucketId: string;
   fileId: string;
 }>) {
-  return;
+  return <FilePage {...(await params)} />;
 }

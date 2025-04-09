@@ -12,7 +12,7 @@ export const BucketsList = () => {
 
   if (!sdk) return;
 
-  const { bucketId } = useParams();
+  const { id, bucketId } = useParams();
 
   const fetcher = async () => {
     return await sdk.storage.listBuckets([], query ?? undefined);
@@ -22,6 +22,8 @@ export const BucketsList = () => {
     queryKey: ["buckets", query],
     queryFn: fetcher,
   });
+
+  const path = `/project/${id}/buckets`;
 
   return (
     <>
@@ -38,13 +40,23 @@ export const BucketsList = () => {
 
         {data?.buckets.map((bucket) => (
           <div key={bucket.$id}>
-            <ToggleButton selected={bucket.$id === bucketId}>{bucket.name}</ToggleButton>
+            <ToggleButton
+              fillWidth
+              selected={bucket.$id === bucketId}
+              href={`${path}/${bucket.$id}`}
+            >
+              {bucket.name}
+            </ToggleButton>
           </div>
         ))}
 
-        {isFetching && <div>Loading...</div>}
+        {isFetching && <span className="text-xs text-center">Loading...</span>}
 
-        {data.total === 0 && "NO BUCKETS FOUND"}
+        {data.total === 0 && !isFetching && (
+          <span className="text-xs text-center">
+            No buckets found. Create a new bucket to get started.
+          </span>
+        )}
       </Column>
       <CreateBucket
         isOpen={open}

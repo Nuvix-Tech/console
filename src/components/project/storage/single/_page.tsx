@@ -56,8 +56,7 @@ export const StorageSinglePage: FC<Props> = ({}) => {
         return (
           <Row gap="8">
             <Avatar
-              size="s"
-              src={sdk.storage.getFilePreview(bucket?.$id!, row.$id, 100, 100)}
+              src={sdk.storage.getFilePreview(bucket?.$id!, row.$id, 64, 64)}
               className="mr-2"
             />
             <span>{row.name}</span>
