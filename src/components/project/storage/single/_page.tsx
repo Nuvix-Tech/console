@@ -22,6 +22,7 @@ import {
 import { EmptyState } from "@/components/_empty_state";
 import { HStack } from "@chakra-ui/react";
 import { formatBytes } from "@/lib";
+import { UploadFile } from "./components";
 
 export const StorageSinglePage: FC<Props> = ({}) => {
   const sdk = useProjectStore.use.sdk?.();
@@ -104,7 +105,12 @@ export const StorageSinglePage: FC<Props> = ({}) => {
   };
 
   const create = (
-    <CreateButton hasPermission={canCreateFiles} label="Upload File" component={() => ""} />
+    <CreateButton
+      hasPermission={canCreateFiles}
+      label="Upload File"
+      component={UploadFile}
+      extraProps={{ refetch }}
+    />
   );
 
   return (

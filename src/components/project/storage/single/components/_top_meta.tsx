@@ -42,40 +42,44 @@ export const TopMeta = () => {
               alignItems={"flex-start"}
               justifyContent={"space-between"}
             >
-              <VStack alignSelf={"flex-start"} alignItems={"flex-start"} width={"full"}>
-                <Text textStyle={{ base: "lg", mdOnly: "md" }} fontWeight={"semibold"} truncate>
-                  {file.name}
-                </Text>
-                <SmartImage
-                  src={sdk.storage.getFilePreview(bucketId, file.$id, 410, 250)}
-                  alt={file.name}
-                  width={120}
-                />
-              </VStack>
+              <SmartImage
+                src={sdk.storage.getFilePreview(bucketId, file.$id, 410, 250)}
+                alt={file.name}
+                unoptimized
+              />
               <IDChip id={file.$id} />
             </VStack>
-            <VStack width={{ base: "full", md: "1/2" }} alignItems={"flex-start"}>
-              {[
-                { size: formatBytes(file.sizeOriginal) },
-                { Created: formatDate(file.$createdAt) },
-                { "Updated At": formatDate(file.$updatedAt) },
-              ]
-                .filter(Boolean)
-                .map((item, _) => (
-                  <Text
-                    key={_}
-                    textStyle={{ base: "sm", mdOnly: "xs" }}
-                    color={"fg.muted"}
-                    truncate
-                  >
-                    {Object.entries(item).map(([key, value]) => (
-                      <span key={key}>
-                        <b>{key}</b>: {value}
-                        <br />
-                      </span>
-                    ))}
-                  </Text>
-                ))}
+            <VStack
+              width={{ base: "full", md: "1/2" }}
+              alignItems={"flex-start"}
+              justifyContent={"space-between"}
+            >
+              <Text textStyle={{ base: "lg", mdOnly: "md" }} fontWeight={"semibold"} truncate>
+                {file.name}
+              </Text>
+              <div className="w-full">
+                {[
+                  { size: formatBytes(file.sizeOriginal) },
+                  { Created: formatDate(file.$createdAt) },
+                  { "Updated At": formatDate(file.$updatedAt) },
+                ]
+                  .filter(Boolean)
+                  .map((item, _) => (
+                    <Text
+                      key={_}
+                      textStyle={{ base: "sm", mdOnly: "xs" }}
+                      color={"fg.muted"}
+                      truncate
+                    >
+                      {Object.entries(item).map(([key, value]) => (
+                        <span key={key}>
+                          <b>{key}</b>: {value}
+                          <br />
+                        </span>
+                      ))}
+                    </Text>
+                  ))}
+              </div>
               <ClipboardRoot
                 value={sdk.storage.getFileView(bucketId, file.$id).toString() + "&mode=admin"}
               >

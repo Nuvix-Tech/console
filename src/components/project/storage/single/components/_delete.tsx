@@ -67,7 +67,7 @@ export const DeleteFile = () => {
     >
       <VStack alignItems={"flex-start"} gap={0.2}>
         <Text textStyle="md" fontWeight="semibold">
-          {file.$id}
+          {file.name}
         </Text>
         <Text textStyle={{ base: "sm", mdOnly: "xs" }} color={"fg.muted"} truncate>
           Last Updated: {formatDate(file.$updatedAt)}

@@ -27,7 +27,7 @@ export const BucketsList = () => {
 
   return (
     <>
-      <Column paddingX="8" fillWidth>
+      <Column paddingX="8" fillWidth gap="8">
         <Button
           fillWidth
           prefixIcon={"plus"}
@@ -50,8 +50,7 @@ export const BucketsList = () => {
           </div>
         ))}
 
-        {isFetching && <span className="text-xs text-center">Loading...</span>}
-
+        {data.total === 0 && isFetching && <span className="text-xs text-center">Loading...</span>}
         {data.total === 0 && !isFetching && (
           <span className="text-xs text-center">
             No buckets found. Create a new bucket to get started.
