@@ -72,7 +72,7 @@ const sdkForConsole = {
 };
 
 function getProjectSdk(id: string) {
-  clientProject.setProject(id);
+  clientProject.setProject(id).setMode("admin");
   return sdkForProject;
 }
 

@@ -51,13 +51,15 @@ export const StorageSinglePage: FC<Props> = ({}) => {
     {
       header: "Filename",
       accessorKey: "name",
-      minSize: 240,
+      minSize: 280,
       cell(props) {
         const row = props.row.original;
         return (
           <Row gap="8">
             <Avatar
-              src={sdk.storage.getFilePreview(bucket?.$id!, row.$id, 64, 64)}
+              src={
+                sdk.storage.getFilePreview(bucket?.$id!, row.$id, 64, 64).toString() + "&mode=admin"
+              }
               className="mr-2"
               unoptimized
             />
@@ -76,11 +78,11 @@ export const StorageSinglePage: FC<Props> = ({}) => {
     },
     {
       header: "Size",
-      accessorKey: "size",
+      accessorKey: "sizeOriginal",
       cell({ getValue }) {
         return formatBytes(getValue<number>());
       },
-      minSize: 250,
+      minSize: 100,
     },
     {
       header: "Created At",

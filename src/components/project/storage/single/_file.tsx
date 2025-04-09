@@ -1,6 +1,9 @@
 "use client";
-import { useProjectStore } from "@/lib/store";
+import { PageContainer } from "@/components/others";
+import { useFileStore, useProjectStore } from "@/lib/store";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { DeleteFile, TopMeta, UpdatePermissions } from "./components";
 
 export const FilePage = ({
   bucketId,
@@ -10,6 +13,14 @@ export const FilePage = ({
   fileId: string;
 }) => {
   const sdk = useProjectStore.use.sdk();
+  const setFile = useFileStore.use.setFile();
+  const setRefresh = useFileStore.use.setRefresh();
+
+  useEffect(() => {
+    setRefresh(async () => {
+      setFile(await sdk?.storage.getFile(bucketId, fileId));
+    });
+  }, []);
 
   const fetcher = async () => {
     const data = await sdk.storage.getFile(bucketId, fileId);
@@ -21,12 +32,18 @@ export const FilePage = ({
     queryFn: fetcher,
   });
 
+  useEffect(() => {
+    if (data) {
+      document.title = `File - ${data.name}`;
+      setFile(data);
+    }
+  }, [data]);
+
   return (
-    <div className="flex flex-col gap-4">
-      <div className="text-2xl font-bold">{data.name}</div>
-      <div className="text-sm text-gray-500">{data.sizeOriginal} bytes</div>
-      <div className="text-sm text-gray-500">{data.$createdAt}</div>
-      <div className="text-sm text-gray-500">{data.$updatedAt}</div>
-    </div>
+    <PageContainer>
+      <TopMeta />
+      <UpdatePermissions />
+      <DeleteFile />
+    </PageContainer>
   );
 };

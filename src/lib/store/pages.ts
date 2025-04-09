@@ -133,3 +133,22 @@ export const useBucket = create<BucketStore>((set) => ({
 }));
 
 export const useBucketStore = createSelectors(useBucket);
+
+/**
+ * Store for Storage File Page
+ */
+interface FileStore extends PageState, Updatable {
+  file?: Models.File;
+  setFile: (file?: Models.File) => void;
+}
+
+export const useFile = create<FileStore>((set) => ({
+  loading: true,
+  file: undefined as any,
+  setFile: (file) => set({ file }),
+  setLoading: (isLoading) => set({ loading: isLoading }),
+  refresh: async () => {},
+  setRefresh: (refreshFn) => set({ refresh: refreshFn }),
+}));
+
+export const useFileStore = createSelectors(useFile);
