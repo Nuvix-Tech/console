@@ -21,6 +21,7 @@ import {
 } from "@/ui/modules/data-grid";
 import { EmptyState } from "@/components/_empty_state";
 import { HStack } from "@chakra-ui/react";
+import { formatBytes } from "@/lib";
 
 export const StorageSinglePage: FC<Props> = ({}) => {
   const sdk = useProjectStore.use.sdk?.();
@@ -58,6 +59,7 @@ export const StorageSinglePage: FC<Props> = ({}) => {
             <Avatar
               src={sdk.storage.getFilePreview(bucket?.$id!, row.$id, 64, 64)}
               className="mr-2"
+              unoptimized
             />
             <span>{row.name}</span>
           </Row>
@@ -76,7 +78,7 @@ export const StorageSinglePage: FC<Props> = ({}) => {
       header: "Size",
       accessorKey: "size",
       cell({ getValue }) {
-        return <span>{getValue<number>()} Bytes</span>;
+        return formatBytes(getValue<number>());
       },
       minSize: 250,
     },
