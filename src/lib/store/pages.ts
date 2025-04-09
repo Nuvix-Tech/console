@@ -114,3 +114,22 @@ export const useDocument = create<DocumentStore>((set) => ({
 }));
 
 export const useDocumentStore = createSelectors(useDocument);
+
+/**
+ * Store for Storage Page
+ */
+interface BucketStore extends PageState, Updatable {
+  bucket?: Models.Bucket;
+  setBucket: (bucket?: Models.Bucket) => void;
+}
+
+export const useBucket = create<BucketStore>((set) => ({
+  loading: true,
+  bucket: undefined as any,
+  setBucket: (bucket) => set({ bucket }),
+  setLoading: (isLoading) => set({ loading: isLoading }),
+  refresh: async () => {},
+  setRefresh: (refreshFn) => set({ refresh: refreshFn }),
+}));
+
+export const useBucketStore = createSelectors(useDocument);
