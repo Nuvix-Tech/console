@@ -1,6 +1,1 @@
-
-
-
-export const SchemaStore = {
-    
-}
+export const SchemaStore = {};

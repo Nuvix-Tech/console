@@ -1,29 +1,29 @@
-import { DiamondIcon, ExternalLink, Fingerprint, Hash, Key, Table2 } from 'lucide-react'
-import Link from 'next/link'
-import { Handle, NodeProps } from 'reactflow'
+import { DiamondIcon, ExternalLink, Fingerprint, Hash, Key, Table2 } from "lucide-react";
+import Link from "next/link";
+import { Handle, NodeProps } from "reactflow";
 
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 // ReactFlow is scaling everything by the factor of 2
-const TABLE_NODE_WIDTH = 320
-const TABLE_NODE_ROW_HEIGHT = 40
+const TABLE_NODE_WIDTH = 320;
+const TABLE_NODE_ROW_HEIGHT = 40;
 
 export type TableNodeData = {
-  id?: number
-  name: string
-  ref: string
-  isForeign: boolean
+  id?: number;
+  name: string;
+  ref: string;
+  isForeign: boolean;
   columns: {
-    id: string
-    isPrimary: boolean
-    isNullable: boolean
-    isUnique: boolean
-    isIdentity: boolean
-    name: string
-    format: string
-  }[]
-}
+    id: string;
+    isPrimary: boolean;
+    isNullable: boolean;
+    isUnique: boolean;
+    isIdentity: boolean;
+    name: string;
+    format: string;
+  }[];
+};
 
 const TableNode = ({
   data,
@@ -33,9 +33,9 @@ const TableNode = ({
 }: NodeProps<TableNodeData> & { placeholder?: boolean }) => {
   // Important styles is a nasty hack to use Handles (required for edges calculations), but do not show them in the UI.
   // ref: https://github.com/wbkd/react-flow/discussions/2698
-  const hiddenNodeConnector = '!h-px !w-px !min-w-0 !min-h-0 !cursor-grab !border-0 !opacity-0'
+  const hiddenNodeConnector = "!h-px !w-px !min-w-0 !min-h-0 !cursor-grab !border-0 !opacity-0";
 
-  const itemHeight = 'h-[22px]'
+  const itemHeight = "h-[22px]";
 
   return (
     <>
@@ -58,8 +58,8 @@ const TableNode = ({
         >
           <header
             className={cn(
-              'text-[0.55rem] pl-2 pr-1 bg-alternative text-default flex items-center justify-between',
-              itemHeight
+              "text-[0.55rem] pl-2 pr-1 bg-alternative text-default flex items-center justify-between",
+              itemHeight,
             )}
           >
             <div className="flex gap-x-1 items-center">
@@ -78,19 +78,19 @@ const TableNode = ({
           {data.columns.map((column) => (
             <div
               className={cn(
-                'text-[8px] leading-5 relative flex flex-row justify-items-start',
-                'bg-surface-100',
-                'border-t',
-                'border-t-[0.5px]',
-                'hover:bg-scale-500 transition cursor-default',
-                itemHeight
+                "text-[8px] leading-5 relative flex flex-row justify-items-start",
+                "bg-surface-100",
+                "border-t",
+                "border-t-[0.5px]",
+                "hover:bg-scale-500 transition cursor-default",
+                itemHeight,
               )}
               key={column.id}
             >
               <div
                 className={cn(
-                  'gap-[0.24rem] flex mx-2 align-middle items-center justify-start',
-                  column.isPrimary && 'basis-1/5'
+                  "gap-[0.24rem] flex mx-2 align-middle items-center justify-start",
+                  column.isPrimary && "basis-1/5",
                 )}
               >
                 {column.isPrimary && (
@@ -99,8 +99,8 @@ const TableNode = ({
                     strokeWidth={1}
                     className={cn(
                       // 'sb-grid-column-header__inner__primary-key'
-                      'flex-shrink-0',
-                      'text-light'
+                      "flex-shrink-0",
+                      "text-light",
                     )}
                   />
                 )}
@@ -135,7 +135,7 @@ const TableNode = ({
                   type="target"
                   id={column.id}
                   position={targetPosition}
-                  className={cn(hiddenNodeConnector, '!left-0')}
+                  className={cn(hiddenNodeConnector, "!left-0")}
                 />
               )}
               {sourcePosition && (
@@ -143,7 +143,7 @@ const TableNode = ({
                   type="source"
                   id={column.id}
                   position={sourcePosition}
-                  className={cn(hiddenNodeConnector, '!right-0')}
+                  className={cn(hiddenNodeConnector, "!right-0")}
                 />
               )}
             </div>
@@ -151,7 +151,7 @@ const TableNode = ({
         </div>
       )}
     </>
-  )
-}
+  );
+};
 
-export { TABLE_NODE_ROW_HEIGHT, TABLE_NODE_WIDTH, TableNode }
+export { TABLE_NODE_ROW_HEIGHT, TABLE_NODE_WIDTH, TableNode };

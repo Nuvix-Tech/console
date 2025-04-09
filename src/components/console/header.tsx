@@ -4,10 +4,7 @@ import { Logo, NavIcon, Row } from "@/ui/components";
 import { usePathname } from "next/navigation";
 import type React from "react";
 import { useRef } from "react";
-import {
-  Drawer,
-  DrawerContent,
-} from "@/components/ui/drawer";
+import { Drawer, DrawerContent } from "@/components/ui/drawer";
 
 import Link from "next/link";
 import { Button } from "../ui/button";

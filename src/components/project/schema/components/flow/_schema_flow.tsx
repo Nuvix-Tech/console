@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from "react";
 import {
   applyNodeChanges,
   Background,
@@ -11,46 +11,46 @@ import {
   useEdgesState,
   useNodesState,
   useReactFlow,
-} from 'reactflow'
+} from "reactflow";
 
-import { TableNode, TableNodeData } from './_table_node';
+import { TableNode, TableNodeData } from "./_table_node";
 
-export const TABLE_NODE_WIDTH = 640
-export const TABLE_NODE_ROW_HEIGHT = 80
+export const TABLE_NODE_WIDTH = 640;
+export const TABLE_NODE_ROW_HEIGHT = 80;
 
 interface SchemaFlowProps {
-  nodes: Node[]
-  edges: Edge[]
+  nodes: Node[];
+  edges: Edge[];
 }
 
 export const SchemaFlow = ({ nodes: initialNodes, edges: initialEdges }: SchemaFlowProps) => {
-  const [nodes, setNodes] = useNodesState(initialNodes)
-  const [edges, setEdges] = useEdgesState(initialEdges)
+  const [nodes, setNodes] = useNodesState(initialNodes);
+  const [edges, setEdges] = useEdgesState(initialEdges);
   const nodeTypes = useMemo(
     () => ({ table: (props: NodeProps<TableNodeData>) => <TableNode {...props} placeholder /> }),
-    []
-  )
-  const reactFlowInstance = useReactFlow<TableNodeData>()
+    [],
+  );
+  const reactFlowInstance = useReactFlow<TableNodeData>();
 
   useEffect(() => {
-    setNodes(initialNodes)
-    setEdges(initialEdges)
-  }, [initialNodes, initialEdges, setNodes, setEdges])
+    setNodes(initialNodes);
+    setEdges(initialEdges);
+  }, [initialNodes, initialEdges, setNodes, setEdges]);
 
   useEffect(() => {
-    reactFlowInstance.fitView()
-  }, [reactFlowInstance, nodes, edges])
+    reactFlowInstance.fitView();
+  }, [reactFlowInstance, nodes, edges]);
 
   const onNodesChange = useCallback(
     (changes: NodeChange[]) => {
-      setNodes((nds) => applyNodeChanges(changes, nds))
+      setNodes((nds) => applyNodeChanges(changes, nds));
     },
-    [setNodes]
-  )
+    [setNodes],
+  );
 
   return (
     <div
-      style={{ maskImage: 'linear-gradient(to right, transparent 2%, black 13%)' }}
+      style={{ maskImage: "linear-gradient(to right, transparent 2%, black 13%)" }}
       className="absolute inset-0"
     >
       <ReactFlow
@@ -59,11 +59,11 @@ export const SchemaFlow = ({ nodes: initialNodes, edges: initialEdges }: SchemaF
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
         defaultEdgeOptions={{
-          type: 'smoothstep',
+          type: "smoothstep",
           animated: true,
           deletable: false,
           style: {
-            stroke: 'hsl(var(--border-stronger))',
+            stroke: "hsl(var(--border-stronger))",
             strokeWidth: 0.5,
           },
         }}
@@ -78,9 +78,9 @@ export const SchemaFlow = ({ nodes: initialNodes, edges: initialEdges }: SchemaF
           gap={16}
           className="[&>*]:stroke-foreground-muted opacity-[50%]"
           variant={BackgroundVariant.Dots}
-          color={'inherit'}
+          color={"inherit"}
         />
       </ReactFlow>
     </div>
-  )
-}
+  );
+};

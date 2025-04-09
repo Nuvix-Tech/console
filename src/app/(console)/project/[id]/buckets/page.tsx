@@ -1,3 +1,5 @@
+import { StoragePage } from "@/components/project/storage";
+
 export default function BucketsPage() {
-  return <div>This is the Buckets page</div>;
+  return <StoragePage />;
 }
