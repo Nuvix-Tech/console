@@ -10,9 +10,7 @@ export function StorageLayout({
   const setSideBarNull = useProjectStore.use.setSidebarNull();
 
   useEffect(() => {
-    return () => {
-      setSideBarNull();
-    };
+    setSideBarNull();
   }, []);
 
   return children;
