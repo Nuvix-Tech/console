@@ -42,11 +42,25 @@ export const TopMeta = () => {
               alignItems={"flex-start"}
               justifyContent={"space-between"}
             >
-              <SmartImage
-                src={sdk.storage.getFilePreview(bucketId, file.$id, 410, 250)}
-                alt={file.name}
-                unoptimized
-              />
+              <Stack
+                justifyContent={"center"}
+                position={"relative"}
+                overflow={"hidden"}
+                width={"full"}
+                height={{ base: "full", md: "154px" }}
+                maxW={{ base: "full", md: "240px" }}
+              >
+                <SmartImage
+                  src={
+                    sdk.storage.getFilePreview(bucketId, file.$id, 410, 250).toString() +
+                    "&mode=admin"
+                  }
+                  alt={file.name}
+                  unoptimized
+                  fill
+                  radius="l"
+                />
+              </Stack>
               <IDChip id={file.$id} />
             </VStack>
             <VStack
