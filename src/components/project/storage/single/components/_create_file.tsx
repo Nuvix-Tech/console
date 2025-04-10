@@ -114,7 +114,7 @@ const FileUploadField = () => {
           <FileUpload.DropzoneContent>
             <Box fontWeight="medium">Drag and drop a file here</Box>
             <Box color="fg.muted">
-              {bucket?.allowedFileExtensions
+              {bucket?.allowedFileExtensions.length
                 ? `Allowed formats: ${bucket.allowedFileExtensions}`
                 : "All file formats accepted"}
               {bucket?.maximumFileSize ? ` • Max size: ${formatBytes(bucket.maximumFileSize)}` : ""}

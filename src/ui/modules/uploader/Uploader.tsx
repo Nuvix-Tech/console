@@ -104,14 +104,14 @@ const Uploader: React.FC<UploaderProps> = ({ files, removeUpload, cancelUpload }
               File Uploads ({files.length})
             </Text>
             {activeUploads > 0 && (
-              <Text variant="code-default-xs" onBackground="neutral-medium">
+              <Text variant="body-default-xs" onBackground="neutral-medium">
                 {activeUploads} in progress
               </Text>
             )}
           </Flex>
         </Flex>
 
-        <Flex gap="1" direction="column" align="end" horizontal="end" vertical="center">
+        <Flex gap="1" direction="column" align="start" horizontal="end" vertical="center">
           {activeUploads > 0 && (
             <Text variant="body-default-xs" onBackground="info-medium">
               {activeUploads} active
@@ -158,6 +158,8 @@ const Uploader: React.FC<UploaderProps> = ({ files, removeUpload, cancelUpload }
       <Flex
         direction="column"
         fillWidth
+        padding="8"
+        overflowX="hidden"
         background="accent-alpha-weak"
         className={classNames(styles.uploadList, { [styles.collapsed]: isCollapsed })}
       >
@@ -176,11 +178,11 @@ const Uploader: React.FC<UploaderProps> = ({ files, removeUpload, cancelUpload }
 
               {/* Progress bar */}
               {upload.status === "uploading" && (
-                <div className={styles.progressContainer}>
+                <div className="w-full">
                   <ProgressRoot value={upload.progress} size="xs" striped animated height={0.5}>
                     <ProgressBar />
                   </ProgressRoot>
-                  <Flex horizontal="space-between" padding="4">
+                  <Flex horizontal="space-between" paddingX="4" marginTop="8">
                     <Text variant="body-default-xs">{upload.progress}%</Text>
                     <Text variant="body-default-xs">{getStatusBadge(upload.status)}</Text>
                   </Flex>
@@ -189,7 +191,7 @@ const Uploader: React.FC<UploaderProps> = ({ files, removeUpload, cancelUpload }
 
               {/* Status for non-uploading files */}
               {upload.status !== "uploading" && (
-                <Flex horizontal="space-between" align="center">
+                <Flex horizontal="space-between" align="center" gap="2">
                   {upload.status === "error" && (
                     <Text variant="body-default-xs" onBackground="neutral-medium">
                       {upload.errorMessage || "Upload failed"}
