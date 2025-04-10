@@ -13,6 +13,7 @@ export interface Upload {
   status: "pending" | "uploading" | "completed" | "error";
   errorMessage?: string;
   permissions?: string[];
+  onComplete?: () => void | Promise<void>;
 }
 
 interface UploadContextProps {
@@ -22,6 +23,7 @@ interface UploadContextProps {
     bucketId: string;
     id?: string;
     permissions?: string[];
+    onComplete?: () => void | Promise<void>;
   }) => void;
   removeUpload: (id: string) => void;
   cancelUpload: (id: string) => void;
@@ -50,11 +52,13 @@ const UploadProvider: React.FC<{
       bucketId,
       id = ID.unique(),
       permissions = [],
+      onComplete,
     }: {
       file: File;
       bucketId: string;
       id?: string;
       permissions?: string[];
+      onComplete?: () => void | Promise<void>;
     }) => {
       // Add the file to the queue with pending status
       const newUpload: Upload = {
@@ -64,6 +68,7 @@ const UploadProvider: React.FC<{
         progress: 0,
         status: "pending",
         permissions,
+        onComplete,
       };
 
       setFiles((prev) => [...prev, newUpload]);
@@ -137,6 +142,7 @@ const UploadProvider: React.FC<{
 
         // Update status when complete
         updateUploadStatus(upload.id, "completed");
+        await upload.onComplete?.();
         abortControllers.delete(upload.id);
       } catch (error) {
         if (error instanceof Error && error.name === "AbortError") {

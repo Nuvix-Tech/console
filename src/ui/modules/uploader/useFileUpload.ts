@@ -30,12 +30,12 @@ interface UploadFileOptions {
  * };
  * ```
  */
-export const useFileUpload = () => {
+export const useFileUpload = (onComplete?: () => void | Promise<void>) => {
   const { uploadFile: addToUploadQueue } = useUpload();
 
   const uploadFile = useCallback(
     ({ file, bucketId, id = ID.unique(), permissions = [] }: UploadFileOptions) => {
-      return addToUploadQueue({ file, bucketId, id, permissions });
+      return addToUploadQueue({ file, bucketId, id, permissions, onComplete });
     },
     [addToUploadQueue],
   );
@@ -51,6 +51,7 @@ export const useFileUpload = () => {
           bucketId,
           id,
           permissions,
+          onComplete,
         });
         uploadIds.push(id);
       });

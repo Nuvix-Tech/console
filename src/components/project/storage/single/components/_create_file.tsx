@@ -23,7 +23,7 @@ interface UploadFileProps {
 export const UploadFile: React.FC<UploadFileProps> = ({ isOpen, onClose, refetch }) => {
   const bucket = useBucketStore.use.bucket?.();
   const { addToast } = useToast();
-  const { uploadFile } = useFileUpload();
+  const { uploadFile } = useFileUpload(refetch);
 
   const steps = useMemo(
     () => [
@@ -96,11 +96,11 @@ export const UploadFile: React.FC<UploadFileProps> = ({ isOpen, onClose, refetch
 
 const FileUploadField = () => {
   const { bucket } = useBucketStore();
-  const { setFieldValue } = useFormikContext<{ files: File[] | null }>();
+  const { setFieldValue } = useFormikContext<{ file: File | null }>();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files || null;
-    setFieldValue("files", files);
+    const file = e.target.files?.[0] || null;
+    setFieldValue("file", file);
   };
 
   return (
