@@ -142,8 +142,8 @@ const UploadProvider: React.FC<{
 
         // Update status when complete
         updateUploadStatus(upload.id, "completed");
-        await upload.onComplete?.();
         abortControllers.delete(upload.id);
+        await upload.onComplete?.();
       } catch (error) {
         if (error instanceof Error && error.name === "AbortError") {
           // Upload was cancelled, already handled

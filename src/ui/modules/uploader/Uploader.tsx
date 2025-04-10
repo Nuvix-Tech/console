@@ -3,12 +3,11 @@
 import type React from "react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { Flex, Icon, IconButton, Text } from "../../../ui/components";
+import { Button, Flex, Icon, IconButton, Text } from "../../../ui/components";
 import classNames from "classnames";
 import styles from "./Uploader.module.scss";
 import type { Upload } from "./UploadProvider";
 import { ProgressBar, ProgressRoot } from "@/components/cui/progress";
-import { Button } from "@chakra-ui/react";
 import { formatBytes } from "@/lib";
 
 interface UploaderProps {
@@ -51,8 +50,27 @@ const Uploader: React.FC<UploaderProps> = ({ files, removeUpload, cancelUpload }
 
   // Get status badge for a file
   const getStatusBadge = (status: Upload["status"]) => {
+    let statusStyle;
+
+    switch (status) {
+      case "uploading":
+        statusStyle = styles.uploading;
+        break;
+      case "completed":
+        statusStyle = styles.success;
+        break;
+      case "error":
+        statusStyle = styles.error;
+        break;
+      case "pending":
+        statusStyle = styles.pending;
+        break;
+      default:
+        statusStyle = "";
+    }
+
     return (
-      <span className={classNames(styles.badge, styles[status])}>
+      <span className={classNames(styles.badge, statusStyle)}>
         {status === "uploading"
           ? "Uploading"
           : status === "completed"
@@ -68,7 +86,6 @@ const Uploader: React.FC<UploaderProps> = ({ files, removeUpload, cancelUpload }
     <Flex
       className={styles.uploaderContainer}
       background="neutral-medium"
-      gap="8"
       radius="l"
       overflow="hidden"
       borderWidth={1}
@@ -82,12 +99,19 @@ const Uploader: React.FC<UploaderProps> = ({ files, removeUpload, cancelUpload }
       >
         <Flex vertical="center" gap="8">
           <Icon name={isCollapsed ? "chevronUp" : "chevronDown"} size="s" />
-          <Text variant="label-strong-s" as="div">
-            File Uploads ({files.length}){activeUploads > 0 && ` - ${activeUploads} in progress`}
-          </Text>
+          <Flex direction="column" gap="1">
+            <Text variant="label-strong-s" as="div">
+              File Uploads ({files.length})
+            </Text>
+            {activeUploads > 0 && (
+              <Text variant="code-default-xs" onBackground="neutral-medium">
+                {activeUploads} in progress
+              </Text>
+            )}
+          </Flex>
         </Flex>
 
-        <Flex gap="8">
+        <Flex gap="1" direction="column" align="end" horizontal="end" vertical="center">
           {activeUploads > 0 && (
             <Text variant="body-default-xs" onBackground="info-medium">
               {activeUploads} active
@@ -104,10 +128,36 @@ const Uploader: React.FC<UploaderProps> = ({ files, removeUpload, cancelUpload }
             </Text>
           )}
         </Flex>
+
+        <IconButton
+          icon="close"
+          size="s"
+          variant="ghost"
+          onClick={(e: any) => {
+            e.stopPropagation();
+            files.forEach((file) => {
+              if (file.status === "uploading") {
+                cancelUpload(file.id);
+              }
+              removeUpload(file.id);
+            });
+          }}
+          aria-label="Close"
+          aria-describedby="close-tooltip"
+          aria-expanded={isCollapsed}
+          aria-controls="uploader"
+          aria-haspopup="true"
+          aria-owns="uploader"
+          aria-hidden={isCollapsed}
+          tooltip="Close"
+          className={styles.closeButton}
+        />
       </div>
 
       {/* Upload list - collapsible */}
       <Flex
+        direction="column"
+        fillWidth
         background="accent-alpha-weak"
         className={classNames(styles.uploadList, { [styles.collapsed]: isCollapsed })}
       >
@@ -116,7 +166,9 @@ const Uploader: React.FC<UploaderProps> = ({ files, removeUpload, cancelUpload }
             <Flex direction="column" gap="8">
               {/* File info */}
               <div className={styles.fileInfo}>
-                <Text variant="body-default-s">{upload.file.name}</Text>
+                <Text variant="body-default-s" className="truncate line-clamp-1">
+                  {upload.file.name}
+                </Text>
                 <Text variant="body-default-xs" onBackground="neutral-medium">
                   {formatBytes(upload.file.size)}
                 </Text>
@@ -125,7 +177,7 @@ const Uploader: React.FC<UploaderProps> = ({ files, removeUpload, cancelUpload }
               {/* Progress bar */}
               {upload.status === "uploading" && (
                 <div className={styles.progressContainer}>
-                  <ProgressRoot value={upload.progress} size="xs" striped animated>
+                  <ProgressRoot value={upload.progress} size="xs" striped animated height={0.5}>
                     <ProgressBar />
                   </ProgressRoot>
                   <Flex horizontal="space-between" padding="4">
@@ -139,49 +191,52 @@ const Uploader: React.FC<UploaderProps> = ({ files, removeUpload, cancelUpload }
               {upload.status !== "uploading" && (
                 <Flex horizontal="space-between" align="center">
                   {upload.status === "error" && (
-                    <Text variant="body-default-xs" color="danger.medium">
+                    <Text variant="body-default-xs" onBackground="neutral-medium">
                       {upload.errorMessage || "Upload failed"}
                     </Text>
                   )}
                   {upload.status === "completed" && (
-                    <Text variant="body-default-xs" color="success.medium">
+                    <Text variant="body-default-xs" onBackground="neutral-medium">
                       Upload complete
                     </Text>
                   )}
                   {upload.status === "pending" && (
-                    <Text variant="body-default-xs" color="fg.muted">
+                    <Text variant="body-default-xs" onBackground="neutral-medium">
                       Preparing upload...
                     </Text>
                   )}
-                  {getStatusBadge(upload.status)}
+                  <Flex gap="4" align="center">
+                    {getStatusBadge(upload.status)}
+                    <IconButton
+                      icon="close"
+                      size="s"
+                      variant="ghost"
+                      onClick={(e: any) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        removeUpload(upload.id);
+                      }}
+                      tooltip={"Remove"}
+                    />
+                  </Flex>
                 </Flex>
               )}
 
               {/* Action buttons */}
-              <div className={styles.actionButtons}>
-                {upload.status === "uploading" && (
+              {upload.status === "uploading" && (
+                <div className={styles.actionButtons}>
                   <Button
-                    size="xs"
-                    variant="ghost"
-                    onClick={(e) => {
+                    size="s"
+                    variant="tertiary"
+                    onClick={(e: any) => {
                       e.stopPropagation();
                       cancelUpload(upload.id);
                     }}
                   >
                     Cancel
                   </Button>
-                )}
-                <IconButton
-                  icon="trash"
-                  size="s"
-                  variant="ghost"
-                  onClick={() => {
-                    // e.stopPropagation();
-                    removeUpload(upload.id);
-                  }}
-                  tooltip={upload.status === "uploading" ? "Cancel and remove" : "Remove"}
-                />
-              </div>
+                </div>
+              )}
             </Flex>
           </div>
         ))}
