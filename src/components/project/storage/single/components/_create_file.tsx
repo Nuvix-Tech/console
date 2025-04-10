@@ -1,15 +1,18 @@
-import React, { useCallback, useMemo, useState } from "react";
-import { Float, useFileUploadContext, useSteps } from "@chakra-ui/react";
+import React, { useCallback, useMemo } from "react";
+import { useSteps } from "@chakra-ui/react";
 import { StepperDrawer } from "@/components/others/stepper";
 import { useBucketStore, useProjectStore } from "@/lib/store";
 import { SubmitButton } from "@/components/others/forms";
-import { useToast } from "@/ui/components";
+import { Column, useToast } from "@/ui/components";
 import { PermissionsEditor } from "@/components/others/permissions";
 import { useFormikContext } from "formik";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Info, Upload, X } from "lucide-react";
+import { Info, Upload } from "lucide-react";
 import { ID } from "@nuvix/console";
 import { Box, FileUpload, Icon } from "@chakra-ui/react";
+import { useFileUpload } from "@/ui/modules/uploader";
+import { formatBytes } from "@/lib";
+import { CustomID } from "@/components/_custom_id";
 
 interface UploadFileProps {
   isOpen: boolean;
@@ -19,8 +22,8 @@ interface UploadFileProps {
 
 export const UploadFile: React.FC<UploadFileProps> = ({ isOpen, onClose, refetch }) => {
   const bucket = useBucketStore.use.bucket?.();
-  const sdk = useProjectStore.use.sdk();
   const { addToast } = useToast();
+  const { uploadFile } = useFileUpload();
 
   const steps = useMemo(
     () => [
@@ -38,7 +41,8 @@ export const UploadFile: React.FC<UploadFileProps> = ({ isOpen, onClose, refetch
 
   const initialValues = useMemo(() => {
     return {
-      files: null,
+      id: null,
+      file: null,
       permissions: [],
     };
   }, []);
@@ -55,21 +59,21 @@ export const UploadFile: React.FC<UploadFileProps> = ({ isOpen, onClose, refetch
         initialValues: initialValues,
         onSubmit: async (values) => {
           try {
-            if (!values.files) {
+            if (!values.file) {
               throw new Error("Please select a file to upload");
             }
 
-            const file = values.files[0] as File;
-            const fileId = ID.unique();
+            const file = values.file as File;
+            const fileId = values.id ?? ID.unique();
             const permissions = values.permissions ?? [];
 
-            await sdk.storage.createFile(bucket!.$id, fileId, file, permissions);
-
-            addToast({
-              message: "File uploaded successfully",
-              variant: "success",
+            uploadFile({
+              file,
+              bucketId: bucket!.$id,
+              id: fileId,
+              permissions,
             });
-            await refetch();
+            // await refetch();
             handleClose();
           } catch (e: any) {
             addToast({
@@ -91,6 +95,7 @@ export const UploadFile: React.FC<UploadFileProps> = ({ isOpen, onClose, refetch
 };
 
 const FileUploadField = () => {
+  const { bucket } = useBucketStore();
   const { setFieldValue } = useFormikContext<{ files: File[] | null }>();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -99,32 +104,40 @@ const FileUploadField = () => {
   };
 
   return (
-    <FileUpload.Root maxW="xl" alignItems="stretch" maxFiles={1} onChange={handleFileChange}>
-      <FileUpload.HiddenInput />
-      <FileUpload.Dropzone>
-        <Icon size="md" color="fg.muted">
-          <Upload />
-        </Icon>
-        <FileUpload.DropzoneContent>
-          <Box>Drag and drop files here</Box>
-          <Box color="fg.muted">.png, .jpg up to 5MB</Box>
-        </FileUpload.DropzoneContent>
-      </FileUpload.Dropzone>
-      <FileUpload.ItemGroup>
-        <FileUpload.Context>
-          {({ acceptedFiles }) =>
-            acceptedFiles.map((file) => (
-              <FileUpload.Item key={file.name} file={file}>
-                <FileUpload.ItemPreview />
-                <FileUpload.ItemName />
-                <FileUpload.ItemSizeText />
-                <FileUpload.ItemDeleteTrigger />
-              </FileUpload.Item>
-            ))
-          }
-        </FileUpload.Context>
-      </FileUpload.ItemGroup>
-    </FileUpload.Root>
+    <Column gap={"4"} fillWidth>
+      <FileUpload.Root maxW="xl" alignItems="stretch" maxFiles={1} onChange={handleFileChange}>
+        <FileUpload.HiddenInput />
+        <FileUpload.Dropzone>
+          <Icon size="md" color="fg.muted">
+            <Upload />
+          </Icon>
+          <FileUpload.DropzoneContent>
+            <Box fontWeight="medium">Drag and drop a file here</Box>
+            <Box color="fg.muted">
+              {bucket?.allowedFileExtensions
+                ? `Allowed formats: ${bucket.allowedFileExtensions}`
+                : "All file formats accepted"}
+              {bucket?.maximumFileSize ? ` • Max size: ${formatBytes(bucket.maximumFileSize)}` : ""}
+            </Box>
+          </FileUpload.DropzoneContent>
+        </FileUpload.Dropzone>
+        <FileUpload.ItemGroup>
+          <FileUpload.Context>
+            {({ acceptedFiles }) =>
+              acceptedFiles.map((file) => (
+                <FileUpload.Item key={file.name} file={file}>
+                  <FileUpload.ItemPreview />
+                  <FileUpload.ItemName />
+                  <FileUpload.ItemSizeText />
+                  <FileUpload.ItemDeleteTrigger />
+                </FileUpload.Item>
+              ))
+            }
+          </FileUpload.Context>
+        </FileUpload.ItemGroup>
+      </FileUpload.Root>
+      <CustomID label="File ID" name="id" />
+    </Column>
   );
 };
 

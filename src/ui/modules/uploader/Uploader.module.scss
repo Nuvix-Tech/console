@@ -1,0 +1,105 @@
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4rem);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.uploaderContainer {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 320px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: var(--surface);
+  border-radius: var(--radii-l) var(--radii-l) 0 0;
+  cursor: pointer;
+  border: 1px solid var(--neutral-medium);
+  border-bottom: none;
+}
+
+.header.collapsed {
+  border-radius: var(--radii-l);
+  border-bottom: 1px solid var(--neutral-medium);
+}
+
+.uploadList {
+  max-height: 400px;
+  overflow-y: auto;
+  background-color: var(--surface);
+  border-radius: 0 0 var(--radii-l) var(--radii-l);
+  border: 1px solid var(--neutral-medium);
+  border-top: none;
+}
+
+.uploadList.collapsed {
+  display: none;
+}
+
+.uploadItem {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--neutral-light);
+}
+
+.uploadItem:last-child {
+  border-bottom: none;
+}
+
+.fileInfo {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.progressContainer {
+  margin: 8px 0;
+}
+
+.actionButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.badge {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.badge.success {
+  background-color: var(--success-light);
+  color: var(--success-medium);
+}
+
+.badge.error {
+  background-color: var(--danger-light);
+  color: var(--danger-medium);
+}
+
+.badge.uploading {
+  background-color: var(--info-light);
+  color: var(--info-medium);
+}
+
+.badge.pending {
+  background-color: var(--warning-light);
+  color: var(--warning-medium);
+}
