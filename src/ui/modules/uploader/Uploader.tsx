@@ -9,6 +9,7 @@ import styles from "./Uploader.module.scss";
 import type { Upload } from "./UploadProvider";
 import { ProgressBar, ProgressRoot } from "@/components/cui/progress";
 import { Button } from "@chakra-ui/react";
+import { formatBytes } from "@/lib";
 
 interface UploaderProps {
   files: Upload[];
@@ -64,7 +65,16 @@ const Uploader: React.FC<UploaderProps> = ({ files, removeUpload, cancelUpload }
   };
 
   return createPortal(
-    <div className={styles.uploaderContainer}>
+    <Flex
+      className={styles.uploaderContainer}
+      background="neutral-medium"
+      gap="8"
+      radius="l"
+      overflow="hidden"
+      borderWidth={1}
+      border="neutral-medium"
+      borderStyle="solid"
+    >
       {/* Header - always visible */}
       <div
         className={classNames(styles.header, { [styles.collapsed]: isCollapsed })}
@@ -72,24 +82,24 @@ const Uploader: React.FC<UploaderProps> = ({ files, removeUpload, cancelUpload }
       >
         <Flex vertical="center" gap="8">
           <Icon name={isCollapsed ? "chevronUp" : "chevronDown"} size="s" />
-          <Text variant="body-default-s" as="div">
+          <Text variant="label-strong-s" as="div">
             File Uploads ({files.length}){activeUploads > 0 && ` - ${activeUploads} in progress`}
           </Text>
         </Flex>
 
         <Flex gap="8">
           {activeUploads > 0 && (
-            <Text variant="body-default-xs" color="fg.muted">
+            <Text variant="body-default-xs" onBackground="info-medium">
               {activeUploads} active
             </Text>
           )}
           {completedUploads > 0 && (
-            <Text variant="body-default-xs" color="success.medium">
+            <Text variant="body-default-xs" onBackground="success-medium">
               {completedUploads} completed
             </Text>
           )}
           {failedUploads > 0 && (
-            <Text variant="body-default-xs" color="danger.medium">
+            <Text variant="body-default-xs" onBackground="danger-medium">
               {failedUploads} failed
             </Text>
           )}
@@ -97,22 +107,25 @@ const Uploader: React.FC<UploaderProps> = ({ files, removeUpload, cancelUpload }
       </div>
 
       {/* Upload list - collapsible */}
-      <div className={classNames(styles.uploadList, { [styles.collapsed]: isCollapsed })}>
+      <Flex
+        background="accent-alpha-weak"
+        className={classNames(styles.uploadList, { [styles.collapsed]: isCollapsed })}
+      >
         {files.map((upload) => (
           <div key={upload.id} className={styles.uploadItem}>
             <Flex direction="column" gap="8">
               {/* File info */}
               <div className={styles.fileInfo}>
                 <Text variant="body-default-s">{upload.file.name}</Text>
-                <Text variant="body-default-xs" color="fg.muted">
-                  {(upload.file.size / 1024 / 1024).toFixed(2)} MB
+                <Text variant="body-default-xs" onBackground="neutral-medium">
+                  {formatBytes(upload.file.size)}
                 </Text>
               </div>
 
               {/* Progress bar */}
               {upload.status === "uploading" && (
                 <div className={styles.progressContainer}>
-                  <ProgressRoot value={upload.progress} size="xs">
+                  <ProgressRoot value={upload.progress} size="xs" striped animated>
                     <ProgressBar />
                   </ProgressRoot>
                   <Flex horizontal="space-between" padding="4">
@@ -172,8 +185,8 @@ const Uploader: React.FC<UploaderProps> = ({ files, removeUpload, cancelUpload }
             </Flex>
           </div>
         ))}
-      </div>
-    </div>,
+      </Flex>
+    </Flex>,
     document.body,
   );
 };
