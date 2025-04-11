@@ -34,14 +34,14 @@ import { RiVisaLine } from "react-icons/ri";
 
 import { FaDiscord, FaGithub, FaGoogle } from "react-icons/fa6";
 import {
-  Image as LucideImage,
-  FileText as LucideFileText,
-  Video as LucideVideo,
-  Music as LucideMusic,
-  Archive as LucideArchive,
-  Code as LucideCode,
-  File as LucideFile,
-} from "lucide-react";
+  LuImage as LucideImage,
+  LuFileText as LucideFileText,
+  LuVideo as LucideVideo,
+  LuMusic as LucideMusic,
+  LuArchive as LucideArchive,
+  LuCode as LucideCode,
+  LuFile as LucideFile,
+} from "react-icons/lu";
 
 export const iconLibrary: Record<string, IconType> = {
   chevronUp: HiChevronUp,
