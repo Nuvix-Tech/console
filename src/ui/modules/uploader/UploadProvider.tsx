@@ -3,7 +3,7 @@ import type React from "react";
 import { type ReactNode, createContext, useContext, useState, useCallback } from "react";
 import { useProjectStore } from "@/lib/store";
 import { ID } from "@nuvix/console";
-import { Uploader } from "./Uploader";
+import { Uploader, UploaderProps } from "./Uploader";
 
 export interface Upload {
   id: string;
@@ -39,9 +39,11 @@ export const useUpload = () => {
   return context;
 };
 
-const UploadProvider: React.FC<{
-  children: ReactNode;
-}> = ({ children }) => {
+const UploadProvider: React.FC<
+  {
+    children: ReactNode;
+  } & Pick<UploaderProps, "position" | "maxHeight">
+> = ({ children, position, maxHeight }) => {
   const [files, setFiles] = useState<Upload[]>([]);
   const [abortControllers] = useState<Map<string, AbortController>>(new Map());
   const sdk = useProjectStore.use.sdk();
@@ -172,7 +174,13 @@ const UploadProvider: React.FC<{
       }}
     >
       {children}
-      <Uploader files={files} removeUpload={removeUpload} cancelUpload={cancelUpload} />
+      <Uploader
+        files={files}
+        removeUpload={removeUpload}
+        cancelUpload={cancelUpload}
+        position={position}
+        maxHeight={maxHeight}
+      />
     </UploadContext.Provider>
   );
 };

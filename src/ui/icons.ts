@@ -33,6 +33,15 @@ import {
 import { RiVisaLine } from "react-icons/ri";
 
 import { FaDiscord, FaGithub, FaGoogle } from "react-icons/fa6";
+import {
+  Image as LucideImage,
+  FileText as LucideFileText,
+  Video as LucideVideo,
+  Music as LucideMusic,
+  Archive as LucideArchive,
+  Code as LucideCode,
+  File as LucideFile,
+} from "lucide-react";
 
 export const iconLibrary: Record<string, IconType> = {
   chevronUp: HiChevronUp,
@@ -66,4 +75,12 @@ export const iconLibrary: Record<string, IconType> = {
   visa: RiVisaLine,
   security: HiOutlineShieldCheck,
   sparkle: HiOutlineSparkles,
+  // File type icons
+  image: LucideImage,
+  document: LucideFileText,
+  video: LucideVideo,
+  audio: LucideMusic,
+  archive: LucideArchive,
+  code: LucideCode,
+  file: LucideFile,
 };
