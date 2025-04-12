@@ -260,7 +260,7 @@ const Uploader: React.FC<UploaderProps> = ({
 
         {/* Overall progress bar */}
         {activeUploads > 0 && (
-          <ProgressRoot value={totalProgress} striped animated height={0.5}>
+          <ProgressRoot value={totalProgress} striped animated height={"2px"}>
             <ProgressBar />
           </ProgressRoot>
         )}
@@ -307,12 +307,34 @@ const Uploader: React.FC<UploaderProps> = ({
                             <Text
                               variant="body-strong-s"
                               className="truncate line-clamp-1"
-                              style={{ maxWidth: "180px" }}
+                              style={{ maxWidth: "170px" }}
                             >
                               {upload.file.name}
                             </Text>
-                            <Text variant="body-default-xs" onBackground="neutral-medium">
+                            <Text
+                              variant="body-default-xs"
+                              onBackground="neutral-medium"
+                              style={{
+                                display: "inline-flex",
+                                gap: "4px",
+                                alignItems: "center",
+                              }}
+                            >
                               {formatBytes(upload.file.size)}
+
+                              {(upload.status === "completed" || upload.status === "error") && (
+                                <IconButton
+                                  icon="close"
+                                  size="s"
+                                  variant="ghost"
+                                  className="!hidden group-hover/uploader:!block"
+                                  onClick={(e: React.MouseEvent) => {
+                                    e.stopPropagation();
+                                    removeUpload(upload.id);
+                                  }}
+                                  tooltip="Remove"
+                                />
+                              )}
                             </Text>
                           </Flex>
 
@@ -385,20 +407,6 @@ const Uploader: React.FC<UploaderProps> = ({
                           </Flex>
                         </Flex>
                       </Flex>
-
-                      {(upload.status === "completed" || upload.status === "error") && (
-                        <IconButton
-                          icon="close"
-                          size="s"
-                          variant="ghost"
-                          className="!absolute -top-0.5 -right-0.5 !hidden group-hover/uploader:!block"
-                          onClick={(e: React.MouseEvent) => {
-                            e.stopPropagation();
-                            removeUpload(upload.id);
-                          }}
-                          tooltip="Remove"
-                        />
-                      )}
                     </motion.div>
                   ))}
                 </AnimatePresence>

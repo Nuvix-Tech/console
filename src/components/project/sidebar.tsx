@@ -1,7 +1,7 @@
 "use client";
 import "@/ui/modules/layout/sidebar.scss";
 import { Column, Line, RevealFx, Row, ToggleButton } from "@/ui/components";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import * as React from "react";
 import { useColorMode } from "../cui/color-mode";
 import { useProjectStore } from "@/lib/store";
@@ -53,11 +53,9 @@ interface FirstSidebarProps {
 
 export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarProps) => {
   const pathname = usePathname() ?? "";
-  const project = useProjectStore.use.project?.();
   const sidebar = useProjectStore.use.sidebar();
   const { setColorMode } = useColorMode();
-
-  const id = project?.$id;
+  const { id } = useParams();
 
   const sideNav: SidebarItem[] = [
     {

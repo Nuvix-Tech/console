@@ -11,6 +11,7 @@ import { useFileStore, useProjectStore } from "@/lib/store";
 import { formatDate } from "@/lib/utils";
 import { Button, Icon, Row, SmartImage } from "@/ui/components";
 import { Stack, Text, VStack } from "@chakra-ui/react";
+import { ExternalLinkIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 
 export const TopMeta = () => {
@@ -42,11 +43,8 @@ export const TopMeta = () => {
               alignItems={"flex-start"}
               justifyContent={"space-between"}
             >
-              <PreviewFile
-                url={
-                  sdk.storage.getFilePreview(bucketId, file.$id, 410, 250).toString() +
-                  "&mode=admin"
-                }
+              <PreviewFile // 410, 250
+                url={sdk.storage.getFilePreview(bucketId, file.$id).toString() + "&mode=admin"}
                 name={file.name}
               />
               <IDChip id={file.$id} />
@@ -138,6 +136,7 @@ const PreviewFile = ({
       width={"full"}
       height={{ base: "full", md: "154px" }}
       maxW={{ base: "full", md: "240px" }}
+      className="group/preview"
     >
       <Stack
         position={"absolute"}
@@ -147,10 +146,14 @@ const PreviewFile = ({
         justifyContent={"center"}
         alignItems={"center"}
         cursor="pointer"
+        css={{
+          borderRadius: "var(--radius-l)",
+        }}
         onClick={() => window.open(url, "_blank")}
+        className="opacity-0 group-hover/preview:opacity-100 group-hover/preview:transition-opacity group-hover/preview:duration-200"
         zIndex={1}
       >
-        <Icon name="openLink" />
+        <Icon name={ExternalLinkIcon} />
       </Stack>
       <SmartImage src={url} alt={name} unoptimized fill radius="l" />
     </Stack>
