@@ -260,8 +260,8 @@ const Uploader: React.FC<UploaderProps> = ({
 
         {/* Overall progress bar */}
         {activeUploads > 0 && (
-          <ProgressRoot value={totalProgress} striped animated height={"2px"}>
-            <ProgressBar />
+          <ProgressRoot value={totalProgress} striped animated height={"2px"} className="!h-0.5">
+            <ProgressBar className="!h-0.5" />
           </ProgressRoot>
         )}
 
@@ -314,9 +314,10 @@ const Uploader: React.FC<UploaderProps> = ({
                             <Text
                               variant="body-default-xs"
                               onBackground="neutral-medium"
+                              className="truncate line-clamp-1"
                               style={{
                                 display: "inline-flex",
-                                gap: "4px",
+                                gap: "2px",
                                 alignItems: "center",
                               }}
                             >
@@ -327,7 +328,8 @@ const Uploader: React.FC<UploaderProps> = ({
                                   icon="close"
                                   size="s"
                                   variant="ghost"
-                                  className="!hidden group-hover/uploader:!block"
+                                  className="!hidden group-hover/uploader:!block transition-all"
+                                  aria-label="Remove"
                                   onClick={(e: React.MouseEvent) => {
                                     e.stopPropagation();
                                     removeUpload(upload.id);

@@ -28,7 +28,7 @@ export const UpdateAllowedExt: React.FC = () => {
     <>
       <Form
         initialValues={{
-          allowedExtensions: bucket.allowedFileExtensions,
+          allowedExtensions: bucket.allowedFileExtensions ?? [],
         }}
         enableReinitialize
         validationSchema={schema}

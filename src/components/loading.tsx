@@ -6,9 +6,9 @@ export default function LoadingUI() {
   return (
     <>
       <Flex fill minHeight={16} position="relative">
-        <Flex fill position="absolute">
+        {/* <Flex fill position="absolute">
           <BackgroundBeams />
-        </Flex>
+        </Flex> */}
         <Flex fill fillWidth horizontal="center" vertical="center" align="center">
           <Spinner size="xl" />
         </Flex>

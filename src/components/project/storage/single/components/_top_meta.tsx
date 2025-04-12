@@ -142,7 +142,7 @@ const PreviewFile = ({
         position={"absolute"}
         width={"full"}
         height={"full"}
-        background="neutral-alpha-strong"
+        background="var(--neutral-alpha-strong)"
         justifyContent={"center"}
         alignItems={"center"}
         cursor="pointer"
@@ -150,7 +150,7 @@ const PreviewFile = ({
           borderRadius: "var(--radius-l)",
         }}
         onClick={() => window.open(url, "_blank")}
-        className="opacity-0 group-hover/preview:opacity-100 group-hover/preview:transition-opacity group-hover/preview:duration-200"
+        className="opacity-0 hover:opacity-100 group-hover/preview:opacity-100 group-hover/preview:transition-opacity group-hover/preview:duration-200"
         zIndex={1}
       >
         <Icon name={<ExternalLinkIcon />} />
