@@ -1,4 +1,4 @@
-import { useProjectStore } from "@/lib/store";
+import { useBucketStore, useProjectStore } from "@/lib/store";
 import { Line } from "@/ui/components";
 import { SidebarGroup } from "@/ui/modules/layout/navigation";
 import { usePathname } from "next/navigation";
@@ -6,6 +6,7 @@ import { BucketsList } from "./_buckets";
 
 const StorageSidebar = () => {
   const project = useProjectStore.use.project?.();
+  const bucket = useBucketStore.use.bucket?.();
   const path = usePathname();
 
   const resolveHref = (value?: string) =>
@@ -25,8 +26,8 @@ const StorageSidebar = () => {
         items={[
           {
             label: "Settings",
-            href: resolveHref("settings"),
-            isSelected: path === resolveHref("settings"),
+            href: resolveHref(`${bucket?.$id}/settings`),
+            isSelected: path === resolveHref(`${bucket?.$id}/settings`),
           },
         ]}
       />

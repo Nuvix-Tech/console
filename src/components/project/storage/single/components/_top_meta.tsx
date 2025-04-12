@@ -153,7 +153,7 @@ const PreviewFile = ({
         className="opacity-0 group-hover/preview:opacity-100 group-hover/preview:transition-opacity group-hover/preview:duration-200"
         zIndex={1}
       >
-        <Icon name={ExternalLinkIcon} />
+        <Icon name={<ExternalLinkIcon />} />
       </Stack>
       <SmartImage src={url} alt={name} unoptimized fill radius="l" />
     </Stack>
