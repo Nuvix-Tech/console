@@ -2,9 +2,8 @@
 
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { Row, Skeleton } from "@/ui/components";
+import { Button, Row, Skeleton } from "@/ui/components";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -17,7 +16,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { sdkForConsole } from "@/lib/sdk";
 import { useRouter } from "@bprogress/next";
 import { Models } from "@nuvix/console";
-import { useProjectStore } from "@/lib/store";
 import { useParams } from "next/navigation";
 
 export function HeaderProject() {
@@ -39,13 +37,14 @@ export function HeaderProject() {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="ghost"
+          variant="tertiary"
           role="combobox"
           aria-expanded={open}
-          className="max-w-42 gap-3 justify-between"
+          className="max-w-42"
+          justifyContent="flex-start"
+          suffixIcon={<ChevronsUpDown className="opacity-40" />}
         >
           {list.find((p) => p.$id === projectId)?.name || "Select project..."}
-          <ChevronsUpDown className="opacity-40" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0 bg-transparent border-[var(--neutral-border-medium)]">

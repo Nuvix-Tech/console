@@ -172,7 +172,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
         minHeight={minHeight}
         trigger={
           <Input
-            // {...rest}
+            label={rest.label}
             labelAsPlaceholder={labelAsPlaceholder}
             style={{
               textOverflow: "ellipsis",

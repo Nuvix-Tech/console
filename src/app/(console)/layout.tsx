@@ -10,18 +10,18 @@ export default function ({ children }: { children: React.ReactNode }) {
           <Background
             position="absolute"
             gradient={{
-              colorEnd: "neutral-alpha-medium",
+              colorEnd: "neutral-background-medium",
               colorStart: "brand-alpha-strong",
               display: true,
               height: 50,
               opacity: 80,
-              tilt: 20,
+              tilt: 35,
               width: 50,
               x: 20,
               y: 20,
             }}
             dots={{
-              color: "brand-alpha-strong",
+              color: "accent-background-strong",
               display: true,
               opacity: 100,
               size: "64",

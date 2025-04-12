@@ -131,9 +131,9 @@ export const SessionInput = () => {
       const newUnitObj = units.find((u) => u.name === newUnit);
       if (!oldUnitObj || !newUnitObj || values.length === undefined) return;
 
-      // Convert the base value to the new unit
+      // Just update the unit - the displayValue will recalculate automatically
+      // while keeping the same seconds value in the form
       setUnit(newUnit);
-      // No need to update form value since we're just changing the display unit
     },
     [unit, units, values.length],
   );

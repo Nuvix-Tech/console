@@ -73,7 +73,7 @@ const ProjectHeader: React.FC<HeaderProps> = () => {
           <Row vertical="center" gap={"2"} marginLeft="4">
             {/* <span className="text-[var(--neutral-alpha-strong)] text-2xl">/</span>
             <HeaderOrganization /> */}
-            {/* <span className="text-[var(--neutral-alpha-strong)] text-2xl">/</span> */}
+            <span className="text-[var(--neutral-alpha-medium)] text-2xl">/</span>
             <HeaderProject />
           </Row>
           <Row fillWidth vertical="center" horizontal="end" gap="12">
