@@ -18,7 +18,7 @@ function Command({ className, ...props }: React.ComponentProps<typeof CommandPri
     <CommandPrimitive
       data-slot="command"
       className={cn(
-        "bg-popover text-popover-foreground flex h-full w-full flex-col overflow-hidden rounded-md",
+        "bg-[var(--neutral-alpha-medium)] text-[var(--neutral-on-background-medium)] flex h-full w-full flex-col overflow-hidden rounded-md",
         className,
       )}
       {...props}
@@ -55,12 +55,15 @@ function CommandInput({
   ...props
 }: React.ComponentProps<typeof CommandPrimitive.Input>) {
   return (
-    <div data-slot="command-input-wrapper" className="flex h-9 items-center gap-2 border-b px-3">
+    <div
+      data-slot="command-input-wrapper"
+      className="flex h-9 items-center gap-2 border-b px-3 border-b-[var(--neutral-border-medium)]"
+    >
       <SearchIcon className="size-4 shrink-0 opacity-50" />
       <CommandPrimitive.Input
         data-slot="command-input"
         className={cn(
-          "placeholder:text-muted-foreground flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
+          "placeholder:text-[var(--neutral-on-background-medium)] flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
           className,
         )}
         {...props}
@@ -112,7 +115,7 @@ function CommandSeparator({
   return (
     <CommandPrimitive.Separator
       data-slot="command-separator"
-      className={cn("bg-border -mx-1 h-px", className)}
+      className={cn("bg-[var(--neutral-border-medium)] -mx-1 h-px", className)}
       {...props}
     />
   );

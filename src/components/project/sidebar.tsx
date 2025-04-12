@@ -108,7 +108,8 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
       <Column
         maxWidth={alwaysFull ? undefined : !showSubSidebar ? undefined : 4}
         fill
-        paddingY="32"
+        paddingBottom="32"
+        paddingTop="12"
         // position={alwaysFull ? "relative" : "absolute"}
         vertical="space-between"
         overflowX="hidden"

@@ -18,9 +18,10 @@ import { sdkForConsole } from "@/lib/sdk";
 import { useRouter } from "@bprogress/next";
 import { Models } from "@nuvix/console";
 import { useProjectStore } from "@/lib/store";
+import { useParams } from "next/navigation";
 
 export function HeaderProject() {
-  const project = useProjectStore.use.project?.();
+  const { id: projectId } = useParams();
   const { projects } = sdkForConsole;
   const [list, setList] = React.useState<Models.Project[]>();
   const { push } = useRouter();
@@ -34,7 +35,7 @@ export function HeaderProject() {
     getAll();
   }, []);
 
-  return project && list ? (
+  return list ? (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
@@ -43,11 +44,11 @@ export function HeaderProject() {
           aria-expanded={open}
           className="max-w-42 gap-3 justify-between"
         >
-          {project ? list.find((p) => p.$id === project.$id)?.name : "Select project..."}
+          {list.find((p) => p.$id === projectId)?.name || "Select project..."}
           <ChevronsUpDown className="opacity-40" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-[200px] p-0 bg-transparent border-[var(--neutral-border-medium)]">
         <Command>
           <CommandInput placeholder="Search project..." className="h-9" />
           <CommandList>
@@ -64,7 +65,7 @@ export function HeaderProject() {
                 >
                   {p.name}
                   <Check
-                    className={cn("ml-auto", project.$id === p.$id ? "opacity-100" : "opacity-0")}
+                    className={cn("ml-auto", projectId === p.$id ? "opacity-100" : "opacity-0")}
                   />
                 </CommandItem>
               ))}

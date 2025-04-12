@@ -70,10 +70,10 @@ const ProjectHeader: React.FC<HeaderProps> = () => {
           horizontal="center"
         /> */}
         <Row fillWidth vertical="center" horizontal="space-between">
-          <Row vertical="center" gap={"2"}>
-            <span className="text-[var(--neutral-alpha-strong)] text-2xl">/</span>
-            <HeaderOrganization />
-            <span className="text-[var(--neutral-alpha-strong)] text-2xl">/</span>
+          <Row vertical="center" gap={"2"} marginLeft="4">
+            {/* <span className="text-[var(--neutral-alpha-strong)] text-2xl">/</span>
+            <HeaderOrganization /> */}
+            {/* <span className="text-[var(--neutral-alpha-strong)] text-2xl">/</span> */}
             <HeaderProject />
           </Row>
           <Row fillWidth vertical="center" horizontal="end" gap="12">
