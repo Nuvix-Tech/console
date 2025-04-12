@@ -43,7 +43,7 @@ import {
   LuFile as LucideFile,
 } from "react-icons/lu";
 
-export const iconLibrary: Record<string, IconType> = {
+export const iconMap = {
   chevronUp: HiChevronUp,
   chevronDown: HiChevronDown,
   chevronRight: HiChevronRight,
@@ -83,4 +83,7 @@ export const iconLibrary: Record<string, IconType> = {
   archive: LucideArchive,
   code: LucideCode,
   file: LucideFile,
-};
+} as const;
+
+export type IconName = keyof typeof iconMap;
+export const iconLibrary: Record<IconName, IconType> = iconMap;

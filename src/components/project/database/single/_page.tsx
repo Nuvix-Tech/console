@@ -183,7 +183,7 @@ const DatabaseSinglePage = ({ databaseId }: { databaseId: string }) => {
           <DataActionBar
             actions={
               <>
-                <ActionButton<Models.Collection> colorPalette="red" onClick={onDelete}>
+                <ActionButton<Models.Collection> variant="danger" onClick={onDelete}>
                   Delete
                 </ActionButton>
               </>

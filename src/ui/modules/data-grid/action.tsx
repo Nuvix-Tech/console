@@ -1,8 +1,7 @@
 import React from "react";
 import { useDataGrid } from "./provider";
-import { ButtonProps } from "@chakra-ui/react";
-import { ActionBar, Button, Portal } from "@chakra-ui/react";
-import { CloseButton } from "@/components/cui/close-button";
+import { ActionBar, Portal } from "@chakra-ui/react";
+import { Button, CloseButton } from "@/ui/components";
 
 type Props = {
   actions?: React.ReactNode;
@@ -16,8 +15,11 @@ export const DataActionBar = ({ actions }: Props) => {
     <ActionBar.Root open={getSelectedRowModel().rows.length > 0}>
       <Portal>
         <ActionBar.Positioner zIndex={999}>
-          <ActionBar.Content>
-            <ActionBar.SelectionTrigger>
+          <ActionBar.Content
+            background={"var(--neutral-background-medium)"}
+            css={{ borderRadius: "var(--radius-l)" }}
+          >
+            <ActionBar.SelectionTrigger borderColor={"var(--neutral-border-medium)"}>
               {getSelectedRowModel().rows.length} selected
             </ActionBar.SelectionTrigger>
 
@@ -25,7 +27,7 @@ export const DataActionBar = ({ actions }: Props) => {
             {actions}
 
             <ActionBar.CloseTrigger asChild onClick={() => toggleAllRowsSelected(false)}>
-              <CloseButton size="sm" />
+              <CloseButton size="s" />
             </ActionBar.CloseTrigger>
           </ActionBar.Content>
         </ActionBar.Positioner>
@@ -34,7 +36,7 @@ export const DataActionBar = ({ actions }: Props) => {
   );
 };
 
-type ActionButtonProps<T extends unknown> = Omit<ButtonProps, "onClick"> & {
+type ActionButtonProps<T extends unknown> = Omit<React.ComponentProps<typeof Button>, "onClick"> & {
   onClick?: (values: T[]) => void;
   disabled?: boolean;
 };
@@ -45,7 +47,7 @@ export const ActionButton = <T,>({ onClick, ...props }: ActionButtonProps<T>) =>
   const selectedRows = getSelectedRowModel().rows.map((r) => r.original);
 
   return (
-    <Button {...props} onClick={() => onClick?.(selectedRows)}>
+    <Button {...(props as any)} onClick={() => onClick?.(selectedRows)}>
       {props.children}
     </Button>
   );

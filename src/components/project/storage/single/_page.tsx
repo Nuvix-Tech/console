@@ -101,10 +101,12 @@ export const StorageSinglePage: FC<Props> = ({}) => {
   ];
 
   const onDelete = async (values: Models.File[]) => {
-    const ids = values.map((file) => file.$id);
+    const files = values;
+    const fileCount = files.length;
+
     const confirmDelete = await confirm({
       title: "Delete Files",
-      description: `Are you sure you want to delete ${ids.length} files? This action cannot be undone.`,
+      description: `Are you sure you want to delete ${fileCount} ${fileCount === 1 ? "file" : "files"}? This action cannot be undone.`,
       cancle: {
         text: "Cancel",
       },
@@ -115,18 +117,18 @@ export const StorageSinglePage: FC<Props> = ({}) => {
     });
 
     if (!confirmDelete) return;
+
     try {
-      for (const id of ids) {
-        await sdk.storage.deleteFile(bucket?.$id!, id);
-      }
+      await Promise.all(files.map((file) => sdk.storage.deleteFile(bucket?.$id!, file.$id)));
+
       addToast({
-        message: `Successfully deleted ${ids.length} files.`,
+        message: `Successfully deleted ${fileCount} ${fileCount === 1 ? "file" : "files"}.`,
         variant: "success",
       });
       await refetch();
     } catch (error) {
       addToast({
-        message: `Failed to delete files. ${error}`,
+        message: `Failed to delete ${fileCount === 1 ? "file" : "files"}. Please try again.`,
         variant: "danger",
       });
     }
@@ -179,7 +181,7 @@ export const StorageSinglePage: FC<Props> = ({}) => {
           <DataActionBar
             actions={
               <>
-                <ActionButton<Models.File> colorPalette="red" onClick={onDelete}>
+                <ActionButton<Models.File> variant="danger" onClick={onDelete}>
                   Delete
                 </ActionButton>
               </>

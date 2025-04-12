@@ -186,7 +186,7 @@ const CollectionPage: React.FC<Props> = ({ databaseId, collectionId }: Props) =>
         <DataActionBar
           actions={
             <>
-              <ActionButton<Models.Collection> colorPalette="red" onClick={onDelete}>
+              <ActionButton<Models.Collection> variant="danger" onClick={onDelete}>
                 <LuTrash2 />
                 Delete
               </ActionButton>

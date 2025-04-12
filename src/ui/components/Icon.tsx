@@ -5,13 +5,13 @@ import type React from "react";
 import { type ReactNode, forwardRef, useEffect, useState } from "react";
 import type { IconType } from "react-icons";
 import { Flex, Tooltip } from ".";
-import { iconLibrary } from "../icons";
+import { iconLibrary, IconName } from "../icons";
 import type { ColorScheme, ColorWeight } from "../types";
 import styles from "./Icon.module.scss";
 import iconStyles from "./IconButton.module.scss";
 
 interface IconProps extends React.ComponentProps<typeof Flex> {
-  name: string | ReactNode | IconType;
+  name: IconName | Exclude<ReactNode, string> | IconType;
   onBackground?: `${ColorScheme}-${ColorWeight}`;
   onSolid?: `${ColorScheme}-${ColorWeight}`;
   size?: "xs" | "s" | "m" | "l" | "xl";
@@ -35,7 +35,7 @@ const Icon = forwardRef<HTMLDivElement, IconProps>(
     ref,
   ) => {
     const IconComponent: IconType | undefined | any =
-      typeof name === "string" ? iconLibrary[name] : name;
+      typeof name === "string" ? iconLibrary[name as IconName] : name;
 
     if (!IconComponent) {
       console.warn(`Icon "${name}" does not exist in the library.`);

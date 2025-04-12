@@ -9,7 +9,7 @@ import { IDChip, TopCard } from "@/components/others";
 import { formatBytes } from "@/lib";
 import { useFileStore, useProjectStore } from "@/lib/store";
 import { formatDate } from "@/lib/utils";
-import { Button, Row, SmartImage } from "@/ui/components";
+import { Button, Icon, Row, SmartImage } from "@/ui/components";
 import { Stack, Text, VStack } from "@chakra-ui/react";
 import { useParams } from "next/navigation";
 
@@ -42,25 +42,13 @@ export const TopMeta = () => {
               alignItems={"flex-start"}
               justifyContent={"space-between"}
             >
-              <Stack
-                justifyContent={"center"}
-                position={"relative"}
-                overflow={"hidden"}
-                width={"full"}
-                height={{ base: "full", md: "154px" }}
-                maxW={{ base: "full", md: "240px" }}
-              >
-                <SmartImage
-                  src={
-                    sdk.storage.getFilePreview(bucketId, file.$id, 410, 250).toString() +
-                    "&mode=admin"
-                  }
-                  alt={file.name}
-                  unoptimized
-                  fill
-                  radius="l"
-                />
-              </Stack>
+              <PreviewFile
+                url={
+                  sdk.storage.getFilePreview(bucketId, file.$id, 410, 250).toString() +
+                  "&mode=admin"
+                }
+                name={file.name}
+              />
               <IDChip id={file.$id} />
             </VStack>
             <VStack
@@ -132,5 +120,39 @@ export const TopMeta = () => {
         </VStack>
       </TopCard>
     </>
+  );
+};
+
+const PreviewFile = ({
+  url,
+  name,
+}: {
+  url: string;
+  name: string;
+}) => {
+  return (
+    <Stack
+      justifyContent={"center"}
+      position={"relative"}
+      overflow={"hidden"}
+      width={"full"}
+      height={{ base: "full", md: "154px" }}
+      maxW={{ base: "full", md: "240px" }}
+    >
+      <Stack
+        position={"absolute"}
+        width={"full"}
+        height={"full"}
+        background="neutral-alpha-strong"
+        justifyContent={"center"}
+        alignItems={"center"}
+        cursor="pointer"
+        onClick={() => window.open(url, "_blank")}
+        zIndex={1}
+      >
+        <Icon name="openLink" />
+      </Stack>
+      <SmartImage src={url} alt={name} unoptimized fill radius="l" />
+    </Stack>
   );
 };
