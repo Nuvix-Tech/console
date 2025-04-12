@@ -101,7 +101,35 @@ export const StorageSinglePage: FC<Props> = ({}) => {
   ];
 
   const onDelete = async (values: Models.File[]) => {
-    // TODO: Add delete file functionality
+    const ids = values.map((file) => file.$id);
+    const confirmDelete = await confirm({
+      title: "Delete Files",
+      description: `Are you sure you want to delete ${ids.length} files? This action cannot be undone.`,
+      cancle: {
+        text: "Cancel",
+      },
+      confirm: {
+        text: "Delete",
+        variant: "danger",
+      },
+    });
+
+    if (!confirmDelete) return;
+    try {
+      for (const id of ids) {
+        await sdk.storage.deleteFile(bucket?.$id!, id);
+      }
+      addToast({
+        message: `Successfully deleted ${ids.length} files.`,
+        variant: "success",
+      });
+      await refetch();
+    } catch (error) {
+      addToast({
+        message: `Failed to delete files. ${error}`,
+        variant: "danger",
+      });
+    }
   };
 
   const create = (
@@ -136,7 +164,7 @@ export const StorageSinglePage: FC<Props> = ({}) => {
         {(data.total > 0 || hasQuery) && (
           <>
             <HStack justifyContent="space-between" alignItems="center">
-              <Search placeholder="Search by ID" />
+              <Search placeholder="Search by Name" />
             </HStack>
             <Table noResults={data.total === 0 && hasQuery} />
 
@@ -153,9 +181,6 @@ export const StorageSinglePage: FC<Props> = ({}) => {
               <>
                 <ActionButton<Models.File> colorPalette="red" onClick={onDelete}>
                   Delete
-                </ActionButton>
-                <ActionButton<Models.File> colorPalette="blue" onClick={() => {}}>
-                  Download
                 </ActionButton>
               </>
             }

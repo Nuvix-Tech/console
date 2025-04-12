@@ -44,6 +44,8 @@ export const BucketsList = () => {
               fillWidth
               selected={bucket.$id === bucketId}
               href={`${path}/${bucket.$id}`}
+              size="s"
+              justifyContent="flex-start"
             >
               {bucket.name}
             </ToggleButton>

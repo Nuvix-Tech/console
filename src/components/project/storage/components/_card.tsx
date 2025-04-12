@@ -23,7 +23,7 @@ export const StorageCard = ({ bucket }: { bucket: Models.Bucket }) => {
           <Text as={"h3"} size="xl" onBackground="neutral-strong">
             {bucket.name}
           </Text>
-          <Cloud className="absolute right-4 opacity-10 size-28 rotate-45 bottom-4 neutral-on-background-weak" />
+          {/* <Cloud className="absolute right-4 opacity-5 size-28 bottom-4 neutral-on-background-weak" /> */}
         </Column>
         <div onClick={(e) => e.preventDefault()} className="inline w-min">
           <IDChip id={bucket.$id} hideIcon />
