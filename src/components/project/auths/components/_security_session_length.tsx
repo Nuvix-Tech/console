@@ -78,14 +78,33 @@ export const SessionInput = () => {
   const { values, setFieldValue } = useFormikContext<Record<string, number>>();
   const { value, unit, baseValue, setValue, setUnit, units } = useTimeUnitPair(values.length);
 
+  // Initialize field value if needed and handle unit changes
   React.useEffect(() => {
-    if (baseValue === undefined || baseValue === values.length) return;
-    setFieldValue("length", baseValue);
-  }, [baseValue]);
+    // Don't update if baseValue is undefined or already matches form value
+    if (baseValue === undefined) return;
+    
+    // Only update when there's an actual change to avoid infinite loops
+    if (values.length !== baseValue) {
+      setFieldValue("length", baseValue);
+    }
+  }, [baseValue, setFieldValue, values.length]);
+
+  // Handle form value changes from outside
+  React.useEffect(() => {
+    if (values.length !== undefined && baseValue !== values.length) {
+      // Reset the unit pair with new value from form
+      setValue(values.length / (units.find(u => u.name === unit)?.value || 1));
+    }
+  }, [values.length]);
 
   return (
     <Group gap={6}>
-      <NumberInput label="Length" min={0} value={value} onChange={(v) => setValue(v)} />
+      <NumberInput 
+        label="Length" 
+        min={0} 
+        value={value} 
+        onChange={(v) => setValue(v || 0)}
+      />
       <Select
         label="Time Period"
         value={unit}

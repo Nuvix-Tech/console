@@ -131,7 +131,7 @@ export const InputTagField = (props: InputTagFieldProps) => {
             <>
               <div className="flex flex-wrap gap-2">
                 {suggestion
-                  .filter((v) => !removeOnSelect || !values.name.includes(v))
+                  .filter((v) => !removeOnSelect || !values[name]?.includes(v))
                   .map((s, i) => (
                     <Chip
                       label={s}

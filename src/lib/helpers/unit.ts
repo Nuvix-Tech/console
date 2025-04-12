@@ -21,10 +21,10 @@ function createValueUnitStore<T = string>(
   get: () => ValueUnitState<T>,
 ) {
   if (!units.some((u) => u.value === 1)) {
-    throw new Error("Units must have a value of 1");
+    throw new Error("Units must include a base unit with value of 1");
   }
-  if (units.some((u) => u.value < 1)) {
-    throw new Error("Units must have a value greater than 1");
+  if (units.some((u) => u.value <= 0)) {
+    throw new Error("Units must have a value greater than 0");
   }
 
   const sortedUnits = [...units].sort((a, b) => b.value - a.value);
@@ -56,22 +56,23 @@ function createValueUnitStore<T = string>(
   return { ...state, units };
 }
 
-function useValueUnitPair<T = string>(initialValue: number, units: Unit<T>[]) {
+function useValueUnitPair<T = string>(initialValue: number | null | undefined, units: Unit<T>[]) {
+  const safeInitialValue = initialValue ?? 0;
   const useStore = create<ValueUnitState<T>>((set, get) =>
-    createValueUnitStore(initialValue, units, set, get),
+    createValueUnitStore(safeInitialValue, units, set, get),
   );
   const state = useStore();
   return { ...state };
 }
 
-function useTimeUnitPair(initialValue = 0) {
+function useTimeUnitPair(initialValue: number | null | undefined = 0) {
   const units: Unit[] = [
     { name: "Days", value: 86400 },
     { name: "Hours", value: 3600 },
     { name: "Minutes", value: 60 },
     { name: "Seconds", value: 1 },
   ];
-  return useValueUnitPair(initialValue, units);
+  return useValueUnitPair(initialValue ?? 0, units);
 }
 
 function useByteUnitPair(initialValue = 0, base: 1000 | 1024 = 1000) {
