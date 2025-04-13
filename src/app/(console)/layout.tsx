@@ -21,30 +21,31 @@ export default function ({ children }: { children: React.ReactNode }) {
               x: 20,
               y: 20,
             }}
-            // dots={{
-            //   color: "accent-background-strong",
-            //   display: true,
-            //   opacity: 100,
-            //   size: "64",
-            // }}
-            // grid={{
-            //   color: "neutral-alpha-weak",
-            //   display: true,
-            //   height: "var(--static-space-32)",
-            //   opacity: 100,
-            //   width: "var(--static-space-32)",
-            // }}
-            // lines={{
-            //   display: true,
-            //   opacity: 20,
-            //   size: "24",
-            //   color: "accent-solid-weak",
-            // }}
+          // dots={{
+          //   color: "accent-background-strong",
+          //   display: true,
+          //   opacity: 100,
+          //   size: "64",
+          // }}
+          // grid={{
+          //   color: "neutral-alpha-weak",
+          //   display: true,
+          //   height: "var(--static-space-32)",
+          //   opacity: 100,
+          //   width: "var(--static-space-32)",
+          // }}
+          // lines={{
+          //   display: true,
+          //   opacity: 20,
+          //   size: "24",
+          //   color: "accent-solid-weak",
+          // }}
           />
           <Stack
             width="full"
             height="full"
             className="backdrop-blur-xl"
+            flexDirection={"row"}
             overflow="hidden"
             padding={{ base: 0, lg: `var(--static-space-8)` }}
             gap={{ base: 0, lg: `var(--static-space-16)` }}

@@ -5,7 +5,7 @@ export const TopLeftInfo = () => {
 
   return (
     <>
-      {project.platforms.map((platform, _) => (
+      {project?.platforms?.map((platform, _) => (
         <div key={_}>
           {platform.type}
           {platform.name}
