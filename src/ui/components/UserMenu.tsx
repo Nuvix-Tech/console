@@ -13,6 +13,7 @@ interface UserMenuProps
   dropdown?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
+  dropClass?: string;
 }
 
 const UserMenu: React.FC<UserMenuProps> = ({
@@ -23,6 +24,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
   minHeight,
   className,
   style,
+  dropClass,
   ...userProps
 }) => {
   return (
@@ -33,7 +35,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
       style={{
         borderRadius: "var(--radius-full)",
       }}
-      zIndex={`999 !important`}
+      dropClass={dropClass}
       trigger={
         <Flex
           tabIndex={0}

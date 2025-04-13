@@ -2,14 +2,13 @@
 import { Background, Column, Row } from "@/ui/components";
 import React, { useEffect } from "react";
 import { useProjectStore } from "@/lib/store";
-import { TopInfo } from "./components";
+import { TopInfo, TopLeftInfo } from "./components";
 
 type ProjectPageProps = {
   id: string;
 };
 
 export default function ProjectPage({ id }: ProjectPageProps) {
-  const project = useProjectStore.use.project?.();
   const setSidebarNull = useProjectStore.use.setSidebarNull();
 
   useEffect(() => {
@@ -55,6 +54,9 @@ export default function ProjectPage({ id }: ProjectPageProps) {
               />
               <TopInfo />
             </Row>
+            <Column maxWidth="xs">
+              <TopLeftInfo />
+            </Column>
           </Row>
         </Column>
       </Row>

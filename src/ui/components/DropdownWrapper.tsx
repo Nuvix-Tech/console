@@ -35,7 +35,7 @@ export interface DropdownWrapperProps {
   onSelect?: (value: string) => void;
   isOpen?: boolean;
   onOpenChange?: (isOpen: boolean) => void;
-  zIndex?: number | `${number} !important`;
+  dropClass?: string;
 }
 
 const DropdownWrapper = forwardRef<HTMLDivElement, DropdownWrapperProps>(
@@ -54,7 +54,7 @@ const DropdownWrapper = forwardRef<HTMLDivElement, DropdownWrapperProps>(
       floatingPlacement = "bottom-start",
       className,
       style,
-      zIndex,
+      dropClass,
     },
     ref,
   ) => {
@@ -173,7 +173,7 @@ const DropdownWrapper = forwardRef<HTMLDivElement, DropdownWrapperProps>(
         {isOpen && (
           <Flex
             zIndex={1}
-            className={styles.fadeIn}
+            className={`${styles.fadeIn} ${dropClass}`}
             minWidth={minWidth}
             ref={dropdownRef}
             style={{
@@ -181,7 +181,6 @@ const DropdownWrapper = forwardRef<HTMLDivElement, DropdownWrapperProps>(
               top: y ?? 0,
               offset: 4,
               left: x ?? 0,
-              zIndex: zIndex,
             }}
             role="listbox"
           >

@@ -16,6 +16,8 @@ export function UserProfile() {
           src: avatars.getInitials(user.name, 100, 100),
         }}
         loading={!user}
+        dropClass="!z-[999]"
+        className="!z-[999]"
         dropdown={
           <>
             <Option label="Dashboard" value="0" />
