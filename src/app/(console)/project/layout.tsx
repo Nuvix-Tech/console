@@ -25,7 +25,12 @@ export default function ({ children }: { children: React.ReactNode }) {
         as={"main"}
       >
         <ProjectHeader />
-        <Stack height={"calc(100% - 64px)"} overflowY="auto" direction="column">
+        <Stack
+          height={"calc(100% - 64px)"}
+          top={{ base: "64px", lg: 0 }}
+          overflowY="auto"
+          direction="column"
+        >
           <Suspense fallback={<SkeletonProject />}>{children}</Suspense>
         </Stack>
       </Stack>

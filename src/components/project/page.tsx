@@ -3,6 +3,8 @@ import { Background, Column, Row } from "@/ui/components";
 import React, { useEffect } from "react";
 import { useProjectStore } from "@/lib/store";
 import { TopInfo, TopLeftInfo } from "./components";
+import { PageContainer } from "../others";
+import { Stack } from "@chakra-ui/react";
 
 type ProjectPageProps = {
   id: string;
@@ -17,49 +19,56 @@ export default function ProjectPage({ id }: ProjectPageProps) {
 
   return (
     <>
-      <Row fill>
-        <Column fillWidth>
-          <Row fillWidth paddingX="40" paddingTop="24" horizontal="start">
-            <Row
-              position="relative"
-              overflow="hidden"
-              fillWidth
-              height={20}
-              background="neutral-alpha-weak"
-              radius="l-8"
-              horizontal="center"
-              vertical="start"
-            >
-              <Background
-                zIndex={0}
-                position="absolute"
-                color="neutral-alpha-weak"
-                gradient={{
-                  colorEnd: "static-transparent",
-                  colorStart: "brand-alpha-medium",
-                  display: true,
-                  height: 100,
-                  opacity: 60,
-                  tilt: 40,
-                  width: 150,
-                  x: 0,
-                  y: 0,
-                }}
-                dots={{
-                  color: "neutral-alpha-weak",
-                  display: true,
-                  opacity: 80,
-                  size: "4",
-                }}
-              />
-              <TopInfo />
-            </Row>
-            <Column maxWidth="xs">
-              <TopLeftInfo />
-            </Column>
+      <PageContainer>
+        <Stack
+          width="full"
+          gap={2}
+          justifyContent="space-between"
+          flexDirection={{
+            base: "column",
+            lg: "row",
+          }}
+          paddingTop={"24"}
+        >
+          <Row
+            position="relative"
+            overflow="hidden"
+            fillWidth
+            height={20}
+            background="neutral-alpha-weak"
+            radius="l-8"
+            horizontal="center"
+            vertical="start"
+          >
+            <Background
+              zIndex={0}
+              position="absolute"
+              color="neutral-alpha-weak"
+              gradient={{
+                colorEnd: "static-transparent",
+                colorStart: "brand-alpha-medium",
+                display: true,
+                height: 100,
+                opacity: 60,
+                tilt: 40,
+                width: 150,
+                x: 0,
+                y: 0,
+              }}
+              dots={{
+                color: "neutral-alpha-weak",
+                display: true,
+                opacity: 80,
+                size: "4",
+              }}
+            />
+            <TopInfo />
           </Row>
-        </Column>
-      </Row>
+          <Stack width={{ base: "full", lg: "1/4" }}>
+            <TopLeftInfo />
+          </Stack>
+        </Stack>
+      </PageContainer>
     </>
   );
 }

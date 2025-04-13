@@ -41,7 +41,7 @@ const ProjectHeader: React.FC<HeaderProps> = () => {
         // borderBottom="neutral-medium"
         fillWidth
         // position="fixed"
-        // zIndex={10}
+        zIndex={10}
         radius="l"
         gap="12"
         paddingX="m"
@@ -152,7 +152,7 @@ const ProjectHeader: React.FC<HeaderProps> = () => {
           <DrawerBody>
             <FirstSidebar alwaysFull noBg border={false} />
           </DrawerBody>
-          <DrawerCloseTrigger />
+          <DrawerCloseTrigger top={1} right={1} />
         </DrawerContent>
       </DrawerRoot>
 

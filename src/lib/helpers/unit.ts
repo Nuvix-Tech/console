@@ -6,7 +6,20 @@ type Unit<T = string> = {
 };
 
 type ValueUnitState<T = string> = {
+  /**
+   * The value of the unit in the selected unit.
+   * For example, if the selected unit is "Hours" and the value is 2,
+   * it means 2 hours.
+   * If the selected unit is "Minutes" and the value is 120,
+   * it means 120 minutes.
+   * If the selected unit is "Seconds" and the value is 7200,
+   * it means 7200 seconds.
+   */
   value: number;
+  /**
+   * The selected unit.
+   * For example, "Hours", "Minutes", or "Seconds".
+   */
   unit: T;
   baseValue: number;
   setUnit: (newUnit: T) => void;
@@ -14,6 +27,24 @@ type ValueUnitState<T = string> = {
   units: Unit<T>[];
 };
 
+/**
+ * Creates a store for managing value and unit conversions.
+ *
+ * @template T - The type for unit names, defaults to string
+ * @param initialValue - The initial numeric value
+ * @param units - Array of units where each unit has a name and a conversion value relative to the base unit
+ * @param set - Function to update the store state
+ * @param get - Function to retrieve the current store state
+ * @returns A ValueUnitState object that includes:
+ *   - value: Current numeric value in the selected unit
+ *   - unit: Current selected unit name
+ *   - baseValue: Current value converted to the base unit (where unit.value = 1)
+ *   - setUnit: Function to change the current unit while preserving the actual quantity
+ *   - setValue: Function to update the numeric value while maintaining the current unit
+ *   - units: Array of available units
+ * @throws Error if units array doesn't include a base unit with value of 1
+ * @throws Error if any unit has a value less than or equal to 0
+ */
 function createValueUnitStore<T = string>(
   initialValue: number,
   units: Unit<T>[],

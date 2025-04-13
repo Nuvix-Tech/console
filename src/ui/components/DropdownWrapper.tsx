@@ -173,7 +173,7 @@ const DropdownWrapper = forwardRef<HTMLDivElement, DropdownWrapperProps>(
         {isOpen && (
           <Flex
             zIndex={1}
-            className={`${styles.fadeIn} ${dropClass}`}
+            className={`${styles.fadeIn} ${dropClass ? dropClass : ""}`}
             minWidth={minWidth}
             ref={dropdownRef}
             style={{

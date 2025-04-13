@@ -10,9 +10,10 @@ import { sdkForConsole } from "@/lib/sdk";
 import { NumberInput, Select, useToast } from "@/ui/components";
 import { Group } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import * as y from "yup";
 import { useProjectStore } from "@/lib/store";
+import { useTimeUnitPair } from "@/lib/helpers/unit";
 
 const schema = y.object({
   length: y.number().min(0).optional(),
@@ -75,76 +76,26 @@ export const SessionDuration: React.FC = () => {
 
 export const SessionInput = () => {
   const { values, setFieldValue } = useFormikContext<Record<string, number>>();
+  const { units, value, unit, baseValue, setUnit, setValue } = useTimeUnitPair(values.length);
 
-  // Units definition
-  const units = React.useMemo(
-    () => [
-      { name: "Days", value: 86400 },
-      { name: "Hours", value: 3600 },
-      { name: "Minutes", value: 60 },
-      { name: "Seconds", value: 1 },
-    ],
-    [],
-  );
-
-  // Find the best initial unit for display
-  const getBestUnit = useCallback(
-    (seconds: number) => {
-      if (seconds === 0) return "Seconds";
-      const sortedUnits = [...units].sort((a, b) => b.value - a.value);
-      for (const unit of sortedUnits) {
-        if (seconds % unit.value === 0 && seconds >= unit.value) {
-          return unit.name;
-        }
-      }
-      return "Seconds"; // Default to seconds if no exact match
-    },
-    [units],
-  );
-
-  // Initialize state with form value
-  const [unit, setUnit] = useState(() => getBestUnit(values.length || 0));
-
-  // Calculate display value based on selected unit
-  const displayValue = React.useMemo(() => {
-    const unitObj = units.find((u) => u.name === unit);
-    if (!unitObj || !values.length) return 0;
-    return values.length / unitObj.value;
-  }, [values.length, unit, units]);
-
-  // Handle value change from the input
   const handleValueChange = useCallback(
-    (newValue: number) => {
-      const unitObj = units.find((u) => u.name === unit);
-      if (!unitObj) return;
-
-      const newBaseValue = newValue * unitObj.value;
-      setFieldValue("length", newBaseValue);
+    (v: number) => {
+      setValue(v);
     },
-    [unit, units, setFieldValue],
+    [setValue, setFieldValue],
   );
 
-  // Handle unit change from select
-  const handleUnitChange = useCallback(
-    (newUnit: string) => {
-      const oldUnitObj = units.find((u) => u.name === unit);
-      const newUnitObj = units.find((u) => u.name === newUnit);
-      if (!oldUnitObj || !newUnitObj || values.length === undefined) return;
-
-      // Just update the unit - the displayValue will recalculate automatically
-      // while keeping the same seconds value in the form
-      setUnit(newUnit);
-    },
-    [unit, units, values.length],
-  );
+  useEffect(() => {
+    setFieldValue("length", value);
+  }, [baseValue]);
 
   return (
     <Group gap={6}>
-      <NumberInput label="Length" min={0} value={displayValue} onChange={handleValueChange} />
+      <NumberInput label="Length" min={0} value={value} onChange={handleValueChange} />
       <Select
         label="Time Period"
         value={unit}
-        onSelect={handleUnitChange}
+        onSelect={(v) => setUnit(v)}
         options={units.map((u) => ({ label: u.name, value: u.name }))}
       />
     </Group>
