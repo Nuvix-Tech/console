@@ -70,9 +70,15 @@ const UsersPage = () => {
       header: "User ID",
       accessorKey: "$id",
       cell(props) {
-        return <IDChip id={props.getValue<string>().slice(0, 12) + "..."} hideIcon />;
+        return (
+          <IDChip
+            id={props.getValue<string>()}
+            label={props.getValue<string>().slice(0, 12) + "..."}
+            hideIcon
+          />
+        );
       },
-      size: 160,
+      size: 170,
     },
     {
       header: "Status",

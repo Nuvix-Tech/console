@@ -35,6 +35,7 @@ export interface DropdownWrapperProps {
   onSelect?: (value: string) => void;
   isOpen?: boolean;
   onOpenChange?: (isOpen: boolean) => void;
+  zIndex?: number | `${number} !important`;
 }
 
 const DropdownWrapper = forwardRef<HTMLDivElement, DropdownWrapperProps>(
@@ -53,6 +54,7 @@ const DropdownWrapper = forwardRef<HTMLDivElement, DropdownWrapperProps>(
       floatingPlacement = "bottom-start",
       className,
       style,
+      zIndex,
     },
     ref,
   ) => {
@@ -179,6 +181,7 @@ const DropdownWrapper = forwardRef<HTMLDivElement, DropdownWrapperProps>(
               top: y ?? 0,
               offset: 4,
               left: x ?? 0,
+              zIndex: zIndex,
             }}
             role="listbox"
           >

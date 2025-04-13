@@ -33,6 +33,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
       style={{
         borderRadius: "var(--radius-full)",
       }}
+      zIndex={`999 !important`}
       trigger={
         <Flex
           tabIndex={0}

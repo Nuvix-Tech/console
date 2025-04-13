@@ -6,9 +6,10 @@ import { LuCheck } from "react-icons/lu";
 type Props = {
   id?: string;
   hideIcon?: boolean;
+  label?: string;
 };
 
-const IDChip = ({ id, hideIcon }: Props) => {
+const IDChip = ({ id, hideIcon, label }: Props) => {
   return (
     <Clipboard.Root value={id}>
       <Clipboard.Trigger asChild>
@@ -18,7 +19,7 @@ const IDChip = ({ id, hideIcon }: Props) => {
               selected
               data-action="copyChip"
               prefixIcon={<LuCheck size={14} />}
-              label={id ?? "Unknown"}
+              label={label ?? id ?? "Unknown"}
               iconButtonProps={{
                 tooltip: "Copied",
                 tooltipPosition: "top",
@@ -29,7 +30,7 @@ const IDChip = ({ id, hideIcon }: Props) => {
           <Chip
             selected={false}
             data-action="copyChip"
-            label={id ?? "Unknown"}
+            label={label ?? id ?? "Unknown"}
             prefixIcon={!hideIcon && <LuClipboard size={14} />}
             iconButtonProps={{
               tooltip: "Copy ID",

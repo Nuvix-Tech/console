@@ -21,7 +21,7 @@ export const CardBox = (props: UpdateCardProps) => {
 
   return (
     <>
-      <Card className="neutral-background-alpha-weak neutral-border-alpha-medium">
+      <Card className="neutral-background-alpha-weak neutral-border-alpha-medium shadow-none">
         <CardContent>{children}</CardContent>
         {actions ? (
           <>

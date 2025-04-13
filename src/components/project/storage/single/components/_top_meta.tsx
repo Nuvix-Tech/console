@@ -45,6 +45,7 @@ export const TopMeta = () => {
             >
               <PreviewFile // 410, 250
                 url={sdk.storage.getFilePreview(bucketId, file.$id).toString() + "&mode=admin"}
+                link={sdk.storage.getFileView(bucketId, file.$id).toString() + "&mode=admin"}
                 name={file.name}
               />
               <IDChip id={file.$id} />
@@ -124,9 +125,11 @@ export const TopMeta = () => {
 const PreviewFile = ({
   url,
   name,
+  link,
 }: {
   url: string;
   name: string;
+  link: string;
 }) => {
   return (
     <Stack
@@ -149,8 +152,8 @@ const PreviewFile = ({
         css={{
           borderRadius: "var(--radius-l)",
         }}
-        onClick={() => window.open(url, "_blank")}
-        className="opacity-0 hover:opacity-100 group-hover/preview:opacity-100 group-hover/preview:transition-opacity group-hover/preview:duration-200"
+        onClick={() => window.open(link, "_blank")}
+        className="opacity-0 hover:!opacity-100 group-hover/preview:!opacity-100 group-hover/preview:transition-opacity group-hover/preview:duration-200"
         zIndex={1}
       >
         <Icon name={<ExternalLinkIcon />} />

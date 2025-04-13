@@ -70,7 +70,7 @@ const ProjectHeader: React.FC<HeaderProps> = () => {
           horizontal="center"
         /> */}
         <Row fillWidth vertical="center" horizontal="space-between">
-          <Row vertical="center" gap={"2"} marginLeft="4">
+          <Row vertical="center" gap={"2"}>
             {/* <span className="text-[var(--neutral-alpha-strong)] text-2xl">/</span>
             <HeaderOrganization /> */}
             <span className="text-[var(--neutral-alpha-medium)] text-2xl">/</span>
@@ -89,24 +89,6 @@ const ProjectHeader: React.FC<HeaderProps> = () => {
             </div>
             <UserProfile />
           </Row>
-          {/* <Row as="nav">
-            <Row minWidth={10}>
-              <HStack key={user?.email} gap="4">
-                <Avatar.Root size={"sm"}>
-                  <Avatar.Fallback name={user?.name} />
-                  <Avatar.Image src={avatars.getInitials(user?.name, 96, 96)} />
-                </Avatar.Root>
-                <Stack gap="0">
-                  <Text textStyle={"sm"} fontWeight="medium">
-                    {user?.name}
-                  </Text>
-                  <Text color="fg.muted" textStyle="sm">
-                    {organization?.name}
-                  </Text>
-                </Stack>
-              </HStack>
-            </Row>
-          </Row> */}
         </Row>
       </Row>
 

@@ -1,6 +1,6 @@
 import { APP_NAME } from "@/lib/constants";
 
-const baseURL = "https://nuvix.com";
+const baseURL = "https://nuvix.in";
 
 // default customization applied to the HTML in the main layout.tsx
 const style = {

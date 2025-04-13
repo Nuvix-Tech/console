@@ -42,7 +42,7 @@ export function HeaderProject() {
           aria-expanded={open}
           className="max-w-42"
           justifyContent="flex-start"
-          suffixIcon={<ChevronsUpDown className="opacity-40" />}
+          suffixIcon={<ChevronsUpDown className="opacity-40" size={18} />}
         >
           {list.find((p) => p.$id === projectId)?.name || "Select project..."}
         </Button>
