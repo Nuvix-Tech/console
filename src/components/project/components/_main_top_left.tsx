@@ -132,9 +132,8 @@ export const TopLeftInfo = () => {
                       <Button
                         variant="tertiary"
                         className="flex items-center gap-2"
-                        onClick={() => setShowPlatformOptions(false)}
+                        prefixIcon={config.icon}
                       >
-                        {config.icon}
                         <span>{config.label}</span>
                       </Button>
                     </CreatePlatform>
