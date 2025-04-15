@@ -28,8 +28,7 @@ import { Schema } from "./external-sdk";
 const API_URL =
   process.env.NEXT_PUBLIC_NUVIX_ENDPOINT ?? process.env.NUVIX_ENDPOINT ?? "https://api.nuvix.in/v1";
 
-const SERVER_URL =
-  process.env.NEXT_PUBLIC_SERVER_ENDPOINT ?? "https://server.nuvix.in";
+const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_ENDPOINT ?? "https://server.nuvix.in";
 
 const clientConsole = new Client().setEndpoint(API_URL).setProject("console");
 const clientServer = new Client().setEndpoint(SERVER_URL).setProject("console");
@@ -68,7 +67,7 @@ const sdkForConsole = {
   users: new ConsoleUsers(clientServer),
   assistant: new Assistant(clientServer),
   billing: new Billing(clientServer),
-  // sources: new Sources(clientServer), // Updated to use clientServer 
+  // sources: new Sources(clientServer), // Updated to use clientServer
   organizations: new Organizations(clientServer),
 };
 

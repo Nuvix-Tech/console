@@ -1,17 +1,70 @@
 import { useProjectStore } from "@/lib/store";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { PlatformType } from "@nuvix/console";
+import { CreatePlatform } from "../../wizard/_platform_create";
+import { Plus, Code, Smartphone, Apple, Monitor, Globe, Laptop } from "lucide-react";
+import { Button } from "@/ui/components";
 
 // Platform icons configuration
 const platformConfig = {
-  web: { icon: "icon-code", label: "Web" },
-  android: { icon: "icon-android", label: "Android" },
-  ios: { icon: "icon-ios", label: "iOS" },
-  desktop: { icon: "icon-desktop", label: "Desktop" }
+  web: { icon: <Code className="h-4 w-4" />, label: "Web", type: PlatformType.Web },
+  flutterweb: {
+    icon: <Globe className="h-4 w-4" />,
+    label: "Flutter Web",
+    type: PlatformType.Flutterweb,
+  },
+  android: {
+    icon: <Smartphone className="h-4 w-4" />,
+    label: "Android",
+    type: PlatformType.Android,
+  },
+  reactnativeandroid: {
+    icon: <Smartphone className="h-4 w-4" />,
+    label: "React Native Android",
+    type: PlatformType.Reactnativeandroid,
+  },
+  ios: { icon: <Apple className="h-4 w-4" />, label: "iOS", type: PlatformType.Appleios },
+  reactnativeios: {
+    icon: <Apple className="h-4 w-4" />,
+    label: "React Native iOS",
+    type: PlatformType.Reactnativeios,
+  },
+  flutterlinux: {
+    icon: <Monitor className="h-4 w-4" />,
+    label: "Flutter Linux",
+    type: PlatformType.Flutterlinux,
+  },
+  fluttermacos: {
+    icon: <Laptop className="h-4 w-4" />,
+    label: "Flutter macOS",
+    type: PlatformType.Fluttermacos,
+  },
+  flutterwindows: {
+    icon: <Monitor className="h-4 w-4" />,
+    label: "Flutter Windows",
+    type: PlatformType.Flutterwindows,
+  },
+  applemacos: {
+    icon: <Apple className="h-4 w-4" />,
+    label: "macOS",
+    type: PlatformType.Applemacos,
+  },
 };
 
 // Available platforms for adding
-const availablePlatforms = ["web", "android", "ios", "desktop"];
+const availablePlatforms = [
+  "web",
+  "flutterweb",
+  "android",
+  "reactnativeandroid",
+  "ios",
+  "reactnativeios",
+  "flutterlinux",
+  "fluttermacos",
+  "flutterwindows",
+  "applemacos",
+];
 
 export const TopLeftInfo = () => {
   const project = useProjectStore.use.project?.();
@@ -25,13 +78,13 @@ export const TopLeftInfo = () => {
   // Platform icon component
   const PlatformIcon = ({ type, name }: { type: string; name: string }) => {
     const config = platformConfig[type as keyof typeof platformConfig] || {
-      icon: "icon-view-grid",
-      label: type
+      icon: <Code className="h-4 w-4" />,
+      label: type,
     };
 
     return (
       <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 rounded-md px-3 py-2 text-sm">
-        <span className={config.icon} aria-hidden="true"></span>
+        {config.icon}
         <span>{name || config.label}</span>
       </div>
     );
@@ -52,13 +105,14 @@ export const TopLeftInfo = () => {
 
       {/* Add platform section */}
       <div className="mt-4">
-        <button
+        <Button
           onClick={togglePlatformOptions}
-          className={`flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md px-3 py-2 text-sm transition-all ${showPlatformOptions ? 'opacity-75' : ''}`}
+          variant="primary"
+          className={`flex items-center gap-2 ${showPlatformOptions ? "opacity-75" : ""}`}
         >
-          <span className="icon-plus" aria-hidden="true"></span>
+          <Plus className="h-4 w-4" />
           <span>Add Platform</span>
-        </button>
+        </Button>
 
         {/* Platform selection options with slide animation */}
         <AnimatePresence>
@@ -74,18 +128,16 @@ export const TopLeftInfo = () => {
                 {availablePlatforms.map((platform) => {
                   const config = platformConfig[platform as keyof typeof platformConfig];
                   return (
-                    <button
-                      key={platform}
-                      className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-md px-3 py-2 text-sm transition-all"
-                      onClick={() => {
-                        // Here you would implement the logic to add this platform
-                        // For now, just close the options display
-                        setShowPlatformOptions(false);
-                      }}
-                    >
-                      <span className={config.icon} aria-hidden="true"></span>
-                      <span>{config.label}</span>
-                    </button>
+                    <CreatePlatform key={platform} type={config.type}>
+                      <Button
+                        variant="tertiary"
+                        className="flex items-center gap-2"
+                        onClick={() => setShowPlatformOptions(false)}
+                      >
+                        {config.icon}
+                        <span>{config.label}</span>
+                      </Button>
+                    </CreatePlatform>
                   );
                 })}
               </div>
