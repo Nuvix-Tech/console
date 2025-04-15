@@ -28,7 +28,6 @@ export default function ProjectPage({ id }: ProjectPageProps) {
             base: "column",
             lg: "row",
           }}
-          paddingTop={"24"}
         >
           <Row
             position="relative"

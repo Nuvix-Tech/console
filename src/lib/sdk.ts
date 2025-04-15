@@ -28,7 +28,11 @@ import { Schema } from "./external-sdk";
 const API_URL =
   process.env.NEXT_PUBLIC_NUVIX_ENDPOINT ?? process.env.NUVIX_ENDPOINT ?? "https://api.nuvix.in/v1";
 
+const SERVER_URL =
+  process.env.NEXT_PUBLIC_SERVER_ENDPOINT ?? "https://server.nuvix.in";
+
 const clientConsole = new Client().setEndpoint(API_URL).setProject("console");
+const clientServer = new Client().setEndpoint(SERVER_URL).setProject("console");
 
 const clientProject = new Client().setEndpoint(API_URL).setMode("admin");
 
@@ -54,21 +58,18 @@ const sdkForProject = {
 };
 
 const sdkForConsole = {
-  client: clientConsole,
-  account: new ConsoleAccount(clientConsole),
+  client: clientServer,
+  account: new ConsoleAccount(clientServer),
   avatars: new Avatars(clientConsole),
-  functions: new Functions(clientConsole),
-  health: new Health(clientConsole),
+  health: new Health(clientServer),
   locale: new Locale(clientConsole),
-  projects: new Projects(clientConsole),
-  teams: new Organizations(clientConsole),
-  users: new ConsoleUsers(clientConsole),
-  migrations: new Migrations(clientConsole),
-  console: new Console(clientConsole),
-  assistant: new Assistant(clientConsole),
-  billing: new Billing(clientConsole),
-  // sources: new Sources(clientConsole),
-  organizations: new Organizations(clientConsole),
+  projects: new Projects(clientServer),
+  teams: new Organizations(clientServer),
+  users: new ConsoleUsers(clientServer),
+  assistant: new Assistant(clientServer),
+  billing: new Billing(clientServer),
+  // sources: new Sources(clientServer), // Updated to use clientServer 
+  organizations: new Organizations(clientServer),
 };
 
 function getProjectSdk(id: string) {
