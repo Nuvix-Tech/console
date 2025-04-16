@@ -5,6 +5,7 @@ import { useProjectStore } from "@/lib/store";
 import { TopInfo, TopLeftInfo } from "./components";
 import { PageContainer } from "../others";
 import { Stack } from "@chakra-ui/react";
+import MainMetrics from "./components/_main_matrics";
 
 type ProjectPageProps = {
   id: string;
@@ -63,6 +64,7 @@ export default function ProjectPage({ id }: ProjectPageProps) {
           />
           <TopInfo />
         </Row>
+        <MainMetrics />
       </PageContainer>
     </>
   );
