@@ -44,14 +44,14 @@ export default function ProjectPage({ id }: ProjectPageProps) {
               zIndex={0}
               position="absolute"
               color="neutral-alpha-weak"
-              mask={{ cursor: true, radius: 10 }}
+              mask={{ cursor: false, radius: 10 }}
               gradient={{
                 colorEnd: "static-transparent",
                 colorStart: "brand-alpha-medium",
                 display: true,
                 height: 100,
                 opacity: 60,
-                tilt: 40,
+                tilt: 170,
                 width: 150,
                 x: 0,
                 y: 0,
@@ -59,15 +59,15 @@ export default function ProjectPage({ id }: ProjectPageProps) {
               dots={{
                 color: "accent-alpha-medium",
                 display: true,
-                opacity: 80,
+                opacity: 30,
                 size: "4",
               }}
               grid={{
                 color: "accent-alpha-weak",
                 display: true,
-                height: 'var(--static-space-16)',
-                opacity: 100,
-                width: 'var(--static-space-16)'
+                height: "var(--static-space-16)",
+                opacity: 30,
+                width: "var(--static-space-16)",
               }}
             />
             <TopInfo />

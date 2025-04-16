@@ -14,12 +14,12 @@ export default function ({ children }: { children: React.ReactNode }) {
               colorEnd: "neutral-background-medium",
               colorStart: "brand-alpha-strong",
               display: true,
-              height: 50,
-              opacity: 80,
-              tilt: 35,
-              width: 50,
-              x: 20,
-              y: 20,
+              height: 90,
+              opacity: 60,
+              tilt: -36,
+              width: 150,
+              x: 0,
+              y: 0,
             }}
             // dots={{
             //   color: "accent-background-strong",
