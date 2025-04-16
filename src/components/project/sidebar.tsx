@@ -1,10 +1,11 @@
 "use client";
-import "@/ui/modules/layout/sidebar.scss";
 import { Column, Line, RevealFx, Row, ToggleButton } from "@/ui/components";
 import { useParams, usePathname } from "next/navigation";
 import * as React from "react";
 import { useColorMode } from "../cui/color-mode";
 import { useProjectStore } from "@/lib/store";
+import { Stack } from "@chakra-ui/react";
+import { cn } from "@/lib/utils";
 
 export interface ProjectSidebarData {
   name: string;
@@ -33,14 +34,25 @@ export interface SidebarItemGroup {
 }
 
 const ProjectSidebar: React.FC = () => {
+  const sidebar = useProjectStore.use.sidebar();
+  const showSubSidebar = sidebar.first || sidebar.middle || sidebar.last;
+
   return (
     <>
-      <Row className="sidebar" fill>
+      <Stack
+        position="relative"
+        as={"aside"}
+        className={cn("lg:flex hidden", {
+          "lg:w-[17.5rem]": showSubSidebar,
+          "lg:w-[15.5rem]": !showSubSidebar,
+        })}
+        height="full"
+      >
         <Row gap="4" fill position="relative">
           <FirstSidebar />
           <SecondSidebar />
         </Row>
-      </Row>
+      </Stack>
     </>
   );
 };
@@ -120,7 +132,8 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
         }}
         radius="l"
         zIndex={10}
-        className={`sidebar-small ${!showSubSidebar ? "sidebar-small-open" : ""}`}
+        overflowY="auto"
+        className="transition-[max-width] duration-200 ease-in-out"
         background={noBg ? "transparent" : "surface"}
       >
         <Column fillWidth paddingX="xs" gap="m">
@@ -140,7 +153,7 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
           <SidebarSmallButton
             item={{
               name: "Settings",
-              href: `/project/${id}/settings`,
+              href: `/project/${id}/s/general`,
               icon: <span className="icon-cog" />,
             }}
             showFullSidebar={!showSubSidebar || !!alwaysFull}
@@ -192,7 +205,6 @@ export const SecondSidebar = ({ noMarg, noBg, border = true }: SecondSidebarProp
             // borderRightWidth: border ? 1 : 0,
           }}
           radius="l"
-          className="sidebar-large"
         >
           <Column fillWidth gap="s" paddingBottom="56">
             {sidebar.first && (

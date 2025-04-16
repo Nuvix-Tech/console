@@ -30,7 +30,6 @@ const ProjectHeader: React.FC<HeaderProps> = () => {
   const isSecondMenuOpen = useAppStore.use.isSecondMenuOpen();
   const setIsDrawerOpen = useAppStore.use.setIsDrawerOpen();
   const setIsSecondMenuOpen = useAppStore.use.setIsSecondMenuOpen();
-  const pathname = usePathname() ?? "";
   const headerRef = useRef<any>(null);
 
   return (

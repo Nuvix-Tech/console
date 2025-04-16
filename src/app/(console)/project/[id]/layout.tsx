@@ -1,4 +1,3 @@
-import "@/ui/modules/layout/project.scss";
 import ProjectWrapper from "@/components/project/wrapper";
 import { Column } from "@/ui/components";
 import type React from "react";

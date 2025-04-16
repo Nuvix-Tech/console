@@ -7,7 +7,7 @@ const style = {
   theme: "dark", // dark | light
   neutral: "slate", // sand | gray | slate
   brand: "custom", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan
-  accent: "indigo", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan
+  accent: "custom", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan
   solid: "contrast", // color | contrast | inverse
   solidStyle: "flat", // flat | plastic
   border: "conservative", // rounded | playful | conservative

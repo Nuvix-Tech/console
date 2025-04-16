@@ -12,11 +12,11 @@ export default function ({ children }: { children: React.ReactNode }) {
             position="absolute"
             gradient={{
               colorEnd: "neutral-background-medium",
-              colorStart: "brand-alpha-strong",
+              colorStart: "brand-alpha-medium",
               display: true,
-              height: 90,
+              height: 180,
               opacity: 60,
-              tilt: -36,
+              tilt: -31,
               width: 150,
               x: 0,
               y: 0,

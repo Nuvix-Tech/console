@@ -1,11 +1,24 @@
 "use client";
-import classNames from "classnames";
+import { useProjectStore } from "@/lib/store";
+import { cn } from "@/lib/utils";
+import { Stack } from "@chakra-ui/react";
 import { PropsWithChildren } from "react";
 
 export const ProjectLayout = ({ children }: PropsWithChildren) => {
+  const sidebar = useProjectStore.use.sidebar();
+  const showSubSidebar = sidebar.first || sidebar.middle || sidebar.last;
+
   return (
-    <div id="project" className={classNames(`project show-sidebar show-sidebar-large`)}>
+    <Stack
+      className={cn("flex-1 w-full", {
+        "lg:max-w-[calc(100%-18.5rem)]": showSubSidebar,
+        "lg:max-w-[calc(100%-16.5rem)]": !showSubSidebar,
+      })}
+      height="full"
+      position="relative"
+      as={"main"}
+    >
       {children}
-    </div>
+    </Stack>
   );
 };

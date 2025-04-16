@@ -26,7 +26,7 @@ export default function ProjectWrapper({
 
   const { data } = useSuspenseQuery({
     queryKey: ["project", id],
-    queryFn: () => fetcher(),
+    queryFn: fetcher,
   });
 
   useEffect(() => {
