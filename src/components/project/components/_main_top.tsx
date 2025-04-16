@@ -3,10 +3,11 @@ import { useProjectStore } from "@/lib/store";
 import { IDChip } from "@/components/others";
 import { useRouter } from "@bprogress/next";
 import { AnimatePresence, motion } from "framer-motion";
-import { Apple, Code, Smartphone } from "lucide-react";
-import { FaFlutter } from "react-icons/fa6";
+import { Apple, Code, Code2, Smartphone } from "lucide-react";
+import { FaFlutter, FaUnity } from "react-icons/fa6";
 import { CreatePlatform } from "@/components/wizard/_platform_create";
 import { useState } from "react";
+import { PlatformType } from "@nuvix/console";
 
 export const TopInfo = () => {
   const [showPlatformOptions, setShowPlatformOptions] = useState(false);
@@ -55,8 +56,8 @@ export const TopInfo = () => {
               height={2.3}
               paddingX="12"
               selected={false}
-              prefixIcon={<span className={platformIcon(platform.type)} aria-hidden="true"></span>}
-              onClick={() => push(`/project/${project?.$id}/platforms/${platform.$id}`)}
+              prefixIcon={platformIcon(platform.type as PlatformType)}
+              onClick={() => push(`/project/${project?.$id}/s/apps/${platform.$id}`)}
               label={platform.name}
               iconButtonProps={{
                 tooltip: "More info",
@@ -70,7 +71,7 @@ export const TopInfo = () => {
             height={2.3}
             paddingX="12"
             selected={false}
-            onClick={() => push(`/project/${project?.$id}/platforms`)}
+            onClick={() => push(`/project/${project?.$id}/s/apps`)}
             label={`+${project?.platforms.length - 3} more`}
             iconButtonProps={{
               tooltip: "More info",
@@ -78,26 +79,12 @@ export const TopInfo = () => {
             }}
           />
         ) : null}
-        { }
-
-        <Chip
-          height={2.3}
-          paddingX="12"
-          selected={false}
-          prefixIcon={"plus"}
-          onClick={togglePlatformOptions}
-          label={"Add platform"}
-          iconButtonProps={{
-            tooltip: "Add platform",
-            tooltipPosition: "top",
-          }}
-        />
       </Row>
       <Row>
         <AnimatePresence>
           {showPlatformOptions && (
             <motion.div
-              className="absolute left-0 right-0 z-10"
+              className="absolute left-0 right-[100px] z-[1] bottom-3"
               initial={{ x: "100%", opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: "100%", opacity: 0 }}
@@ -123,23 +110,54 @@ export const TopInfo = () => {
           )}
         </AnimatePresence>
       </Row>
+      <div className="absolute bottom-2 right-2 z-[2]">
+        <Chip
+          height={2.3}
+          paddingX="12"
+          selected={false}
+          prefixIcon={showPlatformOptions ? "close" : "plus"}
+          onClick={togglePlatformOptions}
+          label={showPlatformOptions ? "Cancel" : "Add app"}
+          iconButtonProps={{
+            tooltip: showPlatformOptions ? "Cancel" : "Add app",
+            tooltipPosition: "top",
+          }}
+        />
+      </div>
     </Column>
   );
 };
 
-const platformIcon = (platform: string) => {
-  switch (platform) {
-    case "web":
-      return "icon-code";
-    case "android":
-      return "icon-android";
-    case "ios":
-      return "icon-ios";
-    case "desktop":
-      return "icon-desktop";
-    default:
-      return "icon-view-grid";
-  }
+const platformIcon = (platform: PlatformType) => {
+  const Icon = () => {
+    switch (platform) {
+      case PlatformType.Web:
+        return Code2;
+      case PlatformType.Android:
+        return Smartphone;
+      case PlatformType.Flutterandroid:
+      case PlatformType.Flutterios:
+      case PlatformType.Flutterweb:
+      case PlatformType.Fluttermacos:
+      case PlatformType.Flutterwindows:
+      case PlatformType.Flutterlinux:
+        return FaFlutter;
+      case PlatformType.Appleios:
+      case PlatformType.Applemacos:
+      case PlatformType.Applewatchos:
+      case PlatformType.Appletvos:
+        return Apple;
+      case PlatformType.Reactnativeandroid:
+      case PlatformType.Reactnativeios:
+        return Smartphone;
+      case PlatformType.Unity:
+        return FaUnity;
+      default:
+        return Code;
+    }
+  };
+  const IconComponent = Icon();
+  return <IconComponent className="h-4 w-4" />;
 };
 
 const availablePlatforms = ["web", "flutter", "android", "reactnative", "ios"];

@@ -7,8 +7,7 @@ const SettingsSidebar = () => {
   const project = useProjectStore.use.project?.();
   const path = usePathname();
 
-  const resolveHref = (value?: string) =>
-    `/project/${project?.$id}/settings${value ? `/${value}` : ""}`;
+  const resolveHref = (value?: string) => `/project/${project?.$id}/s${value ? `/${value}` : ""}`;
   const resolveIsSelected = (value?: string) => path.includes(resolveHref(value));
 
   return (
@@ -17,8 +16,18 @@ const SettingsSidebar = () => {
         items={[
           {
             label: "General",
-            href: resolveHref(),
-            isSelected: path === resolveHref(),
+            href: resolveHref("general"),
+            isSelected: resolveIsSelected("general"),
+          },
+          {
+            label: "Webhooks",
+            href: resolveHref("webhooks"),
+            isSelected: resolveIsSelected("webhooks"),
+          },
+          {
+            label: "Apps",
+            href: resolveHref("apps"),
+            isSelected: resolveIsSelected("apps"),
           },
         ]}
       />
@@ -26,14 +35,9 @@ const SettingsSidebar = () => {
         title="Configuration"
         items={[
           {
-            label: "Cutstom Domains",
+            label: "Custom Domains",
             href: resolveHref("domains"),
             isSelected: resolveIsSelected("domains"),
-          },
-          {
-            label: "Webhooks",
-            href: resolveHref("webhooks"),
-            isSelected: resolveIsSelected("webhooks"),
           },
           {
             label: "Smtp",

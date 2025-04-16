@@ -28,12 +28,13 @@ export default function ProjectPage({ id }: ProjectPageProps) {
             base: "column",
             lg: "row",
           }}
+          marginTop={"8"}
         >
           <Row
             position="relative"
             overflow="hidden"
             fillWidth
-            height={20}
+            minHeight={10}
             background="neutral-alpha-weak"
             radius="l-8"
             horizontal="center"
@@ -43,6 +44,7 @@ export default function ProjectPage({ id }: ProjectPageProps) {
               zIndex={0}
               position="absolute"
               color="neutral-alpha-weak"
+              mask={{ cursor: true }}
               gradient={{
                 colorEnd: "static-transparent",
                 colorStart: "brand-alpha-medium",
@@ -55,10 +57,15 @@ export default function ProjectPage({ id }: ProjectPageProps) {
                 y: 0,
               }}
               dots={{
-                color: "neutral-alpha-weak",
+                color: "accent-alpha-medium",
                 display: true,
                 opacity: 80,
                 size: "4",
+              }}
+              grid={{
+                color: "accent-alpha-weak",
+                display: true,
+                opacity: 80,
               }}
             />
             <TopInfo />
