@@ -1,69 +1,39 @@
 import { useProjectStore } from "@/lib/store";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { PlatformType } from "@nuvix/console";
 import { CreatePlatform } from "../../wizard/_platform_create";
-import { Plus, Code, Smartphone, Apple, Monitor, Globe, Laptop } from "lucide-react";
+import { Plus, Code, Smartphone, Apple } from "lucide-react";
 import { Button } from "@/ui/components";
+import { FaFlutter } from "react-icons/fa6";
 
 // Platform icons configuration
 const platformConfig = {
-  web: { icon: <Code className="h-4 w-4" />, label: "Web", type: PlatformType.Web },
-  flutterweb: {
-    icon: <Globe className="h-4 w-4" />,
-    label: "Flutter Web",
-    type: PlatformType.Flutterweb,
+  web: { icon: <Code className="h-4 w-4" />, label: "Web", type: 'web' },
+  flutter: {
+    icon: <FaFlutter className="h-4 w-4" />,
+    label: "Flutter",
+    type: 'flutter',
   },
   android: {
     icon: <Smartphone className="h-4 w-4" />,
     label: "Android",
-    type: PlatformType.Android,
+    type: 'android',
   },
-  reactnativeandroid: {
+  reactnative: {
     icon: <Smartphone className="h-4 w-4" />,
-    label: "React Native Android",
-    type: PlatformType.Reactnativeandroid,
+    label: "React Native",
+    type: 'reactnative',
   },
-  ios: { icon: <Apple className="h-4 w-4" />, label: "iOS", type: PlatformType.Appleios },
-  reactnativeios: {
-    icon: <Apple className="h-4 w-4" />,
-    label: "React Native iOS",
-    type: PlatformType.Reactnativeios,
-  },
-  flutterlinux: {
-    icon: <Monitor className="h-4 w-4" />,
-    label: "Flutter Linux",
-    type: PlatformType.Flutterlinux,
-  },
-  fluttermacos: {
-    icon: <Laptop className="h-4 w-4" />,
-    label: "Flutter macOS",
-    type: PlatformType.Fluttermacos,
-  },
-  flutterwindows: {
-    icon: <Monitor className="h-4 w-4" />,
-    label: "Flutter Windows",
-    type: PlatformType.Flutterwindows,
-  },
-  applemacos: {
-    icon: <Apple className="h-4 w-4" />,
-    label: "macOS",
-    type: PlatformType.Applemacos,
-  },
-};
+  ios: { icon: <Apple className="h-4 w-4" />, label: "iOS", type: 'ios' },
+} as const;
 
 // Available platforms for adding
 const availablePlatforms = [
   "web",
-  "flutterweb",
+  "flutter",
   "android",
-  "reactnativeandroid",
+  "reactnative",
   "ios",
-  "reactnativeios",
-  "flutterlinux",
-  "fluttermacos",
-  "flutterwindows",
-  "applemacos",
 ];
 
 export const TopLeftInfo = () => {

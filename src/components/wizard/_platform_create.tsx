@@ -8,6 +8,8 @@ import { PlatformType } from "@nuvix/console";
 import { useRouter } from "@bprogress/next";
 import { useToast } from "@/ui/components";
 import { useProjectStore } from "@/lib/store";
+import { Globe, Smartphone } from "lucide-react";
+import { useFormikContext } from "formik";
 
 // Define validation schema for platform creation form
 const schema = y.object().shape({
@@ -34,28 +36,50 @@ const schema = y.object().shape({
   }),
 });
 
+const platformMap = {
+  flutter: [
+    { name: "Flutter Web", type: PlatformType.Flutterweb, icon: <Globe className="h-4 w-4" /> },
+    { name: "Flutter iOS", type: PlatformType.Flutterios, icon: <Smartphone className="h-4 w-4" /> },
+    { name: "Flutter Android", type: PlatformType.Flutterandroid, icon: <Smartphone className="h-4 w-4" /> },
+    { name: "Flutter Linux", type: PlatformType.Flutterlinux, icon: <Globe className="h-4 w-4" /> },
+    { name: "Flutter macOS", type: PlatformType.Fluttermacos, icon: <Globe className="h-4 w-4" /> },
+    { name: "Flutter Windows", type: PlatformType.Flutterwindows, icon: <Globe className="h-4 w-4" /> }
+  ],
+  ios: [
+    { name: "Apple iOS", type: PlatformType.Appleios, icon: <Smartphone className="h-4 w-4" /> },
+    { name: "Apple macOS", type: PlatformType.Applemacos, icon: <Globe className="h-4 w-4" /> },
+    { name: "Apple watchOS", type: PlatformType.Applewatchos, icon: <Globe className="h-4 w-4" /> },
+    { name: "Apple tvOS", type: PlatformType.Appletvos, icon: <Globe className="h-4 w-4" /> }
+  ],
+  reactnative: [
+    { name: "React Native iOS", type: PlatformType.Reactnativeios, icon: <Smartphone className="h-4 w-4" /> },
+    { name: "React Native Android", type: PlatformType.Reactnativeandroid, icon: <Smartphone className="h-4 w-4" /> }
+  ],
+}
+
 type CreatePlatformProps = {
   children?: React.ReactNode;
-  type: PlatformType;
+  type: 'web' | 'flutter' | 'android' | 'reactnative' | 'ios';
   onClose?: () => void;
 } & Omit<React.ComponentProps<typeof Dialog.Root>, "size" | "motionPreset" | "children">;
+
+type SubmitValues = y.InferType<typeof schema>;
 
 export const CreatePlatform: React.FC<CreatePlatformProps> = ({ children, type, ...props }) => {
   const { projects } = sdkForConsole;
   const { project } = useProjectStore();
   const { addToast } = useToast();
-  const router = useRouter();
 
-  async function onSubmit(values: y.InferType<typeof schema>, resetForm: any) {
+  async function onSubmit(values: SubmitValues, resetForm: any) {
     const { name, key, store, hostname } = values;
     try {
       const platform = await projects.createPlatform(
         project!.$id,
-        type,
+        values.type,
         name,
-        key,
-        store,
-        hostname,
+        key || undefined,
+        store || undefined,
+        hostname || undefined,
       );
 
       addToast({
@@ -64,12 +88,8 @@ export const CreatePlatform: React.FC<CreatePlatformProps> = ({ children, type, 
       });
 
       resetForm();
+      // TODO: Show next steps  
       props.onClose?.();
-
-      // Navigate to the newly created platform
-      if (platform && platform.$id) {
-        router.push(`/project/${project?.$id}/platforms/${platform.$id}`);
-      }
     } catch (e: any) {
       addToast({
         variant: "danger",
@@ -98,55 +118,18 @@ export const CreatePlatform: React.FC<CreatePlatformProps> = ({ children, type, 
                   <Form
                     initialValues={{
                       name: "",
-                      type: type,
+                      type: type in platformMap ? platformMap[type as keyof typeof platformMap][0].type : type,
                       key: "",
                       store: "",
                       hostname: "",
                     }}
                     validationSchema={schema}
                     onSubmit={async (values, { resetForm }) => {
-                      await onSubmit(values, resetForm);
+                      await onSubmit(values as SubmitValues, resetForm);
                     }}
                   >
                     <div className="space-y-4">
-                      <InputField name="name" label="Platform Name" />
-
-                      {[PlatformType.Web, PlatformType.Flutterweb].includes(type) && (
-                        <InputField
-                          name="hostname"
-                          label="Hostname"
-                          placeholder="example.com"
-                          description="Enter the domain where this platform will be deployed"
-                        />
-                      )}
-
-                      {[
-                        PlatformType.Appleios,
-                        PlatformType.Android,
-                        PlatformType.Reactnativeios,
-                        PlatformType.Reactnativeandroid,
-                      ].includes(type) && (
-                        <>
-                          <InputField
-                            name="key"
-                            label="App Key"
-                            placeholder={
-                              type.includes("ios") ? "com.example.app" : "com.example.app"
-                            }
-                            description="Enter your app bundle identifier/package name"
-                          />
-                          <InputField
-                            name="store"
-                            label="App Store URL"
-                            placeholder={
-                              type.includes("ios")
-                                ? "https://apps.apple.com/app/id123456789"
-                                : "https://play.google.com/store/apps/details?id=com.example.app"
-                            }
-                            description="Optional: Enter your app store URL if published"
-                          />
-                        </>
-                      )}
+                      <CreateForm />
                     </div>
 
                     <Flex justify="flex-end" mt={6}>
@@ -173,3 +156,56 @@ export const CreatePlatform: React.FC<CreatePlatformProps> = ({ children, type, 
     </>
   );
 };
+
+
+const CreateForm = () => {
+  const { values } = useFormikContext<{ type: PlatformType; name: string; key: string; store: string; hostname: string; }>();
+  const { type } = values;
+
+  return (
+    <>
+      <InputField name="name" label="Platform Name" />
+
+      {
+        [PlatformType.Web, PlatformType.Flutterweb].includes(type) && (
+          <InputField
+            name="hostname"
+            label="Hostname"
+            placeholder="example.com"
+            description="Enter the domain where this platform will be deployed"
+          />
+        )
+      }
+
+      {
+        [
+          PlatformType.Appleios,
+          PlatformType.Android,
+          PlatformType.Reactnativeios,
+          PlatformType.Reactnativeandroid,
+        ].includes(type) && (
+          <>
+            <InputField
+              name="key"
+              label="App Key"
+              placeholder={
+                type.includes("ios") ? "com.example.app" : "com.example.app"
+              }
+              description="Enter your app bundle identifier/package name"
+            />
+            <InputField
+              name="store"
+              label="App Store URL"
+              placeholder={
+                type.includes("ios")
+                  ? "https://apps.apple.com/app/id123456789"
+                  : "https://play.google.com/store/apps/details?id=com.example.app"
+              }
+              description="Optional: Enter your app store URL if published"
+            />
+          </>
+        )
+      }
+    </>
+  )
+}
