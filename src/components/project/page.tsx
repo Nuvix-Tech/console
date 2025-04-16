@@ -63,9 +63,9 @@ export default function ProjectPage({ id }: ProjectPageProps) {
             />
             <TopInfo />
           </Row>
-          <Stack width={{ base: "full", lg: "1/4" }}>
+          {/* <Stack width={{ base: "full", lg: "1/4" }}>
             <TopLeftInfo />
-          </Stack>
+          </Stack> */}
         </Stack>
       </PageContainer>
     </>

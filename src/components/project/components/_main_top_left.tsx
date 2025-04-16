@@ -8,33 +8,27 @@ import { FaFlutter } from "react-icons/fa6";
 
 // Platform icons configuration
 const platformConfig = {
-  web: { icon: <Code className="h-4 w-4" />, label: "Web", type: 'web' },
+  web: { icon: <Code className="h-4 w-4" />, label: "Web", type: "web" },
   flutter: {
     icon: <FaFlutter className="h-4 w-4" />,
     label: "Flutter",
-    type: 'flutter',
+    type: "flutter",
   },
   android: {
     icon: <Smartphone className="h-4 w-4" />,
     label: "Android",
-    type: 'android',
+    type: "android",
   },
   reactnative: {
     icon: <Smartphone className="h-4 w-4" />,
     label: "React Native",
-    type: 'reactnative',
+    type: "reactnative",
   },
-  ios: { icon: <Apple className="h-4 w-4" />, label: "iOS", type: 'ios' },
+  ios: { icon: <Apple className="h-4 w-4" />, label: "iOS", type: "ios" },
 } as const;
 
 // Available platforms for adding
-const availablePlatforms = [
-  "web",
-  "flutter",
-  "android",
-  "reactnative",
-  "ios",
-];
+const availablePlatforms = ["web", "flutter", "android", "reactnative", "ios"];
 
 export const TopLeftInfo = () => {
   const project = useProjectStore.use.project?.();

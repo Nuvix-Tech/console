@@ -1,9 +1,18 @@
-import { Chip, Column, Heading, Line, Row } from "@/ui/components";
+import { Button, Chip, Column, Heading, Line, Row } from "@/ui/components";
 import { useProjectStore } from "@/lib/store";
 import { IDChip } from "@/components/others";
 import { useRouter } from "@bprogress/next";
+import { AnimatePresence, motion } from "framer-motion";
+import { Apple, Code, Smartphone } from "lucide-react";
+import { FaFlutter } from "react-icons/fa6";
+import { CreatePlatform } from "@/components/wizard/_platform_create";
+import { useState } from "react";
 
 export const TopInfo = () => {
+  const [showPlatformOptions, setShowPlatformOptions] = useState(false);
+  const togglePlatformOptions = () => {
+    setShowPlatformOptions(!showPlatformOptions);
+  };
   const project = useProjectStore.use.project?.();
   const { push } = useRouter();
 
@@ -22,7 +31,7 @@ export const TopInfo = () => {
         <IDChip id={project?.$id} />
       </Row>
       <Row vertical="center" horizontal="start" fillWidth gap="8">
-        {(project?.platforms.length ?? 0) > 0 ? (
+        {/* {(project?.platforms.length ?? 0) > 0 ? (
           <>
             <Chip
               height={2.3}
@@ -38,7 +47,7 @@ export const TopInfo = () => {
 
             <Line vert height={1.5} marginX="24" background="neutral-alpha-strong" />
           </>
-        ) : null}
+        ) : null} */}
         {project?.platforms &&
           project?.platforms.slice(0, 3).map((platform) => (
             <Chip
@@ -69,20 +78,50 @@ export const TopInfo = () => {
             }}
           />
         ) : null}
-        {}
+        { }
 
         <Chip
           height={2.3}
           paddingX="12"
           selected={false}
           prefixIcon={"plus"}
-          onClick={() => push(`/project/${project?.$id}/platforms/create`)}
+          onClick={togglePlatformOptions}
           label={"Add platform"}
           iconButtonProps={{
             tooltip: "Add platform",
             tooltipPosition: "top",
           }}
         />
+      </Row>
+      <Row>
+        <AnimatePresence>
+          {showPlatformOptions && (
+            <motion.div
+              className="absolute left-0 right-0 z-10"
+              initial={{ x: "100%", opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: "100%", opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+            >
+              <div className="flex flex-wrap gap-2">
+                {availablePlatforms.map((platform) => {
+                  const config = platformConfig[platform as keyof typeof platformConfig];
+                  return (
+                    <CreatePlatform key={platform} type={config.type}>
+                      <Chip
+                        height={2.3}
+                        paddingX="12"
+                        selected={false}
+                        prefixIcon={config.icon}
+                        label={config.label}
+                      />
+                    </CreatePlatform>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </Row>
     </Column>
   );
@@ -102,3 +141,25 @@ const platformIcon = (platform: string) => {
       return "icon-view-grid";
   }
 };
+
+const availablePlatforms = ["web", "flutter", "android", "reactnative", "ios"];
+
+const platformConfig = {
+  web: { icon: <Code className="h-4 w-4" />, label: "Web", type: "web" },
+  flutter: {
+    icon: <FaFlutter className="h-4 w-4" />,
+    label: "Flutter",
+    type: "flutter",
+  },
+  android: {
+    icon: <Smartphone className="h-4 w-4" />,
+    label: "Android",
+    type: "android",
+  },
+  reactnative: {
+    icon: <Smartphone className="h-4 w-4" />,
+    label: "React Native",
+    type: "reactnative",
+  },
+  ios: { icon: <Apple className="h-4 w-4" />, label: "iOS", type: "ios" },
+} as const;

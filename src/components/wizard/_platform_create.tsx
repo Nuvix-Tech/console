@@ -39,27 +39,47 @@ const schema = y.object().shape({
 const platformMap = {
   flutter: [
     { name: "Flutter Web", type: PlatformType.Flutterweb, icon: <Globe className="h-4 w-4" /> },
-    { name: "Flutter iOS", type: PlatformType.Flutterios, icon: <Smartphone className="h-4 w-4" /> },
-    { name: "Flutter Android", type: PlatformType.Flutterandroid, icon: <Smartphone className="h-4 w-4" /> },
+    {
+      name: "Flutter iOS",
+      type: PlatformType.Flutterios,
+      icon: <Smartphone className="h-4 w-4" />,
+    },
+    {
+      name: "Flutter Android",
+      type: PlatformType.Flutterandroid,
+      icon: <Smartphone className="h-4 w-4" />,
+    },
     { name: "Flutter Linux", type: PlatformType.Flutterlinux, icon: <Globe className="h-4 w-4" /> },
     { name: "Flutter macOS", type: PlatformType.Fluttermacos, icon: <Globe className="h-4 w-4" /> },
-    { name: "Flutter Windows", type: PlatformType.Flutterwindows, icon: <Globe className="h-4 w-4" /> }
+    {
+      name: "Flutter Windows",
+      type: PlatformType.Flutterwindows,
+      icon: <Globe className="h-4 w-4" />,
+    },
   ],
   ios: [
     { name: "Apple iOS", type: PlatformType.Appleios, icon: <Smartphone className="h-4 w-4" /> },
     { name: "Apple macOS", type: PlatformType.Applemacos, icon: <Globe className="h-4 w-4" /> },
     { name: "Apple watchOS", type: PlatformType.Applewatchos, icon: <Globe className="h-4 w-4" /> },
-    { name: "Apple tvOS", type: PlatformType.Appletvos, icon: <Globe className="h-4 w-4" /> }
+    { name: "Apple tvOS", type: PlatformType.Appletvos, icon: <Globe className="h-4 w-4" /> },
   ],
   reactnative: [
-    { name: "React Native iOS", type: PlatformType.Reactnativeios, icon: <Smartphone className="h-4 w-4" /> },
-    { name: "React Native Android", type: PlatformType.Reactnativeandroid, icon: <Smartphone className="h-4 w-4" /> }
+    {
+      name: "React Native iOS",
+      type: PlatformType.Reactnativeios,
+      icon: <Smartphone className="h-4 w-4" />,
+    },
+    {
+      name: "React Native Android",
+      type: PlatformType.Reactnativeandroid,
+      icon: <Smartphone className="h-4 w-4" />,
+    },
   ],
-}
+};
 
 type CreatePlatformProps = {
   children?: React.ReactNode;
-  type: 'web' | 'flutter' | 'android' | 'reactnative' | 'ios';
+  type: "web" | "flutter" | "android" | "reactnative" | "ios";
   onClose?: () => void;
 } & Omit<React.ComponentProps<typeof Dialog.Root>, "size" | "motionPreset" | "children">;
 
@@ -88,7 +108,7 @@ export const CreatePlatform: React.FC<CreatePlatformProps> = ({ children, type, 
       });
 
       resetForm();
-      // TODO: Show next steps  
+      // TODO: Show next steps
       props.onClose?.();
     } catch (e: any) {
       addToast({
@@ -118,7 +138,10 @@ export const CreatePlatform: React.FC<CreatePlatformProps> = ({ children, type, 
                   <Form
                     initialValues={{
                       name: "",
-                      type: type in platformMap ? platformMap[type as keyof typeof platformMap][0].type : type,
+                      type:
+                        type in platformMap
+                          ? platformMap[type as keyof typeof platformMap][0].type
+                          : type,
                       key: "",
                       store: "",
                       hostname: "",
@@ -157,55 +180,54 @@ export const CreatePlatform: React.FC<CreatePlatformProps> = ({ children, type, 
   );
 };
 
-
 const CreateForm = () => {
-  const { values } = useFormikContext<{ type: PlatformType; name: string; key: string; store: string; hostname: string; }>();
+  const { values } = useFormikContext<{
+    type: PlatformType;
+    name: string;
+    key: string;
+    store: string;
+    hostname: string;
+  }>();
   const { type } = values;
 
   return (
     <>
       <InputField name="name" label="Platform Name" />
 
-      {
-        [PlatformType.Web, PlatformType.Flutterweb].includes(type) && (
-          <InputField
-            name="hostname"
-            label="Hostname"
-            placeholder="example.com"
-            description="Enter the domain where this platform will be deployed"
-          />
-        )
-      }
+      {[PlatformType.Web, PlatformType.Flutterweb].includes(type) && (
+        <InputField
+          name="hostname"
+          label="Hostname"
+          placeholder="example.com"
+          description="Enter the domain where this platform will be deployed"
+        />
+      )}
 
-      {
-        [
-          PlatformType.Appleios,
-          PlatformType.Android,
-          PlatformType.Reactnativeios,
-          PlatformType.Reactnativeandroid,
-        ].includes(type) && (
-          <>
-            <InputField
-              name="key"
-              label="App Key"
-              placeholder={
-                type.includes("ios") ? "com.example.app" : "com.example.app"
-              }
-              description="Enter your app bundle identifier/package name"
-            />
-            <InputField
-              name="store"
-              label="App Store URL"
-              placeholder={
-                type.includes("ios")
-                  ? "https://apps.apple.com/app/id123456789"
-                  : "https://play.google.com/store/apps/details?id=com.example.app"
-              }
-              description="Optional: Enter your app store URL if published"
-            />
-          </>
-        )
-      }
+      {[
+        PlatformType.Appleios,
+        PlatformType.Android,
+        PlatformType.Reactnativeios,
+        PlatformType.Reactnativeandroid,
+      ].includes(type) && (
+        <>
+          <InputField
+            name="key"
+            label="App Key"
+            placeholder={type.includes("ios") ? "com.example.app" : "com.example.app"}
+            description="Enter your app bundle identifier/package name"
+          />
+          <InputField
+            name="store"
+            label="App Store URL"
+            placeholder={
+              type.includes("ios")
+                ? "https://apps.apple.com/app/id123456789"
+                : "https://play.google.com/store/apps/details?id=com.example.app"
+            }
+            description="Optional: Enter your app store URL if published"
+          />
+        </>
+      )}
     </>
-  )
-}
+  );
+};
