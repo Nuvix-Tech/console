@@ -84,7 +84,7 @@ export const TopInfo = () => {
         <AnimatePresence>
           {showPlatformOptions && (
             <motion.div
-              className="absolute left-0 right-[100px] z-[1] bottom-3"
+              className="absolute left-auto right-[120px] z-[1] bottom-3"
               initial={{ x: "100%", opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: "100%", opacity: 0 }}
@@ -110,7 +110,7 @@ export const TopInfo = () => {
           )}
         </AnimatePresence>
       </Row>
-      <div className="absolute bottom-2 right-2 z-[2]">
+      <div className="absolute bottom-3 right-3 z-[2]">
         <Chip
           height={2.3}
           paddingX="12"

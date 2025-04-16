@@ -44,7 +44,7 @@ export default function ProjectPage({ id }: ProjectPageProps) {
               zIndex={0}
               position="absolute"
               color="neutral-alpha-weak"
-              mask={{ cursor: true }}
+              mask={{ cursor: true, radius: 10 }}
               gradient={{
                 colorEnd: "static-transparent",
                 colorStart: "brand-alpha-medium",
@@ -65,7 +65,9 @@ export default function ProjectPage({ id }: ProjectPageProps) {
               grid={{
                 color: "accent-alpha-weak",
                 display: true,
-                opacity: 80,
+                height: 'var(--static-space-16)',
+                opacity: 100,
+                width: 'var(--static-space-16)'
               }}
             />
             <TopInfo />
