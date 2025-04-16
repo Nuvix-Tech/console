@@ -29,8 +29,14 @@ const SettingsSidebar = () => {
             href: resolveHref("apps"),
             isSelected: resolveIsSelected("apps"),
           },
+          {
+            label: "Keys",
+            href: resolveHref("keys"),
+            isSelected: resolveIsSelected("keys"),
+          },
         ]}
       />
+      <Line />
       <SidebarGroup
         title="Configuration"
         items={[

@@ -10,7 +10,7 @@ export const ProjectLayout = ({ children }: PropsWithChildren) => {
 
   return (
     <Stack
-      className={cn("flex-1 w-full", {
+      className={cn("flex-1 w-full transition-[width] duration-300 ease-in-out", {
         "lg:max-w-[calc(100%-18.5rem)]": showSubSidebar,
         "lg:max-w-[calc(100%-16.5rem)]": !showSubSidebar,
       })}
