@@ -1,3 +1,5 @@
+import { TablesPage } from "@/components/project/database/tables";
+
 export default function Page() {
-  return <div>{/* Your content here */}</div>;
+  return <TablesPage />;
 }

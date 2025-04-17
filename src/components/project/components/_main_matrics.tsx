@@ -55,10 +55,10 @@ export const MainMetrics = () => {
             <CardTitle>Request Analytics</CardTitle>
           </CardHeader>
           <CardContent>
-            <ChartContainer config={requestsConfig} className="h-[350px]">
+            <ChartContainer config={requestsConfig} className="h-[240px]">
               <BarChart data={requestsData} accessibilityLayer>
-                <Bar dataKey="total" fill="var(--color-total)" radius={4} />
-                <Bar dataKey="failed" fill="var(--color-failed)" radius={4} />
+                <Bar dataKey="total" fill="var(--color-total)" radius={4} width={4} />
+                <Bar dataKey="failed" fill="var(--color-failed)" radius={4} width={4} />
               </BarChart>
             </ChartContainer>
           </CardContent>
@@ -70,7 +70,7 @@ export const MainMetrics = () => {
             <CardTitle>Bandwidth Usage</CardTitle>
           </CardHeader>
           <CardContent>
-            <ChartContainer config={bandwidthConfig} className="h-[350px]">
+            <ChartContainer config={bandwidthConfig} className="h-[240px]">
               <AreaChart data={bandwidthData} accessibilityLayer>
                 <Area
                   type="monotone"

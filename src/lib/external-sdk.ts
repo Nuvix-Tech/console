@@ -1,6 +1,6 @@
 import { Client, Payload } from "@nuvix/console";
 
-declare namespace Models {
+export declare namespace Models {
   export interface Schema {
     $id: string;
     name: string;
@@ -12,14 +12,20 @@ declare namespace Models {
     schemas: Schema[];
     total: number;
   }
+
+  interface Table {}
+
+  interface Column {}
+
+  interface Index {}
 }
 
-export type { Models as _Models };
+export type { Models as _Models, Models as ModelsX };
 
 export class Schema {
   private client: Client;
 
-  private readonly namespace: string = "/databases/schemas";
+  private readonly namespace = "/databases/schemas" as const;
 
   constructor(client: Client) {
     this.client = client;
@@ -72,4 +78,17 @@ export class Schema {
     };
     return await this.client.call("post", uri, apiHeaders, payload);
   }
+
+  async getTables(name: string): Promise<Models.Table> {
+    const apiPath = this.namespace + "/" + name + "/tables";
+    const payload: Payload = {};
+    const uri = new URL(this.client.config.endpoint + apiPath);
+
+    const apiHeaders: { [header: string]: string } = {
+      "content-type": "application/json",
+    };
+    return await this.client.call("get", uri, apiHeaders, payload);
+  }
+
+  async createTable() {}
 }
