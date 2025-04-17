@@ -5,7 +5,7 @@ import { useRouter } from "@bprogress/next";
 import { AnimatePresence, motion } from "framer-motion";
 import { Apple, Code, Code2, Smartphone } from "lucide-react";
 import { FaFlutter, FaUnity } from "react-icons/fa6";
-import { CreatePlatform } from "@/components/wizard/_platform_create";
+import { CreatePlatform } from "@/components/wizard";
 import { useState } from "react";
 import { PlatformType } from "@nuvix/console";
 

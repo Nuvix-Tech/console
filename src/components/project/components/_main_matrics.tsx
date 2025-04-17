@@ -1,16 +1,23 @@
 import React from "react";
-import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Area, AreaChart, Bar, BarChart } from "recharts";
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { CardBox } from "@/components/others/card";
 
 // Requests Data
 const requestsData = [
-  { name: "Jan", total: 4000, failed: 400 },
-  { name: "Feb", total: 5000, failed: 350 },
-  { name: "Mar", total: 6000, failed: 420 },
-  { name: "Apr", total: 8000, failed: 560 },
-  { name: "May", total: 7500, failed: 525 },
-  { name: "Jun", total: 9000, failed: 450 },
+  { name: "2023-01-15", total: 4000, failed: 120 },
+  { name: "2023-02-15", total: 5000, failed: 150 },
+  { name: "2023-03-15", total: 6000, failed: 200 },
+  { name: "2023-04-15", total: 8000, failed: 250 },
+  { name: "2023-05-15", total: 7500, failed: 180 },
+  { name: "2023-06-15", total: 9000, failed: 270 },
+  { name: "2023-07-15", total: 9500, failed: 300 },
+  { name: "2023-08-15", total: 10200, failed: 240 },
+  { name: "2023-09-15", total: 11000, failed: 320 },
+  { name: "2023-10-15", total: 12500, failed: 380 },
+  { name: "2023-11-15", total: 13000, failed: 350 },
+  { name: "2023-12-15", total: 14000, failed: 420 },
 ];
 
 const requestsConfig = {
@@ -26,12 +33,18 @@ const requestsConfig = {
 
 // Bandwidth Data
 const bandwidthData = [
-  { name: "Jan", incoming: 120, outgoing: 80 },
-  { name: "Feb", incoming: 150, outgoing: 100 },
-  { name: "Mar", incoming: 180, outgoing: 120 },
-  { name: "Apr", incoming: 220, outgoing: 150 },
-  { name: "May", incoming: 250, outgoing: 170 },
-  { name: "Jun", incoming: 300, outgoing: 200 },
+  { name: "2023-01-15", incoming: 120, outgoing: 80 },
+  { name: "2023-02-15", incoming: 150, outgoing: 100 },
+  { name: "2023-03-15", incoming: 180, outgoing: 120 },
+  { name: "2023-04-15", incoming: 220, outgoing: 150 },
+  { name: "2023-05-15", incoming: 250, outgoing: 170 },
+  { name: "2023-06-15", incoming: 300, outgoing: 200 },
+  { name: "2023-07-15", incoming: 280, outgoing: 190 },
+  { name: "2023-08-15", incoming: 220, outgoing: 230 },
+  { name: "2023-09-15", incoming: 350, outgoing: 260 },
+  { name: "2023-10-15", incoming: 110, outgoing: 220 },
+  { name: "2023-11-15", incoming: 380, outgoing: 290 },
+  { name: "2023-12-15", incoming: 420, outgoing: 330 },
 ];
 
 const bandwidthConfig = {
@@ -50,27 +63,60 @@ export const MainMetrics = () => {
     <div className="space-y-6">
       <div className="grid gap-6 md:grid-cols-2">
         {/* Requests Chart */}
-        <Card>
-          <CardHeader>
+        <CardBox>
+          <CardHeader className="px-0">
             <CardTitle>Request Analytics</CardTitle>
           </CardHeader>
-          <CardContent>
-            <ChartContainer config={requestsConfig} className="h-[240px]">
-              <BarChart data={requestsData} accessibilityLayer>
-                <Bar dataKey="total" fill="var(--color-total)" radius={4} width={4} />
-                <Bar dataKey="failed" fill="var(--color-failed)" radius={4} width={4} />
+          <CardContent className="px-0">
+            <ChartContainer config={requestsConfig} className="h-[240px] aspect-auto w-full">
+              <BarChart data={requestsData} accessibilityLayer margin={{
+                left: 12,
+                right: 12,
+              }}>
+                <CartesianGrid vertical={false} />
+                <XAxis
+                  dataKey="name"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                  minTickGap={32}
+                  tickFormatter={(value) => {
+                    const date = new Date(value)
+                    return date.toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                    })
+                  }}
+                />
+                <ChartTooltip
+                  content={
+                    <ChartTooltipContent
+                      className="w-[150px]"
+                      nameKey="name"
+                      labelFormatter={(value) => {
+                        return new Date(value).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        });
+                      }}
+                    />
+                  }
+                />
+                <Bar dataKey="total" fill="var(--color-total)" radius={4} />
+                {/* <Bar dataKey="failed" fill="var(--color-failed)" radius={4} /> */}
               </BarChart>
             </ChartContainer>
           </CardContent>
-        </Card>
+        </CardBox>
 
         {/* Bandwidth Chart */}
-        <Card>
-          <CardHeader>
+        <CardBox>
+          <CardHeader className="px-0">
             <CardTitle>Bandwidth Usage</CardTitle>
           </CardHeader>
-          <CardContent>
-            <ChartContainer config={bandwidthConfig} className="h-[240px]">
+          <CardContent className="px-0">
+            <ChartContainer config={bandwidthConfig} className="h-[240px] aspect-auto w-full">
               <AreaChart data={bandwidthData} accessibilityLayer>
                 <Area
                   type="monotone"
@@ -89,7 +135,7 @@ export const MainMetrics = () => {
               </AreaChart>
             </ChartContainer>
           </CardContent>
-        </Card>
+        </CardBox>
       </div>
     </div>
   );

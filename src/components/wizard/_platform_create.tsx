@@ -108,7 +108,6 @@ export const CreatePlatform: React.FC<CreatePlatformProps> = ({ children, type, 
       });
 
       resetForm();
-      // TODO: Show next steps
       props.onClose?.();
     } catch (e: any) {
       addToast({
@@ -127,21 +126,24 @@ export const CreatePlatform: React.FC<CreatePlatformProps> = ({ children, type, 
           <Dialog.Positioner>
             <Dialog.Content>
               <Dialog.Body h="full" gap={10} p={12} display="flex" alignItems="center">
-                <Box flex="1" h="full" justifyContent={"center"}>
-                  <Text fontSize="4xl" fontWeight="bold" mb={6}>
-                    Add a New Platform
-                  </Text>
+                <Box flex="1" h="full" justifyContent={"center"} maxW="500px">
+                  <Flex alignItems="center" justifyContent="space-between" mb={6}>
+                    <Text fontSize="3xl" fontWeight="bold">
+                      Add a New Platform
+                    </Text>
+                    <Dialog.Trigger>
+                      <CloseButton />
+                    </Dialog.Trigger>
+                  </Flex>
 
-                  <Text fontSize="2xl" color="fg.muted" mb={10}>
+                  <Text fontSize="lg" color="fg.muted" mb={8}>
                     Configure your {type} platform settings.
                   </Text>
+
                   <Form
                     initialValues={{
                       name: "",
-                      type:
-                        type in platformMap
-                          ? platformMap[type as keyof typeof platformMap][0].type
-                          : type,
+                      type: type in platformMap ? platformMap[type as keyof typeof platformMap][0].type : type,
                       key: "",
                       store: "",
                       hostname: "",
@@ -151,24 +153,24 @@ export const CreatePlatform: React.FC<CreatePlatformProps> = ({ children, type, 
                       await onSubmit(values as SubmitValues, resetForm);
                     }}
                   >
-                    <div className="space-y-4">
-                      <CreateForm />
+                    <div className="space-y-6">
+                      <CreateForm type={type} />
                     </div>
 
-                    <Flex justify="flex-end" mt={6}>
+                    <Flex justify="flex-end" mt={8}>
                       <SubmitButton>Create Platform</SubmitButton>
                     </Flex>
                   </Form>
                 </Box>
-                <Box flex="1" h="full">
-                  <Dialog.Trigger>
-                    <CloseButton position="absolute" top={4} right={4} />
-                  </Dialog.Trigger>
+
+                <Box flex="1" h="full" ml={10}>
                   <Image
                     src="https://img.freepik.com/free-vector/business-teamwork-concept-teamwork-leadership-effort-hard-work-team-strategy-concept-brainstorm-workshop-management-skills-vector-cartoon-illustration-flat-design_1150-56223.jpg?t=st=1741944634~exp=1741948234~hmac=a8809da68f5bcdb67d8616d53467b3b475fdf51020c728f1a1a1a00874fd875e&w=996"
                     alt="Platform Preview"
                     objectFit="cover"
-                    borderRadius="md"
+                    borderRadius="lg"
+                    shadow="md"
+                    height="80%"
                   />
                 </Box>
               </Dialog.Body>
@@ -180,54 +182,87 @@ export const CreatePlatform: React.FC<CreatePlatformProps> = ({ children, type, 
   );
 };
 
-const CreateForm = () => {
-  const { values } = useFormikContext<{
+const CreateForm = ({ type }: { type: string }) => {
+  const { values, setFieldValue } = useFormikContext<{
     type: PlatformType;
     name: string;
     key: string;
     store: string;
     hostname: string;
   }>();
-  const { type } = values;
+  const currentType = values.type;
+
+  const platformOptions = platformMap[type as keyof typeof platformMap] || [];
 
   return (
     <>
       <InputField name="name" label="Platform Name" />
 
-      {[PlatformType.Web, PlatformType.Flutterweb].includes(type) && (
-        <InputField
-          name="hostname"
-          label="Hostname"
-          placeholder="example.com"
-          description="Enter the domain where this platform will be deployed"
-        />
+      {platformOptions.length > 0 && (
+        <Box mb={4}>
+          <Text mb={2} fontWeight="medium">Platform Type</Text>
+          <Flex gap={3} flexWrap="wrap">
+            {platformOptions.map((option) => (
+              <Box
+                key={option.type}
+                p={3}
+                borderWidth="1px"
+                borderRadius="md"
+                cursor="pointer"
+                bg={currentType === option.type ? "blue.50" : "transparent"}
+                borderColor={currentType === option.type ? "blue.500" : "gray.200"}
+                onClick={() => setFieldValue("type", option.type)}
+                _hover={{ borderColor: "blue.300" }}
+                width="fit-content"
+              >
+                <Flex alignItems="center" gap={2}>
+                  {option.icon}
+                  <Text fontSize="sm">{option.name}</Text>
+                </Flex>
+              </Box>
+            ))}
+          </Flex>
+        </Box >
       )}
 
-      {[
-        PlatformType.Appleios,
-        PlatformType.Android,
-        PlatformType.Reactnativeios,
-        PlatformType.Reactnativeandroid,
-      ].includes(type) && (
-        <>
+      {
+        [PlatformType.Web, PlatformType.Flutterweb].includes(currentType) && (
           <InputField
-            name="key"
-            label="App Key"
-            placeholder={type.includes("ios") ? "com.example.app" : "com.example.app"}
-            description="Enter your app bundle identifier/package name"
+            name="hostname"
+            label="Hostname"
+            placeholder="example.com"
+            description="Enter the domain where this platform will be deployed"
           />
-          <InputField
-            name="store"
-            label="App Store URL"
-            placeholder={
-              type.includes("ios")
-                ? "https://apps.apple.com/app/id123456789"
-                : "https://play.google.com/store/apps/details?id=com.example.app"
-            }
-            description="Optional: Enter your app store URL if published"
-          />
-        </>
-      )}
+        )
+      }
+
+      {
+        [
+          PlatformType.Appleios,
+          PlatformType.Android,
+          PlatformType.Reactnativeios,
+          PlatformType.Reactnativeandroid,
+        ].includes(currentType) && (
+          <>
+            <InputField
+              name="key"
+              label="App Key"
+              placeholder={currentType.includes("ios") ? "com.example.app" : "com.example.app"}
+              description="Enter your app bundle identifier/package name"
+            />
+            <InputField
+              name="store"
+              label="App Store URL"
+              placeholder={
+                currentType.includes("ios")
+                  ? "https://apps.apple.com/app/id123456789"
+                  : "https://play.google.com/store/apps/details?id=com.example.app"
+              }
+              description="Optional: Enter your app store URL if published"
+            />
+          </>
+        )
+      }
     </>
   );
 };

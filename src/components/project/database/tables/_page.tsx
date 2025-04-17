@@ -7,7 +7,7 @@ export const TablesPage = () => {
   const { sdk } = useProjectStore();
 
   async function fetcher() {
-    return sdk.schema.getTables("m_doc");
+    return sdk.schema.getTables("m_do");
   }
 
   const { data, isPending } = useSuspenseQuery({
