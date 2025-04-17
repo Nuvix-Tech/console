@@ -143,7 +143,10 @@ export const CreatePlatform: React.FC<CreatePlatformProps> = ({ children, type, 
                   <Form
                     initialValues={{
                       name: "",
-                      type: type in platformMap ? platformMap[type as keyof typeof platformMap][0].type : type,
+                      type:
+                        type in platformMap
+                          ? platformMap[type as keyof typeof platformMap][0].type
+                          : type,
                       key: "",
                       store: "",
                       hostname: "",
@@ -200,7 +203,9 @@ const CreateForm = ({ type }: { type: string }) => {
 
       {platformOptions.length > 0 && (
         <Box mb={4}>
-          <Text mb={2} fontWeight="medium">Platform Type</Text>
+          <Text mb={2} fontWeight="medium">
+            Platform Type
+          </Text>
           <Flex gap={3} flexWrap="wrap">
             {platformOptions.map((option) => (
               <Box
@@ -222,47 +227,43 @@ const CreateForm = ({ type }: { type: string }) => {
               </Box>
             ))}
           </Flex>
-        </Box >
+        </Box>
       )}
 
-      {
-        [PlatformType.Web, PlatformType.Flutterweb].includes(currentType) && (
-          <InputField
-            name="hostname"
-            label="Hostname"
-            placeholder="example.com"
-            description="Enter the domain where this platform will be deployed"
-          />
-        )
-      }
+      {[PlatformType.Web, PlatformType.Flutterweb].includes(currentType) && (
+        <InputField
+          name="hostname"
+          label="Hostname"
+          placeholder="example.com"
+          description="Enter the domain where this platform will be deployed"
+        />
+      )}
 
-      {
-        [
-          PlatformType.Appleios,
-          PlatformType.Android,
-          PlatformType.Reactnativeios,
-          PlatformType.Reactnativeandroid,
-        ].includes(currentType) && (
-          <>
-            <InputField
-              name="key"
-              label="App Key"
-              placeholder={currentType.includes("ios") ? "com.example.app" : "com.example.app"}
-              description="Enter your app bundle identifier/package name"
-            />
-            <InputField
-              name="store"
-              label="App Store URL"
-              placeholder={
-                currentType.includes("ios")
-                  ? "https://apps.apple.com/app/id123456789"
-                  : "https://play.google.com/store/apps/details?id=com.example.app"
-              }
-              description="Optional: Enter your app store URL if published"
-            />
-          </>
-        )
-      }
+      {[
+        PlatformType.Appleios,
+        PlatformType.Android,
+        PlatformType.Reactnativeios,
+        PlatformType.Reactnativeandroid,
+      ].includes(currentType) && (
+        <>
+          <InputField
+            name="key"
+            label="App Key"
+            placeholder={currentType.includes("ios") ? "com.example.app" : "com.example.app"}
+            description="Enter your app bundle identifier/package name"
+          />
+          <InputField
+            name="store"
+            label="App Store URL"
+            placeholder={
+              currentType.includes("ios")
+                ? "https://apps.apple.com/app/id123456789"
+                : "https://play.google.com/store/apps/details?id=com.example.app"
+            }
+            description="Optional: Enter your app store URL if published"
+          />
+        </>
+      )}
     </>
   );
 };

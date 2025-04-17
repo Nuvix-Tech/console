@@ -7,7 +7,7 @@ import { _Models } from "../external-sdk";
 /**
  * Base interface for page state common across all stores.
  */
-interface PageState {
+export interface PageState {
   loading: boolean;
   setLoading: (isLoading: boolean) => void;
 }
@@ -15,7 +15,7 @@ interface PageState {
 /**
  * Common update functionality for the pages.
  */
-interface Updatable {
+export interface Updatable {
   refresh: () => Promise<void>;
   setRefresh: (refreshFn: () => Promise<void>) => void;
 }

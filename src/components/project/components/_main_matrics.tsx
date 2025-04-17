@@ -1,33 +1,34 @@
 import React from "react";
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import { CardBox } from "@/components/others/card";
 
 // Requests Data
 const requestsData = [
-  { name: "2023-01-15", total: 4000, failed: 120 },
-  { name: "2023-02-15", total: 5000, failed: 150 },
-  { name: "2023-03-15", total: 6000, failed: 200 },
-  { name: "2023-04-15", total: 8000, failed: 250 },
-  { name: "2023-05-15", total: 7500, failed: 180 },
-  { name: "2023-06-15", total: 9000, failed: 270 },
-  { name: "2023-07-15", total: 9500, failed: 300 },
-  { name: "2023-08-15", total: 10200, failed: 240 },
-  { name: "2023-09-15", total: 11000, failed: 320 },
-  { name: "2023-10-15", total: 12500, failed: 380 },
-  { name: "2023-11-15", total: 13000, failed: 350 },
-  { name: "2023-12-15", total: 14000, failed: 420 },
+  { name: "2023-01-15", total: 4000 },
+  { name: "2023-02-15", total: 5000 },
+  { name: "2023-03-15", total: 6000 },
+  { name: "2023-04-15", total: 8000 },
+  { name: "2023-05-15", total: 7500 },
+  { name: "2023-06-15", total: 9000 },
+  { name: "2023-07-15", total: 9500 },
+  { name: "2023-08-15", total: 10200 },
+  { name: "2023-09-15", total: 11000 },
+  { name: "2023-10-15", total: 12500 },
+  { name: "2023-11-15", total: 13000 },
+  { name: "2023-12-15", total: 14000 },
 ];
 
 const requestsConfig = {
   total: {
     label: "Total Requests",
-    color: "#2563eb",
-  },
-  failed: {
-    label: "Failed Requests",
-    color: "#ef4444",
+    color: "var(--brand-alpha-medium)",
   },
 } satisfies ChartConfig;
 
@@ -50,11 +51,11 @@ const bandwidthData = [
 const bandwidthConfig = {
   incoming: {
     label: "Incoming (GB)",
-    color: "#60a5fa",
+    color: "var(--brand-alpha-medium)",
   },
   outgoing: {
     label: "Outgoing (GB)",
-    color: "#93c5fd",
+    color: "var(--brand-alpha-strong)",
   },
 } satisfies ChartConfig;
 
@@ -68,11 +69,15 @@ export const MainMetrics = () => {
             <CardTitle>Request Analytics</CardTitle>
           </CardHeader>
           <CardContent className="px-0">
-            <ChartContainer config={requestsConfig} className="h-[240px] aspect-auto w-full">
-              <BarChart data={requestsData} accessibilityLayer margin={{
-                left: 12,
-                right: 12,
-              }}>
+            <ChartContainer config={requestsConfig} className="h-[250px] aspect-auto w-full">
+              <BarChart
+                data={requestsData}
+                accessibilityLayer
+                margin={{
+                  left: 12,
+                  right: 12,
+                }}
+              >
                 <CartesianGrid vertical={false} />
                 <XAxis
                   dataKey="name"
@@ -81,11 +86,11 @@ export const MainMetrics = () => {
                   tickMargin={8}
                   minTickGap={32}
                   tickFormatter={(value) => {
-                    const date = new Date(value)
+                    const date = new Date(value);
                     return date.toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
-                    })
+                    });
                   }}
                 />
                 <ChartTooltip
@@ -116,7 +121,7 @@ export const MainMetrics = () => {
             <CardTitle>Bandwidth Usage</CardTitle>
           </CardHeader>
           <CardContent className="px-0">
-            <ChartContainer config={bandwidthConfig} className="h-[240px] aspect-auto w-full">
+            <ChartContainer config={bandwidthConfig} className="h-[250px] aspect-auto w-full">
               <AreaChart data={bandwidthData} accessibilityLayer>
                 <Area
                   type="monotone"

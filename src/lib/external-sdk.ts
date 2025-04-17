@@ -4,7 +4,7 @@ export declare namespace Models {
   export interface Schema {
     $id: string;
     name: string;
-    description: string;
+    description?: string;
     type: "managed" | "unmanaged" | "document";
   }
 
@@ -13,11 +13,46 @@ export declare namespace Models {
     total: number;
   }
 
-  interface Table {}
+  export interface Table {
+    $id: string;
+    id: number;
+    name: string;
+    schema: string;
+    comment: string | null;
+    rls: boolean;
+    cls: boolean;
+    $permissions: any[];
+    created_at: string;
+    updated_at: string;
+    columns: Column[];
+    indexes: Index[];
+  }
 
-  interface Column {}
+  export interface Column {
+    id: number;
+    name: string;
+    type: string;
+    array: boolean;
+    unique: boolean;
+    default: any | null;
+    not_null: boolean;
+    collation: string | null;
+    generated: string | null;
+    references: string | null;
+    validation: string | null;
+    compression: string | null;
+    primary_key: boolean;
+    $permissions: any[];
+  }
 
-  interface Index {}
+  export interface Index {
+    // Add properties based on your needs when you have index data
+  }
+
+  export interface TableList {
+    tables: Table[];
+    total: number;
+  }
 }
 
 export type { Models as _Models, Models as ModelsX };
@@ -79,7 +114,7 @@ export class Schema {
     return await this.client.call("post", uri, apiHeaders, payload);
   }
 
-  async getTables(name: string): Promise<Models.Table> {
+  async getTables(name: string): Promise<Models.TableList> {
     const apiPath = this.namespace + "/" + name + "/tables";
     const payload: Payload = {};
     const uri = new URL(this.client.config.endpoint + apiPath);
