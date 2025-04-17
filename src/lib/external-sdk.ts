@@ -19,7 +19,7 @@ export type { Models as _Models };
 export class Schema {
   private client: Client;
 
-  private readonly namespace: string = "/schemas";
+  private readonly namespace: string = "/databases/schemas";
 
   constructor(client: Client) {
     this.client = client;

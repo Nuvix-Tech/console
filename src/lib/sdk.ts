@@ -34,6 +34,7 @@ const clientConsole = new Client().setEndpoint(API_URL).setProject("console");
 const clientServer = new Client().setEndpoint(SERVER_URL).setProject("console");
 
 const clientProject = new Client().setEndpoint(API_URL).setMode("admin");
+const clientServerProject = new Client().setEndpoint(SERVER_URL).setMode("admin");
 
 const sdkForProject = {
   client: clientProject,
@@ -53,7 +54,7 @@ const sdkForProject = {
   vcs: new Vcs(clientProject),
   proxy: new Proxy(clientProject),
   migrations: new Migrations(clientProject),
-  schema: new Schema(clientProject),
+  schema: new Schema(clientServerProject),
 };
 
 const sdkForConsole = {
@@ -73,6 +74,7 @@ const sdkForConsole = {
 
 function getProjectSdk(id: string) {
   clientProject.setProject(id).setMode("admin");
+  clientServerProject.setProject(id).setMode("admin");
   return sdkForProject;
 }
 

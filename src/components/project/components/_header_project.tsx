@@ -48,7 +48,21 @@ export function HeaderProject() {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0 bg-transparent border-[var(--neutral-border-medium)]">
-        <Command>
+        <Command
+          filter={(value, search) => {
+            if (value === "") {
+              return 0;
+            }
+            const item = list.find((p) => p.$id === value);
+            if (item) {
+              return item.name.toLowerCase().includes(search.toLowerCase()) ||
+                item.$id.toLowerCase().includes(search.toLowerCase())
+                ? 1
+                : 0;
+            }
+            return 0;
+          }}
+        >
           <CommandInput placeholder="Search project..." className="h-9" />
           <CommandList>
             <CommandEmpty>No project found.</CommandEmpty>
