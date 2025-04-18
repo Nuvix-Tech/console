@@ -61,7 +61,7 @@ const TablesPage = () => {
     },
     {
       header: "Created At",
-      accessorKey: "$createdAt",
+      accessorKey: "created_at",
       minSize: 200,
       cell(props) {
         const date = formatDate(props.getValue<string>());
@@ -126,7 +126,7 @@ const TablesPage = () => {
     <CreateButton
       hasPermission={canCreateCollections}
       label="Create Table"
-      // component={CreateTable}
+    // component={CreateTable}
     />
   );
 
@@ -156,15 +156,11 @@ const TablesPage = () => {
 
         {(data.total > 0 || hasQuery) && (
           <>
-            <HStack justifyContent="space-between" alignItems="center">
-              <Search placeholder="Search by ID" />
-            </HStack>
             <Table noResults={data.total === 0 && hasQuery} />
-
-            <HStack justifyContent="space-between" alignItems="center">
+            {/* <HStack justifyContent="space-between" alignItems="center">
               <SelectLimit />
               <Pagination />
-            </HStack>
+            </HStack> */}
           </>
         )}
 

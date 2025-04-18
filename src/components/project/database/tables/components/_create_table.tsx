@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo } from "react";
-import { Drawer } from "@chakra-ui/react";
 import { useProjectStore } from "@/lib/store";
 import { Form, SubmitButton } from "@/components/others/forms";
 import { useToast } from "@/ui/components";
@@ -9,6 +8,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Info } from "lucide-react";
 import { Portal } from "vaul";
 import { CloseButton } from "@/components/cui/close-button";
+import { Drawer } from "@chakra-ui/react";
 interface CreateTableProps {
     isOpen: boolean;
     onClose: () => void;
@@ -32,47 +32,45 @@ export const CreateTable: React.FC<CreateTableProps> = ({ isOpen, onClose, refet
 
     return (
         <>
-            <Drawer.Root open={isOpen} onOpenChange={handleClose}>
-                <Portal>
-                    <Drawer.Backdrop />
-                    <Drawer.Positioner>
-                        <Drawer.Content height="full" asChild>
-                            <Form
-                                initialValues={initialValues}
-                                onSubmit={async (values) => {
-                                    try {
-                                        await sdk.schema.createTable(
-                                            { ...values }
-                                        );
-                                        addToast({
-                                            message: "Table created",
-                                            variant: "success",
-                                        });
-                                        await refetch();
-                                        handleClose();
-                                    } catch (e: any) {
-                                        addToast({
-                                            message: e.message,
-                                            variant: "danger",
-                                        });
-                                    }
-                                }}
-                                className="w-full">
-                                <Drawer.Header display="flex" flexDirection="column" gap={4}>
-                                    <Drawer.Title>
-                                        Create Table
-                                    </Drawer.Title>
-                                    <div className="absolute right-4 top-4">
-                                        <Drawer.CloseTrigger asChild>
-                                            <CloseButton size="sm" />
-                                        </Drawer.CloseTrigger>
-                                    </div>
-                                </Drawer.Header>
-                                <TableSettings />
-                            </Form>
-                        </Drawer.Content>
-                    </Drawer.Positioner>
-                </Portal >
+            <Drawer.Root open={isOpen} onOpenChange={handleClose} size='sm'>
+                <Drawer.Backdrop />
+                <Drawer.Positioner>
+                    <Drawer.Content height="full" asChild>
+                        <Form
+                            initialValues={initialValues}
+                            onSubmit={async (values) => {
+                                try {
+                                    await sdk.schema.createTable(
+                                        { ...values }
+                                    );
+                                    addToast({
+                                        message: "Table created",
+                                        variant: "success",
+                                    });
+                                    await refetch();
+                                    handleClose();
+                                } catch (e: any) {
+                                    addToast({
+                                        message: e.message,
+                                        variant: "danger",
+                                    });
+                                }
+                            }}
+                            className="w-full">
+                            <Drawer.Header display="flex" flexDirection="column" gap={4}>
+                                <Drawer.Title>
+                                    Create Table
+                                </Drawer.Title>
+                                <div className="absolute right-4 top-4">
+                                    <Drawer.CloseTrigger asChild>
+                                        <CloseButton size="sm" />
+                                    </Drawer.CloseTrigger>
+                                </div>
+                            </Drawer.Header>
+                            <TableSettings />
+                        </Form>
+                    </Drawer.Content>
+                </Drawer.Positioner>
             </Drawer.Root >
         </>
     );
