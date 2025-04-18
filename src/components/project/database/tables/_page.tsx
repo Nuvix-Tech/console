@@ -126,7 +126,7 @@ const TablesPage = () => {
     <CreateButton
       hasPermission={canCreateCollections}
       label="Create Table"
-    // component={CreateTable}
+      component={CreateTable}
     />
   );
 
