@@ -40,7 +40,7 @@ const TablesPage = () => {
   const fetcher = async () => {
     const queries: string[] = [];
     queries.push(Query.limit(limit), Query.offset((page - 1) * limit));
-    return await sdk.schema.listTables(schema?.$id!);
+    return await sdk.schema.listTables(schema?.$id ?? 'm_do');
   };
 
   const { data, isFetching, refetch } = useSuspenseQuery({
