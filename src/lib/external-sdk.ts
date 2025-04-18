@@ -125,5 +125,9 @@ export class Schema {
     return await this.client.call("get", uri, apiHeaders, payload);
   }
 
-  async createTable() {}
+  listTables(name: string): Promise<Models.TableList> {
+    return this.getTables(name);
+  }
+
+  async createTable({ name, permissions }: { name: string; permissions: string[] }) { }
 }

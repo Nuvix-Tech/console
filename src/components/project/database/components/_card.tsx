@@ -9,14 +9,14 @@ type DatabaseCardProps = {
 };
 
 export const DatabaseCard = ({ database }: DatabaseCardProps) => {
-  const { id } = useParams();
+  const { id, schemaId } = useParams();
 
   return (
     <SmartLink
       unstyled
       key={database.name}
       fillWidth
-      href={`/project/${id}/d-schema/${database.name}`}
+      href={database.type === "managed" ? `/project/${id}/database/schemas/${schemaId}/tables` : `/project/${id}/d-schema/${database.name}`}
     >
       <Card
         radius="l-4"

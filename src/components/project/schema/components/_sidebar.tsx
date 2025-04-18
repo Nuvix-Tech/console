@@ -8,7 +8,7 @@ const DatbaseSidebar = () => {
   const path = usePathname();
 
   const resolveHref = (value?: string) =>
-    `/project/${project?.$id}/database/${value ? `/${value}` : ""}`;
+    `/project/${project?.$id}/database/${value ? `${value}` : ""}`;
   const resolveIsSelected = (value?: string) => path.includes(resolveHref(value));
 
   return (

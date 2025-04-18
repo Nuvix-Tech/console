@@ -1,123 +1,187 @@
 "use client";
-
-import { useProjectStore } from "@/lib/store";
 import { useSchemaStore } from "@/lib/store/schema";
+import { useConfirm, useToast } from "@/ui/components";
+import { Models, Query } from "@nuvix/console";
+import React from "react";
+import { ColumnDef } from "@tanstack/react-table";
+import { Tooltip } from "@/components/cui/tooltip";
+import { HStack } from "@chakra-ui/react";
+import { formatDate } from "@/lib/utils";
+import {
+  ActionButton,
+  DataActionBar,
+  DataGridProvider,
+  Pagination,
+  Search,
+  SelectLimit,
+  Table,
+} from "@/ui/modules/data-grid";
+import { CreateButton, PageContainer, PageHeading } from "@/components/others";
+import { useProjectStore } from "@/lib/store";
+import { useSearchQuery } from "@/hooks/useQuery";
+import { EmptyState } from "@/components/_empty_state";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
+import { ModelsX } from "@/lib/external-sdk";
+import { CreateTable } from "./components";
 
-export const TablesPage = () => {
-  const { sdk } = useProjectStore();
+const TablesPage = () => {
+  const sdk = useProjectStore.use.sdk?.();
+  const { id: projectId } = useParams();
+  const permissions = useProjectStore.use.permissions();
   const { schema } = useSchemaStore();
 
-  async function fetcher() {
-    return sdk.schema.getTables("m_do");
-  }
+  const { limit, page, hasQuery } = useSearchQuery();
+  const confirm = useConfirm();
+  const { addToast } = useToast();
+  const { canCreateCollections, canDeleteCollections } = permissions();
 
-  const { data, isPending } = useSuspenseQuery({
+
+  const fetcher = async () => {
+    const queries: string[] = [];
+    queries.push(Query.limit(limit), Query.offset((page - 1) * limit));
+    return await sdk.schema.listTables(schema?.$id!);
+  };
+
+  const { data, isFetching, refetch } = useSuspenseQuery({
+    queryKey: ["tables", page, limit],
     queryFn: fetcher,
-    queryKey: ["tables"],
   });
 
-  if (isPending) {
-    return <div className="flex justify-center p-8">Loading tables...</div>;
-  }
+  const path = `/project/${projectId}/database/schemas/${schema?.$id}/tables`;
+
+  const columns: ColumnDef<ModelsX.Table>[] = [
+    {
+      header: "Name",
+      accessorKey: "name",
+      minSize: 250,
+      meta: {
+        href: (row) => `${path}/${row.$id}`,
+      },
+    },
+    {
+      header: "Created At",
+      accessorKey: "$createdAt",
+      minSize: 200,
+      cell(props) {
+        const date = formatDate(props.getValue<string>());
+        return (
+          <Tooltip showArrow content={date}>
+            <span>{date}</span>
+          </Tooltip>
+        );
+      },
+    },
+    {
+      header: "Columns",
+      accessorKey: "columns",
+      minSize: 250,
+      cell(props) {
+        const columns = props.getValue<ModelsX.Column[]>();
+        return (
+          <Tooltip showArrow content={columns.map((col) => col.name).join(", ")}>
+            <span>{columns.length}</span>
+          </Tooltip>
+        );
+      },
+    },
+  ];
+
+  const onDelete = async (values: Models.Collection[]) => {
+    if (
+      await confirm({
+        title: "Delete Collection",
+        description: `Are you sure you want to delete ${values.length} collection(s)?`,
+        confirm: {
+          text: "Delete",
+          variant: "danger",
+        },
+      })
+    ) {
+      // setDeleting(true);
+      // const ids = values.map((v) => v.$id);
+      // if (!sdk) return;
+      // await Promise.all(
+      //   ids.map(async (id) => {
+      //     try {
+      //       await sdk.databases.deleteCollection(database?.name!, id);
+      //     } catch (e) {
+      //       addToast({
+      //         message: `Error deleting collection ${id}`,
+      //         variant: "danger",
+      //       });
+      //     }
+      //   }),
+      // ).then((v) =>
+      //   addToast({
+      //     message: `Successfully deleted ${ids.length} collection(s)`,
+      //     variant: "success",
+      //   }),
+      // );
+      // await refetch();
+    }
+  };
+
+  const create = (
+    <CreateButton
+      hasPermission={canCreateCollections}
+      label="Create Table"
+      component={CreateTable}
+    />
+  );
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Database Tables</h1>
-      <div className="text-sm text-gray-500 mb-6">Total tables: {data.total}</div>
+    <PageContainer>
+      <PageHeading
+        heading="Tables"
+        description="Tables are the basic building blocks of a database. They are used to store data in a structured format, with rows and columns."
+        right={create}
+      />
 
-      {data.tables.map((table) => (
-        <div key={table.$id} className="mb-8 bg-white rounded-lg shadow">
-          <div className="p-4 border-b flex justify-between items-center">
-            <div>
-              <h2 className="text-xl font-semibold">{table.name}</h2>
-              <div className="text-sm text-gray-500">
-                Schema: {table.schema} • Created: {new Date(table.created_at).toLocaleDateString()}
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <span
-                className={`px-2 py-1 rounded text-xs ${table.rls ? "bg-blue-100 text-blue-800" : "bg-gray-100"}`}
-              >
-                RLS: {table.rls ? "ON" : "OFF"}
-              </span>
-              <span
-                className={`px-2 py-1 rounded text-xs ${table.cls ? "bg-purple-100 text-purple-800" : "bg-gray-100"}`}
-              >
-                CLS: {table.cls ? "ON" : "OFF"}
-              </span>
-            </div>
-          </div>
+      <DataGridProvider<ModelsX.Table>
+        columns={columns}
+        data={data.tables}
+        manualPagination
+        rowCount={data.total}
+        loading={isFetching}
+        state={{ pagination: { pageIndex: page, pageSize: limit } }}
+      // showCheckbox={canDeleteCollections}
+      >
+        <EmptyState
+          show={data.total === 0 && !isFetching && !hasQuery}
+          title="No tables found"
+          description="No tables have been created yet."
+          primaryComponent={create}
+        />
 
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Name
-                  </th>
-                  <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Type
-                  </th>
-                  <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Attributes
-                  </th>
-                  <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Default
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {table.columns.map((column) => (
-                  <tr key={column.id}>
-                    <td className="py-3 px-4 text-sm">
-                      <div className="font-medium">{column.name}</div>
-                      {column.primary_key && (
-                        <span className="text-xs text-blue-600 mt-1">Primary Key</span>
-                      )}
-                    </td>
-                    <td className="py-3 px-4 text-sm">
-                      <span className="px-2 py-1 bg-gray-100 rounded text-xs">
-                        {column.type}
-                        {column.array ? "[]" : ""}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 text-xs">
-                      <div className="flex flex-wrap gap-1">
-                        {column.not_null && (
-                          <span className="px-2 py-1 bg-yellow-100 rounded">NOT NULL</span>
-                        )}
-                        {column.unique && (
-                          <span className="px-2 py-1 bg-green-100 rounded">UNIQUE</span>
-                        )}
-                        {column.references && (
-                          <span className="px-2 py-1 bg-purple-100 rounded">FOREIGN KEY</span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="py-3 px-4 text-sm text-gray-500">
-                      {column.default !== null ? column.default : "-"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        {(data.total > 0 || hasQuery) && (
+          <>
+            <HStack justifyContent="space-between" alignItems="center">
+              <Search placeholder="Search by ID" />
+            </HStack>
+            <Table noResults={data.total === 0 && hasQuery} />
 
-          {table.indexes?.length > 0 && (
-            <div className="p-4 border-t">
-              <h3 className="text-sm font-medium mb-2">Indexes ({table.indexes.length})</h3>
-              <div className="text-xs text-gray-500">
-                {table.indexes.map((index, idx) => (
-                  <div key={idx} className="mb-1">
-                    {JSON.stringify(index)}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      ))}
-    </div>
+            <HStack justifyContent="space-between" alignItems="center">
+              <SelectLimit />
+              <Pagination />
+            </HStack>
+          </>
+        )}
+
+        {canDeleteCollections && (
+          <DataActionBar
+            actions={
+              <>
+                <ActionButton<Models.Collection> variant="danger" onClick={onDelete}>
+                  Delete
+                </ActionButton>
+              </>
+            }
+          />
+        )}
+      </DataGridProvider>
+    </PageContainer>
   );
 };
+
+export { TablesPage };
