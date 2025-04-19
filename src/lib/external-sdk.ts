@@ -157,6 +157,7 @@ export class Schema {
     const payload: Payload = {
       $id: name,
       name,
+      schema,
       permissions,
       columns: [],
       indexes: [],
