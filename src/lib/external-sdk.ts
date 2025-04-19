@@ -155,8 +155,11 @@ export class Schema {
   }: { schema: string; name: string; permissions: string[] }) {
     const apiPath = this.namespace + "/" + schema + "/tables";
     const payload: Payload = {
+      $id: name,
       name,
       permissions,
+      columns: [],
+      indexes: [],
     };
     const uri = new URL(this.client.config.endpoint + apiPath);
 

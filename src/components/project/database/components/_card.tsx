@@ -9,7 +9,7 @@ type DatabaseCardProps = {
 };
 
 export const DatabaseCard = ({ database }: DatabaseCardProps) => {
-  const { id, schemaId } = useParams();
+  const { id } = useParams();
 
   return (
     <SmartLink
@@ -18,7 +18,7 @@ export const DatabaseCard = ({ database }: DatabaseCardProps) => {
       fillWidth
       href={
         database.type === "managed"
-          ? `/project/${id}/database/schemas/${schemaId}/tables`
+          ? `/project/${id}/database/schemas/${database.name}/tables`
           : `/project/${id}/d-schema/${database.name}`
       }
     >

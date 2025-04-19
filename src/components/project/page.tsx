@@ -1,10 +1,9 @@
 "use client";
-import { Background, Column, Row } from "@/ui/components";
+import { Background, Row } from "@/ui/components";
 import React, { useEffect } from "react";
 import { useProjectStore } from "@/lib/store";
-import { TopInfo, TopLeftInfo } from "./components";
+import { TopInfo } from "./components";
 import { PageContainer } from "../others";
-import { Stack } from "@chakra-ui/react";
 import MainMetrics from "./components/_main_matrics";
 
 type ProjectPageProps = {

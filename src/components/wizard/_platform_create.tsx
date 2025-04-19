@@ -7,7 +7,6 @@ import { sdkForConsole } from "@/lib/sdk";
 import { PlatformType } from "@nuvix/console";
 import { Chip, useToast } from "@/ui/components";
 import { useProjectStore } from "@/lib/store";
-import { Globe, Smartphone } from "lucide-react";
 import { useFormikContext } from "formik";
 
 // Define validation schema for platform creation form
@@ -37,41 +36,36 @@ const schema = y.object().shape({
 
 const platformMap = {
   flutter: [
-    { name: "Flutter Web", type: PlatformType.Flutterweb, icon: <Globe className="h-4 w-4" /> },
+    { name: "Web", type: PlatformType.Flutterweb },
     {
-      name: "Flutter iOS",
+      name: "iOS",
       type: PlatformType.Flutterios,
-      icon: <Smartphone className="h-4 w-4" />,
     },
     {
-      name: "Flutter Android",
+      name: "Android",
       type: PlatformType.Flutterandroid,
-      icon: <Smartphone className="h-4 w-4" />,
     },
-    { name: "Flutter Linux", type: PlatformType.Flutterlinux, icon: <Globe className="h-4 w-4" /> },
-    { name: "Flutter macOS", type: PlatformType.Fluttermacos, icon: <Globe className="h-4 w-4" /> },
+    { name: "Linux", type: PlatformType.Flutterlinux },
+    { name: "macOS", type: PlatformType.Fluttermacos },
     {
-      name: "Flutter Windows",
+      name: "Windows",
       type: PlatformType.Flutterwindows,
-      icon: <Globe className="h-4 w-4" />,
     },
   ],
   ios: [
-    { name: "Apple iOS", type: PlatformType.Appleios, icon: <Smartphone className="h-4 w-4" /> },
-    { name: "Apple macOS", type: PlatformType.Applemacos, icon: <Globe className="h-4 w-4" /> },
-    { name: "Apple watchOS", type: PlatformType.Applewatchos, icon: <Globe className="h-4 w-4" /> },
-    { name: "Apple tvOS", type: PlatformType.Appletvos, icon: <Globe className="h-4 w-4" /> },
+    { name: "iOS", type: PlatformType.Appleios },
+    { name: "macOS", type: PlatformType.Applemacos },
+    { name: "watchOS", type: PlatformType.Applewatchos },
+    { name: "tvOS", type: PlatformType.Appletvos },
   ],
   reactnative: [
     {
-      name: "React Native iOS",
+      name: "iOS",
       type: PlatformType.Reactnativeios,
-      icon: <Smartphone className="h-4 w-4" />,
     },
     {
-      name: "React Native Android",
+      name: "Android",
       type: PlatformType.Reactnativeandroid,
-      icon: <Smartphone className="h-4 w-4" />,
     },
   ],
 };
@@ -125,7 +119,7 @@ export const CreatePlatform: React.FC<CreatePlatformProps> = ({ children, type, 
           <Dialog.Positioner>
             <Dialog.Content>
               <Dialog.Body h="full" gap={10} p={12} display="flex" alignItems="center">
-                <Box flex="1" h="full" ml={10}>
+                <Box flex="1" h="full" ml={10} display={{ base: "none", md: "block" }}>
                   <Image
                     src="https://img.freepik.com/free-vector/business-teamwork-concept-teamwork-leadership-effort-hard-work-team-strategy-concept-brainstorm-workshop-management-skills-vector-cartoon-illustration-flat-design_1150-56223.jpg?t=st=1741944634~exp=1741948234~hmac=a8809da68f5bcdb67d8616d53467b3b475fdf51020c728f1a1a1a00874fd875e&w=996"
                     alt="Platform Preview"
@@ -207,7 +201,6 @@ const CreateForm = ({ type }: { type: string }) => {
                 height={2.3}
                 paddingX="12"
                 selected={currentType === option.type}
-                prefixIcon={() => option.icon}
                 onClick={() => setFieldValue("type", option.type)}
                 label={option.name}
               />
@@ -215,7 +208,7 @@ const CreateForm = ({ type }: { type: string }) => {
           </Flex>
         </Box>
       )}
-      <InputField name="name" label="Platform Name" />
+      <InputField name="name" label="Name" />
 
       {[PlatformType.Web, PlatformType.Flutterweb].includes(currentType) && (
         <InputField
@@ -228,6 +221,14 @@ const CreateForm = ({ type }: { type: string }) => {
 
       {[
         PlatformType.Appleios,
+        PlatformType.Applemacos,
+        PlatformType.Applewatchos,
+        PlatformType.Appletvos,
+        PlatformType.Flutterios,
+        PlatformType.Flutterandroid,
+        PlatformType.Flutterlinux,
+        PlatformType.Fluttermacos,
+        PlatformType.Flutterwindows,
         PlatformType.Android,
         PlatformType.Reactnativeios,
         PlatformType.Reactnativeandroid,

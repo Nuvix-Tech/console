@@ -4,7 +4,7 @@ import { IDChip } from "@/components/others";
 import { useRouter } from "@bprogress/next";
 import { AnimatePresence, motion } from "framer-motion";
 import { Apple, Code, Code2, Smartphone } from "lucide-react";
-import { FaFlutter, FaUnity } from "react-icons/fa6";
+import { FaApple, FaFlutter, FaUnity } from "react-icons/fa6";
 import { CreatePlatform } from "@/components/wizard";
 import { useState } from "react";
 import { PlatformType } from "@nuvix/console";
@@ -100,11 +100,11 @@ export const TopInfo = () => {
                       onClose={togglePlatformOptions}
                     >
                       <Chip
-                        height={2.3}
-                        paddingX="12"
+                        paddingX="8"
                         selected={false}
                         prefixIcon={config.icon}
                         label={config.label}
+                        className="bg-[var(--accent-background-strong)] hover:bg-[var(--accent-background-medium)]"
                       />
                     </CreatePlatform>
                   );
@@ -150,7 +150,7 @@ const platformIcon = (platform: PlatformType) => {
       case PlatformType.Applemacos:
       case PlatformType.Applewatchos:
       case PlatformType.Appletvos:
-        return Apple;
+        return FaApple;
       case PlatformType.Reactnativeandroid:
       case PlatformType.Reactnativeios:
         return Smartphone;
@@ -183,5 +183,5 @@ const platformConfig = {
     label: "React Native",
     type: "reactnative",
   },
-  ios: { icon: <Apple className="h-4 w-4" />, label: "iOS", type: "ios" },
+  ios: { icon: <FaApple className="h-4 w-4" />, label: "Apple", type: "ios" },
 } as const;
