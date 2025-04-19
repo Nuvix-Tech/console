@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from "react";
 import { useProjectStore } from "@/lib/store";
-import { Form, SubmitButton } from "@/components/others/forms";
-import { useToast } from "@/ui/components";
+import { Form, InputField, SubmitButton } from "@/components/others/forms";
+import { Line, useToast } from "@/ui/components";
 import { PermissionsEditor } from "@/components/others/permissions";
 import { useFormikContext } from "formik";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -21,6 +21,7 @@ export const CreateTable: React.FC<CreateTableProps> = ({ isOpen, onClose, refet
     const initialValues = useMemo(() => {
         return {
             name: "",
+            description: "",
             permissions: []
         };
     }, []);
@@ -92,24 +93,25 @@ const TableSettings = () => {
         <>
             <Drawer.Body>
                 <div className="flex flex-col gap-4">
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium mb-1">Table Name</label>
-                        <input
-                            type="text"
-                            name="name"
-                            value={values.name}
-                            onChange={(e) => setFieldValue("name", e.target.value)}
-                            className="w-full p-2 border rounded"
-                            placeholder="Enter table name"
-                        />
-                    </div>
-
+                    <InputField
+                        name="name"
+                        label="Table Name"
+                        placeholder="Enter table name"
+                    />
+                    <InputField
+                        name="description"
+                        label="Description"
+                        placeholder="Enter table description"
+                    />
+                    <Line />
                     <div>
                         <Alert>
                             <Info className="h-4 w-4" />
-                            <AlertTitle>Table Permissions</AlertTitle>
+                            <AlertTitle>
+                                Table Level Security (TLS)
+                            </AlertTitle>
                             <AlertDescription>
-                                Set who can read, update, and delete this table.
+                                Set who can access this table and what actions they can perform.
                             </AlertDescription>
                         </Alert>
                     </div>
@@ -117,10 +119,12 @@ const TableSettings = () => {
                     <div className="relative">
                         <PermissionsEditor
                             sdk={sdk}
+                            withCreate
                             permissions={values.permissions}
                             onChange={handleChange}
                         />
                     </div>
+                    <Line />
                 </div>
             </Drawer.Body >
             <Drawer.Footer>

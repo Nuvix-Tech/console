@@ -127,6 +127,7 @@ const TablesPage = () => {
       hasPermission={canCreateCollections}
       label="Create Table"
       component={CreateTable}
+      extraProps={{ refetch }}
     />
   );
 

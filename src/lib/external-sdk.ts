@@ -129,5 +129,17 @@ export class Schema {
     return this.getTables(name);
   }
 
-  async createTable({ name, permissions }: { name: string; permissions: string[] }) { }
+  async createTable({ name, permissions }: { name: string; permissions: string[] }) {
+    const apiPath = this.namespace + "/" + name + "/tables";
+    const payload: Payload = {
+      name,
+      permissions,
+    };
+    const uri = new URL(this.client.config.endpoint + apiPath);
+
+    const apiHeaders: { [header: string]: string } = {
+      "content-type": "application/json",
+    };
+    return await this.client.call("post", uri, apiHeaders, payload);
+  }
 }
