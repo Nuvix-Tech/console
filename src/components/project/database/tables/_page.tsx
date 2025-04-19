@@ -36,11 +36,10 @@ const TablesPage = () => {
   const { addToast } = useToast();
   const { canCreateCollections, canDeleteCollections } = permissions();
 
-
   const fetcher = async () => {
     const queries: string[] = [];
     queries.push(Query.limit(limit), Query.offset((page - 1) * limit));
-    return await sdk.schema.listTables(schema?.$id ?? 'm_do');
+    return await sdk.schema.listTables(schema?.$id ?? "m_do");
   };
 
   const { data, isFetching, refetch } = useSuspenseQuery({
@@ -146,7 +145,7 @@ const TablesPage = () => {
         rowCount={data.total}
         loading={isFetching}
         state={{ pagination: { pageIndex: page, pageSize: limit } }}
-      // showCheckbox={canDeleteCollections}
+        // showCheckbox={canDeleteCollections}
       >
         <EmptyState
           show={data.total === 0 && !isFetching && !hasQuery}

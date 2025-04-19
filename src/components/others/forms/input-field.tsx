@@ -408,3 +408,32 @@ export const RadioField = (props: RadioFieldProps) => {
     </FormItem>
   );
 };
+
+export const InputSelectField = ({
+  options,
+  name,
+  nullable = false,
+  ...props
+}: Omit<React.ComponentProps<typeof Select>, "onChange" | "value" | "id"> & {
+  name: string;
+  nullable?: boolean;
+}) => {
+  const { setFieldValue, values } = useFormikContext<Record<string, string | null>>();
+  const value = values[name];
+  const _onChange = (v: string) => {
+    if ((v === "null" || v === "") && nullable) {
+      setFieldValue(name, null);
+    } else {
+      setFieldValue(name, v);
+    }
+  };
+  return (
+    <Select
+      {...props}
+      labelAsPlaceholder
+      value={value == null ? "null" : value}
+      options={options}
+      onSelect={_onChange}
+    />
+  );
+};

@@ -5,8 +5,7 @@ import { Form, InputField, SubmitButton } from "../others/forms";
 import * as y from "yup";
 import { sdkForConsole } from "@/lib/sdk";
 import { PlatformType } from "@nuvix/console";
-import { useRouter } from "@bprogress/next";
-import { useToast } from "@/ui/components";
+import { Chip, useToast } from "@/ui/components";
 import { useProjectStore } from "@/lib/store";
 import { Globe, Smartphone } from "lucide-react";
 import { useFormikContext } from "formik";
@@ -126,6 +125,17 @@ export const CreatePlatform: React.FC<CreatePlatformProps> = ({ children, type, 
           <Dialog.Positioner>
             <Dialog.Content>
               <Dialog.Body h="full" gap={10} p={12} display="flex" alignItems="center">
+                <Box flex="1" h="full" ml={10}>
+                  <Image
+                    src="https://img.freepik.com/free-vector/business-teamwork-concept-teamwork-leadership-effort-hard-work-team-strategy-concept-brainstorm-workshop-management-skills-vector-cartoon-illustration-flat-design_1150-56223.jpg?t=st=1741944634~exp=1741948234~hmac=a8809da68f5bcdb67d8616d53467b3b475fdf51020c728f1a1a1a00874fd875e&w=996"
+                    alt="Platform Preview"
+                    objectFit="cover"
+                    borderRadius="lg"
+                    shadow="md"
+                    height="80%"
+                  />
+                </Box>
+
                 <Box flex="1" h="full" justifyContent={"center"} maxW="500px">
                   <Flex alignItems="center" justifyContent="space-between" mb={6}>
                     <Text fontSize="3xl" fontWeight="bold">
@@ -165,17 +175,6 @@ export const CreatePlatform: React.FC<CreatePlatformProps> = ({ children, type, 
                     </Flex>
                   </Form>
                 </Box>
-
-                <Box flex="1" h="full" ml={10}>
-                  <Image
-                    src="https://img.freepik.com/free-vector/business-teamwork-concept-teamwork-leadership-effort-hard-work-team-strategy-concept-brainstorm-workshop-management-skills-vector-cartoon-illustration-flat-design_1150-56223.jpg?t=st=1741944634~exp=1741948234~hmac=a8809da68f5bcdb67d8616d53467b3b475fdf51020c728f1a1a1a00874fd875e&w=996"
-                    alt="Platform Preview"
-                    objectFit="cover"
-                    borderRadius="lg"
-                    shadow="md"
-                    height="80%"
-                  />
-                </Box>
               </Dialog.Body>
             </Dialog.Content>
           </Dialog.Positioner>
@@ -199,43 +198,31 @@ const CreateForm = ({ type }: { type: string }) => {
 
   return (
     <>
-      <InputField name="name" label="Platform Name" />
-
       {platformOptions.length > 0 && (
         <Box mb={4}>
-          <Text mb={2} fontWeight="medium">
-            Platform Type
-          </Text>
           <Flex gap={3} flexWrap="wrap">
             {platformOptions.map((option) => (
-              <Box
+              <Chip
                 key={option.type}
-                p={3}
-                borderWidth="1px"
-                borderRadius="md"
-                cursor="pointer"
-                bg={currentType === option.type ? "blue.50" : "transparent"}
-                borderColor={currentType === option.type ? "blue.500" : "gray.200"}
+                height={2.3}
+                paddingX="12"
+                selected={currentType === option.type}
+                prefixIcon={() => option.icon}
                 onClick={() => setFieldValue("type", option.type)}
-                _hover={{ borderColor: "blue.300" }}
-                width="fit-content"
-              >
-                <Flex alignItems="center" gap={2}>
-                  {option.icon}
-                  <Text fontSize="sm">{option.name}</Text>
-                </Flex>
-              </Box>
+                label={option.name}
+              />
             ))}
           </Flex>
         </Box>
       )}
+      <InputField name="name" label="Platform Name" />
 
       {[PlatformType.Web, PlatformType.Flutterweb].includes(currentType) && (
         <InputField
           name="hostname"
           label="Hostname"
           placeholder="example.com"
-          description="Enter the domain where this platform will be deployed"
+          description="Enter the domain where this platform will be deployed (can be wildcard domain like *.example.com)"
         />
       )}
 
@@ -252,16 +239,16 @@ const CreateForm = ({ type }: { type: string }) => {
             placeholder={currentType.includes("ios") ? "com.example.app" : "com.example.app"}
             description="Enter your app bundle identifier/package name"
           />
-          <InputField
-            name="store"
-            label="App Store URL"
-            placeholder={
-              currentType.includes("ios")
-                ? "https://apps.apple.com/app/id123456789"
-                : "https://play.google.com/store/apps/details?id=com.example.app"
-            }
-            description="Optional: Enter your app store URL if published"
-          />
+          {/* <InputField
+              name="store"
+              label="App Store URL"
+              placeholder={
+                currentType.includes("ios")
+                  ? "https://apps.apple.com/app/id123456789"
+                  : "https://play.google.com/store/apps/details?id=com.example.app"
+              }
+              description="Optional: Enter your app store URL if published"
+            /> */}
         </>
       )}
     </>

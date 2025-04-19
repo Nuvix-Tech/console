@@ -1,4 +1,4 @@
-import { Button, Chip, Column, Heading, Line, Row } from "@/ui/components";
+import { Chip, Column, Heading, Row } from "@/ui/components";
 import { useProjectStore } from "@/lib/store";
 import { IDChip } from "@/components/others";
 import { useRouter } from "@bprogress/next";
@@ -94,7 +94,11 @@ export const TopInfo = () => {
                 {availablePlatforms.map((platform) => {
                   const config = platformConfig[platform as keyof typeof platformConfig];
                   return (
-                    <CreatePlatform key={platform} type={config.type}>
+                    <CreatePlatform
+                      key={platform}
+                      type={config.type}
+                      onClose={togglePlatformOptions}
+                    >
                       <Chip
                         height={2.3}
                         paddingX="12"

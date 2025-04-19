@@ -9,8 +9,9 @@ import { useSearchQuery } from "@/hooks/useQuery";
 import { EmptyState } from "@/components/_empty_state";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { HStack } from "@chakra-ui/react";
-import { CreateDatabase, DatabaseCard } from "../database/components";
+import { DatabaseCard } from "../database/components";
 import { _Models } from "@/lib/external-sdk";
+import { CreateSchema } from "./components";
 
 const DatabasePage = () => {
   // const setSidebarNull = useProjectStore.use.setSidebarNull();
@@ -40,7 +41,7 @@ const DatabasePage = () => {
     <CreateButton
       hasPermission={canCreateDatabases}
       label="Create Schema"
-      component={CreateDatabase}
+      component={CreateSchema}
     />
   );
 
@@ -64,8 +65,8 @@ const DatabasePage = () => {
       >
         <EmptyState
           show={data.total === 0 && !isFetching && !hasQuery}
-          title="No Databases"
-          description="No databases have been created yet."
+          title="No Schemas"
+          description="No schemas have been created yet."
           primaryComponent={create}
         />
 

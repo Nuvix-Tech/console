@@ -9,7 +9,7 @@ import styles from "./Chip.module.scss";
 interface ChipProps extends React.ComponentProps<typeof Flex> {
   label: string;
   selected?: boolean;
-  prefixIcon?: ReactNode;
+  prefixIcon?: React.ComponentProps<typeof Icon>["name"];
   onRemove?: () => void;
   onClick?: MouseEventHandler<HTMLDivElement>;
   children?: ReactNode;

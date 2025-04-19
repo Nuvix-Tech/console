@@ -114,6 +114,25 @@ export class Schema {
     return await this.client.call("post", uri, apiHeaders, payload);
   }
 
+  async create(
+    name: string,
+    type: "managed" | "unmanaged",
+    description?: string,
+  ): Promise<Models.Schema> {
+    const apiPath = this.namespace;
+    const payload: Payload = {
+      name,
+      type,
+      description,
+    };
+    const uri = new URL(this.client.config.endpoint + apiPath);
+
+    const apiHeaders: { [header: string]: string } = {
+      "content-type": "application/json",
+    };
+    return await this.client.call("post", uri, apiHeaders, payload);
+  }
+
   async getTables(name: string): Promise<Models.TableList> {
     const apiPath = this.namespace + "/" + name + "/tables";
     const payload: Payload = {};
@@ -129,8 +148,12 @@ export class Schema {
     return this.getTables(name);
   }
 
-  async createTable({ name, permissions }: { name: string; permissions: string[] }) {
-    const apiPath = this.namespace + "/" + name + "/tables";
+  async createTable({
+    schema,
+    name,
+    permissions,
+  }: { schema: string; name: string; permissions: string[] }) {
+    const apiPath = this.namespace + "/" + schema + "/tables";
     const payload: Payload = {
       name,
       permissions,

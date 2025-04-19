@@ -16,7 +16,11 @@ export const DatabaseCard = ({ database }: DatabaseCardProps) => {
       unstyled
       key={database.name}
       fillWidth
-      href={database.type === "managed" ? `/project/${id}/database/schemas/${schemaId}/tables` : `/project/${id}/d-schema/${database.name}`}
+      href={
+        database.type === "managed"
+          ? `/project/${id}/database/schemas/${schemaId}/tables`
+          : `/project/${id}/d-schema/${database.name}`
+      }
     >
       <Card
         radius="l-4"
@@ -32,7 +36,7 @@ export const DatabaseCard = ({ database }: DatabaseCardProps) => {
           <Text as={"h3"} size="xl" onBackground="neutral-strong">
             {database.name}
           </Text>
-          <Database className="absolute right-4 opacity-10 size-28 rotate-45 bottom-4 neutral-on-background-weak" />
+          {/* <Database className="absolute right-4 opacity-10 size-28 rotate-45 bottom-4 neutral-on-background-weak" /> */}
         </Column>
         <div onClick={(e) => e.preventDefault()} className="inline w-min">
           <IDChip id={database.name} hideIcon />
