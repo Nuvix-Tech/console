@@ -7,7 +7,7 @@ import { DataGrid } from "react-data-grid";
 export const TableEditor = () => {
   const sdk = useProjectStore.use.sdk();
 
-  const fetcher = async () => sdk.schema.getTables("m_do");
+  const fetcher = async () => sdk.schema.getTables("public");
 
   const { data, isPending, isError } = useSuspenseQuery({
     queryKey: ["sc"],

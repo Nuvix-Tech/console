@@ -162,7 +162,7 @@ export class Schema {
       columns: [],
       indexes: [],
       rls: false,
-      cls: false
+      cls: false,
     };
     const uri = new URL(this.client.config.endpoint + apiPath);
 

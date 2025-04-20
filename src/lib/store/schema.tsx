@@ -14,10 +14,10 @@ const useSchema = create<SchemaStore>((set) => ({
   schema: {
     $id: "public",
     name: "public",
-    type: "managed"
+    type: "managed",
   },
   setSchema: (schema) => set({ schema }),
-  refetch: async () => { },
+  refetch: async () => {},
   setRefetch: (refetch) => set({ refetch }),
 }));
 
