@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from "react";
 import { useProjectStore } from "@/lib/store";
 import { Form, InputField, SubmitButton } from "@/components/others/forms";
-import { Line, useToast } from "@/ui/components";
+import { Column, Line, useToast } from "@/ui/components";
 import { PermissionsEditor } from "@/components/others/permissions";
 import { useFormikContext } from "formik";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -34,7 +34,7 @@ export const CreateTable: React.FC<CreateTableProps> = ({ isOpen, onClose, refet
 
   return (
     <>
-      <Drawer.Root open={isOpen} onOpenChange={handleClose} size="sm">
+      <Drawer.Root open={isOpen} onOpenChange={handleClose} size="lg">
         <Portal>
           <Drawer.Backdrop />
           <Drawer.Positioner>
@@ -92,13 +92,15 @@ const TableSettings = () => {
     <>
       <Drawer.Body>
         <div className="flex flex-col gap-4">
-          <InputField name="name" label="Table Name" placeholder="Enter table name" />
-          <InputField
-            name="description"
-            label="Description"
-            placeholder="Enter table description"
-          />
-          <Line />
+          <Column paddingX="24" gap="12">
+            <InputField name="name" label="Name" placeholder="Enter table name" />
+            <InputField
+              name="description"
+              label="Description"
+              placeholder="Enter table description"
+            />
+          </Column>
+          <Line marginY="16" />
           <div>
             <Alert>
               <Info className="h-4 w-4" />
