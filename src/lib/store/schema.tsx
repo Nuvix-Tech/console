@@ -11,9 +11,13 @@ interface SchemaStore {
 }
 
 const useSchema = create<SchemaStore>((set) => ({
-  schema: undefined,
+  schema: {
+    $id: "public",
+    name: "public",
+    type: "managed"
+  },
   setSchema: (schema) => set({ schema }),
-  refetch: async () => {},
+  refetch: async () => { },
   setRefetch: (refetch) => set({ refetch }),
 }));
 

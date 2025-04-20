@@ -161,6 +161,8 @@ export class Schema {
       permissions,
       columns: [],
       indexes: [],
+      rls: false,
+      cls: false
     };
     const uri = new URL(this.client.config.endpoint + apiPath);
 
