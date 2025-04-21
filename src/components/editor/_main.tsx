@@ -2,11 +2,27 @@
 import { ModelsX } from "@/lib/external-sdk";
 import { useProjectStore } from "@/lib/store";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import { DataGrid } from "react-data-grid";
 
 export const TableEditor = () => {
-  const sdk = useProjectStore.use.sdk();
+  const searchParam = useSearchParams();
+  const currentTable = searchParam.get("table");
 
+  if (!currentTable) return "Select A table.";
+
+  return (
+    <>
+      <Suspense fallback={"Loading ....."}>
+        <TableView table={currentTable} />
+      </Suspense>
+    </>
+  );
+};
+
+export const TableView = ({ table }: { table: string }) => {
+  const sdk = useProjectStore.use.sdk();
   const fetcher = async () => sdk.schema.getTables("public");
 
   const { data, isPending, isError } = useSuspenseQuery({

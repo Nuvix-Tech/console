@@ -1,5 +1,5 @@
 import { useProjectStore } from "@/lib/store";
-import { ToggleButton } from "@/ui/components";
+import { Column, ToggleButton } from "@/ui/components";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -23,16 +23,20 @@ export const Sidebar = () => {
       <div className="h-full w-full">
         {isPending && <div>Loading...</div>}
         {isError && <div>Error loading tables</div>}
-        {data &&
-          data.tables.length &&
-          data.tables.map((table) => (
-            <ToggleButton
-              key={table.name}
-              selected={table.name === currentTable}
-              label={table.name}
-              href={`?table=${table.name}`}
-            />
-          ))}
+        <Column gap="4" padding="12">
+          {data &&
+            data.tables.length &&
+            data.tables.map((table) => (
+              <ToggleButton
+                fillWidth
+                justifyContent="flex-start"
+                key={table.name}
+                selected={table.name === currentTable}
+                label={table.name}
+                href={`?table=${table.name}`}
+              />
+            ))}
+        </Column>
       </div>
     </>
   );
