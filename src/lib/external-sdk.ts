@@ -171,4 +171,26 @@ export class Schema {
     };
     return await this.client.call("post", uri, apiHeaders, payload);
   }
+
+  async getTable(name: string, schema: string): Promise<Models.Table> {
+    const apiPath = this.namespace + "/" + schema + "/tables/" + name;
+    const payload: Payload = {};
+    const uri = new URL(this.client.config.endpoint + apiPath);
+
+    const apiHeaders: { [header: string]: string } = {
+      "content-type": "application/json",
+    };
+    return await this.client.call("get", uri, apiHeaders, payload);
+  }
+
+  async getRows(name: string, schema: string): Promise<any[]> {
+    const apiPath = this.namespace + "/" + schema + "/tables/" + name + "/rows";
+    const payload: Payload = {};
+    const uri = new URL(this.client.config.endpoint + apiPath);
+
+    const apiHeaders: { [header: string]: string } = {
+      "content-type": "application/json",
+    };
+    return await this.client.call("get", uri, apiHeaders, payload);
+  }
 }
