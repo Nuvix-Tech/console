@@ -62,8 +62,13 @@ export class Schema {
 
   private readonly namespace = "/databases/schemas" as const;
 
-  constructor(client: Client) {
+  private readonly ns2 = "/schemas" as const;
+
+  private endpoint: string;
+
+  constructor(client: Client, endpoint: string) {
     this.client = client;
+    this.endpoint = endpoint;
   }
 
   async list(): Promise<Models.SchemaList> {
@@ -184,9 +189,9 @@ export class Schema {
   }
 
   async getRows(name: string, schema: string): Promise<any[]> {
-    const apiPath = this.namespace + "/" + schema + "/tables/" + name + "/rows";
+    const apiPath = this.ns2 + "/" + schema + "/table/" + name;
     const payload: Payload = {};
-    const uri = new URL(this.client.config.endpoint + apiPath);
+    const uri = new URL(this.endpoint + apiPath);
 
     const apiHeaders: { [header: string]: string } = {
       "content-type": "application/json",
