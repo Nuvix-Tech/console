@@ -98,6 +98,11 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
       icon: <span className="icon-folder" />,
     },
     {
+      name: "Table Editor",
+      href: `/project/${id}/editor`,
+      icon: <span className="icon-table" />,
+    },
+    {
       name: "Functions",
       href: `/project/${id}/functions`,
       icon: <span className="icon-sparkles" />,

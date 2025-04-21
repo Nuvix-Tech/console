@@ -6,7 +6,7 @@ import React from "react";
 export default function ({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <Stack position="relative" as={"aside"} className="w-[280px]">
+      <Stack position="relative" as={"aside"} className="w-[248px]">
         <ConsoleSidebar />
       </Stack>
       <Stack className="flex-1" height="full" position="relative" as={"main"}>
