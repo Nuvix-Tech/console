@@ -1,11 +1,7 @@
 "use client";
-import { ModelsX } from "@/lib/external-sdk";
-import { useProjectStore } from "@/lib/store";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { DataGrid } from "react-data-grid";
-import { Editor } from "./components";
+import { NuvixGrid } from "./grid";
 
 export const TableEditor = () => {
   const searchParam = useSearchParams();
@@ -16,7 +12,7 @@ export const TableEditor = () => {
   return (
     <>
       <Suspense fallback={"Loading ....."}>
-        <Editor table={currentTable} />
+        <NuvixGrid table={currentTable} />
       </Suspense>
     </>
   );

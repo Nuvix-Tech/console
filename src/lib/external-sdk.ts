@@ -198,4 +198,46 @@ export class Schema {
     };
     return await this.client.call("get", uri, apiHeaders, payload);
   }
+
+  async insertRow(name: string, schema: string, data: { [key: string]: any }): Promise<any> {
+    const apiPath = this.ns2 + "/" + schema + "/table/" + name;
+    const payload: Payload = {
+      data,
+    };
+    const uri = new URL(this.endpoint + apiPath);
+
+    const apiHeaders: { [header: string]: string } = {
+      "content-type": "application/json",
+    };
+    return await this.client.call("post", uri, apiHeaders, payload);
+  }
+
+  async updateRow(
+    name: string,
+    schema: string,
+    id: number,
+    data: { [key: string]: any },
+  ): Promise<any> {
+    const apiPath = this.ns2 + "/" + schema + "/table/" + name + "/" + id;
+    const payload: Payload = {
+      data,
+    };
+    const uri = new URL(this.endpoint + apiPath);
+
+    const apiHeaders: { [header: string]: string } = {
+      "content-type": "application/json",
+    };
+    return await this.client.call("post", uri, apiHeaders, payload); // update
+  }
+
+  async deleteRow(name: string, schema: string, id: number): Promise<any> {
+    const apiPath = this.ns2 + "/" + schema + "/table/" + name + "/" + id;
+    const payload: Payload = {};
+    const uri = new URL(this.endpoint + apiPath);
+
+    const apiHeaders: { [header: string]: string } = {
+      "content-type": "application/json",
+    };
+    return await this.client.call("delete", uri, apiHeaders, payload);
+  }
 }
