@@ -7,12 +7,12 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        hostname: 'api.nuvix.in'
+        hostname: "api.nuvix.in",
       },
       {
-        hostname: "strapi.collegejaankaar.in"
-      }
-    ]
+        hostname: "strapi.collegejaankaar.in",
+      },
+    ],
   },
   reactStrictMode: false,
 };

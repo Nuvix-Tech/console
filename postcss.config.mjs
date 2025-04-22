@@ -1,8 +1,7 @@
 const config = {
   plugins: {
     "@tailwindcss/postcss": {},
-    "@csstools/postcss-global-data":
-    {
+    "@csstools/postcss-global-data": {
       files: ["src/ui/styles/breakpoints.scss"],
     },
     "postcss-custom-media": {},
@@ -16,7 +15,6 @@ const config = {
         "custom-properties": false,
       },
     },
-
   },
 };
 
