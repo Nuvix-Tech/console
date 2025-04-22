@@ -16,12 +16,14 @@ interface GridState {
   setColumns: (columns: any[]) => void;
   setRows: (rows: any[]) => void;
   reset: () => void;
+  table: any;
   dialog: {
     open: boolean;
     type: "create" | "update" | "delete";
     data: React.ReactNode;
   };
   setDialog: (dialog: GridState["dialog"]) => void;
+  setTable: (table: any) => void;
 }
 
 export const useGridStore = create<GridState>()(
@@ -34,6 +36,7 @@ export const useGridStore = create<GridState>()(
           loading: false,
           error: false,
         },
+        table: null,
         setGrid: (grid) => set({ grid }),
         setLoading: (loading) => {
           set((state) => ({ grid: { ...state.grid, loading } }));
@@ -54,6 +57,7 @@ export const useGridStore = create<GridState>()(
           data: null,
         },
         reset: () => set({ grid: { columns: [], rows: [], loading: false, error: false } }),
+        setTable: (table) => set({ table }),
       }),
       {
         name: "grid-store",
@@ -63,6 +67,8 @@ export const useGridStore = create<GridState>()(
 );
 
 export const useGrid = () => {
+  const table = useGridStore((state) => state.table);
+  const setTable = useGridStore((state) => state.setTable);
   const grid = useGridStore((state) => state.grid);
   const setGrid = useGridStore((state) => state.setGrid);
   const setLoading = useGridStore((state) => state.setLoading);
@@ -76,6 +82,8 @@ export const useGrid = () => {
   return {
     grid,
     setGrid,
+    table,
+    setTable,
     setLoading,
     setError,
     setColumns,
