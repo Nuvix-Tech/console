@@ -2,7 +2,6 @@ import React from "react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { devtools } from "zustand/middleware";
-import { immer } from "zustand/middleware/immer";
 
 interface GridState {
   grid: {
@@ -28,7 +27,7 @@ interface GridState {
 export const useGridStore = create<GridState>()(
   devtools(
     persist(
-      immer((set) => ({
+      (set) => ({
         grid: {
           columns: [],
           rows: [],
@@ -36,22 +35,18 @@ export const useGridStore = create<GridState>()(
           error: false,
         },
         setGrid: (grid) => set({ grid }),
-        setLoading: (loading) =>
-          set((state) => {
-            state.grid.loading = loading;
-          }),
-        setError: (error) =>
-          set((state) => {
-            state.grid.error = error;
-          }),
-        setColumns: (columns) =>
-          set((state) => {
-            state.grid.columns = columns;
-          }),
-        setRows: (rows) =>
-          set((state) => {
-            state.grid.rows = rows;
-          }),
+        setLoading: (loading) => {
+          set((state) => ({ grid: { ...state.grid, loading } }));
+        },
+        setError: (error) => {
+          set((state) => ({ grid: { ...state.grid, error } }));
+        },
+        setColumns: (columns) => {
+          set((state) => ({ grid: { ...state.grid, columns } }));
+        },
+        setRows: (rows) => {
+          set((state) => ({ grid: { ...state.grid, rows } }));
+        },
         setDialog: (dialog) => set({ dialog }),
         dialog: {
           open: false,
@@ -59,7 +54,7 @@ export const useGridStore = create<GridState>()(
           data: null,
         },
         reset: () => set({ grid: { columns: [], rows: [], loading: false, error: false } }),
-      })),
+      }),
       {
         name: "grid-store",
       },
