@@ -4,15 +4,14 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { createPortal } from "react-dom";
 
-import { useParams } from "common";
-import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
-import { useTableRowsQuery } from "data/table-rows/table-rows-query";
-import { useTableEditorFiltersSort } from "hooks/misc/useTableEditorFiltersSort";
-import { RoleImpersonationState } from "lib/role-impersonation";
-import { EMPTY_ARR } from "lib/void";
-import { useRoleImpersonationStateSnapshot } from "state/role-impersonation-state";
-import { useTableEditorStateSnapshot } from "state/table-editor";
-import { useTableEditorTableStateSnapshot } from "state/table-editor-table";
+import { useParams, useSearchParams } from "next/navigation";
+// import { useTableRowsQuery } from "data/table-rows/table-rows-query";
+// import { useTableEditorFiltersSort } from "hooks/misc/useTableEditorFiltersSort";
+// import { RoleImpersonationState } from "lib/role-impersonation";
+// import { EMPTY_ARR } from "lib/void";
+// import { useRoleImpersonationStateSnapshot } from "state/role-impersonation-state";
+import { useTableEditorStore } from "@/lib/store/table-editor";
+import { useTableEditorTableState } from "@/lib/store/table";
 import {
   filtersToUrlParams,
   formatFilterURLParams,
@@ -24,7 +23,11 @@ import Footer from "./components/footer/Footer";
 import { Grid } from "./components/grid/Grid";
 import Header, { HeaderProps } from "./components/header/Header";
 import { RowContextMenu } from "./components/menu";
-import { Filter, GridProps } from "./types";
+import { GridProps } from "./types";
+import { useProjectStore } from "@/lib/store";
+import { useQuery } from "@tanstack/react-query";
+
+const EMPTY_ARR: any[] = [];
 
 export const SupabaseGrid = ({
   customHeader,
@@ -35,90 +38,93 @@ export const SupabaseGrid = ({
     gridProps?: GridProps;
   }
 >) => {
-  const { id: _id } = useParams();
-  const tableId = _id ? Number(_id) : undefined;
-
-  const { project } = useProjectContext();
-  const tableEditorSnap = useTableEditorStateSnapshot();
-  const snap = useTableEditorTableStateSnapshot();
+  const query = useSearchParams();
+  const _id = query.get("table");
+  const { project, sdk } = useProjectStore();
+  const tableEditorSnap = useTableEditorStore();
+  const snap = useTableEditorTableState();
 
   const gridRef = useRef<DataGridHandle>(null);
   const [mounted, setMounted] = useState(false);
 
-  const { filters: filter, sorts: sort, setParams } = useTableEditorFiltersSort();
+  // const { filters: filter, sorts: sort, setParams } = useTableEditorFiltersSort();
 
-  const sorts = formatSortURLParams(snap.table.name, sort as string[] | undefined);
-  const filters = formatFilterURLParams(filter as string[]);
+  // const sorts = formatSortURLParams(snap.table.name, sort as string[] | undefined);
+  // const filters = formatFilterURLParams(filter as string[]);
 
-  const onApplyFilters = useCallback(
-    (appliedFilters: Filter[]) => {
-      snap.setEnforceExactCount(false);
-      // Reset page to 1 when filters change
-      snap.setPage(1);
+  // const onApplyFilters = useCallback(
+  //   (appliedFilters: Filter[]) => {
+  //     snap.setEnforceExactCount(false);
+  //     // Reset page to 1 when filters change
+  //     snap.setPage(1);
 
-      const filters = filtersToUrlParams(appliedFilters);
+  //     const filters = filtersToUrlParams(appliedFilters);
 
-      setParams((prevParams) => {
-        return {
-          ...prevParams,
-          filter: filters,
-        };
-      });
+  //     setParams((prevParams) => {
+  //       return {
+  //         ...prevParams,
+  //         filter: filters,
+  //       };
+  //     });
 
-      if (project?.ref) {
-        saveTableEditorStateToLocalStorage({
-          projectRef: project.ref,
-          tableName: snap.table.name,
-          schema: snap.table.schema,
-          filters: filters,
-        });
-      }
-    },
-    [project?.ref, snap.table.name, snap.table.schema],
-  );
+  //     if (project?.ref) {
+  //       saveTableEditorStateToLocalStorage({
+  //         projectRef: project.ref,
+  //         tableName: snap.table.name,
+  //         schema: snap.table.schema,
+  //         filters: filters,
+  //       });
+  //     }
+  //   },
+  //   [project?.ref, snap.table.name, snap.table.schema],
+  // );
 
-  const roleImpersonationState = useRoleImpersonationStateSnapshot();
+  // const roleImpersonationState = useRoleImpersonationStateSnapshot();
 
-  const { data, error, isSuccess, isError, isLoading, isRefetching } = useTableRowsQuery(
+  const { data, error, isSuccess, isError, isLoading, isRefetching } = useQuery(
     {
-      projectRef: project?.ref,
-      connectionString: project?.connectionString,
-      tableId,
-      sorts,
-      filters,
-      page: snap.page,
-      limit: tableEditorSnap.rowsPerPage,
-      roleImpersonationState: roleImpersonationState as RoleImpersonationState,
+      queryKey: ["any"],
+      queryFn: async () => await sdk.schema.getRows("users", _id!),
     },
-    {
-      keepPreviousData: true,
-      retryDelay: (retryAttempt, error: any) => {
-        if (error && error.message?.includes("does not exist")) {
-          setParams((prevParams) => {
-            return {
-              ...prevParams,
-              ...{ sort: undefined },
-            };
-          });
-        }
-        if (retryAttempt > 3) {
-          return Infinity;
-        }
-        return 5000;
-      },
-    },
+    // {
+    //   projectRef: project?.ref,
+    //   connectionString: project?.connectionString,
+    //   tableId,
+    //   sorts,
+    //   filters,
+    //   page: snap.page,
+    //   limit: tableEditorSnap.rowsPerPage,
+    //   roleImpersonationState: roleImpersonationState as RoleImpersonationState,
+    // },
+    // {
+    //   keepPreviousData: true,
+    //   retryDelay: (retryAttempt, error: any) => {
+    //     if (error && error.message?.includes("does not exist")) {
+    //       setParams((prevParams) => {
+    //         return {
+    //           ...prevParams,
+    //           ...{ sort: undefined },
+    //         };
+    //       });
+    //     }
+    //     if (retryAttempt > 3) {
+    //       return Infinity;
+    //     }
+    //     return 5000;
+    //   },
+    // },
   );
 
   useEffect(() => {
     if (!mounted) setMounted(true);
   }, []);
 
-  const rows = data?.rows ?? EMPTY_ARR;
+  const rows = data ?? EMPTY_ARR;
 
   return (
     <DndProvider backend={HTML5Backend} context={window}>
       <div className="sb-grid h-full flex flex-col">
-        <Header sorts={sorts} filters={filters} customHeader={customHeader} />
+        <Header sorts={[]} filters={[]} customHeader={customHeader} />
 
         {children || (
           <>
@@ -130,11 +136,11 @@ export const SupabaseGrid = ({
               isLoading={isLoading}
               isSuccess={isSuccess}
               isError={isError}
-              filters={filters}
-              onApplyFilters={onApplyFilters}
+              filters={[]} //filters
+              onApplyFilters={() => {}} //onApplyFilters
             />
             <Footer isRefetching={isRefetching} />
-            <Shortcuts gridRef={gridRef} rows={rows} />
+            <Shortcuts gridRef={gridRef as any} rows={rows} />
           </>
         )}
 
