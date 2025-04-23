@@ -35,6 +35,7 @@ export interface Columns {
   id: number;
   name: string;
   type: string;
+  format?: string;
   primary_key?: boolean;
   comment?: string;
   default?: any;
@@ -60,3 +61,5 @@ export interface Columns {
     onUpdate?: "CASCADE" | "SET NULL" | "RESTRICT" | "NO ACTION";
   };
 }
+
+export type Column = Columns;

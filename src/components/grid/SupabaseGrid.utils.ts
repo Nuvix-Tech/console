@@ -3,14 +3,15 @@ import { compact } from "lodash";
 import { useEffect } from "react";
 import { CalculatedColumn, CellKeyboardEvent } from "react-data-grid";
 
-import type { Filter, SavedState } from "components/grid/types";
-import { Entity, isTableLike } from "data/table-editor/table-editor-types";
-import { useUrlState } from "hooks/ui/useUrlState";
-import { copyToClipboard } from "ui";
+import type { Filter, SavedState } from "@/components/grid/types";
+// import { useUrlState } from "hooks/ui/useUrlState";
+// import { copyToClipboard } from "ui";
 import { FilterOperatorOptions } from "./components/header/filter/Filter.constants";
 import { STORAGE_KEY_PREFIX } from "./constants";
 import type { Sort, SupaColumn, SupaTable } from "./types";
 import { formatClipboardValue } from "./utils/common";
+import { Entity } from "@/types/grid";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export function formatSortURLParams(tableName: string, sort?: string[]): Sort[] {
   if (Array.isArray(sort)) {
@@ -62,59 +63,60 @@ export function filtersToUrlParams(filters: Filter[]) {
 }
 
 export function parseSupaTable(table: Entity): SupaTable {
-  const columns = table.columns;
-  const primaryKeys = isTableLike(table) ? table.primary_keys : [];
-  const relationships = isTableLike(table) ? table.relationships : [];
+  // const columns = table.columns;
+  // const primaryKeys = isTableLike(table) ? table.primary_keys : [];
+  // const relationships = isTableLike(table) ? table.relationships : [];
 
-  const supaColumns: SupaColumn[] = columns.map((column) => {
-    const temp = {
-      position: column.ordinal_position,
-      name: column.name,
-      defaultValue: column.default_value as string | null | undefined,
-      dataType: column.data_type,
-      format: column.format,
-      isPrimaryKey: false,
-      isIdentity: column.is_identity,
-      isGeneratable: column.identity_generation == "BY DEFAULT",
-      isNullable: column.is_nullable,
-      isUpdatable: column.is_updatable,
-      enum: column.enums,
-      comment: column.comment,
-      foreignKey: {
-        targetTableSchema: null as string | null,
-        targetTableName: null as string | null,
-        targetColumnName: null as string | null,
-        deletionAction: undefined as string | undefined,
-        updateAction: undefined as string | undefined,
-      },
-    };
-    const primaryKey = primaryKeys.find((pk) => pk.name == column.name);
-    temp.isPrimaryKey = !!primaryKey;
+  // const supaColumns: SupaColumn[] = columns.map((column) => {
+  //   const temp = {
+  //     position: column.ordinal_position,
+  //     name: column.name,
+  //     defaultValue: column.default_value as string | null | undefined,
+  //     dataType: column.data_type,
+  //     format: column.format,
+  //     isPrimaryKey: false,
+  //     isIdentity: column.is_identity,
+  //     isGeneratable: column.identity_generation == "BY DEFAULT",
+  //     isNullable: column.is_nullable,
+  //     isUpdatable: column.is_updatable,
+  //     enum: column.enums,
+  //     comment: column.comment,
+  //     foreignKey: {
+  //       targetTableSchema: null as string | null,
+  //       targetTableName: null as string | null,
+  //       targetColumnName: null as string | null,
+  //       deletionAction: undefined as string | undefined,
+  //       updateAction: undefined as string | undefined,
+  //     },
+  //   };
+  //   const primaryKey = primaryKeys.find((pk) => pk.name == column.name);
+  //   temp.isPrimaryKey = !!primaryKey;
 
-    const relationship = relationships.find((relation) => {
-      return (
-        relation.source_schema === column.schema &&
-        relation.source_table_name === column.table &&
-        relation.source_column_name === column.name
-      );
-    });
-    if (relationship) {
-      temp.foreignKey.targetTableSchema = relationship.target_table_schema;
-      temp.foreignKey.targetTableName = relationship.target_table_name;
-      temp.foreignKey.targetColumnName = relationship.target_column_name;
-      temp.foreignKey.deletionAction = relationship.deletion_action;
-      temp.foreignKey.updateAction = relationship.update_action;
-    }
-    return temp;
-  });
+  //   const relationship = relationships.find((relation) => {
+  //     return (
+  //       relation.source_schema === column.schema &&
+  //       relation.source_table_name === column.table &&
+  //       relation.source_column_name === column.name
+  //     );
+  //   });
+  //   if (relationship) {
+  //     temp.foreignKey.targetTableSchema = relationship.target_table_schema;
+  //     temp.foreignKey.targetTableName = relationship.target_table_name;
+  //     temp.foreignKey.targetColumnName = relationship.target_column_name;
+  //     temp.foreignKey.deletionAction = relationship.deletion_action;
+  //     temp.foreignKey.updateAction = relationship.update_action;
+  //   }
+  //   return temp;
+  // });
 
   return {
-    id: table.id,
-    name: table.name,
-    comment: table.comment,
-    schema: table.schema,
-    columns: supaColumns,
-    estimateRowCount: isTableLike(table) ? table.live_rows_estimate : 0,
+    ...table,
+    // id: table.id,
+    // name: table.name,
+    // comment: table.comment,
+    // schema: table.schema,
+    // columns: columns,
+    // estimateRowCount: isTableLike(table) ? table.live_rows_estimate : 0,
   };
 }
 
@@ -176,6 +178,32 @@ export const saveTableEditorStateToLocalStorageDebounced = AwesomeDebouncePromis
   500,
 );
 
+function useUrlState({
+  arrayKeys,
+}: {
+  arrayKeys: string[];
+}): {
+  setParams: (params: Record<string, any>) => void;
+} {
+  const params = useSearchParams();
+  const router = useRouter();
+  const setParams = (newParams: Record<string, any>) => {
+    const searchParams = new URLSearchParams(params.toString());
+    Object.entries(newParams).forEach(([key, value]) => {
+      if (arrayKeys.includes(key)) {
+        searchParams.delete(key);
+        value.forEach((v: string) => searchParams.append(key, v));
+      } else {
+        searchParams.set(key, value);
+      }
+    });
+    router.push(`?${searchParams.toString()}`);
+  };
+  return {
+    setParams,
+  };
+}
+
 export function useLoadTableEditorStateFromLocalStorageIntoUrl({
   projectRef,
   table,
@@ -183,7 +211,7 @@ export function useLoadTableEditorStateFromLocalStorageIntoUrl({
   projectRef: string | undefined;
   table: Entity | undefined;
 }) {
-  const [_, setParams] = useUrlState({
+  const { setParams } = useUrlState({
     arrayKeys: ["sort", "filter"],
   });
   useEffect(() => {
@@ -208,7 +236,7 @@ export function useLoadTableEditorStateFromLocalStorageIntoUrl({
     }
 
     if (params) {
-      setParams((prevParams) => ({ ...prevParams, ...params }));
+      setParams({ ...params });
     }
   }, [projectRef, table]);
 }
@@ -221,6 +249,7 @@ export const handleCopyCell = (
     const colKey = column.key;
     const cellValue = row[colKey] ?? "";
     const value = formatClipboardValue(cellValue);
-    copyToClipboard(value);
+    // copyToClipboard(value);
+    console.warn("Not Implemented &&&");
   }
 };

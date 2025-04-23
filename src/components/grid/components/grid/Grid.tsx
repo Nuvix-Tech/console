@@ -79,8 +79,13 @@ export const Grid = memo(
       const { project } = useProjectStore();
 
       function getColumnForeignKey(columnName: string) {
-        const { table: _table } =
-          table?.columns.find((x) => x.name == columnName)?.references ?? {};
+        const {
+          table: _table,
+          schema,
+          column,
+          onDelete,
+          onUpdate,
+        } = table?.columns.find((x) => x.name == columnName)?.references ?? {};
 
         // const fk = data?.find(
         //   (key: any) =>
@@ -92,7 +97,16 @@ export const Grid = memo(
         //     key.target_columns.includes(targetColumnName),
         // );
         // fk !== undefined ? formatForeignKeys([fk])[0] : undefined
-        return _table;
+        return {
+          table: table.name,
+          schema: table.schema,
+          column: columnName,
+          foreignColumn: column!,
+          foreignTable: _table!,
+          foreignSchema: schema!,
+          onDelete: onDelete,
+          onUpdate: onUpdate,
+        };
       }
 
       function onRowDoubleClick(row: any, column: any) {

@@ -1,11 +1,23 @@
 import { create } from "zustand";
-import type { PostgresColumn } from "@supabase/postgres-meta";
-import type { SupaRow } from "components/grid/types";
-import { ForeignKey } from "components/interfaces/TableGridEditor/SidePanelEditor/ForeignKeySelector/ForeignKeySelector.types";
-import type { EditValue } from "components/interfaces/TableGridEditor/SidePanelEditor/RowEditor/RowEditor.types";
-import type { Dictionary } from "types";
+import type { SupaRow, Dictionary } from "@/components/grid/types";
+// import { ForeignKey } from "components/interfaces/TableGridEditor/SidePanelEditor/ForeignKeySelector/ForeignKeySelector.types";
+// import type { EditValue } from "components/interfaces/TableGridEditor/SidePanelEditor/RowEditor/RowEditor.types";
+import { Column } from "@/types/grid";
 
 export const TABLE_EDITOR_DEFAULT_ROWS_PER_PAGE = 100;
+
+type PostgresColumn = Column;
+type EditValue = any; // TODO: Define the type for EditValue
+type ForeignKey = {
+  schema: string;
+  table: string;
+  column: string;
+  foreignColumn: string;
+  foreignTable: string;
+  foreignSchema: string;
+  onDelete?: string;
+  onUpdate?: string;
+};
 
 type ForeignKeyState = {
   foreignKey: ForeignKey;
@@ -89,10 +101,12 @@ export const useTableEditorStore = create<TableEditorState>((set, get) => ({
 
   // Computed getters
   get sidePanel() {
-    return get().ui.open === "side-panel" ? get().ui.sidePanel : undefined;
+    return get().ui.open === "side-panel" ? (get().ui as any).sidePanel : undefined;
   },
   get confirmationDialog() {
-    return get().ui.open === "confirmation-dialog" ? get().ui.confirmationDialog : undefined;
+    return get().ui.open === "confirmation-dialog"
+      ? (get().ui as any).confirmationDialog
+      : undefined;
   },
 
   // Actions
