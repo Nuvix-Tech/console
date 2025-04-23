@@ -21,7 +21,7 @@ import {
 import { Shortcuts } from "./components/common/Shortcuts";
 import Footer from "./components/footer/Footer";
 import { Grid } from "./components/grid/Grid";
-import Header, { HeaderProps } from "./components/header/Header";
+// import Header, { HeaderProps } from "./components/header/Header";
 import { RowContextMenu } from "./components/menu";
 import { GridProps } from "./types";
 import { useProjectStore } from "@/lib/store";
@@ -30,11 +30,12 @@ import { useQuery } from "@tanstack/react-query";
 const EMPTY_ARR: any[] = [];
 
 export const SupabaseGrid = ({
-  customHeader,
+  // customHeader,
   gridProps,
   children,
 }: PropsWithChildren<
-  Pick<HeaderProps, "customHeader"> & {
+  // Pick<HeaderProps, "customHeader"> & 
+  {
     gridProps?: GridProps;
   }
 >) => {
@@ -124,7 +125,7 @@ export const SupabaseGrid = ({
   return (
     <DndProvider backend={HTML5Backend} context={window}>
       <div className="sb-grid h-full flex flex-col">
-        <Header sorts={[]} filters={[]} customHeader={customHeader} />
+        {/* <Header sorts={[]} filters={[]} customHeader={customHeader} /> */}
 
         {children || (
           <>
@@ -139,12 +140,12 @@ export const SupabaseGrid = ({
               filters={[]} //filters
               onApplyFilters={() => {}} //onApplyFilters
             />
-            <Footer isRefetching={isRefetching} />
+            {/* <Footer isRefetching={isRefetching} /> */}
             <Shortcuts gridRef={gridRef as any} rows={rows} />
           </>
         )}
 
-        {mounted && createPortal(<RowContextMenu rows={rows} />, document.body)}
+        {/* {mounted && createPortal(<RowContextMenu rows={rows} />, document.body)} */}
       </div>
     </DndProvider>
   );

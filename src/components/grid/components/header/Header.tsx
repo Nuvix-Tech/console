@@ -1,45 +1,42 @@
-import { PermissionAction } from "@supabase/shared-types/out/constants";
-import saveAs from "file-saver";
+// import { PermissionAction } from "@supabase/shared-types/out/constants";
+// import saveAs from "file-saver";
 import { ArrowUp, ChevronDown, FileText, Trash } from "lucide-react";
 import Link from "next/link";
-import Papa from "papaparse";
+// import Papa from "papaparse";
 import { ReactNode, useCallback, useState } from "react";
-import { toast } from "sonner";
 
-import { useParams } from "common";
+// import { useParams } from "common";
 import {
   filtersToUrlParams,
   saveTableEditorStateToLocalStorage,
   sortsToUrlParams,
 } from "../../SupabaseGrid.utils";
-import type { Filter, Sort } from "components/grid/types";
-import GridHeaderActions from "components/interfaces/TableGridEditor/GridHeaderActions";
-import { formatTableRowsToSQL } from "components/interfaces/TableGridEditor/TableEntity.utils";
-import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
-import { ButtonTooltip } from "components/ui/ButtonTooltip";
-import { useTableRowsCountQuery } from "data/table-rows/table-rows-count-query";
-import { fetchAllTableRows, useTableRowsQuery } from "data/table-rows/table-rows-query";
-import { useSendEventMutation } from "data/telemetry/send-event-mutation";
-import { useCheckPermissions } from "hooks/misc/useCheckPermissions";
-import { useSelectedOrganization } from "hooks/misc/useSelectedOrganization";
-import { useTableEditorFiltersSort } from "hooks/misc/useTableEditorFiltersSort";
-import { RoleImpersonationState } from "lib/role-impersonation";
+// import type { Filter, Sort } from "components/grid/types";
+// import GridHeaderActions from "components/interfaces/TableGridEditor/GridHeaderActions";
+// import { formatTableRowsToSQL } from "components/interfaces/TableGridEditor/TableEntity.utils";
+// import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
+// import { ButtonTooltip } from "components/ui/ButtonTooltip";
+// import { useTableRowsCountQuery } from "data/table-rows/table-rows-count-query";
+// import { fetchAllTableRows, useTableRowsQuery } from "data/table-rows/table-rows-query";
+// import { useSendEventMutation } from "data/telemetry/send-event-mutation";
+// import { useCheckPermissions } from "hooks/misc/useCheckPermissions";
+// import { useSelectedOrganization } from "hooks/misc/useSelectedOrganization";
+// import { useTableEditorFiltersSort } from "hooks/misc/useTableEditorFiltersSort";
+// import { RoleImpersonationState } from "lib/role-impersonation";
+// import {
+//   useRoleImpersonationStateSnapshot,
+//   useSubscribeToImpersonatedRole,
+// } from "state/role-impersonation-state";
+import { useTableEditorStore } from "@/lib/store/table-editor";
+import { useTableEditorTableState } from "@/lib/store/table";
+import {  Button} from "@/components/ui/button";
+
 import {
-  useRoleImpersonationStateSnapshot,
-  useSubscribeToImpersonatedRole,
-} from "state/role-impersonation-state";
-import { useTableEditorStateSnapshot } from "state/table-editor";
-import { useTableEditorTableStateSnapshot } from "state/table-editor-table";
-import {
-  Button,
-  cn,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  Separator,
-  SonnerProgress,
-} from "ui";
+} from "@/components/ui/dropdown-menu";
 import FilterPopover from "./filter/FilterPopover";
 import { SortPopover } from "./sort";
 // [Joshen] CSV exports require this guard as a fail-safe if the table is

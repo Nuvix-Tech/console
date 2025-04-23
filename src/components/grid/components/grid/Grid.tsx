@@ -1,20 +1,25 @@
 import { forwardRef, memo, useRef } from "react";
-import DataGrid, { CalculatedColumn, DataGridHandle } from "react-data-grid";
+import { DataGrid, CalculatedColumn, DataGridHandle } from "react-data-grid";
 
-import { handleCopyCell } from "components/grid/SupabaseGrid.utils";
-import { formatForeignKeys } from "components/interfaces/TableGridEditor/SidePanelEditor/ForeignKeySelector/ForeignKeySelector.utils";
-import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
-import AlertError from "components/ui/AlertError";
-import { useForeignKeyConstraintsQuery } from "data/database/foreign-key-constraints-query";
-import { useSendEventMutation } from "data/telemetry/send-event-mutation";
-import { useSelectedOrganization } from "hooks/misc/useSelectedOrganization";
-import { useTableEditorStateSnapshot } from "state/table-editor";
-import { useTableEditorTableStateSnapshot } from "state/table-editor-table";
-import { Button, cn } from "ui";
-import { GenericSkeletonLoader } from "ui-patterns";
-import type { Filter, GridProps, SupaRow } from "../../types";
+// import { handleCopyCell } from "components/grid/SupabaseGrid.utils";
+// import { formatForeignKeys } from "components/interfaces/TableGridEditor/SidePanelEditor/ForeignKeySelector/ForeignKeySelector.utils";
+// import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
+// import AlertError from "components/ui/AlertError";
+// import { useForeignKeyConstraintsQuery } from "data/database/foreign-key-constraints-query";
+// import { useSendEventMutation } from "data/telemetry/send-event-mutation";
+// import { useSelectedOrganization } from "hooks/misc/useSelectedOrganization";
+// import { useTableEditorStateSnapshot } from "state/table-editor";
+// import { useTableEditorTableStateSnapshot } from "state/table-editor-table";
+// import { Button } from '@/components/ui/button';
+// import { GenericSkeletonLoader } from "ui-patterns";
+import type { GridProps, SupaRow } from "../../types";
 import { useOnRowsChange } from "./Grid.utils";
 import RowRenderer from "./RowRenderer";
+import { useTableEditorStore } from "@/lib/store/table-editor";
+import { useTableEditorTableState } from "@/lib/store/table";
+import { useAppStore, useProjectStore } from "@/lib/store";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 const rowKeyGetter = (row: SupaRow) => {
   return row?.idx ?? -1;
@@ -26,8 +31,8 @@ interface IGrid extends GridProps {
   isLoading: boolean;
   isSuccess: boolean;
   isError: boolean;
-  filters: Filter[];
-  onApplyFilters: (appliedFilters: Filter[]) => void;
+  filters: any[]; // Filter
+  onApplyFilters: (appliedFilters: any[]) => void;
 }
 
 // [Joshen] Just for visibility this is causing some hook errors in the browser
@@ -50,8 +55,9 @@ export const Grid = memo(
       },
       ref: React.Ref<DataGridHandle> | undefined,
     ) => {
-      const tableEditorSnap = useTableEditorStateSnapshot();
-      const snap = useTableEditorTableStateSnapshot();
+      const tableEditorSnap = useTableEditorStore();
+      const { getState } = useTableEditorTableState();
+      const snap = getState();
 
       const onRowsChange = useOnRowsChange(rows);
 
@@ -68,9 +74,9 @@ export const Grid = memo(
 
       const table = snap.table;
 
-      const { mutate: sendEvent } = useSendEventMutation();
-      const org = useSelectedOrganization();
-      const { project } = useProjectContext();
+      // const { mutate: sendEvent } = useSendEventMutation();
+      const { organization: org } = useAppStore();
+      const { project } = useProjectStore();
       const { data } = useForeignKeyConstraintsQuery({
         projectRef: project?.ref,
         connectionString: project?.connectionString,
@@ -121,7 +127,7 @@ export const Grid = memo(
               style={{ height: `calc(100% - 35px)` }}
               className="absolute top-9 z-[2] p-2 w-full"
             >
-              {isLoading && <GenericSkeletonLoader />}
+              {/* {isLoading && <GenericSkeletonLoader />}
               {isError && (
                 <AlertError error={error} subject="Failed to retrieve rows from table">
                   {filters.length > 0 && (
@@ -131,7 +137,7 @@ export const Grid = memo(
                     </p>
                   )}
                 </AlertError>
-              )}
+              )} */}
               {isSuccess && (
                 <>
                   {(filters ?? []).length === 0 ? (
@@ -142,22 +148,22 @@ export const Grid = memo(
                       </p>
                       <div className="flex items-center space-x-2 mt-4">
                         {
-                          <Button
-                            type="default"
-                            onClick={() => {
-                              tableEditorSnap.onImportData();
-                              sendEvent({
-                                action: "import_data_button_clicked",
-                                properties: { tableType: "Existing Table" },
-                                groups: {
-                                  project: project?.ref ?? "Unknown",
-                                  organization: org?.slug ?? "Unknown",
-                                },
-                              });
-                            }}
-                          >
-                            Import data from CSV
-                          </Button>
+                          // <Button
+                          //   type="default"
+                          //   onClick={() => {
+                          //     tableEditorSnap.onImportData();
+                          //     sendEvent({
+                          //       action: "import_data_button_clicked",
+                          //       properties: { tableType: "Existing Table" },
+                          //       groups: {
+                          //         project: project?.ref ?? "Unknown",
+                          //         organization: org?.slug ?? "Unknown",
+                          //       },
+                          //     });
+                          //   }}
+                          // >
+                          //   Import data from CSV
+                          // </Button>
                         }
                       </div>
                     </div>
@@ -167,7 +173,7 @@ export const Grid = memo(
                         The filters applied have returned no results from this table
                       </p>
                       <div className="flex items-center space-x-2 mt-4">
-                        <Button type="default" onClick={() => removeAllFilters()}>
+                        <Button onClick={() => removeAllFilters()}>
                           Remove all filters
                         </Button>
                       </div>
@@ -187,12 +193,12 @@ export const Grid = memo(
             renderers={{ renderRow: RowRenderer }}
             rowKeyGetter={rowKeyGetter}
             selectedRows={snap.selectedRows}
-            onColumnResize={snap.updateColumnSize}
+            onColumnResize={snap.updateColumnSize as any}
             onRowsChange={onRowsChange}
             onSelectedCellChange={onSelectedCellChange}
             onSelectedRowsChange={onSelectedRowsChange}
             onCellDoubleClick={(props) => onRowDoubleClick(props.row, props.column)}
-            onCellKeyDown={handleCopyCell}
+          // onCellKeyDown={handleCopyCell as unknown}
           />
         </div>
       );

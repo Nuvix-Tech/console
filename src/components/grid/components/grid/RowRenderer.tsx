@@ -9,7 +9,8 @@ export default function RowRenderer(key: Key, props: RenderRowProps<SupaRow>) {
   const { show: showContextMenu } = useContextMenu();
 
   function displayMenu(e: TriggerEvent) {
-    showContextMenu(e, {
+    showContextMenu({
+      event: e,
       id: ROW_CONTEXT_MENU_ID,
       props: { rowIdx: props.rowIdx },
     });
