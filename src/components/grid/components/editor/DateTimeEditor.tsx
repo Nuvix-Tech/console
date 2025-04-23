@@ -14,7 +14,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { TimestampInfo, timestampLocalFormatter } from "@/components/editor/components/_timestamp_info";
+import {
+  TimestampInfo,
+  timestampLocalFormatter,
+} from "@/components/editor/components/_timestamp_info";
 
 interface BaseEditorProps<TRow, TSummaryRow = unknown>
   extends RenderEditCellProps<TRow, TSummaryRow> {

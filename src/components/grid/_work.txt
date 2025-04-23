@@ -8,7 +8,7 @@ X formatter ----> ForegiKey | ReffrenceRecoarder !!! :)
 
 X editor ======> JSON | TEXT | DATE TIME !!! :)
 
-X GRID --> Grid/Utils | SelectColumn !!! :)
+ GRID --> Grid/Utils | SelectColumn !!! :)
 
 menu ---> DONE | NOERRORS __()
 
