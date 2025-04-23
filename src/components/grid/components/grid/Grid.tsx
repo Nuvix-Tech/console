@@ -173,9 +173,7 @@ export const Grid = memo(
                         The filters applied have returned no results from this table
                       </p>
                       <div className="flex items-center space-x-2 mt-4">
-                        <Button onClick={() => removeAllFilters()}>
-                          Remove all filters
-                        </Button>
+                        <Button onClick={() => removeAllFilters()}>Remove all filters</Button>
                       </div>
                     </div>
                   )}
@@ -198,7 +196,7 @@ export const Grid = memo(
             onSelectedCellChange={onSelectedCellChange}
             onSelectedRowsChange={onSelectedRowsChange}
             onCellDoubleClick={(props) => onRowDoubleClick(props.row, props.column)}
-          // onCellKeyDown={handleCopyCell as unknown}
+            // onCellKeyDown={handleCopyCell as unknown}
           />
         </div>
       );

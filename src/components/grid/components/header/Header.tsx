@@ -29,7 +29,7 @@ import {
 // } from "state/role-impersonation-state";
 import { useTableEditorStore } from "@/lib/store/table-editor";
 import { useTableEditorTableState } from "@/lib/store/table";
-import {  Button} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 
 import {
   DropdownMenu,

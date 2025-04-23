@@ -33,12 +33,10 @@ export const SupabaseGrid = ({
   // customHeader,
   gridProps,
   children,
-}: PropsWithChildren<
-  // Pick<HeaderProps, "customHeader"> & 
-  {
-    gridProps?: GridProps;
-  }
->) => {
+}: PropsWithChildren<// Pick<HeaderProps, "customHeader"> &
+{
+  gridProps?: GridProps;
+}>) => {
   const query = useSearchParams();
   const _id = query.get("table");
   const { project, sdk } = useProjectStore();
