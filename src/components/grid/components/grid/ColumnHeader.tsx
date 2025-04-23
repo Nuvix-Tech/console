@@ -3,12 +3,14 @@ import { ArrowRight, Key, Link, Lock } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 
-import { getForeignKeyCascadeAction } from "components/interfaces/TableGridEditor/SidePanelEditor/ColumnEditor/ColumnEditor.utils";
-import { FOREIGN_KEY_CASCADE_ACTION } from "data/database/database-query-constants";
-import { useTableEditorTableStateSnapshot } from "state/table-editor-table";
-import { Tooltip, TooltipContent, TooltipTrigger } from "ui";
+// import { getForeignKeyCascadeAction } from "components/interfaces/TableGridEditor/SidePanelEditor/ColumnEditor/ColumnEditor.utils";
+// import { FOREIGN_KEY_CASCADE_ACTION } from "data/database/database-query-constants";
+// import { useTableEditorTableStateSnapshot } from "state/table-editor-table";
+// import { Tooltip, TooltipContent, TooltipTrigger } from "ui";
 import type { ColumnHeaderProps, ColumnType, DragItem, GridForeignKey } from "../../types";
 import { ColumnMenu } from "../menu";
+import { useTableEditorTableState } from "@/lib/store/table";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export function ColumnHeader<R>({
   column,
@@ -22,7 +24,8 @@ export function ColumnHeader<R>({
   const columnIdx = column.idx;
   const columnKey = column.key;
   const columnFormat = getColumnFormat(columnType, format);
-  const snap = useTableEditorTableStateSnapshot();
+  const { getState } = useTableEditorTableState();
+  const snap = getState();
   const hoverValue = column.name as string;
 
   // keep snap.gridColumns' order in sync with data grid component
@@ -173,7 +176,7 @@ function renderColumnIcon(
                   {foreignKey?.targetColumnName}
                 </p>
               </div>
-              {foreignKey?.updateAction !== FOREIGN_KEY_CASCADE_ACTION.NO_ACTION && (
+              {/* {foreignKey?.updateAction !== FOREIGN_KEY_CASCADE_ACTION.NO_ACTION && (
                 <p className="text-xs !text-foreground mt-1">
                   On update: {getForeignKeyCascadeAction(foreignKey?.updateAction)}
                 </p>
@@ -182,7 +185,7 @@ function renderColumnIcon(
                 <p className="text-xs !text-foreground mt-1">
                   On delete: {getForeignKeyCascadeAction(foreignKey?.deletionAction)}
                 </p>
-              )}
+              )} */}
             </div>
           </TooltipContent>
         </Tooltip>

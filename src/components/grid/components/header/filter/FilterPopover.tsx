@@ -5,15 +5,12 @@ import { KeyboardEvent, useCallback, useMemo, useState } from "react";
 
 import { formatFilterURLParams } from "../../../SupabaseGrid.utils";
 import type { Filter } from "../../../types";
-import { useTableEditorTableStateSnapshot } from "state/table-editor-table";
-import {
-  Button,
-  PopoverContent_Shadcn_,
-  PopoverSeparator_Shadcn_,
-  PopoverTrigger_Shadcn_,
-  Popover_Shadcn_,
-} from "ui";
+
 import FilterRow from "./FilterRow";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Button } from "@/ui/components";
+import { useTableEditorTableState } from "@/lib/store/table";
+import { Separator } from "@/components/ui/separator";
 
 export interface FilterPopoverProps {
   filters: string[];
@@ -30,16 +27,17 @@ const FilterPopover = ({ filters, portal = true, onApplyFilters }: FilterPopover
       : "Filter";
 
   return (
-    <Popover_Shadcn_ open={open} onOpenChange={setOpen} modal={false}>
-      <PopoverTrigger_Shadcn_ asChild>
-        <Button type={(filters || []).length > 0 ? "link" : "text"} icon={<FilterIcon />}>
+    <Popover open={open} onOpenChange={setOpen} modal={false}>
+      <PopoverTrigger asChild>
+        <Button type={(filters || []).length > 0 ? "link" : "text"} prefixIcon={<FilterIcon />}>
           {btnText}
         </Button>
-      </PopoverTrigger_Shadcn_>
-      <PopoverContent_Shadcn_ className="p-0 w-96" side="bottom" align="start" portal={portal}>
+      </PopoverTrigger>
+      <PopoverContent className="p-0 w-96" side="bottom" align="start">
+        {/* portal={portal} */}
         <FilterOverlay filters={filters} onApplyFilters={onApplyFilters} />
-      </PopoverContent_Shadcn_>
-    </Popover_Shadcn_>
+      </PopoverContent>
+    </Popover>
   );
 };
 
@@ -51,7 +49,8 @@ interface FilterOverlayProps {
 }
 
 const FilterOverlay = ({ filters: filtersFromUrl, onApplyFilters }: FilterOverlayProps) => {
-  const snap = useTableEditorTableStateSnapshot();
+  const { getState } = useTableEditorTableState();
+  const snap = getState();
 
   const initialFilters = useMemo(
     () => formatFilterURLParams((filtersFromUrl as string[]) ?? []),
@@ -127,9 +126,9 @@ const FilterOverlay = ({ filters: filtersFromUrl, onApplyFilters }: FilterOverla
           </div>
         )}
       </div>
-      <PopoverSeparator_Shadcn_ />
+      <Separator />
       <div className="px-3 flex flex-row justify-between">
-        <Button icon={<Plus />} type="text" onClick={onAddFilter}>
+        <Button prefixIcon={<Plus />} type="text" onClick={onAddFilter}>
           Add filter
         </Button>
         <Button
