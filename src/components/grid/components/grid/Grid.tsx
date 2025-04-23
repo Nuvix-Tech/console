@@ -77,27 +77,22 @@ export const Grid = memo(
       // const { mutate: sendEvent } = useSendEventMutation();
       const { organization: org } = useAppStore();
       const { project } = useProjectStore();
-      const { data } = useForeignKeyConstraintsQuery({
-        projectRef: project?.ref,
-        connectionString: project?.connectionString,
-        schema: table?.schema ?? undefined,
-      });
 
       function getColumnForeignKey(columnName: string) {
-        const { targetTableSchema, targetTableName, targetColumnName } =
-          table?.columns.find((x) => x.name == columnName)?.foreignKey ?? {};
+        const { table: _table } =
+          table?.columns.find((x) => x.name == columnName)?.references ?? {};
 
-        const fk = data?.find(
-          (key: any) =>
-            key.source_schema === table?.schema &&
-            key.source_table === table?.name &&
-            key.source_columns.includes(columnName) &&
-            key.target_schema === targetTableSchema &&
-            key.target_table === targetTableName &&
-            key.target_columns.includes(targetColumnName),
-        );
-
-        return fk !== undefined ? formatForeignKeys([fk])[0] : undefined;
+        // const fk = data?.find(
+        //   (key: any) =>
+        //     key.source_schema === table?.schema &&
+        //     key.source_table === table?.name &&
+        //     key.source_columns.includes(columnName) &&
+        //     key.target_schema === targetTableSchema &&
+        //     key.target_table === targetTableName &&
+        //     key.target_columns.includes(targetColumnName),
+        // );
+        // fk !== undefined ? formatForeignKeys([fk])[0] : undefined
+        return _table;
       }
 
       function onRowDoubleClick(row: any, column: any) {
@@ -127,7 +122,13 @@ export const Grid = memo(
               style={{ height: `calc(100% - 35px)` }}
               className="absolute top-9 z-[2] p-2 w-full"
             >
-              {/* {isLoading && <GenericSkeletonLoader />}
+              {/* {isLoading && <GenericSkeletonLoader />}*/}
+              {isLoading && (
+                <div className="flex items-center justify-center h-full">
+                  <p className="text-sm text-light">Loading...</p>
+                </div>
+              )}
+              {/*
               {isError && (
                 <AlertError error={error} subject="Failed to retrieve rows from table">
                   {filters.length > 0 && (

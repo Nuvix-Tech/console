@@ -2,6 +2,7 @@
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { NuvixGrid } from "./grid";
+import { SupabaseGrid } from "../grid/SupabaseGrid";
 
 export const TableEditor = () => {
   const searchParam = useSearchParams();
@@ -12,7 +13,8 @@ export const TableEditor = () => {
   return (
     <>
       <Suspense fallback={"Loading ....."}>
-        <NuvixGrid table={currentTable} />
+        {/* <NuvixGrid table={currentTable} /> */}
+        <SupabaseGrid />
       </Suspense>
     </>
   );

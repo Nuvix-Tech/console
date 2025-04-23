@@ -32,5 +32,6 @@ export interface SupaTable extends Entity {
 }
 
 export interface SupaRow extends Dictionary<any> {
+  readonly $id: string;
   readonly idx: number;
 }

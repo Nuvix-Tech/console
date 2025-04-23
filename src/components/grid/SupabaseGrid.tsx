@@ -33,15 +33,16 @@ export const SupabaseGrid = ({
   // customHeader,
   gridProps,
   children,
-}: PropsWithChildren<// Pick<HeaderProps, "customHeader"> &
-{
+}: PropsWithChildren<{
   gridProps?: GridProps;
 }>) => {
+  // Pick<HeaderProps, "customHeader"> &
   const query = useSearchParams();
   const _id = query.get("table");
   const { project, sdk } = useProjectStore();
   const tableEditorSnap = useTableEditorStore();
-  const snap = useTableEditorTableState();
+  const { getState } = useTableEditorTableState();
+  const snap = getState();
 
   const gridRef = useRef<DataGridHandle>(null);
   const [mounted, setMounted] = useState(false);
