@@ -18,7 +18,7 @@ export declare namespace Models {
     id: number;
     name: string;
     schema: string;
-    comment: string | null;
+    comment?: string;
     rls: boolean;
     cls: boolean;
     $permissions: any[];

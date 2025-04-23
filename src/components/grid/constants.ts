@@ -15,3 +15,5 @@ export const rlsAcknowledgedKey = (tableID?: string | number) =>
 
 export const MAX_CHARACTERS = 1000;
 export const MAX_CHARACTERS_WARNING = 1000;
+
+export const MAX_ARRAY_SIZE = 10;

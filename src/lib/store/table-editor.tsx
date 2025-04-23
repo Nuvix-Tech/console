@@ -63,6 +63,7 @@ export type UIState =
     };
 
 interface TableEditorState {
+  schema: string;
   rowsPerPage: number;
   ui: UIState;
 
@@ -96,6 +97,7 @@ interface TableEditorState {
 }
 
 export const useTableEditorStore = create<TableEditorState>((set, get) => ({
+  schema: "public",
   rowsPerPage: TABLE_EDITOR_DEFAULT_ROWS_PER_PAGE,
   ui: { open: "none" },
 

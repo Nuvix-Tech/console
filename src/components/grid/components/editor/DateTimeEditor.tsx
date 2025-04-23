@@ -3,7 +3,6 @@ import { ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { RenderEditCellProps } from "react-data-grid";
 
-// import { TimestampInfo, timestampLocalFormatter } from "ui-patterns";
 import { BlockKeys } from "../common/BlockKeys";
 import { Input } from "@/components/editor/components";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -15,6 +14,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { TimestampInfo, timestampLocalFormatter } from "@/components/editor/components/_timestamp_info";
 
 interface BaseEditorProps<TRow, TSummaryRow = unknown>
   extends RenderEditCellProps<TRow, TSummaryRow> {

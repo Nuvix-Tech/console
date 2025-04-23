@@ -4,11 +4,11 @@ types ---> default | should Modify | No Errors  &&&&
 
 utils ---> default | No Errors
 
-formatter ----> ForegiKey | ReffrenceRecoarder !!!
+X formatter ----> ForegiKey | ReffrenceRecoarder !!! :)
 
-editor ======> JSON | TEXT | DATE TIME !!!
+X editor ======> JSON | TEXT | DATE TIME !!! :)
 
-GRID --> Grid/Utils | SelectColumn !!!
+X GRID --> Grid/Utils | SelectColumn !!! :)
 
 menu ---> DONE | NOERRORS __()
 
