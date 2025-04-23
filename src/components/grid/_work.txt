@@ -1,7 +1,21 @@
 
 
-types ---> default | should Modify | No Errors
+types ---> default | should Modify | No Errors  &&&&
 
 utils ---> default | No Errors
 
-comp/common ---> ./BlockKeys(error exists) | NO MORE
+formatter ----> ForegiKey | ReffrenceRecoarder !!!
+
+editor ======> JSON | TEXT | DATE TIME !!!
+
+GRID --> Grid/Utils | SelectColumn !!!
+
+menu ---> DONE | NOERRORS __()
+
+
+
+
+FOOTER ---> !!! footer --> !!! Pagination
+
+
+HEADER ---> 

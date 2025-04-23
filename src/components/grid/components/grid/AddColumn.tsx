@@ -1,10 +1,10 @@
 import { Plus } from "lucide-react";
 import type { CalculatedColumn } from "react-data-grid";
 
-import { useTableEditorStateSnapshot } from "state/table-editor";
-import { Button } from "ui";
+import { useTableEditorStore } from "@/lib/store/table-editor";
 import { ADD_COLUMN_KEY } from "../../constants";
 import { DefaultFormatter } from "../formatter/DefaultFormatter";
+import { Button } from "@/ui/components";
 
 export const AddColumn: CalculatedColumn<any, any> = {
   key: ADD_COLUMN_KEY,
@@ -29,11 +29,11 @@ export const AddColumn: CalculatedColumn<any, any> = {
 };
 
 const AddColumnHeader = () => {
-  const tableEditorSnap = useTableEditorStateSnapshot();
+  const tableEditorSnap = useTableEditorStore();
 
   return (
-    <div className="flex h-full w-full py-1.5 flex items-center">
-      <Button block type="text" onClick={tableEditorSnap.onAddColumn} icon={<Plus />} />
+    <div className="flex h-full w-full py-1.5 items-center">
+      <Button type="text" onClick={tableEditorSnap.onAddColumn} prefixIcon={<Plus />} />
     </div>
   );
 };

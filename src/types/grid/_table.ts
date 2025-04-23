@@ -35,7 +35,7 @@ export interface Columns {
   id: number;
   name: string;
   type: string;
-  format?: string;
+  format: string;
   primary_key?: boolean;
   comment?: string;
   default?: any;

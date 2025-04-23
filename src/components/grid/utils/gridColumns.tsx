@@ -49,7 +49,7 @@ export function getGridColumns(
     const columnType = getColumnType(x);
     const columnDefaultWidth = getColumnDefaultWidth(x);
     const columnWidthBasedOnName =
-      (x.name.length + x.format.length) * ESTIMATED_CHARACTER_PIXEL_WIDTH;
+      (x.name.length + x.type.length) * ESTIMATED_CHARACTER_PIXEL_WIDTH; // x.format
     const columnWidth = options?.defaultWidth
       ? options.defaultWidth
       : columnDefaultWidth < columnWidthBasedOnName
@@ -64,16 +64,22 @@ export function getGridColumns(
       sortable: true,
       width: columnWidth,
       minWidth: COLUMN_MIN_WIDTH,
-      frozen: x.isPrimaryKey || false,
+      frozen: x.primary_key || false,
       // isLastFrozenColumn: false, // TODO: Check if this is needed
       renderHeaderCell: (props) => (
         <ColumnHeader
           {...props}
           columnType={columnType}
-          isPrimaryKey={x.isPrimaryKey}
-          isEncrypted={x.isEncrypted}
-          format={x.format}
-          foreignKey={x.foreignKey}
+          isPrimaryKey={x.primary_key}
+          isEncrypted={false} // TODO: Check if this is needed
+          format={x.type}
+          foreignKey={{
+            targetTableSchema: x.references?.schema,
+            targetTableName: x.references?.table,
+            targetColumnName: x.references?.column,
+            deletionAction: x.references?.onDelete,
+            updateAction: x.references?.onUpdate,
+          }}
         />
       ),
       renderEditCell: options
@@ -129,33 +135,34 @@ function getCellEditor(
       return;
     }
   }
-  if (columnDefinition.isPrimaryKey || !columnDefinition.isUpdatable) {
+  if (columnDefinition.primary_key) {
+    //|| !columnDefinition.isUpdatable
     return;
   }
 
   switch (columnType) {
     case "boolean": {
       // eslint-disable-next-line react/display-name
-      return (p: any) => <BooleanEditor {...p} isNullable={columnDefinition.isNullable} />;
+      return (p: any) => <BooleanEditor {...p} isNullable={!columnDefinition.not_null} />;
     }
     case "date": {
-      return DateTimeEditor("date", columnDefinition.isNullable || false);
+      return DateTimeEditor("date", !columnDefinition.not_null || false);
     }
     case "datetime": {
-      return columnDefinition.format.endsWith("z")
-        ? DateTimeEditor("datetimetz", columnDefinition.isNullable || false)
-        : DateTimeEditor("datetime", columnDefinition.isNullable || false);
+      return columnDefinition.format?.endsWith("z")
+        ? DateTimeEditor("datetimetz", !columnDefinition.not_null || false)
+        : DateTimeEditor("datetime", !columnDefinition.not_null || false);
     }
     case "time": {
-      return columnDefinition.format.endsWith("z") ? TimeWithTimezoneEditor : TimeEditor;
+      return columnDefinition.format?.endsWith("z") ? TimeWithTimezoneEditor : TimeEditor;
     }
     case "enum": {
-      const options = columnDefinition.enum!.map((x) => {
+      const options = columnDefinition.elements!.map((x) => {
         return { label: x, value: x };
       });
       // eslint-disable-next-line react/display-name
       return (p: any) => (
-        <SelectEditor {...p} options={options} isNullable={columnDefinition.isNullable} />
+        <SelectEditor {...p} options={options} isNullable={!columnDefinition.not_null} />
       );
     }
     case "array":
@@ -173,7 +180,7 @@ function getCellEditor(
         <TextEditor
           {...p}
           isEditable={isEditable}
-          isNullable={columnDefinition.isNullable}
+          isNullable={!columnDefinition.not_null}
           onExpandEditor={onExpandTextEditor}
         />
       );
@@ -194,8 +201,8 @@ function getCellRenderer(
       return BooleanFormatter;
     }
     case "foreign_key": {
-      if (!columnDef.isUpdatable) {
-        return DefaultFormatter;
+      if (true) {
+        return DefaultFormatter; // !columnDef.isUpdatable
       } else {
         // eslint-disable-next-line react/display-name
         return (p: any) => <ForeignKeyFormatter {...p} tableId={metadata.tableId} />;
@@ -216,13 +223,13 @@ function getCellRenderer(
 function getColumnType(columnDef: SupaColumn): ColumnType {
   if (isForeignKeyColumn(columnDef)) {
     return "foreign_key";
-  } else if (isNumericalColumn(columnDef.dataType)) {
+  } else if (isNumericalColumn(columnDef.type)) {
     return "number";
-  } else if (isArrayColumn(columnDef.dataType)) {
+  } else if (isArrayColumn(columnDef.type)) {
     return "array";
-  } else if (isJsonColumn(columnDef.dataType)) {
+  } else if (isJsonColumn(columnDef.type)) {
     return "json";
-  } else if (isTextColumn(columnDef.dataType)) {
+  } else if (isTextColumn(columnDef.type)) {
     return "text";
   } else if (isCiTextColumn(columnDef.format)) {
     return "citext";
@@ -232,17 +239,17 @@ function getColumnType(columnDef: SupaColumn): ColumnType {
     return "time";
   } else if (isDateTimeColumn(columnDef.format)) {
     return "datetime";
-  } else if (isBoolColumn(columnDef.dataType)) {
+  } else if (isBoolColumn(columnDef.type)) {
     return "boolean";
-  } else if (isEnumColumn(columnDef.dataType)) {
+  } else if (isEnumColumn(columnDef.type)) {
     return "enum";
-  } else if (isBinaryColumn(columnDef.dataType)) {
+  } else if (isBinaryColumn(columnDef.type)) {
     return "binary";
   } else return "unknown";
 }
 
 export function getColumnDefaultWidth(columnDef: SupaColumn): number {
-  if (isNumericalColumn(columnDef.dataType)) {
+  if (isNumericalColumn(columnDef.type)) {
     return 120;
   } else if (
     isDateTimeColumn(columnDef.format) ||
@@ -250,9 +257,9 @@ export function getColumnDefaultWidth(columnDef: SupaColumn): number {
     isTimeColumn(columnDef.format)
   ) {
     return 150;
-  } else if (isBoolColumn(columnDef.dataType)) {
+  } else if (isBoolColumn(columnDef.type)) {
     return 120;
-  } else if (isEnumColumn(columnDef.dataType)) {
+  } else if (isEnumColumn(columnDef.type)) {
     return 150;
   } else return 250;
 }

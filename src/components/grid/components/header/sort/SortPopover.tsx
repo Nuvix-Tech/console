@@ -3,18 +3,14 @@ import { isEqual } from "lodash";
 import { ChevronDown, List } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 
-import { formatSortURLParams } from "components/grid/SupabaseGrid.utils";
-import { DropdownControl } from "components/grid/components/common/DropdownControl";
-import type { Sort } from "components/grid/types";
-import { useTableEditorTableStateSnapshot } from "state/table-editor-table";
-import {
-  Button,
-  PopoverContent_Shadcn_,
-  PopoverSeparator_Shadcn_,
-  PopoverTrigger_Shadcn_,
-  Popover_Shadcn_,
-} from "ui";
+import { formatSortURLParams } from "@/components/grid/SupabaseGrid.utils";
+import { DropdownControl } from "@/components/grid/components/common/DropdownControl";
+import type { Sort } from "@/components/grid/types";
+import { useTableEditorTableState } from "@/lib/store/table";
 import SortRow from "./SortRow";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Button } from "@/ui/components";
+import { Separator } from "@/components/ui/separator";
 
 export interface SortPopoverProps {
   sorts: string[];
@@ -31,16 +27,17 @@ const SortPopover = ({ sorts, portal = true, onApplySorts }: SortPopoverProps) =
       : "Sort";
 
   return (
-    <Popover_Shadcn_ modal={false} open={open} onOpenChange={setOpen}>
-      <PopoverTrigger_Shadcn_ asChild>
-        <Button type={(sorts || []).length > 0 ? "link" : "text"} icon={<List />}>
+    <Popover modal={false} open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button type={(sorts || []).length > 0 ? "link" : "text"} prefixIcon={<List />}>
           {btnText}
         </Button>
-      </PopoverTrigger_Shadcn_>
-      <PopoverContent_Shadcn_ className="p-0 w-96" side="bottom" align="start" portal={portal}>
+      </PopoverTrigger>
+      <PopoverContent className="p-0 w-96" side="bottom" align="start">
+        {/* portal={portal} */}
         <SortOverlay sorts={sorts} onApplySorts={onApplySorts} />
-      </PopoverContent_Shadcn_>
-    </Popover_Shadcn_>
+      </PopoverContent>
+    </Popover>
   );
 };
 
@@ -52,7 +49,8 @@ export interface SortOverlayProps {
 }
 
 const SortOverlay = ({ sorts: sortsFromUrl, onApplySorts }: SortOverlayProps) => {
-  const snap = useTableEditorTableStateSnapshot();
+  const { getState } = useTableEditorTableState();
+  const snap = getState();
 
   const initialSorts = useMemo(
     () => formatSortURLParams(snap.table.name, sortsFromUrl ?? []),
@@ -63,7 +61,7 @@ const SortOverlay = ({ sorts: sortsFromUrl, onApplySorts }: SortOverlayProps) =>
   const columns = snap.table.columns.filter((x) => {
     // exclude json/jsonb columns from sorting. Sorting by json fields in PG is only possible if you provide key from
     // the JSON object.
-    if (x.dataType === "json" || x.dataType === "jsonb") {
+    if (x.type === "json" || x.type === "jsonb") {
       return false;
     }
     const found = sorts.find((y) => y.column == x.name);
@@ -126,7 +124,7 @@ const SortOverlay = ({ sorts: sortsFromUrl, onApplySorts }: SortOverlayProps) =>
         </div>
       )}
 
-      <PopoverSeparator_Shadcn_ />
+      <Separator />
       <div className="px-3 flex flex-row justify-between">
         {columns && columns.length > 0 ? (
           <DropdownControl
@@ -136,9 +134,9 @@ const SortOverlay = ({ sorts: sortsFromUrl, onApplySorts }: SortOverlayProps) =>
             align="start"
           >
             <Button
-              asChild
+              // asChild
               type="text"
-              iconRight={<ChevronDown size="14" className="text-foreground-light" />}
+              suffixIcon={<ChevronDown size="14" className="text-foreground-light" />}
               className="sb-grid-dropdown__item-trigger"
               data-testid="table-editor-pick-column-to-sort-button"
             >

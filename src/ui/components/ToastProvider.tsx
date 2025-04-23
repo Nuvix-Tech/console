@@ -7,7 +7,7 @@ import { Toaster } from "./Toaster";
 interface Toast {
   id: string;
   variant: "success" | "danger";
-  message: string;
+  message: string | ReactNode;
   action?: ReactNode;
 }
 

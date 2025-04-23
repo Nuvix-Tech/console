@@ -75,6 +75,6 @@ export function isBinaryColumn(type: string) {
 }
 
 export function isForeignKeyColumn(columnDef: SupaColumn) {
-  const { targetTableSchema, targetTableName, targetColumnName } = columnDef?.foreignKey ?? {};
-  return !!targetTableSchema && !!targetTableName && !!targetColumnName;
+  const { table, schema, column } = columnDef?.references ?? {};
+  return !!schema && !!table && !!column;
 }

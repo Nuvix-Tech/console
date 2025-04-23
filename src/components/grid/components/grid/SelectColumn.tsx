@@ -5,14 +5,15 @@ import {
   RenderCellProps,
   RenderGroupCellProps,
   RenderHeaderCellProps,
+  useHeaderRowSelection,
   useRowSelection,
 } from "react-data-grid";
 
-import { ButtonTooltip } from "components/ui/ButtonTooltip";
-import { useTableEditorStateSnapshot } from "state/table-editor";
-import { useTableEditorTableStateSnapshot } from "state/table-editor-table";
+import { useTableEditorStore } from "@/lib/store/table-editor";
+import { useTableEditorTableState } from "@/lib/store/table";
 import { SELECT_COLUMN_KEY } from "../../constants";
 import type { SupaRow } from "../../types";
+import { IconButton } from "@/ui/components";
 
 export const SelectColumn: CalculatedColumn<any, any> = {
   key: SELECT_COLUMN_KEY,
@@ -27,22 +28,21 @@ export const SelectColumn: CalculatedColumn<any, any> = {
   renderHeaderCell: (props: RenderHeaderCellProps<unknown>) => {
     // [Joshen] formatter is actually a valid React component, so we can use hooks here
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    // @ts-ignore
-    const [isRowSelected, onRowSelectionChange] = useRowSelection();
+    const { isRowSelected, onRowSelectionChange } = useHeaderRowSelection();
 
     return (
       <SelectCellHeader
         aria-label="Select All"
         tabIndex={props.tabIndex}
         value={isRowSelected}
-        onChange={(checked) => onRowSelectionChange({ type: "HEADER", checked })}
+        onChange={(checked) => onRowSelectionChange({ checked })}
       />
     );
   },
   renderCell: (props: RenderCellProps<SupaRow>) => {
     // [Alaister] formatter is actually a valid React component, so we can use hooks here
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [isRowSelected, onRowSelectionChange] = useRowSelection();
+    const { isRowSelected, onRowSelectionChange } = useRowSelection();
     return (
       <SelectCellFormatter
         aria-label="Select"
@@ -50,7 +50,7 @@ export const SelectColumn: CalculatedColumn<any, any> = {
         value={isRowSelected}
         row={props.row}
         onChange={(checked, isShiftClick) => {
-          onRowSelectionChange({ type: "ROW", row: props.row, checked, isShiftClick });
+          onRowSelectionChange({ row: props.row, checked, isShiftClick });
         }}
         // Stop propagation to prevent row selection
         onClick={stopPropagation}
@@ -60,7 +60,7 @@ export const SelectColumn: CalculatedColumn<any, any> = {
   renderGroupCell: (props: RenderGroupCellProps<SupaRow>) => {
     // [Alaister] groupFormatter is actually a valid React component, so we can use hooks here
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [isRowSelected, onRowSelectionChange] = useRowSelection();
+    const { isRowSelected, onRowSelectionChange } = useRowSelection();
     return (
       <SelectCellFormatter
         aria-label="Select Group"
@@ -68,7 +68,6 @@ export const SelectColumn: CalculatedColumn<any, any> = {
         value={isRowSelected}
         onChange={(checked) => {
           onRowSelectionChange({
-            type: "ROW",
             row: props.row,
             checked,
             isShiftClick: false,
@@ -112,7 +111,7 @@ function SelectCellFormatter({
   "aria-label": ariaLabel,
   "aria-labelledby": ariaLabelledBy,
 }: SelectCellFormatterProps) {
-  const snap = useTableEditorStateSnapshot();
+  const snap = useTableEditorStore();
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     onChange(e.target.checked, (e.nativeEvent as MouseEvent).shiftKey);
@@ -139,18 +138,13 @@ function SelectCellFormatter({
         onClick={onClick}
       />
       {row && (
-        <ButtonTooltip
+        <IconButton
           type="text"
-          size="tiny"
+          size="s"
           className="px-1 rdg-row__select-column__edit-action"
           icon={<Maximize2 />}
           onClick={onEditClick}
-          tooltip={{
-            content: {
-              side: "bottom",
-              text: "Expand row",
-            },
-          }}
+          tooltip={"Expand row"}
         />
       )}
     </div>
@@ -171,7 +165,8 @@ function SelectCellHeader({
   "aria-label": ariaLabel,
   "aria-labelledby": ariaLabelledBy,
 }: SelectCellHeaderProps) {
-  const snap = useTableEditorTableStateSnapshot();
+  const { getState } = useTableEditorTableState();
+  const snap = getState();
   const inputRef = useRef<HTMLInputElement>(null);
 
   // indeterminate state === some rows are selected but not all

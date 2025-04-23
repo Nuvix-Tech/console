@@ -3,9 +3,11 @@ import { Menu, X } from "lucide-react";
 import { memo, useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 
-import type { DragItem, Sort } from "components/grid/types";
-import { useTableEditorTableStateSnapshot } from "state/table-editor-table";
-import { Button, Toggle } from "ui";
+import type { DragItem, Sort } from "@/components/grid/types";
+import { useTableEditorTableState } from "@/lib/store/table";
+import { Toggle } from "@/components/ui/toggle";
+import { Button } from "@/ui/components";
+// import { Button, Toggle } from "ui";
 
 export interface SortRowProps {
   index: number;
@@ -17,7 +19,8 @@ export interface SortRowProps {
 }
 
 const SortRow = ({ index, columnName, sort, onDelete, onToggle, onDrag }: SortRowProps) => {
-  const snap = useTableEditorTableStateSnapshot();
+  const { getState } = useTableEditorTableState();
+  const snap = getState();
   const column = snap.table.columns.find((x) => x.name === columnName);
 
   const ref = useRef<HTMLDivElement>(null);
@@ -119,16 +122,16 @@ const SortRow = ({ index, columnName, sort, onDelete, onToggle, onDrag }: SortRo
       <div className="flex items-center gap-1">
         <label className="text-xs text-foreground-lighter">ascending:</label>
         <Toggle
-          size="tiny"
-          layout="flex"
+          size="sm"
+          // layout="flex"
           defaultChecked={sort.ascending}
           // @ts-ignore
-          onChange={(e: boolean) => onToggle(columnName, e)}
+          onToggle={() => onToggle(columnName, !sort.ascending)}
         />
       </div>
       <Button
-        icon={<X strokeWidth={1.5} />}
-        size="tiny"
+        prefixIcon={<X strokeWidth={1.5} />}
+        size="s"
         type="text"
         onClick={() => onDelete(columnName)}
       />

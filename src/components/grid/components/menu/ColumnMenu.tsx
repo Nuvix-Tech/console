@@ -1,19 +1,17 @@
 import { ChevronDown, Edit, Lock, Trash, Unlock } from "lucide-react";
 import type { CalculatedColumn } from "react-data-grid";
 
-import { useTableEditorStateSnapshot } from "state/table-editor";
-import { useTableEditorTableStateSnapshot } from "state/table-editor-table";
+import { useTableEditorStore } from "@/lib/store/table-editor";
+import { useTableEditorTableState } from "@/lib/store/table";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
-  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  Separator,
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "ui";
+} from "@/components/ui/dropdown-menu";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/ui/components";
 
 interface ColumnMenuProps {
   column: CalculatedColumn<any, unknown>;
@@ -21,8 +19,9 @@ interface ColumnMenuProps {
 }
 
 const ColumnMenu = ({ column, isEncrypted }: ColumnMenuProps) => {
-  const tableEditorSnap = useTableEditorStateSnapshot();
-  const snap = useTableEditorTableStateSnapshot();
+  const tableEditorSnap = useTableEditorStore();
+  const { getState } = useTableEditorTableState();
+  const snap = getState();
 
   const columnKey = column.key;
 
@@ -104,7 +103,7 @@ const ColumnMenu = ({ column, isEncrypted }: ColumnMenuProps) => {
             onClick={(e) => {
               e.stopPropagation();
             }}
-            icon={<ChevronDown />}
+            suffixIcon={<ChevronDown />}
           />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" side="bottom">
