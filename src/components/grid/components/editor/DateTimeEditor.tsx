@@ -3,20 +3,18 @@ import { ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { RenderEditCellProps } from "react-data-grid";
 
+// import { TimestampInfo, timestampLocalFormatter } from "ui-patterns";
+import { BlockKeys } from "../common/BlockKeys";
+import { Input } from "@/components/editor/components";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { Button } from "@/ui/components";
 import {
-  Button,
-  cn,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  Popover_Shadcn_,
-  PopoverContent_Shadcn_,
-  PopoverTrigger_Shadcn_,
-} from "ui";
-import { TimestampInfo, timestampLocalFormatter } from "ui-patterns";
-import { Input } from "ui-patterns/DataInputs/Input";
-import { BlockKeys } from "../common/BlockKeys";
+} from "@/components/ui/dropdown-menu";
 
 interface BaseEditorProps<TRow, TSummaryRow = unknown>
   extends RenderEditCellProps<TRow, TSummaryRow> {
@@ -70,13 +68,13 @@ function BaseEditor<TRow, TSummaryRow = unknown>({
   }, []);
 
   return (
-    <Popover_Shadcn_ open>
-      <PopoverTrigger_Shadcn_>
+    <Popover open>
+      <PopoverTrigger>
         <div className={cn("px-[8px]", value === null ? "text-foreground-lighter" : "")}>
           {value === null ? "NULL" : value}
         </div>
-      </PopoverTrigger_Shadcn_>
-      <PopoverContent_Shadcn_ align="start" className="p-0 rounded-none w-64">
+      </PopoverTrigger>
+      <PopoverContent align="start" className="p-0 rounded-none w-64">
         <BlockKeys
           ignoreOutsideClicks
           value={inputValue}
@@ -143,7 +141,7 @@ function BaseEditor<TRow, TSummaryRow = unknown>({
                   <DropdownMenuTrigger asChild>
                     <Button
                       type="default"
-                      icon={<ChevronDown />}
+                      suffixIcon={<ChevronDown />}
                       className="px-1 rounded-l-none border-l-0"
                     />
                   </DropdownMenuTrigger>
@@ -159,8 +157,8 @@ function BaseEditor<TRow, TSummaryRow = unknown>({
             )}
           </div>
         </div>
-      </PopoverContent_Shadcn_>
-    </Popover_Shadcn_>
+      </PopoverContent>
+    </Popover>
   );
 }
 

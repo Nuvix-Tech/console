@@ -1,22 +1,27 @@
 import { Maximize } from "lucide-react";
 import { useCallback, useState } from "react";
 import type { RenderEditCellProps } from "react-data-grid";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 
-import { useParams } from "common";
-import { useTableEditorQuery } from "data/table-editor/table-editor-query";
-import { isTableLike } from "data/table-editor/table-editor-types";
-import { useGetCellValueMutation } from "data/table-rows/get-cell-value-mutation";
-import { MAX_CHARACTERS } from "@supabase/pg-meta/src/query/table-row-query";
-import { useSelectedProject } from "hooks/misc/useSelectedProject";
-import { useTableEditorTableStateSnapshot } from "state/table-editor-table";
-import { Button, Popover, Tooltip, TooltipContent, TooltipTrigger, cn } from "ui";
-import ConfirmationModal from "ui-patterns/Dialogs/ConfirmationModal";
+const MAX_CHARACTERS = 1000; // import {  } from "@supabase/pg-meta/src/query/table-row-query";
+
+// import { useParams } from "common";
+// import { useTableEditorQuery } from "data/table-editor/table-editor-query";
+// import { isTableLike } from "data/table-editor/table-editor-types";
+// import { useGetCellValueMutation } from "data/table-rows/get-cell-value-mutation";
+// import { useSelectedProject } from "hooks/misc/useSelectedProject";
+import { useTableEditorTableState } from "@/lib/store/table";
+import { Button, useToast } from "@/ui/components";
+import { Popover } from "@/components/ui/popover";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
+// import ConfirmationModal from "ui-patterns/Dialogs/ConfirmationModal";
 import { BlockKeys } from "../common/BlockKeys";
 import { EmptyValue } from "../common/EmptyValue";
 import { MonacoEditor } from "../common/MonacoEditor";
 import { NullValue } from "../common/NullValue";
 import { TruncatedWarningOverlay } from "./TruncatedWarningOverlay";
+import { useParams } from "next/navigation";
 
 export const TextEditor = <TRow, TSummaryRow = unknown>({
   row,
@@ -30,9 +35,11 @@ export const TextEditor = <TRow, TSummaryRow = unknown>({
   isEditable?: boolean;
   onExpandEditor: (column: string, row: TRow) => void;
 }) => {
-  const snap = useTableEditorTableStateSnapshot();
+  const { getState } = useTableEditorTableState();
+  const snap = getState();
   const { id: _id } = useParams();
   const id = _id ? Number(_id) : undefined;
+  const { addToast } = useToast();
   const project = useSelectedProject();
 
   const { data: selectedTable } = useTableEditorQuery({
@@ -56,9 +63,10 @@ export const TextEditor = <TRow, TSummaryRow = unknown>({
     initialValue.length > MAX_CHARACTERS;
 
   const loadFullValue = () => {
-    if (selectedTable === undefined || project === undefined || !isTableLike(selectedTable)) return;
+    if (selectedTable === undefined || project === undefined) return;
+    // !isTableLike(selectedTable)
     if (selectedTable.primary_keys.length === 0) {
-      return toast("Unable to load value as table has no primary keys");
+      return addToast("Unable to load value as table has no primary keys");
     }
 
     const pkMatch = selectedTable.primary_keys.reduce((a, b) => {
@@ -165,16 +173,16 @@ export const TextEditor = <TRow, TSummaryRow = unknown>({
                           type="default"
                           className="px-1"
                           onClick={() => onSelectExpand()}
-                          icon={<Maximize size={12} strokeWidth={2} />}
+                          suffixIcon={<Maximize size={12} strokeWidth={2} />}
                         />
                       </TooltipTrigger>
                       <TooltipContent side="bottom">Expand editor</TooltipContent>
                     </Tooltip>
                     {isNullable && (
                       <Button
-                        size="tiny"
+                        size="s"
                         type="default"
-                        htmlType="button"
+                        // htmlType="button"
                         onClick={() => setIsConfirmNextModalOpen(true)}
                       >
                         Set to NULL

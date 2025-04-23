@@ -1,7 +1,7 @@
 import type { RenderEditCellProps } from "react-data-grid";
-import { Select } from "@/components/ui/select";
 
-import { useTableEditorTableStateSnapshot } from "state/table-editor-table";
+import { useTableEditorTableState } from "@/lib/store/table";
+import { Select } from "@/ui/components";
 
 interface SelectEditorProps<TRow, TSummaryRow = unknown>
   extends RenderEditCellProps<TRow, TSummaryRow> {
@@ -17,16 +17,17 @@ export function SelectEditor<TRow, TSummaryRow = unknown>({
   options,
   isNullable,
 }: SelectEditorProps<TRow, TSummaryRow>) {
-  const snap = useTableEditorTableStateSnapshot();
+  const { getState } = useTableEditorTableState();
+  const snap = getState();
   const gridColumn = snap.gridColumns.find((x) => x.name == column.key);
 
   const value = row[column.key as keyof TRow] as unknown as string;
 
-  function onChange(event: any) {
-    if (!event.target.value || event.target.value == "") {
+  function onChange(value: string) {
+    if (!value || value == "") {
       onRowChange({ ...row, [column.key]: null }, true);
     } else {
-      onRowChange({ ...row, [column.key]: event.target.value }, true);
+      onRowChange({ ...row, [column.key]: value }, true);
     }
   }
 
@@ -39,20 +40,18 @@ export function SelectEditor<TRow, TSummaryRow = unknown>({
       autoFocus
       id="select-editor"
       name="select-editor"
-      size="small"
+      // size="s"
       defaultValue={value ?? ""}
       className="sb-grid-select-editor !gap-2"
       style={{ width: `${gridColumn?.width || column.width}px` }}
-      // @ts-ignore
-      onChange={onChange}
+      onSelect={onChange}
       onBlur={onBlur}
-    >
-      {isNullable && <Select.Option value="">NULL</Select.Option>}
-      {options.map(({ label, _value }) => (
-        <Select.Option key={_value} value={_value} selected={_value === value}>
-          {label}
-        </Select.Option>
-      ))}
-    </Select>
+      options={[
+        ...(isNullable ? [{ label: "NULL", value: "" }] : []),
+        ...options.map(({ label, _value }) => ({ label, value: _value })),
+      ]}
+      value={value ?? ""}
+      placeholder={gridColumn?.defaultValue ?? ""}
+    />
   );
 }

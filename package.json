@@ -48,6 +48,7 @@
     "cmdk": "^1.0.4",
     "compressorjs": "^1.2.1",
     "date-fns": "^4.1.0",
+    "dayjs": "^1.11.13",
     "formik": "^2.4.6",
     "framer-motion": "^12.4.7",
     "lodash": "^4.17.21",

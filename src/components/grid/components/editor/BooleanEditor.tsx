@@ -1,6 +1,6 @@
 import type { RenderEditCellProps } from "react-data-grid";
-import { useTableEditorTableStateSnapshot } from "state/table-editor-table";
-import { Select } from "@/components/ui/select";
+import { useTableEditorTableState } from "@/lib/store/table";
+import { Select } from "@/ui/components";
 
 interface Props<TRow, TSummaryRow = unknown> extends RenderEditCellProps<TRow, TSummaryRow> {
   isNullable?: boolean;
@@ -13,13 +13,13 @@ export const BooleanEditor = <TRow, TSummaryRow = unknown>({
   onRowChange,
   onClose,
 }: Props<TRow, TSummaryRow>) => {
-  const snap = useTableEditorTableStateSnapshot();
+  const { getState } = useTableEditorTableState();
+  const snap = getState();
   const gridColumn = snap.gridColumns.find((x) => x.name == column.key);
   const value = row[column.key as keyof TRow] as unknown as string;
 
   const onBlur = () => onClose(false);
-  const onChange = (event: any) => {
-    const value = event.target.value;
+  const onChange = (value: string) => {
     if (value === "null") {
       onRowChange({ ...row, [column.key]: null }, true);
     } else {
@@ -32,15 +32,17 @@ export const BooleanEditor = <TRow, TSummaryRow = unknown>({
       autoFocus
       id="boolean-editor"
       name="boolean-editor"
-      size="small"
+      // size="s"
       onBlur={onBlur}
-      onChange={onChange}
+      onSelect={onChange}
       defaultValue={value === null ? "null" : value.toString()}
       style={{ width: `${gridColumn?.width || column.width}px` }}
-    >
-      <Select.Option value="true">TRUE</Select.Option>
-      <Select.Option value="false">FALSE</Select.Option>
-      {isNullable && <Select.Option value="null">NULL</Select.Option>}
-    </Select>
+      options={[
+        { label: "TRUE", value: "true" },
+        { label: "FALSE", value: "false" },
+        ...(isNullable ? [{ label: "NULL", value: "null" }] : []),
+      ]}
+      value={value === null ? "null" : value.toString()}
+    />
   );
 };

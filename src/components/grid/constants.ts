@@ -12,3 +12,6 @@ const RLS_ACKNOWLEDGED_KEY = "supabase-acknowledge-rls-warning";
 
 export const rlsAcknowledgedKey = (tableID?: string | number) =>
   `${RLS_ACKNOWLEDGED_KEY}-${String(tableID)}`;
+
+export const MAX_CHARACTERS = 1000;
+export const MAX_CHARACTERS_WARNING = 1000;
