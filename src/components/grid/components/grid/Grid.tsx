@@ -19,7 +19,8 @@ import { useTableEditorStore } from "@/lib/store/table-editor";
 import { useTableEditorTableState } from "@/lib/store/table";
 import { useAppStore, useProjectStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/ui/components";
+import { Alert } from "@chakra-ui/react";
 
 const rowKeyGetter = (row: SupaRow) => {
   return row?.idx ?? -1;
@@ -142,17 +143,23 @@ export const Grid = memo(
                   <p className="text-sm text-light">Loading...</p>
                 </div>
               )}
-              {/*
+
               {isError && (
-                <AlertError error={error} subject="Failed to retrieve rows from table">
+                <Alert.Root>
+                  <Alert.Indicator>
+                    <Alert.Title>Failed to retrieve rows from table</Alert.Title>
+                    <Alert.Content>
+                      <p className="text-sm text-light">Error: {error?.message}</p>
+                    </Alert.Content>
+                  </Alert.Indicator>
                   {filters.length > 0 && (
-                    <p>
+                    <Alert.Description>
                       Verify that the filter values are correct, as the error may stem from an
                       incorrectly applied filter
-                    </p>
+                    </Alert.Description>
                   )}
-                </AlertError>
-              )} */}
+                </Alert.Root>
+              )}
               {isSuccess && (
                 <>
                   {(filters ?? []).length === 0 ? (
@@ -163,22 +170,22 @@ export const Grid = memo(
                       </p>
                       <div className="flex items-center space-x-2 mt-4">
                         {
-                          // <Button
-                          //   type="default"
-                          //   onClick={() => {
-                          //     tableEditorSnap.onImportData();
-                          //     sendEvent({
-                          //       action: "import_data_button_clicked",
-                          //       properties: { tableType: "Existing Table" },
-                          //       groups: {
-                          //         project: project?.ref ?? "Unknown",
-                          //         organization: org?.slug ?? "Unknown",
-                          //       },
-                          //     });
-                          //   }}
-                          // >
-                          //   Import data from CSV
-                          // </Button>
+                          <Button
+                            type="default"
+                            onClick={() => {
+                              tableEditorSnap.onImportData();
+                              // sendEvent({
+                              //   action: "import_data_button_clicked",
+                              //   properties: { tableType: "Existing Table" },
+                              //   groups: {
+                              //     project: project?.ref ?? "Unknown",
+                              //     organization: org?.slug ?? "Unknown",
+                              //   },
+                              // });
+                            }}
+                          >
+                            Import data from CSV
+                          </Button>
                         }
                       </div>
                     </div>
@@ -210,6 +217,11 @@ export const Grid = memo(
             onRowsChange={onRowsChange}
             onSelectedCellChange={onSelectedCellChange}
             onSelectedRowsChange={onSelectedRowsChange}
+            style={{
+              ["--rdg-color" as any]: "var(--neutral-on-background-strong)",
+              ["--rdg-background-color" as any]: "transparent",
+              ["--rdg-row-hover-background-color" as any]: "var(--accent-border-strong)",
+            }}
             onCellDoubleClick={(props) => onRowDoubleClick(props.row, props.column)}
             // onCellKeyDown={handleCopyCell as unknown}
           />
