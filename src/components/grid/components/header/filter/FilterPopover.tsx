@@ -29,7 +29,7 @@ const FilterPopover = ({ filters, portal = true, onApplyFilters }: FilterPopover
   return (
     <Popover open={open} onOpenChange={setOpen} modal={false}>
       <PopoverTrigger asChild>
-        <Button type={(filters || []).length > 0 ? "link" : "text"} prefixIcon={<FilterIcon />}>
+        <Button size="s" type={(filters || []).length > 0 ? "link" : "text"} prefixIcon={<FilterIcon size={18} />}>
           {btnText}
         </Button>
       </PopoverTrigger>
@@ -121,19 +121,20 @@ const FilterOverlay = ({ filters: filtersFromUrl, onApplyFilters }: FilterOverla
         ))}
         {filters.length == 0 && (
           <div className="space-y-1 px-3">
-            <h5 className="text-sm text-foreground-light">No filters applied to this view</h5>
-            <p className="text-xs text-foreground-lighter">Add a column below to filter the view</p>
+            <h5 className="text-sm neutral-on-background-medium">No filters applied to this view</h5>
+            <p className="text-xs neutral-on-background-weak">Add a column below to filter the view</p>
           </div>
         )}
       </div>
       <Separator />
       <div className="px-3 flex flex-row justify-between">
-        <Button prefixIcon={<Plus />} type="text" onClick={onAddFilter}>
+        <Button size="s" variant="tertiary" prefixIcon={<Plus size={18} />} type="text" onClick={onAddFilter}>
           Add filter
         </Button>
         <Button
           disabled={isEqual(filters, initialFilters)}
           type="default"
+          size="s"
           onClick={() => onSelectApplyFilters()}
         >
           Apply filter

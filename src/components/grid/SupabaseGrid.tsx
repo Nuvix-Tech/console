@@ -27,6 +27,7 @@ import { Filter, GridProps } from "./types";
 import { useProjectStore } from "@/lib/store";
 import { useQuery } from "@tanstack/react-query";
 import { useTableEditorFiltersSort } from "@/hooks/useTableEditorFilterSort";
+import { Column } from "@/ui/components";
 
 const EMPTY_ARR: any[] = [];
 
@@ -124,8 +125,8 @@ export const SupabaseGrid = ({
 
   return (
     <DndProvider backend={HTML5Backend} context={window}>
-      <div className="sb-grid h-full flex flex-col">
-        <Header sorts={[]} filters={[]} customHeader={customHeader} />
+      <Column background="surface" fill className="!max-h-[calc(100svh-84px)]" radius="l">
+        <Header sorts={sorts} filters={filters} customHeader={customHeader} />
 
         {children || (
           <>
@@ -137,8 +138,8 @@ export const SupabaseGrid = ({
               isLoading={isLoading}
               isSuccess={isSuccess}
               isError={isError}
-              filters={[]} //filters
-              onApplyFilters={() => {}} //onApplyFilters
+              filters={filters} //filters
+              onApplyFilters={onApplyFilters} //onApplyFilters
             />
             <Footer isRefetching={isRefetching} />
             <Shortcuts gridRef={gridRef as any} rows={rows} />
@@ -146,7 +147,7 @@ export const SupabaseGrid = ({
         )}
 
         {mounted && createPortal(<RowContextMenu rows={rows} />, document.body)}
-      </div>
+      </Column>
     </DndProvider>
   );
 };

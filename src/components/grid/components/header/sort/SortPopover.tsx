@@ -29,7 +29,7 @@ const SortPopover = ({ sorts, portal = true, onApplySorts }: SortPopoverProps) =
   return (
     <Popover modal={false} open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button type={(sorts || []).length > 0 ? "link" : "text"} prefixIcon={<List />}>
+        <Button size="s" type={(sorts || []).length > 0 ? "link" : "text"} prefixIcon={<List size={18} />}>
           {btnText}
         </Button>
       </PopoverTrigger>
@@ -119,8 +119,8 @@ const SortOverlay = ({ sorts: sortsFromUrl, onApplySorts }: SortOverlayProps) =>
       ))}
       {sorts.length === 0 && (
         <div className="space-y-1 px-3">
-          <h5 className="text-sm text-foreground-light">No sorts applied to this view</h5>
-          <p className="text-xs text-foreground-lighter">Add a column below to sort the view</p>
+          <h5 className="text-sm neutral-on-background-medium">No sorts applied to this view</h5>
+          <p className="text-xs neutral-on-background-weak">Add a column below to sort the view</p>
         </div>
       )}
 
@@ -135,8 +135,10 @@ const SortOverlay = ({ sorts: sortsFromUrl, onApplySorts }: SortOverlayProps) =>
           >
             <Button
               // asChild
+              size="s"
+              variant="tertiary"
               type="text"
-              suffixIcon={<ChevronDown size="14" className="text-foreground-light" />}
+              suffixIcon={<ChevronDown size="14" className="neutral-on-background-medium" />}
               className="sb-grid-dropdown__item-trigger"
               data-testid="table-editor-pick-column-to-sort-button"
             >
@@ -149,6 +151,7 @@ const SortOverlay = ({ sorts: sortsFromUrl, onApplySorts }: SortOverlayProps) =>
         <div className="flex items-center">
           <Button
             disabled={isEqual(sorts, initialSorts)}
+            size="s"
             type="default"
             onClick={() => onApplySorts(sorts)}
           >

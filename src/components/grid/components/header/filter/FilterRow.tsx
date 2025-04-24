@@ -5,8 +5,7 @@ import { DropdownControl } from "@/components/grid/components/common/DropdownCon
 import type { Filter, FilterOperator } from "@/components/grid/types";
 import { FilterOperatorOptions } from "./Filter.constants";
 import { useTableEditorTableState } from "@/lib/store/table";
-import { Button } from "@/ui/components";
-import { Input } from "@/components/ui/input";
+import { Button, IconButton, Input } from "@/ui/components";
 
 export interface FilterRowProps {
   filterIdx: number;
@@ -41,10 +40,11 @@ const FilterRow = ({ filter, filterIdx, onChange, onDelete, onKeyDown }: FilterR
       >
         <Button
           // asChild
+          size="s"
           variant="secondary"
           prefixIcon={
             <div className="text-foreground-lighter">
-              <ChevronDown strokeWidth={1.5} />
+              <ChevronDown strokeWidth={1.5} size={18} />
             </div>
           }
           className="w-32 justify-start"
@@ -64,10 +64,11 @@ const FilterRow = ({ filter, filterIdx, onChange, onDelete, onKeyDown }: FilterR
       >
         <Button
           // asChild
+          size="s"
           variant="secondary"
           prefixIcon={
             <div className="text-foreground-lighter">
-              <ChevronDown strokeWidth={1.5} />
+              <ChevronDown strokeWidth={1.5} size={18} />
             </div>
           }
         >
@@ -75,8 +76,9 @@ const FilterRow = ({ filter, filterIdx, onChange, onDelete, onKeyDown }: FilterR
         </Button>
       </DropdownControl>
       <Input
-        // size="sm"
-        className="w-full"
+        labelAsPlaceholder
+        height="s"
+        inputClass="!text-xs !min-h-8 !rounded-md"
         placeholder={placeholder}
         value={filter.value}
         onChange={(event) =>
@@ -87,10 +89,11 @@ const FilterRow = ({ filter, filterIdx, onChange, onDelete, onKeyDown }: FilterR
         }
         onKeyDown={onKeyDown}
       />
-      <Button
+      <IconButton
         type="text"
-        className="px-1"
-        prefixIcon={<X strokeWidth={1.5} />}
+        size="s"
+        variant="tertiary"
+        icon={<X strokeWidth={1.5} size={18} />}
         onClick={() => onDelete(filterIdx)}
       />
     </div>

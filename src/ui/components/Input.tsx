@@ -40,6 +40,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   validate?: (value: ReactNode) => ReactNode | null;
   nullable?: boolean;
   isNull?: boolean;
+  inputClass?: string;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -65,6 +66,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       isNull = false,
       maxLength: max,
       onChange,
+      inputClass,
       ...props
     },
     ref,
@@ -170,6 +172,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             {
               "!bg-[var(--neutral-solid-strong)]": props.disabled,
             },
+            inputClass,
           )}
         >
           {hasPrefix && (

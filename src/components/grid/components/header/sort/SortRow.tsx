@@ -6,8 +6,7 @@ import { useDrag, useDrop } from "react-dnd";
 import type { DragItem, Sort } from "@/components/grid/types";
 import { useTableEditorTableState } from "@/lib/store/table";
 import { Toggle } from "@/components/ui/toggle";
-import { Button } from "@/ui/components";
-// import { Button, Toggle } from "ui";
+import { Button, IconButton, Switch } from "@/ui/components";
 
 export interface SortRowProps {
   index: number;
@@ -109,7 +108,7 @@ const SortRow = ({ index, columnName, sort, onDelete, onToggle, onDrag }: SortRo
       data-handler-id={handlerId}
     >
       <span className="transition-color text-foreground-lighter hover:text-foreground-light">
-        <Menu strokeWidth={2} size={16} />
+        <Menu strokeWidth={1.3} size={18} />
       </span>
       <div className="grow">
         <span className="flex grow items-center gap-1 truncate text-sm text-foreground">
@@ -120,18 +119,17 @@ const SortRow = ({ index, columnName, sort, onDelete, onToggle, onDrag }: SortRo
         </span>
       </div>
       <div className="flex items-center gap-1">
-        <label className="text-xs text-foreground-lighter">ascending:</label>
-        <Toggle
-          size="sm"
-          // layout="flex"
-          defaultChecked={sort.ascending}
-          // @ts-ignore
+        <Switch
+          label="ascending"
+          reverse
+          isChecked={sort.ascending ?? false}
           onToggle={() => onToggle(columnName, !sort.ascending)}
         />
       </div>
-      <Button
-        prefixIcon={<X strokeWidth={1.5} />}
+      <IconButton
+        icon={<X strokeWidth={1.5} size={18} />}
         size="s"
+        variant="tertiary"
         type="text"
         onClick={() => onDelete(columnName)}
       />
