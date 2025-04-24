@@ -29,7 +29,11 @@ const SortPopover = ({ sorts, portal = true, onApplySorts }: SortPopoverProps) =
   return (
     <Popover modal={false} open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button size="s" type={(sorts || []).length > 0 ? "link" : "text"} prefixIcon={<List size={18} />}>
+        <Button
+          size="s"
+          type={(sorts || []).length > 0 ? "link" : "text"}
+          prefixIcon={<List size={18} />}
+        >
           {btnText}
         </Button>
       </PopoverTrigger>

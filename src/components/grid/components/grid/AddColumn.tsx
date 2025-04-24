@@ -33,7 +33,13 @@ const AddColumnHeader = () => {
 
   return (
     <div className="flex h-full w-full py-1.5 items-center">
-      <Button type="text" onClick={tableEditorSnap.onAddColumn} prefixIcon={<Plus />} />
+      <Button
+        fillWidth
+        variant="tertiary"
+        type="text"
+        onClick={tableEditorSnap.onAddColumn}
+        prefixIcon={<Plus size={18} />}
+      />
     </div>
   );
 };

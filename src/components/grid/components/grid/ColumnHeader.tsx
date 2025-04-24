@@ -112,9 +112,9 @@ export function ColumnHeader<R>({
   drag(drop(ref));
 
   return (
-    <div ref={ref} data-handler-id={handlerId} style={{ opacity }} className="w-full">
-      <div className={`sb-grid-column-header ${cursor}`}>
-        <div className="sb-grid-column-header__inner">
+    <div ref={ref} data-handler-id={handlerId} style={{ opacity }} className="w-full group/gridcol">
+      <div className={`sb-grid-column-header ${cursor} flex w-full items-center justify-between`}>
+        <div className="sb-grid-column-header__inner space-x-2">
           {renderColumnIcon(columnType, { name: column.name as string, foreignKey })}
           {isPrimaryKey && (
             <Tooltip>
@@ -131,7 +131,7 @@ export function ColumnHeader<R>({
           <span className="sb-grid-column-header__inner__name" title={hoverValue}>
             {column.name}
           </span>
-          <span className="sb-grid-column-header__inner__format">
+          <span className="sb-grid-column-header__inner__format neutral-on-background-weak">
             {columnFormat}
             {columnFormat === "bytea" ? ` (hex)` : ""}
           </span>

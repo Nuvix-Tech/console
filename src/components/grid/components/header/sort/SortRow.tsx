@@ -107,12 +107,12 @@ const SortRow = ({ index, columnName, sort, onDelete, onToggle, onDrag }: SortRo
       style={{ opacity }}
       data-handler-id={handlerId}
     >
-      <span className="transition-color text-foreground-lighter hover:text-foreground-light">
+      <span className="transition-color neutral-on-background-weak hover:text-[var(--neutral-on-background-strong)]">
         <Menu strokeWidth={1.3} size={18} />
       </span>
       <div className="grow">
-        <span className="flex grow items-center gap-1 truncate text-sm text-foreground">
-          <span className="text-xs text-foreground-lighter">
+        <span className="flex grow items-center gap-1 truncate text-sm neutral-on-background-strong">
+          <span className="text-xs neutral-on-background-weak">
             {index > 0 ? "then by" : "sort by"}
           </span>
           {column.name}

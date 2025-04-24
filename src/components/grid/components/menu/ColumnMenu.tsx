@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
-import { Button } from "@/ui/components";
+import { Button, IconButton } from "@/ui/components";
 
 interface ColumnMenuProps {
   column: CalculatedColumn<any, unknown>;
@@ -96,14 +96,16 @@ const ColumnMenu = ({ column, isEncrypted }: ColumnMenuProps) => {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button
+          <IconButton
             className="opacity-50 flex"
             type="text"
+            size="s"
+            variant="tertiary"
             style={{ padding: "3px" }}
             onClick={(e) => {
               e.stopPropagation();
             }}
-            suffixIcon={<ChevronDown />}
+            icon={<ChevronDown size={16} strokeWidth={1} />}
           />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" side="bottom">

@@ -16,7 +16,9 @@ export interface FooterProps {
 
 const GridFooter = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="flex items-center justify-between p-4 border-t border-gray-200">{children}</div>
+    <div className="flex items-center justify-between px-4 py-1 border-t border-gray-200">
+      {children}
+    </div>
   );
 };
 
@@ -34,16 +36,19 @@ const TwoOptionToggle = ({
   onClickOption: (option: string) => void;
 }) => {
   return (
-    <div className={`flex ${borderOverride} rounded-md`}>
+    <div className={`relative inline-flex ${borderOverride} rounded-full overflow-hidden`}>
       {options.map((option) => (
         <button
           key={option}
-          className={`w-${width} p-2 text-sm font-medium ${
-            activeOption === option ? "bg-blue-500 text-white" : "text-gray-700"
-          }`}
+          className={`
+            relative z-10 w-${width} px-4 py-2 text-sm font-medium
+            ${activeOption === option ? "text-slate-800" : "text-gray-500 hover:bg-gray-100"}`}
           onClick={() => onClickOption(option)}
         >
           {option}
+          {activeOption === option && (
+            <span className="absolute inset-0 bg-white rounded-full transition-all duration-200 z-[-1]" />
+          )}
         </button>
       ))}
     </div>

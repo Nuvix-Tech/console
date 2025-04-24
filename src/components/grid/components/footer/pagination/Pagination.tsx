@@ -23,7 +23,7 @@ import { useTableEditorStore } from "@/lib/store/table-editor";
 import { useTableEditorTableState } from "@/lib/store/table";
 import { useTableEditorQuery } from "@/components/editor/data";
 import { useQuery } from "@tanstack/react-query";
-import { Button } from "@/ui/components";
+import { Button, IconButton } from "@/ui/components";
 import { Input } from "@/components/editor/components";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import ConfirmationModal from "@/components/editor/components/_confim_dialog";
@@ -170,17 +170,16 @@ const Pagination = () => {
       {isSuccess && (
         <>
           <div className="flex items-center gap-x-2">
-            <Button
-              prefixIcon={<ArrowLeft />}
-              type="outline"
+            <IconButton
+              icon={<ArrowLeft size={18} />}
+              variant="ghost"
               className="px-1.5"
               disabled={page <= 1 || isLoading}
               onClick={onPreviousPage}
             />
-            <p className="text-xs text-foreground-light">Page</p>
+            <p className="text-xs neutral-on-background-medium">Page</p>
             <Input
               className="w-12"
-              // size="tiny"
               min={1}
               max={maxPages}
               value={value}
@@ -198,11 +197,12 @@ const Pagination = () => {
               }}
             />
 
-            <p className="text-xs text-foreground-light">of {totalPages.toLocaleString()}</p>
+            <p className="text-xs neutral-on-background-medium">of {totalPages.toLocaleString()}</p>
 
-            <Button
-              prefixIcon={<ArrowRight />}
+            <IconButton
+              icon={<ArrowRight size={18} />}
               type="outline"
+              variant="ghost"
               className="px-1.5"
               disabled={page >= maxPages || isLoading}
               onClick={onNextPage}
@@ -214,7 +214,7 @@ const Pagination = () => {
               side="top"
               align="start"
             >
-              <Button type="outline" style={{ padding: "3px 10px" }}>
+              <Button size="s" variant="secondary" type="outline" style={{ padding: "3px 10px" }}>
                 <span>{`${tableEditorSnap.rowsPerPage} rows`}</span>
               </Button>
             </DropdownControl>
@@ -231,10 +231,11 @@ const Pagination = () => {
                 <TooltipTrigger asChild>
                   <Button
                     size="s"
+                    variant="tertiary"
                     type="text"
                     className="px-1.5"
                     loading={isFetching}
-                    prefixIcon={<HelpCircle />}
+                    prefixIcon={<HelpCircle size={18} />}
                     onClick={() => {
                       // Show warning if either NOT a table entity, or table rows estimate is beyond threshold
                       if (rowsCountEstimate === null || data.count > THRESHOLD_COUNT) {

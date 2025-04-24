@@ -14,6 +14,7 @@ import { useTableEditorTableState } from "@/lib/store/table";
 import { SELECT_COLUMN_KEY } from "../../constants";
 import type { SupaRow } from "../../types";
 import { IconButton } from "@/ui/components";
+import { Checkbox } from "@/components/cui/checkbox";
 
 export const SelectColumn: CalculatedColumn<any, any> = {
   key: SELECT_COLUMN_KEY,
@@ -125,24 +126,26 @@ function SelectCellFormatter({
   }
 
   return (
-    <div className="sb-grid-select-cell__formatter">
-      <input
+    <div className="sb-grid-select-cell__formatter flex justify-between items-center">
+      <Checkbox
+        size={"sm"}
+        checked={value}
+        disabled={disabled}
+        // onClick={onClick}
+        onCheckedChange={(e) => onChange(!!e.checked, false)}
+        // onChange={handleChange}
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledBy}
         tabIndex={tabIndex}
-        type="checkbox"
         className="rdg-row__select-column__select-action"
-        disabled={disabled}
-        checked={value}
-        onChange={handleChange}
-        onClick={onClick}
       />
       {row && (
         <IconButton
           type="text"
           size="s"
+          variant="tertiary"
           className="px-1 rdg-row__select-column__edit-action"
-          icon={<Maximize2 />}
+          icon={<Maximize2 size={14} />}
           onClick={onEditClick}
           tooltip={"Expand row"}
         />
@@ -172,29 +175,23 @@ function SelectCellHeader({
   // indeterminate state === some rows are selected but not all
   const isIndeterminate = snap.selectedRows.size > 0 && !snap.allRowsSelected;
 
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.indeterminate = isIndeterminate;
-    }
-  }, [isIndeterminate]);
-
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     onChange(e.target.checked, (e.nativeEvent as MouseEvent).shiftKey);
   }
 
   return (
     <div className="sb-grid-select-cell__header">
-      <input
-        ref={inputRef}
+      <Checkbox
+        size={"sm"}
+        checked={isIndeterminate ? "indeterminate" : value}
+        disabled={disabled}
+        // onClick={onClick}
+        onCheckedChange={(e) => onChange(!!e.checked, false)}
+        // onChange={handleChange}
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledBy}
         tabIndex={tabIndex}
-        type="checkbox"
         className="sb-grid-select-cell__header__input"
-        disabled={disabled}
-        checked={value}
-        onChange={handleChange}
-        onClick={onClick}
       />
     </div>
   );
