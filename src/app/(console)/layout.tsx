@@ -2,6 +2,7 @@ import ConsoleWrapper from "@/components/console/wrapper";
 import { Background, Row } from "@/ui/components";
 import { Stack } from "@chakra-ui/react";
 import type React from "react";
+import { Toaster } from "sonner";
 
 export default function ({ children }: { children: React.ReactNode }) {
   return (
@@ -53,6 +54,7 @@ export default function ({ children }: { children: React.ReactNode }) {
             {children}
           </Stack>
         </Row>
+        <Toaster richColors position="top-right" />
       </ConsoleWrapper>
     </>
   );
