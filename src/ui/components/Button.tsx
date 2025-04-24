@@ -34,6 +34,7 @@ interface CommonProps {
   style?: React.CSSProperties;
   id?: string;
   arrowIcon?: boolean;
+  disabled?: boolean;
 }
 
 export type ButtonProps = CommonProps & React.ButtonHTMLAttributes<HTMLButtonElement>;

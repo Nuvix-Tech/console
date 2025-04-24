@@ -18,7 +18,7 @@ export declare namespace Models {
     id: number;
     name: string;
     schema: string;
-    comment: string | null;
+    comment?: string;
     rls: boolean;
     cls: boolean;
     $permissions: any[];
@@ -185,7 +185,14 @@ export class Schema {
     const apiHeaders: { [header: string]: string } = {
       "content-type": "application/json",
     };
-    return await this.client.call("get", uri, apiHeaders, payload);
+    const data = await this.client.call("get", uri, apiHeaders, payload);
+    if (data) {
+      const ncol = data.columns.map((c: any) => ({ ...c, format: c.type }));
+      console.log(data, "e909d009999d9sd9d9", ncol);
+      data.columns = ncol;
+      return data;
+    }
+    return data;
   }
 
   async getRows(name: string, schema: string): Promise<any[]> {

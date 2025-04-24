@@ -29,6 +29,7 @@ interface CommonProps {
   style?: React.CSSProperties;
   href?: string;
   children?: ReactNode;
+  disabled?: boolean;
 }
 
 export type IconButtonProps = CommonProps & React.ButtonHTMLAttributes<HTMLButtonElement>;

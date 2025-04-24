@@ -1,4 +1,3 @@
-import "react-data-grid/lib/styles.css";
 import { TableEditor } from "@/components/editor";
 import { Metadata } from "next";
 

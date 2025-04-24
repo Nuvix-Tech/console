@@ -7,13 +7,13 @@ import { Toaster } from "./Toaster";
 interface Toast {
   id: string;
   variant: "success" | "danger";
-  message: string;
+  message: string | ReactNode;
   action?: ReactNode;
 }
 
 interface ToastContextProps {
   toasts: Toast[];
-  addToast: (toast: Omit<Toast, "id">) => void;
+  addToast: (toast: Omit<Toast, "id"> | string) => void;
   removeToast: (id: string) => void;
 }
 
@@ -32,11 +32,18 @@ const ToastProvider: React.FC<{
 }> = ({ children }) => {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const addToast = (toast: Omit<Toast, "id">) => {
-    const newToast: Toast = {
-      id: Math.random().toString(36).substring(7),
-      ...toast,
-    };
+  const addToast = (toast: Omit<Toast, "id"> | string) => {
+    const newToast: Toast =
+      typeof toast === "string"
+        ? {
+            id: Math.random().toString(36).substring(7),
+            variant: "success",
+            message: toast,
+          }
+        : {
+            id: Math.random().toString(36).substring(7),
+            ...toast,
+          };
     setToasts((prev) => [...prev, newToast]);
   };
 
