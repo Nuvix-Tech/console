@@ -36,7 +36,7 @@ export interface ConfirmationModalProps {
   onConfirm: () => void;
   onCancel: () => void;
   disabled?: boolean;
-  variant?: React.ComponentProps<typeof Alert>["variant"] & "warning";
+  variant?: React.ComponentProps<typeof Alert>["variant"] | "warning";
   alert?: {
     base?: React.ComponentProps<typeof Alert>;
     title?: string;

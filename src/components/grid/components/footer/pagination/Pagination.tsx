@@ -1,22 +1,32 @@
 import { ArrowLeft, ArrowRight, HelpCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { useParams } from "common";
-import { formatFilterURLParams } from "components/grid/SupabaseGrid.utils";
-import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
-import { useTableEditorQuery } from "data/table-editor/table-editor-query";
-import { isTableLike } from "data/table-editor/table-editor-types";
-import { THRESHOLD_COUNT, useTableRowsCountQuery } from "data/table-rows/table-rows-count-query";
-import { useUrlState } from "hooks/ui/useUrlState";
-import { RoleImpersonationState } from "lib/role-impersonation";
-import { useRoleImpersonationStateSnapshot } from "state/role-impersonation-state";
-import { useTableEditorStateSnapshot } from "state/table-editor";
-import { useTableEditorTableStateSnapshot } from "state/table-editor-table";
-import { Button, Tooltip, TooltipContent, TooltipTrigger } from "ui";
-import { Input } from "ui-patterns/DataInputs/Input";
-import ConfirmationModal from "ui-patterns/Dialogs/ConfirmationModal";
+// import { useParams } from "common";
+import { formatFilterURLParams } from "@/components/grid/SupabaseGrid.utils";
+// import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
+// import { useTableEditorQuery } from "data/table-editor/table-editor-query";
+// import { isTableLike } from "data/table-editor/table-editor-types";
+// import { THRESHOLD_COUNT, useTableRowsCountQuery } from "data/table-rows/table-rows-count-query";
+// import { useUrlState } from "hooks/ui/useUrlState";
+// import { RoleImpersonationState } from "lib/role-impersonation";
+// import { useRoleImpersonationStateSnapshot } from "state/role-impersonation-state";
+// import { useTableEditorStateSnapshot } from "state/table-editor";
+// import { useTableEditorTableStateSnapshot } from "state/table-editor-table";
+// import { Button, Tooltip, TooltipContent, TooltipTrigger } from "ui";
+// import { Input } from "ui-patterns/DataInputs/Input";
+// import ConfirmationModal from "ui-patterns/Dialogs/ConfirmationModal";
 import { DropdownControl } from "../../common/DropdownControl";
 import { formatEstimatedCount } from "./Pagination.utils";
+import { useSearchParams } from "next/navigation";
+import { useProjectStore } from "@/lib/store";
+import { useTableEditorStore } from "@/lib/store/table-editor";
+import { useTableEditorTableState } from "@/lib/store/table";
+import { useTableEditorQuery } from "@/components/editor/data";
+import { useQuery } from "@tanstack/react-query";
+import { Button } from "@/ui/components";
+import { Input } from "@/components/editor/components";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import ConfirmationModal from "@/components/editor/components/_confim_dialog";
 
 const rowsPerPageOptions = [
   { value: 100, label: "100 rows" },
@@ -24,28 +34,30 @@ const rowsPerPageOptions = [
   { value: 1000, label: "1000 rows" },
 ];
 
-const Pagination = () => {
-  const { id: _id } = useParams();
-  const id = _id ? Number(_id) : undefined;
+const THRESHOLD_COUNT = 10000;
 
-  const { project } = useProjectContext();
-  const tableEditorSnap = useTableEditorStateSnapshot();
-  const snap = useTableEditorTableStateSnapshot();
+const Pagination = () => {
+  const params = useSearchParams();
+  const id = params.get("table");
+  const { project, sdk } = useProjectStore();
+  const tableEditorSnap = useTableEditorStore();
+  const { getState } = useTableEditorTableState();
+  const snap = getState();
 
   const { data: selectedTable } = useTableEditorQuery({
-    projectRef: project?.ref,
-    connectionString: project?.connectionString,
-    id,
+    sdk,
+    id: params.get("table") as string,
+    schema: tableEditorSnap.schema,
   });
 
   // rowsCountEstimate is only applicable to table entities
-  const rowsCountEstimate = isTableLike(selectedTable) ? selectedTable.live_rows_estimate : null;
+  const rowsCountEstimate = null;
 
-  const [{ filter }] = useUrlState({ arrayKeys: ["filter"] });
+  const filter = params.getAll("filter");
   const filters = formatFilterURLParams(filter as string[]);
   const page = snap.page;
 
-  const roleImpersonationState = useRoleImpersonationStateSnapshot();
+  // const roleImpersonationState = useRoleImpersonationStateSnapshot();
   const [isConfirmNextModalOpen, setIsConfirmNextModalOpen] = useState(false);
   const [isConfirmPreviousModalOpen, setIsConfirmPreviousModalOpen] = useState(false);
   const [isConfirmFetchExactCountModalOpen, setIsConfirmFetchExactCountModalOpen] = useState(false);
@@ -57,19 +69,34 @@ const Pagination = () => {
     setValue(String(page));
   }, [page]);
 
-  const { data, isLoading, isSuccess, isError, isFetching } = useTableRowsCountQuery(
-    {
-      projectRef: project?.ref,
-      connectionString: project?.connectionString,
-      tableId: id,
-      filters,
-      enforceExactCount: snap.enforceExactCount,
-      roleImpersonationState: roleImpersonationState as RoleImpersonationState,
+  const { data, isLoading, isSuccess, isError, isFetching } = useQuery({
+    queryKey: [
+      "table-rows-count",
+      {
+        project,
+        table: selectedTable?.name,
+        schema: selectedTable?.schema,
+        filters,
+        enforceExactCount: snap.enforceExactCount,
+      },
+    ],
+    queryFn: async () => {
+      if (selectedTable) {
+        // const { data } = await sdk.getTableRowsCount({
+        //   project,
+        //   table: selectedTable.name,
+        //   schema: selectedTable.schema,
+        //   filters,
+        //   enforceExactCount: snap.enforceExactCount,
+        // });
+        return {
+          count: 0,
+          is_estimate: false,
+        };
+      }
+      return null;
     },
-    {
-      keepPreviousData: true,
-    },
-  );
+  });
 
   const count = data?.is_estimate ? formatEstimatedCount(data.count) : data?.count.toLocaleString();
   const maxPages = Math.ceil((data?.count ?? 0) / tableEditorSnap.rowsPerPage);
@@ -134,6 +161,7 @@ const Pagination = () => {
       snap.setEnforceExactCount(rowsCountEstimate !== null && rowsCountEstimate <= THRESHOLD_COUNT);
     }
   }, [id]);
+  data;
 
   return (
     <div className="flex items-center gap-x-4">
@@ -143,7 +171,7 @@ const Pagination = () => {
         <>
           <div className="flex items-center gap-x-2">
             <Button
-              icon={<ArrowLeft />}
+              prefixIcon={<ArrowLeft />}
               type="outline"
               className="px-1.5"
               disabled={page <= 1 || isLoading}
@@ -152,7 +180,7 @@ const Pagination = () => {
             <p className="text-xs text-foreground-light">Page</p>
             <Input
               className="w-12"
-              size="tiny"
+              // size="tiny"
               min={1}
               max={maxPages}
               value={value}
@@ -173,7 +201,7 @@ const Pagination = () => {
             <p className="text-xs text-foreground-light">of {totalPages.toLocaleString()}</p>
 
             <Button
-              icon={<ArrowRight />}
+              prefixIcon={<ArrowRight />}
               type="outline"
               className="px-1.5"
               disabled={page >= maxPages || isLoading}
@@ -186,7 +214,7 @@ const Pagination = () => {
               side="top"
               align="start"
             >
-              <Button asChild type="outline" style={{ padding: "3px 10px" }}>
+              <Button type="outline" style={{ padding: "3px 10px" }}>
                 <span>{`${tableEditorSnap.rowsPerPage} rows`}</span>
               </Button>
             </DropdownControl>
@@ -194,19 +222,19 @@ const Pagination = () => {
 
           <div className="flex items-center gap-x-2">
             <p className="text-xs text-foreground-light">
-              {`${count} ${data.count === 0 || data.count > 1 ? `records` : "record"}`}{" "}
-              {data.is_estimate ? "(estimated)" : ""}
+              {`${count} ${data?.count === 0 || (data?.count ?? 0) > 1 ? `records` : "record"}`}{" "}
+              {data?.is_estimate ? "(estimated)" : ""}
             </p>
 
-            {data.is_estimate && (
+            {data?.is_estimate && (
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
-                    size="tiny"
+                    size="s"
                     type="text"
                     className="px-1.5"
                     loading={isFetching}
-                    icon={<HelpCircle />}
+                    prefixIcon={<HelpCircle />}
                     onClick={() => {
                       // Show warning if either NOT a table entity, or table rows estimate is beyond threshold
                       if (rowsCountEstimate === null || data.count > THRESHOLD_COUNT) {

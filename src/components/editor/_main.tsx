@@ -43,16 +43,16 @@ export const TableEditor = () => {
           <SupabaseGrid
             key={"__"}
             gridProps={{ height: "100%" }}
-          // customHeader={
-          //   (isViewSelected || isTableSelected) && selectedView === 'definition' ? (
-          //     <div className="flex items-center space-x-2">
-          //       <p>
-          //         SQL Definition of <code className="text-sm">{selectedTable.name}</code>{' '}
-          //       </p>
-          //       <p className="text-foreground-light text-sm">(Read only)</p>
-          //     </div>
-          //   ) : null
-          // }
+            // customHeader={
+            //   (isViewSelected || isTableSelected) && selectedView === 'definition' ? (
+            //     <div className="flex items-center space-x-2">
+            //       <p>
+            //         SQL Definition of <code className="text-sm">{selectedTable.name}</code>{' '}
+            //       </p>
+            //       <p className="text-foreground-light text-sm">(Read only)</p>
+            //     </div>
+            //   ) : null
+            // }
           >
             {/* {(isViewSelected || isTableSelected) && selectedView === 'definition' && (
               <TableDefinition entity={selectedTable} />

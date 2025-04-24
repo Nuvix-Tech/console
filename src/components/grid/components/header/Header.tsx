@@ -38,12 +38,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import FilterPopover from "./filter/FilterPopover";
 import { SortPopover } from "./sort";
-import { Filter, Sort } from "../../types";
+import { Filter, Sort, SupaRow } from "../../types";
 import { useAppStore, useProjectStore } from "@/lib/store";
 import { useParams } from "next/navigation";
 import { Button, useToast } from "@/ui/components";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
+import { useTableEditorFiltersSort } from "@/hooks/useTableEditorFilterSort";
 // [Joshen] CSV exports require this guard as a fail-safe if the table is
 // just too large for a browser to keep all the rows in memory before
 // exporting. Either that or export as multiple CSV sheets with max n rows each
@@ -106,7 +107,7 @@ const DefaultHeader = () => {
   const canAddNew = onAddRow !== undefined || onAddColumn !== undefined;
 
   // [Joshen] Using this logic to block both column and row creation/update/delete
-  const canCreateColumns = useCheckPermissions(PermissionAction.TENANT_SQL_ADMIN_WRITE, "columns");
+  const canCreateColumns = true; // useCheckPermissions(PermissionAction.TENANT_SQL_ADMIN_WRITE, "columns");
 
   const { filters, sorts, setParams } = useTableEditorFiltersSort();
 
@@ -160,7 +161,7 @@ const DefaultHeader = () => {
     [projectRef, snap.table.name, snap.table.schema, setParams],
   );
 
-  const { mutate: sendEvent } = useSendEventMutation();
+  // const { mutate: sendEvent } = useSendEventMutation();
 
   return (
     <div className="flex items-center gap-4">
@@ -245,14 +246,14 @@ const DefaultHeader = () => {
                             className="group space-x-2"
                             onClick={() => {
                               onImportData();
-                              sendEvent({
-                                action: "import_data_button_clicked",
-                                properties: { tableType: "Existing Table" },
-                                groups: {
-                                  project: projectRef ?? "Unknown",
-                                  organization: org?.$id ?? "Unknown",
-                                },
-                              });
+                              // sendEvent({
+                              //   action: "import_data_button_clicked",
+                              //   properties: { tableType: "Existing Table" },
+                              //   groups: {
+                              //     project: projectRef ?? "Unknown",
+                              //     organization: org?.$id ?? "Unknown",
+                              //   },
+                              // });
                             }}
                           >
                             <div className="relative -mt-2">
@@ -304,31 +305,31 @@ const RowHeader = ({ sorts, filters }: RowHeaderProps) => {
 
   const [isExporting, setIsExporting] = useState(false);
 
-  const { data } = useTableRowsQuery({
-    projectRef: project?.ref,
-    connectionString: project?.connectionString,
-    tableId: snap.table.id,
-    sorts,
-    filters,
-    page: snap.page,
-    limit: tableEditorSnap.rowsPerPage,
-    roleImpersonationState: roleImpersonationState as RoleImpersonationState,
-  });
+  // const { data } = useTableRowsQuery({
+  //   projectRef: project?.ref,
+  //   connectionString: project?.connectionString,
+  //   tableId: snap.table.id,
+  //   sorts,
+  //   filters,
+  //   page: snap.page,
+  //   limit: tableEditorSnap.rowsPerPage,
+  //   roleImpersonationState: roleImpersonationState as RoleImpersonationState,
+  // });
 
-  const { data: countData } = useTableRowsCountQuery(
-    {
-      projectRef: project?.ref,
-      connectionString: project?.connectionString,
-      tableId: snap.table.id,
-      filters,
-      enforceExactCount: snap.enforceExactCount,
-      roleImpersonationState: roleImpersonationState as RoleImpersonationState,
-    },
-    { keepPreviousData: true },
-  );
+  // const { data: countData } = useTableRowsCountQuery(
+  //   {
+  //     projectRef: project?.ref,
+  //     connectionString: project?.connectionString,
+  //     tableId: snap.table.id,
+  //     filters,
+  //     enforceExactCount: snap.enforceExactCount,
+  //     roleImpersonationState: roleImpersonationState as RoleImpersonationState,
+  //   },
+  //   { keepPreviousData: true },
+  // );
 
-  const allRows = data?.rows ?? [];
-  const totalRows = countData?.count ?? 0;
+  const allRows: SupaRow[] = []; //data?.rows ??
+  const totalRows = 0; // countData?.count ??
 
   const onSelectAllRows = () => {
     snap.setSelectedRows(new Set(allRows.map((row) => row.idx)), true);
