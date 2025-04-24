@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Input, SidePanel } from "ui";
+// import { Input, SidePanel } from "ui";
 
-import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
-import { useSchemaCreateMutation } from "data/database/schema-create-mutation";
+// import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
+// import { useSchemaCreateMutation } from "data/database/schema-create-mutation";
 import ActionBar from "./ActionBar";
+import SidePanel from "@/components/ui/SidePanel/SidePanel";
+import { Input } from "@/ui/components";
 
 interface SchemaEditorProps {
   visible: boolean;
@@ -12,12 +14,12 @@ interface SchemaEditorProps {
 }
 
 const SchemaEditor = ({ visible, closePanel }: SchemaEditorProps) => {
-  const { project } = useProjectContext();
+  // const { project } = useProjectContext();
 
   const [errors, setErrors] = useState<{ name?: string }>({ name: undefined });
   const [name, setName] = useState("");
 
-  const { mutate: createSchema } = useSchemaCreateMutation();
+  // const { mutate: createSchema } = useSchemaCreateMutation();
 
   useEffect(() => {
     if (visible) {
@@ -34,17 +36,17 @@ const SchemaEditor = ({ visible, closePanel }: SchemaEditorProps) => {
       return setErrors(errors);
     }
 
-    if (project === undefined) return console.error("Project is required");
-    createSchema(
-      { projectRef: project.ref, connectionString: project.connectionString, name },
-      {
-        onSuccess: () => {
-          resolve();
-          closePanel();
-          toast.success(`Successfully created schema "${name}"`);
-        },
-      },
-    );
+    // if (project === undefined) return console.error("Project is required");
+    // createSchema(
+    //   { projectRef: project.ref, connectionString: project.connectionString, name },
+    //   {
+    //     onSuccess: () => {
+    resolve();
+    closePanel();
+    toast.success(`Successfully created schema "${name}"`);
+    //     },
+    //   },
+    // );
   };
 
   return (
@@ -70,9 +72,10 @@ const SchemaEditor = ({ visible, closePanel }: SchemaEditorProps) => {
           <div className="space-y-10 py-6">
             <Input
               label="Name"
-              layout="horizontal"
+              labelAsPlaceholder
               type="text"
-              error={errors?.name}
+              error={!!errors?.name}
+              errorMessage={errors?.name}
               value={name}
               onChange={(event: any) => setName(event.target.value)}
             />

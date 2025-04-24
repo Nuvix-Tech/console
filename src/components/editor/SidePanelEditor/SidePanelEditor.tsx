@@ -1,34 +1,34 @@
-import type { PostgresColumn, PostgresTable } from "@supabase/postgres-meta";
+// import type { PostgresColumn, PostgresTable } from "@supabase/postgres-meta";
 import { useQueryClient } from "@tanstack/react-query";
 import { isEmpty, isUndefined, noop } from "lodash";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import { useParams } from "common";
-import { useIsTableEditorTabsEnabled } from "components/interfaces/App/FeaturePreview/FeaturePreviewContext";
-import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
-import { useDatabasePublicationCreateMutation } from "data/database-publications/database-publications-create-mutation";
-import { useDatabasePublicationsQuery } from "data/database-publications/database-publications-query";
-import { useDatabasePublicationUpdateMutation } from "data/database-publications/database-publications-update-mutation";
-import type { Constraint } from "data/database/constraints-query";
-import type { ForeignKeyConstraint } from "data/database/foreign-key-constraints-query";
-import { databaseKeys } from "data/database/keys";
-import { ENTITY_TYPE } from "data/entity-types/entity-type-constants";
-import { entityTypeKeys } from "data/entity-types/keys";
-import { tableEditorKeys } from "data/table-editor/keys";
-import { isTableLike } from "data/table-editor/table-editor-types";
-import { tableRowKeys } from "data/table-rows/keys";
-import { useTableRowCreateMutation } from "data/table-rows/table-row-create-mutation";
-import { useTableRowUpdateMutation } from "data/table-rows/table-row-update-mutation";
-import { tableKeys } from "data/tables/keys";
-import { getTables } from "data/tables/tables-query";
-import { useUrlState } from "hooks/ui/useUrlState";
-import { useGetImpersonatedRoleState } from "state/role-impersonation-state";
-import { useTableEditorStateSnapshot } from "state/table-editor";
-import { createTabId, updateTab } from "state/tabs";
-import type { Dictionary } from "types";
-import { SonnerProgress } from "ui";
-import ConfirmationModal from "ui-patterns/Dialogs/ConfirmationModal";
+// import { useParams } from "common";
+// import { useIsTableEditorTabsEnabled } from "components/interfaces/App/FeaturePreview/FeaturePreviewContext";
+// import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
+// import { useDatabasePublicationCreateMutation } from "data/database-publications/database-publications-create-mutation";
+// import { useDatabasePublicationsQuery } from "data/database-publications/database-publications-query";
+// import { useDatabasePublicationUpdateMutation } from "data/database-publications/database-publications-update-mutation";
+// import type { Constraint } from "data/database/constraints-query";
+// import type { ForeignKeyConstraint } from "data/database/foreign-key-constraints-query";
+// import { databaseKeys } from "data/database/keys";
+// import { ENTITY_TYPE } from "data/entity-types/entity-type-constants";
+// import { entityTypeKeys } from "data/entity-types/keys";
+// import { tableEditorKeys } from "data/table-editor/keys";
+// import { isTableLike } from "data/table-editor/table-editor-types";
+// import { tableRowKeys } from "data/table-rows/keys";
+// import { useTableRowCreateMutation } from "data/table-rows/table-row-create-mutation";
+// import { useTableRowUpdateMutation } from "data/table-rows/table-row-update-mutation";
+// import { tableKeys } from "data/tables/keys";
+// import { getTables } from "data/tables/tables-query";
+// import { useUrlState } from "hooks/ui/useUrlState";
+// import { useGetImpersonatedRoleState } from "state/role-impersonation-state";
+// import { useTableEditorStateSnapshot } from "state/table-editor";
+// import { createTabId, updateTab } from "state/tabs";
+// import type { Dictionary } from "types";
+// import { SonnerProgress } from "ui";
+// import ConfirmationModal from "ui-patterns/Dialogs/ConfirmationModal";
 import ColumnEditor from "./ColumnEditor/ColumnEditor";
 import type { ForeignKey } from "./ForeignKeySelector/ForeignKeySelector.types";
 import ForeignRowSelector from "./RowEditor/ForeignRowSelector/ForeignRowSelector";
@@ -54,15 +54,21 @@ import {
 import SpreadsheetImport from "./SpreadsheetImport/SpreadsheetImport";
 import TableEditor from "./TableEditor/TableEditor";
 import type { ImportContent } from "./TableEditor/TableEditor.types";
+import { Column, Entity } from "@/types/grid";
+import { useTableEditorStore } from "@/lib/store/table-editor";
+import { useProjectStore } from "@/lib/store";
+import { Dictionary } from "@/components/grid/types";
+import { useTableEditorFiltersSort } from "@/hooks/useTableEditorFilterSort";
+import ConfirmationModal from "../components/_confim_dialog";
 
 export interface SidePanelEditorProps {
   editable?: boolean;
-  selectedTable?: PostgresTable;
+  selectedTable?: Entity;
   includeColumns?: boolean; // This is mainly used for invalidating useTablesQuery
 
   // Because the panel is shared between grid editor and database pages
   // Both require different responses upon success of these events
-  onTableCreated?: (table: PostgresTable) => void;
+  onTableCreated?: (table: Entity) => void;
 }
 
 const SidePanelEditor = ({
@@ -71,43 +77,43 @@ const SidePanelEditor = ({
   includeColumns = false,
   onTableCreated = noop,
 }: SidePanelEditorProps) => {
-  const { ref } = useParams();
-  const snap = useTableEditorStateSnapshot();
-  const isTableEditorTabsEnabled = useIsTableEditorTabsEnabled();
-  const [_, setParams] = useUrlState({ arrayKeys: ["filter", "sort"] });
+  // const { ref } = useParams();
+  const snap = useTableEditorStore();
+  // const isTableEditorTabsEnabled = useIsTableEditorTabsEnabled();
+  // const [_, setParams] = useUrlState({ arrayKeys: ["filter", "sort"] });
 
-  const queryClient = useQueryClient();
-  const { project } = useProjectContext();
+  // const queryClient = useQueryClient();
+  const { project } = useProjectStore();
 
   const [isEdited, setIsEdited] = useState<boolean>(false);
   const [isClosingPanel, setIsClosingPanel] = useState<boolean>(false);
 
   const enumArrayColumns = (selectedTable?.columns ?? [])
     .filter((column) => {
-      return (column?.enums ?? []).length > 0 && column.data_type.toLowerCase() === "array";
+      return (column?.elements ?? []).length > 0 && column.array; // column.type.toLowerCase() === "array";
     })
     .map((column) => column.name);
 
-  const { mutateAsync: createTableRows } = useTableRowCreateMutation({
-    onSuccess() {
-      toast.success("Successfully created row");
-    },
-  });
-  const { mutateAsync: updateTableRow } = useTableRowUpdateMutation({
-    onSuccess() {
-      toast.success("Successfully updated row");
-    },
-  });
-  const { data: publications } = useDatabasePublicationsQuery({
-    projectRef: project?.ref,
-    connectionString: project?.connectionString,
-  });
-  const { mutateAsync: createPublication } = useDatabasePublicationCreateMutation();
-  const { mutateAsync: updatePublication } = useDatabasePublicationUpdateMutation({
-    onError: () => {},
-  });
+  // const { mutateAsync: createTableRows } = useTableRowCreateMutation({
+  //   onSuccess() {
+  //     toast.success("Successfully created row");
+  //   },
+  // });
+  // const { mutateAsync: updateTableRow } = useTableRowUpdateMutation({
+  //   onSuccess() {
+  //     toast.success("Successfully updated row");
+  //   },
+  // });
+  // const { data: publications } = useDatabasePublicationsQuery({
+  //   projectRef: project?.ref,
+  //   connectionString: project?.connectionString,
+  // });
+  // const { mutateAsync: createPublication } = useDatabasePublicationCreateMutation();
+  // const { mutateAsync: updatePublication } = useDatabasePublicationUpdateMutation({
+  //   onError: () => { },
+  // });
 
-  const getImpersonatedRoleState = useGetImpersonatedRoleState();
+  // const getImpersonatedRoleState = useGetImpersonatedRoleState();
 
   const saveRow = async (
     payload: any,
@@ -122,40 +128,40 @@ const SidePanelEditor = ({
     let saveRowError: Error | undefined;
     if (isNewRecord) {
       try {
-        await createTableRows({
-          projectRef: project.ref,
-          connectionString: project.connectionString,
-          table: selectedTable,
-          payload,
-          enumArrayColumns,
-          roleImpersonationState: getImpersonatedRoleState(),
-        });
+        // await createTableRows({
+        //   projectRef: project.ref,
+        //   connectionString: project.connectionString,
+        //   table: selectedTable,
+        //   payload,
+        //   enumArrayColumns,
+        //   roleImpersonationState: getImpersonatedRoleState(),
+        // });
       } catch (error: any) {
         saveRowError = error;
       }
     } else {
       const hasChanges = !isEmpty(payload);
       if (hasChanges) {
-        if (selectedTable.primary_keys.length > 0) {
-          try {
-            await updateTableRow({
-              projectRef: project.ref,
-              connectionString: project.connectionString,
-              table: selectedTable,
-              configuration,
-              payload,
-              enumArrayColumns,
-              roleImpersonationState: getImpersonatedRoleState(),
-            });
-          } catch (error: any) {
-            saveRowError = error;
-          }
-        } else {
-          saveRowError = new Error("No primary key");
-          toast.error(
-            "We can't make changes to this table because there is no primary key. Please create a primary key and try again.",
-          );
-        }
+        // if (selectedTable.primary_keys.length > 0) {
+        //   try {
+        //     await updateTableRow({
+        //       projectRef: project.ref,
+        //       connectionString: project.connectionString,
+        //       table: selectedTable,
+        //       configuration,
+        //       payload,
+        //       enumArrayColumns,
+        //       roleImpersonationState: getImpersonatedRoleState(),
+        //     });
+        //   } catch (error: any) {
+        //     saveRowError = error;
+        //   }
+        // } else {
+        //   saveRowError = new Error("No primary key");
+        //   toast.error(
+        //     "We can't make changes to this table because there is no primary key. Please create a primary key and try again.",
+        //   );
+        // }
       }
     }
 
@@ -177,9 +183,9 @@ const SidePanelEditor = ({
       const selectedValueForJsonEdit = snap.sidePanel.jsonValue;
       const { row, column } = selectedValueForJsonEdit;
       payload = { [column]: value === null ? null : JSON.parse(value as any) };
-      selectedTable.primary_keys.forEach(
-        (column) => (identifiers[column.name] = row![column.name]),
-      );
+      // selectedTable.primary_keys.forEach(
+      //   (column) => (identifiers[column.name] = row![column.name]),
+      // );
       configuration = { identifiers, rowIdx: row.idx };
     } else if (snap.sidePanel?.type === "cell") {
       const column = snap.sidePanel.value?.column;
@@ -187,9 +193,9 @@ const SidePanelEditor = ({
 
       if (!column || !row) return;
       payload = { [column]: value === null ? null : value };
-      selectedTable.primary_keys.forEach(
-        (column) => (identifiers[column.name] = row![column.name]),
-      );
+      // selectedTable.primary_keys.forEach(
+      //   (column) => (identifiers[column.name] = row![column.name]),
+      // );
       configuration = { identifiers, rowIdx: row.idx };
     }
 
@@ -211,11 +217,11 @@ const SidePanelEditor = ({
     try {
       const { row } = selectedForeignKeyToEdit;
       const identifiers = {} as Dictionary<any>;
-      selectedTable.primary_keys.forEach((column) => {
-        const col = selectedTable.columns?.find((x) => x.name === column.name);
-        identifiers[column.name] =
-          col?.format === "bytea" ? convertByteaToHex(row![column.name]) : row![column.name];
-      });
+      // selectedTable.primary_keys.forEach((column) => {
+      //   const col = selectedTable.columns?.find((x) => x.name === column.name);
+      //   identifiers[column.name] =
+      //     col?.format === "bytea" ? convertByteaToHex(row![column.name]) : row![column.name];
+      // });
 
       const isNewRecord = false;
       const configuration = { identifiers, rowIdx: row.idx };
@@ -229,9 +235,9 @@ const SidePanelEditor = ({
     isNewRecord: boolean,
     configuration: {
       columnId?: string;
-      primaryKey?: Constraint;
+      primaryKey?: any; //Constraint;
       foreignKeyRelations: ForeignKey[];
-      existingForeignKeyRelations: ForeignKeyConstraint[];
+      existingForeignKeyRelations: any; // ForeignKeyConstraint[];
     },
     resolve: any,
   ) => {
@@ -243,54 +249,54 @@ const SidePanelEditor = ({
       return console.error("no project or table selected");
     }
 
-    const response = isNewRecord
-      ? await createColumn({
-          projectRef: project?.ref!,
-          connectionString: project?.connectionString,
-          payload: payload as CreateColumnPayload,
-          selectedTable,
-          primaryKey,
-          foreignKeyRelations,
-        })
-      : await updateColumn({
-          projectRef: project?.ref!,
-          connectionString: project?.connectionString,
-          id: columnId as string,
-          payload: payload as UpdateColumnPayload,
-          selectedTable,
-          primaryKey,
-          foreignKeyRelations,
-          existingForeignKeyRelations,
-        });
+    const response: any = isNewRecord;
+    //   ? await createColumn({
+    //     projectRef: project?.ref!,
+    //     connectionString: project?.connectionString,
+    //     payload: payload as CreateColumnPayload,
+    //     selectedTable,
+    //     primaryKey,
+    //     foreignKeyRelations,
+    //   })
+    //   : await updateColumn({
+    //     projectRef: project?.ref!,
+    //     connectionString: project?.connectionString,
+    //     id: columnId as string,
+    //     payload: payload as UpdateColumnPayload,
+    //     selectedTable,
+    //     primaryKey,
+    //     foreignKeyRelations,
+    //     existingForeignKeyRelations,
+    //   });
 
     if (response?.error) {
       toast.error(response.error.message);
     } else {
-      if (
-        !isNewRecord &&
-        payload.name &&
-        selectedColumnToEdit &&
-        selectedColumnToEdit.name !== payload.name
-      ) {
-        reAddRenamedColumnSortAndFilter(selectedColumnToEdit.name, payload.name);
-      }
+      //   if (
+      //     !isNewRecord &&
+      //     payload.name &&
+      //     selectedColumnToEdit &&
+      //     selectedColumnToEdit.name !== payload.name
+      //   ) {
+      //     reAddRenamedColumnSortAndFilter(selectedColumnToEdit.name, payload.name);
+      //   }
 
-      await Promise.all([
-        queryClient.invalidateQueries(tableEditorKeys.tableEditor(project?.ref, selectedTable?.id)),
-        queryClient.invalidateQueries(
-          databaseKeys.foreignKeyConstraints(project?.ref, selectedTable?.schema),
-        ),
-        queryClient.invalidateQueries(
-          databaseKeys.tableDefinition(project?.ref, selectedTable?.id),
-        ),
-        queryClient.invalidateQueries(entityTypeKeys.list(project?.ref)),
-      ]);
+      // await Promise.all([
+      //   queryClient.invalidateQueries(tableEditorKeys.tableEditor(project?.ref, selectedTable?.id)),
+      //   queryClient.invalidateQueries(
+      //     databaseKeys.foreignKeyConstraints(project?.ref, selectedTable?.schema),
+      //   ),
+      //   queryClient.invalidateQueries(
+      //     databaseKeys.tableDefinition(project?.ref, selectedTable?.id),
+      //   ),
+      //   queryClient.invalidateQueries(entityTypeKeys.list(project?.ref)),
+      // ]);
 
-      // We need to invalidate tableRowsAndCount after tableEditor
-      // to ensure the query sent is correct
-      await queryClient.invalidateQueries(
-        tableRowKeys.tableRowsAndCount(project?.ref, selectedTable?.id),
-      );
+      // // We need to invalidate tableRowsAndCount after tableEditor
+      // // to ensure the query sent is correct
+      // await queryClient.invalidateQueries(
+      //   tableRowKeys.tableRowsAndCount(project?.ref, selectedTable?.id),
+      // );
 
       setIsEdited(false);
       snap.closeSidePanel();
@@ -298,6 +304,8 @@ const SidePanelEditor = ({
 
     resolve();
   };
+
+  const { setParams } = useTableEditorFiltersSort();
 
   /**
    * Adds the renamed column's filter and/or sort rules.
@@ -321,67 +329,67 @@ const SidePanelEditor = ({
     });
   };
 
-  const updateTableRealtime = async (table: PostgresTable, enabled: boolean) => {
+  const updateTableRealtime = async (table: Entity, enabled: boolean) => {
     if (!project) return console.error("Project is required");
-    let realtimePublication = (publications ?? []).find((pub) => pub.name === "supabase_realtime");
-    const publicTables = await queryClient.fetchQuery({
-      queryKey: tableKeys.list(project.ref, "public", includeColumns),
-      queryFn: ({ signal }) =>
-        getTables(
-          { projectRef: project.ref, connectionString: project.connectionString, schema: "public" },
-          signal,
-        ),
-    });
+    // let realtimePublication = (publications ?? []).find((pub) => pub.name === "supabase_realtime");
+    // const publicTables = await queryClient.fetchQuery({
+    //   queryKey: tableKeys.list(project.ref, "public", includeColumns),
+    //   queryFn: ({ signal }) =>
+    //     getTables(
+    //       { projectRef: project.ref, connectionString: project.connectionString, schema: "public" },
+    //       signal,
+    //     ),
+    // });
 
     try {
-      if (realtimePublication === undefined) {
-        realtimePublication = await createPublication({
-          projectRef: project.ref,
-          connectionString: project?.connectionString,
-          name: "supabase_realtime",
-          publish_insert: true,
-          publish_update: true,
-          publish_delete: true,
-        });
-      }
-      const { id, tables: publicationTables } = realtimePublication;
-      if (publicationTables === null) {
-        // UI doesn't have support for toggling realtime for ALL tables
-        // Switch it to individual tables via an array of strings
-        // Refer to PublicationStore for more information about this
-        const realtimeTables = enabled
-          ? publicTables.map((t: any) => `${t.schema}.${t.name}`)
-          : publicTables
-              .filter((t: any) => t.id !== table.id)
-              .map((t: any) => `${t.schema}.${t.name}`);
-        await updatePublication({
-          id,
-          projectRef: project.ref,
-          connectionString: project?.connectionString,
-          tables: realtimeTables,
-        });
-      } else {
-        const isAlreadyEnabled = publicationTables.some((x: any) => x.id == table.id);
-        const realtimeTables =
-          isAlreadyEnabled && !enabled
-            ? // Toggle realtime off
-              publicationTables
-                .filter((t: any) => t.id !== table.id)
-                .map((t: any) => `${t.schema}.${t.name}`)
-            : !isAlreadyEnabled && enabled
-              ? // Toggle realtime on
-                [`${table.schema}.${table.name}`].concat(
-                  publicationTables.map((t: any) => `${t.schema}.${t.name}`),
-                )
-              : null;
-        if (realtimeTables === null) return;
-        await updatePublication({
-          id,
-          projectRef: project.ref,
-          connectionString: project?.connectionString,
-          tables: realtimeTables,
-        });
-      }
+      // if (realtimePublication === undefined) {
+      //   realtimePublication = await createPublication({
+      //     projectRef: project.ref,
+      //     connectionString: project?.connectionString,
+      //     name: "supabase_realtime",
+      //     publish_insert: true,
+      //     publish_update: true,
+      //     publish_delete: true,
+      //   });
+      // }
+      // const { id, tables: publicationTables } = realtimePublication;
+      // if (publicationTables === null) {
+      //   // UI doesn't have support for toggling realtime for ALL tables
+      //   // Switch it to individual tables via an array of strings
+      //   // Refer to PublicationStore for more information about this
+      //   const realtimeTables = enabled
+      //     ? publicTables.map((t: any) => `${t.schema}.${t.name}`)
+      //     : publicTables
+      //       .filter((t: any) => t.id !== table.id)
+      //       .map((t: any) => `${t.schema}.${t.name}`);
+      //   await updatePublication({
+      //     id,
+      //     projectRef: project.ref,
+      //     connectionString: project?.connectionString,
+      //     tables: realtimeTables,
+      //   });
+      // } else {
+      //   const isAlreadyEnabled = publicationTables.some((x: any) => x.id == table.id);
+      //   const realtimeTables =
+      //     isAlreadyEnabled && !enabled
+      //       ? // Toggle realtime off
+      //       publicationTables
+      //         .filter((t: any) => t.id !== table.id)
+      //         .map((t: any) => `${t.schema}.${t.name}`)
+      //       : !isAlreadyEnabled && enabled
+      //         ? // Toggle realtime on
+      //         [`${table.schema}.${table.name}`].concat(
+      //           publicationTables.map((t: any) => `${t.schema}.${t.name}`),
+      //         )
+      //         : null;
+      //   if (realtimeTables === null) return;
+      //   await updatePublication({
+      //     id,
+      //     projectRef: project.ref,
+      //     connectionString: project?.connectionString,
+      //     tables: realtimeTables,
+      //   });
+      // }
     } catch (error: any) {
       toast.error(`Failed to update realtime for ${table.name}: ${error.message}`);
     }
@@ -402,8 +410,8 @@ const SidePanelEditor = ({
       isRLSEnabled: boolean;
       isRealtimeEnabled: boolean;
       isDuplicateRows: boolean;
-      existingForeignKeyRelations: ForeignKeyConstraint[];
-      primaryKey?: Constraint;
+      existingForeignKeyRelations: any; // ForeignKeyConstraint[];
+      primaryKey?: any; // Constraint;
     },
     resolve: any,
   ) => {
@@ -428,80 +436,110 @@ const SidePanelEditor = ({
 
         toastId = toast.loading(`Duplicating table: ${tableToDuplicate.name}...`);
 
-        const table = await duplicateTable(project?.ref!, project?.connectionString, payload, {
-          isRLSEnabled,
-          isDuplicateRows,
-          duplicateTable: tableToDuplicate,
-          foreignKeyRelations,
-        });
-        if (isRealtimeEnabled) await updateTableRealtime(table, isRealtimeEnabled);
+        // const table = await duplicateTable(project?.ref!, project?.connectionString, payload, {
+        //   isRLSEnabled,
+        //   isDuplicateRows,
+        //   duplicateTable: tableToDuplicate,
+        //   foreignKeyRelations,
+        // });
+        // if (isRealtimeEnabled) await updateTableRealtime(table, isRealtimeEnabled);
 
-        await Promise.all([
-          queryClient.invalidateQueries(tableKeys.list(project?.ref, table.schema, includeColumns)),
-          queryClient.invalidateQueries(entityTypeKeys.list(project?.ref)),
-        ]);
+        // await Promise.all([
+        //   queryClient.invalidateQueries(tableKeys.list(project?.ref, table.schema, includeColumns)),
+        //   queryClient.invalidateQueries(entityTypeKeys.list(project?.ref)),
+        // ]);
 
-        toast.success(
-          `Table ${tableToDuplicate.name} has been successfully duplicated into ${table.name}!`,
-          { id: toastId },
-        );
-        onTableCreated(table);
+        // toast.success(
+        //   `Table ${tableToDuplicate.name} has been successfully duplicated into ${table.name}!`,
+        //   { id: toastId },
+        // );
+        // onTableCreated(table);
       } else if (isNewRecord) {
         toastId = toast.loading(`Creating new table: ${payload.name}...`);
 
-        const table = await createTable({
-          projectRef: project?.ref!,
-          connectionString: project?.connectionString,
-          toastId,
-          payload,
-          columns,
-          foreignKeyRelations,
-          isRLSEnabled,
-          importContent,
-        });
-        if (isRealtimeEnabled) await updateTableRealtime(table, true);
+        // const table = await createTable({
+        //   projectRef: project?.ref!,
+        //   connectionString: project?.connectionString,
+        //   toastId,
+        //   payload,
+        //   columns,
+        //   foreignKeyRelations,
+        //   isRLSEnabled,
+        //   importContent,
+        // });
+        // if (isRealtimeEnabled) await updateTableRealtime(table, true);
 
-        await Promise.all([
-          queryClient.invalidateQueries(tableKeys.list(project?.ref, table.schema, includeColumns)),
-          queryClient.invalidateQueries(entityTypeKeys.list(project?.ref)),
-        ]);
+        // await Promise.all([
+        //   queryClient.invalidateQueries(tableKeys.list(project?.ref, table.schema, includeColumns)),
+        //   queryClient.invalidateQueries(entityTypeKeys.list(project?.ref)),
+        // ]);
 
-        toast.success(`Table ${table.name} is good to go!`, { id: toastId });
-        onTableCreated(table);
+        // toast.success(`Table ${table.name} is good to go!`, { id: toastId });
+        // onTableCreated(table);
       } else if (selectedTable) {
         toastId = toast.loading(`Updating table: ${selectedTable?.name}...`);
 
-        const { table, hasError } = await updateTable({
-          projectRef: project?.ref!,
-          connectionString: project?.connectionString,
-          toastId,
-          table: selectedTable,
-          payload,
-          columns,
-          foreignKeyRelations,
-          existingForeignKeyRelations,
-          primaryKey,
-        });
+        // const { table, hasError } = await updateTable({
+        //   projectRef: project?.ref!,
+        //   connectionString: project?.connectionString,
+        //   toastId,
+        //   table: selectedTable,
+        //   payload,
+        //   columns,
+        //   foreignKeyRelations,
+        //   existingForeignKeyRelations,
+        //   primaryKey,
+        // });
 
-        if (table === undefined) {
-          return toast.error("Failed to update table");
-        }
-        if (isTableLike(table)) {
-          await updateTableRealtime(table, isRealtimeEnabled);
-        }
+        // if (table === undefined) {
+        //   return toast.error("Failed to update table");
+        // }
+        // if (isTableLike(table)) {
+        //   await updateTableRealtime(table, isRealtimeEnabled);
+        // }
 
-        if (hasError) {
-          toast.warning(
-            `Table ${table.name} has been updated but there were some errors. Please check these errors separately.`,
-          );
-        } else {
-          if (isTableEditorTabsEnabled && ref && payload.name) {
-            // [Joshen] Only table entities can be updated via the dashboard
-            const tabId = createTabId(ENTITY_TYPE.TABLE, { id: selectedTable.id });
-            updateTab(ref, tabId, { label: payload.name });
-          }
-          toast.success(`Successfully updated ${table.name}!`, { id: toastId });
-        }
+        // if (hasError) {
+        //   toast.warning(
+        //     `Table ${table.name} has been updated but there were some errors. Please check these errors separately.`,
+        //   );
+        // } else {
+        //   if (isTableEditorTabsEnabled && ref && payload.name) {
+        //     // [Joshen] Only table entities can be updated via the dashboard
+        //     const tabId = createTabId(ENTITY_TYPE.TABLE, { id: selectedTable.id });
+        //     updateTab(ref, tabId, { label: payload.name });
+        //   }
+        //   toast.success(`Successfully updated ${table.name}!`, { id: toastId });
+        // }able, hasError } = await updateTable({
+        //   projectRef: project?.ref!,
+        //   connectionString: project?.connectionString,
+        //   toastId,
+        //   table: selectedTable,
+        //   payload,
+        //   columns,
+        //   foreignKeyRelations,
+        //   existingForeignKeyRelations,
+        //   primaryKey,
+        // });
+
+        // if (table === undefined) {
+        //   return toast.error("Failed to update table");
+        // }
+        // if (isTableLike(table)) {
+        //   await updateTableRealtime(table, isRealtimeEnabled);
+        // }
+
+        // if (hasError) {
+        //   toast.warning(
+        //     `Table ${table.name} has been updated but there were some errors. Please check these errors separately.`,
+        //   );
+        // } else {
+        //   if (isTableEditorTabsEnabled && ref && payload.name) {
+        //     // [Joshen] Only table entities can be updated via the dashboard
+        //     const tabId = createTabId(ENTITY_TYPE.TABLE, { id: selectedTable.id });
+        //     updateTab(ref, tabId, { label: payload.name });
+        //   }
+        //   toast.success(`Successfully updated ${table.name}!`, { id: toastId });
+        // }
       }
     } catch (error: any) {
       saveTableError = true;
@@ -528,58 +566,60 @@ const SidePanelEditor = ({
 
     if (file && rowCount > 0) {
       // CSV file upload
-      const res: any = await insertRowsViaSpreadsheet(
-        project.ref!,
-        project.connectionString,
-        file,
-        selectedTable,
-        selectedHeaders,
-        (progress: number) => {
-          toast.loading(
-            <SonnerProgress
-              progress={progress}
-              message={`Adding ${rowCount.toLocaleString()} rows to ${selectedTable.name}`}
-            />,
-            { id: toastId },
-          );
-        },
-      );
-      if (res.error) {
-        toast.error(`Failed to import data: ${res.error.message}`, { id: toastId });
-        return resolve();
-      }
+      // const res: any = await insertRowsViaSpreadsheet(
+      //   project.ref!,
+      //   project.connectionString,
+      //   file,
+      //   selectedTable,
+      //   selectedHeaders,
+      //   (progress: number) => {
+      //     toast.loading(
+      //       <SonnerProgress
+      //         progress={progress}
+      //         message={`Adding ${rowCount.toLocaleString()} rows to ${selectedTable.name}`}
+      //       />,
+      //       { id: toastId },
+      //     );
+      //   },
+      // );
+      // if (res.error) {
+      //   toast.error(`Failed to import data: ${res.error.message}`, { id: toastId });
+      //   return resolve();
+      // }
     } else {
       // Text paste
-      const res: any = await insertTableRows(
-        project.ref!,
-        project.connectionString,
-        selectedTable,
-        importContent.rows,
-        selectedHeaders,
-        (progress: number) => {
-          toast.loading(
-            <SonnerProgress
-              progress={progress}
-              message={`Adding ${importContent.rows.length.toLocaleString()} rows to ${
-                selectedTable.name
-              }`}
-            />,
-            { id: toastId },
-          );
-        },
-      );
-      if (res.error) {
-        toast.error(`Failed to import data: ${res.error.message}`, { id: toastId });
-        return resolve();
-      }
+      // const res: any = await insertTableRows(
+      //   project.ref!,
+      //   project.connectionString,
+      //   selectedTable,
+      //   importContent.rows,
+      //   selectedHeaders,
+      //   (progress: number) => {
+      //     toast.loading(
+      //       <SonnerProgress
+      //         progress={progress}
+      //         message={`Adding ${importContent.rows.length.toLocaleString()} rows to ${selectedTable.name
+      //           }`}
+      //       />,
+      //       { id: toastId },
+      //     );s.error) {
+      //   toast.error(`Failed to import data: ${res.error.message}`, { id: toastId });
+      //   return resolve();
+      // }
+      //   },
+      // );
+      // if (res.error) {
+      //   toast.error(`Failed to import data: ${res.error.message}`, { id: toastId });
+      //   return resolve();
+      // }
     }
 
-    await queryClient.invalidateQueries(
-      tableRowKeys.tableRowsAndCount(project?.ref, selectedTable?.id),
-    );
-    toast.success(`Successfully imported ${rowCount} rows of data into ${selectedTable.name}`, {
-      id: toastId,
-    });
+    // await queryClient.invalidateQueries(
+    //   tableRowKeys.tableRowsAndCount(project?.ref, selectedTable?.id),
+    // );
+    // toast.success(`Successfully imported ${rowCount} rows of data into ${selectedTable.name}`, {
+    //   id: toastId,
+    // });
     resolve();
     snap.closeSidePanel();
   };
@@ -609,7 +649,7 @@ const SidePanelEditor = ({
         <ColumnEditor
           column={
             snap.sidePanel?.type === "column"
-              ? (snap.sidePanel.column as unknown as PostgresColumn)
+              ? (snap.sidePanel.column as unknown as Column)
               : undefined
           }
           selectedTable={selectedTable}

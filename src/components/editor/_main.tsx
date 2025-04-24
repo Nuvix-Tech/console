@@ -6,6 +6,8 @@ import { TableEditorTableStateContextProvider } from "@/lib/store/table";
 import { useProjectStore } from "@/lib/store";
 import { useQuery } from "@tanstack/react-query";
 import { Entity } from "@/types/grid";
+import SidePanelEditor from "./SidePanelEditor/SidePanelEditor";
+import { toast } from "sonner";
 
 export const TableEditor = () => {
   const searchParam = useSearchParams();
@@ -53,6 +55,11 @@ export const TableEditor = () => {
               <TableDefinition entity={selectedTable} />
             )} */}
           </SupabaseGrid>
+          <SidePanelEditor
+            editable={true}
+            selectedTable={selectedTable as unknown as Entity}
+            onTableCreated={(t) => toast.info("TABLE IS CREATED< GETTING CALLBACK CALLED")}
+          />
         </TableEditorTableStateContextProvider>
       </Suspense>
     </>

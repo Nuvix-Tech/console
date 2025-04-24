@@ -1,6 +1,6 @@
 import { noop } from "lodash";
 import { PropsWithChildren, useState } from "react";
-import { Button } from "ui";
+import { Button } from "@/ui/components";
 
 interface ActionBarProps {
   loading?: boolean;
@@ -36,7 +36,7 @@ const ActionBar = ({
 
   return (
     <div className="flex w-full justify-end space-x-3 border-t border-default px-3 py-4">
-      <Button type="default" htmlType="button" onClick={closePanel} disabled={isRunning || loading}>
+      <Button type="button" onClick={closePanel} disabled={isRunning || loading}>
         {backButtonLabel}
       </Button>
 
@@ -58,7 +58,7 @@ const ActionBar = ({
           disabled={loading || disableApply}
           loading={loading}
           data-testid="action-bar-save-row"
-          htmlType="submit"
+          type="submit"
           form={formId}
         >
           {applyButtonLabel}
