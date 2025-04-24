@@ -46,6 +46,7 @@ export function getGridColumns(
   },
 ): any[] {
   const columns = table.columns.map((x, idx) => {
+    console.log(x, "e9udi8u9d89");
     const columnType = getColumnType(x);
     const columnDefaultWidth = getColumnDefaultWidth(x);
     const columnWidthBasedOnName =

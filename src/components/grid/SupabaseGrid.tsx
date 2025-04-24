@@ -40,7 +40,7 @@ export const SupabaseGrid = ({
   const query = useSearchParams();
   const _id = query.get("table");
   const { project, sdk } = useProjectStore();
-  const tableEditorSnap = useTableEditorStore();
+  const { schema } = useTableEditorStore();
   const { getState } = useTableEditorTableState();
   const snap = getState();
 
@@ -84,7 +84,7 @@ export const SupabaseGrid = ({
   const { data, error, isSuccess, isError, isLoading, isRefetching } = useQuery(
     {
       queryKey: ["any"],
-      queryFn: async () => await sdk.schema.getRows("users", _id!),
+      queryFn: async () => await sdk.schema.getRows(_id!, schema),
     },
     // {
     //   projectRef: project?.ref,

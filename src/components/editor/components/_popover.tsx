@@ -1,5 +1,5 @@
 "use client";
-import __styles from "./_popover.module.css";
+import styles from "./_popover.module.css";
 import type * as RadixPopoverTypes from "@radix-ui/react-popover";
 import * as RadixPopover from "@radix-ui/react-popover";
 import * as React from "react";
@@ -50,7 +50,7 @@ function Popover({
   disabled,
   "data-testid": dataTestId,
 }: RootProps) {
-  let classes = [__styles.content, (__styles.size as any)[size]];
+  let classes = [styles.popoverContent, (styles.size as any)?.[size]];
   if (className) {
     classes.push(className);
   }
@@ -65,7 +65,7 @@ function Popover({
       <RadixPopover.Trigger
         // className={DropdownStyles['sbui-popover__trigger']}
         disabled={disabled}
-        className={__styles.trigger}
+        className={styles.trigger}
         aria-label={ariaLabel}
         data-testid={dataTestId}
       >
@@ -86,9 +86,9 @@ function Popover({
               offset={10}
             ></RadixPopover.Arrow>
           )}
-          {header && <div className={__styles.header}>{header}</div>}
+          {header && <div className={styles.header}>{header}</div>}
           {overlay}
-          {footer && <div className={__styles.footer}>{footer}</div>}
+          {footer && <div className={styles.footer}>{footer}</div>}
         </RadixPopover.Content>
       </RadixPopover.Portal>
     </RadixPopover.Root>
@@ -100,7 +100,7 @@ function Popover({
  */
 function Close() {
   return (
-    <RadixPopover.Close className={__styles.close}>
+    <RadixPopover.Close className={styles.close}>
       <X size={14} strokeWidth={2} />
     </RadixPopover.Close>
   );
@@ -110,7 +110,7 @@ function Close() {
  * @deprecated Use ./PopoverSeparator_Shadcn_ instead
  */
 function Separator() {
-  return <div className={__styles.separator}></div>;
+  return <div className={styles.separator}></div>;
 }
 
 Popover.Separator = Separator;

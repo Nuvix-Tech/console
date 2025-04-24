@@ -1,11 +1,13 @@
-.sbui-popover__content {
-  @apply bg-background p-0;
+/* @import "tailwindcss"; */
+
+/* .popoverContent {
+  @apply  p-0;
   @apply border;
   @apply rounded;
   @apply shadow;
   border-style: solid;
   border-width: 1px;
-}
+} */
 
 /* @keyframes fadeIn {
   from {
@@ -45,19 +47,19 @@
   @apply border-none bg-transparent p-0 focus:ring-0;
 } */
 
-.sbui-popover__arrow {
-  @apply fill-current text-background;
+/* .arrow {
+  @apply fill-current;
   @apply border-0 border-t;
   border-style: solid;
-}
-
-.sbui-popover__close {
+} */
+/* 
+.close {
   @apply absolute top-1 right-0;
-  @apply bg-transparent cursor-pointer border-none;
+  @apply bg-transparent cursor-pointer border-none; */
 
-  @apply text-background-surface-100;
+/* @apply text-background-surface-100;
   @apply hover:text-background-surface-200;
 
   @apply dark:text-background-surface-200;
-  @apply dark:hover:text-background-surface-00;
-}
+  @apply dark:hover:text-background-surface-00; */
+/* } */
