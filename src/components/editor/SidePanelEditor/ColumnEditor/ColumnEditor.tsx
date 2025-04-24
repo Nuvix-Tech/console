@@ -1,35 +1,35 @@
-import type { PostgresColumn, PostgresTable } from '@supabase/postgres-meta'
-import { isEmpty, noop } from 'lodash'
-import { ExternalLink, Plus } from 'lucide-react'
-import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import type { PostgresColumn, PostgresTable } from "@supabase/postgres-meta";
+import { isEmpty, noop } from "lodash";
+import { ExternalLink, Plus } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
-import { useParams } from 'common'
-import { useProjectContext } from 'components/layouts/ProjectLayout/ProjectContext'
-import { FormSection, FormSectionContent, FormSectionLabel } from 'components/ui/Forms/FormSection'
+import { useParams } from "common";
+import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
+import { FormSection, FormSectionContent, FormSectionLabel } from "components/ui/Forms/FormSection";
 import {
   CONSTRAINT_TYPE,
   Constraint,
   useTableConstraintsQuery,
-} from 'data/database/constraints-query'
+} from "data/database/constraints-query";
 import {
   ForeignKeyConstraint,
   useForeignKeyConstraintsQuery,
-} from 'data/database/foreign-key-constraints-query'
-import { useEnumeratedTypesQuery } from 'data/enumerated-types/enumerated-types-query'
-import { PROTECTED_SCHEMAS_WITHOUT_EXTENSIONS } from 'lib/constants/schemas'
-import type { Dictionary } from 'types'
-import { Button, Checkbox, Input, SidePanel, Toggle } from 'ui'
-import ActionBar from '../ActionBar'
-import type { ForeignKey } from '../ForeignKeySelector/ForeignKeySelector.types'
-import { formatForeignKeys } from '../ForeignKeySelector/ForeignKeySelector.utils'
-import { TEXT_TYPES } from '../SidePanelEditor.constants'
+} from "data/database/foreign-key-constraints-query";
+import { useEnumeratedTypesQuery } from "data/enumerated-types/enumerated-types-query";
+import { PROTECTED_SCHEMAS_WITHOUT_EXTENSIONS } from "lib/constants/schemas";
+import type { Dictionary } from "types";
+import { Button, Checkbox, Input, SidePanel, Toggle } from "ui";
+import ActionBar from "../ActionBar";
+import type { ForeignKey } from "../ForeignKeySelector/ForeignKeySelector.types";
+import { formatForeignKeys } from "../ForeignKeySelector/ForeignKeySelector.utils";
+import { TEXT_TYPES } from "../SidePanelEditor.constants";
 import type {
   ColumnField,
   CreateColumnPayload,
   UpdateColumnPayload,
-} from '../SidePanelEditor.types'
-import ColumnDefaultValue from './ColumnDefaultValue'
+} from "../SidePanelEditor.types";
+import ColumnDefaultValue from "./ColumnDefaultValue";
 import {
   generateColumnField,
   generateColumnFieldFromPostgresColumn,
@@ -37,28 +37,28 @@ import {
   generateUpdateColumnPayload,
   getPlaceholderText,
   validateFields,
-} from './ColumnEditor.utils'
-import ColumnForeignKey from './ColumnForeignKey'
-import ColumnType from './ColumnType'
-import HeaderTitle from './HeaderTitle'
+} from "./ColumnEditor.utils";
+import ColumnForeignKey from "./ColumnForeignKey";
+import ColumnType from "./ColumnType";
+import HeaderTitle from "./HeaderTitle";
 
 export interface ColumnEditorProps {
-  column?: Readonly<PostgresColumn>
-  selectedTable: PostgresTable
-  visible: boolean
-  closePanel: () => void
+  column?: Readonly<PostgresColumn>;
+  selectedTable: PostgresTable;
+  visible: boolean;
+  closePanel: () => void;
   saveChanges: (
     payload: CreateColumnPayload | UpdateColumnPayload,
     isNewRecord: boolean,
     configuration: {
-      columnId?: string
-      primaryKey?: Constraint
-      foreignKeyRelations: ForeignKey[]
-      existingForeignKeyRelations: ForeignKeyConstraint[]
+      columnId?: string;
+      primaryKey?: Constraint;
+      foreignKeyRelations: ForeignKey[];
+      existingForeignKeyRelations: ForeignKeyConstraint[];
     },
-    resolve: any
-  ) => void
-  updateEditorDirty: () => void
+    resolve: any,
+  ) => void;
+  updateEditorDirty: () => void;
 }
 
 const ColumnEditor = ({
@@ -69,71 +69,71 @@ const ColumnEditor = ({
   saveChanges = noop,
   updateEditorDirty = noop,
 }: ColumnEditorProps) => {
-  const { ref } = useParams()
-  const { project } = useProjectContext()
+  const { ref } = useParams();
+  const { project } = useProjectContext();
 
-  const [errors, setErrors] = useState<Dictionary<any>>({})
-  const [columnFields, setColumnFields] = useState<ColumnField>()
-  const [fkRelations, setFkRelations] = useState<ForeignKey[]>([])
+  const [errors, setErrors] = useState<Dictionary<any>>({});
+  const [columnFields, setColumnFields] = useState<ColumnField>();
+  const [fkRelations, setFkRelations] = useState<ForeignKey[]>([]);
   const [placeholder, setPlaceholder] = useState(
-    getPlaceholderText(columnFields?.format, columnFields?.name)
-  )
+    getPlaceholderText(columnFields?.format, columnFields?.name),
+  );
 
   const { data: types } = useEnumeratedTypesQuery({
     projectRef: project?.ref,
     connectionString: project?.connectionString,
-  })
+  });
   const enumTypes = (types ?? []).filter(
-    (type) => !PROTECTED_SCHEMAS_WITHOUT_EXTENSIONS.includes(type.schema)
-  )
+    (type) => !PROTECTED_SCHEMAS_WITHOUT_EXTENSIONS.includes(type.schema),
+  );
 
   const { data: constraints } = useTableConstraintsQuery({
     projectRef: project?.ref,
     connectionString: project?.connectionString,
     id: selectedTable?.id,
-  })
+  });
   const primaryKey = (constraints ?? []).find(
-    (constraint) => constraint.type === CONSTRAINT_TYPE.PRIMARY_KEY_CONSTRAINT
-  )
+    (constraint) => constraint.type === CONSTRAINT_TYPE.PRIMARY_KEY_CONSTRAINT,
+  );
 
   const { data } = useForeignKeyConstraintsQuery({
     projectRef: project?.ref,
     connectionString: project?.connectionString,
     schema: selectedTable?.schema,
-  })
+  });
 
-  const isNewRecord = column === undefined
-  const foreignKeyMeta = data || []
+  const isNewRecord = column === undefined;
+  const foreignKeyMeta = data || [];
   const foreignKeys = foreignKeyMeta.filter((relation) => {
-    return relation.source_id === column?.table_id && relation.source_columns.includes(column.name)
-  })
+    return relation.source_id === column?.table_id && relation.source_columns.includes(column.name);
+  });
   const lockColumnType =
     fkRelations.find(
       (fk) =>
-        fk.columns.find((col) => col.source === columnFields?.name) !== undefined && !fk.toRemove
-    ) !== undefined
+        fk.columns.find((col) => col.source === columnFields?.name) !== undefined && !fk.toRemove,
+    ) !== undefined;
 
   useEffect(() => {
     if (visible) {
-      setErrors({})
+      setErrors({});
       const columnFields = isNewRecord
         ? generateColumnField({ schema: selectedTable.schema, table: selectedTable.name })
-        : generateColumnFieldFromPostgresColumn(column, selectedTable, foreignKeyMeta)
-      setColumnFields(columnFields)
-      setFkRelations(formatForeignKeys(foreignKeys))
+        : generateColumnFieldFromPostgresColumn(column, selectedTable, foreignKeyMeta);
+      setColumnFields(columnFields);
+      setFkRelations(formatForeignKeys(foreignKeys));
     }
-  }, [visible])
+  }, [visible]);
 
-  if (!columnFields) return null
+  if (!columnFields) return null;
 
   const onUpdateField = (changes: Partial<ColumnField>) => {
-    const isTextBasedColumn = TEXT_TYPES.includes(columnFields.format)
-    if (!isTextBasedColumn && changes.defaultValue === '') {
-      changes.defaultValue = null
+    const isTextBasedColumn = TEXT_TYPES.includes(columnFields.format);
+    if (!isTextBasedColumn && changes.defaultValue === "") {
+      changes.defaultValue = null;
     }
 
-    const changedName = 'name' in changes && changes.name !== columnFields.name
-    const changedFormat = 'format' in changes && changes.format !== columnFields.format
+    const changedName = "name" in changes && changes.name !== columnFields.name;
+    const changedFormat = "format" in changes && changes.format !== columnFields.format;
 
     if (
       changedName &&
@@ -143,50 +143,53 @@ const ColumnEditor = ({
         fkRelations.map((relation) => ({
           ...relation,
           columns: relation.columns.map((col) =>
-            col.source === columnFields?.name ? { ...col, source: changes.name! } : col
+            col.source === columnFields?.name ? { ...col, source: changes.name! } : col,
           ),
-        }))
-      )
+        })),
+      );
     }
 
     if (changedName || changedFormat) {
       setPlaceholder(
-        getPlaceholderText(changes.format || columnFields.format, changes.name || columnFields.name)
-      )
+        getPlaceholderText(
+          changes.format || columnFields.format,
+          changes.name || columnFields.name,
+        ),
+      );
     }
 
-    const updatedColumnFields: ColumnField = { ...columnFields, ...changes }
-    setColumnFields(updatedColumnFields)
-    updateEditorDirty()
+    const updatedColumnFields: ColumnField = { ...columnFields, ...changes };
+    setColumnFields(updatedColumnFields);
+    updateEditorDirty();
 
-    const updatedErrors = { ...errors }
+    const updatedErrors = { ...errors };
     for (const key of Object.keys(changes)) {
-      delete updatedErrors[key]
+      delete updatedErrors[key];
     }
-    setErrors(updatedErrors)
-  }
+    setErrors(updatedErrors);
+  };
 
   const onSaveChanges = (resolve: () => void) => {
     if (columnFields) {
-      const errors = validateFields(columnFields)
-      setErrors(errors)
+      const errors = validateFields(columnFields);
+      setErrors(errors);
 
       if (isEmpty(errors)) {
         const payload = isNewRecord
           ? generateCreateColumnPayload(selectedTable.id, columnFields)
-          : generateUpdateColumnPayload(column!, selectedTable, columnFields)
+          : generateUpdateColumnPayload(column!, selectedTable, columnFields);
         const configuration = {
           columnId: column?.id,
           primaryKey,
           foreignKeyRelations: fkRelations,
           existingForeignKeyRelations: foreignKeys,
-        }
-        saveChanges(payload, isNewRecord, configuration, resolve)
+        };
+        saveChanges(payload, isNewRecord, configuration, resolve);
       } else {
-        resolve()
+        resolve();
       }
     }
-  }
+  };
 
   return (
     <SidePanel
@@ -215,14 +218,14 @@ const ColumnEditor = ({
             descriptionText="Recommended to use lowercase and use an underscore to separate words e.g. column_name"
             placeholder="column_name"
             error={errors.name}
-            value={columnFields?.name ?? ''}
+            value={columnFields?.name ?? ""}
             onChange={(event: any) => onUpdateField({ name: event.target.value })}
           />
           <Input
             label="Description"
             labelOptional="Optional"
             type="text"
-            value={columnFields?.comment ?? ''}
+            value={columnFields?.comment ?? ""}
             onChange={(event: any) => onUpdateField({ comment: event.target.value })}
           />
         </FormSectionContent>
@@ -263,28 +266,28 @@ const ColumnEditor = ({
         <FormSectionContent loading={false} className="lg:!col-span-8">
           <ColumnType
             showRecommendation
-            value={columnFields?.format ?? ''}
+            value={columnFields?.format ?? ""}
             layout="vertical"
             enumTypes={enumTypes}
             error={errors.format}
             description={
-              lockColumnType ? 'Column type cannot be changed as it has a foreign key relation' : ''
+              lockColumnType ? "Column type cannot be changed as it has a foreign key relation" : ""
             }
             disabled={lockColumnType}
             onOptionSelect={(format: string) => onUpdateField({ format, defaultValue: null })}
           />
           {columnFields.foreignKey === undefined && (
             <div className="space-y-4">
-              {columnFields.format.includes('int') && (
+              {columnFields.format.includes("int") && (
                 <div className="w-full">
                   <Checkbox
                     label="Is Identity"
                     description="Automatically assign a sequential unique number to the column"
                     checked={columnFields.isIdentity}
                     onChange={() => {
-                      const isIdentity = !columnFields.isIdentity
-                      const isArray = isIdentity ? false : columnFields.isArray
-                      onUpdateField({ isIdentity, isArray })
+                      const isIdentity = !columnFields.isIdentity;
+                      const isArray = isIdentity ? false : columnFields.isArray;
+                      onUpdateField({ isIdentity, isArray });
                     }}
                   />
                 </div>
@@ -296,9 +299,9 @@ const ColumnEditor = ({
                     description="Allow column to be defined as variable-length multidimensional arrays"
                     checked={columnFields.isArray}
                     onChange={() => {
-                      const isArray = !columnFields.isArray
-                      const isIdentity = isArray ? false : columnFields.isIdentity
-                      onUpdateField({ isArray, isIdentity })
+                      const isArray = !columnFields.isArray;
+                      const isIdentity = isArray ? false : columnFields.isIdentity;
+                      onUpdateField({ isArray, isIdentity });
                     }}
                   />
                 </div>
@@ -324,10 +327,10 @@ const ColumnEditor = ({
             relations={fkRelations}
             closePanel={closePanel}
             onUpdateColumnType={(format: string) => {
-              if (format[0] === '_') {
-                onUpdateField({ format: format.slice(1), isArray: true, isIdentity: false })
+              if (format[0] === "_") {
+                onUpdateField({ format: format.slice(1), isArray: true, isIdentity: false });
               } else {
-                onUpdateField({ format })
+                onUpdateField({ format });
               }
             }}
             onUpdateFkRelations={setFkRelations}
@@ -362,14 +365,14 @@ const ColumnEditor = ({
             labelOptional="Optional"
             placeholder={placeholder}
             type="text"
-            value={columnFields?.check ?? ''}
+            value={columnFields?.check ?? ""}
             onChange={(event: any) => onUpdateField({ check: event.target.value })}
             className="[&_input]:font-mono"
           />
         </FormSectionContent>
       </FormSection>
     </SidePanel>
-  )
-}
+  );
+};
 
-export default ColumnEditor
+export default ColumnEditor;

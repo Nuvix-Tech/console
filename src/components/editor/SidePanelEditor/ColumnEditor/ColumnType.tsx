@@ -1,4 +1,4 @@
-import { noop } from 'lodash'
+import { noop } from "lodash";
 import {
   Calendar,
   Check,
@@ -8,11 +8,11 @@ import {
   ListPlus,
   ToggleRight,
   Type,
-} from 'lucide-react'
-import Link from 'next/link'
-import { ReactNode, useState } from 'react'
+} from "lucide-react";
+import Link from "next/link";
+import { ReactNode, useState } from "react";
 
-import type { EnumeratedType } from 'data/enumerated-types/enumerated-types-query'
+import type { EnumeratedType } from "data/enumerated-types/enumerated-types-query";
 import {
   AlertDescription_Shadcn_,
   AlertTitle_Shadcn_,
@@ -35,25 +35,25 @@ import {
   TooltipContent,
   TooltipTrigger,
   cn,
-} from 'ui'
+} from "ui";
 import {
   POSTGRES_DATA_TYPES,
   POSTGRES_DATA_TYPE_OPTIONS,
   RECOMMENDED_ALTERNATIVE_DATA_TYPE,
-} from '../SidePanelEditor.constants'
-import type { PostgresDataTypeOption } from '../SidePanelEditor.types'
+} from "../SidePanelEditor.constants";
+import type { PostgresDataTypeOption } from "../SidePanelEditor.types";
 
 interface ColumnTypeProps {
-  value: string
-  enumTypes: EnumeratedType[]
-  className?: string
-  error?: any
-  disabled?: boolean
-  showLabel?: boolean
-  layout?: 'horizontal' | 'vertical'
-  description?: ReactNode
-  showRecommendation?: boolean
-  onOptionSelect: (value: string) => void
+  value: string;
+  enumTypes: EnumeratedType[];
+  className?: string;
+  error?: any;
+  disabled?: boolean;
+  showLabel?: boolean;
+  layout?: "horizontal" | "vertical";
+  description?: ReactNode;
+  showRecommendation?: boolean;
+  onOptionSelect: (value: string) => void;
 }
 
 const ColumnType = ({
@@ -62,56 +62,56 @@ const ColumnType = ({
   enumTypes = [],
   disabled = false,
   showLabel = true,
-  layout = 'horizontal',
+  layout = "horizontal",
   description,
   showRecommendation = false,
   onOptionSelect = noop,
 }: ColumnTypeProps) => {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
   const availableTypes = POSTGRES_DATA_TYPES.concat(
-    enumTypes.map((type) => type.format.replaceAll('"', ''))
-  )
-  const isAvailableType = value ? availableTypes.includes(value) : true
-  const recommendation = RECOMMENDED_ALTERNATIVE_DATA_TYPE[value]
+    enumTypes.map((type) => type.format.replaceAll('"', "")),
+  );
+  const isAvailableType = value ? availableTypes.includes(value) : true;
+  const recommendation = RECOMMENDED_ALTERNATIVE_DATA_TYPE[value];
 
-  const unsupportedDataTypeText = `This column's data type cannot be changed via the Table Editor as it is not supported yet. You can do so through the SQL Editor instead.`
+  const unsupportedDataTypeText = `This column's data type cannot be changed via the Table Editor as it is not supported yet. You can do so through the SQL Editor instead.`;
 
   const getOptionByName = (name: string) => {
     // handle built in types
-    const pgOption = POSTGRES_DATA_TYPE_OPTIONS.find((option) => option.name === name)
-    if (pgOption) return pgOption
+    const pgOption = POSTGRES_DATA_TYPE_OPTIONS.find((option) => option.name === name);
+    if (pgOption) return pgOption;
 
     // handle custom enums
-    const enumType = enumTypes.find((type) => type.format === name)
-    return enumType ? { ...enumType, type: 'enum' } : undefined
-  }
+    const enumType = enumTypes.find((type) => type.format === name);
+    return enumType ? { ...enumType, type: "enum" } : undefined;
+  };
 
   const inferIcon = (type: string) => {
     switch (type) {
-      case 'number':
-        return <Hash size={14} className="text-foreground" strokeWidth={1.5} />
-      case 'time':
-        return <Calendar size={14} className="text-foreground" strokeWidth={1.5} />
-      case 'text':
-        return <Type size={14} className="text-foreground" strokeWidth={1.5} />
-      case 'json':
+      case "number":
+        return <Hash size={14} className="text-foreground" strokeWidth={1.5} />;
+      case "time":
+        return <Calendar size={14} className="text-foreground" strokeWidth={1.5} />;
+      case "text":
+        return <Type size={14} className="text-foreground" strokeWidth={1.5} />;
+      case "json":
         return (
-          <div className="text-foreground" style={{ padding: '0px 1px' }}>
-            {'{ }'}
+          <div className="text-foreground" style={{ padding: "0px 1px" }}>
+            {"{ }"}
           </div>
-        )
-      case 'jsonb':
+        );
+      case "jsonb":
         return (
-          <div className="text-foreground" style={{ padding: '0px 1px' }}>
-            {'{ }'}
+          <div className="text-foreground" style={{ padding: "0px 1px" }}>
+            {"{ }"}
           </div>
-        )
-      case 'bool':
-        return <ToggleRight size={14} className="text-foreground" strokeWidth={1.5} />
+        );
+      case "bool":
+        return <ToggleRight size={14} className="text-foreground" strokeWidth={1.5} />;
       default:
-        return <ListPlus size={16} className="text-foreground" strokeWidth={1.5} />
+        return <ListPlus size={16} className="text-foreground" strokeWidth={1.5} />;
     }
-  }
+  };
 
   if (!isAvailableType) {
     return (
@@ -120,11 +120,11 @@ const ColumnType = ({
           <Input
             readOnly
             disabled
-            label={showLabel ? 'Type' : ''}
+            label={showLabel ? "Type" : ""}
             layout={showLabel ? layout : undefined}
             className="md:gap-x-0 [&>div>div]:text-left"
             size="small"
-            icon={inferIcon(POSTGRES_DATA_TYPE_OPTIONS.find((x) => x.name === value)?.type ?? '')}
+            icon={inferIcon(POSTGRES_DATA_TYPE_OPTIONS.find((x) => x.name === value)?.type ?? "")}
             value={value}
             descriptionText={showLabel ? unsupportedDataTypeText : undefined}
           />
@@ -135,7 +135,7 @@ const ColumnType = ({
           </TooltipContent>
         )}
       </Tooltip>
-    )
+    );
   }
 
   if (disabled && !showLabel) {
@@ -145,8 +145,8 @@ const ColumnType = ({
           <Input
             readOnly
             disabled
-            label={showLabel ? 'Type' : ''}
-            layout={showLabel ? 'horizontal' : undefined}
+            label={showLabel ? "Type" : ""}
+            layout={showLabel ? "horizontal" : undefined}
             className="md:gap-x-0"
             size="small"
             value={value}
@@ -158,29 +158,29 @@ const ColumnType = ({
           </TooltipContent>
         )}
       </Tooltip>
-    )
+    );
   }
 
   return (
-    <div className={cn('flex flex-col gap-y-2', className)}>
+    <div className={cn("flex flex-col gap-y-2", className)}>
       {showLabel && <Label_Shadcn_ className="text-foreground-light">Type</Label_Shadcn_>}
       <Popover_Shadcn_ open={open} onOpenChange={setOpen}>
         <PopoverTrigger_Shadcn_ asChild>
           <Button
             type="default"
             role="combobox"
-            size={'small'}
+            size={"small"}
             aria-expanded={open}
-            className={cn('w-full justify-between', !value && 'text-foreground-lighter')}
+            className={cn("w-full justify-between", !value && "text-foreground-lighter")}
             iconRight={<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />}
           >
             {value ? (
               <div className="flex gap-2 items-center">
-                <span>{inferIcon(getOptionByName(value)?.type ?? '')}</span>
-                {value.replaceAll('"', '')}
+                <span>{inferIcon(getOptionByName(value)?.type ?? "")}</span>
+                {value.replaceAll('"', "")}
               </div>
             ) : (
-              'Choose a column type...'
+              "Choose a column type..."
             )}
           </Button>
         </PopoverTrigger_Shadcn_>
@@ -196,10 +196,10 @@ const ColumnType = ({
                     <CommandItem_Shadcn_
                       key={option.name}
                       value={option.name}
-                      className={cn('relative', option.name === value ? 'bg-surface-200' : '')}
+                      className={cn("relative", option.name === value ? "bg-surface-200" : "")}
                       onSelect={(value: string) => {
-                        onOptionSelect(value)
-                        setOpen(false)
+                        onOptionSelect(value);
+                        setOpen(false);
                       }}
                     >
                       <div className="flex items-center gap-2 pr-6">
@@ -208,7 +208,7 @@ const ColumnType = ({
                         <span className="text-foreground-lighter">{option.description}</span>
                       </div>
                       <span className="absolute right-3 top-2">
-                        {option.name === value ? <Check className="text-brand" size={14} /> : ''}
+                        {option.name === value ? <Check className="text-brand" size={14} /> : ""}
                       </span>
                     </CommandItem_Shadcn_>
                   ))}
@@ -222,16 +222,16 @@ const ColumnType = ({
                           key={option.id}
                           value={option.format}
                           className={cn(
-                            'relative',
-                            option.format === value ? 'bg-surface-200' : ''
+                            "relative",
+                            option.format === value ? "bg-surface-200" : "",
                           )}
                           onSelect={(value: string) => {
                             // [Joshen] For camel case types specifically, format property includes escaped double quotes
                             // which will cause the POST columns call to error out. So we strip it specifically in this context
                             onOptionSelect(
-                              option.schema === 'public' ? value.replaceAll('"', '') : value
-                            )
-                            setOpen(false)
+                              option.schema === "public" ? value.replaceAll('"', "") : value,
+                            );
+                            setOpen(false);
                           }}
                         >
                           <div className="flex items-center gap-2">
@@ -239,11 +239,11 @@ const ColumnType = ({
                               <ListPlus size={16} className="text-foreground" strokeWidth={1.5} />
                             </div>
                             <span className="text-foreground">
-                              {option.format.replaceAll('"', '')}
+                              {option.format.replaceAll('"', "")}
                             </span>
                             {option.comment !== undefined && (
                               <span
-                                title={option.comment ?? ''}
+                                title={option.comment ?? ""}
                                 className="text-foreground-lighter"
                               >
                                 {option.comment}
@@ -270,15 +270,13 @@ const ColumnType = ({
         <Alert_Shadcn_ variant="warning" className="mt-2">
           <CriticalIcon />
           <AlertTitle_Shadcn_>
-            {' '}
-            It is recommended to use <code className="text-xs">
-              {recommendation.alternative}
-            </code>{' '}
+            {" "}
+            It is recommended to use <code className="text-xs">{recommendation.alternative}</code>{" "}
             instead
           </AlertTitle_Shadcn_>
           <AlertDescription_Shadcn_>
             <p>
-              Postgres recommends against using the data type{' '}
+              Postgres recommends against using the data type{" "}
               <code className="text-xs">{value}</code> unless you have a very specific use case.
             </p>
             <div className="flex items-center space-x-2 mt-3">
@@ -295,7 +293,7 @@ const ColumnType = ({
         </Alert_Shadcn_>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default ColumnType
+export default ColumnType;

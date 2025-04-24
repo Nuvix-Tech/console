@@ -1,31 +1,31 @@
-import { AlignLeft } from 'lucide-react'
-import { useCallback, useEffect, useState } from 'react'
-import { toast } from 'sonner'
+import { AlignLeft } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
 
-import { useParams } from 'common'
-import { ButtonTooltip } from 'components/ui/ButtonTooltip'
-import TwoOptionToggle from 'components/ui/TwoOptionToggle'
-import { useTableEditorQuery } from 'data/table-editor/table-editor-query'
-import { isTableLike } from 'data/table-editor/table-editor-types'
-import { useGetCellValueMutation } from 'data/table-rows/get-cell-value-mutation'
-import { MAX_CHARACTERS } from '@supabase/pg-meta/src/query/table-row-query'
-import { useSelectedProject } from 'hooks/misc/useSelectedProject'
-import { minifyJSON, prettifyJSON, removeJSONTrailingComma, tryParseJson } from '@/lib/helpers'
-import { Button, SidePanel, cn } from 'ui'
-import ActionBar from '../../ActionBar'
-import { isValueTruncated } from '../RowEditor.utils'
-import { DrilldownViewer } from './DrilldownViewer'
-import JsonCodeEditor from './JsonCodeEditor'
+import { useParams } from "common";
+import { ButtonTooltip } from "components/ui/ButtonTooltip";
+import TwoOptionToggle from "components/ui/TwoOptionToggle";
+import { useTableEditorQuery } from "data/table-editor/table-editor-query";
+import { isTableLike } from "data/table-editor/table-editor-types";
+import { useGetCellValueMutation } from "data/table-rows/get-cell-value-mutation";
+import { MAX_CHARACTERS } from "@supabase/pg-meta/src/query/table-row-query";
+import { useSelectedProject } from "hooks/misc/useSelectedProject";
+import { minifyJSON, prettifyJSON, removeJSONTrailingComma, tryParseJson } from "@/lib/helpers";
+import { Button, SidePanel, cn } from "ui";
+import ActionBar from "../../ActionBar";
+import { isValueTruncated } from "../RowEditor.utils";
+import { DrilldownViewer } from "./DrilldownViewer";
+import JsonCodeEditor from "./JsonCodeEditor";
 
 interface JsonEditProps {
-  row?: { [key: string]: any }
-  column: string
-  visible: boolean
-  backButtonLabel?: string
-  applyButtonLabel?: string
-  readOnly?: boolean
-  closePanel: () => void
-  onSaveJSON: (value: string | number | null, resolve: () => void) => void
+  row?: { [key: string]: any };
+  column: string;
+  visible: boolean;
+  backButtonLabel?: string;
+  applyButtonLabel?: string;
+  readOnly?: boolean;
+  closePanel: () => void;
+  onSaveJSON: (value: string | number | null, resolve: () => void) => void;
 }
 
 const JsonEdit = ({
@@ -38,40 +38,40 @@ const JsonEdit = ({
   closePanel,
   onSaveJSON,
 }: JsonEditProps) => {
-  const { id: _id } = useParams()
-  const id = _id ? Number(_id) : undefined
-  const project = useSelectedProject()
+  const { id: _id } = useParams();
+  const id = _id ? Number(_id) : undefined;
+  const project = useSelectedProject();
 
   const { data: selectedTable } = useTableEditorQuery({
     projectRef: project?.ref,
     connectionString: project?.connectionString,
     id,
-  })
+  });
 
-  const [view, setView] = useState<'edit' | 'view'>('edit')
-  const [jsonStr, setJsonStr] = useState('')
+  const [view, setView] = useState<"edit" | "view">("edit");
+  const [jsonStr, setJsonStr] = useState("");
   // sometimes the value is a JSON object if it was truncated, then fully loaded from the grid.
-  const value = row?.[column as keyof typeof row] as unknown
-  const jsonString = typeof value === 'object' ? JSON.stringify(value) : (value as string)
-  const isTruncated = isValueTruncated(jsonString)
+  const value = row?.[column as keyof typeof row] as unknown;
+  const jsonString = typeof value === "object" ? JSON.stringify(value) : (value as string);
+  const isTruncated = isValueTruncated(jsonString);
 
-  const { mutate: getCellValue, isLoading, isSuccess, reset } = useGetCellValueMutation()
+  const { mutate: getCellValue, isLoading, isSuccess, reset } = useGetCellValueMutation();
 
   const validateJSON = async (resolve: () => void) => {
     try {
-      const newJsonStr = removeJSONTrailingComma(jsonStr)
-      const minifiedJSON = minifyJSON(newJsonStr)
-      if (onSaveJSON) onSaveJSON(minifiedJSON, resolve)
+      const newJsonStr = removeJSONTrailingComma(jsonStr);
+      const minifiedJSON = minifyJSON(newJsonStr);
+      if (onSaveJSON) onSaveJSON(minifiedJSON, resolve);
     } catch (error: any) {
-      resolve()
-      toast.error('JSON seems to have an invalid structure.')
+      resolve();
+      toast.error("JSON seems to have an invalid structure.");
     }
-  }
+  };
 
   const prettify = () => {
-    const res = prettifyJSON(jsonStr)
-    setJsonStr(res)
-  }
+    const res = prettifyJSON(jsonStr);
+    setJsonStr(res);
+  };
 
   const loadFullValue = () => {
     if (
@@ -80,14 +80,14 @@ const JsonEdit = ({
       row === undefined ||
       !isTableLike(selectedTable)
     )
-      return
+      return;
     if (selectedTable.primary_keys.length === 0) {
-      return toast('Unable to load value as table has no primary keys')
+      return toast("Unable to load value as table has no primary keys");
     }
 
     const pkMatch = selectedTable.primary_keys.reduce((a, b) => {
-      return { ...a, [b.name]: (row as any)[b.name] }
-    }, {})
+      return { ...a, [b.name]: (row as any)[b.name] };
+    }, {});
 
     getCellValue(
       {
@@ -99,34 +99,34 @@ const JsonEdit = ({
       },
       {
         onSuccess: (data) => {
-          setJsonStr(JSON.stringify(data))
+          setJsonStr(JSON.stringify(data));
         },
-      }
-    )
-  }
+      },
+    );
+  };
 
   useEffect(() => {
     if (visible) {
-      const temp = prettifyJSON(jsonString)
-      setJsonStr(temp)
+      const temp = prettifyJSON(jsonString);
+      setJsonStr(temp);
     }
-  }, [visible])
+  }, [visible]);
 
   // reset the mutation when the panel closes. Fixes an issue where the value is truncated if you close and reopen the
   // panel again
   const onClose = useCallback(() => {
-    reset()
-    closePanel()
-  }, [reset])
+    reset();
+    closePanel();
+  }, [reset]);
 
   return (
     <SidePanel
       size="large"
       header={
         <div className="flex items-center justify-between">
-          {view === 'edit' ? (
+          {view === "edit" ? (
             <p>
-              {readOnly ? 'Viewing' : 'Editing'} JSON Field: <code>{column}</code>
+              {readOnly ? "Viewing" : "Editing"} JSON Field: <code>{column}</code>
             </p>
           ) : (
             <p>
@@ -135,17 +135,17 @@ const JsonEdit = ({
           )}
           {(!isTruncated || (isTruncated && isSuccess)) && (
             <div className="flex items-center gap-x-2">
-              {view === 'edit' && (
+              {view === "edit" && (
                 <ButtonTooltip
                   type="default"
                   icon={<AlignLeft />}
                   className="px-1"
                   onClick={() => prettify()}
-                  tooltip={{ content: { side: 'bottom', text: 'Prettify JSON' } }}
+                  tooltip={{ content: { side: "bottom", text: "Prettify JSON" } }}
                 />
               )}
               <TwoOptionToggle
-                options={['view', 'edit']}
+                options={["view", "edit"]}
                 activeOption={view}
                 borderOverride="border-muted"
                 onClickOption={setView}
@@ -167,12 +167,12 @@ const JsonEdit = ({
       }
     >
       <div className="flex flex-auto h-full flex-col gap-y-4 relative">
-        {view === 'edit' ? (
+        {view === "edit" ? (
           <div className="w-full h-full flex-grow">
             <JsonCodeEditor
               key={jsonString}
               readOnly={readOnly}
-              onInputChange={(val) => setJsonStr(val ?? '')}
+              onInputChange={(val) => setJsonStr(val ?? "")}
               value={jsonStr.toString()}
             />
           </div>
@@ -182,9 +182,9 @@ const JsonEdit = ({
         {isTruncated && !isSuccess && (
           <div
             className={cn(
-              'absolute top-0 left-0 flex items-center justify-center flex-col gap-y-3',
-              'text-sm w-full h-full px-2 text-center',
-              'bg-default/80 backdrop-blur-[1.5px]'
+              "absolute top-0 left-0 flex items-center justify-center flex-col gap-y-3",
+              "text-sm w-full h-full px-2 text-center",
+              "bg-default/80 backdrop-blur-[1.5px]",
             )}
           >
             <div className="flex flex-col gap-y-1 w-80">
@@ -201,7 +201,7 @@ const JsonEdit = ({
         )}
       </div>
     </SidePanel>
-  )
-}
+  );
+};
 
-export default JsonEdit
+export default JsonEdit;

@@ -1,41 +1,41 @@
-import { ArrowRight } from 'lucide-react'
-import Link from 'next/link'
-import SVG from 'react-inlinesvg'
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+import SVG from "react-inlinesvg";
 
-import { useParams } from 'common'
-import { BASE_PATH } from 'lib/constants'
-import { Badge, Button, cn } from 'ui'
-import type { ForeignKey } from '../../ForeignKeySelector/ForeignKeySelector.types'
+import { useParams } from "common";
+import { BASE_PATH } from "lib/constants";
+import { Badge, Button, cn } from "ui";
+import type { ForeignKey } from "../../ForeignKeySelector/ForeignKeySelector.types";
 
 interface ForeignKeyProps {
-  foreignKey: ForeignKey
-  disabled?: boolean
-  status?: 'ADD' | 'UPDATE' | 'REMOVE'
-  layout?: 'vertical' | 'horizontal'
-  closePanel: () => void
-  onSelectEdit: () => void
-  onSelectRemove: () => void
-  onSelectUndoRemove: () => void
+  foreignKey: ForeignKey;
+  disabled?: boolean;
+  status?: "ADD" | "UPDATE" | "REMOVE";
+  layout?: "vertical" | "horizontal";
+  closePanel: () => void;
+  onSelectEdit: () => void;
+  onSelectRemove: () => void;
+  onSelectUndoRemove: () => void;
 }
 
 export const ForeignKeyRow = ({
   foreignKey,
   disabled = false,
   status,
-  layout = 'horizontal',
+  layout = "horizontal",
   closePanel,
   onSelectEdit,
   onSelectRemove,
   onSelectUndoRemove,
 }: ForeignKeyProps) => {
-  const { ref } = useParams()
+  const { ref } = useParams();
 
   return (
     <div
       className={cn(
-        layout === 'horizontal' ? 'items-center justify-between gap-x-2' : 'flex-col gap-y-3',
-        'flex border border-strong px-4 py-4',
-        'border-b-0 last:border-b first:rounded-t-md last:rounded-b-md'
+        layout === "horizontal" ? "items-center justify-between gap-x-2" : "flex-col gap-y-3",
+        "flex border border-strong px-4 py-4",
+        "border-b-0 last:border-b first:rounded-t-md last:rounded-b-md",
       )}
     >
       <div className="flex flex-col gap-y-2">
@@ -49,14 +49,14 @@ export const ForeignKeyRow = ({
             {status !== undefined && (
               <Badge
                 variant={
-                  status === 'ADD' ? 'brand' : status === 'UPDATE' ? 'warning' : 'destructive'
+                  status === "ADD" ? "brand" : status === "UPDATE" ? "warning" : "destructive"
                 }
               >
                 {status}
               </Badge>
             )}
             <p className="text-sm text-foreground-light">
-              {foreignKey.columns.length > 1 ? 'Composite foreign' : 'Foreign'} key relation to:
+              {foreignKey.columns.length > 1 ? "Composite foreign" : "Foreign"} key relation to:
             </p>
             <Button
               asChild
@@ -67,7 +67,7 @@ export const ForeignKeyRow = ({
                 <SVG
                   className="table-icon"
                   src={`${BASE_PATH}/img/icons/table-icon.svg`}
-                  style={{ width: `16px`, height: `16px`, strokeWidth: '1px' }}
+                  style={{ width: `16px`, height: `16px`, strokeWidth: "1px" }}
                   preProcessor={(code: any) =>
                     code.replace(/svg/, 'svg class="m-auto text-color-inherit"')
                   }
@@ -91,9 +91,9 @@ export const ForeignKeyRow = ({
           {foreignKey.columns.map((x, idx) => (
             <div key={`relation-${idx}}`} className="flex items-center gap-x-2">
               <code
-                className={cn('text-xs', (x?.source ?? '').length === 0 && 'text-foreground-light')}
+                className={cn("text-xs", (x?.source ?? "").length === 0 && "text-foreground-light")}
               >
-                {x.source || '[column_name]'}
+                {x.source || "[column_name]"}
               </code>
               <ArrowRight size={16} />
               <code className="text-xs">
@@ -120,5 +120,5 @@ export const ForeignKeyRow = ({
         </div>
       )}
     </div>
-  )
-}
+  );
+};

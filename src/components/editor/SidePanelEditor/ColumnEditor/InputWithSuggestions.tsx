@@ -5,11 +5,11 @@
 // with timeouts and a lot of unnecessary defensive guards - but these can go away when we port
 // the component over to the UI library
 
-import { noop } from 'lodash'
-import { List } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { noop } from "lodash";
+import { List } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
-import { ButtonTooltip } from 'components/ui/ButtonTooltip'
+import { ButtonTooltip } from "components/ui/ButtonTooltip";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,26 +18,26 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   Input,
-} from 'ui'
-import type { Suggestion } from './ColumnEditor.types'
+} from "ui";
+import type { Suggestion } from "./ColumnEditor.types";
 
-const MAX_SUGGESTIONS = 3
+const MAX_SUGGESTIONS = 3;
 
 interface InputWithSuggestionsProps {
-  label?: string
-  description?: string
-  placeholder?: string
-  size?: 'small' | 'tiny' | 'medium' | 'large'
-  layout?: 'horizontal' | 'vertical'
-  disabled?: boolean
-  className?: string
-  value: string
-  suggestions: Suggestion[]
-  suggestionsTooltip?: string
-  suggestionsHeader?: string
-  onChange: (event: any) => void
-  onSelectSuggestion: (suggestion: Suggestion) => void
-  'data-testid'?: string
+  label?: string;
+  description?: string;
+  placeholder?: string;
+  size?: "small" | "tiny" | "medium" | "large";
+  layout?: "horizontal" | "vertical";
+  disabled?: boolean;
+  className?: string;
+  value: string;
+  suggestions: Suggestion[];
+  suggestionsTooltip?: string;
+  suggestionsHeader?: string;
+  onChange: (event: any) => void;
+  onSelectSuggestion: (suggestion: Suggestion) => void;
+  "data-testid"?: string;
 }
 
 const InputWithSuggestions = ({
@@ -47,37 +47,37 @@ const InputWithSuggestions = ({
   size,
   layout,
   disabled = false,
-  className = '',
-  value = '',
+  className = "",
+  value = "",
   suggestions = [],
   suggestionsTooltip,
   suggestionsHeader,
   onChange = noop,
   onSelectSuggestion = noop,
-  'data-testid': dataTestId,
+  "data-testid": dataTestId,
 }: InputWithSuggestionsProps) => {
-  const ref = useRef(null)
-  const [filteredSuggestions, setFilteredSuggestions] = useState<Suggestion[]>(suggestions)
-  const showSuggestions = filteredSuggestions.length > 0
+  const ref = useRef(null);
+  const [filteredSuggestions, setFilteredSuggestions] = useState<Suggestion[]>(suggestions);
+  const showSuggestions = filteredSuggestions.length > 0;
 
   useEffect(() => {
-    setFilteredSuggestions(suggestions.slice(0, MAX_SUGGESTIONS))
-  }, [suggestions])
+    setFilteredSuggestions(suggestions.slice(0, MAX_SUGGESTIONS));
+  }, [suggestions]);
 
   const onInputChange = (event: any) => {
-    onChange(event)
+    onChange(event);
 
-    const inputText = event.target.value
+    const inputText = event.target.value;
 
     if (suggestions.length > MAX_SUGGESTIONS) {
       const filteredSuggestions = inputText
         ? suggestions.filter((suggestion: Suggestion) => {
-            return suggestion.name.indexOf(inputText) !== -1
+            return suggestion.name.indexOf(inputText) !== -1;
           })
-        : suggestions
-      setFilteredSuggestions(filteredSuggestions.slice(0, MAX_SUGGESTIONS))
+        : suggestions;
+      setFilteredSuggestions(filteredSuggestions.slice(0, MAX_SUGGESTIONS));
     }
-  }
+  };
 
   return (
     <div ref={ref} className="relative">
@@ -102,7 +102,7 @@ const InputWithSuggestions = ({
                   type="default"
                   className="!px-1 mr-0.5"
                   tooltip={{
-                    content: { text: suggestionsTooltip || 'Suggestions', side: 'bottom' },
+                    content: { text: suggestionsTooltip || "Suggestions", side: "bottom" },
                   }}
                 >
                   <List strokeWidth={1.5} size={14} />
@@ -110,7 +110,7 @@ const InputWithSuggestions = ({
               </DropdownMenuTrigger>
 
               <DropdownMenuContent align="end" side="bottom">
-                <DropdownMenuLabel>{suggestionsHeader || 'Suggestions'}</DropdownMenuLabel>
+                <DropdownMenuLabel>{suggestionsHeader || "Suggestions"}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {filteredSuggestions.map((suggestion: Suggestion) => (
                   <DropdownMenuItem
@@ -128,7 +128,7 @@ const InputWithSuggestions = ({
         }
       />
     </div>
-  )
-}
+  );
+};
 
-export default InputWithSuggestions
+export default InputWithSuggestions;

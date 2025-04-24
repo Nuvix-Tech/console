@@ -1,7 +1,7 @@
-import { AlertOctagon, Lock, ShieldOff } from 'lucide-react'
+import { AlertOctagon, Lock, ShieldOff } from "lucide-react";
 
-import { DocsButton } from 'components/ui/DocsButton'
-import { Alert } from 'ui'
+import { DocsButton } from "components/ui/DocsButton";
+import { Alert } from "ui";
 
 export default function RLSDisableModalContent() {
   return (
@@ -49,5 +49,5 @@ export default function RLSDisableModalContent() {
         href="https://supabase.com/docs/guides/auth/row-level-security"
       />
     </div>
-  )
+  );
 }

@@ -1,19 +1,19 @@
-import { AlertCircle, ArrowRight, ChevronDown, ChevronRight } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { AlertCircle, ArrowRight, ChevronDown, ChevronRight } from "lucide-react";
+import { useEffect, useState } from "react";
 
-import { Badge, Button, cn, Collapsible, SidePanel } from 'ui'
-import type { SpreadsheetData } from './SpreadsheetImport.types'
-import SpreadsheetPreviewGrid from './SpreadsheetPreviewGrid'
+import { Badge, Button, cn, Collapsible, SidePanel } from "ui";
+import type { SpreadsheetData } from "./SpreadsheetImport.types";
+import SpreadsheetPreviewGrid from "./SpreadsheetPreviewGrid";
 
-const MAX_ROWS = 20
-const MAX_HEADERS = 20
+const MAX_ROWS = 20;
+const MAX_HEADERS = 20;
 
 interface SpreadsheetImportPreviewProps {
-  selectedTable?: { name: string }
-  spreadsheetData: SpreadsheetData
-  errors?: any[]
-  selectedHeaders: string[]
-  incompatibleHeaders: string[]
+  selectedTable?: { name: string };
+  spreadsheetData: SpreadsheetData;
+  errors?: any[];
+  selectedHeaders: string[];
+  incompatibleHeaders: string[];
 }
 
 const SpreadsheetImportPreview = ({
@@ -23,31 +23,31 @@ const SpreadsheetImportPreview = ({
   selectedHeaders,
   incompatibleHeaders,
 }: SpreadsheetImportPreviewProps) => {
-  const [expandPreview, setExpandPreview] = useState(false)
-  const [expandedErrors, setExpandedErrors] = useState<string[]>([])
+  const [expandPreview, setExpandPreview] = useState(false);
+  const [expandedErrors, setExpandedErrors] = useState<string[]>([]);
 
-  const { headers, rows } = spreadsheetData
+  const { headers, rows } = spreadsheetData;
   const previewHeaders = headers
     .filter((header) => selectedHeaders.includes(header))
-    .slice(0, MAX_HEADERS)
-  const previewRows = rows.slice(0, MAX_ROWS)
+    .slice(0, MAX_HEADERS);
+  const previewRows = rows.slice(0, MAX_ROWS);
 
-  const isCompatible = selectedTable !== undefined ? incompatibleHeaders.length === 0 : true
+  const isCompatible = selectedTable !== undefined ? incompatibleHeaders.length === 0 : true;
 
   useEffect(() => {
-    setExpandPreview(true)
-  }, [spreadsheetData])
+    setExpandPreview(true);
+  }, [spreadsheetData]);
 
   const onSelectExpandError = (key: string) => {
     if (expandedErrors.includes(key)) {
-      setExpandedErrors(expandedErrors.filter((error) => error !== key))
+      setExpandedErrors(expandedErrors.filter((error) => error !== key));
     } else {
-      setExpandedErrors(expandedErrors.concat([key]))
+      setExpandedErrors(expandedErrors.concat([key]));
     }
-  }
+  };
 
   return (
-    <Collapsible open={expandPreview} onOpenChange={setExpandPreview} className={''}>
+    <Collapsible open={expandPreview} onOpenChange={setExpandPreview} className={""}>
       <Collapsible.Trigger asChild>
         <SidePanel.Content>
           <div className="py-1 flex items-center justify-between">
@@ -62,7 +62,7 @@ const SpreadsheetImportPreview = ({
                 <ChevronDown
                   size={18}
                   strokeWidth={2}
-                  className={cn('text-foreground-light', expandPreview && 'rotate-180')}
+                  className={cn("text-foreground-light", expandPreview && "rotate-180")}
                 />
               }
               className="px-1"
@@ -95,10 +95,10 @@ const SpreadsheetImportPreview = ({
                 <AlertCircle size={16} strokeWidth={1.5} className="text-foreground-light" />
                 <p className="text-sm text-foreground-light">
                   {previewHeaders.length === 0
-                    ? 'No headers have been selected'
+                    ? "No headers have been selected"
                     : previewRows.length === 0
-                      ? 'Your CSV contains no data'
-                      : ''}
+                      ? "Your CSV contains no data"
+                      : ""}
                 </p>
               </div>
             )}
@@ -110,8 +110,8 @@ const SpreadsheetImportPreview = ({
                 {isCompatible && (
                   <p className="text-sm text-foreground-light">
                     {selectedTable !== undefined
-                      ? 'This CSV can still be imported into your table despite issues in the following rows.'
-                      : 'Your table can still be created nonetheless despite issues in the following rows.'}
+                      ? "This CSV can still be imported into your table despite issues in the following rows."
+                      : "Your table can still be created nonetheless despite issues in the following rows."}
                   </p>
                 )}
               </div>
@@ -126,16 +126,16 @@ const SpreadsheetImportPreview = ({
                         This CSV <span className="text-red-900">cannot</span> be imported into your
                         table due to incompatible headers:
                         <br />
-                        The column{incompatibleHeaders.length > 1 ? 's' : ''}{' '}
-                        {incompatibleHeaders.map((x) => `"${x}"`).join(', ')}{' '}
-                        {incompatibleHeaders.length > 1 ? 'are' : 'is'} not present in your table
+                        The column{incompatibleHeaders.length > 1 ? "s" : ""}{" "}
+                        {incompatibleHeaders.map((x) => `"${x}"`).join(", ")}{" "}
+                        {incompatibleHeaders.length > 1 ? "are" : "is"} not present in your table
                       </p>
                     </div>
                   </div>
                 )}
                 {errors.map((error: any, idx: number) => {
-                  const key = `import-error-${idx}`
-                  const isExpanded = expandedErrors.includes(key)
+                  const key = `import-error-${idx}`;
+                  const isExpanded = expandedErrors.includes(key);
 
                   return (
                     <div key={key} className="space-y-2">
@@ -146,7 +146,7 @@ const SpreadsheetImportPreview = ({
                         {error.data !== undefined ? (
                           <ChevronRight
                             size={14}
-                            className={`transform ${isExpanded ? 'rotate-90' : ''}`}
+                            className={`transform ${isExpanded ? "rotate-90" : ""}`}
                           />
                         ) : (
                           <div className="w-[14px] h-[14px] flex items-center justify-center">
@@ -176,7 +176,7 @@ const SpreadsheetImportPreview = ({
                         />
                       )}
                     </div>
-                  )
+                  );
                 })}
               </div>
             </div>
@@ -184,7 +184,7 @@ const SpreadsheetImportPreview = ({
         </SidePanel.Content>
       </Collapsible.Content>
     </Collapsible>
-  )
-}
+  );
+};
 
-export default SpreadsheetImportPreview
+export default SpreadsheetImportPreview;

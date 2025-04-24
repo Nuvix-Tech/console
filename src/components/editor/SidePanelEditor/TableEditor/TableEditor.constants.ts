@@ -1,13 +1,13 @@
-import { uuidv4 } from '@/lib/helpers'
-import type { ColumnField } from '../SidePanelEditor.types'
+import { uuidv4 } from "@/lib/helpers";
+import type { ColumnField } from "../SidePanelEditor.types";
 
 export const DEFAULT_COLUMNS: ColumnField[] = [
   {
     id: uuidv4(),
-    name: 'id',
-    schema: '',
-    table: '',
-    format: 'int8',
+    name: "id",
+    schema: "",
+    table: "",
+    format: "int8",
     defaultValue: null,
     check: null,
     foreignKey: undefined,
@@ -21,11 +21,11 @@ export const DEFAULT_COLUMNS: ColumnField[] = [
   },
   {
     id: uuidv4(),
-    name: 'created_at',
-    schema: '',
-    table: '',
-    format: 'timestamptz',
-    defaultValue: 'now()',
+    name: "created_at",
+    schema: "",
+    table: "",
+    format: "timestamptz",
+    defaultValue: "now()",
     check: null,
     foreignKey: undefined,
     isNullable: false,
@@ -36,4 +36,4 @@ export const DEFAULT_COLUMNS: ColumnField[] = [
     isNewColumn: true,
     isEncrypted: false,
   },
-]
+];

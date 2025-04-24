@@ -1,8 +1,8 @@
-import { Input } from 'ui'
+import { Input } from "ui";
 
 interface SpreadSheetTextInputProps {
-  input: string
-  onInputChange: (event: any) => void
+  input: string;
+  onInputChange: (event: any) => void;
 }
 
 const SpreadSheetTextInput = ({ input, onInputChange }: SpreadSheetTextInputProps) => (
@@ -22,11 +22,11 @@ const SpreadSheetTextInput = ({ input, onInputChange }: SpreadSheetTextInputProp
       size="tiny"
       className="font-mono"
       rows={15}
-      style={{ resize: 'none' }}
+      style={{ resize: "none" }}
       value={input}
       onChange={onInputChange}
     />
   </div>
-)
+);
 
-export default SpreadSheetTextInput
+export default SpreadSheetTextInput;

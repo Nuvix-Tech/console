@@ -1,15 +1,15 @@
-import Editor, { OnChange } from '@monaco-editor/react'
-import { noop } from 'lodash'
+import Editor, { OnChange } from "@monaco-editor/react";
+import { noop } from "lodash";
 
 // [Joshen] Should just use CodeEditor instead of declaring Editor here so that all the mount logic is consistent
 
 interface JsonEditorProps {
-  value: string
-  readOnly?: boolean
-  onInputChange: OnChange
+  value: string;
+  readOnly?: boolean;
+  onInputChange: OnChange;
 }
 
-const JsonEditor = ({ value = '', readOnly = false, onInputChange = noop }: JsonEditorProps) => {
+const JsonEditor = ({ value = "", readOnly = false, onInputChange = noop }: JsonEditorProps) => {
   return (
     <Editor
       className="monaco-editor"
@@ -24,7 +24,7 @@ const JsonEditor = ({ value = '', readOnly = false, onInputChange = noop }: Json
         minimap: {
           enabled: false,
         },
-        wordWrap: 'on',
+        wordWrap: "on",
         fixedOverflowWidgets: true,
         lineNumbersMinChars: 4,
       }}
@@ -33,14 +33,14 @@ const JsonEditor = ({ value = '', readOnly = false, onInputChange = noop }: Json
           accessor.addZone({
             afterLineNumber: 0,
             heightInPx: 4,
-            domNode: document.createElement('div'),
-          })
-        })
-        editor.focus()
+            domNode: document.createElement("div"),
+          });
+        });
+        editor.focus();
       }}
       onChange={onInputChange}
     />
-  )
-}
+  );
+};
 
-export default JsonEditor
+export default JsonEditor;

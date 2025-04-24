@@ -1,28 +1,28 @@
-import { Editor } from '@monaco-editor/react'
-import { Loader } from 'lucide-react'
-import { useCallback, useEffect, useState } from 'react'
-import remarkGfm from 'remark-gfm'
-import { toast } from 'sonner'
+import { Editor } from "@monaco-editor/react";
+import { Loader } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import remarkGfm from "remark-gfm";
+import { toast } from "sonner";
 
-import { useParams } from 'common'
-import { Markdown } from 'components/interfaces/Markdown'
-import TwoOptionToggle from 'components/ui/TwoOptionToggle'
-import { useTableEditorQuery } from 'data/table-editor/table-editor-query'
-import { isTableLike } from 'data/table-editor/table-editor-types'
-import { useGetCellValueMutation } from 'data/table-rows/get-cell-value-mutation'
-import { MAX_CHARACTERS } from '@supabase/pg-meta/src/query/table-row-query'
-import { useSelectedProject } from 'hooks/misc/useSelectedProject'
-import { Button, SidePanel, cn } from 'ui'
-import ActionBar from '../ActionBar'
-import { isValueTruncated } from './RowEditor.utils'
+import { useParams } from "common";
+import { Markdown } from "components/interfaces/Markdown";
+import TwoOptionToggle from "components/ui/TwoOptionToggle";
+import { useTableEditorQuery } from "data/table-editor/table-editor-query";
+import { isTableLike } from "data/table-editor/table-editor-types";
+import { useGetCellValueMutation } from "data/table-rows/get-cell-value-mutation";
+import { MAX_CHARACTERS } from "@supabase/pg-meta/src/query/table-row-query";
+import { useSelectedProject } from "hooks/misc/useSelectedProject";
+import { Button, SidePanel, cn } from "ui";
+import ActionBar from "../ActionBar";
+import { isValueTruncated } from "./RowEditor.utils";
 
 interface TextEditorProps {
-  visible: boolean
-  readOnly?: boolean
-  row?: { [key: string]: any }
-  column: string
-  closePanel: () => void
-  onSaveField: (value: string, resolve: () => void) => void
+  visible: boolean;
+  readOnly?: boolean;
+  row?: { [key: string]: any };
+  column: string;
+  closePanel: () => void;
+  onSaveField: (value: string, resolve: () => void) => void;
 }
 
 export const TextEditor = ({
@@ -33,22 +33,22 @@ export const TextEditor = ({
   closePanel,
   onSaveField,
 }: TextEditorProps) => {
-  const { id: _id } = useParams()
-  const id = _id ? Number(_id) : undefined
-  const project = useSelectedProject()
+  const { id: _id } = useParams();
+  const id = _id ? Number(_id) : undefined;
+  const project = useSelectedProject();
 
   const { data: selectedTable } = useTableEditorQuery({
     projectRef: project?.ref,
     connectionString: project?.connectionString,
     id,
-  })
+  });
 
-  const [strValue, setStrValue] = useState('')
-  const [view, setView] = useState<'edit' | 'view'>('edit')
-  const value = row?.[column as keyof typeof row] as unknown as string
-  const isTruncated = isValueTruncated(value)
+  const [strValue, setStrValue] = useState("");
+  const [view, setView] = useState<"edit" | "view">("edit");
+  const value = row?.[column as keyof typeof row] as unknown as string;
+  const isTruncated = isValueTruncated(value);
 
-  const { mutate: getCellValue, isLoading, isSuccess, reset } = useGetCellValueMutation()
+  const { mutate: getCellValue, isLoading, isSuccess, reset } = useGetCellValueMutation();
 
   const loadFullValue = () => {
     if (
@@ -57,14 +57,14 @@ export const TextEditor = ({
       row === undefined ||
       !isTableLike(selectedTable)
     )
-      return
+      return;
     if (selectedTable.primary_keys.length === 0) {
-      return toast('Unable to load value as table has no primary keys')
+      return toast("Unable to load value as table has no primary keys");
     }
 
     const pkMatch = selectedTable.primary_keys.reduce((a, b) => {
-      return { ...a, [b.name]: (row as any)[b.name] }
-    }, {})
+      return { ...a, [b.name]: (row as any)[b.name] };
+    }, {});
 
     getCellValue(
       {
@@ -74,27 +74,27 @@ export const TextEditor = ({
         projectRef: project?.ref,
         connectionString: project?.connectionString,
       },
-      { onSuccess: (data) => setStrValue(data) }
-    )
-  }
+      { onSuccess: (data) => setStrValue(data) },
+    );
+  };
 
   const saveValue = (resolve: () => void) => {
-    if (onSaveField) onSaveField(strValue, resolve)
-  }
+    if (onSaveField) onSaveField(strValue, resolve);
+  };
 
   useEffect(() => {
     if (visible) {
-      setView('edit')
-      setStrValue(value)
+      setView("edit");
+      setStrValue(value);
     }
-  }, [visible])
+  }, [visible]);
 
   // reset the mutation when the panel closes. Fixes an issue where the value is truncated if you close and reopen the
   // panel again
   const onClose = useCallback(() => {
-    reset()
-    closePanel()
-  }, [reset])
+    reset();
+    closePanel();
+  }, [reset]);
 
   return (
     <SidePanel
@@ -104,11 +104,11 @@ export const TextEditor = ({
       header={
         <div className="flex items-center justify-between">
           <p>
-            {readOnly ? 'Viewing' : 'Editing'} value of: <code>{column}</code>
+            {readOnly ? "Viewing" : "Editing"} value of: <code>{column}</code>
           </p>
           {(!isTruncated || (isTruncated && isSuccess)) && (
             <TwoOptionToggle
-              options={['view', 'edit']}
+              options={["view", "edit"]}
               activeOption={view}
               borderOverride="border-muted"
               onClickOption={setView}
@@ -127,7 +127,7 @@ export const TextEditor = ({
       }
     >
       <div className="relative flex flex-auto h-full flex-col gap-y-4">
-        {view === 'edit' ? (
+        {view === "edit" ? (
           <div className="w-full h-full flex-grow">
             <Editor
               key={value}
@@ -143,7 +143,7 @@ export const TextEditor = ({
                 minimap: {
                   enabled: false,
                 },
-                wordWrap: 'on',
+                wordWrap: "on",
                 fixedOverflowWidgets: true,
                 lineNumbersMinChars: 4,
               }}
@@ -152,12 +152,12 @@ export const TextEditor = ({
                   accessor.addZone({
                     afterLineNumber: 0,
                     heightInPx: 4,
-                    domNode: document.createElement('div'),
-                  })
-                })
-                editor.focus()
+                    domNode: document.createElement("div"),
+                  });
+                });
+                editor.focus();
               }}
-              onChange={(val) => setStrValue(val ?? '')}
+              onChange={(val) => setStrValue(val ?? "")}
             />
           </div>
         ) : (
@@ -172,9 +172,9 @@ export const TextEditor = ({
         {isTruncated && !isSuccess && (
           <div
             className={cn(
-              'absolute top-0 left-0 flex items-center justify-center flex-col gap-y-3',
-              'text-sm w-full h-full px-2 text-center',
-              'bg-default/80 backdrop-blur-[1.5px]'
+              "absolute top-0 left-0 flex items-center justify-center flex-col gap-y-3",
+              "text-sm w-full h-full px-2 text-center",
+              "bg-default/80 backdrop-blur-[1.5px]",
             )}
           >
             <div className="flex flex-col gap-y-1 w-80">
@@ -191,5 +191,5 @@ export const TextEditor = ({
         )}
       </div>
     </SidePanel>
-  )
-}
+  );
+};

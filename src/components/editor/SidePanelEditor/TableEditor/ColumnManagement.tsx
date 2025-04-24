@@ -1,19 +1,19 @@
-import { isEmpty, noop, partition } from 'lodash'
-import { Edit, ExternalLink, HelpCircle, Key, Trash } from 'lucide-react'
-import { useState } from 'react'
+import { isEmpty, noop, partition } from "lodash";
+import { Edit, ExternalLink, HelpCircle, Key, Trash } from "lucide-react";
+import { useState } from "react";
 import {
   DragDropContext,
   Draggable,
   DraggableProvided,
   Droppable,
   DroppableProvided,
-} from 'react-beautiful-dnd'
+} from "react-beautiful-dnd";
 
-import { useParams } from 'common'
-import InformationBox from 'components/ui/InformationBox'
-import type { EnumeratedType } from 'data/enumerated-types/enumerated-types-query'
-import { useSendEventMutation } from 'data/telemetry/send-event-mutation'
-import { useSelectedOrganization } from 'hooks/misc/useSelectedOrganization'
+import { useParams } from "common";
+import InformationBox from "components/ui/InformationBox";
+import type { EnumeratedType } from "data/enumerated-types/enumerated-types-query";
+import { useSendEventMutation } from "data/telemetry/send-event-mutation";
+import { useSelectedOrganization } from "hooks/misc/useSelectedOrganization";
 import {
   AlertDescription_Shadcn_,
   AlertTitle_Shadcn_,
@@ -23,26 +23,26 @@ import {
   TooltipContent,
   TooltipTrigger,
   WarningIcon,
-} from 'ui'
-import { generateColumnField } from '../ColumnEditor/ColumnEditor.utils'
-import { ForeignKeySelector } from '../ForeignKeySelector/ForeignKeySelector'
-import type { ForeignKey } from '../ForeignKeySelector/ForeignKeySelector.types'
-import { TEXT_TYPES } from '../SidePanelEditor.constants'
-import type { ColumnField, ExtendedPostgresRelationship } from '../SidePanelEditor.types'
-import Column from './Column'
-import type { ImportContent, TableField } from './TableEditor.types'
+} from "ui";
+import { generateColumnField } from "../ColumnEditor/ColumnEditor.utils";
+import { ForeignKeySelector } from "../ForeignKeySelector/ForeignKeySelector";
+import type { ForeignKey } from "../ForeignKeySelector/ForeignKeySelector.types";
+import { TEXT_TYPES } from "../SidePanelEditor.constants";
+import type { ColumnField, ExtendedPostgresRelationship } from "../SidePanelEditor.types";
+import Column from "./Column";
+import type { ImportContent, TableField } from "./TableEditor.types";
 
 interface ColumnManagementProps {
-  table: TableField
-  columns?: ColumnField[]
-  relations: ForeignKey[]
-  enumTypes: EnumeratedType[]
-  importContent?: ImportContent
-  isNewRecord: boolean
-  onColumnsUpdated: (columns: ColumnField[]) => void
-  onSelectImportData: () => void
-  onClearImportContent: () => void
-  onUpdateFkRelations: (relations: ForeignKey[]) => void
+  table: TableField;
+  columns?: ColumnField[];
+  relations: ForeignKey[];
+  enumTypes: EnumeratedType[];
+  importContent?: ImportContent;
+  isNewRecord: boolean;
+  onColumnsUpdated: (columns: ColumnField[]) => void;
+  onSelectImportData: () => void;
+  onClearImportContent: () => void;
+  onUpdateFkRelations: (relations: ForeignKey[]) => void;
 }
 
 const ColumnManagement = ({
@@ -57,84 +57,84 @@ const ColumnManagement = ({
   onClearImportContent = noop,
   onUpdateFkRelations,
 }: ColumnManagementProps) => {
-  const { ref: projectRef } = useParams()
-  const org = useSelectedOrganization()
+  const { ref: projectRef } = useParams();
+  const org = useSelectedOrganization();
 
-  const [open, setOpen] = useState(false)
-  const [selectedColumn, setSelectedColumn] = useState<ColumnField>()
-  const [selectedFk, setSelectedFk] = useState<ForeignKey>()
+  const [open, setOpen] = useState(false);
+  const [selectedColumn, setSelectedColumn] = useState<ColumnField>();
+  const [selectedFk, setSelectedFk] = useState<ForeignKey>();
 
-  const { mutate: sendEvent } = useSendEventMutation()
+  const { mutate: sendEvent } = useSendEventMutation();
 
-  const hasImportContent = !isEmpty(importContent)
+  const hasImportContent = !isEmpty(importContent);
   const [primaryKeyColumns, otherColumns] = partition(
     columns,
-    (column: ColumnField) => column.isPrimaryKey
-  )
+    (column: ColumnField) => column.isPrimaryKey,
+  );
 
   const checkIfHaveForeignKeys = (column: ColumnField) => {
     return (
       relations.find((relation) => relation.columns.find((x) => x.source === column.name)) !==
       undefined
-    )
-  }
+    );
+  };
 
   const onUpdateColumn = (columnToUpdate: ColumnField, changes: Partial<ColumnField>) => {
     const updatedColumns = columns.map((column: ColumnField) => {
       if (column.id === columnToUpdate.id) {
-        const isTextBasedColumn = TEXT_TYPES.includes(columnToUpdate.format)
-        if (!isTextBasedColumn && changes.defaultValue === '') {
-          changes.defaultValue = null
+        const isTextBasedColumn = TEXT_TYPES.includes(columnToUpdate.format);
+        if (!isTextBasedColumn && changes.defaultValue === "") {
+          changes.defaultValue = null;
         }
 
-        if ('name' in changes && column.foreignKey !== undefined) {
+        if ("name" in changes && column.foreignKey !== undefined) {
           const foreignKey: ExtendedPostgresRelationship = {
             ...column.foreignKey,
-            source_column_name: changes?.name ?? '',
-          }
-          return { ...column, ...changes, foreignKey }
+            source_column_name: changes?.name ?? "",
+          };
+          return { ...column, ...changes, foreignKey };
         }
-        return { ...column, ...changes }
+        return { ...column, ...changes };
       } else {
-        return column
+        return column;
       }
-    })
-    onColumnsUpdated(updatedColumns)
-  }
+    });
+    onColumnsUpdated(updatedColumns);
+  };
 
   const onAddColumn = () => {
-    const defaultColumn = generateColumnField()
-    const updatedColumns = columns.concat(defaultColumn)
-    onColumnsUpdated(updatedColumns)
-  }
+    const defaultColumn = generateColumnField();
+    const updatedColumns = columns.concat(defaultColumn);
+    onColumnsUpdated(updatedColumns);
+  };
 
   const onRemoveColumn = (columnToRemove: ColumnField) => {
-    const updatedColumns = columns.filter((column: ColumnField) => column.id !== columnToRemove.id)
-    onColumnsUpdated(updatedColumns)
-  }
+    const updatedColumns = columns.filter((column: ColumnField) => column.id !== columnToRemove.id);
+    onColumnsUpdated(updatedColumns);
+  };
 
-  const onSortColumns = (result: any, type: 'pks' | 'others') => {
+  const onSortColumns = (result: any, type: "pks" | "others") => {
     // Dropped outside of the list
     if (!result.destination) {
-      return
+      return;
     }
 
-    if (type === 'pks') {
-      const updatedPrimaryKeyColumns = primaryKeyColumns.slice()
-      const [removed] = updatedPrimaryKeyColumns.splice(result.source.index, 1)
-      updatedPrimaryKeyColumns.splice(result.destination.index, 0, removed)
-      const updatedColumns = updatedPrimaryKeyColumns.concat(otherColumns)
-      return onColumnsUpdated(updatedColumns)
+    if (type === "pks") {
+      const updatedPrimaryKeyColumns = primaryKeyColumns.slice();
+      const [removed] = updatedPrimaryKeyColumns.splice(result.source.index, 1);
+      updatedPrimaryKeyColumns.splice(result.destination.index, 0, removed);
+      const updatedColumns = updatedPrimaryKeyColumns.concat(otherColumns);
+      return onColumnsUpdated(updatedColumns);
     }
 
-    if (type === 'others') {
-      const updatedOtherColumns = otherColumns.slice()
-      const [removed] = updatedOtherColumns.splice(result.source.index, 1)
-      updatedOtherColumns.splice(result.destination.index, 0, removed)
-      const updatedColumns = primaryKeyColumns.concat(updatedOtherColumns)
-      return onColumnsUpdated(updatedColumns)
+    if (type === "others") {
+      const updatedOtherColumns = otherColumns.slice();
+      const [removed] = updatedOtherColumns.splice(result.source.index, 1);
+      updatedOtherColumns.splice(result.destination.index, 0, removed);
+      const updatedColumns = primaryKeyColumns.concat(updatedOtherColumns);
+      return onColumnsUpdated(updatedColumns);
     }
-  }
+  };
 
   return (
     <>
@@ -167,15 +167,15 @@ const ColumnManagement = ({
                   <Button
                     type="default"
                     onClick={() => {
-                      onSelectImportData()
+                      onSelectImportData();
                       sendEvent({
-                        action: 'import_data_button_clicked',
-                        properties: { tableType: 'New Table' },
+                        action: "import_data_button_clicked",
+                        properties: { tableType: "New Table" },
                         groups: {
-                          project: projectRef ?? 'Unknown',
-                          organization: org?.slug ?? 'Unknown',
+                          project: projectRef ?? "Unknown",
+                          organization: org?.slug ?? "Unknown",
                         },
-                      })
+                      });
                     }}
                   >
                     Import data from CSV
@@ -233,7 +233,7 @@ const ColumnManagement = ({
             <div className="w-[25%]">
               <h5 className="text-xs text-foreground-lighter">Type</h5>
             </div>
-            <div className={`${isNewRecord ? 'w-[25%]' : 'w-[30%]'} flex items-center space-x-2`}>
+            <div className={`${isNewRecord ? "w-[25%]" : "w-[30%]"} flex items-center space-x-2`}>
               <h5 className="text-xs text-foreground-lighter">Default Value</h5>
               <Tooltip>
                 <TooltipTrigger>
@@ -249,7 +249,7 @@ const ColumnManagement = ({
               <h5 className="text-xs text-foreground-lighter">Primary</h5>
             </div>
             {/* Empty space */}
-            <div className={`${hasImportContent ? 'w-[10%]' : 'w-0'}`} />
+            <div className={`${hasImportContent ? "w-[10%]" : "w-0"}`} />
             {/* More config button */}
             <div className="w-[5%]" />
             {/* Delete button */}
@@ -257,13 +257,13 @@ const ColumnManagement = ({
           </div>
 
           {primaryKeyColumns.length > 0 && (
-            <DragDropContext onDragEnd={(result: any) => onSortColumns(result, 'pks')}>
+            <DragDropContext onDragEnd={(result: any) => onSortColumns(result, "pks")}>
               <Droppable droppableId="pk_columns_droppable">
                 {(droppableProvided: DroppableProvided) => (
                   <div
                     ref={droppableProvided.innerRef}
                     className={`space-y-2 rounded-md bg-surface-200 px-3 py-2 ${
-                      isNewRecord ? '' : '-mx-3'
+                      isNewRecord ? "" : "-mx-3"
                     }`}
                   >
                     {primaryKeyColumns.map((column: ColumnField, index: number) => (
@@ -276,7 +276,7 @@ const ColumnManagement = ({
                             <Column
                               column={column}
                               relations={relations.filter((relation) => {
-                                return relation.columns.some((x) => x.source === column.name)
+                                return relation.columns.some((x) => x.source === column.name);
                               })}
                               enumTypes={enumTypes}
                               hasForeignKeys={checkIfHaveForeignKeys(column)}
@@ -286,9 +286,9 @@ const ColumnManagement = ({
                               onUpdateColumn={(changes) => onUpdateColumn(column, changes)}
                               onRemoveColumn={() => onRemoveColumn(column)}
                               onEditForeignKey={(fk) => {
-                                setOpen(true)
-                                setSelectedColumn(column)
-                                if (fk) setSelectedFk(fk)
+                                setOpen(true);
+                                setSelectedColumn(column);
+                                if (fk) setSelectedFk(fk);
                               }}
                             />
                           </div>
@@ -302,12 +302,12 @@ const ColumnManagement = ({
             </DragDropContext>
           )}
 
-          <DragDropContext onDragEnd={(result: any) => onSortColumns(result, 'others')}>
+          <DragDropContext onDragEnd={(result: any) => onSortColumns(result, "others")}>
             <Droppable droppableId="other_columns_droppable">
               {(droppableProvided: DroppableProvided) => (
                 <div
                   ref={droppableProvided.innerRef}
-                  className={`space-y-2 py-2 ${isNewRecord ? 'px-3 ' : ''}`}
+                  className={`space-y-2 py-2 ${isNewRecord ? "px-3 " : ""}`}
                 >
                   {otherColumns.map((column: ColumnField, index: number) => (
                     <Draggable key={column.id} draggableId={column.id} index={index}>
@@ -316,7 +316,7 @@ const ColumnManagement = ({
                           <Column
                             column={column}
                             relations={relations.filter((relation) => {
-                              return relation.columns.some((x) => x.source === column.name)
+                              return relation.columns.some((x) => x.source === column.name);
                             })}
                             enumTypes={enumTypes}
                             isNewRecord={isNewRecord}
@@ -326,9 +326,9 @@ const ColumnManagement = ({
                             onUpdateColumn={(changes) => onUpdateColumn(column, changes)}
                             onRemoveColumn={() => onRemoveColumn(column)}
                             onEditForeignKey={(fk) => {
-                              setOpen(true)
-                              setSelectedColumn(column)
-                              if (fk) setSelectedFk(fk)
+                              setOpen(true);
+                              setSelectedColumn(column);
+                              if (fk) setSelectedFk(fk);
                             }}
                           />
                         </div>
@@ -357,26 +357,26 @@ const ColumnManagement = ({
         table={{ id: table.id, name: table.name, columns: table.columns }}
         foreignKey={selectedFk}
         onClose={() => {
-          setOpen(false)
-          setSelectedFk(undefined)
-          setSelectedColumn(undefined)
+          setOpen(false);
+          setSelectedFk(undefined);
+          setSelectedColumn(undefined);
         }}
         onSaveRelation={(fk) => {
-          const existingRelationIds = relations.map((x) => x.id)
+          const existingRelationIds = relations.map((x) => x.id);
           if (fk.id !== undefined && existingRelationIds.includes(fk.id)) {
             onUpdateFkRelations(
               relations.map((x) => {
-                if (x.id === fk.id) return fk
-                return x
-              })
-            )
+                if (x.id === fk.id) return fk;
+                return x;
+              }),
+            );
           } else {
-            onUpdateFkRelations(relations.concat([fk]))
+            onUpdateFkRelations(relations.concat([fk]));
           }
         }}
       />
     </>
-  )
-}
+  );
+};
 
-export default ColumnManagement
+export default ColumnManagement;

@@ -1,10 +1,10 @@
-import { last } from 'lodash'
-import { Home, ChevronRight } from 'lucide-react'
+import { last } from "lodash";
+import { Home, ChevronRight } from "lucide-react";
 
 interface DrilldownBreadCrumbsProps {
-  breadcrumbs: string[]
-  resetBreadcrumbs: () => void
-  onSelectBreadcrumb: (breadcrumb: string[]) => void
+  breadcrumbs: string[];
+  resetBreadcrumbs: () => void;
+  onSelectBreadcrumb: (breadcrumb: string[]) => void;
 }
 
 const DrilldownBreadCrumbs = ({
@@ -41,7 +41,7 @@ const DrilldownBreadCrumbs = ({
           </div>
         ))}
     </div>
-  )
-}
+  );
+};
 
-export default DrilldownBreadCrumbs
+export default DrilldownBreadCrumbs;

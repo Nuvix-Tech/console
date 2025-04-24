@@ -1,20 +1,20 @@
-import { Key } from 'lucide-react'
-import  {DataGrid, Column } from 'react-data-grid'
+import { Key } from "lucide-react";
+import { DataGrid, Column } from "react-data-grid";
 
-import { NullValue } from 'components/grid/components/common/NullValue'
-import { COLUMN_MIN_WIDTH } from 'components/grid/constants'
-import type { SupaRow } from 'components/grid/types'
+import { NullValue } from "components/grid/components/common/NullValue";
+import { COLUMN_MIN_WIDTH } from "components/grid/constants";
+import type { SupaRow } from "components/grid/types";
 import {
   ESTIMATED_CHARACTER_PIXEL_WIDTH,
   getColumnDefaultWidth,
-} from 'components/grid/utils/gridColumns'
-import { useTableEditorTableStateSnapshot } from 'state/table-editor-table'
-import { Tooltip, TooltipContent, TooltipTrigger } from 'ui'
-import { convertByteaToHex } from '../RowEditor.utils'
+} from "components/grid/utils/gridColumns";
+import { useTableEditorTableStateSnapshot } from "state/table-editor-table";
+import { Tooltip, TooltipContent, TooltipTrigger } from "ui";
+import { convertByteaToHex } from "../RowEditor.utils";
 
 export interface SelectorGridProps {
-  rows: SupaRow[]
-  onRowSelect: (row: SupaRow) => void
+  rows: SupaRow[];
+  onRowSelect: (row: SupaRow) => void;
 }
 
 const columnRender = (name: string, isPrimaryKey = false) => {
@@ -33,19 +33,19 @@ const columnRender = (name: string, isPrimaryKey = false) => {
 
       <span className="sb-grid-column-header__inner__name">{name}</span>
     </div>
-  )
-}
+  );
+};
 
 // TODO: move this formatter out to a common component
 const formatter = ({ column, format, row }: { column: string; format: string; row: SupaRow }) => {
   const formattedValue =
-    format === 'bytea'
+    format === "bytea"
       ? convertByteaToHex(row[column])
       : row[column] === null
         ? null
-        : typeof row[column] === 'object'
+        : typeof row[column] === "object"
           ? JSON.stringify(row[column])
-          : row[column]
+          : row[column];
 
   return (
     <div className="group sb-grid-select-cell__formatter overflow-hidden">
@@ -55,18 +55,18 @@ const formatter = ({ column, format, row }: { column: string; format: string; ro
         <span className="text-sm truncate">{formattedValue}</span>
       )}
     </div>
-  )
-}
+  );
+};
 
 const SelectorGrid = ({ rows, onRowSelect }: SelectorGridProps) => {
-  const snap = useTableEditorTableStateSnapshot()
+  const snap = useTableEditorTableStateSnapshot();
 
   const columns: Column<SupaRow>[] = snap.table.columns.map((column) => {
-    const columnDefaultWidth = getColumnDefaultWidth(column)
+    const columnDefaultWidth = getColumnDefaultWidth(column);
     const columnWidthBasedOnName =
-      (column.name.length + column.format.length) * ESTIMATED_CHARACTER_PIXEL_WIDTH
+      (column.name.length + column.format.length) * ESTIMATED_CHARACTER_PIXEL_WIDTH;
     const columnWidth =
-      columnDefaultWidth < columnWidthBasedOnName ? columnWidthBasedOnName : columnDefaultWidth
+      columnDefaultWidth < columnWidthBasedOnName ? columnWidthBasedOnName : columnDefaultWidth;
 
     const result: Column<SupaRow> = {
       key: column.name,
@@ -77,19 +77,19 @@ const SelectorGrid = ({ rows, onRowSelect }: SelectorGridProps) => {
       resizable: true,
       width: columnWidth,
       minWidth: COLUMN_MIN_WIDTH,
-    }
-    return result
-  })
+    };
+    return result;
+  });
 
   return (
     <DataGrid
       columns={columns}
       rows={rows}
-      style={{ height: '100%' }}
+      style={{ height: "100%" }}
       onCellClick={(props) => onRowSelect(props.row)}
-      rowClass={() => 'cursor-pointer'}
+      rowClass={() => "cursor-pointer"}
     />
-  )
-}
+  );
+};
 
-export default SelectorGrid
+export default SelectorGrid;

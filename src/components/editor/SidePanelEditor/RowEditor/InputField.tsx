@@ -1,5 +1,5 @@
-import { includes, noop } from 'lodash'
-import { Edit, Edit2, Eye } from 'lucide-react'
+import { includes, noop } from "lodash";
+import { Edit, Edit2, Eye } from "lucide-react";
 
 import {
   Button,
@@ -15,21 +15,21 @@ import {
   SelectItem_Shadcn_,
   SelectTrigger_Shadcn_,
   SelectValue_Shadcn_,
-} from 'ui'
-import { FormItemLayout } from 'ui-patterns/form/FormItemLayout/FormItemLayout'
-import { DATETIME_TYPES, JSON_TYPES, TEXT_TYPES } from '../SidePanelEditor.constants'
-import { DateTimeInput } from './DateTimeInput'
-import type { EditValue, RowField } from './RowEditor.types'
-import { isValueTruncated } from './RowEditor.utils'
+} from "ui";
+import { FormItemLayout } from "ui-patterns/form/FormItemLayout/FormItemLayout";
+import { DATETIME_TYPES, JSON_TYPES, TEXT_TYPES } from "../SidePanelEditor.constants";
+import { DateTimeInput } from "./DateTimeInput";
+import type { EditValue, RowField } from "./RowEditor.types";
+import { isValueTruncated } from "./RowEditor.utils";
 
 export interface InputFieldProps {
-  field: RowField
-  errors: any
-  isEditable?: boolean
-  onUpdateField?: (changes: object) => void
-  onEditJson?: (data: any) => void
-  onEditText?: (data: EditValue) => void
-  onSelectForeignKey?: () => void
+  field: RowField;
+  errors: any;
+  isEditable?: boolean;
+  onUpdateField?: (changes: object) => void;
+  onEditJson?: (data: any) => void;
+  onEditText?: (data: EditValue) => void;
+  onSelectForeignKey?: () => void;
 }
 
 const InputField = ({
@@ -42,7 +42,7 @@ const InputField = ({
   onSelectForeignKey = noop,
 }: InputFieldProps) => {
   if (field.enums.length > 0) {
-    const isArray = field.format[0] === '_'
+    const isArray = field.format[0] === "_";
     if (isArray) {
       return (
         <div className="text-area-text-sm">
@@ -56,24 +56,24 @@ const InputField = ({
             disabled={!isEditable}
             error={errors[field.name]}
             rows={5}
-            value={field.value ?? ''}
+            value={field.value ?? ""}
             placeholder={
               field.defaultValue === null
-                ? ''
-                : typeof field.defaultValue === 'string' && field.defaultValue.length === 0
-                  ? 'EMPTY'
+                ? ""
+                : typeof field.defaultValue === "string" && field.defaultValue.length === 0
+                  ? "EMPTY"
                   : `Default: ${field.defaultValue}`
             }
             onChange={(event: any) => onUpdateField({ [field.name]: event.target.value })}
           />
         </div>
-      )
+      );
     } else {
       return (
         <Select
           size="medium"
           layout="horizontal"
-          value={field.value ?? ''}
+          value={field.value ?? ""}
           label={field.name}
           labelOptional={field.format}
           descriptionText={field.comment}
@@ -88,7 +88,7 @@ const InputField = ({
             </Select.Option>
           ))}
         </Select>
-      )
+      );
     }
   }
 
@@ -99,14 +99,14 @@ const InputField = ({
         layout="horizontal"
         placeholder="NULL"
         label={field.name}
-        value={field.value ?? ''}
+        value={field.value ?? ""}
         descriptionText={
           <>
             {field.comment && (
               <span className="text-sm text-foreground-lighter">{field.comment} </span>
             )}
             <span className="text-sm text-foreground-lighter">
-              {field.comment && '('}Has a foreign key relation to
+              {field.comment && "("}Has a foreign key relation to
             </span>
             <span className="text-code font-mono text-xs text-foreground-lighter">
               {field.foreignKey.target_table_schema}.{field.foreignKey.target_table_name}.
@@ -137,11 +137,11 @@ const InputField = ({
           )
         }
       />
-    )
+    );
   }
 
   if (includes(TEXT_TYPES, field.format)) {
-    const isTruncated = isValueTruncated(field.value)
+    const isTruncated = isValueTruncated(field.value);
 
     return (
       <div className="text-area-text-sm">
@@ -166,14 +166,14 @@ const InputField = ({
           disabled={!isEditable || isTruncated}
           error={errors[field.name]}
           rows={5}
-          value={field.value ?? ''}
+          value={field.value ?? ""}
           placeholder={
             field.value === null && field.defaultValue === null
-              ? 'NULL'
-              : field.value === ''
-                ? 'EMPTY'
-                : typeof field.defaultValue === 'string' && field.defaultValue.length === 0
-                  ? 'EMPTY'
+              ? "NULL"
+              : field.value === ""
+                ? "EMPTY"
+                : typeof field.defaultValue === "string" && field.defaultValue.length === 0
+                  ? "EMPTY"
                   : `NULL (Default: ${field.defaultValue})`
           }
           actions={
@@ -188,7 +188,7 @@ const InputField = ({
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem
-                  onClick={() => onEditText({ column: field.name, value: field.value || '' })}
+                  onClick={() => onEditText({ column: field.name, value: field.value || "" })}
                 >
                   Expand editor
                 </DropdownMenuItem>
@@ -198,17 +198,17 @@ const InputField = ({
           onChange={(event) => onUpdateField({ [field.name]: event.target.value })}
         />
       </div>
-    )
+    );
   }
 
   if (includes(JSON_TYPES, field.format)) {
-    const isTruncated = isValueTruncated(field.value)
+    const isTruncated = isValueTruncated(field.value);
 
     return (
       <Input
         data-testid={`${field.name}-input`}
         layout="horizontal"
-        value={field.value ?? ''}
+        value={field.value ?? ""}
         label={field.name}
         descriptionText={
           <>
@@ -223,7 +223,7 @@ const InputField = ({
         }
         labelOptional={field.format}
         disabled={!isEditable || isTruncated}
-        placeholder={field?.defaultValue ?? 'NULL'}
+        placeholder={field?.defaultValue ?? "NULL"}
         error={errors[field.name]}
         onChange={(event: any) => onUpdateField({ [field.name]: event.target.value })}
         actions={
@@ -233,11 +233,11 @@ const InputField = ({
             onClick={() => onEditJson({ column: field.name, value: field.value })}
             icon={isEditable ? <Edit2 /> : <Eye />}
           >
-            {isEditable ? 'Edit JSON' : 'View JSON'}
+            {isEditable ? "Edit JSON" : "View JSON"}
           </Button>
         }
       />
-    )
+    );
   }
 
   if (includes(DATETIME_TYPES, field.format)) {
@@ -245,7 +245,7 @@ const InputField = ({
       <DateTimeInput
         name={field.name}
         format={field.format}
-        value={field.value ?? ''}
+        value={field.value ?? ""}
         isNullable={field.isNullable}
         description={
           <>
@@ -256,17 +256,17 @@ const InputField = ({
         onChange={(value: any) => onUpdateField({ [field.name]: value })}
         disabled={!isEditable}
       />
-    )
+    );
   }
 
-  if (field.format === 'bool') {
+  if (field.format === "bool") {
     const options = [
-      { value: 'true', label: 'TRUE' },
-      { value: 'false', label: 'FALSE' },
-      ...(field.isNullable ? [{ value: 'null', label: 'NULL' }] : []),
-    ]
+      { value: "true", label: "TRUE" },
+      { value: "false", label: "FALSE" },
+      ...(field.isNullable ? [{ value: "null", label: "NULL" }] : []),
+    ];
 
-    const defaultValue = field.value === null ? undefined : field.value
+    const defaultValue = field.value === null ? undefined : field.value;
 
     return (
       <FormItemLayout
@@ -278,7 +278,7 @@ const InputField = ({
         className="[&>div:first-child>span]:text-foreground-lighter"
       >
         <Select_Shadcn_
-          value={defaultValue === null ? 'null' : defaultValue}
+          value={defaultValue === null ? "null" : defaultValue}
           onValueChange={(value: string) => onUpdateField({ [field.name]: value })}
           disabled={!isEditable}
         >
@@ -296,10 +296,10 @@ const InputField = ({
           </SelectContent_Shadcn_>
         </Select_Shadcn_>
       </FormItemLayout>
-    )
+    );
   }
 
-  if (field.format === 'bytea') {
+  if (field.format === "bytea") {
     return (
       <Input
         data-testid={`${field.name}-input`}
@@ -313,12 +313,12 @@ const InputField = ({
         }
         labelOptional={field.format}
         error={errors[field.name]}
-        value={field.value ?? ''}
+        value={field.value ?? ""}
         placeholder={`\\x`}
         disabled={!isEditable}
         onChange={(event: any) => onUpdateField({ [field.name]: event.target.value })}
       />
-    )
+    );
   }
 
   return (
@@ -329,18 +329,18 @@ const InputField = ({
       descriptionText={field.comment}
       labelOptional={field.format}
       error={errors[field.name]}
-      value={field.value ?? ''}
+      value={field.value ?? ""}
       placeholder={
         field.isIdentity
-          ? 'Automatically generated as identity'
+          ? "Automatically generated as identity"
           : field.defaultValue !== null
             ? `Default: ${field.defaultValue}`
-            : 'NULL'
+            : "NULL"
       }
       disabled={!isEditable}
       onChange={(event: any) => onUpdateField({ [field.name]: event.target.value })}
     />
-  )
-}
+  );
+};
 
-export default InputField
+export default InputField;

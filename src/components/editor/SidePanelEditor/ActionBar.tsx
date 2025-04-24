@@ -1,38 +1,38 @@
-import { noop } from 'lodash'
-import { PropsWithChildren, useState } from 'react'
-import { Button } from 'ui'
+import { noop } from "lodash";
+import { PropsWithChildren, useState } from "react";
+import { Button } from "ui";
 
 interface ActionBarProps {
-  loading?: boolean
-  disableApply?: boolean
-  hideApply?: boolean
-  applyButtonLabel?: string
-  backButtonLabel?: string
-  applyFunction?: (resolve: any) => void
-  closePanel: () => void
-  formId?: string
+  loading?: boolean;
+  disableApply?: boolean;
+  hideApply?: boolean;
+  applyButtonLabel?: string;
+  backButtonLabel?: string;
+  applyFunction?: (resolve: any) => void;
+  closePanel: () => void;
+  formId?: string;
 }
 const ActionBar = ({
   loading = false,
   disableApply = false,
   hideApply = false,
   children = undefined,
-  applyButtonLabel = 'Apply',
-  backButtonLabel = 'Back',
+  applyButtonLabel = "Apply",
+  backButtonLabel = "Back",
   applyFunction = undefined,
   closePanel = noop,
   formId,
 }: PropsWithChildren<ActionBarProps>) => {
-  const [isRunning, setIsRunning] = useState(false)
+  const [isRunning, setIsRunning] = useState(false);
 
   // @ts-ignore
-  const applyCallback = () => new Promise((resolve) => applyFunction(resolve))
+  const applyCallback = () => new Promise((resolve) => applyFunction(resolve));
 
   const onSelectApply = async () => {
-    setIsRunning(true)
-    await applyCallback()
-    setIsRunning(false)
-  }
+    setIsRunning(true);
+    await applyCallback();
+    setIsRunning(false);
+  };
 
   return (
     <div className="flex w-full justify-end space-x-3 border-t border-default px-3 py-4">
@@ -67,6 +67,6 @@ const ActionBar = ({
         <div />
       )}
     </div>
-  )
-}
-export default ActionBar
+  );
+};
+export default ActionBar;

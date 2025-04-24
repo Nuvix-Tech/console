@@ -1,4 +1,4 @@
-import { Link, Menu, Plus, Settings, X } from 'lucide-react'
+import { Link, Menu, Plus, Settings, X } from "lucide-react";
 import {
   Badge,
   Button,
@@ -13,20 +13,20 @@ import {
   PopoverTrigger_Shadcn_,
   Popover_Shadcn_,
   cn,
-} from 'ui'
+} from "ui";
 
-import { useProjectContext } from 'components/layouts/ProjectLayout/ProjectContext'
-import { useForeignKeyConstraintsQuery } from 'data/database/foreign-key-constraints-query'
-import type { EnumeratedType } from 'data/enumerated-types/enumerated-types-query'
-import { EMPTY_ARR, EMPTY_OBJ } from 'lib/void'
-import { useState } from 'react'
-import { typeExpressionSuggestions } from '../ColumnEditor/ColumnEditor.constants'
-import type { Suggestion } from '../ColumnEditor/ColumnEditor.types'
-import ColumnType from '../ColumnEditor/ColumnType'
-import InputWithSuggestions from '../ColumnEditor/InputWithSuggestions'
-import { ForeignKey } from '../ForeignKeySelector/ForeignKeySelector.types'
-import type { ColumnField } from '../SidePanelEditor.types'
-import { checkIfRelationChanged } from './ForeignKeysManagement/ForeignKeysManagement.utils'
+import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
+import { useForeignKeyConstraintsQuery } from "data/database/foreign-key-constraints-query";
+import type { EnumeratedType } from "data/enumerated-types/enumerated-types-query";
+import { EMPTY_ARR, EMPTY_OBJ } from "lib/void";
+import { useState } from "react";
+import { typeExpressionSuggestions } from "../ColumnEditor/ColumnEditor.constants";
+import type { Suggestion } from "../ColumnEditor/ColumnEditor.types";
+import ColumnType from "../ColumnEditor/ColumnType";
+import InputWithSuggestions from "../ColumnEditor/InputWithSuggestions";
+import { ForeignKey } from "../ForeignKeySelector/ForeignKeySelector.types";
+import type { ColumnField } from "../SidePanelEditor.types";
+import { checkIfRelationChanged } from "./ForeignKeysManagement/ForeignKeysManagement.utils";
 
 /**
  * [Joshen] For context:
@@ -47,16 +47,16 @@ import { checkIfRelationChanged } from './ForeignKeysManagement/ForeignKeysManag
  */
 
 interface ColumnProps {
-  column: ColumnField
-  relations: ForeignKey[]
-  enumTypes: EnumeratedType[]
-  isNewRecord: boolean
-  hasForeignKeys: boolean
-  hasImportContent: boolean
-  dragHandleProps?: any
-  onUpdateColumn: (changes: Partial<ColumnField>) => void
-  onRemoveColumn: () => void
-  onEditForeignKey: (relation?: ForeignKey) => void
+  column: ColumnField;
+  relations: ForeignKey[];
+  enumTypes: EnumeratedType[];
+  isNewRecord: boolean;
+  hasForeignKeys: boolean;
+  hasImportContent: boolean;
+  dragHandleProps?: any;
+  onUpdateColumn: (changes: Partial<ColumnField>) => void;
+  onRemoveColumn: () => void;
+  onEditForeignKey: (relation?: ForeignKey) => void;
 }
 
 const Column = ({
@@ -71,43 +71,43 @@ const Column = ({
   onRemoveColumn,
   onEditForeignKey,
 }: ColumnProps) => {
-  const { project } = useProjectContext()
-  const [open, setOpen] = useState(false)
-  const suggestions: Suggestion[] = typeExpressionSuggestions?.[column.format] ?? []
+  const { project } = useProjectContext();
+  const [open, setOpen] = useState(false);
+  const suggestions: Suggestion[] = typeExpressionSuggestions?.[column.format] ?? [];
 
   const settingsCount = [
     column.isNullable ? 1 : 0,
     column.isIdentity ? 1 : 0,
     column.isUnique ? 1 : 0,
     column.isArray ? 1 : 0,
-  ].reduce((a, b) => a + b, 0)
+  ].reduce((a, b) => a + b, 0);
 
   const { data } = useForeignKeyConstraintsQuery({
     projectRef: project?.ref,
     connectionString: project?.connectionString,
     schema: column.schema,
-  })
+  });
 
   const getRelationStatus = (fk: ForeignKey) => {
-    const existingRelation = (data ?? []).find((x) => x.id === fk.id)
-    const stateRelation = relations.find((x) => x.id === fk.id)
+    const existingRelation = (data ?? []).find((x) => x.id === fk.id);
+    const stateRelation = relations.find((x) => x.id === fk.id);
 
-    if (stateRelation?.toRemove) return 'REMOVE'
-    if (existingRelation === undefined && stateRelation !== undefined) return 'ADD'
+    if (stateRelation?.toRemove) return "REMOVE";
+    if (existingRelation === undefined && stateRelation !== undefined) return "ADD";
     if (existingRelation !== undefined && stateRelation !== undefined) {
-      const hasUpdated = checkIfRelationChanged(existingRelation, stateRelation)
-      if (hasUpdated) return 'UPDATE'
-      else return undefined
+      const hasUpdated = checkIfRelationChanged(existingRelation, stateRelation);
+      if (hasUpdated) return "UPDATE";
+      else return undefined;
     }
-  }
+  };
 
   const hasChangesInRelations = relations
     .map((r) => getRelationStatus(r))
-    .some((x) => x !== undefined)
+    .some((x) => x !== undefined);
 
   return (
     <div className="flex w-full items-center">
-      <div className={`w-[5%] ${!isNewRecord ? 'hidden' : ''}`}>
+      <div className={`w-[5%] ${!isNewRecord ? "hidden" : ""}`}>
         <div className="cursor-drag" {...dragHandleProps}>
           <Menu strokeWidth={1} size={16} />
         </div>
@@ -121,8 +121,8 @@ const Column = ({
             disabled={hasImportContent}
             placeholder="column_name"
             className={cn(
-              '[&>div>div>div>input]:py-1.5 [&>div>div>div>input]:border-r-transparent [&>div>div>div>input]:rounded-r-none',
-              hasImportContent ? 'opacity-50' : ''
+              "[&>div>div>div>input]:py-1.5 [&>div>div>div>input]:border-r-transparent [&>div>div>div>input]:rounded-r-none",
+              hasImportContent ? "opacity-50" : "",
             )}
             onChange={(event: any) => onUpdateColumn({ name: event.target.value })}
           />
@@ -142,20 +142,20 @@ const Column = ({
                 </Button>
               </PopoverTrigger_Shadcn_>
               <PopoverContent_Shadcn_
-                className={cn('p-0', hasChangesInRelations ? 'w-96' : 'w-72')}
+                className={cn("p-0", hasChangesInRelations ? "w-96" : "w-72")}
                 side="bottom"
                 align="end"
               >
                 <div className="text-xs px-2 pt-2">
-                  Involved in {relations.length} foreign key{relations.length > 1 ? 's' : ''}
+                  Involved in {relations.length} foreign key{relations.length > 1 ? "s" : ""}
                 </div>
                 <Command_Shadcn_>
                   <CommandList_Shadcn_>
                     <CommandGroup_Shadcn_>
                       {relations.map((relation, idx) => {
-                        const key = String(relation?.id ?? `${column.id}-relation-${idx}`)
-                        const status = getRelationStatus(relation)
-                        if (status === 'REMOVE') return null
+                        const key = String(relation?.id ?? `${column.id}-relation-${idx}`);
+                        const status = getRelationStatus(relation);
+                        if (status === "REMOVE") return null;
 
                         return (
                           <CommandItem_Shadcn_
@@ -171,13 +171,13 @@ const Column = ({
                               </div>
                             ) : (
                               <div className="flex items-center gap-x-2 truncate">
-                                <Badge variant={status === 'ADD' ? 'brand' : 'warning'}>
+                                <Badge variant={status === "ADD" ? "brand" : "warning"}>
                                   {status}
                                 </Badge>
                                 <p className="truncate">
                                   {relation.name || (
                                     <>
-                                      To{' '}
+                                      To{" "}
                                       {relation.columns
                                         .filter((c) => c.source === column.name)
                                         .map((c) => {
@@ -185,12 +185,12 @@ const Column = ({
                                             <code key={`${c.source}-${c.target}`}>
                                               {relation.schema}.{relation.table}.{c.target}
                                             </code>
-                                          )
+                                          );
                                         })}
                                       {relation.columns.length > 1 && (
                                         <>
                                           and {relation.columns.length - 1} other column
-                                          {relation.columns.length > 2 ? 's' : ''}
+                                          {relation.columns.length > 2 ? "s" : ""}
                                         </>
                                       )}
                                     </>
@@ -199,7 +199,7 @@ const Column = ({
                               </div>
                             )}
                           </CommandItem_Shadcn_>
-                        )
+                        );
                       })}
                     </CommandGroup_Shadcn_>
                     <CommandSeparator_Shadcn_ />
@@ -229,29 +229,29 @@ const Column = ({
             className="table-editor-column-type lg:gap-0 "
             disabled={hasForeignKeys}
             description={
-              hasForeignKeys ? 'Column type cannot be changed as it has a foreign key relation' : ''
+              hasForeignKeys ? "Column type cannot be changed as it has a foreign key relation" : ""
             }
             onOptionSelect={(format: string) => {
-              const defaultValue = format === 'uuid' ? 'gen_random_uuid()' : null
-              onUpdateColumn({ format, defaultValue })
+              const defaultValue = format === "uuid" ? "gen_random_uuid()" : null;
+              onUpdateColumn({ format, defaultValue });
             }}
           />
         </div>
       </div>
-      <div className={`${isNewRecord ? 'w-[25%]' : 'w-[30%]'}`}>
+      <div className={`${isNewRecord ? "w-[25%]" : "w-[30%]"}`}>
         <div className="w-[95%]">
           <InputWithSuggestions
             data-testid={`${column.name}-default-value`}
             placeholder={
-              typeof column.defaultValue === 'string' && column.defaultValue.length === 0
-                ? 'EMPTY'
-                : 'NULL'
+              typeof column.defaultValue === "string" && column.defaultValue.length === 0
+                ? "EMPTY"
+                : "NULL"
             }
             size="small"
-            value={column.defaultValue ?? ''}
-            disabled={column.format.includes('int') && column.isIdentity}
+            value={column.defaultValue ?? ""}
+            disabled={column.format.includes("int") && column.isIdentity}
             className={`rounded bg-surface-100 lg:gap-0 ${
-              column.format.includes('int') && column.isIdentity ? 'opacity-50' : ''
+              column.format.includes("int") && column.isIdentity ? "opacity-50" : ""
             }`}
             suggestions={suggestions}
             suggestionsHeader="Suggested expressions"
@@ -268,17 +268,17 @@ const Column = ({
           label=""
           checked={column.isPrimaryKey}
           onChange={() => {
-            const updatedValue = !column.isPrimaryKey
+            const updatedValue = !column.isPrimaryKey;
             onUpdateColumn({
               isPrimaryKey: updatedValue,
               isNullable: updatedValue ? false : column.isNullable,
-            })
+            });
           }}
         />
       </div>
-      <div className={`${hasImportContent ? 'w-[10%]' : 'w-[0%]'}`} />
+      <div className={`${hasImportContent ? "w-[10%]" : "w-[0%]"}`} />
       <div className="flex w-[5%] justify-end">
-        {(!column.isPrimaryKey || column.format.includes('int')) && (
+        {(!column.isPrimaryKey || column.format.includes("int")) && (
           <Popover_Shadcn_>
             <PopoverTrigger_Shadcn_
               data-testid={`${column.name}-extra-options`}
@@ -315,16 +315,16 @@ const Column = ({
                   className="p-4"
                   onChange={() => onUpdateColumn({ isUnique: !column.isUnique })}
                 />
-                {column.format.includes('int') && (
+                {column.format.includes("int") && (
                   <Checkbox
                     label="Is Identity"
                     description="Automatically assign a sequential unique number to the column"
                     checked={column.isIdentity}
                     className="p-4"
                     onChange={() => {
-                      const isIdentity = !column.isIdentity
-                      const isArray = isIdentity ? false : column.isArray
-                      onUpdateColumn({ isIdentity, isArray })
+                      const isIdentity = !column.isIdentity;
+                      const isArray = isIdentity ? false : column.isArray;
+                      onUpdateColumn({ isIdentity, isArray });
                     }}
                   />
                 )}
@@ -336,9 +336,9 @@ const Column = ({
                     checked={column.isArray}
                     className="p-4"
                     onChange={() => {
-                      const isArray = !column.isArray
-                      const isIdentity = isArray ? false : column.isIdentity
-                      onUpdateColumn({ isArray, isIdentity })
+                      const isArray = !column.isArray;
+                      const isIdentity = isArray ? false : column.isIdentity;
+                      onUpdateColumn({ isArray, isIdentity });
                     }}
                   />
                 )}
@@ -355,7 +355,7 @@ const Column = ({
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Column
+export default Column;

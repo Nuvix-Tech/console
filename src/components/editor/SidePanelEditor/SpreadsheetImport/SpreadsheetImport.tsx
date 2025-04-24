@@ -1,39 +1,39 @@
-import type { PostgresTable } from '@supabase/postgres-meta'
-import { debounce, includes, noop } from 'lodash'
-import { ExternalLink } from 'lucide-react'
-import Link from 'next/link'
-import { useCallback, useEffect, useState } from 'react'
-import { toast } from 'sonner'
+import type { PostgresTable } from "@supabase/postgres-meta";
+import { debounce, includes, noop } from "lodash";
+import { ExternalLink } from "lucide-react";
+import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
 
-import { useParams } from 'common'
-import { useSendEventMutation } from 'data/telemetry/send-event-mutation'
-import { useSelectedOrganization } from 'hooks/misc/useSelectedOrganization'
-import { Button, SidePanel, Tabs } from 'ui'
-import ActionBar from '../ActionBar'
-import type { ImportContent } from '../TableEditor/TableEditor.types'
-import SpreadSheetFileUpload from './SpreadSheetFileUpload'
-import SpreadsheetImportConfiguration from './SpreadSheetImportConfiguration'
-import SpreadSheetTextInput from './SpreadSheetTextInput'
-import { EMPTY_SPREADSHEET_DATA, UPLOAD_FILE_TYPES } from './SpreadsheetImport.constants'
-import type { SpreadsheetData } from './SpreadsheetImport.types'
+import { useParams } from "common";
+import { useSendEventMutation } from "data/telemetry/send-event-mutation";
+import { useSelectedOrganization } from "hooks/misc/useSelectedOrganization";
+import { Button, SidePanel, Tabs } from "ui";
+import ActionBar from "../ActionBar";
+import type { ImportContent } from "../TableEditor/TableEditor.types";
+import SpreadSheetFileUpload from "./SpreadSheetFileUpload";
+import SpreadsheetImportConfiguration from "./SpreadSheetImportConfiguration";
+import SpreadSheetTextInput from "./SpreadSheetTextInput";
+import { EMPTY_SPREADSHEET_DATA, UPLOAD_FILE_TYPES } from "./SpreadsheetImport.constants";
+import type { SpreadsheetData } from "./SpreadsheetImport.types";
 import {
   acceptedFileExtension,
   parseSpreadsheet,
   parseSpreadsheetText,
-} from './SpreadsheetImport.utils'
-import SpreadsheetImportPreview from './SpreadsheetImportPreview'
+} from "./SpreadsheetImport.utils";
+import SpreadsheetImportPreview from "./SpreadsheetImportPreview";
 
-const MAX_CSV_SIZE = 1024 * 1024 * 100 // 100 MB
+const MAX_CSV_SIZE = 1024 * 1024 * 100; // 100 MB
 
 interface SpreadsheetImportProps {
-  debounceDuration?: number
-  headers?: string[]
-  rows?: any[]
-  visible: boolean
-  selectedTable?: PostgresTable
-  saveContent: (prefillData: ImportContent) => void
-  closePanel: () => void
-  updateEditorDirty?: (value: boolean) => void
+  debounceDuration?: number;
+  headers?: string[];
+  rows?: any[];
+  visible: boolean;
+  selectedTable?: PostgresTable;
+  saveContent: (prefillData: ImportContent) => void;
+  closePanel: () => void;
+  updateEditorDirty?: (value: boolean) => void;
 }
 
 const SpreadsheetImport = ({
@@ -46,43 +46,43 @@ const SpreadsheetImport = ({
   closePanel,
   updateEditorDirty = noop,
 }: SpreadsheetImportProps) => {
-  const { ref: projectRef } = useParams()
-  const org = useSelectedOrganization()
+  const { ref: projectRef } = useParams();
+  const org = useSelectedOrganization();
 
-  const [tab, setTab] = useState<'fileUpload' | 'pasteText'>('fileUpload')
-  const [input, setInput] = useState<string>('')
-  const [uploadedFile, setUploadedFile] = useState<File>()
-  const [parseProgress, setParseProgress] = useState<number>(0)
+  const [tab, setTab] = useState<"fileUpload" | "pasteText">("fileUpload");
+  const [input, setInput] = useState<string>("");
+  const [uploadedFile, setUploadedFile] = useState<File>();
+  const [parseProgress, setParseProgress] = useState<number>(0);
   const [spreadsheetData, setSpreadsheetData] = useState<SpreadsheetData>({
     headers: headers,
     rows: rows,
     rowCount: 0,
     columnTypeMap: {},
-  })
-  const [errors, setErrors] = useState<any>([])
-  const [selectedHeaders, setSelectedHeaders] = useState<string[]>([])
+  });
+  const [errors, setErrors] = useState<any>([]);
+  const [selectedHeaders, setSelectedHeaders] = useState<string[]>([]);
 
-  const { mutate: sendEvent } = useSendEventMutation()
+  const { mutate: sendEvent } = useSendEventMutation();
 
-  const selectedTableColumns = (selectedTable?.columns ?? []).map((column) => column.name)
+  const selectedTableColumns = (selectedTable?.columns ?? []).map((column) => column.name);
   const incompatibleHeaders = selectedHeaders.filter(
-    (header) => !selectedTableColumns.includes(header)
-  )
-  const isCompatible = selectedTable !== undefined ? incompatibleHeaders.length === 0 : true
+    (header) => !selectedTableColumns.includes(header),
+  );
+  const isCompatible = selectedTable !== undefined ? incompatibleHeaders.length === 0 : true;
 
   const onProgressUpdate = (progress: number) => {
-    setParseProgress(progress)
-  }
+    setParseProgress(progress);
+  };
 
   const onFileUpload = async (event: any) => {
-    setParseProgress(0)
-    event.persist()
-    const [file] = event.target.files || event.dataTransfer.files
+    setParseProgress(0);
+    event.persist();
+    const [file] = event.target.files || event.dataTransfer.files;
 
     if (!file || !includes(UPLOAD_FILE_TYPES, file?.type) || !acceptedFileExtension(file)) {
-      toast.error('Sorry! We only accept CSV or TSV file types, please upload another file.')
+      toast.error("Sorry! We only accept CSV or TSV file types, please upload another file.");
     } else if (file.size > MAX_CSV_SIZE) {
-      event.target.value = ''
+      event.target.value = "";
       return toast(
         <div className="space-y-1">
           <p>The dashboard currently only supports importing of CSVs below 100MB.</p>
@@ -97,89 +97,89 @@ const SpreadsheetImport = ({
             </Link>
           </Button>
         </div>,
-        { duration: Infinity }
-      )
+        { duration: Infinity },
+      );
     } else {
-      updateEditorDirty(true)
-      setUploadedFile(file)
+      updateEditorDirty(true);
+      setUploadedFile(file);
       const { headers, rowCount, columnTypeMap, errors, previewRows } = await parseSpreadsheet(
         file,
-        onProgressUpdate
-      )
+        onProgressUpdate,
+      );
       if (errors.length > 0) {
         toast.error(
-          `Some issues have been detected on ${errors.length} rows. More details below the content preview.`
-        )
+          `Some issues have been detected on ${errors.length} rows. More details below the content preview.`,
+        );
       }
 
-      setErrors(errors)
-      setSelectedHeaders(headers)
-      setSpreadsheetData({ headers, rows: previewRows, rowCount, columnTypeMap })
+      setErrors(errors);
+      setSelectedHeaders(headers);
+      setSpreadsheetData({ headers, rows: previewRows, rowCount, columnTypeMap });
     }
-    event.target.value = ''
-  }
+    event.target.value = "";
+  };
 
   const resetSpreadsheetImport = () => {
-    setInput('')
-    setSpreadsheetData(EMPTY_SPREADSHEET_DATA)
-    setUploadedFile(undefined)
-    setErrors([])
-    updateEditorDirty(false)
-  }
+    setInput("");
+    setSpreadsheetData(EMPTY_SPREADSHEET_DATA);
+    setUploadedFile(undefined);
+    setErrors([]);
+    updateEditorDirty(false);
+  };
 
   const readSpreadsheetText = async (text: string) => {
     if (text.length > 0) {
-      const { headers, rows, columnTypeMap, errors } = await parseSpreadsheetText(text)
+      const { headers, rows, columnTypeMap, errors } = await parseSpreadsheetText(text);
       if (errors.length > 0) {
         toast.error(
-          `Some issues have been detected on ${errors.length} rows. More details below the content preview.`
-        )
+          `Some issues have been detected on ${errors.length} rows. More details below the content preview.`,
+        );
       }
-      setErrors(errors)
-      setSelectedHeaders(headers)
-      setSpreadsheetData({ headers, rows, rowCount: rows.length, columnTypeMap })
+      setErrors(errors);
+      setSelectedHeaders(headers);
+      setSpreadsheetData({ headers, rows, rowCount: rows.length, columnTypeMap });
     } else {
-      setSpreadsheetData(EMPTY_SPREADSHEET_DATA)
+      setSpreadsheetData(EMPTY_SPREADSHEET_DATA);
     }
-  }
+  };
 
-  const handler = useCallback(debounce(readSpreadsheetText, debounceDuration), [])
+  const handler = useCallback(debounce(readSpreadsheetText, debounceDuration), []);
   const onInputChange = (event: any) => {
-    setInput(event.target.value)
-    handler(event.target.value)
-  }
+    setInput(event.target.value);
+    handler(event.target.value);
+  };
 
   const onToggleHeader = (header: string) => {
     const updatedSelectedHeaders = selectedHeaders.includes(header)
       ? selectedHeaders.filter((h) => h !== header)
-      : selectedHeaders.concat([header])
-    setSelectedHeaders(updatedSelectedHeaders)
-  }
+      : selectedHeaders.concat([header]);
+    setSelectedHeaders(updatedSelectedHeaders);
+  };
 
   const onConfirm = (resolve: () => void) => {
-    if (tab === 'fileUpload' && uploadedFile === undefined) {
-      toast.error('Please upload a file to import your data with')
-      resolve()
+    if (tab === "fileUpload" && uploadedFile === undefined) {
+      toast.error("Please upload a file to import your data with");
+      resolve();
     } else if (selectedHeaders.length === 0) {
-      toast.error('Please select at least one header from your CSV')
-      resolve()
+      toast.error("Please select at least one header from your CSV");
+      resolve();
     } else if (!isCompatible) {
       toast.error(
-        'The data that you are trying to import is incompatible with your table structure'
-      )
-      resolve()
+        "The data that you are trying to import is incompatible with your table structure",
+      );
+      resolve();
     } else {
-      saveContent({ file: uploadedFile, ...spreadsheetData, selectedHeaders, resolve })
+      saveContent({ file: uploadedFile, ...spreadsheetData, selectedHeaders, resolve });
       sendEvent({
-        action: 'import_data_added',
-        groups: { project: projectRef ?? 'Unknown', organization: org?.slug ?? 'Unknown' },
-      })
+        action: "import_data_added",
+        groups: { project: projectRef ?? "Unknown", organization: org?.slug ?? "Unknown" },
+      });
     }
-  }
+  };
 
   useEffect(() => {
-    if (visible && headers.length === 0) resetSpreadsheetImport()
-  }, [visible])
+    if (visible && headers.length === 0) resetSpreadsheetImport();
+  }, [visible]);
 
   return (
     <SidePanel
@@ -189,20 +189,20 @@ const SpreadsheetImport = ({
       header={
         selectedTable !== undefined ? (
           <>
-            Add data to{' '}
+            Add data to{" "}
             <code className="text-sm">
               {selectedTable.schema}.{selectedTable.name}
             </code>
           </>
         ) : (
-          'Add content to new table'
+          "Add content to new table"
         )
       }
       onCancel={() => closePanel()}
       customFooter={
         <ActionBar
           backButtonLabel="Cancel"
-          applyButtonLabel={selectedTable === undefined ? 'Save' : 'Import data'}
+          applyButtonLabel={selectedTable === undefined ? "Save" : "Import data"}
           closePanel={closePanel}
           applyFunction={onConfirm}
         />
@@ -247,7 +247,7 @@ const SpreadsheetImport = ({
         </>
       )}
     </SidePanel>
-  )
-}
+  );
+};
 
-export default SpreadsheetImport
+export default SpreadsheetImport;
