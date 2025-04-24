@@ -34,9 +34,10 @@ export const SupabaseGrid = ({
   customHeader,
   gridProps,
   children,
-}: Pick<HeaderProps, "customHeader"> & PropsWithChildren<{
-  gridProps?: GridProps;
-}>) => {
+}: Pick<HeaderProps, "customHeader"> &
+  PropsWithChildren<{
+    gridProps?: GridProps;
+  }>) => {
   const query = useSearchParams();
   const _id = query.get("table");
   const { project, sdk } = useProjectStore();
@@ -137,7 +138,7 @@ export const SupabaseGrid = ({
               isSuccess={isSuccess}
               isError={isError}
               filters={[]} //filters
-              onApplyFilters={() => { }} //onApplyFilters
+              onApplyFilters={() => {}} //onApplyFilters
             />
             <Footer isRefetching={isRefetching} />
             <Shortcuts gridRef={gridRef as any} rows={rows} />

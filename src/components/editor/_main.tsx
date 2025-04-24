@@ -40,13 +40,7 @@ export const TableEditor = () => {
           table={selectedTable as unknown as Entity}
           editable={true}
         >
-          <SupabaseGrid
-            key={"__"}
-            gridProps={{ height: "100%" }}
-            customHeader={
-              null
-            }
-          >
+          <SupabaseGrid key={"__"} gridProps={{ height: "100%" }} customHeader={null}>
             {/* (isViewSelected || isTableSelected) && selectedView === 'definition' ? (
               <div className="flex items-center space-x-2">
                 <p>

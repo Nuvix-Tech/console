@@ -1,3 +1,4 @@
+import "react-data-grid/lib/styles.css";
 import ProjectWrapper from "@/components/project/wrapper";
 import { Column } from "@/ui/components";
 import type React from "react";
