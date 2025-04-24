@@ -137,14 +137,14 @@ export const SupabaseGrid = ({
               isSuccess={isSuccess}
               isError={isError}
               filters={[]} //filters
-              onApplyFilters={() => {}} //onApplyFilters
+              onApplyFilters={() => { }} //onApplyFilters
             />
             {/* <Footer isRefetching={isRefetching} /> */}
             <Shortcuts gridRef={gridRef as any} rows={rows} />
           </>
         )}
 
-        {/* {mounted && createPortal(<RowContextMenu rows={rows} />, document.body)} */}
+        {mounted && createPortal(<RowContextMenu rows={rows} />, document.body)}
       </div>
     </DndProvider>
   );
