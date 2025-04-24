@@ -1,12 +1,18 @@
 import { noop } from "lodash";
-import { Select } from "ui";
+// import { Select } from "ui";
 
-import type { EnumeratedType } from "data/enumerated-types/enumerated-types-query";
+// import type { EnumeratedType } from "data/enumerated-types/enumerated-types-query";
 import { POSTGRES_DATA_TYPES } from "../SidePanelEditor.constants";
 import type { ColumnField } from "../SidePanelEditor.types";
 import { typeExpressionSuggestions } from "./ColumnEditor.constants";
 import type { Suggestion } from "./ColumnEditor.types";
 import InputWithSuggestions from "./InputWithSuggestions";
+import { Select } from "@/ui/components";
+
+type EnumeratedType = {
+  name: string;
+  enums: string[]
+}
 
 interface ColumnDefaultValueProps {
   columnFields: ColumnField;
@@ -38,19 +44,17 @@ const ColumnDefaultValue = ({
       return (
         <Select
           label="Default Value"
-          layout="vertical"
+          labelAsPlaceholder
           value={formattedValue}
           onChange={(event: any) => onUpdateField({ defaultValue: event.target.value })}
-        >
-          <Select.Option key="empty-enum" value="">
-            NULL
-          </Select.Option>
-          {enumValues.map((value: string) => (
-            <Select.Option key={value} value={value}>
-              {value}
-            </Select.Option>
-          ))}
-        </Select>
+          options={[
+            { value: "", label: "NULL" },
+            ...enumValues.map((value: string) => (
+              { value, label: value }
+            ))
+          ]}
+
+        />
       );
     }
   }

@@ -1,25 +1,25 @@
-import type { PostgresColumn, PostgresTable } from "@supabase/postgres-meta";
+// import type { PostgresColumn, PostgresTable } from "@supabase/postgres-meta";
 import { isEmpty, noop } from "lodash";
 import { ExternalLink, Plus } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { useParams } from "common";
-import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
-import { FormSection, FormSectionContent, FormSectionLabel } from "components/ui/Forms/FormSection";
-import {
-  CONSTRAINT_TYPE,
-  Constraint,
-  useTableConstraintsQuery,
-} from "data/database/constraints-query";
-import {
-  ForeignKeyConstraint,
-  useForeignKeyConstraintsQuery,
-} from "data/database/foreign-key-constraints-query";
-import { useEnumeratedTypesQuery } from "data/enumerated-types/enumerated-types-query";
-import { PROTECTED_SCHEMAS_WITHOUT_EXTENSIONS } from "lib/constants/schemas";
-import type { Dictionary } from "types";
-import { Button, Checkbox, Input, SidePanel, Toggle } from "ui";
+// import { useParams } from "common";
+// import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
+// import { FormSection, FormSectionContent, FormSectionLabel } from "components/ui/Forms/FormSection";
+// import {
+//   CONSTRAINT_TYPE,
+//   Constraint,
+//   useTableConstraintsQuery,
+// } from "data/database/constraints-query";
+// import {
+//   ForeignKeyConstraint,
+//   useForeignKeyConstraintsQuery,
+// } from "data/database/foreign-key-constraints-query";
+// import { useEnumeratedTypesQuery } from "data/enumerated-types/enumerated-types-query";
+// import { PROTECTED_SCHEMAS_WITHOUT_EXTENSIONS } from "lib/constants/schemas";
+// import type { Dictionary } from "types";
+// import { Button, Checkbox, Input, SidePanel, Toggle } from "ui";
 import ActionBar from "../ActionBar";
 import type { ForeignKey } from "../ForeignKeySelector/ForeignKeySelector.types";
 import { formatForeignKeys } from "../ForeignKeySelector/ForeignKeySelector.utils";
@@ -41,10 +41,15 @@ import {
 import ColumnForeignKey from "./ColumnForeignKey";
 import ColumnType from "./ColumnType";
 import HeaderTitle from "./HeaderTitle";
+import { Column, Entity } from "@/types/grid";
+import { Dictionary } from "@/components/grid/types";
+import { useProjectStore } from "@/lib/store";
+import { useParams } from "next/navigation";
+import SidePanel from "@/components/ui/SidePanel/SidePanel";
 
 export interface ColumnEditorProps {
-  column?: Readonly<PostgresColumn>;
-  selectedTable: PostgresTable;
+  column?: Readonly<Column>;
+  selectedTable: Entity;
   visible: boolean;
   closePanel: () => void;
   saveChanges: (
@@ -52,9 +57,9 @@ export interface ColumnEditorProps {
     isNewRecord: boolean,
     configuration: {
       columnId?: string;
-      primaryKey?: Constraint;
+      primaryKey?: any //Constraint;
       foreignKeyRelations: ForeignKey[];
-      existingForeignKeyRelations: ForeignKeyConstraint[];
+      existingForeignKeyRelations: any //ForeignKeyConstraint[];
     },
     resolve: any,
   ) => void;
@@ -69,8 +74,8 @@ const ColumnEditor = ({
   saveChanges = noop,
   updateEditorDirty = noop,
 }: ColumnEditorProps) => {
-  const { ref } = useParams();
-  const { project } = useProjectContext();
+  const { id: ref } = useParams();
+  const { project } = useProjectStore();
 
   const [errors, setErrors] = useState<Dictionary<any>>({});
   const [columnFields, setColumnFields] = useState<ColumnField>();
@@ -79,33 +84,34 @@ const ColumnEditor = ({
     getPlaceholderText(columnFields?.format, columnFields?.name),
   );
 
-  const { data: types } = useEnumeratedTypesQuery({
-    projectRef: project?.ref,
-    connectionString: project?.connectionString,
-  });
-  const enumTypes = (types ?? []).filter(
-    (type) => !PROTECTED_SCHEMAS_WITHOUT_EXTENSIONS.includes(type.schema),
-  );
+  // const { data: types } = useEnumeratedTypesQuery({
+  //   projectRef: project?.ref,
+  //   connectionString: project?.connectionString,
+  // });
+  // const enumTypes = (types ?? []).filter(
+  //   (type) => !PROTECTED_SCHEMAS_WITHOUT_EXTENSIONS.includes(type.schema),
+  // );
 
-  const { data: constraints } = useTableConstraintsQuery({
-    projectRef: project?.ref,
-    connectionString: project?.connectionString,
-    id: selectedTable?.id,
-  });
-  const primaryKey = (constraints ?? []).find(
-    (constraint) => constraint.type === CONSTRAINT_TYPE.PRIMARY_KEY_CONSTRAINT,
-  );
+  // const { data: constraints } = useTableConstraintsQuery({
+  //   projectRef: project?.ref,
+  //   connectionString: project?.connectionString,
+  //   id: selectedTable?.id,
+  // });
+  // const primaryKey = (constraints ?? []).find(
+  //   (constraint) => constraint.type === CONSTRAINT_TYPE.PRIMARY_KEY_CONSTRAINT,
+  // );
 
-  const { data } = useForeignKeyConstraintsQuery({
-    projectRef: project?.ref,
-    connectionString: project?.connectionString,
-    schema: selectedTable?.schema,
-  });
+  // const { data } = useForeignKeyConstraintsQuery({
+  //   projectRef: project?.ref,
+  //   connectionString: project?.connectionString,
+  //   schema: selectedTable?.schema,
+  // });
 
   const isNewRecord = column === undefined;
-  const foreignKeyMeta = data || [];
+  const foreignKeyMeta: any[] = []; //data || 
   const foreignKeys = foreignKeyMeta.filter((relation) => {
-    return relation.source_id === column?.table_id && relation.source_columns.includes(column.name);
+    // return relation.source_id === column?.table_id && relation.source_columns.includes(column?.name);
+    return false;
   });
   const lockColumnType =
     fkRelations.find(
@@ -180,11 +186,11 @@ const ColumnEditor = ({
           : generateUpdateColumnPayload(column!, selectedTable, columnFields);
         const configuration = {
           columnId: column?.id,
-          primaryKey,
+          primaryKey: null, // TODODOD:
           foreignKeyRelations: fkRelations,
           existingForeignKeyRelations: foreignKeys,
         };
-        saveChanges(payload, isNewRecord, configuration, resolve);
+        saveChanges(payload, isNewRecord, configuration as any, resolve);
       } else {
         resolve();
       }

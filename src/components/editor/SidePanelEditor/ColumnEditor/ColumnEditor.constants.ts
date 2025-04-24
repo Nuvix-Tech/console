@@ -1,4 +1,4 @@
-import type { Dictionary } from "types";
+import { Dictionary } from "@/components/grid/types";
 import type { Suggestion } from "./ColumnEditor.types";
 
 const defaultTimeBasedExpressions: Suggestion[] = [
