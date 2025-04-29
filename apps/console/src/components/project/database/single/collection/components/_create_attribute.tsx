@@ -20,7 +20,7 @@ import {
   StringAttributeForm,
   UrlAttributeForm,
 } from "./_attribute_forms";
-import { Button } from "@/ui/components";
+import { Button } from "@nuvix/ui/components";
 import { AttributeIcon } from "./_attribute_icon";
 
 const attributeTypes = [

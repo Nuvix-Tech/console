@@ -1,5 +1,5 @@
 import ProjectPage from "@/components/project/page";
-import { Skeleton } from "@/ui/components";
+import { Skeleton } from "@nuvix/ui/components";
 import { Suspense } from "react";
 
 type Props = {

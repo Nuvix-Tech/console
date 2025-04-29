@@ -1,6 +1,6 @@
 import type { RenderEditCellProps } from "react-data-grid";
 import { useTableEditorTableState } from "@/lib/store/table";
-import { Select } from "@/ui/components";
+import { Select } from "@nuvix/ui/components";
 
 interface Props<TRow, TSummaryRow = unknown> extends RenderEditCellProps<TRow, TSummaryRow> {
   isNullable?: boolean;

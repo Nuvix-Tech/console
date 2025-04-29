@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@nuvix/sui/components/card";
 import { Stack, StackProps } from "@chakra-ui/react";
-import { Separator } from "../ui/separator";
+import { Separator } from "@nuvix/sui/components/separator";
 
 interface InfoCardProps {}
 

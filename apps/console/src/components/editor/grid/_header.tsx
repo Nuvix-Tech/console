@@ -1,4 +1,4 @@
-import { Button } from "@/ui/components";
+import { Button } from "@nuvix/ui/components";
 import { InsertRow } from "./_insert";
 
 export const GridHeader = () => {

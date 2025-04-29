@@ -1,4 +1,4 @@
-import { Column } from "@/ui/components";
+import { Column } from "@nuvix/ui/components";
 
 export const PageContainer = ({ children }: { children: React.ReactNode }) => {
   return (

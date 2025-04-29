@@ -1,4 +1,4 @@
-import { Column, Row } from "@/ui/components";
+import { Column, Row } from "@nuvix/ui/components";
 import { Heading, Stack, Text } from "@chakra-ui/react";
 
 type PageHeadingProps = {

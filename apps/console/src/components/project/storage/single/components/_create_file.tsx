@@ -3,14 +3,14 @@ import { useSteps } from "@chakra-ui/react";
 import { StepperDrawer } from "@/components/others/stepper";
 import { useBucketStore, useProjectStore } from "@/lib/store";
 import { SubmitButton } from "@/components/others/forms";
-import { Column, useToast } from "@/ui/components";
+import { Column, useToast } from "@nuvix/ui/components";
 import { PermissionsEditor } from "@/components/others/permissions";
 import { useFormikContext } from "formik";
 import { Alert, AlertDescription, AlertTitle } from "@nuvix/sui/components/alert";
 import { Info, Upload } from "lucide-react";
 import { ID } from "@nuvix/console";
 import { Box, FileUpload, Icon } from "@chakra-ui/react";
-import { useFileUpload } from "@/ui/modules/uploader";
+import { useFileUpload } from "@/ui/uploader";
 import { formatBytes } from "@/lib";
 import { CustomID } from "@/components/_custom_id";
 

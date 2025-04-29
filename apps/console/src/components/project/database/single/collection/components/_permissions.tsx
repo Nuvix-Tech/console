@@ -8,7 +8,7 @@ import {
 import { Form, SubmitButton } from "@/components/others/forms";
 import { PermissionField } from "@/components/others/permissions";
 import { useCollectionStore, useDatabaseStore, useProjectStore } from "@/lib/store";
-import { useToast } from "@/ui/components";
+import { useToast } from "@nuvix/ui/components";
 import React from "react";
 import * as y from "yup";
 

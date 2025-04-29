@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { Row, Skeleton } from "@/ui/components";
+import { Row, Skeleton } from "@nuvix/ui/components";
 import { cn } from "@nuvix/sui/lib/utils";
 import { Button } from "@nuvix/sui/components/button";
 import {

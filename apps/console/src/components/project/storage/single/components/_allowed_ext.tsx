@@ -7,7 +7,7 @@ import {
 } from "@/components/others/card";
 import { Form, InputTagField, SubmitButton } from "@/components/others/forms";
 import { useBucketStore, useProjectStore } from "@/lib/store";
-import { useToast } from "@/ui/components";
+import { useToast } from "@nuvix/ui/components";
 import React from "react";
 import * as y from "yup";
 

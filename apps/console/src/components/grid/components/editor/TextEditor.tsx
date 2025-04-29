@@ -11,7 +11,7 @@ const MAX_CHARACTERS = 1000; // import {  } from "@supabase/pg-meta/src/query/ta
 // import { useGetCellValueMutation } from "data/table-rows/get-cell-value-mutation";
 // import { useSelectedProject } from "hooks/misc/useSelectedProject";
 import { useTableEditorTableState } from "@/lib/store/table";
-import { Button, useToast } from "@/ui/components";
+import { Button, useToast } from "@nuvix/ui/components";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import { cn } from "@nuvix/sui/lib/utils";
 // import ConfirmationModal from "ui-patterns/Dialogs/ConfirmationModal";

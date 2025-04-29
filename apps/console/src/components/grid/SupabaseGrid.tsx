@@ -27,7 +27,7 @@ import { Filter, GridProps } from "./types";
 import { useProjectStore } from "@/lib/store";
 import { useQuery } from "@tanstack/react-query";
 import { useTableEditorFiltersSort } from "@/hooks/useTableEditorFilterSort";
-import { Column } from "@/ui/components";
+import { Column } from "@nuvix/ui/components";
 
 const EMPTY_ARR: any[] = [];
 

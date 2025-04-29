@@ -1,6 +1,6 @@
 import { FormDialog, InputField, InputTagField, SubmitButton } from "@/components/others/forms";
 import { useProjectStore, useTeamStore } from "@/lib/store";
-import { Column, useToast } from "@/ui/components";
+import { Column, useToast } from "@nuvix/ui/components";
 import * as y from "yup";
 
 interface CreateMemberProps {

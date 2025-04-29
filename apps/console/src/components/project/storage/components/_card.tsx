@@ -1,5 +1,5 @@
 import { IDChip } from "@/components/others";
-import { Card, Column, SmartLink, Text } from "@/ui/components";
+import { Card, Column, SmartLink, Text } from "@nuvix/ui/components";
 import { Models } from "@nuvix/console";
 import { Cloud } from "lucide-react";
 import { useParams } from "next/navigation";

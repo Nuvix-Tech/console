@@ -8,7 +8,7 @@ import {
 import { Form, InputNumberField, SubmitButton } from "@/components/others/forms";
 import { sdkForConsole } from "@/lib/sdk";
 import { useProjectStore } from "@/lib/store";
-import { Column, Switch, useToast } from "@/ui/components";
+import { Column, Switch, useToast } from "@nuvix/ui/components";
 import { Text } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 import React from "react";

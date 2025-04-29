@@ -1,7 +1,7 @@
 "use client";
 import { useParams, usePathname } from "next/navigation";
-import { Line } from "@/ui/components";
-import { SidebarGroup } from "@/ui/modules/layout/navigation";
+import { Line } from "@nuvix/ui/components";
+import { SidebarGroup } from "@/ui/layout/navigation";
 import { useEffect } from "react";
 import { useProjectStore } from "@/lib/store";
 

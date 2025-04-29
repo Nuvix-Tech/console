@@ -2,13 +2,13 @@
 import { ProjectCard } from "@/components/project/card";
 import { GridSkelton } from "@/components/skelton";
 import { sdkForConsole } from "@/lib/sdk";
-import { Button, Column, Grid, Row } from "@/ui/components";
+import { Button, Column, Grid, Row } from "@nuvix/ui/components";
 import { Heading } from "@chakra-ui/react";
 import { Query, type Models } from "@nuvix/console";
 import { useRouter } from "@bprogress/next";
 import { useEffect, useState } from "react";
 import { EmptyState } from "@/components";
-import { DataGridProvider, Pagination, SelectLimit } from "@/ui/modules/data-grid";
+import { DataGridProvider, Pagination, SelectLimit } from "@/ui/data-grid";
 import { CreateProject } from "@/components/wizard";
 
 type Props = {

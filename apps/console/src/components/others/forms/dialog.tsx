@@ -1,4 +1,4 @@
-import { Dialog, Flex } from "@/ui/components";
+import { Dialog, Flex } from "@nuvix/ui/components";
 import React from "react";
 import { Form } from "./form";
 

@@ -2,8 +2,8 @@
 import React from "react";
 import { Models } from "@nuvix/console";
 import { ColumnDef } from "@tanstack/react-table";
-import { useToast } from "@/ui/components";
-import { DataGridProvider, Table } from "@/ui/modules/data-grid";
+import { useToast } from "@nuvix/ui/components";
+import { DataGridProvider, Table } from "@/ui/data-grid";
 import { useProjectStore, useUserStore } from "@/lib/store";
 import { EmptyState } from "@/components/_empty_state";
 import { PageContainer, PageHeading } from "@/components/others";

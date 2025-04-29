@@ -1,6 +1,6 @@
 "use client";
 
-import { useConfirm, useToast } from "@/ui/components";
+import { useConfirm, useToast } from "@nuvix/ui/components";
 import { Models, Query } from "@nuvix/console";
 import React, { useEffect } from "react";
 import { ColumnDef } from "@tanstack/react-table";
@@ -15,7 +15,7 @@ import {
   Search,
   SelectLimit,
   Table,
-} from "@/ui/modules/data-grid";
+} from "@/ui/data-grid";
 import { CreateButton, IDChip, PageContainer, PageHeading } from "@/components/others";
 import { useDatabaseStore, useProjectStore } from "@/lib/store";
 import { useSearchQuery } from "@/hooks/useQuery";

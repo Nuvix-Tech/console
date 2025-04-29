@@ -1,6 +1,6 @@
 import "@appwrite.io/pink-icons";
-import "@/ui/styles/index.scss";
-import "@/ui/tokens/index.scss";
+import "@nuvix/ui/styles/index.scss";
+import "@nuvix/ui/tokens/index.scss";
 import "./globals.css";
 
 import Providers from "@/components/providers";
@@ -8,8 +8,8 @@ import classNames from "classnames";
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 
-import { Column, ConfirmProvider, Flex, ToastProvider } from "@/ui/components";
-import { baseURL, meta, og, schema, social, style } from "@/ui/resources/config";
+import { Column, ConfirmProvider, Flex, ToastProvider } from "@nuvix/ui/components";
+import { baseURL, meta, og, schema, social, style } from "@nuvix/ui/resources/config";
 
 import { Inter } from "next/font/google";
 import { Roboto_Mono, Open_Sans } from "next/font/google";

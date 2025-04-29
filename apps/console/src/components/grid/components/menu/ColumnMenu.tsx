@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@nuvix/sui/components/dropdown-menu";
 import { Separator } from "@nuvix/sui/components/separator";
-import { Button, IconButton } from "@/ui/components";
+import { Button, IconButton } from "@nuvix/ui/components";
 
 interface ColumnMenuProps {
   column: CalculatedColumn<any, unknown>;

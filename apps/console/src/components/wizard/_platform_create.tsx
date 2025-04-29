@@ -5,7 +5,7 @@ import { Form, InputField, SubmitButton } from "../others/forms";
 import * as y from "yup";
 import { sdkForConsole } from "@/lib/sdk";
 import { PlatformType } from "@nuvix/console";
-import { Chip, useToast } from "@/ui/components";
+import { Chip, useToast } from "@nuvix/ui/components";
 import { useProjectStore } from "@/lib/store";
 import { useFormikContext } from "formik";
 

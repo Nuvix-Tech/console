@@ -8,7 +8,7 @@ import React, {
 } from "react";
 // import styleHandler from 'ui/src/lib/theme/styleHandler'
 // import InputIconContainer from '../form/Layout/InputIconContainer'
-import { Button, Icon } from "@/ui/components";
+import { Button, Icon } from "@nuvix/ui/components";
 import { Input as Input_Shadcn_ } from "@nuvix/sui/components/input";
 import { cn } from "@nuvix/sui/lib/utils";
 

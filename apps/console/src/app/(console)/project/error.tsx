@@ -1,6 +1,6 @@
 "use client";
 import { useEffect } from "react";
-import { Button, Heading, Text } from "@/ui/components";
+import { Button, Heading, Text } from "@nuvix/ui/components";
 import { useRouter } from "next/navigation";
 
 interface ErrorProps {

@@ -2,7 +2,7 @@ import React from "react";
 import { HStack, Button } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 import { Field } from "@/components/cui/field";
-import { Input, NumberInput, Select, Textarea } from "@/ui/components";
+import { Input, NumberInput, Select, Textarea } from "@nuvix/ui/components";
 import { CloseButton } from "@/components/cui/close-button";
 import { LuPlus } from "react-icons/lu";
 import { AttributeIcon } from "../../components";

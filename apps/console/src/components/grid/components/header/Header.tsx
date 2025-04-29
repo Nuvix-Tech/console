@@ -41,7 +41,7 @@ import { SortPopover } from "./sort";
 import { Filter, Sort, SupaRow } from "../../types";
 import { useAppStore, useProjectStore } from "@/lib/store";
 import { useParams } from "next/navigation";
-import { Button, useToast } from "@/ui/components";
+import { Button, useToast } from "@nuvix/ui/components";
 import { cn } from "@nuvix/sui/lib/utils";
 import { Separator } from "@nuvix/sui/components/separator";
 import { useTableEditorFiltersSort } from "@/hooks/useTableEditorFilterSort";

@@ -3,8 +3,16 @@
 import { TopCard } from "@/components/others";
 import { sdkForConsole } from "@/lib/sdk";
 import { useAppStore } from "@/lib/store";
-import { AvatarGroup, Button, Column, Heading, Row, SegmentedControl, Tag } from "@/ui/components";
-import { ConsoleSidebar } from "@/ui/modules/layout/ConsoleSidebar";
+import {
+  AvatarGroup,
+  Button,
+  Column,
+  Heading,
+  Row,
+  SegmentedControl,
+  Tag,
+} from "@nuvix/ui/components";
+import { ConsoleSidebar } from "@/ui/layout/ConsoleSidebar";
 import { Stack } from "@chakra-ui/react";
 import type { Models } from "@nuvix/console";
 import { useEffect, useState } from "react";

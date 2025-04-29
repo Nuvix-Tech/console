@@ -5,7 +5,7 @@ import {
   PopoverArrow,
   PopoverBody,
 } from "@/components/cui/popover";
-import { Card, Checkbox, IconButton } from "@/ui/components";
+import { Card, Checkbox, IconButton } from "@nuvix/ui/components";
 import { Table, Text, VStack } from "@chakra-ui/react";
 import { LuPlus } from "react-icons/lu";
 import React, { useState, useEffect, useCallback, useRef } from "react";

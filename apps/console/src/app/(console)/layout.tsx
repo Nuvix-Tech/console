@@ -1,5 +1,5 @@
 import ConsoleWrapper from "@/components/console/wrapper";
-import { Background, Row } from "@/ui/components";
+import { Background, Row } from "@nuvix/ui/components";
 import { Stack } from "@chakra-ui/react";
 import type React from "react";
 import { Toaster } from "sonner";

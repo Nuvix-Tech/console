@@ -6,7 +6,7 @@ import { toast } from "sonner";
 // import { useSchemaCreateMutation } from "data/database/schema-create-mutation";
 import ActionBar from "./ActionBar";
 import SidePanel from "@nuvix/sui/components/SidePanel/SidePanel";
-import { Input } from "@/ui/components";
+import { Input } from "@nuvix/ui/components";
 
 interface SchemaEditorProps {
   visible: boolean;

@@ -88,6 +88,7 @@
   "devDependencies": {
     "@csstools/postcss-global-data": "^2.1.1",
     "@nuvix/sui": "workspace:*",
+    "@nuvix/ui": "workspace:*",
     "@types/lodash": "^4.17.16",
     "@types/node": "^20",
     "@types/react": "19.0.1",
@@ -104,9 +105,5 @@
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.2"
   },
-  "trustedDependencies": [
-    "@biomejs/biome",
-    "@parcel/watcher",
-    "sharp"
-  ]
+  "trustedDependencies": ["@biomejs/biome", "@parcel/watcher", "sharp"]
 }

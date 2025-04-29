@@ -1,5 +1,5 @@
 "use client";
-import { Badge, Column, Logo, NavIcon, Row } from "@/ui/components";
+import { Badge, Column, Logo, NavIcon, Row } from "@nuvix/ui/components";
 import { usePathname } from "next/navigation";
 import type React from "react";
 import { useRef } from "react";
@@ -13,7 +13,7 @@ import {
 import { FirstSidebar, SecondSidebar } from "./sidebar";
 import { HeaderOrganization, HeaderProject } from "./components";
 import Link from "next/link";
-import { Button } from "../ui/button";
+import { Button } from "@nuvix/sui/components/button";
 import { UserProfile } from "../_profile";
 import { useAppStore } from "@/lib/store";
 

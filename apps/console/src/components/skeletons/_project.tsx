@@ -1,4 +1,4 @@
-import { Skeleton, Spinner } from "@/ui/components";
+import { Skeleton, Spinner } from "@nuvix/ui/components";
 
 export function SkeletonProject() {
   return (

@@ -1,4 +1,4 @@
-import { Chip, CloseButton, Column, Input, Row, Text } from "@/ui/components";
+import { Chip, CloseButton, Column, Input, Row, Text } from "@nuvix/ui/components";
 import { Pencil } from "lucide-react";
 import React from "react";
 import { InputField } from "./others/forms";

@@ -6,7 +6,7 @@ import { useCollectionStore, useDatabaseStore, useProjectStore } from "@/lib/sto
 import { DynamicField, FIELD_TYPES } from "../document/components";
 import { generateYupSchema } from "../document/components/_utils";
 import { SubmitButton } from "@/components/others/forms";
-import { useToast } from "@/ui/components";
+import { useToast } from "@nuvix/ui/components";
 import { PermissionsEditor } from "@/components/others/permissions";
 import { useFormikContext } from "formik";
 import { Alert, AlertDescription, AlertTitle } from "@nuvix/sui/components/alert";

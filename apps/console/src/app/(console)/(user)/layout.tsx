@@ -1,5 +1,5 @@
 import { ConsoleHeader } from "@/components/console/header";
-import { ConsoleSidebar } from "@/ui/modules/layout/ConsoleSidebar";
+import { ConsoleSidebar } from "@/ui/layout/ConsoleSidebar";
 import { Stack } from "@chakra-ui/react";
 import React from "react";
 

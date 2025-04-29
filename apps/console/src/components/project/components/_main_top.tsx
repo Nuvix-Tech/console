@@ -1,4 +1,4 @@
-import { Chip, Column, Heading, Row } from "@/ui/components";
+import { Chip, Column, Heading, Row } from "@nuvix/ui/components";
 import { useProjectStore } from "@/lib/store";
 import { IDChip } from "@/components/others";
 import { useRouter } from "@bprogress/next";

@@ -1,7 +1,7 @@
 import { Form, InputField, SubmitButton } from "@/components/others/forms";
 import { CardBox, CardBoxBody, CardBoxItem, CardBoxTitle } from "@/components/others/card";
 import * as y from "yup";
-import { useToast } from "@/ui/components";
+import { useToast } from "@nuvix/ui/components";
 import { useProjectStore, useUserStore } from "@/lib/store";
 
 const schema = y.object({

@@ -1,4 +1,4 @@
-import { Column, Row, Skeleton } from "@/ui/components";
+import { Column, Row, Skeleton } from "@nuvix/ui/components";
 
 export function PageSkelton() {
   return (

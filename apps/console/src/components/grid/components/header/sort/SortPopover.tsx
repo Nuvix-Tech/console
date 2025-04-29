@@ -9,7 +9,7 @@ import type { Sort } from "@/components/grid/types";
 import { useTableEditorTableState } from "@/lib/store/table";
 import SortRow from "./SortRow";
 import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/popover";
-import { Button } from "@/ui/components";
+import { Button } from "@nuvix/ui/components";
 import { Separator } from "@nuvix/sui/components/separator";
 
 export interface SortPopoverProps {

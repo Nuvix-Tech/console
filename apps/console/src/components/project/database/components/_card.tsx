@@ -1,4 +1,4 @@
-import { Card, Column, Row, SmartLink, Tag, Text } from "@/ui/components";
+import { Card, Column, Row, SmartLink, Tag, Text } from "@nuvix/ui/components";
 import { IDChip } from "@/components/others";
 import { useParams } from "next/navigation";
 import { Database } from "lucide-react";

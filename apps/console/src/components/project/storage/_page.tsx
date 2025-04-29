@@ -1,14 +1,14 @@
 "use client";
 import { FunctionComponent } from "react";
 import { CreateButton, PageContainer, PageHeading } from "@/components/others";
-import { DataGridProvider, Pagination, SelectLimit } from "@/ui/modules/data-grid";
+import { DataGridProvider, Pagination, SelectLimit } from "@/ui/data-grid";
 import { Models, Query } from "@nuvix/console";
 import { EmptyState } from "@/components";
 import { HStack } from "@chakra-ui/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useProjectStore } from "@/lib/store";
 import { useSearchQuery } from "@/hooks/useQuery";
-import { Grid } from "@/ui/components";
+import { Grid } from "@nuvix/ui/components";
 import { StorageCard } from "./components";
 import { CreateBucket } from "./components/_create_bucket";
 

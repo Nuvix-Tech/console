@@ -8,7 +8,7 @@ import {
 import { Form, InputSwitchField, SubmitButton } from "@/components/others/forms";
 import { useBucketStore, useProjectStore } from "@/lib/store";
 import { formatDate } from "@/lib/utils";
-import { useToast } from "@/ui/components";
+import { useToast } from "@nuvix/ui/components";
 import React from "react";
 import * as y from "yup";
 

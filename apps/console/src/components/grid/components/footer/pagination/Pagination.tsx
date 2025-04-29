@@ -23,7 +23,7 @@ import { useTableEditorStore } from "@/lib/store/table-editor";
 import { useTableEditorTableState } from "@/lib/store/table";
 import { useTableEditorQuery } from "@/components/editor/data";
 import { useQuery } from "@tanstack/react-query";
-import { Button, IconButton } from "@/ui/components";
+import { Button, IconButton } from "@nuvix/ui/components";
 import { Input } from "@/components/editor/components";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import ConfirmationModal from "@/components/editor/components/_confim_dialog";

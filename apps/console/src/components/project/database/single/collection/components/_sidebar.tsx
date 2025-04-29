@@ -1,7 +1,7 @@
 import { Tooltip } from "@/components/cui/tooltip";
 import { useCollectionStore, useDatabaseStore, useProjectStore } from "@/lib/store";
-import { Button, IconButton, Line, Row, Skeleton } from "@/ui/components";
-import { SidebarGroup } from "@/ui/modules/layout/navigation";
+import { Button, IconButton, Line, Row, Skeleton } from "@nuvix/ui/components";
+import { SidebarGroup } from "@/ui/layout/navigation";
 import { useRouter } from "@bprogress/next";
 import { VStack } from "@chakra-ui/react";
 import { Models } from "@nuvix/console";

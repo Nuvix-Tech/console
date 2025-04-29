@@ -1,6 +1,6 @@
 import { useBucketStore, useProjectStore } from "@/lib/store";
-import { Line } from "@/ui/components";
-import { SidebarGroup } from "@/ui/modules/layout/navigation";
+import { Line } from "@nuvix/ui/components";
+import { SidebarGroup } from "@/ui/layout/navigation";
 import { usePathname } from "next/navigation";
 import { BucketsList } from "./_buckets";
 

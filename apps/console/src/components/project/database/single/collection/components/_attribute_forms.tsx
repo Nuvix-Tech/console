@@ -7,7 +7,7 @@ import {
   SubmitButton,
 } from "@/components/others/forms";
 import { useCollectionStore, useDatabaseStore, useProjectStore } from "@/lib/store";
-import { Column, Row, useToast } from "@/ui/components";
+import { Column, Row, useToast } from "@nuvix/ui/components";
 import * as y from "yup";
 import { AttributeIcon, RelationshipIcon } from "./_attribute_icon";
 import { useFormikContext } from "formik";

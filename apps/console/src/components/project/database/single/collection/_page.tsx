@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useConfirm, useToast } from "@/ui/components";
+import { useConfirm, useToast } from "@nuvix/ui/components";
 import { Models, Query } from "@nuvix/console";
 import { ColumnDef } from "@tanstack/react-table";
 import { Tooltip } from "@/components/cui/tooltip";
@@ -15,7 +15,7 @@ import {
   Pagination,
   SelectLimit,
   Table,
-} from "@/ui/modules/data-grid";
+} from "@/ui/data-grid";
 import { CreateButton, IDChip, PageContainer, PageHeading } from "@/components/others";
 import { LuTrash2 } from "react-icons/lu";
 import { EmptyState } from "@/components";

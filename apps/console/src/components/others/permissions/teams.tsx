@@ -4,7 +4,7 @@ import { Query } from "@nuvix/console";
 import { SimpleSelector, usePaginatedSelector } from "../simple-selector";
 import { Button, HStack, Text, VStack } from "@chakra-ui/react";
 import { Checkbox } from "@/components/cui/checkbox";
-import { Avatar } from "@/ui/components";
+import { Avatar } from "@nuvix/ui/components";
 import { SelectBox1, SelectDialog } from "../select-dialog";
 import { DialogTrigger } from "@nuvix/sui/components/dialog";
 

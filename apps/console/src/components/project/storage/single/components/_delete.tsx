@@ -1,6 +1,6 @@
 import { DangerCard } from "@/components/others/danger-card";
 import { formatDate } from "@/lib/utils";
-import { useConfirm, useToast } from "@/ui/components";
+import { useConfirm, useToast } from "@nuvix/ui/components";
 import { Button, Text, VStack } from "@chakra-ui/react";
 import { useRouter } from "@bprogress/next";
 import { useState } from "react";

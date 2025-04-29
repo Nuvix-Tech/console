@@ -3,7 +3,7 @@ import { Stack, Text } from "@chakra-ui/react";
 import { Tabs, TabsList, TabsTrigger } from "@nuvix/sui/components/tabs";
 import { IDChip, TopCard } from "@/components/others";
 import { useRouter } from "@bprogress/next";
-import { Row } from "@/ui/components";
+import { Row } from "@nuvix/ui/components";
 import { usePathname } from "next/navigation";
 import { formatDate } from "@/lib/utils";
 import {

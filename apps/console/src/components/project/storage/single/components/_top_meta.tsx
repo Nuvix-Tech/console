@@ -9,7 +9,7 @@ import { IDChip, TopCard } from "@/components/others";
 import { formatBytes } from "@/lib";
 import { useFileStore, useProjectStore } from "@/lib/store";
 import { formatDate } from "@/lib/utils";
-import { Button, Icon, Row, SmartImage } from "@/ui/components";
+import { Button, Icon, Row, SmartImage } from "@nuvix/ui/components";
 import { Stack, Text, VStack } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "lucide-react";
 import { useParams } from "next/navigation";

@@ -8,7 +8,7 @@ import {
 } from "@/components/others/card";
 import { Code } from "@chakra-ui/react";
 import * as y from "yup";
-import { useToast } from "@/ui/components";
+import { useToast } from "@nuvix/ui/components";
 import { useProjectStore, useUserStore } from "@/lib/store";
 
 const schema = y.object({

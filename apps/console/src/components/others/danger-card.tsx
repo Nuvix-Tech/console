@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@nuvix/sui/components/card";
-import { Card as TheCard } from "@/ui/components";
+import { Card as TheCard } from "@nuvix/ui/components";
 import React from "react";
 
 interface DangerCardProps {

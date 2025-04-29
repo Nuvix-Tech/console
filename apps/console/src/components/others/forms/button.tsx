@@ -1,4 +1,4 @@
-import { Button, ButtonProps } from "@/ui/components";
+import { Button, ButtonProps } from "@nuvix/ui/components";
 import { ButtonProps as B } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 

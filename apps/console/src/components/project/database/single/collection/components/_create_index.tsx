@@ -1,6 +1,6 @@
 import { FormDialog, InputField, SelectObjectField, SubmitButton } from "@/components/others/forms";
 import { useCollectionStore, useDatabaseStore, useProjectStore } from "@/lib/store";
-import { Column, useToast } from "@/ui/components";
+import { Column, useToast } from "@nuvix/ui/components";
 import * as y from "yup";
 import { DynamicField } from "../document/components";
 

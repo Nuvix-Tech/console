@@ -7,7 +7,7 @@ import * as y from "yup";
 import { sdkForConsole } from "@/lib/sdk";
 import { ID } from "@nuvix/console";
 import { useRouter } from "@bprogress/next";
-import { useToast } from "@/ui/components";
+import { useToast } from "@nuvix/ui/components";
 import { useAppStore } from "@/lib/store";
 
 type CreateProjectProps = {

@@ -5,7 +5,7 @@ import { DropdownControl } from "@/components/grid/components/common/DropdownCon
 import type { Filter, FilterOperator } from "@/components/grid/types";
 import { FilterOperatorOptions } from "./Filter.constants";
 import { useTableEditorTableState } from "@/lib/store/table";
-import { Button, IconButton, Input } from "@/ui/components";
+import { Button, IconButton, Input } from "@nuvix/ui/components";
 
 export interface FilterRowProps {
   filterIdx: number;

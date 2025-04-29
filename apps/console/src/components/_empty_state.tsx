@@ -1,4 +1,4 @@
-import { ButtonProps, Button, SmartImage } from "@/ui/components";
+import { ButtonProps, Button, SmartImage } from "@nuvix/ui/components";
 import { Stack, Text } from "@chakra-ui/react";
 import React from "react";
 

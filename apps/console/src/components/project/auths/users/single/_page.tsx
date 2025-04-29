@@ -2,7 +2,7 @@
 import { IDChip, PageContainer, TopCard, UserStatus } from "@/components/others";
 import { Avatar } from "@/components/cui/avatar";
 import { formatDate } from "@/lib/utils";
-import { Column, Row, useToast } from "@/ui/components";
+import { Column, Row, useToast } from "@nuvix/ui/components";
 import { Button, ButtonProps, HStack, Skeleton, Stack, Text, VStack } from "@chakra-ui/react";
 import React, { useState } from "react";
 import {

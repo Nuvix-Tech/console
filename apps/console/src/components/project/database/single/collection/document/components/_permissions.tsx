@@ -7,7 +7,7 @@ import {
 } from "@/components/others/card";
 import { Form, SubmitButton } from "@/components/others/forms";
 import { PermissionField } from "@/components/others/permissions";
-import { useToast } from "@/ui/components";
+import { useToast } from "@nuvix/ui/components";
 import { Info } from "lucide-react";
 
 import { Alert, AlertDescription, AlertTitle } from "@nuvix/sui/components/alert";

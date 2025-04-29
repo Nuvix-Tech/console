@@ -1,4 +1,4 @@
-import { Button } from "@/ui/components";
+import { Button } from "@nuvix/ui/components";
 import { MAX_CHARACTERS } from "../../constants";
 import { cn } from "@nuvix/sui/lib/utils";
 

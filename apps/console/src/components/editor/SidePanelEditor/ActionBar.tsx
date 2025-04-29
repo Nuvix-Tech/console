@@ -1,6 +1,6 @@
 import { noop } from "lodash";
 import { PropsWithChildren, useState } from "react";
-import { Button } from "@/ui/components";
+import { Button } from "@nuvix/ui/components";
 
 interface ActionBarProps {
   loading?: boolean;

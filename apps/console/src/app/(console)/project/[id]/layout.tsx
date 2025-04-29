@@ -1,6 +1,6 @@
 import "react-data-grid/lib/styles.css";
 import ProjectWrapper from "@/components/project/wrapper";
-import { Column } from "@/ui/components";
+import { Column } from "@nuvix/ui/components";
 import type React from "react";
 import { Footer } from "@/components/footer";
 

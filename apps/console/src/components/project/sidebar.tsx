@@ -1,5 +1,5 @@
 "use client";
-import { Column, Line, RevealFx, Row, ToggleButton } from "@/ui/components";
+import { Column, Line, RevealFx, Row, ToggleButton } from "@nuvix/ui/components";
 import { useParams, usePathname } from "next/navigation";
 import * as React from "react";
 import { useColorMode } from "../cui/color-mode";

@@ -2,9 +2,9 @@
 import React from "react";
 import { Models } from "@nuvix/console";
 import { ColumnDef } from "@tanstack/react-table";
-import { Chip, Row, useToast } from "@/ui/components";
+import { Chip, Row, useToast } from "@nuvix/ui/components";
 import { IconButton, Text } from "@chakra-ui/react";
-import { DataGridProvider, Table } from "@/ui/modules/data-grid";
+import { DataGridProvider, Table } from "@/ui/data-grid";
 import { LuTrash2 } from "react-icons/lu";
 import { useProjectStore, useUserStore } from "@/lib/store";
 import { EmptyState } from "@/components/_empty_state";

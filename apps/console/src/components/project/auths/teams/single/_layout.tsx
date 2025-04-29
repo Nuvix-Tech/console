@@ -2,8 +2,8 @@
 import { Avatar } from "@/components/cui/avatar";
 import { SkeletonText } from "@/components/cui/skeleton";
 import { useProjectStore, useTeamStore } from "@/lib/store";
-import { Line, Row } from "@/ui/components";
-import { SidebarGroup } from "@/ui/modules/layout/navigation";
+import { Line, Row } from "@nuvix/ui/components";
+import { SidebarGroup } from "@/ui/layout/navigation";
 import { Text } from "@chakra-ui/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";

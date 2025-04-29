@@ -4,7 +4,7 @@ import type { CalculatedColumn } from "react-data-grid";
 import { useTableEditorStore } from "@/lib/store/table-editor";
 import { ADD_COLUMN_KEY } from "../../constants";
 import { DefaultFormatter } from "../formatter/DefaultFormatter";
-import { Button } from "@/ui/components";
+import { Button } from "@nuvix/ui/components";
 
 export const AddColumn: CalculatedColumn<any, any> = {
   key: ADD_COLUMN_KEY,

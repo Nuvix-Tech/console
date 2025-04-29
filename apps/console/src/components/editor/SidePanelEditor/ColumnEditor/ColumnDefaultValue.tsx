@@ -7,7 +7,7 @@ import type { ColumnField } from "../SidePanelEditor.types";
 import { typeExpressionSuggestions } from "./ColumnEditor.constants";
 import type { Suggestion } from "./ColumnEditor.types";
 import InputWithSuggestions from "./InputWithSuggestions";
-import { Select } from "@/ui/components";
+import { Select } from "@nuvix/ui/components";
 
 type EnumeratedType = {
   name: string;

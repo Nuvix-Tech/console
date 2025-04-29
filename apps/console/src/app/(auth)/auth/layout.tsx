@@ -1,6 +1,6 @@
 "use client";
 import { Illustration } from "@nuvix/sui/components/glowing-stars";
-import { Background, Column, Row, SmartImage } from "@/ui/components";
+import { Background, Column, Row, SmartImage } from "@nuvix/ui/components";
 import { Stack } from "@chakra-ui/react";
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {

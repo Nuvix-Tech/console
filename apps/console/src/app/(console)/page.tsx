@@ -1,6 +1,6 @@
 "use client";
 import { sdkForConsole } from "@/lib/sdk";
-import { Row } from "@/ui/components";
+import { Row } from "@nuvix/ui/components";
 import { Spinner } from "@chakra-ui/react";
 import { Models } from "@nuvix/console";
 import { useRouter } from "@bprogress/next";

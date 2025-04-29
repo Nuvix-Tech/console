@@ -1,13 +1,13 @@
 "use client";
-import { Avatar } from "@/ui/components";
+import { Avatar } from "@nuvix/ui/components";
 import { Models, Query } from "@nuvix/console";
 import React, { useEffect } from "react";
-import { Row } from "@/ui/components";
+import { Row } from "@nuvix/ui/components";
 import { ColumnDef } from "@tanstack/react-table";
 import { Tooltip } from "@/components/cui/tooltip";
 import { HStack, Text } from "@chakra-ui/react";
 import { formatDate } from "@/lib/utils";
-import { DataGridProvider, Pagination, Search, SelectLimit, Table } from "@/ui/modules/data-grid";
+import { DataGridProvider, Pagination, Search, SelectLimit, Table } from "@/ui/data-grid";
 import { useProjectStore } from "@/lib/store";
 import { EmptyState } from "@/components";
 import { CreateButton, PageContainer, PageHeading } from "@/components/others";

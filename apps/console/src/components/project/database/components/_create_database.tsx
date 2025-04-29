@@ -1,7 +1,7 @@
 import { CustomID } from "@/components/_custom_id";
 import { FormDialog, InputField, SubmitButton } from "@/components/others/forms";
 import { useProjectStore } from "@/lib/store";
-import { Column, useToast } from "@/ui/components";
+import { Column, useToast } from "@nuvix/ui/components";
 import { useRouter } from "@bprogress/next";
 import { useParams } from "next/navigation";
 import * as y from "yup";

@@ -2,13 +2,13 @@
 import React, { useState } from "react";
 import { Models, Query } from "@nuvix/console";
 import { ColumnDef } from "@tanstack/react-table";
-import { Row, useConfirm, useToast } from "@/ui/components";
+import { Row, useConfirm, useToast } from "@nuvix/ui/components";
 import { Avatar } from "@/components/cui/avatar";
 import { HStack, IconButton, Text } from "@chakra-ui/react";
 import { Tooltip } from "@/components/cui/tooltip";
 import { formatDate } from "@/lib/utils";
 import { LuTrash2 } from "react-icons/lu";
-import { DataGridProvider, Pagination, Search, SelectLimit, Table } from "@/ui/modules/data-grid";
+import { DataGridProvider, Pagination, Search, SelectLimit, Table } from "@/ui/data-grid";
 import { useProjectStore, useTeamStore } from "@/lib/store";
 import { useSearchQuery } from "@/hooks/useQuery";
 import { CreateButton, PageContainer, PageHeading } from "@/components/others";

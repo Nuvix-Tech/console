@@ -1,5 +1,5 @@
 import { useDatabaseStore, useProjectStore } from "@/lib/store";
-import { SidebarGroup } from "@/ui/modules/layout/navigation";
+import { SidebarGroup } from "@/ui/layout/navigation";
 import { usePathname } from "next/navigation";
 
 const DatbaseSidebar = () => {

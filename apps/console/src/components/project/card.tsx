@@ -1,4 +1,4 @@
-import { Button, Card, Column, Icon, Row, Tag, Text } from "@/ui/components";
+import { Button, Card, Column, Icon, Row, Tag, Text } from "@nuvix/ui/components";
 import type { Models } from "@nuvix/console";
 import { useRouter } from "@bprogress/next";
 import { IoIosAppstore } from "react-icons/io";

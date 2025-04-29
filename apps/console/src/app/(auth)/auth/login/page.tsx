@@ -16,7 +16,7 @@ import {
   SmartLink,
   Text,
   useToast,
-} from "@/ui/components";
+} from "@nuvix/ui/components";
 import { useRouter } from "@bprogress/next";
 import React, { useState } from "react";
 import { motion } from "framer-motion";

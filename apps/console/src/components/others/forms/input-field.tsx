@@ -13,7 +13,7 @@ import {
   SwitchProps,
   TagInput,
   TagInputProps,
-} from "@/ui/components";
+} from "@nuvix/ui/components";
 import { LuPlus } from "react-icons/lu";
 import {
   FormControl,
@@ -22,7 +22,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@nuvix/sui/components/form";
-import { Input } from "@/ui/components";
+import { Input } from "@nuvix/ui/components";
 import { RadioGroup } from "@nuvix/sui/components/radio-group";
 
 interface Props extends Omit<InputProps, "onChange" | "value" | "id"> {

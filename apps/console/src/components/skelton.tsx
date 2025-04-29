@@ -1,4 +1,4 @@
-import { Skeleton } from "@/ui/components";
+import { Skeleton } from "@nuvix/ui/components";
 
 export const GridSkelton = ({ limit }: { limit: number }) => {
   return Array.from({ length: limit }).map((_, index) => (

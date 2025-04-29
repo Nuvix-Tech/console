@@ -15,7 +15,7 @@ import { useTableEditorQuery } from "@/components/editor/data";
 import { useTableEditorStore } from "@/lib/store/table-editor";
 import { convertByteaToHex } from "@/lib/helpers";
 import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/popover";
-import { IconButton } from "@/ui/components";
+import { IconButton } from "@nuvix/ui/components";
 import { useQuery } from "@tanstack/react-query";
 
 interface Props extends PropsWithChildren<RenderCellProps<SupaRow, unknown>> {

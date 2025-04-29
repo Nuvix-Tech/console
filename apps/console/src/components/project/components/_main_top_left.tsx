@@ -3,7 +3,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CreatePlatform } from "../../wizard/_platform_create";
 import { Plus, Code, Smartphone, Apple } from "lucide-react";
-import { Button } from "@/ui/components";
+import { Button } from "@nuvix/ui/components";
 import { FaFlutter } from "react-icons/fa6";
 
 // Platform icons configuration

@@ -1,5 +1,5 @@
 import { useProjectStore } from "@/lib/store";
-import { Button, Column, ToggleButton } from "@/ui/components";
+import { Button, Column, ToggleButton } from "@nuvix/ui/components";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { useState } from "react";

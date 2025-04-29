@@ -1,4 +1,4 @@
-import { Background, Row } from "@/ui/components";
+import { Background, Row } from "@nuvix/ui/components";
 import { Stack } from "@chakra-ui/react";
 import { PropsWithChildren } from "react";
 

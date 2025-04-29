@@ -1,4 +1,4 @@
-import { Button, Text } from "@/ui/components";
+import { Button, Text } from "@nuvix/ui/components";
 import {
   CloseButton,
   Drawer,

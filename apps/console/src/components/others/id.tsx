@@ -1,4 +1,4 @@
-import { Chip } from "@/ui/components";
+import { Chip } from "@nuvix/ui/components";
 import { Clipboard } from "@chakra-ui/react";
 import { LuClipboard } from "react-icons/lu";
 import { LuCheck } from "react-icons/lu";

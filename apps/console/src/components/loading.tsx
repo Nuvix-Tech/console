@@ -1,6 +1,6 @@
-import { Background, Flex } from "@/ui/components";
+import { Background, Flex } from "@nuvix/ui/components";
 import { Spinner } from "@chakra-ui/react";
-import { BackgroundBeams } from "./ui/background-beams";
+import { BackgroundBeams } from "@nuvix/sui/components/background-beams";
 
 export default function LoadingUI() {
   return (

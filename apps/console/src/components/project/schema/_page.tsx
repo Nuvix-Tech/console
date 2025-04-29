@@ -1,8 +1,8 @@
 "use client";
 import { Query } from "@nuvix/console";
 import React, { useEffect } from "react";
-import { Grid } from "@/ui/components";
-import { DataGridProvider, Pagination, SelectLimit } from "@/ui/modules/data-grid";
+import { Grid } from "@nuvix/ui/components";
+import { DataGridProvider, Pagination, SelectLimit } from "@/ui/data-grid";
 import { CreateButton, PageContainer, PageHeading } from "@/components/others";
 import { useProjectStore } from "@/lib/store";
 import { useSearchQuery } from "@/hooks/useQuery";

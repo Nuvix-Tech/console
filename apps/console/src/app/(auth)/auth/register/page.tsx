@@ -1,5 +1,5 @@
 import { RegisterForm } from "@/components/auth/_register";
-import { Heading, Logo, Text } from "@/ui/components";
+import { Heading, Logo, Text } from "@nuvix/ui/components";
 import { Metadata } from "next";
 import Link from "next/link";
 

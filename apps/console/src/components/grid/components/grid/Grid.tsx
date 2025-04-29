@@ -19,7 +19,7 @@ import { useTableEditorStore } from "@/lib/store/table-editor";
 import { useTableEditorTableState } from "@/lib/store/table";
 import { useAppStore, useProjectStore } from "@/lib/store";
 import { cn } from "@nuvix/sui/lib/utils";
-import { Button } from "@/ui/components";
+import { Button } from "@nuvix/ui/components";
 import { Alert } from "@chakra-ui/react";
 
 const rowKeyGetter = (row: SupaRow) => {

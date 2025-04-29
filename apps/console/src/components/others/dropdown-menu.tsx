@@ -1,5 +1,5 @@
 "use client";
-import { Button, ButtonProps } from "@/ui/components";
+import { Button, ButtonProps } from "@nuvix/ui/components";
 import {
   PopoverArrow,
   PopoverBody,

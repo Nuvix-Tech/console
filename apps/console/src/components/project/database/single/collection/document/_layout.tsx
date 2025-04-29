@@ -1,5 +1,5 @@
 "use client";
-import { Column } from "@/ui/components";
+import { Column } from "@nuvix/ui/components";
 import React, { PropsWithChildren, useEffect } from "react";
 import { LayoutTop } from "./components";
 import { useDocumentStore, useProjectStore } from "@/lib/store";

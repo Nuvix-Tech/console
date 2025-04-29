@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Button, Input, Select, SmartLink, Text, useToast } from "@/ui/components";
+import { Button, Input, Select, SmartLink, Text, useToast } from "@nuvix/ui/components";
 import {
   Card,
   CardHeader,

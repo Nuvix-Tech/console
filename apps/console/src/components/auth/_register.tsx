@@ -5,7 +5,7 @@ import { Form, InputField } from "../others/forms";
 import * as y from "yup";
 import { sdkForConsole } from "@/lib/sdk";
 import { ID } from "@nuvix/console";
-import { Button, useToast } from "@/ui/components";
+import { Button, useToast } from "@nuvix/ui/components";
 import { useRouter } from "@bprogress/next";
 
 const schema = y.object({

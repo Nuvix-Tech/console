@@ -1,4 +1,4 @@
-import { useToast } from "@/ui/components";
+import { useToast } from "@nuvix/ui/components";
 import { noop } from "lodash";
 
 export const tryParseJson = (jsonString: any) => {

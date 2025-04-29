@@ -13,7 +13,7 @@ import { useTableEditorStore } from "@/lib/store/table-editor";
 import { useTableEditorTableState } from "@/lib/store/table";
 import { SELECT_COLUMN_KEY } from "../../constants";
 import type { SupaRow } from "../../types";
-import { IconButton } from "@/ui/components";
+import { IconButton } from "@nuvix/ui/components";
 import { Checkbox } from "@/components/cui/checkbox";
 
 export const SelectColumn: CalculatedColumn<any, any> = {

@@ -7,7 +7,7 @@ import {
 } from "@/components/others/card";
 import { sdkForConsole } from "@/lib/sdk";
 import { useProjectStore } from "@/lib/store";
-import { Switch, useToast } from "@/ui/components";
+import { Switch, useToast } from "@nuvix/ui/components";
 import React from "react";
 
 export const SessionAlerts: React.FC = () => {

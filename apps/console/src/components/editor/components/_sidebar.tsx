@@ -1,5 +1,5 @@
 import { useProjectStore } from "@/lib/store";
-import { Column, ToggleButton } from "@/ui/components";
+import { Column, ToggleButton } from "@nuvix/ui/components";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 

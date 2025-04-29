@@ -2,14 +2,14 @@
 import { Models } from "@nuvix/console";
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { DataGridProvider, Table } from "@/ui/modules/data-grid";
+import { DataGridProvider, Table } from "@/ui/data-grid";
 import { AttributeIcon, CreateAttribute } from "./components";
 import { Ellipsis, Pencil, Trash } from "lucide-react";
 import { useCollectionStore, useDatabaseStore, useProjectStore } from "@/lib/store";
 import { PageContainer, PageHeading } from "@/components/others";
 import { EmptyState } from "@/components/_empty_state";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Column, IconButton, Tag, Text, useConfirm, useToast } from "@/ui/components";
+import { Column, IconButton, Tag, Text, useConfirm, useToast } from "@nuvix/ui/components";
 import { DropdownMenu, DropdownMenuItem } from "@/components/others/dropdown-menu";
 
 type Props = {

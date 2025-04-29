@@ -7,7 +7,7 @@ import {
 } from "@/components/others/card";
 import { Form, RadioField, SubmitButton } from "@/components/others/forms";
 import { sdkForConsole } from "@/lib/sdk";
-import { NumberInput, useToast } from "@/ui/components";
+import { NumberInput, useToast } from "@nuvix/ui/components";
 import { Badge, HStack, VStack } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 import React from "react";

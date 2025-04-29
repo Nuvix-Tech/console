@@ -6,7 +6,7 @@ import {
   CardBoxItem,
   CardBoxTitle,
 } from "@/components/others/card";
-import { Line, Switch, useConfirm, useToast } from "@/ui/components";
+import { Line, Switch, useConfirm, useToast } from "@nuvix/ui/components";
 import { sdkForConsole } from "@/lib/sdk";
 import { ApiService } from "@nuvix/console";
 import { Button, HStack, VStack } from "@chakra-ui/react";

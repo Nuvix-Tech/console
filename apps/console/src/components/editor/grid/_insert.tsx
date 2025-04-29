@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from "react";
 import { useProjectStore } from "@/lib/store";
 import { Form, InputField, SubmitButton } from "@/components/others/forms";
-import { Column, Line, useToast } from "@/ui/components";
+import { Column, Line, useToast } from "@nuvix/ui/components";
 import { PermissionsEditor } from "@/components/others/permissions";
 import { useFormikContext } from "formik";
 import { Alert, AlertDescription, AlertTitle } from "@nuvix/sui/components/alert";

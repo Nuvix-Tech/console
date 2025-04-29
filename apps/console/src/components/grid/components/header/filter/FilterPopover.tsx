@@ -8,7 +8,7 @@ import type { Filter } from "../../../types";
 
 import FilterRow from "./FilterRow";
 import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/popover";
-import { Button } from "@/ui/components";
+import { Button } from "@nuvix/ui/components";
 import { useTableEditorTableState } from "@/lib/store/table";
 import { Separator } from "@nuvix/sui/components/separator";
 

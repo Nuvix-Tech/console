@@ -13,7 +13,7 @@ import { useProjectStore } from "@/lib/store";
 import { useTableEditorQuery } from "@/components/editor/data";
 import { useTableEditorStore } from "@/lib/store/table-editor";
 import { useSearchParams } from "next/navigation";
-import { useToast } from "@/ui/components";
+import { useToast } from "@nuvix/ui/components";
 import { MAX_ARRAY_SIZE, MAX_CHARACTERS } from "../../constants";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import Popover from "@/components/editor/components/_popover";

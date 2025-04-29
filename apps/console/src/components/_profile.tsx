@@ -1,6 +1,6 @@
 import { sdkForConsole } from "@/lib/sdk";
 import { useAppStore } from "@/lib/store";
-import { UserMenu, Row, Option } from "@/ui/components";
+import { UserMenu, Row, Option } from "@nuvix/ui/components";
 
 export function UserProfile() {
   const user = useAppStore.use.user();

@@ -6,7 +6,7 @@ import {
   CardBoxTitle,
 } from "@/components/others/card";
 import { Form, SubmitButton } from "@/components/others/forms";
-import { useToast } from "@/ui/components";
+import { useToast } from "@nuvix/ui/components";
 import React from "react";
 import { FIELD_TYPES } from "./_fields";
 import { AttributeIcon } from "../../components";

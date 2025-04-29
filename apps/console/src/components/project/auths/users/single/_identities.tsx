@@ -2,7 +2,7 @@
 import React from "react";
 import { Models } from "@nuvix/console";
 import { ColumnDef } from "@tanstack/react-table";
-import { DataGridProvider, Table } from "@/ui/modules/data-grid";
+import { DataGridProvider, Table } from "@/ui/data-grid";
 import { useProjectStore } from "@/lib/store";
 import { PageContainer, PageHeading } from "@/components/others";
 import { EmptyState } from "@/components/_empty_state";

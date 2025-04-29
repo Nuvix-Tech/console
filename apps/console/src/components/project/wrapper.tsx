@@ -3,7 +3,7 @@ import { sdkForConsole } from "@/lib/sdk";
 import React, { useEffect } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useAppStore, useProjectStore } from "@/lib/store";
-import { UploadProvider } from "@/ui/modules/uploader";
+import { UploadProvider } from "@/ui/uploader";
 
 export default function ProjectWrapper({
   children,

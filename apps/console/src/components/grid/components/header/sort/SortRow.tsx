@@ -6,7 +6,7 @@ import { useDrag, useDrop } from "react-dnd";
 import type { DragItem, Sort } from "@/components/grid/types";
 import { useTableEditorTableState } from "@/lib/store/table";
 import { Toggle } from "@nuvix/sui/components/toggle";
-import { Button, IconButton, Switch } from "@/ui/components";
+import { Button, IconButton, Switch } from "@nuvix/ui/components";
 
 export interface SortRowProps {
   index: number;

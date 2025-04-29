@@ -9,7 +9,7 @@ import {
 } from "@/components/cui/hover-card";
 import { Models } from "@nuvix/console";
 import { sdkForConsole, sdkForProject } from "@/lib/sdk";
-import { Line } from "@/ui/components";
+import { Line } from "@nuvix/ui/components";
 import IDChip from "../id";
 
 interface RoleHoverProps {

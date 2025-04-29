@@ -3,7 +3,7 @@ import { FC } from "react";
 import { Props } from "./_layout";
 import { useBucketStore, useProjectStore } from "@/lib/store";
 import { useSearchQuery } from "@/hooks/useQuery";
-import { Avatar, Row, useConfirm, useToast } from "@/ui/components";
+import { Avatar, Row, useConfirm, useToast } from "@nuvix/ui/components";
 import { Models, Query } from "@nuvix/console";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
@@ -18,7 +18,7 @@ import {
   Search,
   SelectLimit,
   Table,
-} from "@/ui/modules/data-grid";
+} from "@/ui/data-grid";
 import { EmptyState } from "@/components/_empty_state";
 import { HStack } from "@chakra-ui/react";
 import { formatBytes } from "@/lib";

@@ -2,7 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { RefreshCw } from "lucide-react";
 
 // import { tableRowKeys } from "data/table-rows/keys";
-import { Button } from "@/ui/components";
+import { Button } from "@nuvix/ui/components";
 
 export type RefreshButtonProps = {
   tableId?: number;
