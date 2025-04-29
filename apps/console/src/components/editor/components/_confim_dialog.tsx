@@ -13,17 +13,17 @@ import { MouseEventHandler, forwardRef, useEffect, useState } from "react";
 // } from 'ui'
 // import { DialogDescription, DialogHeader } from 'ui/src/components/shadcn/ui/dialog'
 // import { Admonition } from './../admonition'
-import { Alert, AlertDescription, AlertTitle } from "@workspace/ui/components/alert";
+import { Alert, AlertDescription, AlertTitle } from "@nuvix/sui/components/alert";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@workspace/ui/components/dialog";
-import { cn } from "@workspace/ui/lib/utils.js";
-import { Button } from "@workspace/ui/components/button";
-import { Separator } from "@workspace/ui/components/separator";
+} from "@nuvix/sui/components/dialog";
+import { cn } from "@nuvix/sui/lib/utils.js";
+import { Button } from "@nuvix/sui/components/button";
+import { Separator } from "@nuvix/sui/components/separator";
 
 export interface ConfirmationModalProps {
   loading?: boolean;

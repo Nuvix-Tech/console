@@ -6,7 +6,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@workspace/ui/components/card";
+} from "@nuvix/sui/components/card";
 import { Card as TheCard } from "@/ui/components";
 import React from "react";
 

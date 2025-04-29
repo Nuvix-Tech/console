@@ -2,7 +2,7 @@
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Button } from "@workspace/ui/components/button";
+import { Button } from "@nuvix/sui/components/button";
 import {
   Card,
   CardContent,
@@ -10,7 +10,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@workspace/ui/components/card";
+} from "@nuvix/sui/components/card";
 import { Plus } from "lucide-react";
 
 interface App {

@@ -4,7 +4,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@workspace/ui/components/dropdown-menu";
+} from "@nuvix/sui/components/dropdown-menu";
 
 interface DropdownControlProps {
   options: {

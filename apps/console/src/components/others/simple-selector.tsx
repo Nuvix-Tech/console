@@ -1,7 +1,7 @@
 "use client";
 import { HStack, Text, VStack, Spinner } from "@chakra-ui/react";
-import { Input } from "@workspace/ui/components/input";
-import { Button } from "@workspace/ui/components/button";
+import { Input } from "@nuvix/sui/components/input";
+import { Button } from "@nuvix/sui/components/button";
 import React, { useState, useEffect, useCallback } from "react";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import { SearchIcon } from "lucide-react";

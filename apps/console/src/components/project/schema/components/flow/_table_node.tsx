@@ -2,8 +2,8 @@ import { DiamondIcon, ExternalLink, Fingerprint, Hash, Key, Table2 } from "lucid
 import Link from "next/link";
 import { Handle, NodeProps } from "reactflow";
 
-import { Button } from "@workspace/ui/components/button";
-import { cn } from "@workspace/ui/lib/utils.js";
+import { Button } from "@nuvix/sui/components/button";
+import { cn } from "@nuvix/sui/lib/utils.js";
 
 // ReactFlow is scaling everything by the factor of 2
 const TABLE_NODE_WIDTH = 320;

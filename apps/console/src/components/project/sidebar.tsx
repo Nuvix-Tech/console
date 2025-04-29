@@ -5,7 +5,7 @@ import * as React from "react";
 import { useColorMode } from "../cui/color-mode";
 import { useProjectStore } from "@/lib/store";
 import { Stack } from "@chakra-ui/react";
-import { cn } from "@workspace/ui/lib/utils.js";
+import { cn } from "@nuvix/sui/lib/utils.js";
 
 export interface ProjectSidebarData {
   name: string;

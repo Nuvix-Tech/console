@@ -21,7 +21,7 @@ import { useRouter } from "@bprogress/next";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Alert, AlertDescription } from "@workspace/ui/components/alert";
+import { Alert, AlertDescription } from "@nuvix/sui/components/alert";
 
 export default function Login() {
   const [email, setEmail] = useState("");

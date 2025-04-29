@@ -21,9 +21,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@workspace/ui/components/form";
+} from "@nuvix/sui/components/form";
 import { Input } from "@/ui/components";
-import { RadioGroup } from "@workspace/ui/components/radio-group";
+import { RadioGroup } from "@nuvix/sui/components/radio-group";
 
 interface Props extends Omit<InputProps, "onChange" | "value" | "id"> {
   name: string;

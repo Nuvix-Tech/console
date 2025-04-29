@@ -10,7 +10,7 @@ import { useDrag, useDrop } from "react-dnd";
 import type { ColumnHeaderProps, ColumnType, DragItem, GridForeignKey } from "../../types";
 import { ColumnMenu } from "../menu";
 import { useTableEditorTableState } from "@/lib/store/table";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@workspace/ui/components/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 
 export function ColumnHeader<R>({
   column,

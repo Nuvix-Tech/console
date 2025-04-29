@@ -5,7 +5,7 @@ import { SimpleSelector, usePaginatedSelector } from "../simple-selector";
 import { Button, HStack, Text, VStack } from "@chakra-ui/react";
 import { Checkbox } from "@/components/cui/checkbox";
 import { Avatar } from "@/ui/components";
-import { DialogTrigger } from "@workspace/ui/components/dialog";
+import { DialogTrigger } from "@nuvix/sui/components/dialog";
 import { SelectBox1, SelectDialog } from "../select-dialog";
 
 export type UserRoleProps = {

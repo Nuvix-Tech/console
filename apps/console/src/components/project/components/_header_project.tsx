@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Button, Row, Skeleton } from "@/ui/components";
-import { cn } from "@workspace/ui/lib/utils.js";
+import { cn } from "@nuvix/sui/lib/utils.js";
 import {
   Command,
   CommandEmpty,
@@ -11,8 +11,8 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@workspace/ui/components/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@workspace/ui/components/popover";
+} from "@nuvix/sui/components/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/popover";
 import { sdkForConsole } from "@/lib/sdk";
 import { useRouter } from "@bprogress/next";
 import { Models } from "@nuvix/console";

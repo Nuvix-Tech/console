@@ -5,7 +5,7 @@ import { toast } from "sonner";
 // import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
 // import { useSchemaCreateMutation } from "data/database/schema-create-mutation";
 import ActionBar from "./ActionBar";
-import SidePanel from "@workspace/ui/components/SidePanel/SidePanel";
+import SidePanel from "@nuvix/sui/components/SidePanel/SidePanel";
 import { Input } from "@/ui/components";
 
 interface SchemaEditorProps {

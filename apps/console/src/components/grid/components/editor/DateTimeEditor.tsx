@@ -5,15 +5,15 @@ import type { RenderEditCellProps } from "react-data-grid";
 
 import { BlockKeys } from "../common/BlockKeys";
 import { Input } from "@/components/editor/components";
-import { Popover, PopoverContent, PopoverTrigger } from "@workspace/ui/components/popover";
-import { cn } from "@workspace/ui/lib/utils.js";
+import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/popover";
+import { cn } from "@nuvix/sui/lib/utils.js";
 import { Button } from "@/ui/components";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@workspace/ui/components/dropdown-menu";
+} from "@nuvix/sui/components/dropdown-menu";
 import {
   TimestampInfo,
   timestampLocalFormatter,

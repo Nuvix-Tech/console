@@ -3,14 +3,14 @@ import type { CalculatedColumn } from "react-data-grid";
 
 import { useTableEditorStore } from "@/lib/store/table-editor";
 import { useTableEditorTableState } from "@/lib/store/table";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@workspace/ui/components/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@workspace/ui/components/dropdown-menu";
-import { Separator } from "@workspace/ui/components/separator";
+} from "@nuvix/sui/components/dropdown-menu";
+import { Separator } from "@nuvix/sui/components/separator";
 import { Button, IconButton } from "@/ui/components";
 
 interface ColumnMenuProps {

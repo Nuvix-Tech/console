@@ -45,7 +45,7 @@ import { Column, Entity } from "@/types/grid";
 import { Dictionary } from "@/components/grid/types";
 import { useProjectStore } from "@/lib/store";
 import { useParams } from "next/navigation";
-import SidePanel from "@workspace/ui/components/SidePanel/SidePanel";
+import SidePanel from "@nuvix/sui/components/SidePanel/SidePanel";
 
 export interface ColumnEditorProps {
   column?: Readonly<Column>;
@@ -57,9 +57,9 @@ export interface ColumnEditorProps {
     isNewRecord: boolean,
     configuration: {
       columnId?: string;
-      primaryKey?: any //Constraint;
+      primaryKey?: any; //Constraint;
       foreignKeyRelations: ForeignKey[];
-      existingForeignKeyRelations: any //ForeignKeyConstraint[];
+      existingForeignKeyRelations: any; //ForeignKeyConstraint[];
     },
     resolve: any,
   ) => void;
@@ -108,7 +108,7 @@ const ColumnEditor = ({
   // });
 
   const isNewRecord = column === undefined;
-  const foreignKeyMeta: any[] = []; //data || 
+  const foreignKeyMeta: any[] = []; //data ||
   const foreignKeys = foreignKeyMeta.filter((relation) => {
     // return relation.source_id === column?.table_id && relation.source_columns.includes(column?.name);
     return false;

@@ -11,8 +11,8 @@ import { Select } from "@/ui/components";
 
 type EnumeratedType = {
   name: string;
-  enums: string[]
-}
+  enums: string[];
+};
 
 interface ColumnDefaultValueProps {
   columnFields: ColumnField;
@@ -49,11 +49,8 @@ const ColumnDefaultValue = ({
           onChange={(event: any) => onUpdateField({ defaultValue: event.target.value })}
           options={[
             { value: "", label: "NULL" },
-            ...enumValues.map((value: string) => (
-              { value, label: value }
-            ))
+            ...enumValues.map((value: string) => ({ value, label: value })),
           ]}
-
         />
       );
     }

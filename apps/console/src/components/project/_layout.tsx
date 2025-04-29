@@ -1,6 +1,6 @@
 "use client";
 import { useProjectStore } from "@/lib/store";
-import { cn } from "@workspace/ui/lib/utils.js";
+import { cn } from "@nuvix/sui/lib/utils.js";
 import { Stack } from "@chakra-ui/react";
 import { PropsWithChildren } from "react";
 

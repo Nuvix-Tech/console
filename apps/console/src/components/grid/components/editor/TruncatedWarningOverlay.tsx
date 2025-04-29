@@ -1,6 +1,6 @@
 import { Button } from "@/ui/components";
 import { MAX_CHARACTERS } from "../../constants";
-import { cn } from "@workspace/ui/lib/utils.js";
+import { cn } from "@nuvix/sui/lib/utils.js";
 
 export const TruncatedWarningOverlay = ({
   isLoading,

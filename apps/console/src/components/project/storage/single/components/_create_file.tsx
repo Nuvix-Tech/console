@@ -6,7 +6,7 @@ import { SubmitButton } from "@/components/others/forms";
 import { Column, useToast } from "@/ui/components";
 import { PermissionsEditor } from "@/components/others/permissions";
 import { useFormikContext } from "formik";
-import { Alert, AlertDescription, AlertTitle } from "@workspace/ui/components/alert";
+import { Alert, AlertDescription, AlertTitle } from "@nuvix/sui/components/alert";
 import { Info, Upload } from "lucide-react";
 import { ID } from "@nuvix/console";
 import { Box, FileUpload, Icon } from "@chakra-ui/react";

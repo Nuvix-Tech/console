@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
-import { cn } from "@workspace/ui/lib/utils.js";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@workspace/ui/components/tooltip";
+import { cn } from "@nuvix/sui/lib/utils.js";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);

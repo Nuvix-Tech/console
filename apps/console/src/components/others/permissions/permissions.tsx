@@ -11,13 +11,13 @@ import { LuPlus } from "react-icons/lu";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { CloseButton } from "@/components/cui/close-button";
 import { sdkForConsole, sdkForProject } from "@/lib/sdk";
-import { Dialog } from "@workspace/ui/components/dialog";
+import { Dialog } from "@nuvix/sui/components/dialog";
 import { UserRole } from "./users";
 import { TeamRole } from "./teams";
 import { RoleHover } from "./row";
 import { LabelRole } from "./label";
 import { CustomRole } from "./custom";
-import { Button } from "@workspace/ui/components/button";
+import { Button } from "@nuvix/sui/components/button";
 
 export type Permission = {
   create: boolean;

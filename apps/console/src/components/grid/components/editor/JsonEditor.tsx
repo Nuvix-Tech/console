@@ -15,7 +15,7 @@ import { useTableEditorStore } from "@/lib/store/table-editor";
 import { useSearchParams } from "next/navigation";
 import { useToast } from "@/ui/components";
 import { MAX_ARRAY_SIZE, MAX_CHARACTERS } from "../../constants";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@workspace/ui/components/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import Popover from "@/components/editor/components/_popover";
 
 const verifyJSON = (value: string) => {

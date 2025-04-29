@@ -4,8 +4,8 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@workspace/ui/components/chart";
-import { CardContent, CardHeader, CardTitle } from "@workspace/ui/components/card";
+} from "@nuvix/sui/components/chart";
+import { CardContent, CardHeader, CardTitle } from "@nuvix/sui/components/card";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import { CardBox } from "@/components/others/card";
 

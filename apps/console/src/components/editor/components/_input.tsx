@@ -9,8 +9,8 @@ import React, {
 // import styleHandler from 'ui/src/lib/theme/styleHandler'
 // import InputIconContainer from '../form/Layout/InputIconContainer'
 import { Button, Icon } from "@/ui/components";
-import { Input as Input_Shadcn_ } from "@workspace/ui/components/input";
-import { cn } from "@workspace/ui/lib/utils.js";
+import { Input as Input_Shadcn_ } from "@nuvix/sui/components/input";
+import { cn } from "@nuvix/sui/lib/utils.js";
 
 export const HIDDEN_PLACEHOLDER = "**** **** **** ****";
 

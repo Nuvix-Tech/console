@@ -7,10 +7,10 @@ import { formatFilterURLParams } from "../../../SupabaseGrid.utils";
 import type { Filter } from "../../../types";
 
 import FilterRow from "./FilterRow";
-import { Popover, PopoverContent, PopoverTrigger } from "@workspace/ui/components/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/popover";
 import { Button } from "@/ui/components";
 import { useTableEditorTableState } from "@/lib/store/table";
-import { Separator } from "@workspace/ui/components/separator";
+import { Separator } from "@nuvix/sui/components/separator";
 
 export interface FilterPopoverProps {
   filters: string[];

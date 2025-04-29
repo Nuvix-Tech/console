@@ -12,9 +12,9 @@ import { ESTIMATED_CHARACTER_PIXEL_WIDTH, getColumnDefaultWidth } from "../../ut
 import { ModelsX } from "@/lib/external-sdk";
 import { useProjectStore } from "@/lib/store";
 import { useQuery } from "@tanstack/react-query";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@workspace/ui/components/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import { convertByteaToHex } from "@/lib/helpers";
-import { cn } from "@workspace/ui/lib/utils.js";
+import { cn } from "@nuvix/sui/lib/utils.js";
 import { Button } from "@/ui/components";
 
 interface ReferenceRecordPeekProps {

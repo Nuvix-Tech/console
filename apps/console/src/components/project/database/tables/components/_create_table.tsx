@@ -4,7 +4,7 @@ import { Form, InputField, SubmitButton } from "@/components/others/forms";
 import { Column, Line, useToast } from "@/ui/components";
 import { PermissionsEditor } from "@/components/others/permissions";
 import { useFormikContext } from "formik";
-import { Alert, AlertDescription, AlertTitle } from "@workspace/ui/components/alert";
+import { Alert, AlertDescription, AlertTitle } from "@nuvix/sui/components/alert";
 import { Info } from "lucide-react";
 import { CloseButton } from "@/components/cui/close-button";
 import { Drawer, Portal } from "@chakra-ui/react";

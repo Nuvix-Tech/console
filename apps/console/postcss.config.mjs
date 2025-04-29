@@ -1,4 +1,4 @@
-import { default as c } from "@workspace/ui/postcss.config";
+import { default as c } from "@nuvix/sui/postcss.config";
 const config = {
   ...c,
   plugins: {

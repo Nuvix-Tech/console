@@ -1,5 +1,5 @@
 "use client";
-import { Illustration } from "@workspace/ui/components/glowing-stars";
+import { Illustration } from "@nuvix/sui/components/glowing-stars";
 import { Background, Column, Row, SmartImage } from "@/ui/components";
 import { Stack } from "@chakra-ui/react";
 

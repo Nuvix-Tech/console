@@ -6,12 +6,12 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "biome format --write ./"
   },
   "devDependencies": {
-    "@workspace/eslint-config": "workspace:*",
-    "@workspace/typescript-config": "workspace:*",
-    "prettier": "^3.5.1",
+    "@nuvix/eslint-config": "workspace:*",
+    "@nuvix/typescript-config": "workspace:*",
+    "@biomejs/biome": "1.9.4",
     "turbo": "^2.4.2",
     "typescript": "5.7.3"
   },
@@ -20,11 +20,6 @@
     "node": ">=20"
   },
   "pnpm": {
-    "onlyBuiltDependencies": [
-      "@biomejs/biome",
-      "@parcel/watcher",
-      "core-js-pure",
-      "sharp"
-    ]
+    "onlyBuiltDependencies": ["@biomejs/biome", "@parcel/watcher", "core-js-pure", "sharp"]
   }
 }

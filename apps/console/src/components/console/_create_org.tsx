@@ -8,7 +8,7 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from "@workspace/ui/components/card";
+} from "@nuvix/sui/components/card";
 import { BillingPlan, ID, PlansInfo } from "@nuvix/console";
 import { sdkForConsole } from "@/lib/sdk";
 import { useRouter } from "@bprogress/next";

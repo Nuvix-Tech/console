@@ -10,7 +10,7 @@ import { DataGrid, CalculatedColumn, DataGridHandle } from "react-data-grid";
 // import { useSelectedOrganization } from "hooks/misc/useSelectedOrganization";
 // import { useTableEditorStateSnapshot } from "state/table-editor";
 // import { useTableEditorTableStateSnapshot } from "state/table-editor-table";
-// import { Button } from '@workspace/ui/components/button';
+// import { Button } from '@nuvix/sui/components/button';
 // import { GenericSkeletonLoader } from "ui-patterns";
 import type { GridProps, SupaRow } from "../../types";
 import { useOnRowsChange } from "./Grid.utils";
@@ -18,7 +18,7 @@ import RowRenderer from "./RowRenderer";
 import { useTableEditorStore } from "@/lib/store/table-editor";
 import { useTableEditorTableState } from "@/lib/store/table";
 import { useAppStore, useProjectStore } from "@/lib/store";
-import { cn } from "@workspace/ui/lib/utils.js";
+import { cn } from "@nuvix/sui/lib/utils.js";
 import { Button } from "@/ui/components";
 import { Alert } from "@chakra-ui/react";
 

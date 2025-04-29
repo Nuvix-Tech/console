@@ -35,15 +35,15 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@workspace/ui/components/dropdown-menu";
+} from "@nuvix/sui/components/dropdown-menu";
 import FilterPopover from "./filter/FilterPopover";
 import { SortPopover } from "./sort";
 import { Filter, Sort, SupaRow } from "../../types";
 import { useAppStore, useProjectStore } from "@/lib/store";
 import { useParams } from "next/navigation";
 import { Button, useToast } from "@/ui/components";
-import { cn } from "@workspace/ui/lib/utils.js";
-import { Separator } from "@workspace/ui/components/separator";
+import { cn } from "@nuvix/sui/lib/utils.js";
+import { Separator } from "@nuvix/sui/components/separator";
 import { useTableEditorFiltersSort } from "@/hooks/useTableEditorFilterSort";
 // [Joshen] CSV exports require this guard as a fail-safe if the table is
 // just too large for a browser to keep all the rows in memory before

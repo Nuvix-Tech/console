@@ -10,7 +10,7 @@ import { PermissionField } from "@/components/others/permissions";
 import { useToast } from "@/ui/components";
 import { Info } from "lucide-react";
 
-import { Alert, AlertDescription, AlertTitle } from "@workspace/ui/components/alert";
+import { Alert, AlertDescription, AlertTitle } from "@nuvix/sui/components/alert";
 import React from "react";
 import * as y from "yup";
 import { useBucketStore, useFileStore, useProjectStore } from "@/lib/store";

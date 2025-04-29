@@ -5,10 +5,10 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@workspace/ui/components/dialog";
+} from "@nuvix/sui/components/dialog";
 import { CheckIcon } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@workspace/ui/components/avatar";
-import { cn } from "@workspace/ui/lib/utils.js";
+import { Avatar, AvatarFallback, AvatarImage } from "@nuvix/sui/components/avatar";
+import { cn } from "@nuvix/sui/lib/utils.js";
 
 type Props = {
   title: string;

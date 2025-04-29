@@ -12,7 +12,7 @@ import { Badge, HStack, VStack } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 import React from "react";
 import * as y from "yup";
-import { RadioGroupItem } from "@workspace/ui/components/radio-group";
+import { RadioGroupItem } from "@nuvix/sui/components/radio-group";
 import { useProjectStore } from "@/lib/store";
 
 const schema = y.object({

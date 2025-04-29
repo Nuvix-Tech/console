@@ -86,7 +86,6 @@
     "zustand": "^5.0.3"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
     "@csstools/postcss-global-data": "^2.1.1",
     "@types/lodash": "^4.17.16",
     "@types/node": "^20",

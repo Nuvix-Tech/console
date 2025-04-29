@@ -6,7 +6,7 @@ import { Button, HStack, Text, VStack } from "@chakra-ui/react";
 import { Checkbox } from "@/components/cui/checkbox";
 import { Avatar } from "@/ui/components";
 import { SelectBox1, SelectDialog } from "../select-dialog";
-import { DialogTrigger } from "@workspace/ui/components/dialog";
+import { DialogTrigger } from "@nuvix/sui/components/dialog";
 
 export type TeamRoleProps = {
   addRole: (role: string) => void;
