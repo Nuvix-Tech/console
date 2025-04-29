@@ -1,57 +1,31 @@
-# Nuvix Console
+# shadcn/ui monorepo template
 
-Welcome to the Nuvix Console project! This README will guide you through the setup and usage of the Nuvix Console.
-
-## Table of Contents
-
-- [Introduction](#introduction)
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
-
-## Introduction
-
-The Nuvix Console is a powerful tool designed to help developers manage and monitor their applications with ease. It provides a user-friendly interface and a set of robust features to streamline your workflow.
-
-## Features
-
-- Real-time monitoring
-- Customizable dashboards
-- Easy integration with various services
-- User authentication and authorization
-- Detailed logging and reporting
-
-## Installation
-
-To install the Nuvix Console, follow these steps:
-
-1. Clone the repository:
-  ```bash
-  git clone https://github.com/yourusername/nuvix-console.git
-  ```
-2. Navigate to the project directory:
-  ```bash
-  cd nuvix-console
-  ```
-3. Install the dependencies:
-  ```bash
-  npm install
-  ```
+This template is for creating a monorepo with shadcn/ui.
 
 ## Usage
 
-To start using the Nuvix Console, run the following command:
 ```bash
-npm start
+pnpm dlx shadcn@latest init
 ```
 
+## Adding components
 
-## Contributing
+To add components to your app, run the following command at the root of your `web` app:
 
-We welcome contributions to the Nuvix Console project! If you have any ideas, suggestions, or bug reports, please open an issue or submit a pull request.
+```bash
+pnpm dlx shadcn@latest add button -c apps/web
+```
 
-## License
+This will place the ui components in the `packages/ui/src/components` directory.
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+## Tailwind
+
+Your `tailwind.config.ts` and `globals.css` are already set up to use the components from the `ui` package.
+
+## Using components
+
+To use the components in your app, import them from the `ui` package.
+
+```tsx
+import { Button } from "@workspace/ui/components/button"
+```
