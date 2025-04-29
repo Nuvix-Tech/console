@@ -1,6 +1,6 @@
 "use client";
 import { CloseButton } from "@/components/cui/close-button";
-import { cn } from "@nuvix/sui/lib/utils.js";
+import { cn } from "@nuvix/sui/lib/utils";
 import { Input, Row } from "@/ui/components";
 import { Button, ButtonProps } from "@chakra-ui/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";

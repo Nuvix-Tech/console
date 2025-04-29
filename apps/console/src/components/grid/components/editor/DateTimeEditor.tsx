@@ -6,7 +6,7 @@ import type { RenderEditCellProps } from "react-data-grid";
 import { BlockKeys } from "../common/BlockKeys";
 import { Input } from "@/components/editor/components";
 import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/popover";
-import { cn } from "@nuvix/sui/lib/utils.js";
+import { cn } from "@nuvix/sui/lib/utils";
 import { Button } from "@/ui/components";
 import {
   DropdownMenu,

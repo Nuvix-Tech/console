@@ -9,7 +9,7 @@ import { IconButton } from ".";
 import styles from "./NumberInput.module.scss";
 import { Checkbox } from "@/components/cui/checkbox";
 import { LuChevronDown, LuChevronUp } from "react-icons/lu";
-import { cn } from "@nuvix/sui/lib/utils.js";
+import { cn } from "@nuvix/sui/lib/utils";
 
 export interface NumberInputProps
   extends Omit<React.ComponentProps<typeof Input>, "type" | "value" | "onChange"> {

@@ -1,4 +1,4 @@
-import { cn } from "@nuvix/sui/lib/utils.js";
+import { cn } from "@nuvix/sui/lib/utils";
 import {
   Text,
   Hash,

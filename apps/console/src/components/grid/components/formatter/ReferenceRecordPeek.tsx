@@ -14,7 +14,7 @@ import { useProjectStore } from "@/lib/store";
 import { useQuery } from "@tanstack/react-query";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import { convertByteaToHex } from "@/lib/helpers";
-import { cn } from "@nuvix/sui/lib/utils.js";
+import { cn } from "@nuvix/sui/lib/utils";
 import { Button } from "@/ui/components";
 
 interface ReferenceRecordPeekProps {

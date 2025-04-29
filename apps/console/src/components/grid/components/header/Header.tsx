@@ -42,7 +42,7 @@ import { Filter, Sort, SupaRow } from "../../types";
 import { useAppStore, useProjectStore } from "@/lib/store";
 import { useParams } from "next/navigation";
 import { Button, useToast } from "@/ui/components";
-import { cn } from "@nuvix/sui/lib/utils.js";
+import { cn } from "@nuvix/sui/lib/utils";
 import { Separator } from "@nuvix/sui/components/separator";
 import { useTableEditorFiltersSort } from "@/hooks/useTableEditorFilterSort";
 // [Joshen] CSV exports require this guard as a fail-safe if the table is

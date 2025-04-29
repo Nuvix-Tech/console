@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Handle, NodeProps } from "reactflow";
 
 import { Button } from "@nuvix/sui/components/button";
-import { cn } from "@nuvix/sui/lib/utils.js";
+import { cn } from "@nuvix/sui/lib/utils";
 
 // ReactFlow is scaling everything by the factor of 2
 const TABLE_NODE_WIDTH = 320;

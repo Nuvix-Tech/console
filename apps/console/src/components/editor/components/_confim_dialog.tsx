@@ -21,7 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@nuvix/sui/components/dialog";
-import { cn } from "@nuvix/sui/lib/utils.js";
+import { cn } from "@nuvix/sui/lib/utils";
 import { Button } from "@nuvix/sui/components/button";
 import { Separator } from "@nuvix/sui/components/separator";
 

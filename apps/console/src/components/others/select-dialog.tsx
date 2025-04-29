@@ -8,7 +8,7 @@ import {
 } from "@nuvix/sui/components/dialog";
 import { CheckIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@nuvix/sui/components/avatar";
-import { cn } from "@nuvix/sui/lib/utils.js";
+import { cn } from "@nuvix/sui/lib/utils";
 
 type Props = {
   title: string;

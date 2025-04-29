@@ -1,4 +1,4 @@
-import { cn } from "@nuvix/sui/lib/utils.js";
+import { cn } from "@nuvix/sui/lib/utils";
 import { DataGrid } from "react-data-grid";
 
 const MAX_ROWS = 20;

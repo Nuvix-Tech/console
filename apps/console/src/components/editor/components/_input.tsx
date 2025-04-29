@@ -10,7 +10,7 @@ import React, {
 // import InputIconContainer from '../form/Layout/InputIconContainer'
 import { Button, Icon } from "@/ui/components";
 import { Input as Input_Shadcn_ } from "@nuvix/sui/components/input";
-import { cn } from "@nuvix/sui/lib/utils.js";
+import { cn } from "@nuvix/sui/lib/utils";
 
 export const HIDDEN_PLACEHOLDER = "**** **** **** ****";
 
