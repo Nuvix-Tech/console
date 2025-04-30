@@ -4,11 +4,12 @@ import { toast } from "sonner";
 import type { components } from "@/data/api";
 import { handleError, patch } from "@/data/fetchers";
 import type { ResponseError } from "@/types";
+import { ProjectSdk } from "@/lib/sdk";
 
 export type UpdateColumnBody = components["schemas"]["UpdateColumnBody"];
 
 export type DatabaseColumnUpdateVariables = {
-  projectRef: string;
+  projectRef?: string;
   sdk: ProjectSdk;
   id: string;
   payload: components["schemas"]["UpdateColumnBody"];
@@ -16,21 +17,14 @@ export type DatabaseColumnUpdateVariables = {
 
 export async function updateDatabaseColumn({
   projectRef,
-  connectionString,
+  sdk,
   id,
   payload,
 }: DatabaseColumnUpdateVariables) {
-  let headers = new Headers();
-  if (connectionString) headers.set("x-connection-encrypted", connectionString);
 
-  const { data, error } = await patch("/platform/pg-meta/{ref}/columns", {
-    params: {
-      header: { "x-connection-encrypted": connectionString! },
-      path: { ref: projectRef },
-      query: { id },
-    },
-    body: payload,
-    headers,
+  const { data, error } = await patch("/columns", sdk, {
+    query: { id },
+    payload,
   });
 
   if (error) handleError(error);

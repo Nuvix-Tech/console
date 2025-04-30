@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { handleError, patch } from "@/data/fetchers";
 import type { ResponseError } from "@/types";
 import { databasePoliciesKeys } from "./keys";
+import { ProjectSdk } from "@/lib/sdk";
 
 export type DatabasePolicyUpdateVariables = {
   projectRef: string;
@@ -23,17 +24,10 @@ export async function updateDatabasePolicy({
   id,
   payload,
 }: DatabasePolicyUpdateVariables) {
-  let headers = new Headers();
-  if (connectionString) headers.set("x-connection-encrypted", connectionString);
 
-  const { data, error } = await patch("/platform/pg-meta/{ref}/policies", {
-    params: {
-      header: { "x-connection-encrypted": connectionString! },
-      path: { ref: projectRef },
-      query: { id },
-    },
-    body: payload,
-    headers,
+  const { data, error } = await patch("/policies", sdk, {
+    query: { id },
+    payload,
   });
 
   if (error) handleError(error);

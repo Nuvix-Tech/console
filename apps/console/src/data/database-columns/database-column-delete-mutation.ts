@@ -8,9 +8,10 @@ import { tableEditorKeys } from "@/data/table-editor/keys";
 import { tableRowKeys } from "@/data/table-rows/keys";
 import { viewKeys } from "@/data/views/keys";
 import type { ResponseError } from "@/types";
+import { ProjectSdk } from "@/lib/sdk";
 
 export type DatabaseColumnDeleteVariables = {
-  projectRef: string;
+  projectRef?: string;
   sdk: ProjectSdk;
   id: string;
   cascade?: boolean;
@@ -18,22 +19,13 @@ export type DatabaseColumnDeleteVariables = {
 };
 
 export async function deleteDatabaseColumn({
-  projectRef,
-  connectionString,
+  sdk,
   id,
   cascade = false,
 }: DatabaseColumnDeleteVariables) {
-  let headers = new Headers();
-  if (connectionString) headers.set("x-connection-encrypted", connectionString);
 
-  const { data, error } = await del("/platform/pg-meta/{ref}/columns", {
-    params: {
-      header: { "x-connection-encrypted": connectionString! },
-      path: { ref: projectRef },
-      // cascade is expected to be a string 'true' or 'false'
-      query: { id, cascade },
-    },
-    headers,
+  const { data, error } = await del("/columns", sdk, {
+    query: { id, cascade },
   });
 
   if (error) handleError(error);
@@ -53,6 +45,20 @@ export const useDatabaseColumnDeleteMutation = ({
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (vars) => deleteDatabaseColumn(vars),
+    onSuccess: (data, variables, context) => {
+      const { projectRef, id, table } = variables;
+      const tableId = table?.id;
+
+      // queryClient.invalidateQueries({ queryKey: databaseKeys.tableColumns(projectRef) });
+      // queryClient.invalidateQueries(databaseKeys.columns(projectRef, tableId));
+      // queryClient.invalidateQueries(tableRowKeys.list(projectRef, tableId));
+      // queryClient.invalidateQueries(viewKeys.list(projectRef));
+      // queryClient.invalidateQueries(entityTypeKeys.list(projectRef));
+
+      if (onSuccess) {
+        onSuccess(data, variables, context);
+      }
+    },
     ...options,
   });
 };

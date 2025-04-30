@@ -7,6 +7,7 @@ import { databaseKeys } from "@/data/database/keys";
 import { executeSql } from "@/data/sql/execute-sql-query";
 import type { ResponseError } from "@/types";
 import { DatabaseFunction } from "./database-functions-query";
+import { ProjectSdk } from "@/lib/sdk";
 
 export type DatabaseFunctionDeleteVariables = {
   projectRef: string;

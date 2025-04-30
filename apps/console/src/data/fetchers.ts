@@ -1,5 +1,6 @@
 // import * as Sentry from '@sentry/nextjs'
 import { API_ENDPOINT } from "@/lib/constants";
+import { ProjectSdk } from "@/lib/sdk";
 // import { uuidv4 } from '@/lib/helpers'
 // import createClient from 'openapi-fetch'
 import { ResponseError } from "@/types";
@@ -10,75 +11,35 @@ const DEFAULT_HEADERS = {
 };
 
 // This file will eventually replace what we currently have in lib/fetchWrapper, but will be currently unused until we get to that refactor
-
-const client = createClient<paths>({
-  // [Joshen] Just FYI, the replace is temporary until we update env vars API_URL to remove /platform or /v1 - should just be the base URL
-  baseUrl: API_ENDPOINT?.replace("/platform", ""),
-  referrerPolicy: "no-referrer-when-downgrade",
-  headers: DEFAULT_HEADERS,
-  credentials: "include",
-  querySerializer: {
-    array: {
-      style: "form",
-      explode: false,
-    },
-  },
-});
-
-export async function constructHeaders(headersInit?: HeadersInit | undefined) {
-  const requestId = uuidv4();
-  const headers = new Headers(headersInit);
-
-  headers.set("X-Request-Id", requestId);
-
-  if (!headers.has("Authorization")) {
-    const accessToken = await getAccessToken();
-    if (accessToken) headers.set("Authorization", `Bearer ${accessToken}`);
-  }
-
-  return headers;
+type Options = {
+  query?: Record<string, string | boolean | number | undefined>;
+  headers?: Record<string, string>;
+  payload?: any
 }
 
-// Middleware
-client.use(
-  {
-    // Middleware to add authorization headers to the request
-    async onRequest({ request }) {
-      const headers = await constructHeaders();
-      headers.forEach((value, key) => request.headers.set(key, value));
+const createClient = async (method: 'GET' | 'POST' | 'DELETE' | 'PUT' | 'PATCH' | 'HEAD' | 'TRACE' | 'OPTIONS', path: string, sdk: ProjectSdk, options: Options) => {
+  try {
+    const data = await sdk.schema.call({
+      method,
+      path,
+      ...options
+    })
+    return { data, error: null }; // returning the data received from the SDK call
+  } catch (error) {
+    return { data: null, error };
+  }
+}
 
-      return request;
-    },
-  },
-  {
-    // Middleware to format errors
-    async onResponse({ request, response }) {
-      if (response.ok) {
-        return response;
-      }
-
-      // handle errors
-      try {
-        // attempt to parse the response body as JSON
-        let body = await response.clone().json();
-
-        // add code field to body
-        body.code = response.status;
-        body.requestId = request.headers.get("X-Request-Id");
-
-        return new Response(JSON.stringify(body), {
-          headers: response.headers,
-          status: response.status,
-          statusText: response.statusText,
-        });
-      } catch {
-        // noop
-      }
-
-      return response;
-    },
-  },
-);
+const client = {
+  GET: async (path: string, sdk: ProjectSdk, options: Options) => createClient("GET", path, sdk, options),
+  POST: async (path: string, sdk: ProjectSdk, options: Options) => createClient("POST", path, sdk, options),
+  PUT: async (path: string, sdk: ProjectSdk, options: Options) => createClient("PUT", path, sdk, options),
+  PATCH: async (path: string, sdk: ProjectSdk, options: Options) => createClient("PATCH", path, sdk, options),
+  DELETE: async (path: string, sdk: ProjectSdk, options: Options) => createClient("DELETE", path, sdk, options),
+  HEAD: async (path: string, sdk: ProjectSdk, options: Options) => createClient("HEAD", path, sdk, options),
+  TRACE: async (path: string, sdk: ProjectSdk, options: Options) => createClient("TRACE", path, sdk, options),
+  OPTIONS: async (path: string, sdk: ProjectSdk, options: Options) => createClient("OPTIONS", path, sdk, options),
+};
 
 export const {
   GET: get,
@@ -115,7 +76,7 @@ export const handleError = (error: unknown): never => {
 
   // the error doesn't have a message or msg property, so we can't throw it as an error. Log it via Sentry so that we can
   // add handling for it.
-  Sentry.captureException(error);
+  // Sentry.captureException(error);
 
   // throw a generic error if we don't know what the error is. The message is intentionally vague because it might show
   // up in the UI.

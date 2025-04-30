@@ -247,4 +247,30 @@ export class Schema {
     };
     return await this.client.call("delete", uri, apiHeaders, payload);
   }
+
+  async call({
+    method,
+    path,
+    query,
+    headers,
+    payload
+  }: {
+    method: 'GET' | 'POST' | 'DELETE' | 'PUT' | 'PATCH' | 'HEAD' | 'TRACE' | 'OPTIONS';
+    path: string;
+    query?: Record<string, string | boolean | number | undefined>;
+    headers?: Record<string, string>;
+    payload?: any
+  }) {
+    const uri = new URL(this.endpoint + '/database' + path)
+    if (query) {
+      for (const [key, value] of Object.entries(query)) {
+        value && uri.searchParams.set(key, value.toString())
+      }
+    }
+    const apiHeaders: { [header: string]: string } = {
+      "content-type": "application/json",
+      ...headers,
+    };
+    return await this.client.call(method.toLowerCase(), uri, apiHeaders, payload);
+  }
 }

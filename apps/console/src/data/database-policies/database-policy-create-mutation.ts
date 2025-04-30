@@ -5,6 +5,7 @@ import type { components } from "@/data/api";
 import { handleError, post } from "@/data/fetchers";
 import type { ResponseError } from "@/types";
 import { databasePoliciesKeys } from "./keys";
+import { ProjectSdk } from "@/lib/sdk";
 
 type CreatePolicyBody = components["schemas"]["CreatePolicyBody"];
 
@@ -19,16 +20,9 @@ export async function createDatabasePolicy({
   sdk,
   payload,
 }: DatabasePolicyCreateVariables) {
-  let headers = new Headers();
-  if (connectionString) headers.set("x-connection-encrypted", connectionString);
 
-  const { data, error } = await post("/platform/pg-meta/{ref}/policies", {
-    params: {
-      header: { "x-connection-encrypted": connectionString! },
-      path: { ref: projectRef },
-    },
-    body: payload,
-    headers,
+  const { data, error } = await post("/policies", sdk, {
+    payload,
   });
 
   if (error) handleError(error);

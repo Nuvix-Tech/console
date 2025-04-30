@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { executeSql } from "@/data/sql/execute-sql-query";
 import type { ResponseError } from "@/types";
 import { invalidateSchemasQuery } from "./schemas-query";
+import { ProjectSdk } from "@/lib/sdk";
 
 export type SchemaCreateVariables = {
   name: string;

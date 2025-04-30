@@ -2,6 +2,7 @@ import { useMutation, UseMutationOptions, useQueryClient } from "@tanstack/react
 
 import { del, handleError } from "@/data/fetchers";
 import type { ResponseError } from "@/types";
+import { ProjectSdk } from "@/lib/sdk";
 
 export type DatabasePolicyDeleteVariables = {
   projectRef: string;
@@ -10,16 +11,9 @@ export type DatabasePolicyDeleteVariables = {
 };
 
 export async function deleteDatabasePolicy({ projectRef, sdk, id }: DatabasePolicyDeleteVariables) {
-  let headers = new Headers();
-  if (connectionString) headers.set("x-connection-encrypted", connectionString);
 
-  const { data, error } = await del("/platform/pg-meta/{ref}/policies", {
-    params: {
-      header: { "x-connection-encrypted": connectionString! },
-      path: { ref: projectRef },
-      query: { id },
-    },
-    headers,
+  const { data, error } = await del("/policies", sdk, {
+    query: { id },
   });
 
   if (error) handleError(error);

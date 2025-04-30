@@ -1,4 +1,4 @@
-import { useQuery, UseQueryOptions } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { executeSql, ExecuteSqlError } from "../sql/execute-sql-query";
 import { databaseKeys } from "./keys";
 import { QueryOptions } from "@/types";
