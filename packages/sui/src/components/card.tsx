@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { cn } from "@nuvix/sui/lib/utils.js";
+import { cn } from "@nuvix/sui/lib/utils";
 
 function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (

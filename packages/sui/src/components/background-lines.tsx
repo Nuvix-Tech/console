@@ -1,5 +1,5 @@
 "use client";
-import { cn } from "@nuvix/sui/lib/utils.js";
+import { cn } from "@nuvix/sui/lib/utils";
 import { motion } from "framer-motion";
 import React from "react";
 

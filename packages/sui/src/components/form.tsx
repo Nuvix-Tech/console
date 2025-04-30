@@ -2,7 +2,7 @@
 import * as React from "react";
 import * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
-import { cn } from "@nuvix/sui/lib/utils.js";
+import { cn } from "@nuvix/sui/lib/utils";
 import { Label } from "@nuvix/sui/components/label";
 import { useFormikContext } from "formik";
 
