@@ -78,5 +78,7 @@ function getProjectSdk(id: string) {
   return sdkForProject;
 }
 
+export type ProjectSdk = typeof sdkForProject;
+
 export { sdkForConsole, getProjectSdk };
 export type { sdkForProject };

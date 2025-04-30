@@ -18,6 +18,7 @@ import indexes from "./pg-meta-indexes";
 import columnPrivileges from "./pg-meta-column-privileges";
 import * as query from "./query/index";
 
+export type * from "./types";
 export default {
   roles,
   columns,

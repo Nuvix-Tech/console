@@ -8,7 +8,7 @@ const MAX_CHARACTERS = 1000; // import {  } from "@supabase/pg-meta/src/query/ta
 // import { useParams } from "common";
 // import { useTableEditorQuery } from "data/table-editor/table-editor-query";
 // import { isTableLike } from "data/table-editor/table-editor-types";
-// import { useGetCellValueMutation } from "data/table-rows/get-cell-value-mutation";
+import { useGetCellValueMutation } from "@/data/table-rows/get-cell-value-mutation";
 // import { useSelectedProject } from "hooks/misc/useSelectedProject";
 import { useTableEditorTableState } from "@/lib/store/table";
 import { Button, useToast } from "@nuvix/ui/components";

@@ -170,6 +170,9 @@ importers:
       next-themes:
         specifier: ^0.4.4
         version: 0.4.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      pg-minify:
+        specifier: ^1.7.0
+        version: 1.7.0
       postcss:
         specifier: ^8.5.3
         version: 8.5.3
@@ -255,6 +258,9 @@ importers:
       '@csstools/postcss-global-data':
         specifier: ^2.1.1
         version: 2.1.1(postcss@8.5.3)
+      '@nuvix/pg-meta':
+        specifier: workspace:*
+        version: link:../../packages/pg-meta
       '@nuvix/sui':
         specifier: workspace:*
         version: link:../../packages/sui
@@ -328,6 +334,9 @@ importers:
         specifier: ^3.22.4
         version: 3.24.2
     devDependencies:
+      '@sinclair/typebox':
+        specifier: latest
+        version: 0.34.33
       '@types/pg':
         specifier: ^8.11.11
         version: 8.11.14
@@ -2334,6 +2343,9 @@ packages:
     resolution: {integrity: sha512-ECyOuDeH3C1I8jH2MK1RtBJW+YPMvSfT0a5NN0nHfQYnDSJ6tUiZH3gzwVP5/Kfh/+Tt7tpWVF9LXNTnhTJ3kA==}
     cpu: [x64]
     os: [win32]
+
+  '@sinclair/typebox@0.34.33':
+    resolution: {integrity: sha512-5HAV9exOMcXRUxo+9iYB5n09XxzCXnfy4VTNW4xnDv+FgjzAGY989C28BIdljKqmF+ZltUwujE3aossvcVtq6g==}
 
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
@@ -4775,6 +4787,10 @@ packages:
   pg-int8@1.0.1:
     resolution: {integrity: sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw==}
     engines: {node: '>=4.0.0'}
+
+  pg-minify@1.7.0:
+    resolution: {integrity: sha512-kFPxAWAhPMvOqnY7klP3scdU5R7bxpAYOm8vGExuIkcSIwuFkZYl4C4XIPQ8DtXY2NzVmAX1aFHpvFSXQ/qQmA==}
+    engines: {node: '>=14.0.0'}
 
   pg-numeric@1.0.2:
     resolution: {integrity: sha512-BM/Thnrw5jm2kKLE5uJkXqqExRUY/toLHda65XgFTBTFYZyopbKjBe29Ii3RbkvlsMoFwD+tHeGaCjjv0gHlyw==}
@@ -7804,6 +7820,8 @@ snapshots:
 
   '@rollup/rollup-win32-x64-msvc@4.40.1':
     optional: true
+
+  '@sinclair/typebox@0.34.33': {}
 
   '@socket.io/component-emitter@3.1.2': {}
 
@@ -10975,6 +10993,8 @@ snapshots:
   pg-connection-string@2.8.5: {}
 
   pg-int8@1.0.1: {}
+
+  pg-minify@1.7.0: {}
 
   pg-numeric@1.0.2: {}
 
