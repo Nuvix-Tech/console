@@ -1,7 +1,7 @@
 import "@appwrite.io/pink-icons";
 import "@nuvix/ui/styles/index.scss";
 import "@nuvix/ui/tokens/index.scss";
-import "./globals.css";
+import "@nuvix/sui/globals.css";
 
 import Providers from "@/components/providers";
 import classNames from "classnames";
