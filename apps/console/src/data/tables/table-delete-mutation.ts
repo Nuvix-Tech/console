@@ -19,10 +19,8 @@ export type TableDeleteVariables = {
 };
 
 export async function deleteTable({ projectRef, sdk, id, cascade = false }: TableDeleteVariables) {
-
   const { data, error } = await del("/platform/pg-meta/{ref}/tables", sdk, {
     query: { id, cascade },
-
   });
 
   if (error) handleError(error);

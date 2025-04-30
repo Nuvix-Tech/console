@@ -57,13 +57,12 @@ export const useTablesQuery = <TData = TablesData>(
   { projectRef, sdk, schema, includeColumns }: TablesVariables,
   { enabled = true, ...options }: QueryOptions<TablesData, TablesError, TData> = {},
 ) => {
-  return useQuery(
-    {
-      queryKey: tableKeys.list(projectRef, schema, includeColumns),
-      queryFn: ({ signal }) => getTables({ projectRef, sdk, schema, includeColumns }, signal),
-      enabled: enabled && typeof projectRef !== "undefined", ...options
-    },
-  );
+  return useQuery({
+    queryKey: tableKeys.list(projectRef, schema, includeColumns),
+    queryFn: ({ signal }) => getTables({ projectRef, sdk, schema, includeColumns }, signal),
+    enabled: enabled && typeof projectRef !== "undefined",
+    ...options,
+  });
 };
 
 /**

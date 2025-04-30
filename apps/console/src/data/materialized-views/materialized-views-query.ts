@@ -18,7 +18,7 @@ export async function getMaterializedViews(
 ) {
   if (!projectRef) throw new Error("projectRef is required");
 
-  const { data, error } = await get("/materialized-views",sdk, {
+  const { data, error } = await get("/materialized-views", sdk, {
     query: {
       included_schemas: schema || "",
       include_columns: true,
@@ -40,17 +40,15 @@ export const useMaterializedViewsQuery = <TData = MaterializedViewsData>(
     ...options
   }: QueryOptions<MaterializedViewsData, MaterializedViewsError, TData> = {},
 ) =>
-  useQuery(
-    {
-      queryKey: schema
-        ? materializedViewKeys.listBySchema(projectRef, schema)
-        : materializedViewKeys.list(projectRef),
+  useQuery({
+    queryKey: schema
+      ? materializedViewKeys.listBySchema(projectRef, schema)
+      : materializedViewKeys.list(projectRef),
 
-      queryFn: ({ signal }) => getMaterializedViews({ projectRef, sdk, schema }, signal),
-      enabled: enabled && typeof projectRef !== "undefined",
-      // We're using a staleTime of 0 here because the only way to create a
-      // materialized view is via SQL, which we don't know about
-      staleTime: 0,
-      ...options,
-    },
-  );
+    queryFn: ({ signal }) => getMaterializedViews({ projectRef, sdk, schema }, signal),
+    enabled: enabled && typeof projectRef !== "undefined",
+    // We're using a staleTime of 0 here because the only way to create a
+    // materialized view is via SQL, which we don't know about
+    staleTime: 0,
+    ...options,
+  });

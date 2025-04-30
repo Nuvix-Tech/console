@@ -23,7 +23,7 @@ export async function getForeignTables(
       included_schemas: schema || "",
       include_columns: true,
     } as any,
-    signal
+    signal,
   });
 
   if (error) handleError(error);
@@ -37,13 +37,11 @@ export const useForeignTablesQuery = <TData = ForeignTablesData>(
   { projectRef, sdk, schema }: ForeignTablesVariables,
   { enabled = true, ...options }: QueryOptions<ForeignTablesData, ForeignTablesError, TData> = {},
 ) =>
-  useQuery(
-    {
-      queryKey: schema
-        ? foreignTableKeys.listBySchema(projectRef, schema)
-        : foreignTableKeys.list(projectRef),
-      queryFn: ({ signal }) => getForeignTables({ projectRef, sdk, schema }, signal),
-      enabled: enabled && typeof projectRef !== "undefined",
-      ...options,
-    },
-  );
+  useQuery({
+    queryKey: schema
+      ? foreignTableKeys.listBySchema(projectRef, schema)
+      : foreignTableKeys.list(projectRef),
+    queryFn: ({ signal }) => getForeignTables({ projectRef, sdk, schema }, signal),
+    enabled: enabled && typeof projectRef !== "undefined",
+    ...options,
+  });

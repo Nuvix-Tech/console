@@ -34,14 +34,12 @@ export const useViewsQuery = <TData = ViewsData>(
   { projectRef, sdk, schema }: ViewsVariables,
   { enabled = true, ...options }: QueryOptions<ViewsData, ViewsError, TData> = {},
 ) =>
-  useQuery(
-    {
-      queryKey: schema ? viewKeys.listBySchema(projectRef, schema) : viewKeys.list(projectRef),
-      queryFn: ({ signal }) => getViews({ projectRef, sdk, schema }, signal),
-      enabled: enabled && typeof projectRef !== "undefined",
-      // We're using a staleTime of 0 here because the only way to create a
-      // view is via SQL, which we don't know about
-      staleTime: 0,
-      ...options,
-    },
-  );
+  useQuery({
+    queryKey: schema ? viewKeys.listBySchema(projectRef, schema) : viewKeys.list(projectRef),
+    queryFn: ({ signal }) => getViews({ projectRef, sdk, schema }, signal),
+    enabled: enabled && typeof projectRef !== "undefined",
+    // We're using a staleTime of 0 here because the only way to create a
+    // view is via SQL, which we don't know about
+    staleTime: 0,
+    ...options,
+  });

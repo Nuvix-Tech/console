@@ -20,10 +20,9 @@ export async function grantColumnPrivileges({
   sdk,
   grants,
 }: ColumnPrivilegesGrantVariables) {
-
-  const { data, error } = await post("/column-privileges",sdk, {
+  const { data, error } = await post("/column-privileges", sdk, {
     payload: grants,
-    });
+  });
 
   if (error) handleError(error);
   return data;

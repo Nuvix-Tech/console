@@ -18,7 +18,6 @@ export type TableCreateVariables = {
 };
 
 export async function createTable({ projectRef, sdk, payload }: TableCreateVariables) {
-
   const { data, error } = await post("/tables", sdk, {
     payload,
   });

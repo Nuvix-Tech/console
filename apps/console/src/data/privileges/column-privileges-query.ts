@@ -36,11 +36,9 @@ export const useColumnPrivilegesQuery = <TData = ColumnPrivilegesData>(
     ...options
   }: QueryOptions<ColumnPrivilegesData, ColumnPrivilegesError, TData> = {},
 ) =>
-  useQuery(
-    {
-      queryKey: privilegeKeys.columnPrivilegesList(projectRef),
-      queryFn: ({ signal }) => getColumnPrivileges({ projectRef, sdk }, signal),
-      enabled: enabled && typeof projectRef !== "undefined",
-      ...options,
-    },
-  );
+  useQuery({
+    queryKey: privilegeKeys.columnPrivilegesList(projectRef),
+    queryFn: ({ signal }) => getColumnPrivileges({ projectRef, sdk }, signal),
+    enabled: enabled && typeof projectRef !== "undefined",
+    ...options,
+  });

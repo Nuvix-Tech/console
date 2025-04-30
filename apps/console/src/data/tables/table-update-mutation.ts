@@ -20,7 +20,6 @@ export type TableUpdateVariables = {
 };
 
 export async function updateTable({ projectRef, sdk, id, payload }: TableUpdateVariables) {
-
   const { data, error } = await patch("/tables", sdk, {
     query: { id },
     payload,

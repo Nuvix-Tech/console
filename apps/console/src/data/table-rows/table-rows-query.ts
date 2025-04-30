@@ -229,34 +229,30 @@ export const useTableRowsQuery = <TData = TableRowsData>(
   { enabled = true, ...options }: QueryOptions<TableRowsData, TableRowsError, TData> = {},
 ) => {
   const queryClient = useQueryClient();
-  return useQuery(
-    {
-      queryKey: tableRowKeys.tableRows(projectRef, {
-        table: { id: tableId },
-        ...args,
-      }),
+  return useQuery({
+    queryKey: tableRowKeys.tableRows(projectRef, {
+      table: { id: tableId },
+      ...args,
+    }),
 
-      queryFn: ({ signal }) =>
-        getTableRows({ queryClient, projectRef, sdk, tableId, ...args }, signal),
+    queryFn: ({ signal }) =>
+      getTableRows({ queryClient, projectRef, sdk, tableId, ...args }, signal),
 
-      enabled: enabled && typeof projectRef !== "undefined" && typeof tableId !== "undefined",
-      ...options,
-    },
-  );
+    enabled: enabled && typeof projectRef !== "undefined" && typeof tableId !== "undefined",
+    ...options,
+  });
 };
 
 export function prefetchTableRows(
   client: QueryClient,
   { projectRef, sdk, tableId, ...args }: Omit<TableRowsVariables, "queryClient">,
 ) {
-  return client.fetchQuery(
-    {
-      queryKey: tableRowKeys.tableRows(projectRef, {
-        table: { id: tableId },
-        ...args,
-      }),
-      queryFn: ({ signal }) =>
-        getTableRows({ queryClient: client, projectRef, sdk, tableId, ...args }, signal),
-    }
-  );
+  return client.fetchQuery({
+    queryKey: tableRowKeys.tableRows(projectRef, {
+      table: { id: tableId },
+      ...args,
+    }),
+    queryFn: ({ signal }) =>
+      getTableRows({ queryClient: client, projectRef, sdk, tableId, ...args }, signal),
+  });
 }

@@ -35,11 +35,9 @@ export const useEnumeratedTypesQuery = <TData = EnumeratedTypesData>(
     ...options
   }: QueryOptions<EnumeratedTypesData, EnumeratedTypesError, TData> = {},
 ) =>
-  useQuery(
-    {
-      queryKey: enumeratedTypesKeys.list(projectRef),
-      queryFn: ({ signal }) => getEnumeratedTypes({ projectRef, sdk }, signal),
-      enabled: enabled && typeof projectRef !== "undefined",
-      ...options,
-    },
-  );
+  useQuery({
+    queryKey: enumeratedTypesKeys.list(projectRef),
+    queryFn: ({ signal }) => getEnumeratedTypes({ projectRef, sdk }, signal),
+    enabled: enabled && typeof projectRef !== "undefined",
+    ...options,
+  });
