@@ -14,31 +14,45 @@ const DEFAULT_HEADERS = {
 type Options = {
   query?: Record<string, string | boolean | number | undefined>;
   headers?: Record<string, string>;
-  payload?: any
-}
+  payload?: any;
+  signal?: AbortSignal;
+};
 
-const createClient = async (method: 'GET' | 'POST' | 'DELETE' | 'PUT' | 'PATCH' | 'HEAD' | 'TRACE' | 'OPTIONS', path: string, sdk: ProjectSdk, options: Options) => {
+const createClient = async (
+  method: "GET" | "POST" | "DELETE" | "PUT" | "PATCH" | "HEAD" | "TRACE" | "OPTIONS",
+  path: string,
+  sdk: ProjectSdk,
+  options?: Options,
+) => {
   try {
     const data = await sdk.schema.call({
       method,
       path,
-      ...options
-    })
+      ...options,
+    });
     return { data, error: null }; // returning the data received from the SDK call
   } catch (error) {
     return { data: null, error };
   }
-}
+};
 
 const client = {
-  GET: async (path: string, sdk: ProjectSdk, options: Options) => createClient("GET", path, sdk, options),
-  POST: async (path: string, sdk: ProjectSdk, options: Options) => createClient("POST", path, sdk, options),
-  PUT: async (path: string, sdk: ProjectSdk, options: Options) => createClient("PUT", path, sdk, options),
-  PATCH: async (path: string, sdk: ProjectSdk, options: Options) => createClient("PATCH", path, sdk, options),
-  DELETE: async (path: string, sdk: ProjectSdk, options: Options) => createClient("DELETE", path, sdk, options),
-  HEAD: async (path: string, sdk: ProjectSdk, options: Options) => createClient("HEAD", path, sdk, options),
-  TRACE: async (path: string, sdk: ProjectSdk, options: Options) => createClient("TRACE", path, sdk, options),
-  OPTIONS: async (path: string, sdk: ProjectSdk, options: Options) => createClient("OPTIONS", path, sdk, options),
+  GET: async (path: string, sdk: ProjectSdk, options?: Options) =>
+    createClient("GET", path, sdk, options),
+  POST: async (path: string, sdk: ProjectSdk, options?: Options) =>
+    createClient("POST", path, sdk, options),
+  PUT: async (path: string, sdk: ProjectSdk, options?: Options) =>
+    createClient("PUT", path, sdk, options),
+  PATCH: async (path: string, sdk: ProjectSdk, options?: Options) =>
+    createClient("PATCH", path, sdk, options),
+  DELETE: async (path: string, sdk: ProjectSdk, options?: Options) =>
+    createClient("DELETE", path, sdk, options),
+  HEAD: async (path: string, sdk: ProjectSdk, options?: Options) =>
+    createClient("HEAD", path, sdk, options),
+  TRACE: async (path: string, sdk: ProjectSdk, options?: Options) =>
+    createClient("TRACE", path, sdk, options),
+  OPTIONS: async (path: string, sdk: ProjectSdk, options?: Options) =>
+    createClient("OPTIONS", path, sdk, options),
 };
 
 export const {

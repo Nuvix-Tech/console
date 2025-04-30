@@ -5,6 +5,7 @@ import type { components } from "@/data/api";
 import { del, handleError } from "@/data/fetchers";
 import type { ResponseError } from "@/types";
 import { privilegeKeys } from "./keys";
+import { ProjectSdk } from "@/lib/sdk";
 
 export type ColumnPrivilegesRevoke = components["schemas"]["RevokeColumnPrivilegesBody"];
 
@@ -19,17 +20,8 @@ export async function revokeColumnPrivileges({
   sdk,
   revokes,
 }: ColumnPrivilegesRevokeVariables) {
-  const headers = new Headers();
-  if (connectionString) headers.set("x-connection-encrypted", connectionString);
-
-  const { data, error } = await del("/platform/pg-meta/{ref}/column-privileges", {
-    params: {
-      path: { ref: projectRef },
-      // this is needed to satisfy the typescript, but it doesn't pass the actual header
-      header: { "x-connection-encrypted": connectionString! },
-    },
-    body: revokes,
-    headers,
+  const { data, error } = await del("/column-privileges", sdk, {
+    payload: revokes,
   });
 
   if (error) handleError(error);

@@ -5,6 +5,7 @@ import { executeSql } from "@/data/sql/execute-sql-query";
 import { quoteLiteral } from "@/lib/pg-format";
 import type { ResponseError } from "@/types";
 import { databaseTriggerKeys } from "./keys";
+import { ProjectSdk } from "@/lib/sdk";
 
 // [Joshen] Writing this query within FE as the PATCH endpoint from pg-meta only supports updating
 // trigger name and enabled mode. So we'll delete and create the trigger, within a single transaction

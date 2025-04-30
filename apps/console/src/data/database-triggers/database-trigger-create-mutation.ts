@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { handleError, post } from "@/data/fetchers";
 import type { ResponseError } from "@/types";
 import { databaseTriggerKeys } from "./keys";
+import { ProjectSdk } from "@/lib/sdk";
 
 export type DatabaseTriggerCreateVariables = {
   projectRef: string;
@@ -16,16 +17,8 @@ export async function createDatabaseTrigger({
   sdk,
   payload,
 }: DatabaseTriggerCreateVariables) {
-  let headers = new Headers();
-  if (connectionString) headers.set("x-connection-encrypted", connectionString);
-
-  const { data, error } = await post("/platform/pg-meta/{ref}/triggers", {
-    params: {
-      header: { "x-connection-encrypted": connectionString! },
-      path: { ref: projectRef },
-    },
-    body: payload,
-    headers,
+  const { data, error } = await post("/triggers", sdk, {
+    payload,
   });
 
   if (error) handleError(error);

@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { handleError, patch } from "@/data/fetchers";
 import type { ResponseError } from "@/types";
 import { databasePublicationsKeys } from "./keys";
+import { ProjectSdk } from "@/lib/sdk";
 
 export type DatabasePublicationUpdateVariables = {
   projectRef: string;
@@ -26,9 +27,6 @@ export async function updateDatabasePublication({
   publish_delete,
   publish_truncate,
 }: DatabasePublicationUpdateVariables) {
-  let headers = new Headers();
-  if (connectionString) headers.set("x-connection-encrypted", connectionString);
-
   const body = { id } as any;
   if (tables !== undefined) body.tables = tables;
   if (publish_insert !== undefined) body.publish_insert = publish_insert;
@@ -36,14 +34,9 @@ export async function updateDatabasePublication({
   if (publish_delete !== undefined) body.publish_delete = publish_delete;
   if (publish_truncate !== undefined) body.publish_truncate = publish_truncate;
 
-  const { data, error } = await patch("/platform/pg-meta/{ref}/publications", {
-    params: {
-      header: { "x-connection-encrypted": connectionString! },
-      path: { ref: projectRef },
-      query: { id },
-    },
-    body,
-    headers,
+  const { data, error } = await patch("/publications", sdk, {
+    query: { id },
+    payload: body,
   });
 
   if (error) handleError(error);

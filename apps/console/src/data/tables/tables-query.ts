@@ -4,8 +4,9 @@ import { sortBy } from "lodash";
 import { useCallback } from "react";
 
 import { get, handleError } from "@/data/fetchers";
-import type { ResponseError } from "@/types";
+import type { QueryOptions, ResponseError } from "@/types";
 import { tableKeys } from "./keys";
+import { ProjectSdk } from "@/lib/sdk";
 
 export type TablesVariables = {
   projectRef?: string;
@@ -26,9 +27,6 @@ export async function getTables(
     throw new Error("projectRef is required");
   }
 
-  let headers = new Headers();
-  if (connectionString) headers.set("x-connection-encrypted", connectionString);
-
   let queryParams: Record<string, string> = {
     //include_columns is a string, even though it's true or false
     include_columns: `${includeColumns}`,
@@ -37,13 +35,8 @@ export async function getTables(
     queryParams.included_schemas = schema;
   }
 
-  const { data, error } = await get("/platform/pg-meta/{ref}/tables", {
-    params: {
-      header: { "x-connection-encrypted": connectionString! },
-      path: { ref: projectRef },
-      query: queryParams as any,
-    },
-    headers,
+  const { data, error } = await get("/tables", sdk, {
+    query: queryParams as any,
     signal,
   });
 
@@ -68,8 +61,8 @@ export const useTablesQuery = <TData = TablesData>(
     {
       queryKey: tableKeys.list(projectRef, schema, includeColumns),
       queryFn: ({ signal }) => getTables({ projectRef, sdk, schema, includeColumns }, signal),
+      enabled: enabled && typeof projectRef !== "undefined", ...options
     },
-    { enabled: enabled && typeof projectRef !== "undefined", ...options },
   );
 };
 

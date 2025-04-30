@@ -5,10 +5,11 @@ import { executeSql } from "@/data/sql/execute-sql-query";
 import { wrapWithTransaction } from "@/data/sql/utils/transaction";
 import type { ResponseError } from "@/types";
 import { enumeratedTypesKeys } from "./keys";
+import { ProjectSdk } from "@/lib/sdk";
 
 export type EnumeratedTypeUpdateVariables = {
   projectRef: string;
-  sdk: string;
+  sdk: ProjectSdk;
   schema: string;
   name: { original: string; updated: string };
   description?: string;

@@ -20,7 +20,6 @@ export async function createDatabasePolicy({
   sdk,
   payload,
 }: DatabasePolicyCreateVariables) {
-
   const { data, error } = await post("/policies", sdk, {
     payload,
   });

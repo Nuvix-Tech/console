@@ -6,6 +6,7 @@ import type { components } from "@/data/api";
 import { handleError, post } from "@/data/fetchers";
 import type { ResponseError } from "@/types";
 import { tableKeys } from "./keys";
+import { ProjectSdk } from "@/lib/sdk";
 
 export type CreateTableBody = components["schemas"]["CreateTableBody"];
 
@@ -17,16 +18,9 @@ export type TableCreateVariables = {
 };
 
 export async function createTable({ projectRef, sdk, payload }: TableCreateVariables) {
-  let headers = new Headers();
-  if (connectionString) headers.set("x-connection-encrypted", connectionString);
 
-  const { data, error } = await post("/platform/pg-meta/{ref}/tables", {
-    params: {
-      header: { "x-connection-encrypted": connectionString! },
-      path: { ref: projectRef },
-    },
-    body: payload,
-    headers,
+  const { data, error } = await post("/tables", sdk, {
+    payload,
   });
 
   if (error) handleError(error);

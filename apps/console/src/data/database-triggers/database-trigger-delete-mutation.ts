@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { del, handleError } from "@/data/fetchers";
 import type { ResponseError } from "@/types";
 import { databaseTriggerKeys } from "./keys";
+import { ProjectSdk } from "@/lib/sdk";
 
 export type DatabaseTriggerDeleteVariables = {
   id: number;
@@ -19,16 +20,8 @@ export async function deleteDatabaseTrigger({
   projectRef,
   sdk,
 }: DatabaseTriggerDeleteVariables) {
-  let headers = new Headers();
-  if (connectionString) headers.set("x-connection-encrypted", connectionString);
-
-  const { data, error } = await del("/platform/pg-meta/{ref}/triggers", {
-    params: {
-      header: { "x-connection-encrypted": connectionString! },
-      path: { ref: projectRef },
-      query: { id },
-    },
-    headers,
+  const { data, error } = await del("/triggers", sdk, {
+    query: { id },
   });
 
   if (error) handleError(error);

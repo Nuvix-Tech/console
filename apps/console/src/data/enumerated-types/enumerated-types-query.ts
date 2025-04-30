@@ -2,8 +2,9 @@ import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 
 import type { components } from "@/data/api";
 import { get, handleError } from "@/data/fetchers";
-import type { ResponseError } from "@/types";
+import type { QueryOptions, ResponseError } from "@/types";
 import { enumeratedTypesKeys } from "./keys";
+import { ProjectSdk } from "@/lib/sdk";
 
 export type EnumeratedTypesVariables = {
   projectRef?: string;
@@ -18,17 +19,7 @@ export async function getEnumeratedTypes(
 ) {
   if (!projectRef) throw new Error("projectRef is required");
 
-  let headers = new Headers();
-  if (connectionString) headers.set("x-connection-encrypted", connectionString);
-
-  const { data, error } = await get("/platform/pg-meta/{ref}/types", {
-    params: {
-      header: { "x-connection-encrypted": connectionString! },
-      path: { ref: projectRef },
-    },
-    headers: Object.fromEntries(headers),
-    signal,
-  });
+  const { data, error } = await get("/types", sdk);
 
   if (error) handleError(error);
   return data;
@@ -48,8 +39,6 @@ export const useEnumeratedTypesQuery = <TData = EnumeratedTypesData>(
     {
       queryKey: enumeratedTypesKeys.list(projectRef),
       queryFn: ({ signal }) => getEnumeratedTypes({ projectRef, sdk }, signal),
-    },
-    {
       enabled: enabled && typeof projectRef !== "undefined",
       ...options,
     },

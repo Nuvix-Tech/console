@@ -23,7 +23,6 @@ export async function deleteDatabaseColumn({
   id,
   cascade = false,
 }: DatabaseColumnDeleteVariables) {
-
   const { data, error } = await del("/columns", sdk, {
     query: { id, cascade },
   });

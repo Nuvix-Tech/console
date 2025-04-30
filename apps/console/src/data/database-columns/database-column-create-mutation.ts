@@ -12,11 +12,7 @@ export type DatabaseColumnCreateVariables = {
   payload: CreateColumnBody;
 };
 
-export async function createDatabaseColumn({
-  sdk,
-  payload,
-}: DatabaseColumnCreateVariables) {
-
+export async function createDatabaseColumn({ sdk, payload }: DatabaseColumnCreateVariables) {
   const { data, error } = await post("/columns", sdk, {
     payload,
   });

@@ -8,6 +8,7 @@ import { tableEditorKeys } from "@/data/table-editor/keys";
 import { viewKeys } from "@/data/views/keys";
 import type { ResponseError } from "@/types";
 import { tableKeys } from "./keys";
+import { ProjectSdk } from "@/lib/sdk";
 
 export type TableDeleteVariables = {
   projectRef: string;
@@ -18,16 +19,10 @@ export type TableDeleteVariables = {
 };
 
 export async function deleteTable({ projectRef, sdk, id, cascade = false }: TableDeleteVariables) {
-  let headers = new Headers();
-  if (connectionString) headers.set("x-connection-encrypted", connectionString);
 
-  const { data, error } = await del("/platform/pg-meta/{ref}/tables", {
-    params: {
-      header: { "x-connection-encrypted": connectionString! },
-      path: { ref: projectRef },
-      query: { id, cascade },
-    },
-    headers,
+  const { data, error } = await del("/platform/pg-meta/{ref}/tables", sdk, {
+    query: { id, cascade },
+
   });
 
   if (error) handleError(error);

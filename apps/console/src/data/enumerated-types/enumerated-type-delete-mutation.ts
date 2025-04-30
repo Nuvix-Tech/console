@@ -4,10 +4,11 @@ import { toast } from "sonner";
 import { executeSql } from "@/data/sql/execute-sql-query";
 import type { ResponseError } from "@/types";
 import { enumeratedTypesKeys } from "./keys";
+import { ProjectSdk } from "@/lib/sdk";
 
 export type EnumeratedTypeDeleteVariables = {
   projectRef: string;
-  sdk: string;
+  sdk: ProjectSdk;
   name: string;
   schema: string;
 };

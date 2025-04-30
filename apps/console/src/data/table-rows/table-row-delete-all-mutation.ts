@@ -5,10 +5,11 @@ import { Query } from "@nuvix/pg-meta/src/query";
 import type { Filter, SupaTable } from "@/components/grid/types";
 import { executeSql } from "@/data/sql/execute-sql-query";
 import { RoleImpersonationState, wrapWithRoleImpersonation } from "@/lib/role-impersonation";
-import { isRoleImpersonationEnabled } from "state/role-impersonation-state";
+// import { isRoleImpersonationEnabled } from "state/role-impersonation-state";
 import type { ResponseError } from "@/types";
 import { tableRowKeys } from "./keys";
 import { formatFilterValue } from "./utils";
+import { ProjectSdk } from "@/lib/sdk";
 
 export type TableRowDeleteAllVariables = {
   projectRef: string;
@@ -50,7 +51,7 @@ export async function deleteAllTableRow({
     projectRef,
     sdk,
     sql,
-    isRoleImpersonationEnabled: isRoleImpersonationEnabled(roleImpersonationState?.role),
+    // isRoleImpersonationEnabled: isRoleImpersonationEnabled(roleImpersonationState?.role),
   });
 
   return result;

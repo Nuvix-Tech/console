@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { handleError, post } from "@/data/fetchers";
 import type { ResponseError } from "@/types";
 import { databasePublicationsKeys } from "./keys";
+import { ProjectSdk } from "@/lib/sdk";
 
 export type DatabasePublicationCreateVariables = {
   projectRef: string;
@@ -26,15 +27,8 @@ export async function createDatabasePublication({
   publish_delete = false,
   publish_truncate = false,
 }: DatabasePublicationCreateVariables) {
-  let headers = new Headers();
-  if (connectionString) headers.set("x-connection-encrypted", connectionString);
-
-  const { data, error } = await post("/platform/pg-meta/{ref}/publications", {
-    params: {
-      header: { "x-connection-encrypted": connectionString! },
-      path: { ref: projectRef },
-    },
-    body: {
+  const { data, error } = await post("/publications", sdk, {
+    payload: {
       name,
       tables,
       publish_insert,
@@ -42,7 +36,6 @@ export async function createDatabasePublication({
       publish_delete,
       publish_truncate,
     },
-    headers,
   });
 
   if (error) handleError(error);

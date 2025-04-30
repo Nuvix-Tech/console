@@ -6,6 +6,7 @@ import { executeSql } from "@/data/sql/execute-sql-query";
 import type { ResponseError } from "@/types";
 import { invalidateTablePrivilegesQuery } from "./table-privileges-query";
 import { privilegeKeys } from "./keys";
+import { ProjectSdk } from "@/lib/sdk";
 
 export type TablePrivilegesRevoke = Parameters<
   typeof pgMeta.tablePrivileges.revoke

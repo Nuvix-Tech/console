@@ -1,8 +1,8 @@
 import { QueryKey, useQuery, UseQueryOptions } from "@tanstack/react-query";
 
 import { handleError as handleErrorFetchers, post } from "@/data/fetchers";
-import { useSelectedProject } from "hooks/misc/useSelectedProject";
-import { MB, PROJECT_STATUS } from "@/lib/constants";
+// import { useSelectedProject } from "hooks/misc/useSelectedProject";
+// import { MB, PROJECT_STATUS } from "@/lib/constants";
 import {
   ROLE_IMPERSONATION_NO_RESULTS,
   ROLE_IMPERSONATION_SQL_LINE_COUNT,
@@ -41,27 +41,19 @@ export async function executeSql(
 
   const sqlSize = new Blob([sql]).size;
   // [Joshen] I think the limit is around 1MB from testing, but its not exactly 1MB it seems
+  const MB = 1;
   if (sqlSize > 0.98 * MB) {
     throw new Error("Query is too large to be run via the SQL Editor");
   }
 
-  let headers = new Headers(headersInit);
-  if (connectionString) headers.set("x-connection-encrypted", connectionString);
-
-  let { data, error } = await post("/platform/pg-meta/{ref}/query", {
+  let { data, error } = await post("/query", sdk, {
     signal,
-    params: {
-      header: { "x-connection-encrypted": connectionString ?? "" },
-      path: { ref: projectRef },
-      // @ts-expect-error: This is just a client side thing to identify queries better
-      query: {
-        key:
-          queryKey?.filter((seg) => typeof seg === "string" || typeof seg === "number").join("-") ??
-          "",
-      },
+    query: {
+      key:
+        queryKey?.filter((seg) => typeof seg === "string" || typeof seg === "number").join("-") ??
+        "",
     },
-    body: { query: sql },
-    headers,
+    payload: { query: sql },
   });
 
   if (error) {
@@ -119,8 +111,8 @@ export const useExecuteSqlQuery = <TData = ExecuteSqlData>(
   { projectRef, sdk, sql, queryKey, handleError, isRoleImpersonationEnabled }: ExecuteSqlVariables,
   { enabled = true, ...options }: QueryOptions<ExecuteSqlData, ExecuteSqlError, TData>,
 ) => {
-  const project = useSelectedProject();
-  const isActive = project?.status === PROJECT_STATUS.ACTIVE_HEALTHY;
+  // const project = useSelectedProject();
+  // const isActive = project?.status === PROJECT_STATUS.ACTIVE_HEALTHY;
 
   return useQuery({
     queryKey: sqlKeys.query(projectRef, queryKey ?? [btoa(sql)]),
@@ -129,7 +121,7 @@ export const useExecuteSqlQuery = <TData = ExecuteSqlData>(
         { projectRef, sdk, sql, queryKey, handleError, isRoleImpersonationEnabled },
         signal,
       ),
-    enabled: enabled && typeof projectRef !== "undefined" && isActive,
+    // enabled: enabled && typeof projectRef !== "undefined" && isActive,
     staleTime: 0,
     ...options,
   });

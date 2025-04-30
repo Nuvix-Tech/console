@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { executeSql } from "@/data/sql/execute-sql-query";
 import type { ResponseError } from "@/types";
 import { invalidateRolesQuery } from "./database-roles-query";
+import { ProjectSdk } from "@/lib/sdk";
 
 type CreateRoleBody = Parameters<typeof pgMeta.roles.create>[0];
 

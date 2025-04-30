@@ -7,7 +7,7 @@ import {
 
 import { Query } from "@nuvix/pg-meta/src/query";
 import { getTableRowsSql } from "@nuvix/pg-meta/src/query/table-row-query";
-import { IS_PLATFORM } from "common";
+// import { IS_PLATFORM } from "common";
 import { parseSupaTable } from "@/components/grid/SupabaseGrid.utils";
 import { Filter, Sort, SupaRow, SupaTable } from "@/components/grid/types";
 import { prefetchTableEditor } from "@/data/table-editor/table-editor-query";
@@ -16,11 +16,13 @@ import {
   RoleImpersonationState,
   wrapWithRoleImpersonation,
 } from "@/lib/role-impersonation";
-import { isRoleImpersonationEnabled } from "state/role-impersonation-state";
+// import { isRoleImpersonationEnabled } from "state/role-impersonation-state";
 import { ExecuteSqlError, executeSql } from "../sql/execute-sql-query";
 import { tableRowKeys } from "./keys";
 import { THRESHOLD_COUNT } from "./table-rows-count-query";
 import { formatFilterValue } from "./utils";
+import { ProjectSdk } from "@/lib/sdk";
+import { QueryOptions } from "@/types";
 
 export interface GetTableRowsArgs {
   table?: SupaTable;
@@ -89,10 +91,10 @@ export const fetchAllTableRows = async ({
   roleImpersonationState?: RoleImpersonationState;
   progressCallback?: (value: number) => void;
 }) => {
-  if (IS_PLATFORM && !sdk) {
-    console.error("Connection string is required");
-    return [];
-  }
+  // if (IS_PLATFORM && !sdk) {
+  //   console.error("Connection string is required");
+  //   return [];
+  // }
 
   const rows: any[] = [];
   const query = new Query();
@@ -208,7 +210,7 @@ export async function getTableRows(
       sdk,
       sql,
       queryKey: ["table-rows", table?.id],
-      isRoleImpersonationEnabled: isRoleImpersonationEnabled(roleImpersonationState?.role),
+      // isRoleImpersonationEnabled: isRoleImpersonationEnabled(roleImpersonationState?.role),
     },
     signal,
   );
@@ -236,8 +238,7 @@ export const useTableRowsQuery = <TData = TableRowsData>(
 
       queryFn: ({ signal }) =>
         getTableRows({ queryClient, projectRef, sdk, tableId, ...args }, signal),
-    },
-    {
+
       enabled: enabled && typeof projectRef !== "undefined" && typeof tableId !== "undefined",
       ...options,
     },
@@ -249,11 +250,13 @@ export function prefetchTableRows(
   { projectRef, sdk, tableId, ...args }: Omit<TableRowsVariables, "queryClient">,
 ) {
   return client.fetchQuery(
-    tableRowKeys.tableRows(projectRef, {
-      table: { id: tableId },
-      ...args,
-    }),
-    ({ signal }) =>
-      getTableRows({ queryClient: client, projectRef, sdk, tableId, ...args }, signal),
+    {
+      queryKey: tableRowKeys.tableRows(projectRef, {
+        table: { id: tableId },
+        ...args,
+      }),
+      queryFn: ({ signal }) =>
+        getTableRows({ queryClient: client, projectRef, sdk, tableId, ...args }, signal),
+    }
   );
 }

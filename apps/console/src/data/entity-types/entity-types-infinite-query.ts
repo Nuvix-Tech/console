@@ -130,11 +130,14 @@ export const useEntityTypesQuery = <TData = EntityTypesData>(
   {
     enabled = true,
     ...options
-  }: UseInfiniteQueryOptions<EntityTypesData, EntityTypesError, TData> = {},
+  }: Omit<
+    UseInfiniteQueryOptions<EntityTypesData, EntityTypesError, TData>,
+    "queryKey" | "queryFn" | "getNextPageParam"
+  >,
 ) => {
-  return useInfiniteQuery<EntityTypesData, EntityTypesError, TData>(
-    entityTypeKeys.list(projectRef, { schemas, search, sort, limit, filterTypes }),
-    ({ signal, pageParam }) =>
+  return useInfiniteQuery<EntityTypesData, EntityTypesError, TData>({
+    queryKey: entityTypeKeys.list(projectRef, { schemas, search, sort, limit, filterTypes }),
+    queryFn: ({ signal, pageParam }) =>
       getEntityTypes(
         {
           projectRef,
@@ -142,28 +145,26 @@ export const useEntityTypesQuery = <TData = EntityTypesData>(
           schemas,
           search,
           limit,
-          page: pageParam,
+          page: pageParam as any,
           sort,
           filterTypes,
         },
         signal,
       ),
-    {
-      enabled: enabled && typeof projectRef !== "undefined",
-      getNextPageParam(lastPage, pages) {
-        const page = pages.length;
-        const currentTotalCount = page * limit;
-        const totalCount = lastPage.data.count;
+    enabled: enabled && typeof projectRef !== "undefined",
+    getNextPageParam(lastPage, pages) {
+      const page = pages.length;
+      const currentTotalCount = page * limit;
+      const totalCount = lastPage.data.count;
 
-        if (currentTotalCount >= totalCount) {
-          return undefined;
-        }
+      if (currentTotalCount >= totalCount) {
+        return undefined;
+      }
 
-        return page;
-      },
-      ...options,
+      return page;
     },
-  );
+    ...options,
+  });
 };
 
 export function prefetchEntityTypes(
@@ -178,9 +179,9 @@ export function prefetchEntityTypes(
     filterTypes,
   }: Omit<EntityTypesVariables, "page">,
 ) {
-  return client.prefetchInfiniteQuery(
-    entityTypeKeys.list(projectRef, { schemas, search, sort, limit, filterTypes }),
-    ({ signal, pageParam }) =>
+  return client.prefetchInfiniteQuery({
+    queryKey: entityTypeKeys.list(projectRef, { schemas, search, sort, limit, filterTypes }),
+    queryFn: ({ signal, pageParam }) =>
       getEntityTypes(
         {
           projectRef,
@@ -194,5 +195,6 @@ export function prefetchEntityTypes(
         },
         signal,
       ),
-  );
+    initialPageParam: undefined,
+  });
 }

@@ -1,7 +1,8 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { get, handleError } from "@/data/fetchers";
-import type { ResponseError } from "@/types";
+import type { QueryOptions, ResponseError } from "@/types";
 import { databaseTriggerKeys } from "./keys";
+import { ProjectSdk } from "@/lib/sdk";
 
 export type DatabaseTriggersVariables = {
   projectRef?: string;
@@ -12,20 +13,9 @@ export async function getDatabaseTriggers(
   { projectRef, sdk }: DatabaseTriggersVariables,
   signal?: AbortSignal,
 ) {
-  if (!projectRef) throw new Error("projectRef is required");
+  if (!sdk) throw new Error("Sdk is required");
 
-  let headers = new Headers();
-  if (connectionString) headers.set("x-connection-encrypted", connectionString);
-
-  const { data, error } = await get("/platform/pg-meta/{ref}/triggers", {
-    params: {
-      header: { "x-connection-encrypted": connectionString! },
-      path: { ref: projectRef },
-      query: undefined as any,
-    },
-    headers,
-    signal,
-  });
+  const { data, error } = await get("/triggers", sdk);
 
   if (error) handleError(error);
   return data;
@@ -41,24 +31,20 @@ export const useDatabaseHooksQuery = <TData = DatabaseTriggersData>(
     ...options
   }: QueryOptions<DatabaseTriggersData, DatabaseTriggersError, TData> = {},
 ) =>
-  useQuery(
-    {
-      queryKey: databaseTriggerKeys.list(projectRef),
-      queryFn: ({ signal }) => getDatabaseTriggers({ projectRef, sdk }, signal),
+  useQuery({
+    queryKey: databaseTriggerKeys.list(projectRef),
+    queryFn: ({ signal }) => getDatabaseTriggers({ projectRef, sdk }, signal),
+    select: (data) => {
+      return data.filter((trigger: any) => {
+        return (
+          trigger.function_schema === "supabase_functions" &&
+          (trigger.schema !== "net" || trigger.function_args.length === 0)
+        );
+      }) as any;
     },
-    {
-      select: (data) => {
-        return data.filter((trigger) => {
-          return (
-            trigger.function_schema === "supabase_functions" &&
-            (trigger.schema !== "net" || trigger.function_args.length === 0)
-          );
-        }) as any;
-      },
-      enabled: enabled && typeof projectRef !== "undefined",
-      ...options,
-    },
-  );
+    enabled: enabled && typeof projectRef !== "undefined",
+    ...options,
+  });
 
 export const useDatabaseTriggersQuery = <TData = DatabaseTriggersData>(
   { projectRef, sdk }: DatabaseTriggersVariables,
@@ -67,13 +53,10 @@ export const useDatabaseTriggersQuery = <TData = DatabaseTriggersData>(
     ...options
   }: QueryOptions<DatabaseTriggersData, DatabaseTriggersError, TData> = {},
 ) =>
-  useQuery(
-    {
-      queryKey: databaseTriggerKeys.list(projectRef),
-      queryFn: ({ signal }) => getDatabaseTriggers({ projectRef, sdk }, signal),
-    },
-    {
-      enabled: enabled && typeof projectRef !== "undefined",
-      ...options,
-    },
-  );
+  useQuery({
+    queryKey: databaseTriggerKeys.list(projectRef),
+    queryFn: ({ signal }) => getDatabaseTriggers({ projectRef, sdk }, signal),
+
+    enabled: enabled && typeof projectRef !== "undefined",
+    ...options,
+  });

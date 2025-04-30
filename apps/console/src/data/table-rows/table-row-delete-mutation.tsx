@@ -3,15 +3,16 @@ import { toast } from "sonner";
 
 import { Query } from "@nuvix/pg-meta/src/query";
 import type { SupaRow } from "@/components/grid/types";
-import { Markdown } from "@/components/interfaces/Markdown";
-import { DocsButton } from "@/components/ui/DocsButton";
+// import { Markdown } from "@/components/interfaces/Markdown";
+// import { DocsButton } from "@/components/ui/DocsButton";
 import { executeSql } from "@/data/sql/execute-sql-query";
 import { Entity } from "@/data/table-editor/table-editor-types";
 import { RoleImpersonationState, wrapWithRoleImpersonation } from "@/lib/role-impersonation";
-import { isRoleImpersonationEnabled } from "state/role-impersonation-state";
+// import { isRoleImpersonationEnabled } from "state/role-impersonation-state";
 import type { ResponseError } from "@/types";
 import { tableRowKeys } from "./keys";
 import { getPrimaryKeys } from "./utils";
+import { ProjectSdk } from "@/lib/sdk";
 
 export type TableRowDeleteVariables = {
   projectRef: string;
@@ -53,7 +54,7 @@ export async function deleteTableRow({
     projectRef,
     sdk,
     sql,
-    isRoleImpersonationEnabled: isRoleImpersonationEnabled(roleImpersonationState?.role),
+    // isRoleImpersonationEnabled: isRoleImpersonationEnabled(roleImpersonationState?.role),
   });
 
   return result;

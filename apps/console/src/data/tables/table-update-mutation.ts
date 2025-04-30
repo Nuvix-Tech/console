@@ -7,6 +7,7 @@ import { handleError, patch } from "@/data/fetchers";
 import { tableEditorKeys } from "@/data/table-editor/keys";
 import type { ResponseError } from "@/types";
 import { tableKeys } from "./keys";
+import { ProjectSdk } from "@/lib/sdk";
 
 export type UpdateTableBody = components["schemas"]["UpdateTableBody"];
 
@@ -19,17 +20,10 @@ export type TableUpdateVariables = {
 };
 
 export async function updateTable({ projectRef, sdk, id, payload }: TableUpdateVariables) {
-  let headers = new Headers();
-  if (connectionString) headers.set("x-connection-encrypted", connectionString);
 
-  const { data, error } = await patch("/platform/pg-meta/{ref}/tables", {
-    params: {
-      header: { "x-connection-encrypted": connectionString! },
-      path: { ref: projectRef },
-      query: { id },
-    },
-    body: payload,
-    headers,
+  const { data, error } = await patch("/tables", sdk, {
+    query: { id },
+    payload,
   });
 
   if (error) handleError(error);

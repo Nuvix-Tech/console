@@ -1,13 +1,13 @@
 import { QueryClient, onlineManager } from "@tanstack/react-query";
-import { IS_PLATFORM } from "@/lib/constants";
+// import { IS_PLATFORM } from "@/lib/constants";
 import { useState } from "react";
 import { ResponseError } from "@/types";
 
 // When running locally we don't need the internet
 // so we can pretend we're online all the time
-if (!IS_PLATFORM) {
-  onlineManager.setOnline(true);
-}
+// if (!IS_PLATFORM) {
+//   onlineManager.setOnline(true);
+// }
 
 let queryClient: QueryClient | undefined;
 

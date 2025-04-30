@@ -4,9 +4,10 @@ import { toast } from "sonner";
 import { Query } from "@nuvix/pg-meta/src/query";
 import { executeSql } from "@/data/sql/execute-sql-query";
 import { RoleImpersonationState, wrapWithRoleImpersonation } from "@/lib/role-impersonation";
-import { isRoleImpersonationEnabled } from "state/role-impersonation-state";
+// import { isRoleImpersonationEnabled } from "state/role-impersonation-state";
 import type { ResponseError } from "@/types";
 import { tableRowKeys } from "./keys";
+import { ProjectSdk } from "@/lib/sdk";
 
 export type TableRowUpdateVariables = {
   projectRef: string;
@@ -55,7 +56,7 @@ export async function updateTableRow({
     projectRef,
     sdk,
     sql,
-    isRoleImpersonationEnabled: isRoleImpersonationEnabled(roleImpersonationState?.role),
+    // isRoleImpersonationEnabled: isRoleImpersonationEnabled(roleImpersonationState?.role),
     queryKey: ["table-row-update", table.id],
   });
 

@@ -5,6 +5,7 @@ import type { components } from "@/data/api";
 import { handleError, post } from "@/data/fetchers";
 import type { ResponseError } from "@/types";
 import { privilegeKeys } from "./keys";
+import { ProjectSdk } from "@/lib/sdk";
 
 export type ColumnPrivilegesGrant = components["schemas"]["GrantColumnPrivilegesBody"];
 
@@ -19,18 +20,10 @@ export async function grantColumnPrivileges({
   sdk,
   grants,
 }: ColumnPrivilegesGrantVariables) {
-  const headers = new Headers();
-  if (connectionString) headers.set("x-connection-encrypted", connectionString);
 
-  const { data, error } = await post("/platform/pg-meta/{ref}/column-privileges", {
-    params: {
-      path: { ref: projectRef },
-      // this is needed to satisfy the typescript, but it doesn't pass the actual header
-      header: { "x-connection-encrypted": connectionString! },
-    },
-    body: grants,
-    headers,
-  });
+  const { data, error } = await post("/column-privileges",sdk, {
+    payload: grants,
+    });
 
   if (error) handleError(error);
   return data;

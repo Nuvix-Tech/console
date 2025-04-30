@@ -4,7 +4,7 @@ import { parseSupaTable } from "@/components/grid/SupabaseGrid.utils";
 import type { Filter, SupaTable } from "@/components/grid/types";
 import { prefetchTableEditor } from "@/data/table-editor/table-editor-query";
 import { RoleImpersonationState, wrapWithRoleImpersonation } from "@/lib/role-impersonation";
-import { isRoleImpersonationEnabled } from "state/role-impersonation-state";
+// import { isRoleImpersonationEnabled } from "state/role-impersonation-state";
 import { executeSql, ExecuteSqlError } from "../sql/execute-sql-query";
 import { tableRowKeys } from "./keys";
 import { formatFilterValue } from "./utils";
@@ -140,7 +140,7 @@ export async function getTableRowsCount(
       sdk,
       sql,
       queryKey: ["table-rows-count", table.id],
-      isRoleImpersonationEnabled: isRoleImpersonationEnabled(roleImpersonationState?.role),
+      // isRoleImpersonationEnabled: isRoleImpersonationEnabled(roleImpersonationState?.role),
     },
     signal,
   );

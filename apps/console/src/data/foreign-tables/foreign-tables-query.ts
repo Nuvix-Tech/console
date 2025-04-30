@@ -2,8 +2,9 @@ import { UseQueryOptions, useQuery } from "@tanstack/react-query";
 
 import { PostgresView } from "@nuvix/pg-meta";
 import { get, handleError } from "@/data/fetchers";
-import type { ResponseError } from "@/types";
+import type { QueryOptions, ResponseError } from "@/types";
 import { foreignTableKeys } from "./keys";
+import { ProjectSdk } from "@/lib/sdk";
 
 export type ForeignTablesVariables = {
   projectRef?: string;
@@ -17,20 +18,12 @@ export async function getForeignTables(
 ) {
   if (!projectRef) throw new Error("projectRef is required");
 
-  let headers = new Headers();
-  if (connectionString) headers.set("x-connection-encrypted", connectionString);
-
-  const { data, error } = await get("/platform/pg-meta/{ref}/foreign-tables", {
-    params: {
-      header: { "x-connection-encrypted": connectionString! },
-      path: { ref: projectRef },
-      query: {
-        included_schemas: schema || "",
-        include_columns: true,
-      } as any,
-    },
-    headers,
-    signal,
+  const { data, error } = await get("/foreign-tables", sdk, {
+    query: {
+      included_schemas: schema || "",
+      include_columns: true,
+    } as any,
+    signal
   });
 
   if (error) handleError(error);
@@ -50,8 +43,6 @@ export const useForeignTablesQuery = <TData = ForeignTablesData>(
         ? foreignTableKeys.listBySchema(projectRef, schema)
         : foreignTableKeys.list(projectRef),
       queryFn: ({ signal }) => getForeignTables({ projectRef, sdk, schema }, signal),
-    },
-    {
       enabled: enabled && typeof projectRef !== "undefined",
       ...options,
     },

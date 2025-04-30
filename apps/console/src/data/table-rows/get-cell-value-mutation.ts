@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { Query } from "@nuvix/pg-meta/src/query";
 import { executeSql } from "@/data/sql/execute-sql-query";
 import type { ResponseError } from "@/types";
+import { ProjectSdk } from "@/lib/sdk";
 
 export type GetCellValueVariables = {
   projectRef: string;

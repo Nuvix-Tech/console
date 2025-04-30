@@ -42,12 +42,10 @@ export const useDatabasePoliciesQuery = <TData = DatabasePoliciesData>(
   // const project = useSelectedProject();
   // const isActive = project?.status === PROJECT_STATUS.ACTIVE_HEALTHY;
 
-  return useQuery(
-    {
-      queryKey: databasePoliciesKeys.list(projectRef, schema),
-      queryFn: ({ signal }) => getDatabasePolicies({ projectRef, sdk, schema }, signal),
-      // enabled: enabled && typeof projectRef !== "undefined" && isActive,
-      ...options,
-    },
-  );
+  return useQuery({
+    queryKey: databasePoliciesKeys.list(projectRef, schema),
+    queryFn: ({ signal }) => getDatabasePolicies({ projectRef, sdk, schema }, signal),
+    // enabled: enabled && typeof projectRef !== "undefined" && isActive,
+    ...options,
+  });
 };
