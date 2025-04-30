@@ -49,6 +49,7 @@
     "compressorjs": "^1.2.1",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
+    "dnd-core": "^16.0.1",
     "formik": "^2.4.6",
     "framer-motion": "^12.4.7",
     "immutability-helper": "^3.1.1",
@@ -105,5 +106,9 @@
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.2"
   },
-  "trustedDependencies": ["@biomejs/biome", "@parcel/watcher", "sharp"]
+  "trustedDependencies": [
+    "@biomejs/biome",
+    "@parcel/watcher",
+    "sharp"
+  ]
 }

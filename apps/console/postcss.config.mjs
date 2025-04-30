@@ -4,7 +4,7 @@ const config = {
   plugins: {
     ...c.plugins,
     "@csstools/postcss-global-data": {
-      files: ["@nuvix/ui/styles/breakpoints.scss"],
+      files: ["../../packages/ui/src/styles/breakpoints.scss"],
     },
     "postcss-custom-media": {},
     "postcss-flexbugs-fixes": {},

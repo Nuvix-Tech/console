@@ -143,6 +143,9 @@ importers:
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
+      dnd-core:
+        specifier: ^16.0.1
+        version: 16.0.1
       formik:
         specifier: ^2.4.6
         version: 2.4.6(react@19.0.0)
@@ -471,6 +474,9 @@ importers:
       compressorjs:
         specifier: ^1.2.1
         version: 1.2.1
+      lucide-react:
+        specifier: ^0.488.0
+        version: 0.488.0(react@19.0.0)
       next:
         specifier: ^15.2.4
         version: 15.3.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.87.0)
