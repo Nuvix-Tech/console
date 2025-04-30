@@ -7,7 +7,20 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": []
+    "ignore": [
+      "**/node_modules/**",
+      "**/dist/**",
+      "**/build/**",
+      "**/coverage/**",
+      "**/.git/**",
+      "**/.hg/**",
+      "**/.svn/**",
+      "**/.idea/**",
+      "**/.vscode/**",
+      "**/.DS_Store",
+      "**/.next/**",
+      "**/.turbo/**"
+    ]
   },
   "formatter": {
     "enabled": true,
