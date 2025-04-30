@@ -3,6 +3,7 @@
   packages = [
     pkgs.nodejs_20
     pkgs.bun
+    pkgs.pnpm
   ];
   idx.extensions = [
     
@@ -11,7 +12,7 @@
     previews = {
       web = {
         command = [
-          "npm"
+          "turbo"
           "run"
           "dev"
           "--"

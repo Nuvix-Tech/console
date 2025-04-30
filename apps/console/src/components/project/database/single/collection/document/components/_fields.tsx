@@ -1,0 +1,276 @@
+import React from "react";
+import { HStack, Button } from "@chakra-ui/react";
+import { useFormikContext } from "formik";
+import { Field } from "@/components/cui/field";
+import { Input, NumberInput, Select, Textarea } from "@nuvix/ui/components";
+import { CloseButton } from "@/components/cui/close-button";
+import { LuPlus } from "react-icons/lu";
+import { AttributeIcon } from "../../components";
+
+export const FIELD_TYPES = [
+  "string",
+  "integer",
+  "boolean",
+  "enum",
+  "url",
+  "email",
+  "relationship",
+  "datetime",
+  "ip",
+] as const;
+
+interface Props {
+  name: string;
+  label?: string;
+  size?: number;
+  nullable?: boolean;
+  isArray?: boolean;
+  type?: (typeof FIELD_TYPES)[number];
+  options?: { value: string; label: string }[];
+  min?: number;
+  max?: number;
+  showAbout?: boolean;
+  [key: string]: any;
+}
+
+export const DynamicField = (props: Props) => {
+  const {
+    name,
+    isArray,
+    type = "string",
+    options = [],
+    nullable,
+    label,
+    showAbout,
+    ...rest
+  } = props;
+  const { values, errors, touched, setFieldValue, setFieldTouched } =
+    useFormikContext<Record<string, any>>();
+  const id = React.useId();
+  const handleChange = (index: number, value: string | number | boolean | null) => {
+    if (isArray) {
+      const newArray = values[name] ? [...values[name]] : [];
+      newArray[index] = value;
+      setFieldValue(name, newArray);
+    } else {
+      setFieldValue(name, value);
+    }
+  };
+
+  const handleAddField = () => {
+    if (isArray) {
+      setFieldValue(name, [...(values[name] || []), ""]);
+    }
+  };
+
+  const handleRemoveField = (index: number) => {
+    if (isArray) {
+      const newArray = values[name]?.filter((_: any, i: number) => i !== index) || [];
+      setFieldValue(name, newArray);
+    }
+  };
+
+  const commonProps: any = {
+    maxLength: props.size,
+    ...rest,
+  };
+
+  const getFieldComponent = () => {
+    switch (type) {
+      case "integer":
+        return NumberField;
+      case "boolean":
+        return SelectBooleanField;
+      case "enum":
+        return SelectField;
+      case "relationship":
+        return RelationshipField;
+      case "datetime":
+        return DateTimeField;
+      default:
+        return TextareaField;
+    }
+  };
+
+  const FieldComponent = getFieldComponent();
+  return (
+    <Field
+      ids={{
+        root: id,
+        errorText: `${id}-error`,
+        label: `${id}-label`,
+        control: `${id}-input`,
+      }}
+      errorText={errors[name] && touched[name] ? (errors[name] as string) : undefined}
+      invalid={!!errors[name] && !!touched[name]}
+      label={
+        <div className="flex items-center gap-2">
+          {showAbout && <>{AttributeIcon({ format: type }, isArray, 12, "size-6")}</>}
+          {label ?? name}
+        </div>
+      }
+      required={!nullable}
+    >
+      {isArray ? (
+        values[name]?.map((item: any, index: number) => {
+          const onChange = (e: any) => handleChange(index, e.target.value);
+          return (
+            <HStack width="full" key={index}>
+              <FieldComponent
+                isNull={item === null}
+                {...commonProps}
+                value={item}
+                onChange={onChange}
+                onBlur={(e: any) => setFieldTouched(name, true)}
+                options={options}
+                nullable={nullable}
+                index={index}
+              />
+              <CloseButton onClick={() => handleRemoveField(index)} />
+            </HStack>
+          );
+        })
+      ) : (
+        <FieldComponent
+          {...commonProps}
+          isNull={values[name] === null}
+          value={values[name]}
+          onChange={(e: any) => handleChange(0, e.target.value)}
+          options={options}
+          nullable={nullable}
+          onBlur={(e: any) => setFieldTouched(name, true)}
+        />
+      )}
+
+      {isArray && (
+        <Button size="sm" onClick={handleAddField} variant="ghost">
+          <LuPlus size={20} /> Add Item
+        </Button>
+      )}
+    </Field>
+  );
+};
+
+type FieldProps = {
+  value: any;
+  onChange: (event: { target: { value: any } }) => void;
+  isNull?: boolean;
+  nullable?: boolean;
+  maxLength?: number;
+  onBlur?: (event: React.FocusEvent) => void;
+  index?: number;
+};
+
+type SelectFieldProps = FieldProps & {
+  options: Array<{ value: string; label: string }>;
+};
+
+const TextareaField = ({ value, onChange, maxLength, ...props }: FieldProps) => {
+  return maxLength && maxLength > 50 ? (
+    <Textarea
+      lines={5}
+      placeholder="Start typing..."
+      maxLength={maxLength}
+      {...props}
+      value={value ?? ""}
+      onChange={onChange}
+    />
+  ) : (
+    <Input
+      labelAsPlaceholder
+      placeholder="Enter value"
+      maxLength={maxLength}
+      {...props}
+      value={value ?? ""}
+      onChange={onChange}
+    />
+  );
+};
+
+const NumberField = ({ value, onChange, ...props }: FieldProps) => {
+  return (
+    <NumberInput
+      {...props}
+      value={value}
+      labelAsPlaceholder
+      onChange={(v: number | null) => onChange({ target: { value: v } })}
+    />
+  );
+};
+
+export const SelectField = ({
+  value,
+  onChange,
+  options = [],
+  nullable,
+  ...props
+}: SelectFieldProps & React.ComponentProps<typeof Select>) => {
+  const _onChange = (v: string) => {
+    if ((v === null || v === "null") && nullable) {
+      onChange({ target: { value: null } });
+    } else {
+      onChange({ target: { value: v } });
+    }
+  };
+  return (
+    <Select
+      {...props}
+      labelAsPlaceholder
+      value={value == null ? "null" : value}
+      options={options}
+      onSelect={_onChange}
+    />
+  );
+};
+
+export const SelectBooleanField = ({ value, onChange, nullable, ...props }: SelectFieldProps) => {
+  const _onChange = (v: string) => {
+    if ((v === null || v === "null") && nullable) {
+      onChange({ target: { value: null } });
+    } else {
+      onChange({ target: { value: v === "true" } });
+    }
+  };
+
+  const booleanOptions = [
+    { value: "true", label: "True" },
+    { value: "false", label: "False" },
+  ];
+
+  if (nullable) {
+    booleanOptions.unshift({ value: "null", label: "NULL" });
+  }
+
+  return (
+    <Select
+      {...props}
+      nullable={nullable}
+      labelAsPlaceholder
+      value={value == null ? "null" : value === true ? "true" : "false"}
+      options={booleanOptions}
+      onSelect={_onChange}
+    />
+  );
+};
+
+const RelationshipField = ({ value, onChange, ...props }: FieldProps) => {
+  return (
+    <Select
+      value={value ?? ""}
+      options={[{ value: "1", label: "Relation 1" }]}
+      onSelect={(v: string) => onChange({ target: { value: v } })}
+      {...props}
+    />
+  );
+};
+
+const DateTimeField = ({ value, onChange, ...props }: FieldProps) => {
+  return (
+    <input
+      type="datetime-local"
+      value={value ?? ""}
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e)}
+      {...props}
+    />
+  );
+};

@@ -1,0 +1,153 @@
+import { PropsWithChildren, useCallback, useEffect, useRef, useState } from "react";
+import { DataGridHandle } from "react-data-grid";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { createPortal } from "react-dom";
+
+import { useParams, useSearchParams } from "next/navigation";
+// import { useTableRowsQuery } from "data/table-rows/table-rows-query";
+// import { useTableEditorFiltersSort } from "hooks/misc/useTableEditorFiltersSort";
+// import { RoleImpersonationState } from "lib/role-impersonation";
+// import { EMPTY_ARR } from "lib/void";
+// import { useRoleImpersonationStateSnapshot } from "state/role-impersonation-state";
+import { useTableEditorStore } from "@/lib/store/table-editor";
+import { useTableEditorTableState } from "@/lib/store/table";
+import {
+  filtersToUrlParams,
+  formatFilterURLParams,
+  formatSortURLParams,
+  saveTableEditorStateToLocalStorage,
+} from "./SupabaseGrid.utils";
+import { Shortcuts } from "./components/common/Shortcuts";
+import Footer from "./components/footer/Footer";
+import { Grid } from "./components/grid/Grid";
+import Header, { HeaderProps } from "./components/header/Header";
+import { RowContextMenu } from "./components/menu";
+import { Filter, GridProps } from "./types";
+import { useProjectStore } from "@/lib/store";
+import { useQuery } from "@tanstack/react-query";
+import { useTableEditorFiltersSort } from "@/hooks/useTableEditorFilterSort";
+import { Column } from "@nuvix/ui/components";
+
+const EMPTY_ARR: any[] = [];
+
+export const SupabaseGrid = ({
+  customHeader,
+  gridProps,
+  children,
+}: Pick<HeaderProps, "customHeader"> &
+  PropsWithChildren<{
+    gridProps?: GridProps;
+  }>) => {
+  const query = useSearchParams();
+  const _id = query.get("table");
+  const { project, sdk } = useProjectStore();
+  const { schema } = useTableEditorStore();
+  const { getState } = useTableEditorTableState();
+  const snap = getState();
+
+  const gridRef = useRef<DataGridHandle>(null);
+  const [mounted, setMounted] = useState(false);
+
+  const { filters: filter, sorts: sort, setParams } = useTableEditorFiltersSort();
+
+  const sorts = formatSortURLParams(snap.table.name, sort as string[] | undefined);
+  const filters = formatFilterURLParams(filter as string[]);
+
+  const onApplyFilters = useCallback(
+    (appliedFilters: Filter[]) => {
+      snap.setEnforceExactCount(false);
+      // Reset page to 1 when filters change
+      snap.setPage(1);
+
+      const filters = filtersToUrlParams(appliedFilters);
+
+      setParams((prevParams) => {
+        return {
+          ...prevParams,
+          filter: filters,
+        };
+      });
+
+      if (project?.$id) {
+        saveTableEditorStateToLocalStorage({
+          projectRef: project.$id,
+          tableName: snap.table.name,
+          schema: snap.table.schema,
+          filters: filters,
+        });
+      }
+    },
+    [project?.$id, snap.table.name, snap.table.schema],
+  );
+
+  // const roleImpersonationState = useRoleImpersonationStateSnapshot();
+
+  const { data, error, isSuccess, isError, isLoading, isRefetching } = useQuery(
+    {
+      queryKey: ["any"],
+      queryFn: async () => await sdk.schema.getRows(_id!, schema),
+    },
+    // {
+    //   projectRef: project?.ref,
+    //   connectionString: project?.connectionString,
+    //   tableId,
+    //   sorts,
+    //   filters,
+    //   page: snap.page,
+    //   limit: tableEditorSnap.rowsPerPage,
+    //   roleImpersonationState: roleImpersonationState as RoleImpersonationState,
+    // },
+    // {
+    //   keepPreviousData: true,
+    //   retryDelay: (retryAttempt, error: any) => {
+    //     if (error && error.message?.includes("does not exist")) {
+    //       setParams((prevParams) => {
+    //         return {
+    //           ...prevParams,
+    //           ...{ sort: undefined },
+    //         };
+    //       });
+    //     }
+    //     if (retryAttempt > 3) {
+    //       return Infinity;
+    //     }
+    //     return 5000;
+    //   },
+    // },
+  );
+
+  useEffect(() => {
+    if (!mounted) setMounted(true);
+  }, []);
+
+  const rows = data ?? EMPTY_ARR;
+
+  return (
+    <DndProvider backend={HTML5Backend} context={window}>
+      <Column background="surface" fill className="!max-h-[calc(100svh-84px)]" radius="l">
+        <Header sorts={sorts} filters={filters} customHeader={customHeader} />
+
+        {children || (
+          <>
+            <Grid
+              ref={gridRef}
+              {...gridProps}
+              rows={rows}
+              error={error}
+              isLoading={isLoading}
+              isSuccess={isSuccess}
+              isError={isError}
+              filters={filters} //filters
+              onApplyFilters={onApplyFilters} //onApplyFilters
+            />
+            <Footer isRefetching={isRefetching} />
+            <Shortcuts gridRef={gridRef as any} rows={rows} />
+          </>
+        )}
+
+        {mounted && createPortal(<RowContextMenu rows={rows} />, document.body)}
+      </Column>
+    </DndProvider>
+  );
+};

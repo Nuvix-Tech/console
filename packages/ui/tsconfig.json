@@ -1,0 +1,22 @@
+{
+  "extends": "@nuvix/typescript-config/react-library.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "allowJs": true,
+    "jsx": "preserve",
+    "noEmit": true,
+    "paths": {
+      "@nuvix/ui/*": ["./src/*"],
+      "react": ["./node_modules/@types/react"]
+    }
+  },
+  "include": [
+    "../../apps/console/next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "../../apps/console/.next/types/**/*.ts"
+  ],
+  "exclude": ["node_modules", "dist"]
+}
