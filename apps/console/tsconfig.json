@@ -4,7 +4,10 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@nuvix/sui/*": ["../../packages/ui/src/*"]
+      "@nuvix/sui/*": ["../../packages/sui/src/*"],
+      "@nuvix/sui": ["../../packages/sui/src"],
+      "@nuvix/ui/*": ["../../packages/ui/src/*"],
+      "@nuvix/ui": ["../../packages/ui/src"]
     },
     "plugins": [
       {
