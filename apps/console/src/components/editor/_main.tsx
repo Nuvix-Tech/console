@@ -88,6 +88,10 @@ export const TableEditor = () => {
     );
   }
 
+  if (isLoading && isUndefined(selectedTable)) {
+    return "loading...";
+  }
+
   if (isUndefined(selectedTable)) {
     return (
       <div className="flex items-center justify-center h-full">

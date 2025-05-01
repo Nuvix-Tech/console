@@ -25,6 +25,7 @@ export async function getTableEditor(
   }
 
   const sql = getTableEditorSql(id);
+
   const { result } = await executeSql(
     {
       projectRef,

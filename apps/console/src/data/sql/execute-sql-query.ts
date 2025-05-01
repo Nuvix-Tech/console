@@ -2,7 +2,7 @@ import { QueryKey, useQuery, UseQueryOptions } from "@tanstack/react-query";
 
 import { handleError as handleErrorFetchers, post } from "@/data/fetchers";
 // import { useSelectedProject } from "hooks/misc/useSelectedProject";
-// import { MB, PROJECT_STATUS } from "@/lib/constants";
+import { MB } from "@/lib/constants";
 import {
   ROLE_IMPERSONATION_NO_RESULTS,
   ROLE_IMPERSONATION_SQL_LINE_COUNT,
@@ -41,11 +41,9 @@ export async function executeSql(
 
   const sqlSize = new Blob([sql]).size;
   // [Joshen] I think the limit is around 1MB from testing, but its not exactly 1MB it seems
-  const MB = 1;
   if (sqlSize > 0.98 * MB) {
     throw new Error("Query is too large to be run via the SQL Editor");
   }
-
   let { data, error } = await post("/query", sdk, {
     signal,
     query: {
@@ -55,7 +53,7 @@ export async function executeSql(
     },
     payload: { query: sql },
   });
-
+  console.log("YES, WE DID IT", data, error);
   if (error) {
     if (
       isRoleImpersonationEnabled &&
