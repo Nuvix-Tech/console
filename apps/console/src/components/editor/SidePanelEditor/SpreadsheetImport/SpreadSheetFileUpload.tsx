@@ -1,8 +1,8 @@
 import { FileText, Loader } from "lucide-react";
 import { DragEvent, useRef, useState } from "react";
 
-import SparkBar from "components/ui/SparkBar";
-import { Button } from "ui";
+import SparkBar from "@/ui/SparkBar";
+import { Button } from "@nuvix/ui/components";
 
 interface SpreadSheetFileUploadProps {
   parseProgress: number;
@@ -69,7 +69,7 @@ const SpreadSheetFileUpload = ({
             <p className="text-sm text-foreground">{uploadedFile.name}</p>
           </div>
           {parseProgress === 100 ? (
-            <Button type="outline" onClick={removeUploadedFile}>
+            <Button variant="secondary" onClick={removeUploadedFile}>
               Remove File
             </Button>
           ) : (

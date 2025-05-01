@@ -1,4 +1,6 @@
-import { Input } from "ui";
+// import { Input } from "ui";
+
+import { Textarea } from "@nuvix/ui/components";
 
 interface SpreadSheetTextInputProps {
   input: string;
@@ -18,8 +20,8 @@ const SpreadSheetTextInput = ({ input, onInputChange }: SpreadSheetTextInputProp
         Tip: Datetime columns should be formatted as YYYY-MM-DD HH:mm:ss
       </p>
     </div>
-    <Input.TextArea
-      size="tiny"
+    <Textarea
+      // size="tiny"
       className="font-mono"
       rows={15}
       style={{ resize: "none" }}

@@ -1,4 +1,4 @@
-import type { Dictionary } from "types";
+import { Dictionary } from "@nuvix/pg-meta/src/query";
 
 export interface SpreadsheetData {
   headers: string[];

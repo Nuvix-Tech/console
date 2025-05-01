@@ -1,8 +1,12 @@
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
-import { Button, cn, Collapsible, SidePanel } from "ui";
+// import { Button, cn, Collapsible, SidePanel } from "ui";
 import type { SpreadsheetData } from "./SpreadsheetImport.types";
+import { Collapsible } from "@chakra-ui/react";
+import { SidePanel } from "@/ui/SidePanel";
+import { Button } from "@nuvix/ui/components";
+import { cn } from "@nuvix/sui/lib/utils";
 
 interface SpreadSheetImportConfigurationProps {
   spreadsheetData: SpreadsheetData;
@@ -18,14 +22,18 @@ const SpreadsheetImportConfiguration = ({
   const [expandConfiguration, setExpandConfiguration] = useState(false);
 
   return (
-    <Collapsible open={expandConfiguration} onOpenChange={setExpandConfiguration} className={""}>
+    <Collapsible.Root
+      open={expandConfiguration}
+      onOpenChange={(d) => setExpandConfiguration(d.open)}
+      className={""}
+    >
       <Collapsible.Trigger asChild>
         <SidePanel.Content>
           <div className="py-1 flex items-center justify-between">
             <p className="text-sm">Configure import data</p>
             <Button
               type="text"
-              icon={
+              prefixIcon={
                 <ChevronDown
                   size={18}
                   strokeWidth={2}
@@ -65,7 +73,7 @@ const SpreadsheetImportConfiguration = ({
           </div>
         </SidePanel.Content>
       </Collapsible.Content>
-    </Collapsible>
+    </Collapsible.Root>
   );
 };
 

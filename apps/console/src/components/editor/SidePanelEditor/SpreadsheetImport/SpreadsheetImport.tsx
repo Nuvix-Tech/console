@@ -5,10 +5,10 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { useParams } from "common";
-import { useSendEventMutation } from "@/data/telemetry/send-event-mutation";
-import { useSelectedOrganization } from "hooks/misc/useSelectedOrganization";
-import { Button, SidePanel, Tabs } from "ui";
+// import { useParams } from "common";
+// import { useSendEventMutation } from "@/data/telemetry/send-event-mutation";
+// import { useSelectedOrganization } from "hooks/misc/useSelectedOrganization";
+// import { Button, SidePanel, Tabs } from "ui";
 import ActionBar from "../ActionBar";
 import type { ImportContent } from "../TableEditor/TableEditor.types";
 import SpreadSheetFileUpload from "./SpreadSheetFileUpload";
@@ -22,6 +22,10 @@ import {
   parseSpreadsheetText,
 } from "./SpreadsheetImport.utils";
 import SpreadsheetImportPreview from "./SpreadsheetImportPreview";
+import { useParams } from "next/navigation";
+import { Button } from "@nuvix/ui/components";
+import { SidePanel } from "@/ui/SidePanel";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@nuvix/sui/components/tabs";
 
 const MAX_CSV_SIZE = 1024 * 1024 * 100; // 100 MB
 
@@ -46,8 +50,7 @@ const SpreadsheetImport = ({
   closePanel,
   updateEditorDirty = noop,
 }: SpreadsheetImportProps) => {
-  const { ref: projectRef } = useParams();
-  const org = useSelectedOrganization();
+  const { id: projectRef } = useParams();
 
   const [tab, setTab] = useState<"fileUpload" | "pasteText">("fileUpload");
   const [input, setInput] = useState<string>("");
@@ -62,7 +65,7 @@ const SpreadsheetImport = ({
   const [errors, setErrors] = useState<any>([]);
   const [selectedHeaders, setSelectedHeaders] = useState<string[]>([]);
 
-  const { mutate: sendEvent } = useSendEventMutation();
+  // const { mutate: sendEvent } = useSendEventMutation();
 
   const selectedTableColumns = (selectedTable?.columns ?? []).map((column) => column.name);
   const incompatibleHeaders = selectedHeaders.filter(
@@ -87,7 +90,7 @@ const SpreadsheetImport = ({
         <div className="space-y-1">
           <p>The dashboard currently only supports importing of CSVs below 100MB.</p>
           <p>For bulk data loading, we recommend doing so directly through the database.</p>
-          <Button asChild type="default" icon={<ExternalLink />} className="!mt-2">
+          <Button asChild type="default" prefixIcon={<ExternalLink />} className="!mt-2">
             <Link
               href="https://supabase.com/docs/guides/database/tables#bulk-data-loading"
               target="_blank"
@@ -170,10 +173,10 @@ const SpreadsheetImport = ({
       resolve();
     } else {
       saveContent({ file: uploadedFile, ...spreadsheetData, selectedHeaders, resolve });
-      sendEvent({
-        action: "import_data_added",
-        groups: { project: projectRef ?? "Unknown", organization: org?.slug ?? "Unknown" },
-      });
+      // sendEvent({
+      //   action: "import_data_added",
+      //   groups: { project: projectRef ?? "Unknown", organization: org?.slug ?? "Unknown" },
+      // });
     }
   };
 
@@ -210,18 +213,22 @@ const SpreadsheetImport = ({
     >
       <SidePanel.Content>
         <div className="pt-6">
-          <Tabs block type="pills" onChange={setTab}>
-            <Tabs.Panel id="fileUpload" label="Upload CSV">
+          <Tabs value={tab} onValueChange={(value) => setTab(value as "fileUpload" | "pasteText")}>
+            <TabsList>
+              <TabsTrigger value="fileUpload">Upload CSV</TabsTrigger>
+              <TabsTrigger value="pasteText">Paste text</TabsTrigger>
+            </TabsList>
+            <TabsContent value="fileUpload">
               <SpreadSheetFileUpload
                 parseProgress={parseProgress}
                 uploadedFile={uploadedFile}
                 onFileUpload={onFileUpload}
                 removeUploadedFile={resetSpreadsheetImport}
               />
-            </Tabs.Panel>
-            <Tabs.Panel id="pasteText" label="Paste text">
+            </TabsContent>
+            <TabsContent value="pasteText">
               <SpreadSheetTextInput input={input} onInputChange={onInputChange} />
-            </Tabs.Panel>
+            </TabsContent>
           </Tabs>
         </div>
       </SidePanel.Content>

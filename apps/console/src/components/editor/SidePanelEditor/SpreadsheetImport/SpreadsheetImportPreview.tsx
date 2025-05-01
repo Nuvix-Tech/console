@@ -1,9 +1,13 @@
 import { AlertCircle, ArrowRight, ChevronDown, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { Badge, Button, cn, Collapsible, SidePanel } from "ui";
+// import { Badge, Button, cn, Collapsible, SidePanel } from "ui";
 import type { SpreadsheetData } from "./SpreadsheetImport.types";
 import SpreadsheetPreviewGrid from "./SpreadsheetPreviewGrid";
+import { Badge, Collapsible } from "@chakra-ui/react";
+import { SidePanel } from "@/ui/SidePanel";
+import { Button } from "@nuvix/ui/components";
+import { cn } from "@nuvix/sui/lib/utils";
 
 const MAX_ROWS = 20;
 const MAX_HEADERS = 20;
@@ -47,18 +51,22 @@ const SpreadsheetImportPreview = ({
   };
 
   return (
-    <Collapsible open={expandPreview} onOpenChange={setExpandPreview} className={""}>
+    <Collapsible.Root
+      open={expandPreview}
+      onOpenChange={(d) => setExpandPreview(d.open)}
+      className={""}
+    >
       <Collapsible.Trigger asChild>
         <SidePanel.Content>
           <div className="py-1 flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <p className="text-sm">Preview data to be imported</p>
-              {!isCompatible && <Badge variant="destructive">Data incompatible</Badge>}
-              {errors.length > 0 && <Badge variant="warning">{errors.length} issues found</Badge>}
+              {!isCompatible && <Badge>Data incompatible</Badge>}
+              {errors.length > 0 && <Badge>{errors.length} issues found</Badge>}
             </div>
             <Button
               type="text"
-              icon={
+              prefixIcon={
                 <ChevronDown
                   size={18}
                   strokeWidth={2}
@@ -183,7 +191,7 @@ const SpreadsheetImportPreview = ({
           )}
         </SidePanel.Content>
       </Collapsible.Content>
-    </Collapsible>
+    </Collapsible.Root>
   );
 };
 

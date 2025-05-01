@@ -36,6 +36,7 @@ interface CommonProps {
   id?: string;
   arrowIcon?: boolean;
   disabled?: boolean;
+  asChild?: boolean;
 }
 
 export type ButtonProps = CommonProps &

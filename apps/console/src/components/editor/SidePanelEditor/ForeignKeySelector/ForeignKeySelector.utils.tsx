@@ -1,9 +1,10 @@
 import { FOREIGN_KEY_CASCADE_ACTION } from "@/data/database/database-query-constants";
 import type { ForeignKeyConstraint } from "@/data/database/foreign-key-constraints-query";
 import { HelpCircle } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "ui";
+// import { Tooltip, TooltipContent, TooltipTrigger } from "ui";
 import { getForeignKeyCascadeAction } from "../ColumnEditor/ColumnEditor.utils";
 import type { ForeignKey } from "./ForeignKeySelector.types";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 
 export const formatForeignKeys = (fks: ForeignKeyConstraint[]): ForeignKey[] => {
   return fks.map((x) => {

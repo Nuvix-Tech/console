@@ -2,29 +2,24 @@ import type { PostgresTable } from "@nuvix/pg-meta";
 import { sortBy } from "lodash";
 import { ArrowRight, Database, HelpCircle, Table, X } from "lucide-react";
 import { Fragment, useEffect, useState } from "react";
-import {
-  AlertDescription_Shadcn_,
-  AlertTitle_Shadcn_,
-  Alert_Shadcn_,
-  Button,
-  Listbox,
-  SidePanel,
-} from "ui";
+import { AlertDescription, AlertTitle, Alert } from "@nuvix/sui/components/alert";
 
-import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
-import { DocsButton } from "components/ui/DocsButton";
-import InformationBox from "components/ui/InformationBox";
+// import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
+// import { DocsButton } from "components/ui/DocsButton";
+// import InformationBox from "components/ui/InformationBox";
 import { FOREIGN_KEY_CASCADE_ACTION } from "@/data/database/database-query-constants";
 import { useSchemasQuery } from "@/data/database/schemas-query";
 import { useTablesQuery } from "@/data/tables/tables-query";
-import { useQuerySchemaState } from "hooks/misc/useSchemaQueryState";
-import { uuidv4 } from "lib/helpers";
+import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
+import { uuidv4 } from "@/lib/helpers";
 import ActionBar from "../ActionBar";
 import { NUMERICAL_TYPES, TEXT_TYPES } from "../SidePanelEditor.constants";
 import type { ColumnField } from "../SidePanelEditor.types";
 import { FOREIGN_KEY_CASCADE_OPTIONS } from "./ForeignKeySelector.constants";
 import type { ForeignKey } from "./ForeignKeySelector.types";
 import { generateCascadeActionDescription } from "./ForeignKeySelector.utils";
+import { useProjectStore } from "@/lib/store";
+import { SidePanel } from "@/ui/SidePanel";
 
 const EMPTY_STATE: ForeignKey = {
   id: undefined,
@@ -56,7 +51,7 @@ export const ForeignKeySelector = ({
   onClose,
   onSaveRelation,
 }: ForeignKeySelectorProps) => {
-  const { project } = useProjectContext();
+  const { project, sdk } = useProjectStore();
   const { selectedSchema } = useQuerySchemaState();
 
   const [fk, setFk] = useState(EMPTY_STATE);
@@ -222,7 +217,9 @@ export const ForeignKeySelector = ({
     >
       <SidePanel.Content>
         <div className="py-6 space-y-6">
-          <InformationBox
+          Will Be Implemented check:
+          apps/console/src/components/editor/SidePanelEditor/ForeignKeySelector/ForeignKeySelector.tsx
+          {/* <InformationBox
             icon={<HelpCircle size={20} strokeWidth={1.5} />}
             title="What are foreign keys?"
             description={`Foreign keys help maintain referential integrity of your data by ensuring that no
@@ -230,9 +227,8 @@ export const ForeignKeySelector = ({
                 table.`}
             url="https://www.postgresql.org/docs/current/tutorial-fk.html"
             urlLabel="Postgres Foreign Key Documentation"
-          />
-
-          <Listbox
+          /> */}
+          {/* <Listbox
             id="schema"
             label="Select a schema"
             value={fk.schema}
@@ -248,15 +244,14 @@ export const ForeignKeySelector = ({
                   addOnBefore={() => <Database size={16} strokeWidth={1.5} />}
                 >
                   <div className="flex items-center gap-2">
-                    {/* For aria searching to target the schema name instead of schema */}
                     <span className="hidden">{schema.name}</span>
                     <span className="text-foreground">{schema.name}</span>
                   </div>
                 </Listbox.Option>
               );
             })}
-          </Listbox>
-
+          </Listbox> */}
+          {/* 
           <Listbox
             id="table"
             label="Select a table to reference to"
@@ -275,8 +270,7 @@ export const ForeignKeySelector = ({
                   className="min-w-96"
                   addOnBefore={() => <Table size={16} strokeWidth={1.5} />}
                 >
-                  <div className="flex items-center gap-2">
-                    {/* For aria searching to target the table name instead of schema */}
+                  <div className="flex items-center gap-2"> 
                     <span className="hidden">{table.name}</span>
                     <span className="text-foreground-lighter">{table.schema}</span>
                     <span className="text-foreground">{table.name}</span>
@@ -285,8 +279,8 @@ export const ForeignKeySelector = ({
               );
             })}
           </Listbox>
-
-          {fk.schema && fk.table && (
+          */}
+          {/* {fk.schema && fk.table && (
             <>
               <div className="flex flex-col gap-y-3">
                 <label className="text-foreground-light text-sm">
@@ -521,7 +515,7 @@ export const ForeignKeySelector = ({
                 ))}
               </Listbox>
             </>
-          )}
+          )} */}
         </div>
       </SidePanel.Content>
     </SidePanel>
