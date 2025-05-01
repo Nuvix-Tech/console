@@ -1,4 +1,4 @@
-import type { ForeignKeyConstraint } from "data/database/foreign-key-constraints-query";
+import type { ForeignKeyConstraint } from "@/data/database/foreign-key-constraints-query";
 import type { ForeignKey } from "../../ForeignKeySelector/ForeignKeySelector.types";
 import { isEqual } from "lodash";
 

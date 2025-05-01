@@ -12,7 +12,7 @@ import {
 import Link from "next/link";
 import { ReactNode, useState } from "react";
 
-import type { EnumeratedType } from "data/enumerated-types/enumerated-types-query";
+import type { EnumeratedType } from "@/data/enumerated-types/enumerated-types-query";
 import {
   AlertDescription_Shadcn_,
   AlertTitle_Shadcn_,

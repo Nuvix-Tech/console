@@ -1,4 +1,4 @@
-import { FOREIGN_KEY_CASCADE_ACTION } from "data/database/database-query-constants";
+import { FOREIGN_KEY_CASCADE_ACTION } from "@/data/database/database-query-constants";
 
 export const FOREIGN_KEY_CASCADE_OPTIONS = [
   { key: "no-action", label: "No action", value: FOREIGN_KEY_CASCADE_ACTION.NO_ACTION },

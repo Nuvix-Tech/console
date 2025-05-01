@@ -11,8 +11,8 @@ import {
 
 import { useParams } from "common";
 import InformationBox from "components/ui/InformationBox";
-import type { EnumeratedType } from "data/enumerated-types/enumerated-types-query";
-import { useSendEventMutation } from "data/telemetry/send-event-mutation";
+import type { EnumeratedType } from "@/data/enumerated-types/enumerated-types-query";
+import { useSendEventMutation } from "@/data/telemetry/send-event-mutation";
 import { useSelectedOrganization } from "hooks/misc/useSelectedOrganization";
 import {
   AlertDescription_Shadcn_,

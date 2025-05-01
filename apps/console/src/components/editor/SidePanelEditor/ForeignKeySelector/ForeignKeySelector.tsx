@@ -1,4 +1,4 @@
-import type { PostgresTable } from "@supabase/postgres-meta";
+import type { PostgresTable } from "@nuvix/pg-meta";
 import { sortBy } from "lodash";
 import { ArrowRight, Database, HelpCircle, Table, X } from "lucide-react";
 import { Fragment, useEffect, useState } from "react";
@@ -14,9 +14,9 @@ import {
 import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
 import { DocsButton } from "components/ui/DocsButton";
 import InformationBox from "components/ui/InformationBox";
-import { FOREIGN_KEY_CASCADE_ACTION } from "data/database/database-query-constants";
-import { useSchemasQuery } from "data/database/schemas-query";
-import { useTablesQuery } from "data/tables/tables-query";
+import { FOREIGN_KEY_CASCADE_ACTION } from "@/data/database/database-query-constants";
+import { useSchemasQuery } from "@/data/database/schemas-query";
+import { useTablesQuery } from "@/data/tables/tables-query";
 import { useQuerySchemaState } from "hooks/misc/useSchemaQueryState";
 import { uuidv4 } from "lib/helpers";
 import ActionBar from "../ActionBar";

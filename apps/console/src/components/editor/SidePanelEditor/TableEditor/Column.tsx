@@ -16,8 +16,8 @@ import {
 } from "ui";
 
 import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
-import { useForeignKeyConstraintsQuery } from "data/database/foreign-key-constraints-query";
-import type { EnumeratedType } from "data/enumerated-types/enumerated-types-query";
+import { useForeignKeyConstraintsQuery } from "@/data/database/foreign-key-constraints-query";
+import type { EnumeratedType } from "@/data/enumerated-types/enumerated-types-query";
 import { EMPTY_ARR, EMPTY_OBJ } from "lib/void";
 import { useState } from "react";
 import { typeExpressionSuggestions } from "../ColumnEditor/ColumnEditor.constants";

@@ -1,21 +1,21 @@
-import type { PostgresTable } from "@supabase/postgres-meta";
+import type { PostgresTable } from "@nuvix/pg-meta";
 import { isEmpty, isUndefined, noop } from "lodash";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
 import { DocsButton } from "components/ui/DocsButton";
-import { useDatabasePublicationsQuery } from "data/database-publications/database-publications-query";
+import { useDatabasePublicationsQuery } from "@/data/database-publications/database-publications-query";
 import {
   CONSTRAINT_TYPE,
   Constraint,
   useTableConstraintsQuery,
-} from "data/database/constraints-query";
+} from "@/data/database/constraints-query";
 import {
   ForeignKeyConstraint,
   useForeignKeyConstraintsQuery,
-} from "data/database/foreign-key-constraints-query";
-import { useEnumeratedTypesQuery } from "data/enumerated-types/enumerated-types-query";
+} from "@/data/database/foreign-key-constraints-query";
+import { useEnumeratedTypesQuery } from "@/data/enumerated-types/enumerated-types-query";
 import { useIsFeatureEnabled } from "hooks/misc/useIsFeatureEnabled";
 import { useQuerySchemaState } from "hooks/misc/useSchemaQueryState";
 import { useUrlState } from "hooks/ui/useUrlState";
@@ -41,7 +41,7 @@ import {
   generateTableFieldFromPostgresTable,
   validateFields,
 } from "./TableEditor.utils";
-import { useSendEventMutation } from "data/telemetry/send-event-mutation";
+import { useSendEventMutation } from "@/data/telemetry/send-event-mutation";
 import { useSelectedOrganization } from "hooks/misc/useSelectedOrganization";
 
 export interface TableEditorProps {

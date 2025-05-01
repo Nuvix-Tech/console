@@ -16,8 +16,8 @@ import { SortPopover } from "components/grid/components/header/sort";
 import type { Filter } from "components/grid/types";
 import { Sort } from "components/grid/types";
 import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
-import { useTableEditorQuery } from "data/table-editor/table-editor-query";
-import { useTableRowsQuery } from "data/table-rows/table-rows-query";
+import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
+import { useTableRowsQuery } from "@/data/table-rows/table-rows-query";
 import {
   RoleImpersonationState,
   useRoleImpersonationStateSnapshot,

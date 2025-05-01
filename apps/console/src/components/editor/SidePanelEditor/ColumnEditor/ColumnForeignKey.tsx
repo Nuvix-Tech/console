@@ -3,8 +3,8 @@ import { useState } from "react";
 import { Button } from "ui";
 
 import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
-import { useForeignKeyConstraintsQuery } from "data/database/foreign-key-constraints-query";
-import { useTableEditorQuery } from "data/table-editor/table-editor-query";
+import { useForeignKeyConstraintsQuery } from "@/data/database/foreign-key-constraints-query";
+import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
 import { ForeignKeySelector } from "../ForeignKeySelector/ForeignKeySelector";
 import type { ForeignKey } from "../ForeignKeySelector/ForeignKeySelector.types";
 import type { ColumnField } from "../SidePanelEditor.types";

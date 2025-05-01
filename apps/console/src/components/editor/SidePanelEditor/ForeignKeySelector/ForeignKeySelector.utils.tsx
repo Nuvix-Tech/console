@@ -1,5 +1,5 @@
-import { FOREIGN_KEY_CASCADE_ACTION } from "data/database/database-query-constants";
-import type { ForeignKeyConstraint } from "data/database/foreign-key-constraints-query";
+import { FOREIGN_KEY_CASCADE_ACTION } from "@/data/database/database-query-constants";
+import type { ForeignKeyConstraint } from "@/data/database/foreign-key-constraints-query";
 import { HelpCircle } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "ui";
 import { getForeignKeyCascadeAction } from "../ColumnEditor/ColumnEditor.utils";

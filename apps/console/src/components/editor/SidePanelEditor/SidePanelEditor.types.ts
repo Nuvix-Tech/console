@@ -1,12 +1,10 @@
-// import type { PostgresRelationship } from "@supabase/postgres-meta";
-// import { CreateColumnBody } from "data/database-columns/database-column-create-mutation";
-// import { UpdateColumnBody } from "data/database-columns/database-column-update-mutation";
+import type { PostgresRelationship } from "@nuvix/pg-meta";
+import { CreateColumnBody } from "@/data/database-columns/database-column-create-mutation";
+import { UpdateColumnBody } from "@/data/database-columns/database-column-update-mutation";
 
-type CreateColumnBody = any; // TODO:
-type UpdateColumnBody = any; // TODO:
-type PostgresRelationship = any; // TODO:
-
-export interface CreateColumnPayload extends CreateColumnBody {}
+export interface CreateColumnPayload extends CreateColumnBody {
+  isPrimaryKey?: boolean;
+}
 
 export interface UpdateColumnPayload extends UpdateColumnBody {
   isPrimaryKey?: boolean;

@@ -1,4 +1,4 @@
-// import type { PostgresColumn, PostgresTable } from "@supabase/postgres-meta";
+// import type { PostgresColumn, PostgresTable } from "@nuvix/pg-meta";
 import { isEmpty, noop } from "lodash";
 import { ExternalLink, Plus } from "lucide-react";
 import Link from "next/link";
@@ -11,12 +11,12 @@ import { useEffect, useState } from "react";
 //   CONSTRAINT_TYPE,
 //   Constraint,
 //   useTableConstraintsQuery,
-// } from "data/database/constraints-query";
+// } from "@/data/database/constraints-query";
 // import {
 //   ForeignKeyConstraint,
 //   useForeignKeyConstraintsQuery,
-// } from "data/database/foreign-key-constraints-query";
-// import { useEnumeratedTypesQuery } from "data/enumerated-types/enumerated-types-query";
+// } from "@/data/database/foreign-key-constraints-query";
+// import { useEnumeratedTypesQuery } from "@/data/enumerated-types/enumerated-types-query";
 // import { PROTECTED_SCHEMAS_WITHOUT_EXTENSIONS } from "lib/constants/schemas";
 // import type { Dictionary } from "types";
 // import { Button, Checkbox, Input, SidePanel, Toggle } from "ui";

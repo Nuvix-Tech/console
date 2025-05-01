@@ -4,7 +4,7 @@ import { Button } from "ui";
 import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
 import AlertError from "components/ui/AlertError";
 import { GenericSkeletonLoader } from "components/ui/ShimmeringLoader";
-import { useForeignKeyConstraintsQuery } from "data/database/foreign-key-constraints-query";
+import { useForeignKeyConstraintsQuery } from "@/data/database/foreign-key-constraints-query";
 import { useQuerySchemaState } from "hooks/misc/useSchemaQueryState";
 import type { ResponseError } from "types";
 import { ForeignKeySelector } from "../../ForeignKeySelector/ForeignKeySelector";

@@ -1,9 +1,9 @@
-import type { PostgresTable } from "@supabase/postgres-meta";
+import type { PostgresTable } from "@nuvix/pg-meta";
 import { isEmpty, noop, partition } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 
 import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
-import { useForeignKeyConstraintsQuery } from "data/database/foreign-key-constraints-query";
+import { useForeignKeyConstraintsQuery } from "@/data/database/foreign-key-constraints-query";
 import type { Dictionary } from "types";
 import { SidePanel } from "ui";
 import ActionBar from "../ActionBar";

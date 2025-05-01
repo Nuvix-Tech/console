@@ -1,4 +1,4 @@
-import type { PostgresTable } from "@supabase/postgres-meta";
+import type { PostgresTable } from "@nuvix/pg-meta";
 import { debounce, includes, noop } from "lodash";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { useParams } from "common";
-import { useSendEventMutation } from "data/telemetry/send-event-mutation";
+import { useSendEventMutation } from "@/data/telemetry/send-event-mutation";
 import { useSelectedOrganization } from "hooks/misc/useSelectedOrganization";
 import { Button, SidePanel, Tabs } from "ui";
 import ActionBar from "../ActionBar";
