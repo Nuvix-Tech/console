@@ -131,9 +131,9 @@ function SelectCellFormatter({
         size={"sm"}
         checked={value}
         disabled={disabled}
-        // onClick={onClick}
+        onClick={onClick as any}
         onCheckedChange={(e) => onChange(!!e.checked, false)}
-        // onChange={handleChange}
+        onChange={handleChange as any}
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledBy}
         tabIndex={tabIndex}
@@ -185,9 +185,9 @@ function SelectCellHeader({
         size={"sm"}
         checked={isIndeterminate ? "indeterminate" : value}
         disabled={disabled}
-        // onClick={onClick}
+        onClick={onClick as any}
         onCheckedChange={(e) => onChange(!!e.checked, false)}
-        // onChange={handleChange}
+        onChange={handleChange as any}
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledBy}
         tabIndex={tabIndex}

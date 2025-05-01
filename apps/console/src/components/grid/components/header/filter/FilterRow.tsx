@@ -21,7 +21,7 @@ const FilterRow = ({ filter, filterIdx, onChange, onDelete, onKeyDown }: FilterR
   const column = snap.table.columns.find((x) => x.name === filter.column);
   const columnOptions =
     snap.table.columns?.map((x) => {
-      return { value: x.name, label: x.name, postLabel: x.type };
+      return { value: x.name, label: x.name, postLabel: x.dataType };
     }) || [];
 
   const placeholder =

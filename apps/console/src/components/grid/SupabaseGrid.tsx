@@ -5,7 +5,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { createPortal } from "react-dom";
 
 import { useParams, useSearchParams } from "next/navigation";
-// import { useTableRowsQuery } from "data/table-rows/table-rows-query";
+import { useTableRowsQuery } from "@/data/table-rows/table-rows-query";
 // import { useTableEditorFiltersSort } from "hooks/misc/useTableEditorFiltersSort";
 // import { RoleImpersonationState } from "lib/role-impersonation";
 // import { EMPTY_ARR } from "lib/void";
@@ -40,10 +40,11 @@ export const SupabaseGrid = ({
     gridProps?: GridProps;
   }>) => {
   const query = useSearchParams();
-  const _id = query.get("table");
+  const tableId = Number(query.get("table"));
   const { project, sdk } = useProjectStore();
   const { schema } = useTableEditorStore();
   const { getState } = useTableEditorTableState();
+  const sate = useTableEditorStore();
   const snap = getState();
 
   const gridRef = useRef<DataGridHandle>(null);
@@ -83,45 +84,41 @@ export const SupabaseGrid = ({
 
   // const roleImpersonationState = useRoleImpersonationStateSnapshot();
 
-  const { data, error, isSuccess, isError, isLoading, isRefetching } = useQuery(
+  const { data, error, isSuccess, isError, isLoading, isRefetching } = useTableRowsQuery(
     {
-      queryKey: ["any"],
-      queryFn: async () => await sdk.schema.getRows(_id!, schema),
+      projectRef: project?.$id,
+      sdk,
+      tableId,
+      sorts,
+      filters,
+      page: snap.page,
+      limit: sate.rowsPerPage,
+      // roleImpersonationState: roleImpersonationState as RoleImpersonationState,
     },
-    // {
-    //   projectRef: project?.ref,
-    //   connectionString: project?.connectionString,
-    //   tableId,
-    //   sorts,
-    //   filters,
-    //   page: snap.page,
-    //   limit: tableEditorSnap.rowsPerPage,
-    //   roleImpersonationState: roleImpersonationState as RoleImpersonationState,
-    // },
-    // {
-    //   keepPreviousData: true,
-    //   retryDelay: (retryAttempt, error: any) => {
-    //     if (error && error.message?.includes("does not exist")) {
-    //       setParams((prevParams) => {
-    //         return {
-    //           ...prevParams,
-    //           ...{ sort: undefined },
-    //         };
-    //       });
-    //     }
-    //     if (retryAttempt > 3) {
-    //       return Infinity;
-    //     }
-    //     return 5000;
-    //   },
-    // },
+    {
+      // keepPreviousData: true,
+      retryDelay: (retryAttempt, error: any) => {
+        if (error && error.message?.includes("does not exist")) {
+          setParams((prevParams) => {
+            return {
+              ...prevParams,
+              ...{ sort: undefined },
+            };
+          });
+        }
+        if (retryAttempt > 3) {
+          return Infinity;
+        }
+        return 5000;
+      },
+    },
   );
 
   useEffect(() => {
     if (!mounted) setMounted(true);
   }, []);
 
-  const rows = data ?? EMPTY_ARR;
+  const rows = data?.rows ?? EMPTY_ARR;
 
   return (
     <DndProvider backend={HTML5Backend} context={window}>
@@ -138,8 +135,8 @@ export const SupabaseGrid = ({
               isLoading={isLoading}
               isSuccess={isSuccess}
               isError={isError}
-              filters={filters} //filters
-              onApplyFilters={onApplyFilters} //onApplyFilters
+              filters={filters}
+              onApplyFilters={onApplyFilters}
             />
             <Footer isRefetching={isRefetching} />
             <Shortcuts gridRef={gridRef as any} rows={rows} />

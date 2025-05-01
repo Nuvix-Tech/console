@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 
 // import { getForeignKeyCascadeAction } from "components/interfaces/TableGridEditor/SidePanelEditor/ColumnEditor/ColumnEditor.utils";
-// import { FOREIGN_KEY_CASCADE_ACTION } from "data/database/database-query-constants";
+import { FOREIGN_KEY_CASCADE_ACTION } from "@/data/database/database-query-constants";
 // import { useTableEditorTableStateSnapshot } from "state/table-editor-table";
 // import { Tooltip, TooltipContent, TooltipTrigger } from "ui";
 import type { ColumnHeaderProps, ColumnType, DragItem, GridForeignKey } from "../../types";
@@ -176,16 +176,16 @@ function renderColumnIcon(
                   {foreignKey?.targetColumnName}
                 </p>
               </div>
-              {/* {foreignKey?.updateAction !== FOREIGN_KEY_CASCADE_ACTION.NO_ACTION && (
+              {foreignKey?.updateAction !== FOREIGN_KEY_CASCADE_ACTION.NO_ACTION && (
                 <p className="text-xs !text-foreground mt-1">
-                  On update: {getForeignKeyCascadeAction(foreignKey?.updateAction)}
+                  {/* On update: {getForeignKeyCascadeAction(foreignKey?.updateAction)} */}
                 </p>
               )}
               {foreignKey?.deletionAction !== FOREIGN_KEY_CASCADE_ACTION.NO_ACTION && (
                 <p className="text-xs !text-foreground mt-1">
-                  On delete: {getForeignKeyCascadeAction(foreignKey?.deletionAction)}
+                  {/* On delete: {getForeignKeyCascadeAction(foreignKey?.deletionAction)} */}
                 </p>
-              )} */}
+              )}
             </div>
           </TooltipContent>
         </Tooltip>

@@ -158,7 +158,6 @@ export const useTableRowsCountQuery = <TData = TableRowsCountData>(
   const queryClient = useQueryClient();
   return useQuery({
     queryKey: tableRowKeys.tableRowsCount(projectRef, { table: { id: tableId }, ...args }),
-
     queryFn: ({ signal }) =>
       getTableRowsCount({ queryClient, projectRef, sdk, tableId, ...args }, signal),
     enabled: enabled && typeof projectRef !== "undefined" && typeof tableId !== "undefined",

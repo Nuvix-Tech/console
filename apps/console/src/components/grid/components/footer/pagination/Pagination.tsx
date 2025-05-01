@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 // import { useParams } from "common";
 import { formatFilterURLParams } from "@/components/grid/SupabaseGrid.utils";
 // import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
-// import { useTableEditorQuery } from "data/table-editor/table-editor-query";
-// import { isTableLike } from "data/table-editor/table-editor-types";
-// import { THRESHOLD_COUNT, useTableRowsCountQuery } from "data/table-rows/table-rows-count-query";
+import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
+import { isTableLike } from "@/data/table-editor/table-editor-types";
+import { THRESHOLD_COUNT, useTableRowsCountQuery } from "@/data/table-rows/table-rows-count-query";
 // import { useUrlState } from "hooks/ui/useUrlState";
 // import { RoleImpersonationState } from "lib/role-impersonation";
 // import { useRoleImpersonationStateSnapshot } from "state/role-impersonation-state";
@@ -21,7 +21,6 @@ import { useSearchParams } from "next/navigation";
 import { useProjectStore } from "@/lib/store";
 import { useTableEditorStore } from "@/lib/store/table-editor";
 import { useTableEditorTableState } from "@/lib/store/table";
-import { useTableEditorQuery } from "@/components/editor/data";
 import { useQuery } from "@tanstack/react-query";
 import { Button, IconButton } from "@nuvix/ui/components";
 import { Input } from "@/components/editor/components";
@@ -34,8 +33,6 @@ const rowsPerPageOptions = [
   { value: 1000, label: "1000 rows" },
 ];
 
-const THRESHOLD_COUNT = 10000;
-
 const Pagination = () => {
   const params = useSearchParams();
   const id = params.get("table");
@@ -46,8 +43,8 @@ const Pagination = () => {
 
   const { data: selectedTable } = useTableEditorQuery({
     sdk,
-    id: params.get("table") as string,
-    schema: tableEditorSnap.schema,
+    id: Number(params.get("table")),
+    projectRef: project?.$id,
   });
 
   // rowsCountEstimate is only applicable to table entities
@@ -69,34 +66,18 @@ const Pagination = () => {
     setValue(String(page));
   }, [page]);
 
-  const { data, isLoading, isSuccess, isError, isFetching } = useQuery({
-    queryKey: [
-      "table-rows-count",
-      {
-        project,
-        table: selectedTable?.name,
-        schema: selectedTable?.schema,
-        filters,
-        enforceExactCount: snap.enforceExactCount,
-      },
-    ],
-    queryFn: async () => {
-      if (selectedTable) {
-        // const { data } = await sdk.getTableRowsCount({
-        //   project,
-        //   table: selectedTable.name,
-        //   schema: selectedTable.schema,
-        //   filters,
-        //   enforceExactCount: snap.enforceExactCount,
-        // });
-        return {
-          count: 0,
-          is_estimate: false,
-        };
-      }
-      return null;
+  const { data, isLoading, isSuccess, isError, isFetching } = useTableRowsCountQuery(
+    {
+      sdk,
+      tableId: Number(id),
+      projectRef: project?.$id,
+      filters,
+      enforceExactCount: rowsCountEstimate !== null && rowsCountEstimate <= THRESHOLD_COUNT,
     },
-  });
+    {
+      enabled: !!id && isTableLike(selectedTable),
+    },
+  );
 
   const count = data?.is_estimate ? formatEstimatedCount(data.count) : data?.count.toLocaleString();
   const maxPages = Math.ceil((data?.count ?? 0) / tableEditorSnap.rowsPerPage);

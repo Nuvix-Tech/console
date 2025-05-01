@@ -11,7 +11,7 @@ import {
   parseSupaTable,
   saveTableEditorStateToLocalStorageDebounced,
 } from "@/components/grid/SupabaseGrid.utils";
-import { Entity } from "@/types/grid";
+import { Entity } from "@/data/table-editor/table-editor-types";
 
 interface TableEditorTableStateProps {
   projectRef: string;

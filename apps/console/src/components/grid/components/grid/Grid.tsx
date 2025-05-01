@@ -1,16 +1,11 @@
 import { forwardRef, memo, useRef } from "react";
 import { DataGrid, CalculatedColumn, DataGridHandle } from "react-data-grid";
 
-// import { handleCopyCell } from "components/grid/SupabaseGrid.utils";
-// import { formatForeignKeys } from "components/interfaces/TableGridEditor/SidePanelEditor/ForeignKeySelector/ForeignKeySelector.utils";
+import { handleCopyCell } from "@/components/grid/SupabaseGrid.utils";
 // import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
 // import AlertError from "components/ui/AlertError";
-// import { useForeignKeyConstraintsQuery } from "data/database/foreign-key-constraints-query";
+import { useForeignKeyConstraintsQuery } from "@/data/database/foreign-key-constraints-query";
 // import { useSendEventMutation } from "data/telemetry/send-event-mutation";
-// import { useSelectedOrganization } from "hooks/misc/useSelectedOrganization";
-// import { useTableEditorStateSnapshot } from "state/table-editor";
-// import { useTableEditorTableStateSnapshot } from "state/table-editor-table";
-// import { Button } from '@nuvix/sui/components/button';
 // import { GenericSkeletonLoader } from "ui-patterns";
 import type { GridProps, SupaRow } from "../../types";
 import { useOnRowsChange } from "./Grid.utils";
@@ -21,6 +16,7 @@ import { useAppStore, useProjectStore } from "@/lib/store";
 import { cn } from "@nuvix/sui/lib/utils";
 import { Button } from "@nuvix/ui/components";
 import { Alert } from "@chakra-ui/react";
+import { formatForeignKeys } from "@/components/editor/SidePanelEditor/ForeignKeySelector/ForeignKeySelector.utils";
 
 const rowKeyGetter = (row: SupaRow) => {
   return row?.idx ?? -1;
@@ -77,37 +73,29 @@ export const Grid = memo(
 
       // const { mutate: sendEvent } = useSendEventMutation();
       const { organization: org } = useAppStore();
-      const { project } = useProjectStore();
+      const { project, sdk } = useProjectStore();
+
+      const { data } = useForeignKeyConstraintsQuery({
+        projectRef: project?.$id,
+        sdk,
+        schema: table?.schema ?? undefined,
+      });
 
       function getColumnForeignKey(columnName: string) {
-        const {
-          table: _table,
-          schema,
-          column,
-          onDelete,
-          onUpdate,
-        } = table?.columns.find((x) => x.name == columnName)?.references ?? {};
+        const { targetTableSchema, targetTableName, targetColumnName } =
+          table?.columns.find((x) => x.name == columnName)?.foreignKey ?? {};
 
-        // const fk = data?.find(
-        //   (key: any) =>
-        //     key.source_schema === table?.schema &&
-        //     key.source_table === table?.name &&
-        //     key.source_columns.includes(columnName) &&
-        //     key.target_schema === targetTableSchema &&
-        //     key.target_table === targetTableName &&
-        //     key.target_columns.includes(targetColumnName),
-        // );
-        // fk !== undefined ? formatForeignKeys([fk])[0] : undefined
-        return {
-          table: table.name,
-          schema: table.schema,
-          column: columnName,
-          foreignColumn: column!,
-          foreignTable: _table!,
-          foreignSchema: schema!,
-          onDelete: onDelete,
-          onUpdate: onUpdate,
-        };
+        const fk = data?.find(
+          (key: any) =>
+            key.source_schema === table?.schema &&
+            key.source_table === table?.name &&
+            key.source_columns.includes(columnName) &&
+            key.target_schema === targetTableSchema &&
+            key.target_table === targetTableName &&
+            key.target_columns.includes(targetColumnName),
+        );
+
+        return fk !== undefined ? formatForeignKeys([fk])[0] : undefined;
       }
 
       function onRowDoubleClick(row: any, column: any) {
@@ -223,7 +211,7 @@ export const Grid = memo(
               ["--rdg-row-hover-background-color" as any]: "var(--accent-border-strong)",
             }}
             onCellDoubleClick={(props) => onRowDoubleClick(props.row, props.column)}
-            // onCellKeyDown={handleCopyCell as unknown}
+            onCellKeyDown={handleCopyCell}
           />
         </div>
       );
