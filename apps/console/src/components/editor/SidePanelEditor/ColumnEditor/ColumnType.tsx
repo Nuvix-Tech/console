@@ -13,35 +13,49 @@ import Link from "next/link";
 import { ReactNode, useState } from "react";
 
 import type { EnumeratedType } from "@/data/enumerated-types/enumerated-types-query";
-import {
-  AlertDescription_Shadcn_,
-  AlertTitle_Shadcn_,
-  Alert_Shadcn_,
-  Button,
-  CommandEmpty_Shadcn_,
-  CommandGroup_Shadcn_,
-  CommandInput_Shadcn_,
-  CommandItem_Shadcn_,
-  CommandList_Shadcn_,
-  Command_Shadcn_,
-  CriticalIcon,
-  Input,
-  Label_Shadcn_,
-  PopoverContent_Shadcn_,
-  PopoverTrigger_Shadcn_,
-  Popover_Shadcn_,
-  ScrollArea,
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-  cn,
-} from "ui";
+// import {
+//   AlertDescription_Shadcn_,
+//   AlertTitle_Shadcn_,
+//   Alert_Shadcn_,
+//   Button,
+//   CommandEmpty_Shadcn_,
+//   CommandGroup_Shadcn_,
+//   CommandInput_Shadcn_,
+//   CommandItem_Shadcn_,
+//   CommandList_Shadcn_,
+//   Command_Shadcn_,
+//   CriticalIcon,
+//   Input,
+//   Label_Shadcn_,
+//   PopoverContent_Shadcn_,
+//   PopoverTrigger_Shadcn_,
+//   Popover_Shadcn_,
+//   ScrollArea,
+//   Tooltip,
+//   TooltipContent,
+//   TooltipTrigger,
+//   cn,
+// } from "ui";
 import {
   POSTGRES_DATA_TYPES,
   POSTGRES_DATA_TYPE_OPTIONS,
   RECOMMENDED_ALTERNATIVE_DATA_TYPE,
 } from "../SidePanelEditor.constants";
 import type { PostgresDataTypeOption } from "../SidePanelEditor.types";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
+import { Button, Icon, Input } from "@nuvix/ui/components";
+import { Label } from "@nuvix/sui/components/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/popover";
+import { cn } from "@nuvix/sui/lib/utils";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@nuvix/sui/components/command";
+import { Alert, AlertDescription, AlertTitle } from "@nuvix/sui/components/alert";
 
 interface ColumnTypeProps {
   value: string;
@@ -121,12 +135,14 @@ const ColumnType = ({
             readOnly
             disabled
             label={showLabel ? "Type" : ""}
-            layout={showLabel ? layout : undefined}
+            // layout={showLabel ? layout : undefined}
             className="md:gap-x-0 [&>div>div]:text-left"
-            size="small"
-            icon={inferIcon(POSTGRES_DATA_TYPE_OPTIONS.find((x) => x.name === value)?.type ?? "")}
+            height="s"
+            hasPrefix={inferIcon(
+              POSTGRES_DATA_TYPE_OPTIONS.find((x) => x.name === value)?.type ?? "",
+            )}
             value={value}
-            descriptionText={showLabel ? unsupportedDataTypeText : undefined}
+            description={showLabel ? unsupportedDataTypeText : undefined}
           />
         </TooltipTrigger>
         {!showLabel && (
@@ -146,9 +162,9 @@ const ColumnType = ({
             readOnly
             disabled
             label={showLabel ? "Type" : ""}
-            layout={showLabel ? "horizontal" : undefined}
+            // layout={showLabel ? "horizontal" : undefined}
             className="md:gap-x-0"
-            size="small"
+            // size="small"
             value={value}
           />
         </TooltipTrigger>
@@ -163,16 +179,16 @@ const ColumnType = ({
 
   return (
     <div className={cn("flex flex-col gap-y-2", className)}>
-      {showLabel && <Label_Shadcn_ className="text-foreground-light">Type</Label_Shadcn_>}
-      <Popover_Shadcn_ open={open} onOpenChange={setOpen}>
-        <PopoverTrigger_Shadcn_ asChild>
+      {showLabel && <Label className="text-foreground-light">Type</Label>}
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
           <Button
             type="default"
             role="combobox"
-            size={"small"}
+            size={"s"}
             aria-expanded={open}
             className={cn("w-full justify-between", !value && "text-foreground-lighter")}
-            iconRight={<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />}
+            suffixIcon={<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />}
           >
             {value ? (
               <div className="flex gap-2 items-center">
@@ -183,17 +199,17 @@ const ColumnType = ({
               "Choose a column type..."
             )}
           </Button>
-        </PopoverTrigger_Shadcn_>
-        <PopoverContent_Shadcn_ className="w-[460px] p-0" side="bottom" align="center">
+        </PopoverTrigger>
+        <PopoverContent className="w-[460px] p-0" side="bottom" align="center">
           <ScrollArea className="h-[335px]">
-            <Command_Shadcn_>
-              <CommandInput_Shadcn_ placeholder="Search types..." />
-              <CommandEmpty_Shadcn_>Type not found.</CommandEmpty_Shadcn_>
+            <Command>
+              <CommandInput placeholder="Search types..." />
+              <CommandEmpty>Type not found.</CommandEmpty>
 
-              <CommandList_Shadcn_>
-                <CommandGroup_Shadcn_>
+              <CommandList>
+                <CommandGroup>
                   {POSTGRES_DATA_TYPE_OPTIONS.map((option: PostgresDataTypeOption) => (
-                    <CommandItem_Shadcn_
+                    <CommandItem
                       key={option.name}
                       value={option.name}
                       className={cn("relative", option.name === value ? "bg-surface-200" : "")}
@@ -210,15 +226,15 @@ const ColumnType = ({
                       <span className="absolute right-3 top-2">
                         {option.name === value ? <Check className="text-brand" size={14} /> : ""}
                       </span>
-                    </CommandItem_Shadcn_>
+                    </CommandItem>
                   ))}
-                </CommandGroup_Shadcn_>
+                </CommandGroup>
                 {enumTypes.length > 0 && (
                   <>
-                    <CommandItem_Shadcn_>Other types</CommandItem_Shadcn_>
-                    <CommandGroup_Shadcn_>
+                    <CommandItem>Other types</CommandItem>
+                    <CommandGroup>
                       {enumTypes.map((option) => (
-                        <CommandItem_Shadcn_
+                        <CommandItem
                           key={option.id}
                           value={option.format}
                           className={cn(
@@ -255,32 +271,33 @@ const ColumnType = ({
                               </span>
                             )}
                           </div>
-                        </CommandItem_Shadcn_>
+                        </CommandItem>
                       ))}
-                    </CommandGroup_Shadcn_>
+                    </CommandGroup>
                   </>
                 )}
-              </CommandList_Shadcn_>
-            </Command_Shadcn_>
+              </CommandList>
+            </Command>
           </ScrollArea>
-        </PopoverContent_Shadcn_>
-      </Popover_Shadcn_>
+        </PopoverContent>
+      </Popover>
 
       {showRecommendation && recommendation !== undefined && (
-        <Alert_Shadcn_ variant="warning" className="mt-2">
-          <CriticalIcon />
-          <AlertTitle_Shadcn_>
+        <Alert variant="warning" className="mt-2">
+          <Icon name="warningTriangle" />
+          <AlertTitle>
             {" "}
             It is recommended to use <code className="text-xs">{recommendation.alternative}</code>{" "}
             instead
-          </AlertTitle_Shadcn_>
-          <AlertDescription_Shadcn_>
+          </AlertTitle>
+          <AlertDescription>
             <p>
               Postgres recommends against using the data type{" "}
               <code className="text-xs">{value}</code> unless you have a very specific use case.
             </p>
             <div className="flex items-center space-x-2 mt-3">
-              <Button asChild type="default" icon={<ExternalLink />}>
+              <Button type="default" prefixIcon={<ExternalLink />}>
+                {/* asChild */}
                 <Link href={recommendation.reference} target="_blank" rel="noreferrer">
                   Read more
                 </Link>
@@ -289,9 +306,26 @@ const ColumnType = ({
                 Use {recommendation.alternative}
               </Button>
             </div>
-          </AlertDescription_Shadcn_>
-        </Alert_Shadcn_>
+          </AlertDescription>
+        </Alert>
       )}
+    </div>
+  );
+};
+
+export const ScrollArea = ({
+  children,
+  className,
+}: { children: ReactNode; className?: string }) => {
+  return (
+    <div
+      className={cn(
+        "h-full w-full overflow-hidden rounded-md border bg-surface-100",
+        "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:duration-200",
+        className,
+      )}
+    >
+      {children}
     </div>
   );
 };

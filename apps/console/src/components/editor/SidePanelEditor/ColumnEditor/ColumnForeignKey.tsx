@@ -1,8 +1,7 @@
-import { useParams } from "common";
 import { useState } from "react";
-import { Button } from "ui";
+// import { Button } from "ui";
 
-import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
+// import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
 import { useForeignKeyConstraintsQuery } from "@/data/database/foreign-key-constraints-query";
 import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
 import { ForeignKeySelector } from "../ForeignKeySelector/ForeignKeySelector";
@@ -10,6 +9,9 @@ import type { ForeignKey } from "../ForeignKeySelector/ForeignKeySelector.types"
 import type { ColumnField } from "../SidePanelEditor.types";
 import { ForeignKeyRow } from "../TableEditor/ForeignKeysManagement/ForeignKeyRow";
 import { checkIfRelationChanged } from "../TableEditor/ForeignKeysManagement/ForeignKeysManagement.utils";
+import { useParams, useSearchParams } from "next/navigation";
+import { useProjectStore } from "@/lib/store";
+import { Button } from "@nuvix/ui/components";
 
 interface ColumnForeignKeyProps {
   column: ColumnField;
@@ -26,21 +28,22 @@ const ColumnForeignKey = ({
   onUpdateColumnType,
   onUpdateFkRelations,
 }: ColumnForeignKeyProps) => {
-  const { id: _id } = useParams();
+  const params = useSearchParams();
+  const _id = params.get("table");
   const [open, setOpen] = useState(false);
   const [selectedFk, setSelectedFk] = useState<ForeignKey>();
 
-  const { project } = useProjectContext();
+  const { project, sdk } = useProjectStore();
   const { data } = useForeignKeyConstraintsQuery({
-    projectRef: project?.ref,
-    connectionString: project?.connectionString,
+    projectRef: project?.$id,
+    sdk,
     schema: column.schema,
   });
 
   const id = _id ? Number(_id) : undefined;
   const { data: table } = useTableEditorQuery({
-    projectRef: project?.ref,
-    connectionString: project?.connectionString,
+    projectRef: project?.$id,
+    sdk,
     id,
   });
   const formattedColumnsForFkSelector = (table?.columns ?? []).map((c) => {

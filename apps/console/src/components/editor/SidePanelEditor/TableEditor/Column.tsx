@@ -83,8 +83,8 @@ const Column = ({
   ].reduce((a, b) => a + b, 0);
 
   const { data } = useForeignKeyConstraintsQuery({
-    projectRef: project?.ref,
-    connectionString: project?.connectionString,
+    projectRef: project?.$id,
+    sdk,
     schema: column.schema,
   });
 

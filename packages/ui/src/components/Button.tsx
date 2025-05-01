@@ -2,11 +2,12 @@
 
 import classNames from "classnames";
 import type React from "react";
-import { type ReactNode, forwardRef } from "react";
+import { type ReactNode, forwardRef, useEffect, useState } from "react";
 import { ElementType } from "./ElementType";
 
-import { Arrow, Flex, Icon, Spinner } from ".";
+import { Arrow, Flex, Icon, IconButtonProps, Spinner, Tooltip } from ".";
 import styles from "./Button.module.scss";
+import iconStyles from "./IconButton.module.scss";
 
 interface CommonProps {
   variant?: "primary" | "secondary" | "tertiary" | "danger";
@@ -37,8 +38,12 @@ interface CommonProps {
   disabled?: boolean;
 }
 
-export type ButtonProps = CommonProps & React.ButtonHTMLAttributes<HTMLButtonElement>;
-export type AnchorProps = CommonProps & React.AnchorHTMLAttributes<HTMLAnchorElement>;
+export type ButtonProps = CommonProps &
+  Pick<IconButtonProps, "tooltip" | "tooltipPosition"> &
+  React.ButtonHTMLAttributes<HTMLButtonElement>;
+export type AnchorProps = CommonProps &
+  Pick<IconButtonProps, "tooltip" | "tooltipPosition"> &
+  React.AnchorHTMLAttributes<HTMLAnchorElement>;
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps | AnchorProps>(
   (
@@ -59,10 +64,28 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps | AnchorProps>(
       arrowIcon = false,
       className,
       style,
+      tooltip,
+      tooltipPosition = "top",
       ...props
     },
     ref,
   ) => {
+    const [isTooltipVisible, setTooltipVisible] = useState(false);
+    const [isHover, setIsHover] = useState(false);
+
+    useEffect(() => {
+      let timer: NodeJS.Timeout;
+      if (isHover) {
+        timer = setTimeout(() => {
+          setTooltipVisible(true);
+        }, 400);
+      } else {
+        setTooltipVisible(false);
+      }
+
+      return () => clearTimeout(timer);
+    }, [isHover]);
+
     const iconSize = size === "l" ? "s" : size === "m" ? "s" : "xs";
     const radiusSize = size === "s" || size === "m" ? "m" : "l";
 
@@ -92,6 +115,14 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps | AnchorProps>(
         )}
         style={style}
         {...props}
+        onMouseEnter={(e: any) => {
+          setIsHover(true);
+          props.onMouseEnter?.(e);
+        }}
+        onMouseLeave={(e: any) => {
+          setIsHover(false);
+          props.onMouseLeave?.(e);
+        }}
       >
         {prefixIcon && !loading && <Icon name={prefixIcon} size={iconSize} />}
         {loading && <Spinner size={size} />}
@@ -117,6 +148,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps | AnchorProps>(
           />
         )}
         {suffixIcon && <Icon name={suffixIcon} size={iconSize} />}
+        {tooltip && isTooltipVisible && (
+          <Flex position="absolute" zIndex={1} className={iconStyles[tooltipPosition]}>
+            <Tooltip label={tooltip} />
+          </Flex>
+        )}
       </ElementType>
     );
   },

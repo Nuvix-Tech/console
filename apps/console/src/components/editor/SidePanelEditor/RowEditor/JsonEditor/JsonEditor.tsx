@@ -43,8 +43,8 @@ const JsonEdit = ({
   const project = useSelectedProject();
 
   const { data: selectedTable } = useTableEditorQuery({
-    projectRef: project?.ref,
-    connectionString: project?.connectionString,
+    projectRef: project?.$id,
+    sdk,
     id,
   });
 
@@ -94,8 +94,8 @@ const JsonEdit = ({
         table: { schema: selectedTable.schema, name: selectedTable.name },
         column: column,
         pkMatch,
-        projectRef: project?.ref,
-        connectionString: project?.connectionString,
+        projectRef: project?.$id,
+        sdk,
       },
       {
         onSuccess: (data) => {

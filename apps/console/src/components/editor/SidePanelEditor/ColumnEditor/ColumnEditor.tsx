@@ -1,4 +1,4 @@
-// import type { PostgresColumn, PostgresTable } from "@nuvix/pg-meta";
+import type { PostgresColumn, PostgresTable } from "@nuvix/pg-meta";
 import { isEmpty, noop } from "lodash";
 import { ExternalLink, Plus } from "lucide-react";
 import Link from "next/link";
@@ -6,18 +6,18 @@ import { useEffect, useState } from "react";
 
 // import { useParams } from "common";
 // import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
-// import { FormSection, FormSectionContent, FormSectionLabel } from "components/ui/Forms/FormSection";
-// import {
-//   CONSTRAINT_TYPE,
-//   Constraint,
-//   useTableConstraintsQuery,
-// } from "@/data/database/constraints-query";
-// import {
-//   ForeignKeyConstraint,
-//   useForeignKeyConstraintsQuery,
-// } from "@/data/database/foreign-key-constraints-query";
-// import { useEnumeratedTypesQuery } from "@/data/enumerated-types/enumerated-types-query";
-// import { PROTECTED_SCHEMAS_WITHOUT_EXTENSIONS } from "lib/constants/schemas";
+import { FormSection, FormSectionContent, FormSectionLabel } from "@/ui/Forms/FormSection";
+import {
+  CONSTRAINT_TYPE,
+  Constraint,
+  useTableConstraintsQuery,
+} from "@/data/database/constraints-query";
+import {
+  ForeignKeyConstraint,
+  useForeignKeyConstraintsQuery,
+} from "@/data/database/foreign-key-constraints-query";
+import { useEnumeratedTypesQuery } from "@/data/enumerated-types/enumerated-types-query";
+import { PROTECTED_SCHEMAS_WITHOUT_EXTENSIONS } from "@/lib/constants/schemas";
 // import type { Dictionary } from "types";
 // import { Button, Checkbox, Input, SidePanel, Toggle } from "ui";
 import ActionBar from "../ActionBar";
@@ -41,15 +41,15 @@ import {
 import ColumnForeignKey from "./ColumnForeignKey";
 import ColumnType from "./ColumnType";
 import HeaderTitle from "./HeaderTitle";
-import { Column, Entity } from "@/types/grid";
 import { Dictionary } from "@/components/grid/types";
 import { useProjectStore } from "@/lib/store";
 import { useParams } from "next/navigation";
 import { SidePanel } from "@/ui/SidePanel";
+import { Button, Checkbox, Input, Switch } from "@nuvix/ui/components";
 
 export interface ColumnEditorProps {
-  column?: Readonly<Column>;
-  selectedTable: Entity;
+  column?: Readonly<PostgresColumn>;
+  selectedTable: PostgresTable;
   visible: boolean;
   closePanel: () => void;
   saveChanges: (
@@ -57,9 +57,9 @@ export interface ColumnEditorProps {
     isNewRecord: boolean,
     configuration: {
       columnId?: string;
-      primaryKey?: any; //Constraint;
+      primaryKey?: Constraint;
       foreignKeyRelations: ForeignKey[];
-      existingForeignKeyRelations: any; //ForeignKeyConstraint[];
+      existingForeignKeyRelations: ForeignKeyConstraint[];
     },
     resolve: any,
   ) => void;
@@ -74,8 +74,8 @@ const ColumnEditor = ({
   saveChanges = noop,
   updateEditorDirty = noop,
 }: ColumnEditorProps) => {
-  const { id: ref } = useParams();
-  const { project } = useProjectStore();
+  const { ref } = useParams();
+  const { project, sdk } = useProjectStore();
 
   const [errors, setErrors] = useState<Dictionary<any>>({});
   const [columnFields, setColumnFields] = useState<ColumnField>();
@@ -84,34 +84,33 @@ const ColumnEditor = ({
     getPlaceholderText(columnFields?.format, columnFields?.name),
   );
 
-  // const { data: types } = useEnumeratedTypesQuery({
-  //   projectRef: project?.ref,
-  //   connectionString: project?.connectionString,
-  // });
-  // const enumTypes = (types ?? []).filter(
-  //   (type) => !PROTECTED_SCHEMAS_WITHOUT_EXTENSIONS.includes(type.schema),
-  // );
+  const { data: types } = useEnumeratedTypesQuery({
+    projectRef: project?.$id,
+    sdk,
+  });
+  const enumTypes = (types ?? []).filter(
+    (type: any) => !PROTECTED_SCHEMAS_WITHOUT_EXTENSIONS.includes(type.schema),
+  );
 
-  // const { data: constraints } = useTableConstraintsQuery({
-  //   projectRef: project?.ref,
-  //   connectionString: project?.connectionString,
-  //   id: selectedTable?.id,
-  // });
-  // const primaryKey = (constraints ?? []).find(
-  //   (constraint) => constraint.type === CONSTRAINT_TYPE.PRIMARY_KEY_CONSTRAINT,
-  // );
+  const { data: constraints } = useTableConstraintsQuery({
+    projectRef: project?.$id,
+    sdk,
+    id: selectedTable?.id,
+  });
+  const primaryKey = (constraints ?? []).find(
+    (constraint) => constraint.type === CONSTRAINT_TYPE.PRIMARY_KEY_CONSTRAINT,
+  );
 
-  // const { data } = useForeignKeyConstraintsQuery({
-  //   projectRef: project?.ref,
-  //   connectionString: project?.connectionString,
-  //   schema: selectedTable?.schema,
-  // });
+  const { data } = useForeignKeyConstraintsQuery({
+    projectRef: project?.$id,
+    sdk,
+    schema: selectedTable?.schema,
+  });
 
   const isNewRecord = column === undefined;
-  const foreignKeyMeta: any[] = []; //data ||
+  const foreignKeyMeta = data || [];
   const foreignKeys = foreignKeyMeta.filter((relation) => {
-    // return relation.source_id === column?.table_id && relation.source_columns.includes(column?.name);
-    return false;
+    return relation.source_id === column?.table_id && relation.source_columns.includes(column.name);
   });
   const lockColumnType =
     fkRelations.find(
@@ -186,11 +185,11 @@ const ColumnEditor = ({
           : generateUpdateColumnPayload(column!, selectedTable, columnFields);
         const configuration = {
           columnId: column?.id,
-          primaryKey: null, // TODODOD:
+          primaryKey,
           foreignKeyRelations: fkRelations,
           existingForeignKeyRelations: foreignKeys,
         };
-        saveChanges(payload, isNewRecord, configuration as any, resolve);
+        saveChanges(payload, isNewRecord, configuration, resolve);
       } else {
         resolve();
       }
@@ -221,7 +220,7 @@ const ColumnEditor = ({
           <Input
             label="Name"
             type="text"
-            descriptionText="Recommended to use lowercase and use an underscore to separate words e.g. column_name"
+            description="Recommended to use lowercase and use an underscore to separate words e.g. column_name"
             placeholder="column_name"
             error={errors.name}
             value={columnFields?.name ?? ""}
@@ -243,16 +242,15 @@ const ColumnEditor = ({
             className="lg:!col-span-4"
             description={
               <div className="space-y-2">
-                <Button asChild type="default" size="tiny" icon={<Plus strokeWidth={2} />}>
+                <Button variant="secondary" size="s" prefixIcon={<Plus strokeWidth={2} />}>
                   <Link href={`/project/${ref}/database/types`} target="_blank" rel="noreferrer">
                     Create enum types
                   </Link>
                 </Button>
                 <Button
-                  asChild
-                  type="default"
-                  size="tiny"
-                  icon={<ExternalLink size={14} strokeWidth={2} />}
+                  variant="secondary"
+                  size="s"
+                  prefixIcon={<ExternalLink size={14} strokeWidth={2} />}
                 >
                   <Link
                     href="https://supabase.com/docs/guides/database/tables#data-types"
@@ -289,8 +287,8 @@ const ColumnEditor = ({
                   <Checkbox
                     label="Is Identity"
                     description="Automatically assign a sequential unique number to the column"
-                    checked={columnFields.isIdentity}
-                    onChange={() => {
+                    isChecked={columnFields.isIdentity}
+                    onToggle={() => {
                       const isIdentity = !columnFields.isIdentity;
                       const isArray = isIdentity ? false : columnFields.isArray;
                       onUpdateField({ isIdentity, isArray });
@@ -303,8 +301,8 @@ const ColumnEditor = ({
                   <Checkbox
                     label="Define as Array"
                     description="Allow column to be defined as variable-length multidimensional arrays"
-                    checked={columnFields.isArray}
-                    onChange={() => {
+                    isChecked={columnFields.isArray}
+                    onToggle={() => {
                       const isArray = !columnFields.isArray;
                       const isIdentity = isArray ? false : columnFields.isIdentity;
                       onUpdateField({ isArray, isIdentity });
@@ -348,23 +346,26 @@ const ColumnEditor = ({
         header={<FormSectionLabel className="lg:!col-span-4">Constraints</FormSectionLabel>}
       >
         <FormSectionContent loading={false} className="lg:!col-span-8">
-          <Toggle
+          <Switch
             label="Is Primary Key"
-            descriptionText="A primary key indicates that a column or group of columns can be used as a unique identifier for rows in the table"
-            checked={columnFields?.isPrimaryKey ?? false}
-            onChange={() => onUpdateField({ isPrimaryKey: !columnFields?.isPrimaryKey })}
+            reverse
+            description="A primary key indicates that a column or group of columns can be used as a unique identifier for rows in the table"
+            isChecked={columnFields?.isPrimaryKey ?? false}
+            onToggle={() => onUpdateField({ isPrimaryKey: !columnFields?.isPrimaryKey })}
           />
-          <Toggle
+          <Switch
             label="Allow Nullable"
-            descriptionText="Allow the column to assume a NULL value if no value is provided"
-            checked={columnFields.isNullable}
-            onChange={() => onUpdateField({ isNullable: !columnFields.isNullable })}
+            description="Allow the column to assume a NULL value if no value is provided"
+            reverse
+            isChecked={columnFields.isNullable}
+            onToggle={() => onUpdateField({ isNullable: !columnFields.isNullable })}
           />
-          <Toggle
+          <Switch
             label="Is Unique"
-            descriptionText="Enforce values in the column to be unique across rows"
-            checked={columnFields.isUnique}
-            onChange={() => onUpdateField({ isUnique: !columnFields.isUnique })}
+            reverse
+            description="Enforce values in the column to be unique across rows"
+            isChecked={columnFields.isUnique}
+            onToggle={() => onUpdateField({ isUnique: !columnFields.isUnique })}
           />
           <Input
             label="CHECK Constraint"

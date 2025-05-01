@@ -919,7 +919,7 @@ const updateForeignKeys = async ({
   const relationsToUpdate = remainingRelations.filter((x) => {
     const existingRelation = existingForeignKeyRelations.find((y) => x.id === y.id);
     if (existingRelation !== undefined) {
-      return checkIfRelationChanged(existingRelation as unknown, x);
+      return checkIfRelationChanged(existingRelation, x);
     } else return false;
   });
   if (relationsToUpdate.length > 0) {

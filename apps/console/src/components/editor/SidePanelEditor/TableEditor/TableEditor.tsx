@@ -97,16 +97,16 @@ const TableEditor = ({
   }, [snap, params, setParams]);
 
   const { data: types } = useEnumeratedTypesQuery({
-    projectRef: project?.ref,
-    connectionString: project?.connectionString,
+    projectRef: project?.$id,
+    sdk,
   });
   const enumTypes = (types ?? []).filter(
     (type) => !PROTECTED_SCHEMAS_WITHOUT_EXTENSIONS.includes(type.schema),
   );
 
   const { data: publications } = useDatabasePublicationsQuery({
-    projectRef: project?.ref,
-    connectionString: project?.connectionString,
+    projectRef: project?.$id,
+    sdk,
   });
   const realtimePublication = (publications ?? []).find(
     (publication) => publication.name === "supabase_realtime",
@@ -126,8 +126,8 @@ const TableEditor = ({
   const [rlsConfirmVisible, setRlsConfirmVisible] = useState<boolean>(false);
 
   const { data: constraints } = useTableConstraintsQuery({
-    projectRef: project?.ref,
-    connectionString: project?.connectionString,
+    projectRef: project?.$id,
+    sdk,
     id: table?.id,
   });
   const primaryKey = (constraints ?? []).find(
@@ -136,8 +136,8 @@ const TableEditor = ({
 
   const { data: foreignKeyMeta, isSuccess: isSuccessForeignKeyMeta } =
     useForeignKeyConstraintsQuery({
-      projectRef: project?.ref,
-      connectionString: project?.connectionString,
+      projectRef: project?.$id,
+      sdk,
       schema: table?.schema,
     });
   const foreignKeys = (foreignKeyMeta ?? []).filter(
@@ -364,7 +364,7 @@ const TableEditor = ({
                   origin: "tableSidePanel",
                 },
                 groups: {
-                  project: project?.ref ?? "Unknown",
+                  project: project?.$id ?? "Unknown",
                   organization: org?.slug ?? "Unknown",
                 },
               });

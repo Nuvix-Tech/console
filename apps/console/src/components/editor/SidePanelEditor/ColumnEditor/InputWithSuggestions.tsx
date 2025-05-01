@@ -9,7 +9,7 @@ import { noop } from "lodash";
 import { List } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-import { ButtonTooltip } from "components/ui/ButtonTooltip";
+// import { ButtonTooltip } from "components/ui/ButtonTooltip";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,9 +17,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  Input,
-} from "ui";
+} from "@nuvix/sui/components/dropdown-menu";
 import type { Suggestion } from "./ColumnEditor.types";
+import { Button, Input } from "@nuvix/ui/components";
 
 const MAX_SUGGESTIONS = 3;
 
@@ -83,30 +83,29 @@ const InputWithSuggestions = ({
     <div ref={ref} className="relative">
       <Input
         label={label}
-        descriptionText={description}
+        description={description}
         placeholder={placeholder}
-        size={size}
+        // size={size}
         layout={layout}
         disabled={disabled}
         className={className}
-        inputClassName="pr-10"
+        inputClass="pr-10"
         type="text"
         value={value}
         onChange={onInputChange}
         data-testid={dataTestId}
-        actions={
+        hasSuffix={
           showSuggestions && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <ButtonTooltip
+                <Button
                   type="default"
                   className="!px-1 mr-0.5"
-                  tooltip={{
-                    content: { text: suggestionsTooltip || "Suggestions", side: "bottom" },
-                  }}
+                  tooltip={suggestionsTooltip || "Suggestions"}
+                  tooltipPosition="bottom"
                 >
                   <List strokeWidth={1.5} size={14} />
-                </ButtonTooltip>
+                </Button>
               </DropdownMenuTrigger>
 
               <DropdownMenuContent align="end" side="bottom">

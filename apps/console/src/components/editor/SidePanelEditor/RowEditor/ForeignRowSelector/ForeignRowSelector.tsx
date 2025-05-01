@@ -46,8 +46,8 @@ const ForeignRowSelector = ({
   const { id } = useParams();
   const { project } = useProjectContext();
   const { data: selectedTable } = useTableEditorQuery({
-    projectRef: project?.ref,
-    connectionString: project?.connectionString,
+    projectRef: project?.$id,
+    sdk,
     id: !!id ? Number(id) : undefined,
   });
 
@@ -60,8 +60,8 @@ const ForeignRowSelector = ({
   const isNullable = (columns ?? []).length === 1 && sourceColumn?.is_nullable;
 
   const { data: table } = useTableEditorQuery({
-    projectRef: project?.ref,
-    connectionString: project?.connectionString,
+    projectRef: project?.$id,
+    sdk,
     id: tableId,
   });
 
@@ -100,8 +100,8 @@ const ForeignRowSelector = ({
 
   const { data, isLoading, isSuccess, isError, isRefetching } = useTableRowsQuery(
     {
-      projectRef: project?.ref,
-      connectionString: project?.connectionString,
+      projectRef: project?.$id,
+      sdk,
       tableId: table?.id,
       sorts: formatSortURLParams(table?.name || "", sorts),
       filters: formatFilterURLParams(filters),
@@ -150,7 +150,7 @@ const ForeignRowSelector = ({
             </div>
           )}
 
-          {project?.ref && table && isSuccess && (
+          {project?.$id && table && isSuccess && (
             <TableEditorTableStateContextProvider
               projectRef={project.ref}
               table={table}

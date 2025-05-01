@@ -65,12 +65,12 @@ export const ForeignKeySelector = ({
   const hasTypeNotices = (errors?.typeNotice ?? []).filter((x: any) => x !== undefined).length > 0;
 
   const { data: schemas } = useSchemasQuery({
-    projectRef: project?.ref,
-    connectionString: project?.connectionString,
+    projectRef: project?.$id,
+    sdk,
   });
   const { data: tables } = useTablesQuery<PostgresTable[] | undefined>({
-    projectRef: project?.ref,
-    connectionString: project?.connectionString,
+    projectRef: project?.$id,
+    sdk,
     schema: fk.schema,
     includeColumns: true,
   });

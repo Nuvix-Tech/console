@@ -1,4 +1,4 @@
-import type { PostgresRelationship } from "@nuvix/pg-meta";
+import type { PostgresRelationshipOld } from "@nuvix/pg-meta";
 import { CreateColumnBody } from "@/data/database-columns/database-column-create-mutation";
 import { UpdateColumnBody } from "@/data/database-columns/database-column-update-mutation";
 
@@ -37,7 +37,7 @@ export interface Field {
   foreignKey?: { table: string; column: string };
 }
 
-export interface ExtendedPostgresRelationship extends PostgresRelationship {
+export interface ExtendedPostgresRelationship extends PostgresRelationshipOld {
   deletion_action: string;
   update_action: string;
 }

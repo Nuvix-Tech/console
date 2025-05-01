@@ -1,13 +1,13 @@
 import type { PostgresColumn, PostgresTable } from "@nuvix/pg-meta";
 import { isEqual, isNull } from "lodash";
-import type { Dictionary } from "types";
 
 import { FOREIGN_KEY_CASCADE_ACTION } from "@/data/database/database-query-constants";
 import type { ForeignKeyConstraint } from "@/data/database/foreign-key-constraints-query";
-import { uuidv4 } from "lib/helpers";
+import { uuidv4 } from "@/lib/helpers";
 import {
   ColumnField,
   CreateColumnPayload,
+  Dictionary,
   ExtendedPostgresRelationship,
   UpdateColumnPayload,
 } from "../SidePanelEditor.types";

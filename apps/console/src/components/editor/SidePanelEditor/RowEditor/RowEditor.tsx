@@ -68,8 +68,8 @@ const RowEditor = ({
 
   const { project } = useProjectContext();
   const { data } = useForeignKeyConstraintsQuery({
-    projectRef: project?.ref,
-    connectionString: project?.connectionString,
+    projectRef: project?.$id,
+    sdk,
     schema: selectedTable.schema,
   });
   const foreignKeys = formatForeignKeys(
