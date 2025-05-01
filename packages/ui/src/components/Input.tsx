@@ -1,5 +1,4 @@
 "use client";
-
 import classNames from "classnames";
 import React from "react";
 import {
@@ -13,13 +12,33 @@ import {
 import { Flex, Text } from ".";
 import useDebounce from "../hooks/useDebounce";
 import styles from "./Input.module.scss";
-import { Checkbox } from "@/components/cui/checkbox";
+import { Checkbox as ChakraCheckbox } from "@chakra-ui/react";
+
+interface CheckboxProps extends ChakraCheckbox.RootProps {
+  icon?: React.ReactNode;
+  inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
+  rootRef?: React.Ref<HTMLLabelElement>;
+}
+
+const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(function Checkbox(props, ref) {
+  const { icon, children, inputProps, rootRef, ...rest } = props;
+  return (
+    <ChakraCheckbox.Root ref={rootRef} {...rest}>
+      <ChakraCheckbox.HiddenInput ref={ref} {...inputProps} />
+      <ChakraCheckbox.Control>{icon || <ChakraCheckbox.Indicator />}</ChakraCheckbox.Control>
+      {children != null && <ChakraCheckbox.Label>{children}</ChakraCheckbox.Label>}
+    </ChakraCheckbox.Root>
+  );
+});
+
+export { Checkbox as Checkbox_Chakra };
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   id?: string;
   label?: string;
   height?: "s" | "m";
   error?: boolean;
+  layout?: "horizontal" | "vertical";
   errorMessage?: ReactNode;
   description?: ReactNode;
   radius?:
@@ -41,6 +60,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   nullable?: boolean;
   isNull?: boolean;
   inputClass?: string;
+  labelOptional?: string;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -67,6 +87,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       maxLength: max,
       onChange,
       inputClass,
+      labelOptional,
       ...props
     },
     ref,
@@ -141,6 +162,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       [styles.error]: displayError && debouncedValue !== "",
     });
 
+    const optional = labelOptional && (
+      <Text variant="label-default-m" onBackground="neutral-weak">
+        ({labelOptional})
+      </Text>
+    );
+
     return (
       <Flex
         position="relative"
@@ -185,7 +212,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               {...props}
               ref={ref}
               id={id}
-              placeholder={labelAsPlaceholder ? (label ?? props.placeholder) : props.placeholder}
+              placeholder={
+                labelAsPlaceholder
+                  ? (label ?? props.placeholder) + ` ${optional}`
+                  : props.placeholder + ` ${optional}`
+              }
               onFocus={handleFocus}
               onBlur={handleBlur}
               onChange={handleChange}
@@ -204,7 +235,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                   [styles.floating]: isFocused || isFilled,
                 })}
               >
-                {label}
+                {label} {optional}
               </Text>
             )}
             {children}

@@ -54,7 +54,7 @@ const sdkForProject = {
   vcs: new Vcs(clientProject),
   proxy: new Proxy(clientProject),
   migrations: new Migrations(clientProject),
-  schema: new Schema(clientServerProject, API_URL),
+  schema: new Schema(clientServerProject, SERVER_URL),
 };
 
 const sdkForConsole = {
@@ -77,6 +77,8 @@ function getProjectSdk(id: string) {
   clientServerProject.setProject(id).setMode("admin");
   return sdkForProject;
 }
+
+export type ProjectSdk = typeof sdkForProject;
 
 export { sdkForConsole, getProjectSdk };
 export type { sdkForProject };

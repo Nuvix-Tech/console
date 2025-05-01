@@ -10,8 +10,8 @@ import { FilterOperatorOptions } from "./components/header/filter/Filter.constan
 import { STORAGE_KEY_PREFIX } from "./constants";
 import type { Sort, SupaColumn, SupaTable } from "./types";
 import { formatClipboardValue } from "./utils/common";
-import { Entity } from "@/types/grid";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Entity, isTableLike } from "@/data/table-editor/table-editor-types";
 
 export function formatSortURLParams(tableName: string, sort?: string[]): Sort[] {
   if (Array.isArray(sort)) {
@@ -63,60 +63,59 @@ export function filtersToUrlParams(filters: Filter[]) {
 }
 
 export function parseSupaTable(table: Entity): SupaTable {
-  // const columns = table.columns;
-  // const primaryKeys = isTableLike(table) ? table.primary_keys : [];
-  // const relationships = isTableLike(table) ? table.relationships : [];
+  const columns = table.columns;
+  const primaryKeys = isTableLike(table) ? table.primary_keys : [];
+  const relationships = isTableLike(table) ? table.relationships : [];
 
-  // const supaColumns: SupaColumn[] = columns.map((column) => {
-  //   const temp = {
-  //     position: column.ordinal_position,
-  //     name: column.name,
-  //     defaultValue: column.default_value as string | null | undefined,
-  //     dataType: column.data_type,
-  //     format: column.format,
-  //     isPrimaryKey: false,
-  //     isIdentity: column.is_identity,
-  //     isGeneratable: column.identity_generation == "BY DEFAULT",
-  //     isNullable: column.is_nullable,
-  //     isUpdatable: column.is_updatable,
-  //     enum: column.enums,
-  //     comment: column.comment,
-  //     foreignKey: {
-  //       targetTableSchema: null as string | null,
-  //       targetTableName: null as string | null,
-  //       targetColumnName: null as string | null,
-  //       deletionAction: undefined as string | undefined,
-  //       updateAction: undefined as string | undefined,
-  //     },
-  //   };
-  //   const primaryKey = primaryKeys.find((pk) => pk.name == column.name);
-  //   temp.isPrimaryKey = !!primaryKey;
+  const supaColumns: SupaColumn[] = columns.map((column) => {
+    const temp = {
+      position: column.ordinal_position,
+      name: column.name,
+      defaultValue: column.default_value as string | null | undefined,
+      dataType: column.data_type,
+      format: column.format,
+      isPrimaryKey: false,
+      isIdentity: column.is_identity,
+      isGeneratable: column.identity_generation == "BY DEFAULT",
+      isNullable: column.is_nullable,
+      isUpdatable: column.is_updatable,
+      enum: column.enums,
+      comment: column.comment,
+      foreignKey: {
+        targetTableSchema: null as string | null,
+        targetTableName: null as string | null,
+        targetColumnName: null as string | null,
+        deletionAction: undefined as string | undefined,
+        updateAction: undefined as string | undefined,
+      },
+    };
+    const primaryKey = primaryKeys.find((pk) => pk.name == column.name);
+    temp.isPrimaryKey = !!primaryKey;
 
-  //   const relationship = relationships.find((relation) => {
-  //     return (
-  //       relation.source_schema === column.schema &&
-  //       relation.source_table_name === column.table &&
-  //       relation.source_column_name === column.name
-  //     );
-  //   });
-  //   if (relationship) {
-  //     temp.foreignKey.targetTableSchema = relationship.target_table_schema;
-  //     temp.foreignKey.targetTableName = relationship.target_table_name;
-  //     temp.foreignKey.targetColumnName = relationship.target_column_name;
-  //     temp.foreignKey.deletionAction = relationship.deletion_action;
-  //     temp.foreignKey.updateAction = relationship.update_action;
-  //   }
-  //   return temp;
-  // });
+    const relationship = relationships.find((relation) => {
+      return (
+        relation.source_schema === column.schema &&
+        relation.source_table_name === column.table &&
+        relation.source_column_name === column.name
+      );
+    });
+    if (relationship) {
+      temp.foreignKey.targetTableSchema = relationship.target_table_schema;
+      temp.foreignKey.targetTableName = relationship.target_table_name;
+      temp.foreignKey.targetColumnName = relationship.target_column_name;
+      temp.foreignKey.deletionAction = relationship.deletion_action;
+      temp.foreignKey.updateAction = relationship.update_action;
+    }
+    return temp;
+  });
 
   return {
-    ...table,
-    // id: table.id,
-    // name: table.name,
-    // comment: table.comment,
-    // schema: table.schema,
-    // columns: columns,
-    // estimateRowCount: isTableLike(table) ? table.live_rows_estimate : 0,
+    id: table.id,
+    name: table.name,
+    comment: table.comment,
+    schema: table.schema,
+    columns: supaColumns,
+    estimateRowCount: isTableLike(table) ? table.live_rows_estimate : 0,
   };
 }
 

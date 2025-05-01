@@ -5,19 +5,13 @@ import Link from "next/link";
 // import Papa from "papaparse";
 import { ReactNode, useCallback, useState } from "react";
 
-// import { useParams } from "common";
 import {
   filtersToUrlParams,
   saveTableEditorStateToLocalStorage,
   sortsToUrlParams,
 } from "../../SupabaseGrid.utils";
-// import type { Filter, Sort } from "components/grid/types";
 // import GridHeaderActions from "components/interfaces/TableGridEditor/GridHeaderActions";
-// import { formatTableRowsToSQL } from "components/interfaces/TableGridEditor/TableEntity.utils";
-// import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
 // import { ButtonTooltip } from "components/ui/ButtonTooltip";
-// import { useTableRowsCountQuery } from "data/table-rows/table-rows-count-query";
-// import { fetchAllTableRows, useTableRowsQuery } from "data/table-rows/table-rows-query";
 // import { useSendEventMutation } from "data/telemetry/send-event-mutation";
 // import { useCheckPermissions } from "hooks/misc/useCheckPermissions";
 // import { useSelectedOrganization } from "hooks/misc/useSelectedOrganization";
@@ -45,6 +39,9 @@ import { Button, useToast } from "@nuvix/ui/components";
 import { cn } from "@nuvix/sui/lib/utils";
 import { Separator } from "@nuvix/sui/components/separator";
 import { useTableEditorFiltersSort } from "@/hooks/useTableEditorFilterSort";
+import { fetchAllTableRows, useTableRowsQuery } from "@/data/table-rows/table-rows-query";
+import { useTableRowsCountQuery } from "@/data/table-rows/table-rows-count-query";
+import { toast } from "sonner";
 // [Joshen] CSV exports require this guard as a fail-safe if the table is
 // just too large for a browser to keep all the rows in memory before
 // exporting. Either that or export as multiple CSV sheets with max n rows each
@@ -294,42 +291,42 @@ type RowHeaderProps = {
   filters: Filter[];
 };
 const RowHeader = ({ sorts, filters }: RowHeaderProps) => {
-  const { project } = useProjectStore();
+  const { project, sdk } = useProjectStore();
   const tableEditorSnap = useTableEditorStore();
   const { getState } = useTableEditorTableState();
   const snap = getState();
   const { addToast } = useToast();
 
   // const roleImpersonationState = useRoleImpersonationStateSnapshot();
-  const isImpersonatingRole = true; // roleImpersonationState.role !== undefined;
+  const isImpersonatingRole = false; // roleImpersonationState.role !== undefined;
 
   const [isExporting, setIsExporting] = useState(false);
 
-  // const { data } = useTableRowsQuery({
-  //   projectRef: project?.ref,
-  //   connectionString: project?.connectionString,
-  //   tableId: snap.table.id,
-  //   sorts,
-  //   filters,
-  //   page: snap.page,
-  //   limit: tableEditorSnap.rowsPerPage,
-  //   roleImpersonationState: roleImpersonationState as RoleImpersonationState,
-  // });
+  const { data } = useTableRowsQuery({
+    projectRef: project?.$id,
+    sdk,
+    tableId: snap.table.id,
+    sorts,
+    filters,
+    page: snap.page,
+    limit: tableEditorSnap.rowsPerPage,
+    // roleImpersonationState: roleImpersonationState as RoleImpersonationState,
+  });
 
-  // const { data: countData } = useTableRowsCountQuery(
-  //   {
-  //     projectRef: project?.ref,
-  //     connectionString: project?.connectionString,
-  //     tableId: snap.table.id,
-  //     filters,
-  //     enforceExactCount: snap.enforceExactCount,
-  //     roleImpersonationState: roleImpersonationState as RoleImpersonationState,
-  //   },
-  //   { keepPreviousData: true },
-  // );
+  const { data: countData } = useTableRowsCountQuery(
+    {
+      projectRef: project?.$id,
+      sdk,
+      tableId: snap.table.id,
+      filters,
+      enforceExactCount: snap.enforceExactCount,
+      // roleImpersonationState: roleImpersonationState as RoleImpersonationState,
+    },
+    // { keepPreviousData: true },
+  );
 
-  const allRows: SupaRow[] = []; //data?.rows ??
-  const totalRows = 0; // countData?.count ??
+  const allRows: SupaRow[] = data?.rows ?? [];
+  const totalRows = countData?.count ?? 0;
 
   const onSelectAllRows = () => {
     snap.setSelectedRows(new Set(allRows.map((row) => row.idx)), true);
@@ -350,149 +347,163 @@ const RowHeader = ({ sorts, filters }: RowHeaderProps) => {
   };
 
   async function onRowsExportCSV() {
-    // setIsExporting(true);
-    // if (snap.allRowsSelected && totalRows > MAX_EXPORT_ROW_COUNT) {
-    //   addToast({
-    //     variant: "danger",
-    //     message: <div className="prose text-sm text-foreground">{MAX_EXPORT_ROW_COUNT_MESSAGE}</div>,
-    //   });
-    //   return setIsExporting(false);
-    // }
-    // if (!project) {
-    //   addToast({
-    //     variant: "danger",
-    //     message: "Project is required",
-    //   });
-    //   return setIsExporting(false);
-    // }
-    // const toastId = 0
-    //snap.allRowsSelected
-    //   ? toast(
-    //     <SonnerProgress progress={0} message={`Exporting all rows from ${snap.table.name}`} />,
-    //     {
-    //       closeButton: false,
-    //       duration: Infinity,
-    //     },
-    //   )
-    //   : toast.loading(
-    //     `Exporting ${snap.selectedRows.size} row${snap.selectedRows.size > 1 ? "s" : ""} from ${snap.table.name}`,
-    //   );
-    //   const rows = snap.allRowsSelected
-    //     ? await fetchAllTableRows({
-    //       projectRef: project.ref,
-    //       connectionString: project.connectionString,
-    //       table: snap.table,
-    //       filters,
-    //       sorts,
-    //       roleImpersonationState: roleImpersonationState as RoleImpersonationState,
-    //       progressCallback: (value: number) => {
-    //         const progress = Math.min((value / totalRows) * 100, 100);
-    //         toast(
-    //           <SonnerProgress
-    //             progress={progress}
-    //             message={`Exporting all rows from ${snap.table.name}`}
-    //           />,
-    //           {
-    //             id: toastId,
-    //             closeButton: false,
-    //             duration: Infinity,
-    //           },
-    //         );
-    //       },
-    //     })
-    //     : allRows.filter((x) => snap.selectedRows.has(x.idx));
-    //   if (rows.length === 0) {
-    //     toast.dismiss(toastId);
-    //     toast.error("Export failed, please try exporting again");
-    //     setIsExporting(false);
-    //     return;
-    //   }
-    //   const formattedRows = rows.map((row) => {
-    //     const formattedRow = row;
-    //     Object.keys(row).map((column) => {
-    //       if (typeof row[column] === "object" && row[column] !== null)
-    //         formattedRow[column] = JSON.stringify(formattedRow[column]);
-    //     });
-    //     return formattedRow;
-    //   });
-    //   const csv = Papa.unparse(formattedRows, {
-    //     columns: snap.table!.columns.map((column) => column.name),
-    //   });
-    //   const csvData = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    //   toast.success(`Downloaded ${rows.length} rows to CSV`, {
-    //     id: toastId,
-    //     closeButton: true,
-    //     duration: 4000,
-    //   });
-    //   saveAs(csvData, `${snap.table!.name}_rows.csv`);
-    //   setIsExporting(false);
+    setIsExporting(true);
+    if (snap.allRowsSelected && totalRows > MAX_EXPORT_ROW_COUNT) {
+      addToast({
+        variant: "danger",
+        message: (
+          <div className="prose text-sm text-foreground">{MAX_EXPORT_ROW_COUNT_MESSAGE}</div>
+        ),
+      });
+      return setIsExporting(false);
+    }
+    if (!project) {
+      addToast({
+        variant: "danger",
+        message: "Project is required",
+      });
+      return setIsExporting(false);
+    }
+    const toastId = 0;
+    snap.allRowsSelected
+      ? toast(
+          <>
+            SONNER PROGRESS
+            {/* <SonnerProgress progress={0} message={`Exporting all rows from ${snap.table.name}`} />, */}
+          </>,
+          {
+            closeButton: false,
+            duration: Infinity,
+          },
+        )
+      : toast.loading(
+          `Exporting ${snap.selectedRows.size} row${snap.selectedRows.size > 1 ? "s" : ""} from ${snap.table.name}`,
+        );
+    const rows = snap.allRowsSelected
+      ? await fetchAllTableRows({
+          projectRef: project.$id,
+          sdk,
+          table: snap.table,
+          filters,
+          sorts,
+          // roleImpersonationState: roleImpersonationState as RoleImpersonationState,
+          progressCallback: (value: number) => {
+            const progress = Math.min((value / totalRows) * 100, 100);
+            toast(
+              <>
+                SONNER PROGRESS
+                {/* <SonnerProgress
+                progress={progress}
+                message={`Exporting all rows from ${snap.table.name}`}
+              /> */}
+              </>,
+              {
+                id: toastId,
+                closeButton: false,
+                duration: Infinity,
+              },
+            );
+          },
+        })
+      : allRows.filter((x) => snap.selectedRows.has(x.idx));
+    if (rows.length === 0) {
+      toast.dismiss(toastId);
+      toast.error("Export failed, please try exporting again");
+      setIsExporting(false);
+      return;
+    }
+    const formattedRows = rows.map((row) => {
+      const formattedRow = row;
+      Object.keys(row).map((column) => {
+        if (typeof row[column] === "object" && row[column] !== null)
+          formattedRow[column] = JSON.stringify(formattedRow[column]);
+      });
+      return formattedRow;
+    });
+    // const csv = Papa.unparse(formattedRows, {
+    //   columns: snap.table!.columns.map((column) => column.name),
+    // });
+    // const csvData = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    toast.success(`Downloaded ${rows.length} rows to CSV`, {
+      id: toastId,
+      closeButton: true,
+      duration: 4000,
+    });
+    // saveAs(csvData, `${snap.table!.name}_rows.csv`);
+    setIsExporting(false);
   }
 
   async function onRowsExportSQL() {
-    //   setIsExporting(true);
-    //   if (snap.allRowsSelected && totalRows > MAX_EXPORT_ROW_COUNT) {
-    //     toast.error(
-    //       <div className="prose text-sm text-foreground">{MAX_EXPORT_ROW_COUNT_MESSAGE}</div>,
-    //     );
-    //     return setIsExporting(false);
-    //   }
-    //   if (!project) {
-    //     toast.error("Project is required");
-    //     return setIsExporting(false);
-    //   }
-    //   if (snap.allRowsSelected && totalRows === 0) {
-    //     toast.error("Export failed, please try exporting again");
-    //     return setIsExporting(false);
-    //   }
-    //   const toastId = snap.allRowsSelected
-    //     ? toast(
-    //       <SonnerProgress progress={0} message={`Exporting all rows from ${snap.table.name}`} />,
-    //       {
-    //         closeButton: false,
-    //         duration: Infinity,
-    //       },
-    //     )
-    //     : toast.loading(
-    //       `Exporting ${snap.selectedRows.size} row${snap.selectedRows.size > 1 ? "s" : ""} from ${snap.table.name}`,
-    //     );
-    //   const rows = snap.allRowsSelected
-    //     ? await fetchAllTableRows({
-    //       projectRef: project.ref,
-    //       connectionString: project.connectionString,
-    //       table: snap.table,
-    //       filters,
-    //       sorts,
-    //       roleImpersonationState: roleImpersonationState as RoleImpersonationState,
-    //       progressCallback: (value: number) => {
-    //         const progress = Math.min((value / totalRows) * 100, 100);
-    //         toast(
-    //           <SonnerProgress
-    //             progress={progress}
-    //             message={`Exporting all rows from ${snap.table.name}`}
-    //           />,
-    //           {
-    //             id: toastId,
-    //             closeButton: false,
-    //             duration: Infinity,
-    //           },
-    //         );
-    //       },
-    //     })
-    //     : allRows.filter((x) => snap.selectedRows.has(x.idx));
-    //   if (rows.length === 0) {
-    //     toast.error("Export failed, please exporting try again");
-    //     setIsExporting(false);
-    //     return;
-    //   }
-    //   const sqlStatements = formatTableRowsToSQL(snap.table, rows);
-    //   const sqlData = new Blob([sqlStatements], { type: "text/sql;charset=utf-8;" });
-    //   toast.success(`Downloading ${rows.length} rows to SQL`, {
-    //     id: toastId,
-    //     closeButton: true,
-    //     duration: 4000,
-    //   });
-    //   saveAs(sqlData, `${snap.table!.name}_rows.sql`);
-    //   setIsExporting(false);
+    setIsExporting(true);
+    if (snap.allRowsSelected && totalRows > MAX_EXPORT_ROW_COUNT) {
+      toast.error(
+        <div className="prose text-sm text-foreground">{MAX_EXPORT_ROW_COUNT_MESSAGE}</div>,
+      );
+      return setIsExporting(false);
+    }
+    if (!project) {
+      toast.error("Project is required");
+      return setIsExporting(false);
+    }
+    if (snap.allRowsSelected && totalRows === 0) {
+      toast.error("Export failed, please try exporting again");
+      return setIsExporting(false);
+    }
+    const toastId = snap.allRowsSelected
+      ? toast(
+          <>
+            SONNER PROGRESS
+            {/* <SonnerProgress progress={0} message={`Exporting all rows from ${snap.table.name}`} />, */}
+          </>,
+          {
+            closeButton: false,
+            duration: Infinity,
+          },
+        )
+      : toast.loading(
+          `Exporting ${snap.selectedRows.size} row${snap.selectedRows.size > 1 ? "s" : ""} from ${snap.table.name}`,
+        );
+    const rows = snap.allRowsSelected
+      ? await fetchAllTableRows({
+          projectRef: project.$id,
+          sdk,
+          table: snap.table,
+          filters,
+          sorts,
+          // roleImpersonationState: roleImpersonationState as RoleImpersonationState,
+          progressCallback: (value: number) => {
+            const progress = Math.min((value / totalRows) * 100, 100);
+            toast(
+              <>
+                SONNER PROGRESS
+                {/* <SonnerProgress
+              progress={progress}
+              message={`Exporting all rows from ${snap.table.name}`}
+            /> */}
+              </>,
+              {
+                id: toastId,
+                closeButton: false,
+                duration: Infinity,
+              },
+            );
+          },
+        })
+      : allRows.filter((x) => snap.selectedRows.has(x.idx));
+    if (rows.length === 0) {
+      toast.error("Export failed, please exporting try again");
+      setIsExporting(false);
+      return;
+    }
+    // const sqlStatements = formatTableRowsToSQL(snap.table, rows);
+    // const sqlData = new Blob([sqlStatements], { type: "text/sql;charset=utf-8;" });
+    toast.success(`Downloading ${rows.length} rows to SQL`, {
+      id: toastId,
+      closeButton: true,
+      duration: 4000,
+    });
+    // saveAs(sqlData, `${snap.table!.name}_rows.sql`);
+    setIsExporting(false);
   }
 
   function deselectRows() {
@@ -513,10 +524,11 @@ const RowHeader = ({ sorts, filters }: RowHeaderProps) => {
           size="s"
           prefixIcon={<Trash size={18} />}
           onClick={onRowsDelete}
-          // disabled={snap.allRowsSelected && isImpersonatingRole}
+          disabled={snap.allRowsSelected && isImpersonatingRole}
           // tooltip={snap.allRowsSelected && isImpersonatingRole
           //   ? "Table truncation is not supported when impersonating a role"
           //   : undefined
+          // }
         >
           {snap.allRowsSelected
             ? `Delete all rows in table`
@@ -532,7 +544,7 @@ const RowHeader = ({ sorts, filters }: RowHeaderProps) => {
             size="s"
             suffixIcon={<ChevronDown size={18} />}
             loading={isExporting}
-            // disabled={isExporting}
+            disabled={isExporting}
           >
             Export
           </Button>
@@ -541,8 +553,7 @@ const RowHeader = ({ sorts, filters }: RowHeaderProps) => {
           <DropdownMenuItem onClick={onRowsExportCSV}>
             <span className="text-foreground-light">Export to CSV</span>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => {}}>Export to SQL</DropdownMenuItem>
-          {/* onRowsExportSQL */}
+          <DropdownMenuItem onClick={onRowsExportSQL}>Export to SQL</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 

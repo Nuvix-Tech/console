@@ -5,20 +5,19 @@ import { DataGrid, Column } from "react-data-grid";
 import { COLUMN_MIN_WIDTH } from "../../constants";
 import { ESTIMATED_CHARACTER_PIXEL_WIDTH, getColumnDefaultWidth } from "../../utils/gridColumns";
 // import { EditorTablePageLink } from "data/prefetchers/project.$ref.editor.$id";
-// import { useTableRowsQuery } from "data/table-rows/table-rows-query";
-// import { useSelectedProject } from "hooks/misc/useSelectedProject";
 // import { Button, cn, Tooltip, TooltipContent, TooltipTrigger } from "ui";
 // import ShimmeringLoader from "ui-patterns/ShimmeringLoader";
-import { ModelsX } from "@/lib/external-sdk";
 import { useProjectStore } from "@/lib/store";
 import { useQuery } from "@tanstack/react-query";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import { convertByteaToHex } from "@/lib/helpers";
 import { cn } from "@nuvix/sui/lib/utils";
 import { Button } from "@nuvix/ui/components";
+import { PostgresTable } from "@nuvix/pg-meta";
+import { useTableRowsQuery } from "@/data/table-rows/table-rows-query";
 
 interface ReferenceRecordPeekProps {
-  table: ModelsX.Table;
+  table: PostgresTable;
   column: string;
   value: any;
 }
@@ -27,23 +26,30 @@ export const ReferenceRecordPeek = ({ table, column, value }: ReferenceRecordPee
   // const { ref } = useParams();
   const { project, sdk } = useProjectStore();
 
-  const { data, error, isSuccess, isError, isLoading } = useQuery({
-    queryKey: ["table-for-rows", project.$id, table, column],
-    queryFn: async () => {
-      return sdk.schema.getRows(table.name, table.schema);
+  const { data, error, isSuccess, isError, isLoading } = useTableRowsQuery(
+    {
+      projectRef: project?.$id,
+      sdk,
+      tableId: table.id,
+      filters: [{ column, operator: "=", value }],
+      page: 1,
+      limit: 10,
     },
-  });
+    // { placeholderData: },
+  );
+
+  const primaryKeys = table.primary_keys.map((x) => x.name);
 
   const columns = (table?.columns ?? []).map((column) => {
     const columnDefaultWidth = getColumnDefaultWidth({
-      dataType: column.type,
-      format: column.type, //format
+      dataType: column.data_type,
+      format: column.format,
     } as any);
     const columnWidthBasedOnName =
-      (column.name.length + column.type.length) * ESTIMATED_CHARACTER_PIXEL_WIDTH; //format
+      (column.name.length + column.format.length) * ESTIMATED_CHARACTER_PIXEL_WIDTH;
     const columnWidth =
       columnDefaultWidth < columnWidthBasedOnName ? columnWidthBasedOnName : columnDefaultWidth;
-    const isPrimaryKey = column.primary_key;
+    const isPrimaryKey = primaryKeys.includes(column.name);
 
     const res: Column<any> = {
       key: column.name,
@@ -65,12 +71,12 @@ export const ReferenceRecordPeek = ({ table, column, value }: ReferenceRecordPee
             </Tooltip>
           )}
           <span className="text-xs truncate">{column.name}</span>
-          <span className="text-xs text-foreground-light font-normal">{column.type}</span> //format
+          <span className="text-xs text-foreground-light font-normal">{column.format}</span>
         </div>
       ),
       renderCell: ({ column: col, row }) => {
         const value = row[col.name as any];
-        const formattedValue = column.type === "bytea" ? convertByteaToHex(value) : value; //format
+        const formattedValue = column.format === "bytea" ? convertByteaToHex(value) : value;
         return (
           <div
             className={cn(
@@ -98,7 +104,7 @@ export const ReferenceRecordPeek = ({ table, column, value }: ReferenceRecordPee
       <DataGrid
         className="h-32 rounded-b border-0"
         columns={columns}
-        rows={data ?? []}
+        rows={data?.rows ?? []}
         onCellDoubleClick={(_, e) => {
           e.preventDefault();
           e.stopPropagation();

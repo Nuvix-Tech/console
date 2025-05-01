@@ -32,7 +32,8 @@ export const BooleanEditor = <TRow, TSummaryRow = unknown>({
       autoFocus
       id="boolean-editor"
       name="boolean-editor"
-      // size="s"
+      height="s"
+      labelAsPlaceholder
       onBlur={onBlur}
       onSelect={onChange}
       defaultValue={value === null ? "null" : value.toString()}

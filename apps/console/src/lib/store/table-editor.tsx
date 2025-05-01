@@ -1,23 +1,10 @@
 import { create } from "zustand";
 import type { SupaRow, Dictionary } from "@/components/grid/types";
-// import { ForeignKey } from "components/interfaces/TableGridEditor/SidePanelEditor/ForeignKeySelector/ForeignKeySelector.types";
-// import type { EditValue } from "components/interfaces/TableGridEditor/SidePanelEditor/RowEditor/RowEditor.types";
-import { Column } from "@/types/grid";
+import { PostgresColumn } from "@nuvix/pg-meta";
+import { ForeignKey } from "@/components/editor/SidePanelEditor/ForeignKeySelector/ForeignKeySelector.types";
+import { EditValue } from "@/components/editor/SidePanelEditor/RowEditor/RowEditor.types";
 
 export const TABLE_EDITOR_DEFAULT_ROWS_PER_PAGE = 100;
-
-type PostgresColumn = Column;
-type EditValue = any; // TODO: Define the type for EditValue
-type ForeignKey = {
-  schema: string;
-  table: string;
-  column: string;
-  foreignColumn: string;
-  foreignTable: string;
-  foreignSchema: string;
-  onDelete?: string;
-  onUpdate?: string;
-};
 
 type ForeignKeyState = {
   foreignKey: ForeignKey;
