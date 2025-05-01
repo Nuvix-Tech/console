@@ -1,11 +1,14 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Table2Icon } from "lucide-react";
 import Link from "next/link";
-import SVG from "react-inlinesvg";
+// import SVG from "react-inlinesvg";
 
-import { useParams } from "common";
-import { BASE_PATH } from "lib/constants";
-import { Badge, Button, cn } from "ui";
+// import { useParams } from "common";
+import { BASE_PATH } from "@/lib/constants";
+// import { Badge, Button, cn } from "ui";
 import type { ForeignKey } from "../../ForeignKeySelector/ForeignKeySelector.types";
+import { Button, Tag } from "@nuvix/ui/components";
+import { cn } from "@nuvix/sui/lib/utils";
+import { useParams } from "next/navigation";
 
 interface ForeignKeyProps {
   foreignKey: ForeignKey;
@@ -28,7 +31,7 @@ export const ForeignKeyRow = ({
   onSelectRemove,
   onSelectUndoRemove,
 }: ForeignKeyProps) => {
-  const { ref } = useParams();
+  const { id: ref } = useParams();
 
   return (
     <div
@@ -47,13 +50,11 @@ export const ForeignKeyRow = ({
           )}
           <div className="flex items-center gap-x-2">
             {status !== undefined && (
-              <Badge
-                variant={
-                  status === "ADD" ? "brand" : status === "UPDATE" ? "warning" : "destructive"
-                }
+              <Tag
+                variant={status === "ADD" ? "brand" : status === "UPDATE" ? "warning" : "danger"}
               >
                 {status}
-              </Badge>
+              </Tag>
             )}
             <p className="text-sm text-foreground-light">
               {foreignKey.columns.length > 1 ? "Composite foreign" : "Foreign"} key relation to:
@@ -63,17 +64,18 @@ export const ForeignKeyRow = ({
               type="default"
               title={`${foreignKey.schema}.${foreignKey.table}`}
               className="py-0.5 px-1.5 font-mono"
-              icon={
-                <SVG
-                  className="table-icon"
-                  src={`${BASE_PATH}/img/icons/table-icon.svg`}
-                  style={{ width: `16px`, height: `16px`, strokeWidth: "1px" }}
-                  preProcessor={(code: any) =>
-                    code.replace(/svg/, 'svg class="m-auto text-color-inherit"')
-                  }
-                  loader={<span className="block w-4 h-4 bg-[#133929] rounded-sm" />}
-                  cacheRequests={true}
-                />
+              prefixIcon={
+                // <SVG
+                //   className="table-icon"
+                //   src={`${BASE_PATH}/img/icons/table-icon.svg`}
+                //   style={{ width: `16px`, height: `16px`, strokeWidth: "1px" }}
+                //   preProcessor={(code: any) =>
+                //     code.replace(/svg/, 'svg class="m-auto text-color-inherit"')
+                //   }
+                //   loader={<span className="block w-4 h-4 bg-[#133929] rounded-sm" />}
+                //   cacheRequests={true}
+                // />
+                <Table2Icon size={20} />
               }
             >
               <Link

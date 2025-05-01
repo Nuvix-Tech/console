@@ -3,8 +3,7 @@ import { isEmpty, isUndefined, noop } from "lodash";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
-import { DocsButton } from "components/ui/DocsButton";
+import { DocsButton } from "@/ui/DocsButton";
 import { useDatabasePublicationsQuery } from "@/data/database-publications/database-publications-query";
 import {
   CONSTRAINT_TYPE,
@@ -16,14 +15,13 @@ import {
   useForeignKeyConstraintsQuery,
 } from "@/data/database/foreign-key-constraints-query";
 import { useEnumeratedTypesQuery } from "@/data/enumerated-types/enumerated-types-query";
-import { useIsFeatureEnabled } from "hooks/misc/useIsFeatureEnabled";
-import { useQuerySchemaState } from "hooks/misc/useSchemaQueryState";
-import { useUrlState } from "hooks/ui/useUrlState";
-import { PROTECTED_SCHEMAS_WITHOUT_EXTENSIONS } from "lib/constants/schemas";
-import { useTableEditorStateSnapshot } from "state/table-editor";
-import { Badge, Checkbox, Input, SidePanel } from "ui";
-import { Admonition } from "ui-patterns";
-import ConfirmationModal from "ui-patterns/Dialogs/ConfirmationModal";
+// import { useIsFeatureEnabled } from "hooks/misc/useIsFeatureEnabled";
+import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
+// import { useUrlState } from "hooks/ui/useUrlState";
+import { PROTECTED_SCHEMAS_WITHOUT_EXTENSIONS } from "@/lib/constants/schemas";
+// import { Badge, Checkbox, Input, SidePanel } from "ui";
+// import { Admonition } from "ui-patterns";
+// import ConfirmationModal from "ui-patterns/Dialogs/ConfirmationModal";
 import ActionBar from "../ActionBar";
 import type { ForeignKey } from "../ForeignKeySelector/ForeignKeySelector.types";
 import { formatForeignKeys } from "../ForeignKeySelector/ForeignKeySelector.utils";
@@ -41,8 +39,14 @@ import {
   generateTableFieldFromPostgresTable,
   validateFields,
 } from "./TableEditor.utils";
-import { useSendEventMutation } from "@/data/telemetry/send-event-mutation";
-import { useSelectedOrganization } from "hooks/misc/useSelectedOrganization";
+import { useTableEditorStore } from "@/lib/store/table-editor";
+import { useProjectStore } from "@/lib/store";
+import { useSearchQuery } from "@/hooks/useQuery";
+import { SidePanel } from "@/ui/SidePanel";
+import { Checkbox, Feedback, Input, Tag } from "@nuvix/ui/components";
+import ConfirmationModal from "../../components/_confim_dialog";
+// import { useSendEventMutation } from "@/data/telemetry/send-event-mutation";
+// import { useSelectedOrganization } from "hooks/misc/useSelectedOrganization";
 
 export interface TableEditorProps {
   table?: PostgresTable;
@@ -80,28 +84,28 @@ const TableEditor = ({
   saveChanges = noop,
   updateEditorDirty = noop,
 }: TableEditorProps) => {
-  const snap = useTableEditorStateSnapshot();
-  const { project } = useProjectContext();
-  const org = useSelectedOrganization();
+  const snap = useTableEditorStore();
+  const { project, sdk } = useProjectStore();
   const { selectedSchema } = useQuerySchemaState();
   const isNewRecord = isUndefined(table);
-  const realtimeEnabled = useIsFeatureEnabled("realtime:all");
-  const { mutate: sendEvent } = useSendEventMutation();
+  const realtimeEnabled = false; //useIsFeatureEnabled("realtime:all");
+  // const { mutate: sendEvent } = useSendEventMutation();
 
-  const [params, setParams] = useUrlState();
+  // const [params, setParams] = useUrlState();
+  const { params, setQueryParam } = useSearchQuery();
   useEffect(() => {
-    if (params.create === "table" && snap.ui.open === "none") {
+    if (params.get("create") === "table" && snap.ui.open === "none") {
       snap.onAddTable();
-      setParams({ ...params, create: undefined });
+      setQueryParam({ ...params, create: undefined });
     }
-  }, [snap, params, setParams]);
+  }, [snap, params, setQueryParam]);
 
   const { data: types } = useEnumeratedTypesQuery({
     projectRef: project?.$id,
     sdk,
   });
   const enumTypes = (types ?? []).filter(
-    (type) => !PROTECTED_SCHEMAS_WITHOUT_EXTENSIONS.includes(type.schema),
+    (type: any) => !PROTECTED_SCHEMAS_WITHOUT_EXTENSIONS.includes(type.schema),
   );
 
   const { data: publications } = useDatabasePublicationsQuery({
@@ -109,7 +113,7 @@ const TableEditor = ({
     sdk,
   });
   const realtimePublication = (publications ?? []).find(
-    (publication) => publication.name === "supabase_realtime",
+    (publication: any) => publication.name === "supabase_realtime",
   );
   const realtimeEnabledTables = realtimePublication?.tables ?? [];
   const isRealtimeEnabled = isNewRecord
@@ -297,23 +301,23 @@ const TableEditor = ({
           label={
             <div className="flex items-center space-x-2">
               <span>Enable Row Level Security (RLS)</span>
-              <Badge>Recommended</Badge>
+              <Tag variant="info">Recommended</Tag>
             </div>
           }
           description="Restrict access to your table by enabling RLS and writing Postgres policies."
-          checked={tableFields.isRLSEnabled}
-          onChange={() => {
+          isChecked={tableFields.isRLSEnabled}
+          onToggle={() => {
             // if isEnabled, show confirm modal to turn off
             // if not enabled, allow turning on without modal confirmation
             tableFields.isRLSEnabled
               ? setRlsConfirmVisible(true)
               : onUpdateField({ isRLSEnabled: !tableFields.isRLSEnabled });
           }}
-          size="medium"
+          // size="medium"
         />
         {tableFields.isRLSEnabled ? (
-          <Admonition
-            type="default"
+          <Feedback
+            variant="info"
             className="!mt-3"
             title="Policies are required to query data"
             description={
@@ -330,10 +334,10 @@ const TableEditor = ({
               className="mt-2"
               href="https://supabase.com/docs/guides/auth/row-level-security"
             />
-          </Admonition>
+          </Feedback>
         ) : (
-          <Admonition
-            type="warning"
+          <Feedback
+            variant="warning"
             className="!mt-3"
             title="You are allowing anonymous access to your table"
             description={
@@ -348,29 +352,29 @@ const TableEditor = ({
               className="mt-2"
               href="https://supabase.com/docs/guides/auth/row-level-security"
             />
-          </Admonition>
+          </Feedback>
         )}
         {realtimeEnabled && (
           <Checkbox
             id="enable-realtime"
             label="Enable Realtime"
             description="Broadcast changes on this table to authorized subscribers"
-            checked={tableFields.isRealtimeEnabled}
-            onChange={() => {
-              sendEvent({
-                action: "realtime_toggle_table_clicked",
-                properties: {
-                  newState: tableFields.isRealtimeEnabled ? "disabled" : "enabled",
-                  origin: "tableSidePanel",
-                },
-                groups: {
-                  project: project?.$id ?? "Unknown",
-                  organization: org?.slug ?? "Unknown",
-                },
-              });
+            isChecked={tableFields.isRealtimeEnabled}
+            onToggle={() => {
+              // sendEvent({
+              //   action: "realtime_toggle_table_clicked",
+              //   properties: {
+              //     newState: tableFields.isRealtimeEnabled ? "disabled" : "enabled",
+              //     origin: "tableSidePanel",
+              //   },
+              //   groups: {
+              //     project: project?.$id ?? "Unknown",
+              //     organization: org?.slug ?? "Unknown",
+              //   },
+              // });
               onUpdateField({ isRealtimeEnabled: !tableFields.isRealtimeEnabled });
             }}
-            size="medium"
+            // size="medium"
           />
         )}
       </SidePanel.Content>
@@ -399,9 +403,9 @@ const TableEditor = ({
               id="duplicate-rows"
               label="Duplicate table entries"
               description="This will copy all the data in the table into the new table"
-              checked={isDuplicateRows}
-              onChange={() => setIsDuplicateRows(!isDuplicateRows)}
-              size="medium"
+              isChecked={isDuplicateRows}
+              onToggle={() => setIsDuplicateRows(!isDuplicateRows)}
+              // size="medium"
             />
           </>
         )}
@@ -421,7 +425,7 @@ const TableEditor = ({
           visible={rlsConfirmVisible}
           title="Turn off Row Level Security"
           confirmLabel="Confirm"
-          size="medium"
+          // size="medium"
           onCancel={() => setRlsConfirmVisible(false)}
           onConfirm={() => {
             onUpdateField({ isRLSEnabled: !tableFields.isRLSEnabled });

@@ -1,20 +1,19 @@
 import { AlertOctagon, Lock, ShieldOff } from "lucide-react";
 
-import { DocsButton } from "components/ui/DocsButton";
-import { Alert } from "ui";
+import { DocsButton } from "@/ui/DocsButton";
+import { Feedback } from "@nuvix/ui/components";
 
 export default function RLSDisableModalContent() {
   return (
     <div className="text-sm text-foreground-light grid gap-4">
       <div className="grid gap-1">
-        <Alert
+        <Feedback
           variant="warning"
           className="!px-4 !py-3"
           title="This table will be publicly readable and writable"
-          withIcon
-        >
-          <p>Anyone can edit or delete data in this table.</p>
-        </Alert>
+          icon
+          description="Anyone can edit or delete data in this table."
+        />
         <ul className="mt-4 space-y-5">
           <li className="flex gap-3">
             <AlertOctagon />

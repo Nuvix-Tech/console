@@ -1,24 +1,18 @@
 import { Link, Menu, Plus, Settings, X } from "lucide-react";
 import {
-  Badge,
-  Button,
-  Checkbox,
-  CommandGroup_Shadcn_,
-  CommandItem_Shadcn_,
-  CommandList_Shadcn_,
-  CommandSeparator_Shadcn_,
-  Command_Shadcn_,
-  Input,
-  PopoverContent_Shadcn_,
-  PopoverTrigger_Shadcn_,
-  Popover_Shadcn_,
-  cn,
-} from "ui";
+  CommandGroup,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  Command,
+  PopoverContent,
+  PopoverTrigger,
+  Popover,
+} from "@nuvix/sui/components";
 
-import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
 import { useForeignKeyConstraintsQuery } from "@/data/database/foreign-key-constraints-query";
 import type { EnumeratedType } from "@/data/enumerated-types/enumerated-types-query";
-import { EMPTY_ARR, EMPTY_OBJ } from "lib/void";
+// import { EMPTY_ARR, EMPTY_OBJ } from "lib/void";
 import { useState } from "react";
 import { typeExpressionSuggestions } from "../ColumnEditor/ColumnEditor.constants";
 import type { Suggestion } from "../ColumnEditor/ColumnEditor.types";
@@ -27,6 +21,9 @@ import InputWithSuggestions from "../ColumnEditor/InputWithSuggestions";
 import { ForeignKey } from "../ForeignKeySelector/ForeignKeySelector.types";
 import type { ColumnField } from "../SidePanelEditor.types";
 import { checkIfRelationChanged } from "./ForeignKeysManagement/ForeignKeysManagement.utils";
+import { useProjectStore } from "@/lib/store";
+import { Button, Checkbox, Input, Tag } from "@nuvix/ui/components";
+import { cn } from "@nuvix/sui/lib/utils";
 
 /**
  * [Joshen] For context:
@@ -45,6 +42,9 @@ import { checkIfRelationChanged } from "./ForeignKeysManagement/ForeignKeysManag
  * For int fields, they will have this condition:
  * - Cannot be both identity AND array, still checkboxes as they can be toggled off
  */
+
+const EMPTY_ARR: any[] = [];
+const EMPTY_OBJ = {};
 
 interface ColumnProps {
   column: ColumnField;
@@ -71,7 +71,7 @@ const Column = ({
   onRemoveColumn,
   onEditForeignKey,
 }: ColumnProps) => {
-  const { project } = useProjectContext();
+  const { project, sdk } = useProjectStore();
   const [open, setOpen] = useState(false);
   const suggestions: Suggestion[] = typeExpressionSuggestions?.[column.format] ?? [];
 
@@ -115,10 +115,12 @@ const Column = ({
       <div className="w-[25%]">
         <div className="flex w-[95%] items-center justify-between">
           <Input
-            size="small"
+            // size="small"
+            height="s"
             value={column.name}
             title={column.name}
             disabled={hasImportContent}
+            labelAsPlaceholder
             placeholder="column_name"
             className={cn(
               "[&>div>div>div>input]:py-1.5 [&>div>div>div>input]:border-r-transparent [&>div>div>div>input]:rounded-r-none",
@@ -129,19 +131,20 @@ const Column = ({
           {relations.filter((r) => !r.toRemove).length === 0 ? (
             <Button
               type="dashed"
+              variant="secondary"
               className="rounded-l-none h-[30px] py-0 px-2"
               onClick={() => onEditForeignKey()}
             >
               <Link size={12} />
             </Button>
           ) : (
-            <Popover_Shadcn_ open={open} onOpenChange={setOpen} modal={false}>
-              <PopoverTrigger_Shadcn_ asChild>
+            <Popover open={open} onOpenChange={setOpen} modal={false}>
+              <PopoverTrigger asChild>
                 <Button type="default" className="rounded-l-none h-[30px] py-0 px-2">
                   <Link size={12} />
                 </Button>
-              </PopoverTrigger_Shadcn_>
-              <PopoverContent_Shadcn_
+              </PopoverTrigger>
+              <PopoverContent
                 className={cn("p-0", hasChangesInRelations ? "w-96" : "w-72")}
                 side="bottom"
                 align="end"
@@ -149,16 +152,16 @@ const Column = ({
                 <div className="text-xs px-2 pt-2">
                   Involved in {relations.length} foreign key{relations.length > 1 ? "s" : ""}
                 </div>
-                <Command_Shadcn_>
-                  <CommandList_Shadcn_>
-                    <CommandGroup_Shadcn_>
+                <Command>
+                  <CommandList>
+                    <CommandGroup>
                       {relations.map((relation, idx) => {
                         const key = String(relation?.id ?? `${column.id}-relation-${idx}`);
                         const status = getRelationStatus(relation);
                         if (status === "REMOVE") return null;
 
                         return (
-                          <CommandItem_Shadcn_
+                          <CommandItem
                             key={key}
                             value={key}
                             className="cursor-pointer w-full"
@@ -171,9 +174,7 @@ const Column = ({
                               </div>
                             ) : (
                               <div className="flex items-center gap-x-2 truncate">
-                                <Badge variant={status === "ADD" ? "brand" : "warning"}>
-                                  {status}
-                                </Badge>
+                                <Tag variant={status === "ADD" ? "brand" : "warning"}>{status}</Tag>
                                 <p className="truncate">
                                   {relation.name || (
                                     <>
@@ -198,25 +199,25 @@ const Column = ({
                                 </p>
                               </div>
                             )}
-                          </CommandItem_Shadcn_>
+                          </CommandItem>
                         );
                       })}
-                    </CommandGroup_Shadcn_>
-                    <CommandSeparator_Shadcn_ />
-                    <CommandGroup_Shadcn_>
-                      <CommandItem_Shadcn_
+                    </CommandGroup>
+                    <CommandSeparator />
+                    <CommandGroup>
+                      <CommandItem
                         className="cursor-pointer w-full gap-x-2"
                         onSelect={() => onEditForeignKey()}
                         onClick={() => onEditForeignKey()}
                       >
                         <Plus size={14} strokeWidth={1.5} />
                         <p>Add foreign key relation</p>
-                      </CommandItem_Shadcn_>
-                    </CommandGroup_Shadcn_>
-                  </CommandList_Shadcn_>
-                </Command_Shadcn_>
-              </PopoverContent_Shadcn_>
-            </Popover_Shadcn_>
+                      </CommandItem>
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
           )}
         </div>
       </div>
@@ -266,8 +267,8 @@ const Column = ({
       <div className="w-[10%]">
         <Checkbox
           label=""
-          checked={column.isPrimaryKey}
-          onChange={() => {
+          isChecked={column.isPrimaryKey}
+          onToggle={() => {
             const updatedValue = !column.isPrimaryKey;
             onUpdateColumn({
               isPrimaryKey: updatedValue,
@@ -279,8 +280,8 @@ const Column = ({
       <div className={`${hasImportContent ? "w-[10%]" : "w-[0%]"}`} />
       <div className="flex w-[5%] justify-end">
         {(!column.isPrimaryKey || column.format.includes("int")) && (
-          <Popover_Shadcn_>
-            <PopoverTrigger_Shadcn_
+          <Popover>
+            <PopoverTrigger
               data-testid={`${column.name}-extra-options`}
               className="group flex items-center -space-x-1"
             >
@@ -292,8 +293,8 @@ const Column = ({
               <div className="text-foreground-light transition-colors group-hover:text-foreground">
                 <Settings size={16} strokeWidth={1} />
               </div>
-            </PopoverTrigger_Shadcn_>
-            <PopoverContent_Shadcn_ align="end" className="w-96 p-0">
+            </PopoverTrigger>
+            <PopoverContent align="end" className="w-96 p-0">
               <div className="flex items-center justify-center bg-surface-200 space-y-1 py-1.5 px-3 border-b border-overlay">
                 <h5 className="text-sm text-foreground">Extra options</h5>
               </div>
@@ -343,8 +344,8 @@ const Column = ({
                   />
                 )}
               </div>
-            </PopoverContent_Shadcn_>
-          </Popover_Shadcn_>
+            </PopoverContent>
+          </Popover>
         )}
       </div>
       {!hasImportContent && (

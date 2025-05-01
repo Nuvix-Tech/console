@@ -1,17 +1,20 @@
 import { useState } from "react";
-import { Button } from "ui";
+// import { Button } from "ui";
 
-import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
-import AlertError from "components/ui/AlertError";
-import { GenericSkeletonLoader } from "components/ui/ShimmeringLoader";
+// import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
+// import AlertError from "components/ui/AlertError";
+// import { GenericSkeletonLoader } from "components/ui/ShimmeringLoader";
 import { useForeignKeyConstraintsQuery } from "@/data/database/foreign-key-constraints-query";
-import { useQuerySchemaState } from "hooks/misc/useSchemaQueryState";
-import type { ResponseError } from "types";
+import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
+import type { ResponseError } from "@/types";
 import { ForeignKeySelector } from "../../ForeignKeySelector/ForeignKeySelector";
 import type { ForeignKey } from "../../ForeignKeySelector/ForeignKeySelector.types";
 import type { TableField } from "../TableEditor.types";
 import { ForeignKeyRow } from "./ForeignKeyRow";
 import { checkIfRelationChanged } from "./ForeignKeysManagement.utils";
+import { useProjectStore } from "@/lib/store";
+import { Alert, AlertDescription, AlertTitle } from "@nuvix/sui/components/alert";
+import { Button } from "@nuvix/ui/components";
 
 interface ForeignKeysManagementProps {
   table: TableField;
@@ -28,7 +31,7 @@ export const ForeignKeysManagement = ({
   setEditorDirty,
   onUpdateFkRelations,
 }: ForeignKeysManagementProps) => {
-  const { project } = useProjectContext();
+  const { project, sdk } = useProjectStore();
   const { selectedSchema } = useQuerySchemaState();
 
   const [open, setOpen] = useState(false);
@@ -58,13 +61,21 @@ export const ForeignKeysManagement = ({
       <div className="w-full space-y-4 ">
         <h5>Foreign keys</h5>
 
-        {isLoading && <GenericSkeletonLoader />}
+        {/* {isLoading && <GenericSkeletonLoader />} */}
+        {isLoading && "loading ....."}
 
-        {isError && (
+        {/* {isError && (
           <AlertError
             error={error as unknown as ResponseError}
             subject="Failed to retrieve foreign key relationships"
           />
+        )} */}
+
+        {isError && (
+          <Alert>
+            <AlertTitle>Failed to retrieve foreign key relationships</AlertTitle>
+            <AlertDescription>{error.message}</AlertDescription>
+          </Alert>
         )}
 
         {isSuccess && (

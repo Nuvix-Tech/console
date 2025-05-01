@@ -20,12 +20,22 @@ export const useQuery = ({ limit: _limit }: QueryParams = {}) => {
     });
     router.replace(`?${newParams.toString()}`);
   };
-  const setQueryParam = (key: string, value: string | number | undefined) => {
+  const setQueryParam = (key: string | Record<string, any>, value?: string | number) => {
     const newParams = new URLSearchParams(searchParams.toString());
-    if (value === undefined) {
-      newParams.delete(key);
+    if (typeof key === "object") {
+      Object.entries(key).forEach(([k, v]) => {
+        if (v === undefined) {
+          newParams.delete(k);
+        } else {
+          newParams.set(k, v.toString());
+        }
+      });
     } else {
-      newParams.set(key, value.toString());
+      if (value === undefined) {
+        newParams.delete(key);
+      } else {
+        newParams.set(key, value.toString());
+      }
     }
     router.replace(`?${newParams.toString()}`);
   };

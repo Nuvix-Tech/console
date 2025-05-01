@@ -9,21 +9,20 @@ import {
   DroppableProvided,
 } from "react-beautiful-dnd";
 
-import { useParams } from "common";
-import InformationBox from "components/ui/InformationBox";
+// import { useParams } from "common";
+import InformationBox from "@/ui/InformationBox";
 import type { EnumeratedType } from "@/data/enumerated-types/enumerated-types-query";
-import { useSendEventMutation } from "@/data/telemetry/send-event-mutation";
-import { useSelectedOrganization } from "hooks/misc/useSelectedOrganization";
+// import { useSendEventMutation } from "@/data/telemetry/send-event-mutation";
+// import { useSelectedOrganization } from "hooks/misc/useSelectedOrganization";
 import {
-  AlertDescription_Shadcn_,
-  AlertTitle_Shadcn_,
-  Alert_Shadcn_,
-  Button,
+  AlertDescription,
+  AlertTitle,
+  Alert,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-  WarningIcon,
-} from "ui";
+} from "@nuvix/sui/components";
+
 import { generateColumnField } from "../ColumnEditor/ColumnEditor.utils";
 import { ForeignKeySelector } from "../ForeignKeySelector/ForeignKeySelector";
 import type { ForeignKey } from "../ForeignKeySelector/ForeignKeySelector.types";
@@ -31,6 +30,8 @@ import { TEXT_TYPES } from "../SidePanelEditor.constants";
 import type { ColumnField, ExtendedPostgresRelationship } from "../SidePanelEditor.types";
 import Column from "./Column";
 import type { ImportContent, TableField } from "./TableEditor.types";
+import { useParams } from "next/navigation";
+import { Button, Icon } from "@nuvix/ui/components";
 
 interface ColumnManagementProps {
   table: TableField;
@@ -57,14 +58,14 @@ const ColumnManagement = ({
   onClearImportContent = noop,
   onUpdateFkRelations,
 }: ColumnManagementProps) => {
-  const { ref: projectRef } = useParams();
-  const org = useSelectedOrganization();
+  const { id: projectRef } = useParams();
+  // const org = useSelectedOrganization();
 
   const [open, setOpen] = useState(false);
   const [selectedColumn, setSelectedColumn] = useState<ColumnField>();
   const [selectedFk, setSelectedFk] = useState<ForeignKey>();
 
-  const { mutate: sendEvent } = useSendEventMutation();
+  // const { mutate: sendEvent } = useSendEventMutation();
 
   const hasImportContent = !isEmpty(importContent);
   const [primaryKeyColumns, otherColumns] = partition(
@@ -142,7 +143,7 @@ const ColumnManagement = ({
         <div className="flex items-center justify-between w-full">
           <h5>Columns</h5>
           <div className="flex items-center gap-x-2">
-            <Button asChild type="default" icon={<ExternalLink size={12} strokeWidth={2} />}>
+            <Button asChild type="default" prefixIcon={<ExternalLink size={12} strokeWidth={2} />}>
               <a
                 href="https://supabase.com/docs/guides/database/tables#data-types"
                 target="_blank"
@@ -156,10 +157,10 @@ const ColumnManagement = ({
                 <div className="py-3 border-r" />
                 {hasImportContent ? (
                   <div className="flex items-center gap-x-2">
-                    <Button type="default" icon={<Edit />} onClick={onSelectImportData}>
+                    <Button type="default" prefixIcon={<Edit />} onClick={onSelectImportData}>
                       Edit content
                     </Button>
-                    <Button type="danger" icon={<Trash />} onClick={onClearImportContent}>
+                    <Button type="danger" prefixIcon={<Trash />} onClick={onClearImportContent}>
                       Remove content
                     </Button>
                   </div>
@@ -168,14 +169,14 @@ const ColumnManagement = ({
                     type="default"
                     onClick={() => {
                       onSelectImportData();
-                      sendEvent({
-                        action: "import_data_button_clicked",
-                        properties: { tableType: "New Table" },
-                        groups: {
-                          project: projectRef ?? "Unknown",
-                          organization: org?.slug ?? "Unknown",
-                        },
-                      });
+                      // sendEvent({
+                      //   action: "import_data_button_clicked",
+                      //   properties: { tableType: "New Table" },
+                      //   groups: {
+                      //     project: projectRef ?? "Unknown",
+                      //     organization: org?.slug ?? "Unknown",
+                      //   },
+                      // });
                     }}
                   >
                     Import data from CSV
@@ -194,14 +195,14 @@ const ColumnManagement = ({
         )}
 
         {primaryKeyColumns.length === 0 && (
-          <Alert_Shadcn_ variant="warning">
-            <WarningIcon />
-            <AlertTitle_Shadcn_>Warning: No primary keys selected</AlertTitle_Shadcn_>
-            <AlertDescription_Shadcn_>
+          <Alert variant="warning">
+            <Icon name="warningTriangle" />
+            <AlertTitle>Warning: No primary keys selected</AlertTitle>
+            <AlertDescription>
               Tables should have at least one column as the primary key to identify each row.
               Without a primary key, you will not be able to update or delete rows from the table.
-            </AlertDescription_Shadcn_>
-          </Alert_Shadcn_>
+            </AlertDescription>
+          </Alert>
         )}
 
         {primaryKeyColumns.length > 1 && (

@@ -8,7 +8,7 @@ interface FeedbackProps extends Omit<React.ComponentProps<typeof Flex>, "title">
   variant?: "info" | "danger" | "warning" | "success";
   icon?: boolean;
   title?: string;
-  description?: string;
+  description?: string | ReactNode;
   showCloseButton?: boolean;
   onClose?: () => void;
   actionButtonProps?: React.ComponentProps<typeof Button>;
