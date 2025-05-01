@@ -1,7 +1,6 @@
+import { Dictionary } from "@nuvix/pg-meta/src/query";
 import { isNull, noop } from "lodash";
 import { ChevronRight } from "lucide-react";
-
-import type { Dictionary } from "types";
 
 interface DrilldownPaneProps {
   pane: number;

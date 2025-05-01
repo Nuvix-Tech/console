@@ -1,20 +1,25 @@
 import { Editor } from "@monaco-editor/react";
 import { Loader } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-import remarkGfm from "remark-gfm";
+// import remarkGfm from "remark-gfm";
 import { toast } from "sonner";
 
-import { useParams } from "common";
-import { Markdown } from "components/interfaces/Markdown";
-import TwoOptionToggle from "components/ui/TwoOptionToggle";
+// import { useParams } from "common";
+// import { Markdown } from "components/interfaces/Markdown";
+// import TwoOptionToggle from "components/ui/TwoOptionToggle";
 import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
 import { isTableLike } from "@/data/table-editor/table-editor-types";
 import { useGetCellValueMutation } from "@/data/table-rows/get-cell-value-mutation";
 import { MAX_CHARACTERS } from "@nuvix/pg-meta/src/query/table-row-query";
-import { useSelectedProject } from "hooks/misc/useSelectedProject";
-import { Button, SidePanel, cn } from "ui";
+// import { useSelectedProject } from "hooks/misc/useSelectedProject";
+// import { Button, SidePanel, cn } from "ui";
 import ActionBar from "../ActionBar";
 import { isValueTruncated } from "./RowEditor.utils";
+import { useParams, useSearchParams } from "next/navigation";
+import { useProjectStore } from "@/lib/store";
+import { SidePanel } from "@/ui/SidePanel";
+import { cn } from "@nuvix/sui/lib/utils";
+import { Button } from "@nuvix/ui/components";
 
 interface TextEditorProps {
   visible: boolean;
@@ -34,8 +39,9 @@ export const TextEditor = ({
   onSaveField,
 }: TextEditorProps) => {
   const { id: _id } = useParams();
-  const id = _id ? Number(_id) : undefined;
-  const project = useSelectedProject();
+  const params = useSearchParams();
+  const id = _id ? Number(params.get("table")) : undefined;
+  const { project, sdk } = useProjectStore();
 
   const { data: selectedTable } = useTableEditorQuery({
     projectRef: project?.$id,
@@ -48,7 +54,12 @@ export const TextEditor = ({
   const value = row?.[column as keyof typeof row] as unknown as string;
   const isTruncated = isValueTruncated(value);
 
-  const { mutate: getCellValue, isLoading, isSuccess, reset } = useGetCellValueMutation();
+  const {
+    mutate: getCellValue,
+    isPending: isLoading,
+    isSuccess,
+    reset,
+  } = useGetCellValueMutation();
 
   const loadFullValue = () => {
     if (
@@ -106,14 +117,14 @@ export const TextEditor = ({
           <p>
             {readOnly ? "Viewing" : "Editing"} value of: <code>{column}</code>
           </p>
-          {(!isTruncated || (isTruncated && isSuccess)) && (
+          {/* {(!isTruncated || (isTruncated && isSuccess)) && (
             <TwoOptionToggle
               options={["view", "edit"]}
               activeOption={view}
               borderOverride="border-muted"
               onClickOption={setView}
             />
-          )}
+          )} */}
         </div>
       }
       customFooter={
@@ -162,11 +173,12 @@ export const TextEditor = ({
           </div>
         ) : (
           <SidePanel.Content className="py-4 bg-default flex-grow">
-            <Markdown
+            {/* <Markdown
               remarkPlugins={[remarkGfm]}
               className="bg-default markdown-body"
               content={strValue}
-            />
+            /> */}
+            <div>{strValue}</div>
           </SidePanel.Content>
         )}
         {isTruncated && !isSuccess && (

@@ -2,20 +2,23 @@ import { AlignLeft } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { useParams } from "common";
-import { ButtonTooltip } from "components/ui/ButtonTooltip";
-import TwoOptionToggle from "components/ui/TwoOptionToggle";
+// import { useParams } from "common";
+// import { ButtonTooltip } from "components/ui/ButtonTooltip";
+// import TwoOptionToggle from "components/ui/TwoOptionToggle";
 import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
 import { isTableLike } from "@/data/table-editor/table-editor-types";
 import { useGetCellValueMutation } from "@/data/table-rows/get-cell-value-mutation";
 import { MAX_CHARACTERS } from "@nuvix/pg-meta/src/query/table-row-query";
-import { useSelectedProject } from "hooks/misc/useSelectedProject";
 import { minifyJSON, prettifyJSON, removeJSONTrailingComma, tryParseJson } from "@/lib/helpers";
-import { Button, SidePanel, cn } from "ui";
 import ActionBar from "../../ActionBar";
 import { isValueTruncated } from "../RowEditor.utils";
 import { DrilldownViewer } from "./DrilldownViewer";
 import JsonCodeEditor from "./JsonCodeEditor";
+import { useSearchParams } from "next/navigation";
+import { useProjectStore } from "@/lib/store";
+import { SidePanel } from "@/ui/SidePanel";
+import { cn } from "@nuvix/sui/lib/utils";
+import { Button } from "@nuvix/ui/components";
 
 interface JsonEditProps {
   row?: { [key: string]: any };
@@ -38,9 +41,10 @@ const JsonEdit = ({
   closePanel,
   onSaveJSON,
 }: JsonEditProps) => {
-  const { id: _id } = useParams();
+  const params = useSearchParams();
+  const _id = params.get("table");
   const id = _id ? Number(_id) : undefined;
-  const project = useSelectedProject();
+  const { project, sdk } = useProjectStore();
 
   const { data: selectedTable } = useTableEditorQuery({
     projectRef: project?.$id,
@@ -55,7 +59,12 @@ const JsonEdit = ({
   const jsonString = typeof value === "object" ? JSON.stringify(value) : (value as string);
   const isTruncated = isValueTruncated(jsonString);
 
-  const { mutate: getCellValue, isLoading, isSuccess, reset } = useGetCellValueMutation();
+  const {
+    mutate: getCellValue,
+    isPending: isLoading,
+    isSuccess,
+    reset,
+  } = useGetCellValueMutation();
 
   const validateJSON = async (resolve: () => void) => {
     try {
@@ -133,7 +142,7 @@ const JsonEdit = ({
               Viewing JSON Field: <code>{column}</code>
             </p>
           )}
-          {(!isTruncated || (isTruncated && isSuccess)) && (
+          {/* {(!isTruncated || (isTruncated && isSuccess)) && (
             <div className="flex items-center gap-x-2">
               {view === "edit" && (
                 <ButtonTooltip
@@ -151,7 +160,7 @@ const JsonEdit = ({
                 onClickOption={setView}
               />
             </div>
-          )}
+          )} */}
         </div>
       }
       visible={visible}

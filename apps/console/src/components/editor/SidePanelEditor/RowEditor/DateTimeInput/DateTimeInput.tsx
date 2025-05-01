@@ -3,15 +3,14 @@ import { Edit } from "lucide-react";
 import { ReactNode } from "react";
 
 import {
-  Button,
-  cn,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  Input,
-} from "ui";
+} from "@nuvix/sui/components/dropdown-menu";
 import { getColumnType } from "./DateTimeInput.utils";
+import { Button, Input } from "@nuvix/ui/components";
+import { cn } from "@nuvix/sui/lib/utils";
 
 interface DateTimeInputProps {
   name: string;
@@ -44,7 +43,7 @@ const DateTimeInput = ({
       layout="horizontal"
       className={cn("w-full [&>div>div>div>input]:pr-10")}
       label={name}
-      descriptionText={
+      description={
         <div className="space-y-1">
           {description}
           {format.includes("tz") && (
@@ -53,15 +52,17 @@ const DateTimeInput = ({
         </div>
       }
       labelOptional={format}
-      size="small"
+      // size="small"
+      height="s"
+      labelAsPlaceholder
       value={value}
       type={inputType}
       step={inputType == "datetime-local" || inputType == "time" ? "1" : undefined}
-      actions={
+      hasSuffix={
         !disabled && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button type="default" icon={<Edit />} className="px-1.5" />
+              <Button type="default" prefixIcon={<Edit />} className="px-1.5" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-28 pointer-events-auto">
               {isNullable && (

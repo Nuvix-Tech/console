@@ -1,7 +1,12 @@
-import type { PostgresColumn, PostgresRelationship, PostgresTable } from "@nuvix/pg-meta";
+import type {
+  PostgresColumn,
+  PostgresRelationship,
+  PostgresRelationshipOld,
+  PostgresTable,
+} from "@nuvix/pg-meta";
 import dayjs from "dayjs";
 import { compact, isEqual, isNull, isString, omitBy } from "lodash";
-import type { Dictionary } from "types";
+// import type { Dictionary } from "types";
 
 import { MAX_CHARACTERS } from "@nuvix/pg-meta/src/query/table-row-query";
 import { minifyJSON, tryParseJson } from "@/lib/helpers";
@@ -14,6 +19,7 @@ import {
   TIME_TYPES,
 } from "../SidePanelEditor.constants";
 import type { RowField } from "./RowEditor.types";
+import { Dictionary } from "../SidePanelEditor.types";
 
 const getRowValue = ({ column, row }: { column: PostgresColumn; row?: Dictionary<any> }) => {
   const isNewRow = row === undefined;
@@ -69,7 +75,7 @@ export const generateRowFields = (
               target_table_name: foreignKey.table,
               target_column_name:
                 foreignKey.columns.find((c) => c.source === column.name)?.target ?? "",
-            } as PostgresRelationship)
+            } as PostgresRelationshipOld)
           : undefined,
       id: column.id,
       name: column.name,

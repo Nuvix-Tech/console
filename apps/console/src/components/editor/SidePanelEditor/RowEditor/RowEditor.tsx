@@ -2,10 +2,9 @@ import type { PostgresTable } from "@nuvix/pg-meta";
 import { isEmpty, noop, partition } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 
-import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
 import { useForeignKeyConstraintsQuery } from "@/data/database/foreign-key-constraints-query";
-import type { Dictionary } from "types";
-import { SidePanel } from "ui";
+// import type { Dictionary } from "types";
+// import { SidePanel } from "ui";
 import ActionBar from "../ActionBar";
 import { formatForeignKeys } from "../ForeignKeySelector/ForeignKeySelector.utils";
 import ForeignRowSelector from "./ForeignRowSelector/ForeignRowSelector";
@@ -21,6 +20,9 @@ import {
   validateFields,
 } from "./RowEditor.utils";
 import { TextEditor } from "./TextEditor";
+import { Dictionary } from "../SidePanelEditor.types";
+import { useProjectStore } from "@/lib/store";
+import { SidePanel } from "@/ui/SidePanel";
 
 export interface RowEditorProps {
   row?: Dictionary<any>;
@@ -66,7 +68,7 @@ const RowEditor = ({
     (rowField: any) => !rowField.isNullable,
   );
 
-  const { project } = useProjectContext();
+  const { project, sdk } = useProjectStore();
   const { data } = useForeignKeyConstraintsQuery({
     projectRef: project?.$id,
     sdk,

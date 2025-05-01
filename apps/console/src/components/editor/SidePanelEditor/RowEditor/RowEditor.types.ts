@@ -1,4 +1,4 @@
-import type { PostgresRelationship } from "@nuvix/pg-meta";
+import type { PostgresRelationshipOld, PostgresRelationship } from "@nuvix/pg-meta";
 
 export interface EditValue {
   row?: any;
@@ -14,7 +14,7 @@ export interface RowField {
   enums: string[];
   value: string | null;
   defaultValue: string | null;
-  foreignKey?: PostgresRelationship;
+  foreignKey?: PostgresRelationshipOld;
   isNullable: boolean;
   isIdentity: boolean;
   isPrimaryKey: boolean;

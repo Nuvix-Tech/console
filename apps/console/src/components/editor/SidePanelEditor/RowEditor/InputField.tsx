@@ -2,25 +2,24 @@ import { includes, noop } from "lodash";
 import { Edit, Edit2, Eye } from "lucide-react";
 
 import {
-  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  Input,
   Select,
-  Select_Shadcn_,
-  SelectContent_Shadcn_,
-  SelectGroup_Shadcn_,
-  SelectItem_Shadcn_,
-  SelectTrigger_Shadcn_,
-  SelectValue_Shadcn_,
-} from "ui";
-import { FormItemLayout } from "ui-patterns/form/FormItemLayout/FormItemLayout";
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@nuvix/sui/components";
+import { Button, Input, Select as Select_UI } from "@nuvix/ui/components";
+// import { FormItemLayout } from "ui-patterns/form/FormItemLayout/FormItemLayout";
 import { DATETIME_TYPES, JSON_TYPES, TEXT_TYPES } from "../SidePanelEditor.constants";
 import { DateTimeInput } from "./DateTimeInput";
 import type { EditValue, RowField } from "./RowEditor.types";
 import { isValueTruncated } from "./RowEditor.utils";
+import { Textarea } from "@nuvix/ui/components";
 
 export interface InputFieldProps {
   field: RowField;
@@ -46,15 +45,16 @@ const InputField = ({
     if (isArray) {
       return (
         <div className="text-area-text-sm">
-          <Input.TextArea
+          <Textarea
             data-testid={`${field.name}-input`}
-            layout="horizontal"
+            // layout="horizontal"
             label={field.name}
             className="text-sm"
-            descriptionText={field.comment}
-            labelOptional={field.format}
+            description={field.comment}
+            // labelOptional={field.format}
             disabled={!isEditable}
-            error={errors[field.name]}
+            error={!!errors[field.name]}
+            errorMessage={errors[field.name]}
             rows={5}
             value={field.value ?? ""}
             placeholder={
@@ -70,24 +70,22 @@ const InputField = ({
       );
     } else {
       return (
-        <Select
-          size="medium"
-          layout="horizontal"
+        <Select_UI
+          // size="md"
+          // layout="horizontal"
           value={field.value ?? ""}
           label={field.name}
           labelOptional={field.format}
-          descriptionText={field.comment}
+          description={field.comment}
           disabled={!isEditable}
-          error={errors[field.name]}
+          error={!!errors[field.name]}
+          errorMessage={errors[field.name]}
           onChange={(event: any) => onUpdateField({ [field.name]: event.target.value })}
-        >
-          <Select.Option value="">---</Select.Option>
-          {field.enums.map((value: string) => (
-            <Select.Option key={value} value={value}>
-              {value}
-            </Select.Option>
-          ))}
-        </Select>
+          options={[
+            { value: "", label: "---" },
+            ...field.enums.map((value: string) => ({ value, label: value })),
+          ]}
+        />
       );
     }
   }
@@ -100,7 +98,7 @@ const InputField = ({
         placeholder="NULL"
         label={field.name}
         value={field.value ?? ""}
-        descriptionText={
+        description={
           <>
             {field.comment && (
               <span className="text-sm text-foreground-lighter">{field.comment} </span>
@@ -119,11 +117,11 @@ const InputField = ({
         disabled={!isEditable}
         error={errors[field.name]}
         onChange={(event: any) => onUpdateField({ [field.name]: event.target.value })}
-        actions={
+        hasSuffix={
           isEditable && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button type="default" icon={<Edit />} className="px-1.5" />
+                <Button type="default" prefixIcon={<Edit />} className="px-1.5" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-28">
                 {field.isNullable && (
@@ -145,12 +143,12 @@ const InputField = ({
 
     return (
       <div className="text-area-text-sm">
-        <Input.TextArea
+        <Textarea
           data-testid={`${field.name}-input`}
           layout="horizontal"
           label={field.name}
           className="text-sm"
-          descriptionText={
+          description={
             <>
               {field.comment && <p>{field.comment}</p>}
               {isTruncated && (
@@ -161,7 +159,7 @@ const InputField = ({
               )}
             </>
           }
-          textAreaClassName="pr-8"
+          // textAreaClassName="pr-8"
           labelOptional={field.format}
           disabled={!isEditable || isTruncated}
           error={errors[field.name]}
@@ -176,10 +174,10 @@ const InputField = ({
                   ? "EMPTY"
                   : `NULL (Default: ${field.defaultValue})`
           }
-          actions={
+          hasSuffix={
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button type="default" icon={<Edit />} className="px-1.5" />
+                <Button type="default" prefixIcon={<Edit />} className="px-1.5" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-28">
                 {isEditable && (
@@ -210,7 +208,7 @@ const InputField = ({
         layout="horizontal"
         value={field.value ?? ""}
         label={field.name}
-        descriptionText={
+        description={
           <>
             {field.comment && <p>{field.comment}</p>}
             {isTruncated && (
@@ -226,12 +224,11 @@ const InputField = ({
         placeholder={field?.defaultValue ?? "NULL"}
         error={errors[field.name]}
         onChange={(event: any) => onUpdateField({ [field.name]: event.target.value })}
-        actions={
+        hasSuffix={
           <Button
-            type="default"
-            htmlType="button"
+            type="button"
             onClick={() => onEditJson({ column: field.name, value: field.value })}
-            icon={isEditable ? <Edit2 /> : <Eye />}
+            prefixIcon={isEditable ? <Edit2 /> : <Eye />}
           >
             {isEditable ? "Edit JSON" : "View JSON"}
           </Button>
@@ -269,33 +266,33 @@ const InputField = ({
     const defaultValue = field.value === null ? undefined : field.value;
 
     return (
-      <FormItemLayout
-        isReactForm={false}
-        layout="horizontal"
-        label={field.name}
-        labelOptional={field.format}
-        description={field.comment}
-        className="[&>div:first-child>span]:text-foreground-lighter"
+      // <FormItemLayout
+      //   isReactForm={false}
+      //   layout="horizontal"
+      //   label={field.name}
+      //   labelOptional={field.format}
+      //   description={field.comment}
+      //   className="[&>div:first-child>span]:text-foreground-lighter"
+      // >
+      <Select
+        value={defaultValue === null ? "null" : defaultValue}
+        onValueChange={(value: string) => onUpdateField({ [field.name]: value })}
+        disabled={!isEditable}
       >
-        <Select_Shadcn_
-          value={defaultValue === null ? "null" : defaultValue}
-          onValueChange={(value: string) => onUpdateField({ [field.name]: value })}
-          disabled={!isEditable}
-        >
-          <SelectTrigger_Shadcn_>
-            <SelectValue_Shadcn_ placeholder="Select a value" />
-          </SelectTrigger_Shadcn_>
-          <SelectContent_Shadcn_>
-            <SelectGroup_Shadcn_>
-              {options.map((option) => (
-                <SelectItem_Shadcn_ key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem_Shadcn_>
-              ))}
-            </SelectGroup_Shadcn_>
-          </SelectContent_Shadcn_>
-        </Select_Shadcn_>
-      </FormItemLayout>
+        <SelectTrigger>
+          <SelectValue placeholder="Select a value" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            {options.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+      // </FormItemLayout>
     );
   }
 
@@ -305,14 +302,15 @@ const InputField = ({
         data-testid={`${field.name}-input`}
         layout="horizontal"
         label={field.name}
-        descriptionText={
+        description={
           <>
             {field.comment && <p>{field.comment}</p>}
             <p>Bytea columns are edited and displayed as hex in the dashboard</p>
           </>
         }
         labelOptional={field.format}
-        error={errors[field.name]}
+        error={!!errors[field.name]}
+        errorMessage={errors[field.name]}
         value={field.value ?? ""}
         placeholder={`\\x`}
         disabled={!isEditable}
@@ -326,9 +324,10 @@ const InputField = ({
       data-testid={`${field.name}-input`}
       layout="horizontal"
       label={field.name}
-      descriptionText={field.comment}
+      description={field.comment}
       labelOptional={field.format}
-      error={errors[field.name]}
+      error={!!errors[field.name]}
+      errorMessage={errors[field.name]}
       value={field.value ?? ""}
       placeholder={
         field.isIdentity

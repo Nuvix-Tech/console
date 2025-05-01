@@ -3,32 +3,36 @@ import { useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
-import { useParams } from "common";
+// import { useParams } from "common";
 import {
   filtersToUrlParams,
   formatFilterURLParams,
   formatSortURLParams,
   sortsToUrlParams,
-} from "components/grid/SupabaseGrid.utils";
-import RefreshButton from "components/grid/components/header/RefreshButton";
-import FilterPopover from "components/grid/components/header/filter/FilterPopover";
-import { SortPopover } from "components/grid/components/header/sort";
-import type { Filter } from "components/grid/types";
-import { Sort } from "components/grid/types";
-import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
+} from "@/components/grid/SupabaseGrid.utils";
+import RefreshButton from "@/components/grid/components/header/RefreshButton";
+import FilterPopover from "@/components/grid/components/header/filter/FilterPopover";
+import { SortPopover } from "@/components/grid/components/header/sort";
+import type { Filter } from "@/components/grid/types";
+import { Sort } from "@/components/grid/types";
 import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
 import { useTableRowsQuery } from "@/data/table-rows/table-rows-query";
-import {
-  RoleImpersonationState,
-  useRoleImpersonationStateSnapshot,
-} from "state/role-impersonation-state";
-import { TableEditorTableStateContextProvider } from "state/table-editor-table";
-import { Button, SidePanel } from "ui";
+// import {
+//   RoleImpersonationState,
+//   useRoleImpersonationStateSnapshot,
+// } from "state/role-impersonation-state";
+// import { TableEditorTableStateContextProvider } from "state/table-editor-table";
+// import { Button, SidePanel } from "ui";
 import ActionBar from "../../ActionBar";
 import { ForeignKey } from "../../ForeignKeySelector/ForeignKeySelector.types";
 import { convertByteaToHex } from "../RowEditor.utils";
 import Pagination from "./Pagination";
 import SelectorGrid from "./SelectorGrid";
+import { useProjectStore } from "@/lib/store";
+import { useSearchParams } from "next/navigation";
+import { SidePanel } from "@/ui/SidePanel";
+import { TableEditorTableStateContextProvider } from "@/lib/store/table";
+import { Button } from "@nuvix/ui/components";
 
 export interface ForeignRowSelectorProps {
   visible: boolean;
@@ -43,8 +47,9 @@ const ForeignRowSelector = ({
   onSelect,
   closePanel,
 }: ForeignRowSelectorProps) => {
-  const { id } = useParams();
-  const { project } = useProjectContext();
+  const params = useSearchParams();
+  const id = params.get("table");
+  const { project, sdk } = useProjectStore();
   const { data: selectedTable } = useTableEditorQuery({
     projectRef: project?.$id,
     sdk,
@@ -96,7 +101,7 @@ const ForeignRowSelector = ({
   const rowsPerPage = 100;
   const [page, setPage] = useState(1);
 
-  const roleImpersonationState = useRoleImpersonationStateSnapshot();
+  const roleImpersonationState = () => false; //useRoleImpersonationStateSnapshot();
 
   const { data, isLoading, isSuccess, isError, isRefetching } = useTableRowsQuery(
     {
@@ -107,11 +112,11 @@ const ForeignRowSelector = ({
       filters: formatFilterURLParams(filters),
       page,
       limit: rowsPerPage,
-      roleImpersonationState: roleImpersonationState as RoleImpersonationState,
+      roleImpersonationState: roleImpersonationState(),
     },
-    {
-      keepPreviousData: true,
-    },
+    // {
+    //   keepPreviousData: true,
+    // },
   );
 
   return (
@@ -152,7 +157,7 @@ const ForeignRowSelector = ({
 
           {project?.$id && table && isSuccess && (
             <TableEditorTableStateContextProvider
-              projectRef={project.ref}
+              projectRef={project.$id}
               table={table}
               editable={false}
             >

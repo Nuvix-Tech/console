@@ -1,16 +1,17 @@
 import { Key } from "lucide-react";
 import { DataGrid, Column } from "react-data-grid";
 
-import { NullValue } from "components/grid/components/common/NullValue";
-import { COLUMN_MIN_WIDTH } from "components/grid/constants";
-import type { SupaRow } from "components/grid/types";
+import { NullValue } from "@/components/grid/components/common/NullValue";
+import { COLUMN_MIN_WIDTH } from "@/components/grid/constants";
+import type { SupaRow } from "@/components/grid/types";
 import {
   ESTIMATED_CHARACTER_PIXEL_WIDTH,
   getColumnDefaultWidth,
-} from "components/grid/utils/gridColumns";
-import { useTableEditorTableStateSnapshot } from "state/table-editor-table";
-import { Tooltip, TooltipContent, TooltipTrigger } from "ui";
+} from "@/components/grid/utils/gridColumns";
+// import { useTableEditorTableStateSnapshot } from "state/table-editor-table";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import { convertByteaToHex } from "../RowEditor.utils";
+import { useTableEditorTableState } from "@/lib/store/table";
 
 export interface SelectorGridProps {
   rows: SupaRow[];
@@ -59,7 +60,8 @@ const formatter = ({ column, format, row }: { column: string; format: string; ro
 };
 
 const SelectorGrid = ({ rows, onRowSelect }: SelectorGridProps) => {
-  const snap = useTableEditorTableStateSnapshot();
+  const { getState } = useTableEditorTableState();
+  const snap = getState();
 
   const columns: Column<SupaRow>[] = snap.table.columns.map((column) => {
     const columnDefaultWidth = getColumnDefaultWidth(column);

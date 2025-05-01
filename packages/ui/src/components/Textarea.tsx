@@ -12,7 +12,7 @@ import React, {
 import { Flex, Text } from ".";
 import useDebounce from "../hooks/useDebounce";
 import styles from "./Input.module.scss";
-import { Checkbox } from "@/components/cui/checkbox";
+import { Checkbox_Chakra } from "./Input";
 
 interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   id?: string;
@@ -40,6 +40,8 @@ interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   nullable?: boolean;
   isNull?: boolean;
   max?: number;
+  labelOptional?: string;
+  layout?: "horizontal" | "vertical";
 }
 
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
@@ -66,6 +68,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       nullable = false,
       isNull = false,
       maxLength: max = 0,
+      labelOptional,
       ...props
     },
     ref,
@@ -155,6 +158,9 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       },
     );
 
+    const optionalLabel = labelOptional ? ` (${labelOptional})` : "";
+    const labelWithOptional = label ? `${label}${optionalLabel}` : "";
+
     return (
       <Flex
         position="relative"
@@ -200,7 +206,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
               }}
               id={id}
               rows={max > 50 ? (typeof lines === "number" ? lines : 1) : 1}
-              placeholder={labelAsPlaceholder ? label : props.placeholder}
+              placeholder={labelAsPlaceholder ? labelWithOptional : props.placeholder}
               onFocus={handleFocus}
               onBlur={handleBlur}
               className={textareaClassNames}
@@ -224,7 +230,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
                   [styles.floating]: isFocused || isFilled,
                 })}
               >
-                {label}
+                {labelWithOptional}
               </Text>
             )}
             {children && children}
@@ -244,7 +250,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
                 </Text>
               )}
               {nullable && (
-                <Checkbox
+                <Checkbox_Chakra
                   size="xs"
                   ids={{
                     root: checkBoxId,
@@ -276,7 +282,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
                   <Text variant="body-default-xs" onBackground="neutral-weak" wrap="nowrap">
                     NULL
                   </Text>
-                </Checkbox>
+                </Checkbox_Chakra>
               )}
             </Flex>
           </Flex>
