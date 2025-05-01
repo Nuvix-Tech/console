@@ -1,39 +1,46 @@
+import { useGetTables } from "@/data/tables/tables-query";
 import { useProjectStore } from "@/lib/store";
 import { Column, ToggleButton } from "@nuvix/ui/components";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
+import { use, Suspense } from "react";
 
 export const Sidebar = () => {
-  const sdk = useProjectStore.use.sdk();
+  return (
+    <>
+      <Suspense fallback={"loading..."}>
+        <Check />
+      </Suspense>
+    </>
+  );
+};
+
+const Check = () => {
+  const { project, sdk } = useProjectStore();
   const searchParam = useSearchParams();
   const currentTable = searchParam.get("table");
   const { push } = useRouter();
 
-  async function fetcher() {
-    return await sdk.schema.getTables("public");
-  }
-
-  const { data, isPending, isError } = useQuery({
-    queryKey: ["list_tables"],
-    queryFn: fetcher,
+  const getTables = useGetTables({
+    projectRef: project?.$id,
+    sdk,
   });
+
+  const data = use(getTables());
 
   return (
     <>
       <div className="h-full w-full">
-        {isPending && <div>Loading...</div>}
-        {isError && <div>Error loading tables</div>}
         <Column gap="4" padding="12">
           {data &&
-            data.tables.length &&
-            data.tables.map((table) => (
+            data.map((table) => (
               <ToggleButton
                 fillWidth
                 justifyContent="flex-start"
                 key={table.name}
                 selected={table.name === currentTable}
                 label={table.name}
-                href={`?table=${table.name}`}
+                href={`?table=${table.id}`}
               />
             ))}
         </Column>
