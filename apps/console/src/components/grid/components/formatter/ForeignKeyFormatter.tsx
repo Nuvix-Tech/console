@@ -66,10 +66,11 @@ export const ForeignKeyFormatter = (props: Props) => {
         <Popover>
           <PopoverTrigger asChild>
             <IconButton
-              type="default"
-              className="w-6 h-6"
-              icon={<ArrowRight />}
-              onClick={(e) => e.stopPropagation()}
+              type="button"
+              size="s"
+              variant="secondary"
+              icon={<ArrowRight size={14} />}
+              onClick={(e: any) => e.stopPropagation()}
               tooltip={"View referencing record"}
             />
           </PopoverTrigger>

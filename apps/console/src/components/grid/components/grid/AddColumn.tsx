@@ -36,9 +36,10 @@ const AddColumnHeader = () => {
       <Button
         fillWidth
         variant="tertiary"
+        size="s"
         type="text"
         onClick={tableEditorSnap.onAddColumn}
-        prefixIcon={<Plus size={18} />}
+        prefixIcon={<Plus size={16} />}
       />
     </div>
   );

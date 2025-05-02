@@ -32,6 +32,15 @@ interface IGrid extends GridProps {
   onApplyFilters: (appliedFilters: any[]) => void;
 }
 
+export const gridStyles = {
+  ["--rdg-color" as any]: "var(--neutral-on-background-strong)",
+  ["--rdg-background-color" as any]: "var(--neutral-background-weak)",
+  ["--rdg-row-hover-background-color" as any]: "var(--neutral-background-medium)",
+  ["--rdg-border-color" as any]: "var(--neutral-border-medium)",
+  ["--rdg-header-background-color" as any]: "var(--neutral-background-medium)",
+  ["--rdg-row-selected-background-color" as any]: "var(--neutral-background-strong)",
+};
+
 // [Joshen] Just for visibility this is causing some hook errors in the browser
 export const Grid = memo(
   forwardRef<DataGridHandle, IGrid>(
@@ -205,14 +214,7 @@ export const Grid = memo(
             onRowsChange={onRowsChange}
             onSelectedCellChange={onSelectedCellChange}
             onSelectedRowsChange={onSelectedRowsChange}
-            style={{
-              ["--rdg-color" as any]: "var(--neutral-on-background-strong)",
-              ["--rdg-background-color" as any]: "var(--neutral-background-weak)",
-              ["--rdg-row-hover-background-color" as any]: "var(--neutral-background-medium)",
-              ["--rdg-border-color" as any]: "var(--neutral-border-medium)",
-              ["--rdg-header-background-color" as any]: "var(--neutral-background-medium)",
-              ["--rdg-row-selected-background-color" as any]: "var(--neutral-background-strong)",
-            }}
+            style={gridStyles}
             onCellDoubleClick={(props) => onRowDoubleClick(props.row, props.column)}
             onCellKeyDown={handleCopyCell}
           />

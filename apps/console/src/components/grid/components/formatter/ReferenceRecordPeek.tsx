@@ -15,6 +15,7 @@ import { cn } from "@nuvix/sui/lib/utils";
 import { Button } from "@nuvix/ui/components";
 import { PostgresTable } from "@nuvix/pg-meta";
 import { useTableRowsQuery } from "@/data/table-rows/table-rows-query";
+import { gridStyles } from "../grid/Grid";
 
 interface ReferenceRecordPeekProps {
   table: PostgresTable;
@@ -102,7 +103,7 @@ export const ReferenceRecordPeek = ({ table, column, value }: ReferenceRecordPee
         :
       </p>
       <DataGrid
-        className="h-32 rounded-b border-0"
+        className="!h-32 rounded-b border-0"
         columns={columns}
         rows={data?.rows ?? []}
         onCellDoubleClick={(_, e) => {
@@ -115,7 +116,7 @@ export const ReferenceRecordPeek = ({ table, column, value }: ReferenceRecordPee
               {isLoading && (
                 <div className="py-2">
                   {/* <ShimmeringLoader /> */}
-                  loading ######
+                  loading...
                 </div>
               )}
               {isError && (
@@ -127,6 +128,7 @@ export const ReferenceRecordPeek = ({ table, column, value }: ReferenceRecordPee
             </div>
           ),
         }}
+        style={gridStyles}
       />
       <div className="flex items-center justify-end px-2 py-1">
         {/* <EditorTablePageLink
@@ -135,7 +137,9 @@ export const ReferenceRecordPeek = ({ table, column, value }: ReferenceRecordPee
           id={String(table.id)}
           filters={[{ column, operator: "=", value: String(value) }]}
         > */}
-        <Button type="default">Open table</Button>
+        <Button type="button" size="s">
+          Open table
+        </Button>
         {/* </EditorTablePageLink> */}
       </div>
     </>

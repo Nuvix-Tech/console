@@ -11,6 +11,7 @@ import type { ColumnHeaderProps, ColumnType, DragItem, GridForeignKey } from "..
 import { ColumnMenu } from "../menu";
 import { useTableEditorTableState } from "@/lib/store/table";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
+import { getForeignKeyCascadeAction } from "@/components/editor/SidePanelEditor/ColumnEditor/ColumnEditor.utils";
 
 export function ColumnHeader<R>({
   column,
@@ -169,21 +170,21 @@ function renderColumnIcon(
             <div className="font-normal">
               <p className="text-xs text-foreground-light">Foreign key relation:</p>
               <div className="flex items-center space-x-1">
-                <p className="text-xs !text-foreground">{name}</p>
-                <ArrowRight size={14} strokeWidth={1.5} className="!text-foreground-light" />
-                <p className="text-xs !text-foreground">
+                <p className="text-xs !text-background">{name}</p>
+                <ArrowRight size={14} strokeWidth={1.5} className="!text-muted" />
+                <p className="text-xs !text-background">
                   {foreignKey?.targetTableSchema}.{foreignKey?.targetTableName}.
                   {foreignKey?.targetColumnName}
                 </p>
               </div>
               {foreignKey?.updateAction !== FOREIGN_KEY_CASCADE_ACTION.NO_ACTION && (
-                <p className="text-xs !text-foreground mt-1">
-                  {/* On update: {getForeignKeyCascadeAction(foreignKey?.updateAction)} */}
+                <p className="text-xs !text-background mt-1">
+                  On update: {getForeignKeyCascadeAction(foreignKey?.updateAction)}
                 </p>
               )}
               {foreignKey?.deletionAction !== FOREIGN_KEY_CASCADE_ACTION.NO_ACTION && (
-                <p className="text-xs !text-foreground mt-1">
-                  {/* On delete: {getForeignKeyCascadeAction(foreignKey?.deletionAction)} */}
+                <p className="text-xs !text-background mt-1">
+                  On delete: {getForeignKeyCascadeAction(foreignKey?.deletionAction)}
                 </p>
               )}
             </div>
