@@ -17,7 +17,7 @@ export interface FooterProps {
 
 const GridFooter = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="flex items-center justify-between px-4 py-1 border-t border-gray-200">
+    <div className="flex items-center justify-between px-4 py-1 min-h-10">
       {children}
     </div>
   );
@@ -58,7 +58,7 @@ const TwoOptionToggle = ({
 
 const Footer = ({ isRefetching }: FooterProps) => {
   const { params, setQueryParam } = useSearchQuery();
-  const tableId = Number(params.get("tableId"));
+  const tableId = Number(params.get("table"));
   const { sdk, project } = useProjectStore();
 
   const { data: entity } = useTableEditorQuery({
@@ -67,10 +67,10 @@ const Footer = ({ isRefetching }: FooterProps) => {
     id: tableId,
   });
 
-  const selectedView = params.get("view") || "definition";
+  const selectedView = params.get("view") || "data";
 
   const setSelectedView = (view: string) => {
-    if (view === "data") {
+    if (view) {
       setQueryParam("view", view);
     } else {
       setQueryParam("view", undefined);

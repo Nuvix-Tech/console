@@ -105,7 +105,7 @@ export const TableEditor = () => {
                 type="default"
                 className="mt-2"
                 onClick={() => {
-                  if (tabId) {
+                  if (tabId) {.js
                     handleTabClose({
                       ref: projectRef,
                       id: tabId,
@@ -162,7 +162,7 @@ export const TableEditor = () => {
           </SupabaseGrid>
 
           <SidePanelEditor
-            editable={editable}
+            editable={true}
             selectedTable={isTableLike(selectedTable) ? selectedTable : undefined}
             onTableCreated={onTableCreated}
           />

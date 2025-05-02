@@ -61,13 +61,13 @@
   @apply -translate-x-full;
 }
 
-/* .sbui-sidepanel-overlay-container {
+.sbui-sidepanel-overlay-container {
   @apply fixed inset-0 transition-opacity;
-} */
+}
 
-/* .sbui-sidepanel-overlay {
-  @apply absolute inset-0 bg-surface-100 opacity-75;
-} */
+.sbui-sidepanel-overlay {
+  @apply absolute inset-0 bg-slate-700/20 opacity-75;
+}
 
 .sbui-sidepanel--left {
   @apply left-0 pr-10;
@@ -85,21 +85,21 @@
   @apply w-screen max-w-2xl h-full;
 }
 
-/* .sbui-sidepanel-fixed {
+.sbui-sidepanel-fixed {
   @apply fixed inset-0 overflow-hidden;
-} */
+}
 
-/* .sbui-sidepanel-absolute {
+.sbui-sidepanel-absolute {
   @apply absolute inset-0 overflow-hidden;
-} */
+}
 
-/* .sbui-sidepanel-container {
+.sbui-sidepanel-container {
   @apply absolute inset-y-0 max-w-full flex h-screen;
-} */
+}
 
-/* .sbui-sidepanel {
-  @apply h-full flex flex-col bg-white dark:bg-dark-700 shadow-xl;
-} */
+.sbui-sidepanel {
+  @apply h-full flex flex-col bg-background shadow-xl;
+}
 
 .sbui-sidepanel-header {
   @apply space-y-1 py-6 px-4 bg-background sm:px-6;
@@ -120,9 +120,9 @@
   @apply hover:bg-transparent;
 }
 
-/* .sbui-sidepanel-content {
+.sbui-sidepanel-content {
   @apply relative flex-1 px-4 sm:px-6;
-} */
+}
 
 .sbui-sidepanel-footer-container {
   @apply p-4 bg-background;

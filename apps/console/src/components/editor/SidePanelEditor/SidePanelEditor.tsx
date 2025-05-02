@@ -76,7 +76,7 @@ const SidePanelEditor = ({
   const snap = useTableEditorStore();
   // const isTableEditorTabsEnabled = useIsTableEditorTabsEnabled();
   // const [_, setParams] = useUrlState({ arrayKeys: ["filter", "sort"] });
-
+  console.log(snap, "<----- SNAP ----! \n\n\n")
   const queryClient = useQueryClient();
   const { project, sdk } = useProjectStore();
 
@@ -109,7 +109,7 @@ const SidePanelEditor = ({
   });
   const { mutateAsync: createPublication } = useDatabasePublicationCreateMutation();
   const { mutateAsync: updatePublication } = useDatabasePublicationUpdateMutation({
-    onError: () => {},
+    onError: () => { },
   });
 
   const getImpersonatedRoleState = () => false; //useGetImpersonatedRoleState();
@@ -200,7 +200,7 @@ const SidePanelEditor = ({
 
     if (payload !== undefined && configuration !== undefined) {
       try {
-        await saveRow(payload, isNewRecord, configuration, () => {});
+        await saveRow(payload, isNewRecord, configuration, () => { });
       } catch (error) {
         // [Joshen] No error handler required as error is handled within saveRow
       } finally {
@@ -225,8 +225,8 @@ const SidePanelEditor = ({
       const isNewRecord = false;
       const configuration = { identifiers, rowIdx: row.idx };
 
-      saveRow(value, isNewRecord, configuration, () => {});
-    } catch (error) {}
+      saveRow(value, isNewRecord, configuration, () => { });
+    } catch (error) { }
   };
 
   const saveColumn = async (
@@ -250,23 +250,23 @@ const SidePanelEditor = ({
 
     const response: any = isNewRecord
       ? await createColumn({
-          projectRef: project?.$id!,
-          sdk,
-          payload: payload as CreateColumnPayload,
-          selectedTable,
-          primaryKey,
-          foreignKeyRelations,
-        })
+        projectRef: project?.$id!,
+        sdk,
+        payload: payload as CreateColumnPayload,
+        selectedTable,
+        primaryKey,
+        foreignKeyRelations,
+      })
       : await updateColumn({
-          projectRef: project?.$id!,
-          sdk,
-          id: columnId as string,
-          payload: payload as UpdateColumnPayload,
-          selectedTable,
-          primaryKey,
-          foreignKeyRelations,
-          existingForeignKeyRelations,
-        });
+        projectRef: project?.$id!,
+        sdk,
+        id: columnId as string,
+        payload: payload as UpdateColumnPayload,
+        selectedTable,
+        primaryKey,
+        foreignKeyRelations,
+        existingForeignKeyRelations,
+      });
 
     if (response?.error) {
       toast.error(response.error.message);
@@ -360,8 +360,8 @@ const SidePanelEditor = ({
         const realtimeTables = enabled
           ? publicTables.map((t: any) => `${t.schema}.${t.name}`)
           : publicTables
-              .filter((t: any) => t.id !== table.id)
-              .map((t: any) => `${t.schema}.${t.name}`);
+            .filter((t: any) => t.id !== table.id)
+            .map((t: any) => `${t.schema}.${t.name}`);
         await updatePublication({
           id,
           projectRef: project.$id,
@@ -373,14 +373,14 @@ const SidePanelEditor = ({
         const realtimeTables =
           isAlreadyEnabled && !enabled
             ? // Toggle realtime off
-              publicationTables
-                .filter((t: any) => t.id !== table.id)
-                .map((t: any) => `${t.schema}.${t.name}`)
+            publicationTables
+              .filter((t: any) => t.id !== table.id)
+              .map((t: any) => `${t.schema}.${t.name}`)
             : !isAlreadyEnabled && enabled
               ? // Toggle realtime on
-                [`${table.schema}.${table.name}`].concat(
-                  publicationTables.map((t: any) => `${t.schema}.${t.name}`),
-                )
+              [`${table.schema}.${table.name}`].concat(
+                publicationTables.map((t: any) => `${t.schema}.${t.name}`),
+              )
               : null;
         if (realtimeTables === null) return;
         await updatePublication({
@@ -608,7 +608,7 @@ const SidePanelEditor = ({
       snap.closeSidePanel();
     }
   };
-
+  console.log(snap.sidePanel?.type, "THE TYPE!!", isUndefined(selectedTable))
   return (
     <>
       {!isUndefined(selectedTable) && (
@@ -624,7 +624,7 @@ const SidePanelEditor = ({
       )}
       {!isUndefined(selectedTable) && (
         <ColumnEditor
-          column={snap.sidePanel?.type === "column" ? snap.sidePanel.column : undefined}
+          column={snap.sidePanel?.type === "column" ? snap.sidePanel.column as any : undefined}
           selectedTable={selectedTable}
           visible={snap.sidePanel?.type === "column"}
           closePanel={onClosePanel}
@@ -635,7 +635,7 @@ const SidePanelEditor = ({
       <TableEditor
         table={
           snap.sidePanel?.type === "table" &&
-          (snap.sidePanel.mode === "edit" || snap.sidePanel.mode === "duplicate")
+            (snap.sidePanel.mode === "edit" || snap.sidePanel.mode === "duplicate")
             ? selectedTable
             : undefined
         }

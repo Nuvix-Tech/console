@@ -11,14 +11,14 @@ export type SidePanelProps = RadixProps & CustomProps;
 
 interface RadixProps
   extends Dialog.DialogProps,
-    Pick<
-      Dialog.DialogContentProps,
-      | "onOpenAutoFocus"
-      | "onCloseAutoFocus"
-      | "onEscapeKeyDown"
-      | "onPointerDownOutside"
-      | "onInteractOutside"
-    > {}
+  Pick<
+    Dialog.DialogContentProps,
+    | "onOpenAutoFocus"
+    | "onCloseAutoFocus"
+    | "onEscapeKeyDown"
+    | "onPointerDownOutside"
+    | "onInteractOutside"
+  > { }
 
 interface CustomProps {
   id?: String | undefined;
@@ -62,6 +62,7 @@ const SidePanel = ({
   tooltip,
   ...props
 }: SidePanelProps) => {
+  console.log(visible, "YES IT IS?")
   const footerContent = customFooter ? (
     customFooter
   ) : (
