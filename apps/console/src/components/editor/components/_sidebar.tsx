@@ -39,7 +39,7 @@ const Check = () => {
 
   return (
     <>
-      <div className="h-full w-full">
+      <div className="h-full w-full overflow-x-auto">
         <Column gap="4" padding="12">
           {data &&
             data.map((table: any) => (

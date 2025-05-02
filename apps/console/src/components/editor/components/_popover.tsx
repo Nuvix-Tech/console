@@ -4,6 +4,7 @@ import type * as RadixPopoverTypes from "@radix-ui/react-popover";
 import * as RadixPopover from "@radix-ui/react-popover";
 import * as React from "react";
 import { X } from "lucide-react";
+import { cn } from "@nuvix/sui/lib/utils";
 
 interface RootProps {
   align?: RadixPopoverTypes.PopoverContentProps["align"];
@@ -27,9 +28,6 @@ interface RootProps {
   "data-testid"?: string;
 }
 
-/**
- * @deprecated Use ./Popover_shadcn_ instead
- */
 function Popover({
   align = "center",
   ariaLabel,
@@ -63,7 +61,6 @@ function Popover({
       open={open}
     >
       <RadixPopover.Trigger
-        // className={DropdownStyles['sbui-popover__trigger']}
         disabled={disabled}
         className={styles.trigger}
         aria-label={ariaLabel}
@@ -77,14 +74,11 @@ function Popover({
           sideOffset={sideOffset}
           side={side}
           align={align}
-          className={classes.join(" ")}
+          className={cn(classes.join(" "), styles["content"])}
           style={style}
         >
           {arrow && (
-            <RadixPopover.Arrow
-              // className={DropdownStyles['sbui-popover__arrow']}
-              offset={10}
-            ></RadixPopover.Arrow>
+            <RadixPopover.Arrow className={styles["arrow"]} offset={10}></RadixPopover.Arrow>
           )}
           {header && <div className={styles.header}>{header}</div>}
           {overlay}
@@ -95,9 +89,6 @@ function Popover({
   );
 }
 
-/**
- * @deprecated Use ./Popover_shadcn_ instead
- */
 function Close() {
   return (
     <RadixPopover.Close className={styles.close}>
@@ -106,9 +97,6 @@ function Close() {
   );
 }
 
-/**
- * @deprecated Use ./PopoverSeparator_Shadcn_ instead
- */
 function Separator() {
   return <div className={styles.separator}></div>;
 }

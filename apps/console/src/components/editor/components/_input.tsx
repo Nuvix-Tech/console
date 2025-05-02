@@ -116,26 +116,26 @@ const Input = forwardRef<
 
 export { Input };
 
-// export interface TextAreaProps
-//   extends Omit<React.InputHTMLAttributes<HTMLTextAreaElement>, 'size' | 'onCopy'> {
-//   textAreaClassName?: string
-//   descriptionText?: string | React.ReactNode | undefined
-//   error?: string
-//   icon?: any
-//   label?: string | React.ReactNode
-//   afterLabel?: string
-//   beforeLabel?: string
-//   labelOptional?: string | React.ReactNode
-//   layout?: 'horizontal' | 'vertical'
-//   rows?: number
-//   limit?: number
-//   size?: 'tiny' | 'small' | 'medium' | 'large' | 'xlarge'
-//   borderless?: boolean
-//   validation?: (x: any) => void
-//   copy?: boolean
-//   onCopy?: () => void
-//   actions?: React.ReactNode
-// }
+export interface TextAreaProps
+  extends Omit<React.InputHTMLAttributes<HTMLTextAreaElement>, "size" | "onCopy"> {
+  textAreaClassName?: string;
+  descriptionText?: string | React.ReactNode | undefined;
+  error?: string;
+  icon?: any;
+  label?: string | React.ReactNode;
+  afterLabel?: string;
+  beforeLabel?: string;
+  labelOptional?: string | React.ReactNode;
+  layout?: "horizontal" | "vertical";
+  rows?: number;
+  limit?: number;
+  size?: "tiny" | "small" | "medium" | "large" | "xlarge";
+  borderless?: boolean;
+  validation?: (x: any) => void;
+  copy?: boolean;
+  onCopy?: () => void;
+  actions?: React.ReactNode;
+}
 
 // function TextArea({
 //   className,

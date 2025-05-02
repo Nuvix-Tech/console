@@ -11,7 +11,7 @@ import { isTableLike } from "@/data/table-editor/table-editor-types";
 import { useGetCellValueMutation } from "@/data/table-rows/get-cell-value-mutation";
 // import { useSelectedProject } from "hooks/misc/useSelectedProject";
 import { useTableEditorTableState } from "@/lib/store/table";
-import { Button, useToast } from "@nuvix/ui/components";
+import { Button, IconButton, useToast } from "@nuvix/ui/components";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import { cn } from "@nuvix/sui/lib/utils";
 // import ConfirmationModal from "ui-patterns/Dialogs/ConfirmationModal";
@@ -171,11 +171,12 @@ export const TextEditor = <TRow, TSummaryRow = unknown>({
                   <div className="flex flex-col items-end gap-y-1">
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <Button
-                          type="default"
-                          className="px-1"
+                        <IconButton
+                          type="button"
+                          variant="secondary"
+                          size="s"
                           onClick={() => onSelectExpand()}
-                          suffixIcon={<Maximize size={12} strokeWidth={2} />}
+                          icon={<Maximize size={12} strokeWidth={2} />}
                         />
                       </TooltipTrigger>
                       <TooltipContent side="bottom">Expand editor</TooltipContent>
@@ -183,8 +184,8 @@ export const TextEditor = <TRow, TSummaryRow = unknown>({
                     {isNullable && (
                       <Button
                         size="s"
-                        type="default"
-                        // htmlType="button"
+                        type="button"
+                        variant="secondary"
                         onClick={() => setIsConfirmNextModalOpen(true)}
                       >
                         Set to NULL

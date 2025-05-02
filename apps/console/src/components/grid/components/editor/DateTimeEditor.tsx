@@ -7,7 +7,7 @@ import { BlockKeys } from "../common/BlockKeys";
 import { Input } from "@/components/editor/components";
 import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/popover";
 import { cn } from "@nuvix/sui/lib/utils";
-import { Button } from "@nuvix/ui/components";
+import { Button, IconButton } from "@nuvix/ui/components";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -122,13 +122,13 @@ function BaseEditor<TRow, TSummaryRow = unknown>({
         <div className="px-3 pt-1 pb-2 flex justify-between gap-x-1">
           <div className="space-y-1">
             <div className="flex items-center space-x-2">
-              <div className="px-1.5 h-[22px] rounded bg-surface-300 border border-strong flex items-center justify-center">
+              <div className="px-1.5 h-[22px] rounded bg-muted border border-secondary flex items-center justify-center">
                 <span className="text-[10px]">⏎</span>
               </div>
               <p className="text-xs text-foreground-light">Save changes</p>
             </div>
             <div className="flex items-center space-x-2">
-              <div className="px-1 h-[22px] rounded bg-surface-300 border border-strong flex items-center justify-center">
+              <div className="px-1 h-[22px] rounded bg-muted border border-secondary flex items-center justify-center">
                 <span className="text-[10px]">Esc</span>
               </div>
               <p className="text-xs text-foreground-light">Cancel changes</p>
@@ -137,15 +137,22 @@ function BaseEditor<TRow, TSummaryRow = unknown>({
           <div className="flex">
             {isNullable ? (
               <>
-                <Button type="default" className="rounded-r-none" onClick={() => saveChanges(null)}>
+                <Button
+                  size="s"
+                  variant="secondary"
+                  type="button"
+                  className="!rounded-r-none"
+                  onClick={() => saveChanges(null)}
+                >
                   Set NULL
                 </Button>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button
-                      type="default"
-                      suffixIcon={<ChevronDown />}
-                      className="px-1 rounded-l-none border-l-0"
+                    <IconButton
+                      type="button"
+                      variant="secondary"
+                      icon={<ChevronDown size={18} />}
+                      className="!rounded-l-none !border-l-0"
                     />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-20" align="end">
@@ -154,7 +161,7 @@ function BaseEditor<TRow, TSummaryRow = unknown>({
                 </DropdownMenu>
               </>
             ) : (
-              <Button type="default" onClick={setToNow}>
+              <Button type="button" size="s" variant="secondary" onClick={setToNow}>
                 Set to NOW
               </Button>
             )}
