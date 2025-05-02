@@ -91,7 +91,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-      if (_null) {
+      if (_null && nullable) {
         setNull(false);
         setPrev(undefined);
       }

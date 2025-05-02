@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@nuvix/sui/components/dropdown-menu";
 import { getColumnType } from "./DateTimeInput.utils";
-import { Button, Input } from "@nuvix/ui/components";
+import { Button, IconButton, Input } from "@nuvix/ui/components";
 import { cn } from "@nuvix/sui/lib/utils";
 
 interface DateTimeInputProps {
@@ -53,7 +53,7 @@ const DateTimeInput = ({
       }
       labelOptional={format}
       // size="small"
-      height="s"
+      // height="s"
       labelAsPlaceholder
       value={value}
       type={inputType}
@@ -62,7 +62,7 @@ const DateTimeInput = ({
         !disabled && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button type="default" prefixIcon={<Edit />} className="px-1.5" />
+              <IconButton size="s" type="default" icon={<Edit size={14} />} variant="secondary" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-28 pointer-events-auto">
               {isNullable && (

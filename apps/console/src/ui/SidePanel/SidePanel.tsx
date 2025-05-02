@@ -1,6 +1,16 @@
 "use client";
 
 import * as Dialog from "@radix-ui/react-dialog";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@nuvix/sui/components/sheet";
 import React from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import { Button } from "@nuvix/ui/components";
@@ -11,19 +21,19 @@ export type SidePanelProps = RadixProps & CustomProps;
 
 interface RadixProps
   extends Dialog.DialogProps,
-  Pick<
-    Dialog.DialogContentProps,
-    | "onOpenAutoFocus"
-    | "onCloseAutoFocus"
-    | "onEscapeKeyDown"
-    | "onPointerDownOutside"
-    | "onInteractOutside"
-  > { }
+    Pick<
+      Dialog.DialogContentProps,
+      | "onOpenAutoFocus"
+      | "onCloseAutoFocus"
+      | "onEscapeKeyDown"
+      | "onPointerDownOutside"
+      | "onInteractOutside"
+    > {}
 
 interface CustomProps {
   id?: String | undefined;
   disabled?: boolean;
-  className?: String;
+  className?: string;
   children?: React.ReactNode;
   header?: string | React.ReactNode;
   visible: boolean;
@@ -62,11 +72,10 @@ const SidePanel = ({
   tooltip,
   ...props
 }: SidePanelProps) => {
-  console.log(visible, "YES IT IS?")
   const footerContent = customFooter ? (
     customFooter
   ) : (
-    <div className={styles["sbui-sidepanel-footer"]}>
+    <SheetFooter>
       <div>
         <Button
           disabled={loading}
@@ -93,7 +102,7 @@ const SidePanel = ({
           {tooltip !== undefined && <TooltipContent side="bottom">{tooltip}</TooltipContent>}
         </Tooltip>
       )}
-    </div>
+    </SheetFooter>
   );
 
   function handleOpenChange(open: boolean) {
@@ -109,44 +118,59 @@ const SidePanel = ({
   open = open || visible;
 
   return (
-    <Dialog.Root open={open} onOpenChange={handleOpenChange} defaultOpen={defaultOpen}>
+    <Sheet open={open} onOpenChange={handleOpenChange} defaultOpen={defaultOpen}>
       {triggerElement && (
-        <Dialog.Trigger asChild className={styles["sbui-sidepanel__trigger"]}>
+        <SheetTrigger asChild className={styles["sbui-sidepanel__trigger"]}>
           {triggerElement}
-        </Dialog.Trigger>
+        </SheetTrigger>
       )}
 
-      <Dialog.Portal>
-        <Dialog.Overlay className={styles["sbui-sidepanel-overlay"]} />
-        <Dialog.Content
-          className={classNames(
-            styles["sbui-sidepanel"],
-            styles[`sbui-sidepanel--${size}`],
-            styles[`sbui-sidepanel--${align}`],
-            className,
-          )}
-          onOpenAutoFocus={props.onOpenAutoFocus}
-          onCloseAutoFocus={props.onCloseAutoFocus}
-          onEscapeKeyDown={props.onEscapeKeyDown}
-          onPointerDownOutside={props.onPointerDownOutside}
-          onInteractOutside={(event) => {
-            const isToast = (event.target as Element)?.closest("#toast");
-            if (isToast) event.preventDefault();
-            if (props.onInteractOutside) props.onInteractOutside(event);
-          }}
-        >
-          {header && <header className={styles["sbui-sidepanel-header"]}>{header}</header>}
-          <div className={styles["sbui-sidepanel-content"]}>{children}</div>
-          {!hideFooter && footerContent}
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+      <SheetContent
+        className={classNames(
+          getSize(size),
+          className,
+          "sm:max-w-[inherit] h-full overflow-y-auto",
+        )}
+        onOpenAutoFocus={props.onOpenAutoFocus}
+        onCloseAutoFocus={props.onCloseAutoFocus}
+        onEscapeKeyDown={props.onEscapeKeyDown}
+        onPointerDownOutside={props.onPointerDownOutside}
+        onInteractOutside={(event) => {
+          const isToast = (event.target as Element)?.closest("#toast");
+          if (isToast) event.preventDefault();
+          if (props.onInteractOutside) props.onInteractOutside(event);
+        }}
+      >
+        {header && <SheetHeader>{header}</SheetHeader>}
+        <div>{children}</div>
+        {!hideFooter && footerContent}
+      </SheetContent>
+    </Sheet>
   );
 };
 
 export function Separator() {
   return <div className={styles["sbui-sidepanel-separator"]}></div>;
 }
+
+const getSize = (size: CustomProps["size"]) => {
+  switch (size) {
+    case "medium":
+      return "sm:w-md";
+    case "large":
+      return "sm:w-lg";
+    case "xlarge":
+      return "sm:w-xl";
+    case "xxlarge":
+      return "sm:w-2xl";
+    case "xxxlarge":
+      return "sm:w-3xl";
+    case "xxxxlarge":
+      return "sm:w-4xl";
+    default:
+      return "";
+  }
+};
 
 export function Content({
   children,

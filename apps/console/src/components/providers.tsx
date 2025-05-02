@@ -2,6 +2,7 @@
 
 import { Provider } from "./cui/provider";
 import { AppProgressProvider as ProgressProvider } from "@bprogress/next";
+import { loader } from "@monaco-editor/react";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (

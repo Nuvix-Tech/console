@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@nuvix/sui/components";
-import { Button, Input, Select as Select_UI } from "@nuvix/ui/components";
+import { Button, IconButton, Input, Select as Select_UI } from "@nuvix/ui/components";
 // import { FormItemLayout } from "ui-patterns/form/FormItemLayout/FormItemLayout";
 import { DATETIME_TYPES, JSON_TYPES, TEXT_TYPES } from "../SidePanelEditor.constants";
 import { DateTimeInput } from "./DateTimeInput";
@@ -47,11 +47,11 @@ const InputField = ({
         <div className="text-area-text-sm">
           <Textarea
             data-testid={`${field.name}-input`}
-            // layout="horizontal"
+            layout="horizontal"
             label={field.name}
             className="text-sm"
             description={field.comment}
-            // labelOptional={field.format}
+            labelOptional={field.format}
             disabled={!isEditable}
             error={!!errors[field.name]}
             errorMessage={errors[field.name]}
@@ -80,7 +80,7 @@ const InputField = ({
           disabled={!isEditable}
           error={!!errors[field.name]}
           errorMessage={errors[field.name]}
-          onChange={(event: any) => onUpdateField({ [field.name]: event.target.value })}
+          onSelect={(value) => onUpdateField({ [field.name]: value })}
           options={[
             { value: "", label: "---" },
             ...field.enums.map((value: string) => ({ value, label: value })),
@@ -121,7 +121,7 @@ const InputField = ({
           isEditable && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button type="default" prefixIcon={<Edit />} className="px-1.5" />
+                <IconButton size="s" type="default" icon={<Edit size={14} />} variant="secondary" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-28">
                 {field.isNullable && (
@@ -148,6 +148,7 @@ const InputField = ({
           layout="horizontal"
           label={field.name}
           className="text-sm"
+          resize="none"
           description={
             <>
               {field.comment && <p>{field.comment}</p>}
@@ -177,7 +178,7 @@ const InputField = ({
           hasSuffix={
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button type="default" prefixIcon={<Edit />} className="px-1.5" />
+                <IconButton size="s" variant="secondary" type="default" icon={<Edit size={14} />} />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-28">
                 {isEditable && (
@@ -227,8 +228,10 @@ const InputField = ({
         hasSuffix={
           <Button
             type="button"
+            size="s"
+            variant="secondary"
             onClick={() => onEditJson({ column: field.name, value: field.value })}
-            prefixIcon={isEditable ? <Edit2 /> : <Eye />}
+            prefixIcon={isEditable ? <Edit2 size={14} /> : <Eye size={14} />}
           >
             {isEditable ? "Edit JSON" : "View JSON"}
           </Button>
@@ -274,24 +277,17 @@ const InputField = ({
       //   description={field.comment}
       //   className="[&>div:first-child>span]:text-foreground-lighter"
       // >
-      <Select
+      <Select_UI
+        // size="md"
+        // layout="horizontal"
         value={defaultValue === null ? "null" : defaultValue}
-        onValueChange={(value: string) => onUpdateField({ [field.name]: value })}
+        label={field.name}
+        labelOptional={field.format}
+        description={field.comment}
         disabled={!isEditable}
-      >
-        <SelectTrigger>
-          <SelectValue placeholder="Select a value" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            {options.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+        onSelect={(value) => onUpdateField({ [field.name]: value })}
+        options={[...options.map((option) => ({ value: option.value, label: option.value }))]}
+      />
       // </FormItemLayout>
     );
   }

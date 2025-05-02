@@ -1,18 +1,6 @@
 "use client";
 
 import { MouseEventHandler, forwardRef, useEffect, useState } from "react";
-// import {
-//   Alert_Shadcn_,
-//   Button,
-//   Dialog,
-//   DialogContent,
-//   DialogSection,
-//   DialogSectionSeparator,
-//   DialogTitle,
-//   cn,
-// } from 'ui'
-// import { DialogDescription, DialogHeader } from 'ui/src/components/shadcn/ui/dialog'
-// import { Admonition } from './../admonition'
 import { Alert, AlertDescription, AlertTitle } from "@nuvix/sui/components/alert";
 import {
   Dialog,
@@ -93,7 +81,7 @@ const ConfirmationModal = forwardRef<
         }}
       >
         <DialogContent ref={ref} className="p-0 gap-0 pb-5 !block">
-          <DialogHeader className={cn("border-b")}>
+          <DialogHeader className={cn("border-b px-4 py-2")}>
             <DialogTitle>{title}</DialogTitle>
             {description && <DialogDescription>{description}</DialogDescription>}
           </DialogHeader>
@@ -111,12 +99,18 @@ const ConfirmationModal = forwardRef<
             <>
               {/* <DialogSection padding={'small'}>{children}</DialogSection>
                             <DialogSectionSeparator /> */}
-              <div className="px-5 pt-5">{children}</div>
+              <div className="px-5 py-5">{children}</div>
               <Separator />
             </>
           )}
-          <div className="flex gap-2 px-5 pt-5">
-            <Button size="sm" type="button" disabled={loading} onClick={() => onCancel()}>
+          <div className="flex gap-2 px-5 pt-5 justify-end">
+            <Button
+              size="sm"
+              type="button"
+              variant="secondary"
+              disabled={loading}
+              onClick={() => onCancel()}
+            >
               {cancelLabel}
             </Button>
 
