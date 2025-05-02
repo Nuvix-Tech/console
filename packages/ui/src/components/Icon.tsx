@@ -10,7 +10,7 @@ import type { ColorScheme, ColorWeight } from "../types";
 import styles from "./Icon.module.scss";
 import iconStyles from "./IconButton.module.scss";
 
-interface IconProps extends React.ComponentProps<typeof Flex> {
+export interface IconProps extends React.ComponentProps<typeof Flex> {
   /**
    * The name of the icon to be rendered. It can be a string representing the icon name or a JSX Element from `react-icons` or ReactNode
    */

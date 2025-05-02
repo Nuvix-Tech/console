@@ -31,6 +31,7 @@ const SortPopover = ({ sorts, portal = true, onApplySorts }: SortPopoverProps) =
       <PopoverTrigger asChild>
         <Button
           size="s"
+          variant="tertiary"
           type={(sorts || []).length > 0 ? "link" : "text"}
           prefixIcon={<List size={18} />}
         >
@@ -138,7 +139,7 @@ const SortOverlay = ({ sorts: sortsFromUrl, onApplySorts }: SortOverlayProps) =>
             align="start"
           >
             <Button
-              // asChild
+              asChild
               size="s"
               variant="tertiary"
               type="text"

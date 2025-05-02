@@ -14,7 +14,7 @@ export default async function ({
     <>
       <ProjectWrapper id={id}>
         <Column className="project-main" vertical="space-between">
-          <Column className="!min-h-[calc(100svh-64px)]">{children}</Column>
+          <Column className="">{children}</Column>
           {/* <Footer /> */}
         </Column>
       </ProjectWrapper>

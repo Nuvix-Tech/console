@@ -23,6 +23,7 @@ const RefreshButton = ({ tableId, isRefetching }: RefreshButtonProps) => {
     <Button
       type="text"
       size="s"
+      variant="secondary"
       loading={isRefetching}
       prefixIcon={<RefreshCw className="text-foreground-muted" strokeWidth={1.5} size={18} />}
       onClick={() => onClick()}

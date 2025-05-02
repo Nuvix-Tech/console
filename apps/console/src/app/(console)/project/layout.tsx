@@ -12,7 +12,7 @@ export default function ({ children }: { children: React.ReactNode }) {
       <ProjectLayout>
         <ProjectHeader />
         <Stack
-          height={"calc(100% - 64px)"}
+          minHeight={"calc(100% - 90px)"}
           top={{ base: "64px", lg: 0 }}
           overflowY="auto"
           direction="column"

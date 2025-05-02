@@ -31,8 +31,9 @@ const FilterPopover = ({ filters, portal = true, onApplyFilters }: FilterPopover
       <PopoverTrigger asChild>
         <Button
           size="s"
+          variant="tertiary"
           type={(filters || []).length > 0 ? "link" : "text"}
-          prefixIcon={<FilterIcon size={18} />}
+          prefixIcon={<FilterIcon size={16} />}
         >
           {btnText}
         </Button>

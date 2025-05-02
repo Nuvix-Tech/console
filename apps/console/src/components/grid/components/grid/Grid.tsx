@@ -207,8 +207,11 @@ export const Grid = memo(
             onSelectedRowsChange={onSelectedRowsChange}
             style={{
               ["--rdg-color" as any]: "var(--neutral-on-background-strong)",
-              ["--rdg-background-color" as any]: "transparent",
-              ["--rdg-row-hover-background-color" as any]: "var(--accent-border-strong)",
+              ["--rdg-background-color" as any]: "var(--neutral-background-weak)",
+              ["--rdg-row-hover-background-color" as any]: "var(--neutral-background-medium)",
+              ["--rdg-border-color" as any]: "var(--neutral-border-medium)",
+              ["--rdg-header-background-color" as any]: "var(--neutral-background-medium)",
+              ["--rdg-row-selected-background-color" as any]: "var(--neutral-background-strong)",
             }}
             onCellDoubleClick={(props) => onRowDoubleClick(props.row, props.column)}
             onCellKeyDown={handleCopyCell}

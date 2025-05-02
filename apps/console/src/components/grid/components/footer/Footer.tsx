@@ -16,7 +16,7 @@ export interface FooterProps {
 }
 
 const GridFooter = ({ children }: { children: React.ReactNode }) => {
-  return <div className="flex items-center justify-between px-4 py-1 min-h-10">{children}</div>;
+  return <div className="flex items-center justify-between px-4 py-2 min-h-10">{children}</div>;
 };
 
 const TwoOptionToggle = ({
@@ -38,7 +38,7 @@ const TwoOptionToggle = ({
         <button
           key={option}
           className={`
-            relative z-10 w-${width} px-4 py-2 text-sm font-medium
+            relative z-10 w-${width} px-4 py-1.5 text-sm font-medium
             ${activeOption === option ? "text-slate-800" : "text-gray-500 hover:bg-gray-100"}`}
           onClick={() => onClickOption(option)}
         >

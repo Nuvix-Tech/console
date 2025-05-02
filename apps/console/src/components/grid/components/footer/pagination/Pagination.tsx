@@ -154,13 +154,12 @@ const Pagination = () => {
             <IconButton
               icon={<ArrowLeft size={18} />}
               variant="ghost"
-              className="px-1.5"
               disabled={page <= 1 || isLoading}
               onClick={onPreviousPage}
             />
             <p className="text-xs neutral-on-background-medium">Page</p>
             <Input
-              className="w-12"
+              className="w-12 h-8"
               min={1}
               max={maxPages}
               value={value}
@@ -184,7 +183,6 @@ const Pagination = () => {
               icon={<ArrowRight size={18} />}
               type="outline"
               variant="ghost"
-              className="px-1.5"
               disabled={page >= maxPages || isLoading}
               onClick={onNextPage}
             />
@@ -210,13 +208,11 @@ const Pagination = () => {
             {data?.is_estimate && (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button
+                  <IconButton
                     size="s"
-                    variant="tertiary"
+                    variant="ghost"
                     type="text"
-                    className="px-1.5"
-                    loading={isFetching}
-                    prefixIcon={<HelpCircle size={18} />}
+                    icon={isFetching ? "refresh" : "helpCircle"}
                     onClick={() => {
                       // Show warning if either NOT a table entity, or table rows estimate is beyond threshold
                       if (rowsCountEstimate === null || data.count > THRESHOLD_COUNT) {

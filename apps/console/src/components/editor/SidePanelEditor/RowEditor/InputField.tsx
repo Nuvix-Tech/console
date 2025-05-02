@@ -148,7 +148,7 @@ const InputField = ({
           layout="horizontal"
           label={field.name}
           className="text-sm"
-          resize="none"
+          resize="vertical"
           description={
             <>
               {field.comment && <p>{field.comment}</p>}

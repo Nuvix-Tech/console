@@ -3,13 +3,13 @@
 import classNames from "classnames";
 import type React from "react";
 import { type ReactNode, forwardRef, useEffect, useState } from "react";
-import { Flex, Icon, Tooltip } from ".";
+import { Flex, Icon, IconProps, Tooltip } from ".";
 import buttonStyles from "./Button.module.scss";
 import { ElementType } from "./ElementType";
 import iconStyles from "./IconButton.module.scss";
 
 interface CommonProps {
-  icon?: React.ReactNode;
+  icon?: IconProps["name"];
   id?: string;
   size?: "s" | "m" | "l";
   radius?:

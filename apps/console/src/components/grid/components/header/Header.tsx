@@ -175,9 +175,9 @@ const DefaultHeader = () => {
                 <DropdownMenuTrigger asChild>
                   <Button
                     data-testid="table-editor-insert-new-row"
-                    variant="primary"
+                    variant="secondary"
                     size="s"
-                    prefixIcon={<ChevronDown strokeWidth={1.5} />}
+                    prefixIcon={<ChevronDown size={18} strokeWidth={1.5} />}
                   >
                     Insert
                   </Button>
@@ -522,6 +522,7 @@ const RowHeader = ({ sorts, filters }: RowHeaderProps) => {
         <Button
           type="default"
           size="s"
+          variant="secondary"
           prefixIcon={<Trash size={18} />}
           onClick={onRowsDelete}
           disabled={snap.allRowsSelected && isImpersonatingRole}
@@ -562,7 +563,7 @@ const RowHeader = ({ sorts, filters }: RowHeaderProps) => {
           <div className="h-6 ml-0.5">
             <Separator orientation="vertical" />
           </div>
-          <Button type="text" onClick={() => onSelectAllRows()}>
+          <Button size="s" variant="secondary" type="text" onClick={() => onSelectAllRows()}>
             Select all rows in table
           </Button>
         </>

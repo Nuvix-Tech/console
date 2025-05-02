@@ -14,5 +14,5 @@ export const TableEditorLayout = ({ children }: { children: React.ReactNode }) =
     });
   }, []);
 
-  return children;
+  return <div className="h-[calc(100svh-90px)]">{children}</div>;
 };

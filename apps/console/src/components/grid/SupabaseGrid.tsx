@@ -121,7 +121,7 @@ export const SupabaseGrid = ({
 
   return (
     <DndProvider backend={HTML5Backend} context={window}>
-      <Column background="surface" fill className="!max-h-[calc(100svh-84px)]" radius="l">
+      <Column background="neutral-weak" fill radius="l">
         <Header sorts={sorts} filters={filters} customHeader={customHeader} />
 
         {children || (

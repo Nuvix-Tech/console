@@ -142,7 +142,7 @@ const SidePanel = ({
         }}
       >
         {header && <SheetHeader>{header}</SheetHeader>}
-        <div>{children}</div>
+        <div className="size-full">{children}</div>
         {!hideFooter && footerContent}
       </SheetContent>
     </Sheet>
@@ -150,7 +150,7 @@ const SidePanel = ({
 };
 
 export function Separator() {
-  return <div className={styles["sbui-sidepanel-separator"]}></div>;
+  return <div className={"h-px w-full bg-[var(--neutral-border-medium)]"}></div>;
 }
 
 const getSize = (size: CustomProps["size"]) => {

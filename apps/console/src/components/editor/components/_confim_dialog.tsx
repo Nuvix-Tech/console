@@ -81,7 +81,7 @@ const ConfirmationModal = forwardRef<
         }}
       >
         <DialogContent ref={ref} className="p-0 gap-0 pb-5 !block">
-          <DialogHeader className={cn("border-b px-4 py-2")}>
+          <DialogHeader className={cn("border-b px-4 py-5")}>
             <DialogTitle>{title}</DialogTitle>
             {description && <DialogDescription>{description}</DialogDescription>}
           </DialogHeader>
