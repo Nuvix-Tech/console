@@ -10,7 +10,6 @@ import { MonacoEditor } from "../common/MonacoEditor";
 import { NullValue } from "../common/NullValue";
 import { TruncatedWarningOverlay } from "./TruncatedWarningOverlay";
 import { useProjectStore } from "@/lib/store";
-import { useTableEditorStore } from "@/lib/store/table-editor";
 import { useSearchParams } from "next/navigation";
 import { useToast } from "@nuvix/ui/components";
 import { MAX_ARRAY_SIZE, MAX_CHARACTERS } from "../../constants";
@@ -55,7 +54,6 @@ export const JsonEditor = <TRow, TSummaryRow = unknown>({
   onRowChange,
   onExpandEditor,
 }: JsonEditorProps<TRow, TSummaryRow>) => {
-  const { schema } = useTableEditorStore();
   const { getState } = useTableEditorTableState();
   const snap = getState();
   const params = useSearchParams();

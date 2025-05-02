@@ -38,7 +38,6 @@ export const TextEditor = <TRow, TSummaryRow = unknown>({
   isEditable?: boolean;
   onExpandEditor: (column: string, row: TRow) => void;
 }) => {
-  const { schema } = useTableEditorStore();
   const { getState } = useTableEditorTableState();
   const snap = getState();
   const params = useSearchParams();

@@ -42,7 +42,6 @@ export const SupabaseGrid = ({
   const query = useSearchParams();
   const tableId = Number(query.get("table"));
   const { project, sdk } = useProjectStore();
-  const { schema } = useTableEditorStore();
   const { getState } = useTableEditorTableState();
   const sate = useTableEditorStore();
   const snap = getState();
