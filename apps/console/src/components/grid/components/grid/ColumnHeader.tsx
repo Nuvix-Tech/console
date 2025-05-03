@@ -5,11 +5,11 @@ import { useDrag, useDrop } from "react-dnd";
 
 // import { getForeignKeyCascadeAction } from "components/interfaces/TableGridEditor/SidePanelEditor/ColumnEditor/ColumnEditor.utils";
 import { FOREIGN_KEY_CASCADE_ACTION } from "@/data/database/database-query-constants";
-// import { useTableEditorTableStateSnapshot } from "state/table-editor-table";
+
 // import { Tooltip, TooltipContent, TooltipTrigger } from "ui";
 import type { ColumnHeaderProps, ColumnType, DragItem, GridForeignKey } from "../../types";
 import { ColumnMenu } from "../menu";
-import { useTableEditorTableState } from "@/lib/store/table";
+import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import { getForeignKeyCascadeAction } from "@/components/editor/SidePanelEditor/ColumnEditor/ColumnEditor.utils";
 
@@ -25,8 +25,8 @@ export function ColumnHeader<R>({
   const columnIdx = column.idx;
   const columnKey = column.key;
   const columnFormat = getColumnFormat(columnType, format);
-  const { getState } = useTableEditorTableState();
-  const snap = getState();
+
+  const snap = useTableEditorTableStateSnapshot();
   const hoverValue = column.name as string;
 
   // keep snap.gridColumns' order in sync with data grid component

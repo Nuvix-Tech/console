@@ -4,7 +4,7 @@ import { KeyboardEvent, memo } from "react";
 import { DropdownControl } from "@/components/grid/components/common/DropdownControl";
 import type { Filter, FilterOperator } from "@/components/grid/types";
 import { FilterOperatorOptions } from "./Filter.constants";
-import { useTableEditorTableState } from "@/lib/store/table";
+import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { Button, IconButton, Input } from "@nuvix/ui/components";
 
 export interface FilterRowProps {
@@ -16,8 +16,7 @@ export interface FilterRowProps {
 }
 
 const FilterRow = ({ filter, filterIdx, onChange, onDelete, onKeyDown }: FilterRowProps) => {
-  const { getState } = useTableEditorTableState();
-  const snap = getState();
+  const snap = useTableEditorTableStateSnapshot();
   const column = snap.table.columns.find((x) => x.name === filter.column);
   const columnOptions =
     snap.table.columns?.map((x) => {

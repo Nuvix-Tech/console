@@ -6,7 +6,7 @@ import { useCallback, useMemo, useState } from "react";
 import { formatSortURLParams } from "@/components/grid/SupabaseGrid.utils";
 import { DropdownControl } from "@/components/grid/components/common/DropdownControl";
 import type { Sort } from "@/components/grid/types";
-import { useTableEditorTableState } from "@/lib/store/table";
+import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import SortRow from "./SortRow";
 import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/popover";
 import { Button } from "@nuvix/ui/components";
@@ -54,8 +54,7 @@ export interface SortOverlayProps {
 }
 
 const SortOverlay = ({ sorts: sortsFromUrl, onApplySorts }: SortOverlayProps) => {
-  const { getState } = useTableEditorTableState();
-  const snap = getState();
+  const snap = useTableEditorTableStateSnapshot();
 
   const initialSorts = useMemo(
     () => formatSortURLParams(snap.table.name, sortsFromUrl ?? []),

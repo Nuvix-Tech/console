@@ -14,11 +14,12 @@ import ActionBar from "../../ActionBar";
 import { isValueTruncated } from "../RowEditor.utils";
 import { DrilldownViewer } from "./DrilldownViewer";
 import JsonCodeEditor from "./JsonCodeEditor";
-import { useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useProjectStore } from "@/lib/store";
 import { SidePanel } from "@/ui/SidePanel";
 import { cn } from "@nuvix/sui/lib/utils";
 import { Button } from "@nuvix/ui/components";
+import { TableParam } from "@/types";
 
 interface JsonEditProps {
   row?: { [key: string]: any };
@@ -41,8 +42,7 @@ const JsonEdit = ({
   closePanel,
   onSaveJSON,
 }: JsonEditProps) => {
-  const params = useSearchParams();
-  const _id = params.get("table");
+  const { tableId: _id } = useParams<TableParam>();
   const id = _id ? Number(_id) : undefined;
   const { project, sdk } = useProjectStore();
 

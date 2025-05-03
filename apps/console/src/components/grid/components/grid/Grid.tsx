@@ -11,7 +11,7 @@ import type { GridProps, SupaRow } from "../../types";
 import { useOnRowsChange } from "./Grid.utils";
 import RowRenderer from "./RowRenderer";
 import { useTableEditorStore } from "@/lib/store/table-editor";
-import { useTableEditorTableState } from "@/lib/store/table";
+import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { useAppStore, useProjectStore } from "@/lib/store";
 import { cn } from "@nuvix/sui/lib/utils";
 import { Button } from "@nuvix/ui/components";
@@ -62,8 +62,8 @@ export const Grid = memo(
       ref: React.Ref<DataGridHandle> | undefined,
     ) => {
       const tableEditorSnap = useTableEditorStore();
-      const { getState } = useTableEditorTableState();
-      const snap = getState();
+
+      const snap = useTableEditorTableStateSnapshot();
 
       const onRowsChange = useOnRowsChange(rows);
 

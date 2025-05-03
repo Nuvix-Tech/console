@@ -2,7 +2,7 @@ import { ChevronDown, Edit, Lock, Trash, Unlock } from "lucide-react";
 import type { CalculatedColumn } from "react-data-grid";
 
 import { useTableEditorStore } from "@/lib/store/table-editor";
-import { useTableEditorTableState } from "@/lib/store/table";
+import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import {
   DropdownMenu,
@@ -20,8 +20,8 @@ interface ColumnMenuProps {
 
 const ColumnMenu = ({ column, isEncrypted }: ColumnMenuProps) => {
   const tableEditorSnap = useTableEditorStore();
-  const { getState } = useTableEditorTableState();
-  const snap = getState();
+
+  const snap = useTableEditorTableStateSnapshot();
 
   const columnKey = column.key;
 

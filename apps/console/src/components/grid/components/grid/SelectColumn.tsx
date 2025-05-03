@@ -10,7 +10,7 @@ import {
 } from "react-data-grid";
 
 import { useTableEditorStore } from "@/lib/store/table-editor";
-import { useTableEditorTableState } from "@/lib/store/table";
+import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { SELECT_COLUMN_KEY } from "../../constants";
 import type { SupaRow } from "../../types";
 import { IconButton } from "@nuvix/ui/components";
@@ -168,8 +168,7 @@ function SelectCellHeader({
   "aria-label": ariaLabel,
   "aria-labelledby": ariaLabelledBy,
 }: SelectCellHeaderProps) {
-  const { getState } = useTableEditorTableState();
-  const snap = getState();
+  const snap = useTableEditorTableStateSnapshot();
   const inputRef = useRef<HTMLInputElement>(null);
 
   // indeterminate state === some rows are selected but not all

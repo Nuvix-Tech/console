@@ -20,6 +20,7 @@ import { useProjectStore } from "@/lib/store";
 import { SidePanel } from "@/ui/SidePanel";
 import { cn } from "@nuvix/sui/lib/utils";
 import { Button } from "@nuvix/ui/components";
+import { TableParam } from "@/types";
 
 interface TextEditorProps {
   visible: boolean;
@@ -39,8 +40,8 @@ export const TextEditor = ({
   onSaveField,
 }: TextEditorProps) => {
   const { id: _id } = useParams();
-  const params = useSearchParams();
-  const id = _id ? Number(params.get("table")) : undefined;
+  const { tableId } = useParams<TableParam>();
+  const id = tableId ? Number(tableId) : undefined;
   const { project, sdk } = useProjectStore();
 
   const { data: selectedTable } = useTableEditorQuery({

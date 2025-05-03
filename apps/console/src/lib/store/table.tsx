@@ -1,68 +1,37 @@
 import { PropsWithChildren, createContext, useContext, useEffect, useRef } from "react";
 import { CalculatedColumn } from "react-data-grid";
-import { create } from "zustand";
+import { proxy, ref, subscribe, useSnapshot } from "valtio";
+import { proxySet } from "valtio/utils";
 
-import { SupaRow } from "@/components/grid/types";
-import { getInitialGridColumns } from "@/components/grid/utils/column";
-import { getGridColumns } from "@/components/grid/utils/gridColumns";
-import { useTableEditorStore } from "./table-editor";
 import {
   loadTableEditorStateFromLocalStorage,
   parseSupaTable,
   saveTableEditorStateToLocalStorageDebounced,
 } from "@/components/grid/SupabaseGrid.utils";
+import { SupaRow } from "@/components/grid/types";
+import { getInitialGridColumns } from "@/components/grid/utils/column";
+import { getGridColumns } from "@/components/grid/utils/gridColumns";
 import { Entity } from "@/data/table-editor/table-editor-types";
+import { useTableEditorStateSnapshot } from "./table-editor";
 
-interface TableEditorTableStateProps {
-  projectRef: string;
-  table: Entity;
-  editable: boolean;
-  onAddColumn: () => void;
-  onExpandJSONEditor: (column: string, row: SupaRow) => void;
-  onExpandTextEditor: (column: string, row: SupaRow) => void;
-}
-
-interface TableEditorTableState {
-  // Table
-  table: ReturnType<typeof parseSupaTable>;
-  originalTable: Entity;
-  _originalTableRef: Entity;
-  updateTable: (table: Entity) => void;
-
-  // Rows
-  selectedRows: Set<number>;
-  allRowsSelected: boolean;
-  setSelectedRows: (rows: Set<number>, selectAll?: boolean) => void;
-
-  // Columns
-  gridColumns: any[];
-  moveColumn: (fromKey: string, toKey: string) => void;
-  updateColumnSize: (index: number, width: number) => void;
-  freezeColumn: (columnKey: string) => void;
-  unfreezeColumn: (columnKey: string) => void;
-  updateColumnIdx: (columnKey: string, columnIdx: number) => void;
-
-  // Cells
-  selectedCellPosition: { idx: number; rowIdx: number } | null;
-  setSelectedCellPosition: (position: { idx: number; rowIdx: number } | null) => void;
-
-  // Misc
-  enforceExactCount: boolean;
-  setEnforceExactCount: (value: boolean) => void;
-  page: number;
-  setPage: (page: number) => void;
-  editable: boolean;
-}
-
-export const createTableEditorTableStore = ({
+export const createTableEditorTableState = ({
   projectRef,
   table: originalTable,
-  editable,
+  editable = true,
   onAddColumn,
   onExpandJSONEditor,
   onExpandTextEditor,
-}: TableEditorTableStateProps) => {
+}: {
+  projectRef: string;
+  table: Entity;
+  /** If set to true, render an additional "+" column to support adding a new column in the grid editor */
+  editable?: boolean;
+  onAddColumn: () => void;
+  onExpandJSONEditor: (column: string, row: SupaRow) => void;
+  onExpandTextEditor: (column: string, row: SupaRow) => void;
+}) => {
   const table = parseSupaTable(originalTable);
+
   const savedState = loadTableEditorStateFromLocalStorage(projectRef, table.name, table.schema);
   const gridColumns = getInitialGridColumns(
     getGridColumns(table, {
@@ -75,13 +44,20 @@ export const createTableEditorTableStore = ({
     savedState,
   );
 
-  return create<TableEditorTableState>((set, get) => ({
-    // Table
+  const state = proxy({
+    /* Table */
     table,
     originalTable,
-    _originalTableRef: originalTable,
+
+    /**
+     * Used for tracking changes to the table
+     * Do not use outside of table-editor-table.tsx
+     */
+    _originalTableRef: ref(originalTable),
+
     updateTable: (table: Entity) => {
       const supaTable = parseSupaTable(table);
+
       const gridColumns = getInitialGridColumns(
         getGridColumns(supaTable, {
           tableId: table.id,
@@ -90,103 +66,92 @@ export const createTableEditorTableStore = ({
           onExpandJSONEditor,
           onExpandTextEditor,
         }),
-        { gridColumns: get().gridColumns },
+        { gridColumns: state.gridColumns },
       );
 
-      set({
-        table: supaTable,
-        gridColumns,
-        originalTable: table,
-        _originalTableRef: table,
-      });
+      state.table = supaTable;
+      state.gridColumns = gridColumns;
+      state.originalTable = table;
+      state._originalTableRef = ref(table);
     },
 
-    // Rows
-    selectedRows: new Set<number>(),
+    /* Rows */
+    selectedRows: proxySet<number>(),
     allRowsSelected: false,
     setSelectedRows: (rows: Set<number>, selectAll?: boolean) => {
-      set({
-        allRowsSelected: selectAll ?? false,
-        selectedRows: rows,
-      });
+      state.allRowsSelected = selectAll ?? false;
+      state.selectedRows = proxySet(rows);
     },
 
-    // Columns
+    /* Columns */
     gridColumns,
     moveColumn: (fromKey: string, toKey: string) => {
-      const state = get();
       const fromIdx = state.gridColumns.findIndex((x) => x.key === fromKey);
       const toIdx = state.gridColumns.findIndex((x) => x.key === toKey);
       const moveItem = state.gridColumns[fromIdx];
 
-      const newColumns = [...state.gridColumns];
-      newColumns.splice(fromIdx, 1);
-      newColumns.splice(toIdx, 0, moveItem);
-
-      set({ gridColumns: newColumns });
+      state.gridColumns.splice(fromIdx, 1);
+      state.gridColumns.splice(toIdx, 0, moveItem);
     },
     updateColumnSize: (index: number, width: number) => {
-      const state = get();
-      const newColumns = [...state.gridColumns];
-      (newColumns[index] as CalculatedColumn<any, any> & { width?: number }).width = width;
-
-      set({ gridColumns: newColumns });
+      if (state.gridColumns[index]) {
+        (state.gridColumns[index] as CalculatedColumn<any, any> & { width?: number }).width = width;
+      }
     },
     freezeColumn: (columnKey: string) => {
-      const state = get();
       const index = state.gridColumns.findIndex((x) => x.key === columnKey);
-      const newColumns = [...state.gridColumns];
-      (newColumns[index] as CalculatedColumn<any, any> & { frozen?: boolean }).frozen = true;
-
-      set({ gridColumns: newColumns });
+      if (state.gridColumns[index]) {
+        (state.gridColumns[index] as CalculatedColumn<any, any> & { frozen?: boolean }).frozen =
+          true;
+      }
     },
     unfreezeColumn: (columnKey: string) => {
-      const state = get();
       const index = state.gridColumns.findIndex((x) => x.key === columnKey);
-      const newColumns = [...state.gridColumns];
-      (newColumns[index] as CalculatedColumn<any, any> & { frozen?: boolean }).frozen = false;
-
-      set({ gridColumns: newColumns });
+      if (state.gridColumns[index]) {
+        (state.gridColumns[index] as CalculatedColumn<any, any> & { frozen?: boolean }).frozen =
+          false;
+      }
     },
     updateColumnIdx: (columnKey: string, columnIdx: number) => {
-      const state = get();
       const index = state.gridColumns.findIndex((x) => x.key === columnKey);
-      const newColumns = [...state.gridColumns];
-      (newColumns[index] as CalculatedColumn<any, any> & { idx?: number }).idx = columnIdx;
-
-      newColumns.sort((a, b) => a.idx - b.idx);
-      set({ gridColumns: newColumns });
+      if (state.gridColumns[index]) {
+        (state.gridColumns[index] as CalculatedColumn<any, any> & { idx?: number }).idx = columnIdx;
+      }
+      state.gridColumns.sort((a, b) => a.idx - b.idx);
     },
 
-    // Cells
-    selectedCellPosition: null,
-    setSelectedCellPosition: (position) => {
-      set({ selectedCellPosition: position });
+    /* Cells */
+    selectedCellPosition: null as { idx: number; rowIdx: number } | null,
+    setSelectedCellPosition: (position: { idx: number; rowIdx: number } | null) => {
+      state.selectedCellPosition = position;
     },
 
-    // Misc
+    /* Misc */
     enforceExactCount: false,
-    setEnforceExactCount: (value) => {
-      set({ enforceExactCount: value });
+    setEnforceExactCount: (value: boolean) => {
+      state.enforceExactCount = value;
     },
+
     page: 1,
-    setPage: (page) => {
-      set({
-        page,
-        selectedRows: new Set(),
-      });
+    setPage: (page: number) => {
+      state.page = page;
+
+      // reset selected row state
+      state.setSelectedRows(new Set());
     },
+
     editable,
-  }));
+  });
+
+  return state;
 };
 
-// Context for component tree access
-export const TableEditorTableStateContext = createContext<ReturnType<
-  typeof createTableEditorTableStore
-> | null>(null);
+export type TableEditorTableState = ReturnType<typeof createTableEditorTableState>;
+
+export const TableEditorTableStateContext = createContext<TableEditorTableState>(undefined as any);
 
 type TableEditorTableStateContextProviderProps = Omit<
-  TableEditorTableStateProps,
+  Parameters<typeof createTableEditorTableState>[0],
   "onAddColumn" | "onExpandJSONEditor" | "onExpandTextEditor"
 >;
 
@@ -196,29 +161,29 @@ export const TableEditorTableStateContextProvider = ({
   table,
   ...props
 }: PropsWithChildren<TableEditorTableStateContextProviderProps>) => {
-  const tableEditorState = useTableEditorStore();
-  const storeRef = useRef(
-    createTableEditorTableStore({
+  const tableEditorSnap = useTableEditorStateSnapshot();
+  const state = useRef(
+    createTableEditorTableState({
       ...props,
       projectRef,
       table,
-      onAddColumn: tableEditorState.onAddColumn,
+      onAddColumn: tableEditorSnap.onAddColumn,
       onExpandJSONEditor: (column: string, row: SupaRow) => {
-        tableEditorState.onExpandJSONEditor({
+        tableEditorSnap.onExpandJSONEditor({
           column,
           row,
           value: JSON.stringify(row[column]) || "",
         });
       },
       onExpandTextEditor: (column: string, row: SupaRow) => {
-        tableEditorState.onExpandTextEditor(column, row);
+        tableEditorSnap.onExpandTextEditor(column, row);
       },
     }),
   ).current;
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const unsubscribe = storeRef.subscribe((state) => {
+      return subscribe(state, () => {
         saveTableEditorStateToLocalStorageDebounced({
           gridColumns: state.gridColumns,
           projectRef,
@@ -226,32 +191,30 @@ export const TableEditorTableStateContextProvider = ({
           schema: state.table.schema,
         });
       });
-
-      return unsubscribe;
     }
-  }, [projectRef, storeRef]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
-    const state = storeRef.getState();
     // We can use a === check here because react-query is good
     // about returning objects with the same ref / different ref
     if (state._originalTableRef !== table) {
-      storeRef.getState().updateTable(table);
+      state.updateTable(table);
     }
-  }, [table, storeRef]);
+  }, [table]);
 
   return (
-    <TableEditorTableStateContext.Provider value={storeRef}>
+    <TableEditorTableStateContext.Provider value={state}>
       {children}
     </TableEditorTableStateContext.Provider>
   );
 };
 
-export const useTableEditorTableState = () => {
-  const store = useContext(TableEditorTableStateContext);
-  if (!store)
-    throw new Error(
-      "useTableEditorTableState must be used within TableEditorTableStateContextProvider",
-    );
-  return store;
+export const useTableEditorTableStateSnapshot = (options?: Parameters<typeof useSnapshot>[1]) => {
+  const state = useContext(TableEditorTableStateContext);
+  // as TableEditorTableState so this doesn't get marked as readonly,
+  // making adopting this state easier since we're migrating from react-tracked
+  return useSnapshot(state, options) as TableEditorTableState;
 };
+
+export type TableEditorTableStateSnapshot = ReturnType<typeof useTableEditorTableStateSnapshot>;

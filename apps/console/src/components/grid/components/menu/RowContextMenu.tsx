@@ -4,7 +4,7 @@ import { Item, ItemParams, Menu } from "react-contexify";
 
 import type { SupaRow } from "../../types";
 import { useTableEditorStore } from "@/lib/store/table-editor";
-import { useTableEditorTableState } from "@/lib/store/table";
+import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { ROW_CONTEXT_MENU_ID } from ".";
 import { copyToClipboard, formatClipboardValue } from "../../utils/common";
 
@@ -14,8 +14,8 @@ export type RowContextMenuProps = {
 
 const RowContextMenu = ({ rows }: RowContextMenuProps) => {
   const tableEditorSnap = useTableEditorStore();
-  const { getState } = useTableEditorTableState();
-  const snap = getState();
+
+  const snap = useTableEditorTableStateSnapshot();
 
   function onDeleteRow(p: ItemParams) {
     const { props } = p;

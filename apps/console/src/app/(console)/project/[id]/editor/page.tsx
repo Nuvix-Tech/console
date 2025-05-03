@@ -1,4 +1,3 @@
-import { TableEditor } from "@/components/editor";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -6,5 +5,9 @@ export const metadata: Metadata = {
 };
 
 export default function () {
-  return <TableEditor />;
+  return (
+    <div className="flex size-full justify-center items-center">
+      Please select a table from the sidebar to edit.
+    </div>
+  );
 }

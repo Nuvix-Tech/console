@@ -28,3 +28,7 @@ export type QueryOptions<TFnData = unknown, TData = unknown, TError = unknown> =
   UseQueryOptions<TFnData, TData, TError>,
   "queryKey" | "queryFn"
 >;
+
+export type TableParam = {
+  tableId: string;
+};

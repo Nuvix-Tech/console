@@ -12,6 +12,7 @@ import { checkIfRelationChanged } from "../TableEditor/ForeignKeysManagement/For
 import { useParams, useSearchParams } from "next/navigation";
 import { useProjectStore } from "@/lib/store";
 import { Button } from "@nuvix/ui/components";
+import { TableParam } from "@/types";
 
 interface ColumnForeignKeyProps {
   column: ColumnField;
@@ -28,8 +29,7 @@ const ColumnForeignKey = ({
   onUpdateColumnType,
   onUpdateFkRelations,
 }: ColumnForeignKeyProps) => {
-  const params = useSearchParams();
-  const _id = params.get("table");
+  const { tableId: _id } = useParams<TableParam>();
   const [open, setOpen] = useState(false);
   const [selectedFk, setSelectedFk] = useState<ForeignKey>();
 

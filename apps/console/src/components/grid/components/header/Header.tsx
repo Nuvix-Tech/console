@@ -22,7 +22,7 @@ import {
 //   useSubscribeToImpersonatedRole,
 // } from "state/role-impersonation-state";
 import { useTableEditorStore } from "@/lib/store/table-editor";
-import { useTableEditorTableState } from "@/lib/store/table";
+import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 
 import {
   DropdownMenu,
@@ -64,8 +64,7 @@ export type HeaderProps = {
 };
 
 const Header = ({ sorts, filters, customHeader }: HeaderProps) => {
-  const { getState } = useTableEditorTableState();
-  const snap = getState();
+  const snap = useTableEditorTableStateSnapshot();
 
   return (
     <div>
@@ -92,8 +91,8 @@ export default Header;
 const DefaultHeader = () => {
   const { id: projectRef } = useParams<{ id: string }>();
   const tableEditorSnap = useTableEditorStore();
-  const { getState } = useTableEditorTableState();
-  const snap = getState();
+
+  const snap = useTableEditorTableStateSnapshot();
   const { organization: org } = useAppStore();
 
   const onAddRow =
@@ -293,8 +292,8 @@ type RowHeaderProps = {
 const RowHeader = ({ sorts, filters }: RowHeaderProps) => {
   const { project, sdk } = useProjectStore();
   const tableEditorSnap = useTableEditorStore();
-  const { getState } = useTableEditorTableState();
-  const snap = getState();
+
+  const snap = useTableEditorTableStateSnapshot();
   const { addToast } = useToast();
 
   // const roleImpersonationState = useRoleImpersonationStateSnapshot();

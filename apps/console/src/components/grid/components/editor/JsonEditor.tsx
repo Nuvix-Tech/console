@@ -3,14 +3,14 @@ import { useCallback, useState } from "react";
 import type { RenderEditCellProps } from "react-data-grid";
 
 import { prettifyJSON, removeJSONTrailingComma, tryParseJson } from "@/lib/helpers";
-import { useTableEditorTableState } from "@/lib/store/table";
+import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 // import { Popover, Tooltip, TooltipContent, TooltipTrigger } from "ui";
 import { BlockKeys } from "../common/BlockKeys";
 import { MonacoEditor } from "../common/MonacoEditor";
 import { NullValue } from "../common/NullValue";
 import { TruncatedWarningOverlay } from "./TruncatedWarningOverlay";
 import { useProjectStore } from "@/lib/store";
-import { useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useToast } from "@nuvix/ui/components";
 import { MAX_ARRAY_SIZE, MAX_CHARACTERS } from "../../constants";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
@@ -18,6 +18,7 @@ import Popover from "@/components/editor/components/_popover";
 import { useGetCellValueMutation } from "@/data/table-rows/get-cell-value-mutation";
 import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
 import { isTableLike } from "@/data/table-editor/table-editor-types";
+import { TableParam } from "@/types";
 
 const verifyJSON = (value: string) => {
   try {
@@ -54,16 +55,15 @@ export const JsonEditor = <TRow, TSummaryRow = unknown>({
   onRowChange,
   onExpandEditor,
 }: JsonEditorProps<TRow, TSummaryRow>) => {
-  const { getState } = useTableEditorTableState();
-  const snap = getState();
-  const params = useSearchParams();
+  const snap = useTableEditorTableStateSnapshot();
   const { project, sdk } = useProjectStore();
   const { addToast } = useToast();
+  const { tableId } = useParams<TableParam>();
 
   const { data: selectedTable } = useTableEditorQuery({
     projectRef: project?.$id,
     sdk,
-    id: Number(params.get("table")),
+    id: Number(tableId),
   });
 
   const gridColumn = snap.gridColumns.find((x) => x.name == column.key);

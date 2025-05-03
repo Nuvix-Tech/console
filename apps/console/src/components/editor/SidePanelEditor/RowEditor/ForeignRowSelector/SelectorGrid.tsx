@@ -8,10 +8,10 @@ import {
   ESTIMATED_CHARACTER_PIXEL_WIDTH,
   getColumnDefaultWidth,
 } from "@/components/grid/utils/gridColumns";
-// import { useTableEditorTableStateSnapshot } from "state/table-editor-table";
+
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import { convertByteaToHex } from "../RowEditor.utils";
-import { useTableEditorTableState } from "@/lib/store/table";
+import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 
 export interface SelectorGridProps {
   rows: SupaRow[];
@@ -60,8 +60,7 @@ const formatter = ({ column, format, row }: { column: string; format: string; ro
 };
 
 const SelectorGrid = ({ rows, onRowSelect }: SelectorGridProps) => {
-  const { getState } = useTableEditorTableState();
-  const snap = getState();
+  const snap = useTableEditorTableStateSnapshot();
 
   const columns: Column<SupaRow>[] = snap.table.columns.map((column) => {
     const columnDefaultWidth = getColumnDefaultWidth(column);

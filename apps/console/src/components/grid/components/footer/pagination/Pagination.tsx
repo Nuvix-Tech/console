@@ -11,21 +11,22 @@ import { THRESHOLD_COUNT, useTableRowsCountQuery } from "@/data/table-rows/table
 // import { RoleImpersonationState } from "lib/role-impersonation";
 // import { useRoleImpersonationStateSnapshot } from "state/role-impersonation-state";
 // import { useTableEditorStateSnapshot } from "state/table-editor";
-// import { useTableEditorTableStateSnapshot } from "state/table-editor-table";
+
 // import { Button, Tooltip, TooltipContent, TooltipTrigger } from "ui";
 // import { Input } from "ui-patterns/DataInputs/Input";
 // import ConfirmationModal from "ui-patterns/Dialogs/ConfirmationModal";
 import { DropdownControl } from "../../common/DropdownControl";
 import { formatEstimatedCount } from "./Pagination.utils";
-import { useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useProjectStore } from "@/lib/store";
 import { useTableEditorStore } from "@/lib/store/table-editor";
-import { useTableEditorTableState } from "@/lib/store/table";
+import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { useQuery } from "@tanstack/react-query";
 import { Button, IconButton } from "@nuvix/ui/components";
 import { Input } from "@/components/editor/components";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import ConfirmationModal from "@/components/editor/components/_confim_dialog";
+import { TableParam } from "@/types";
 
 const rowsPerPageOptions = [
   { value: 100, label: "100 rows" },
@@ -35,15 +36,15 @@ const rowsPerPageOptions = [
 
 const Pagination = () => {
   const params = useSearchParams();
-  const id = params.get("table");
+  const { tableId } = useParams<TableParam>();
   const { project, sdk } = useProjectStore();
   const tableEditorSnap = useTableEditorStore();
-  const { getState } = useTableEditorTableState();
-  const snap = getState();
+
+  const snap = useTableEditorTableStateSnapshot();
 
   const { data: selectedTable } = useTableEditorQuery({
     sdk,
-    id: Number(params.get("table")),
+    id: Number(tableId),
     projectRef: project?.$id,
   });
 
@@ -69,13 +70,13 @@ const Pagination = () => {
   const { data, isLoading, isSuccess, isError, isFetching } = useTableRowsCountQuery(
     {
       sdk,
-      tableId: Number(id),
+      tableId: Number(tableId),
       projectRef: project?.$id,
       filters,
       enforceExactCount: rowsCountEstimate !== null && rowsCountEstimate <= THRESHOLD_COUNT,
     },
     {
-      enabled: !!id && isTableLike(selectedTable),
+      enabled: !!tableId && isTableLike(selectedTable),
     },
   );
 
@@ -138,10 +139,10 @@ const Pagination = () => {
   }, [page, totalPages]);
 
   useEffect(() => {
-    if (id !== undefined) {
+    if (tableId !== undefined) {
       snap.setEnforceExactCount(rowsCountEstimate !== null && rowsCountEstimate <= THRESHOLD_COUNT);
     }
-  }, [id]);
+  }, [tableId]);
   data;
 
   return (

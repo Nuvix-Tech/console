@@ -9,7 +9,7 @@ import type { Filter } from "../../../types";
 import FilterRow from "./FilterRow";
 import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/popover";
 import { Button } from "@nuvix/ui/components";
-import { useTableEditorTableState } from "@/lib/store/table";
+import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { Separator } from "@nuvix/sui/components/separator";
 
 export interface FilterPopoverProps {
@@ -54,8 +54,7 @@ interface FilterOverlayProps {
 }
 
 const FilterOverlay = ({ filters: filtersFromUrl, onApplyFilters }: FilterOverlayProps) => {
-  const { getState } = useTableEditorTableState();
-  const snap = getState();
+  const snap = useTableEditorTableStateSnapshot();
 
   const initialFilters = useMemo(
     () => formatFilterURLParams((filtersFromUrl as string[]) ?? []),

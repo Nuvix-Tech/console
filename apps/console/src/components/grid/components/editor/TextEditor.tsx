@@ -10,7 +10,7 @@ import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
 import { isTableLike } from "@/data/table-editor/table-editor-types";
 import { useGetCellValueMutation } from "@/data/table-rows/get-cell-value-mutation";
 // import { useSelectedProject } from "hooks/misc/useSelectedProject";
-import { useTableEditorTableState } from "@/lib/store/table";
+import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { Button, IconButton, useToast } from "@nuvix/ui/components";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import { cn } from "@nuvix/sui/lib/utils";
@@ -25,6 +25,7 @@ import { useProjectStore } from "@/lib/store";
 import { useTableEditorStore } from "@/lib/store/table-editor";
 import Popover from "@/components/editor/components/_popover";
 import ConfirmationModal from "@/components/editor/components/_confim_dialog";
+import { TableParam } from "@/types";
 
 export const TextEditor = <TRow, TSummaryRow = unknown>({
   row,
@@ -38,16 +39,15 @@ export const TextEditor = <TRow, TSummaryRow = unknown>({
   isEditable?: boolean;
   onExpandEditor: (column: string, row: TRow) => void;
 }) => {
-  const { getState } = useTableEditorTableState();
-  const snap = getState();
-  const params = useSearchParams();
+  const snap = useTableEditorTableStateSnapshot();
   const { addToast } = useToast();
   const { project, sdk } = useProjectStore();
+  const { tableId } = useParams<TableParam>();
 
   const { data: selectedTable } = useTableEditorQuery({
     projectRef: project.$id,
     sdk,
-    id: Number(params.get("table")),
+    id: Number(tableId),
   });
 
   const gridColumn = snap.gridColumns.find((x) => x.name == column.key);

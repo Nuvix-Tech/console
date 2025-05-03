@@ -29,10 +29,11 @@ import { convertByteaToHex } from "../RowEditor.utils";
 import Pagination from "./Pagination";
 import SelectorGrid from "./SelectorGrid";
 import { useProjectStore } from "@/lib/store";
-import { useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { SidePanel } from "@/ui/SidePanel";
 import { TableEditorTableStateContextProvider } from "@/lib/store/table";
 import { Button } from "@nuvix/ui/components";
+import { TableParam } from "@/types";
 
 export interface ForeignRowSelectorProps {
   visible: boolean;
@@ -47,8 +48,7 @@ const ForeignRowSelector = ({
   onSelect,
   closePanel,
 }: ForeignRowSelectorProps) => {
-  const params = useSearchParams();
-  const id = params.get("table");
+  const { tableId: id } = useParams<TableParam>();
   const { project, sdk } = useProjectStore();
   const { data: selectedTable } = useTableEditorQuery({
     projectRef: project?.$id,

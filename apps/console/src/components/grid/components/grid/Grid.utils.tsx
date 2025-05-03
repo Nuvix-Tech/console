@@ -10,17 +10,17 @@ import { tableRowKeys } from "@/data/table-rows/keys";
 import { useTableRowUpdateMutation } from "@/data/table-rows/table-row-update-mutation";
 import type { TableRowsData } from "@/data/table-rows/table-rows-query";
 // import { useGetImpersonatedRoleState } from "state/role-impersonation-state";
-// import { useTableEditorTableStateSnapshot } from "state/table-editor-table";
+
 import { Dictionary } from "../../types";
 import { useProjectStore } from "@/lib/store";
-import { useTableEditorTableState } from "@/lib/store/table";
+import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { toast } from "sonner";
 import { convertByteaToHex } from "@/components/editor/SidePanelEditor/RowEditor/RowEditor.utils";
 
 export function useOnRowsChange(rows: SupaRow[]) {
   const { project, sdk } = useProjectStore();
-  const { getState } = useTableEditorTableState();
-  const snap = getState();
+
+  const snap = useTableEditorTableStateSnapshot();
   const queryClient = useQueryClient();
   // const getImpersonatedRoleState = useGetImpersonatedRoleState();
 

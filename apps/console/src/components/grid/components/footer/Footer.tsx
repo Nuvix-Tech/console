@@ -8,8 +8,10 @@ import { isTableLike, isViewLike } from "@/data/table-editor/table-editor-types"
 import { useSearchQuery } from "@/hooks/useQuery";
 import RefreshButton from "../header/RefreshButton";
 import { Pagination } from "./pagination";
-import { useTableEditorTableState } from "@/lib/store/table";
+import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { useProjectStore } from "@/lib/store";
+import { useParams } from "next/navigation";
+import { TableParam } from "@/types";
 
 export interface FooterProps {
   isRefetching?: boolean;
@@ -54,13 +56,13 @@ const TwoOptionToggle = ({
 
 const Footer = ({ isRefetching }: FooterProps) => {
   const { params, setQueryParam } = useSearchQuery();
-  const tableId = Number(params.get("table"));
+  const { tableId } = useParams<TableParam>();
   const { sdk, project } = useProjectStore();
 
   const { data: entity } = useTableEditorQuery({
     projectRef: project?.$id,
     sdk,
-    id: tableId,
+    id: Number(tableId),
   });
 
   const selectedView = params.get("view") || "data";

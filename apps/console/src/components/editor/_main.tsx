@@ -1,57 +1,79 @@
 "use client";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useCallback } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { Suspense, useCallback, useMemo } from "react";
+import { isUndefined } from "lodash";
+
 import { SupabaseGrid } from "../grid/SupabaseGrid";
 import { TableEditorTableStateContextProvider } from "@/lib/store/table";
 import { useProjectStore } from "@/lib/store";
-import { useQuery } from "@tanstack/react-query";
-import { toast } from "sonner";
-import { isMaterializedView, isTableLike, isView } from "@/data/table-editor/table-editor-types";
+import {
+  isMaterializedView,
+  isTableLike,
+  isView,
+  Table,
+  View,
+  MaterializedView,
+} from "@/data/table-editor/table-editor-types";
 import { PROTECTED_SCHEMAS } from "@/lib/constants";
-import { isUndefined } from "lodash";
 import { useGetTables } from "@/data/tables/tables-query";
 import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
 import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
 import { Feedback } from "@nuvix/ui/components";
 import SidePanelEditor from "./SidePanelEditor/SidePanelEditor";
 import { useSearchQuery } from "@/hooks/useQuery";
+import { TableParam } from "@/types";
+
+// Placeholder component for loading state
+const LoadingState = () => <div>Loading...</div>;
+
+// Placeholder component for error/not found state
+const TableNotFound = ({ id }: { id: number | undefined }) => (
+  <div className="flex items-center justify-center h-full">
+    <div className="w-[400px]">
+      <Feedback
+        title={id ? `Unable to find table with ID ${id}` : "Table ID is missing"}
+        description={
+          id
+            ? "This table might not exist or you may not have permission to view it."
+            : "Please select a table."
+        }
+      />
+    </div>
+  </div>
+);
 
 export const TableEditor = () => {
-  const searchParam = useSearchParams();
-  const currentTable = searchParam.get("table");
+  const { tableId: tableIdParam, id: projectRef } = useParams<TableParam & { id: string }>();
+  const router = useRouter();
   const { project, sdk } = useProjectStore();
   const { selectedSchema } = useQuerySchemaState();
+  const { params } = useSearchQuery();
 
-  const id = currentTable ? parseInt(currentTable) : undefined;
+  const tableId = useMemo(() => {
+    const parsedId: any = tableIdParam ? parseInt(tableIdParam, 10) : undefined;
+    return isNaN(parsedId) ? undefined : parsedId;
+  }, [tableIdParam]);
 
-  if (!id) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <div className="w-[400px]">
-          <Feedback
-            variant="danger"
-            title="Unable to find your table"
-            description="Please select a table from the sidebar to view its details."
-          />
-        </div>
-      </div>
-    );
+  // Redirect if tableId is invalid or missing after parsing
+  if (isUndefined(tableId)) {
+    // Redirect to the base editor page if no valid table ID is present
+    // Consider if this redirect is always the desired behavior
+    if (typeof window !== "undefined") {
+      // Ensure router is used client-side
+      router.replace(`/project/${projectRef}/editor`);
+    }
+    return <TableNotFound id={tableId} />; // Show message while redirecting or if redirect fails
   }
 
-  const { data: selectedTable, isLoading } = useTableEditorQuery({
+  const {
+    data: selectedTable,
+    isLoading,
+    isError,
+  } = useTableEditorQuery({
     projectRef: project?.$id,
     sdk,
-    id: id,
+    id: tableId,
   });
-
-  const router = useRouter();
-  const canEditTables = true; // useCheckPermissions(PermissionAction.TENANT_SQL_ADMIN_WRITE, 'tables')
-  const canEditColumns = true; //useCheckPermissions(PermissionAction.TENANT_SQL_ADMIN_WRITE, 'columns')
-  const isReadOnly = !canEditTables && !canEditColumns;
-  const tabId = undefined;
-  const projectRef = project?.$id;
-  const { params } = useSearchQuery();
-  const selectedView = params.get("view") || "data";
 
   const getTables = useGetTables({
     projectRef: project?.$id,
@@ -60,114 +82,100 @@ export const TableEditor = () => {
 
   const onTableCreated = useCallback(
     (table: { id: number }) => {
-      router.push(`/project/${project.$id}/editor/${table.id}`);
+      if (project?.$id) {
+        router.push(`/project/${project.$id}/editor/${table.id}`);
+      }
     },
-    [project, router],
+    [project?.$id, router],
   );
 
   const onTableDeleted = useCallback(async () => {
-    const tables = await getTables(selectedSchema);
-    if (tables.length > 0) {
-      router.push(`/project/${projectRef}/editor/${tables[0].id}`);
-    } else {
+    try {
+      const tables = await getTables(selectedSchema);
+      const nextTableId = tables.length > 0 ? tables[0].id : undefined;
+      const nextUrl = nextTableId
+        ? `/project/${projectRef}/editor/${nextTableId}`
+        : `/project/${projectRef}/editor`;
+      router.push(nextUrl);
+    } catch (error) {
+      console.error("Failed to fetch tables after deletion:", error);
+      // Fallback redirect if fetching tables fails
       router.push(`/project/${projectRef}/editor`);
     }
   }, [getTables, projectRef, router, selectedSchema]);
 
-  // NOTE: DO NOT PUT HOOKS AFTER THIS LINE
-  if (!projectRef) {
-    return (
-      <div className="flex flex-col">
-        <div className="h-10 bg-dash-sidebar dark:bg-surface-100" />
-        <div className="h-9 border-y" />
-        <div className="p-2 col-span-full">
-          {/* <GenericSkeletonLoader /> */}
-          loading...
-        </div>
-      </div>
-    );
-  }
+  // Derived state calculations
+  const isViewSelected = useMemo(
+    () => isView(selectedTable) || isMaterializedView(selectedTable),
+    [selectedTable],
+  );
+  const isTableSelected = useMemo(() => isTableLike(selectedTable), [selectedTable]);
+  const isLocked = useMemo(
+    () => PROTECTED_SCHEMAS.includes(selectedTable?.schema ?? ""),
+    [selectedTable],
+  );
 
-  if (isLoading && isUndefined(selectedTable)) {
-    return "loading...";
-  }
+  // --- TODO: Replace hardcoded permissions with actual permission checks ---
+  const canEditTables = true; // Example: useCheckPermissions(PermissionAction.TENANT_SQL_ADMIN_WRITE, 'tables')
+  const canEditColumns = true; // Example: useCheckPermissions(PermissionAction.TENANT_SQL_ADMIN_WRITE, 'columns')
+  // ---
 
-  if (isUndefined(selectedTable)) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <div className="w-[400px]">
-          <Feedback
-            title={`Unable to find your table with ID ${id}`}
-            description="This table doesn't exist in your database"
-          >
-            {/* {isTableEditorTabsEnabled && (
-              <Button
-                type="default"
-                className="mt-2"
-                onClick={() => {
-                  if (tabId) {.js
-                    handleTabClose({
-                      ref: projectRef,
-                      id: tabId,
-                      router,
-                      editor,
-                      onClearDashboardHistory,
-                    })
-                  }
-                }}
-              >
-                Close tab
-              </Button>
-            )} */}
-          </Feedback>
-        </div>
-      </div>
-    );
-  }
-
-  const isViewSelected = isView(selectedTable) || isMaterializedView(selectedTable);
-  const isTableSelected = isTableLike(selectedTable);
-  const isLocked = PROTECTED_SCHEMAS.includes(selectedTable?.schema ?? "");
+  const isReadOnly = !canEditTables && !canEditColumns;
   const canEditViaTableEditor = isTableSelected && !isLocked;
   const editable = !isReadOnly && canEditViaTableEditor;
 
-  const gridKey = `${selectedTable.schema}_${selectedTable.name}`;
+  const selectedView = params.get("view") || "data";
+  const gridKey = `${selectedTable?.schema}_${selectedTable?.name}_${tableId}`; // Include tableId for uniqueness
+
+  // --- Render Logic ---
+
+  if (isLoading) {
+    return <LoadingState />;
+  }
+
+  if (isError || isUndefined(selectedTable)) {
+    return <TableNotFound id={tableId} />;
+  }
+
+  // Type assertion after checks
+  const table = selectedTable as Table | View | MaterializedView;
 
   return (
     <>
-      <Suspense fallback={"Loading ....."}>
-        <TableEditorTableStateContextProvider
-          key={`table-editor-table-${currentTable}`}
-          projectRef={project.$id}
-          table={selectedTable}
-          editable={true}
+      <TableEditorTableStateContextProvider
+        // Key ensures context resets when navigating between different tables
+        key={`table-editor-context-${tableId}`}
+        projectRef={projectRef}
+        table={table}
+        editable={editable}
+      >
+        <SupabaseGrid
+          key={gridKey}
+          gridProps={{ height: "100%" }}
+          customHeader={
+            (isViewSelected || isTableSelected) && selectedView === "definition" ? (
+              <div className="flex items-center space-x-2">
+                <p>
+                  SQL Definition of <code className="text-sm">{table.name}</code>
+                </p>
+                <p className="text-foreground-light text-sm">(Read only)</p>
+              </div>
+            ) : null
+          }
         >
-          <SupabaseGrid
-            key={gridKey}
-            gridProps={{ height: "100%" }}
-            customHeader={
-              (isViewSelected || isTableSelected) && selectedView === "definition" ? (
-                <div className="flex items-center space-x-2">
-                  <p>
-                    SQL Definition of <code className="text-sm">{selectedTable.name}</code>{" "}
-                  </p>
-                  <p className="text-foreground-light text-sm">(Read only)</p>
-                </div>
-              ) : null
-            }
-          >
-            {/* {(isViewSelected || isTableSelected) && selectedView === 'definition' && (
-              <TableDefinition entity={selectedTable} />
+          {/* Conditional rendering for table definition can be added here if needed */}
+          {/* {(isViewSelected || isTableSelected) && selectedView === 'definition' && (
+              <TableDefinition entity={table} />
             )} */}
-          </SupabaseGrid>
+        </SupabaseGrid>
 
-          <SidePanelEditor
-            editable={true}
-            selectedTable={isTableLike(selectedTable) ? selectedTable : undefined}
-            onTableCreated={onTableCreated}
-          />
-        </TableEditorTableStateContextProvider>
-      </Suspense>
+        <SidePanelEditor
+          editable={editable}
+          selectedTable={isTableLike(table) ? table : undefined}
+          onTableCreated={onTableCreated}
+          // onTableDeleted={onTableDeleted}
+        />
+      </TableEditorTableStateContextProvider>
     </>
   );
 };

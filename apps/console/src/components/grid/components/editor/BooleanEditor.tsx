@@ -1,5 +1,5 @@
 import type { RenderEditCellProps } from "react-data-grid";
-import { useTableEditorTableState } from "@/lib/store/table";
+import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import {
   Select,
   SelectContent,
@@ -21,8 +21,7 @@ export const BooleanEditor = <TRow, TSummaryRow = unknown>({
   onRowChange,
   onClose,
 }: Props<TRow, TSummaryRow>) => {
-  const { getState } = useTableEditorTableState();
-  const snap = getState();
+  const snap = useTableEditorTableStateSnapshot();
   const gridColumn = snap.gridColumns.find((x) => x.name == column.key);
   const value = row[column.key as keyof TRow] as unknown as string;
 

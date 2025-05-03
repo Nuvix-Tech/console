@@ -4,7 +4,7 @@ import { memo, useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 
 import type { DragItem, Sort } from "@/components/grid/types";
-import { useTableEditorTableState } from "@/lib/store/table";
+import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { Toggle } from "@nuvix/sui/components/toggle";
 import { Button, IconButton, Switch } from "@nuvix/ui/components";
 
@@ -18,8 +18,7 @@ export interface SortRowProps {
 }
 
 const SortRow = ({ index, columnName, sort, onDelete, onToggle, onDrag }: SortRowProps) => {
-  const { getState } = useTableEditorTableState();
-  const snap = getState();
+  const snap = useTableEditorTableStateSnapshot();
   const column = snap.table.columns.find((x) => x.name === columnName);
 
   const ref = useRef<HTMLDivElement>(null);

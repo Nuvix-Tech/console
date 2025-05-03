@@ -11,7 +11,7 @@ import { useTableRowsQuery } from "@/data/table-rows/table-rows-query";
 // import { EMPTY_ARR } from "lib/void";
 // import { useRoleImpersonationStateSnapshot } from "state/role-impersonation-state";
 import { useTableEditorStore } from "@/lib/store/table-editor";
-import { useTableEditorTableState } from "@/lib/store/table";
+import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import {
   filtersToUrlParams,
   formatFilterURLParams,
@@ -28,6 +28,7 @@ import { useProjectStore } from "@/lib/store";
 import { useQuery } from "@tanstack/react-query";
 import { useTableEditorFiltersSort } from "@/hooks/useTableEditorFilterSort";
 import { Column } from "@nuvix/ui/components";
+import { TableParam } from "@/types";
 
 const EMPTY_ARR: any[] = [];
 
@@ -39,12 +40,12 @@ export const SupabaseGrid = ({
   PropsWithChildren<{
     gridProps?: GridProps;
   }>) => {
-  const query = useSearchParams();
-  const tableId = Number(query.get("table"));
+  const { tableId: _id } = useParams<TableParam>();
+  const tableId = Number(_id);
   const { project, sdk } = useProjectStore();
-  const { getState } = useTableEditorTableState();
+
   const sate = useTableEditorStore();
-  const snap = getState();
+  const snap = useTableEditorTableStateSnapshot();
 
   const gridRef = useRef<DataGridHandle>(null);
   const [mounted, setMounted] = useState(false);

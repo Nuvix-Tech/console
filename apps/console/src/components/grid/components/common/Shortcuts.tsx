@@ -2,7 +2,7 @@ import { RefObject, useMemo } from "react";
 import type { DataGridHandle } from "react-data-grid";
 
 import { SupaRow } from "../../types";
-import { useTableEditorTableState } from "@/lib/store/table";
+import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { useKeyboardShortcuts } from "./Hooks";
 
 type ShortcutsProps = {
@@ -11,8 +11,7 @@ type ShortcutsProps = {
 };
 
 export function Shortcuts({ gridRef, rows }: ShortcutsProps) {
-  const { getState } = useTableEditorTableState();
-  const snap = getState();
+  const snap = useTableEditorTableStateSnapshot();
 
   const metaKey = useMemo(() => {
     function getClientOS() {

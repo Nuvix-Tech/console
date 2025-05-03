@@ -1,6 +1,6 @@
 import type { RenderEditCellProps } from "react-data-grid";
 
-import { useTableEditorTableState } from "@/lib/store/table";
+import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { Select } from "@nuvix/ui/components";
 
 interface SelectEditorProps<TRow, TSummaryRow = unknown>
@@ -17,8 +17,7 @@ export function SelectEditor<TRow, TSummaryRow = unknown>({
   options,
   isNullable,
 }: SelectEditorProps<TRow, TSummaryRow>) {
-  const { getState } = useTableEditorTableState();
-  const snap = getState();
+  const snap = useTableEditorTableStateSnapshot();
   const gridColumn = snap.gridColumns.find((x) => x.name == column.key);
 
   const value = row[column.key as keyof TRow] as unknown as string;
@@ -51,7 +50,7 @@ export function SelectEditor<TRow, TSummaryRow = unknown>({
         ...options.map(({ label, _value }) => ({ label, value: _value })),
       ]}
       value={value ?? ""}
-      placeholder={gridColumn?.defaultValue ?? ""}
+      placeholder={(gridColumn as any)?.defaultValue ?? ""}
     />
   );
 }
