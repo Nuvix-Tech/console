@@ -132,8 +132,8 @@ export const useEntityTypesQuery = <TData = EntityTypesData>(
     ...options
   }: Omit<
     UseInfiniteQueryOptions<EntityTypesData, EntityTypesError, TData>,
-    "queryKey" | "queryFn" | "getNextPageParam"
-  >,
+    "queryKey" | "queryFn" | "getNextPageParam" | "initialPageParam"
+  > = {},
 ) => {
   return useInfiniteQuery<EntityTypesData, EntityTypesError, TData>({
     queryKey: entityTypeKeys.list(projectRef, { schemas, search, sort, limit, filterTypes }),
@@ -163,6 +163,7 @@ export const useEntityTypesQuery = <TData = EntityTypesData>(
 
       return page;
     },
+    initialPageParam: undefined,
     ...options,
   });
 };

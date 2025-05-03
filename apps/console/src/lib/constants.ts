@@ -5,3 +5,5 @@ export const SHOW_TABLE_BORDER = process.env.NEXT_PUBLIC_TABLE_BORDER === "true"
 
 export * from "./constants/index";
 export * from "./constants/schemas";
+
+export const IS_PLATFORM = true;
