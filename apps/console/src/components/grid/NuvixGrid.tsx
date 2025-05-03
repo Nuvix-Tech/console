@@ -121,7 +121,13 @@ export const NuvixGrid = ({
 
   return (
     <DndProvider backend={HTML5Backend} context={window}>
-      <Column background="neutral-weak" fill radius="l">
+      <Column
+        background="neutral-alpha-weak"
+        border="neutral-alpha-medium"
+        fill
+        radius="l"
+        overflow="hidden"
+      >
         <Header sorts={sorts} filters={filters} customHeader={customHeader} />
 
         {children || (

@@ -41,6 +41,15 @@ export const gridStyles = {
   ["--rdg-row-selected-background-color" as any]: "var(--neutral-background-strong)",
 };
 
+export const gridStyles2 = {
+  ["--rdg-color" as any]: "var(--neutral-on-background-strong)",
+  ["--rdg-background-color" as any]: "var(--neutral-alpha-weak)",
+  ["--rdg-row-hover-background-color" as any]: "var(--neutral-background-medium)",
+  ["--rdg-border-color" as any]: "var(--neutral-alpha-medium)",
+  ["--rdg-header-background-color" as any]: "var(--neutral-alpha-strong)",
+  ["--rdg-row-selected-background-color" as any]: "var(--neutral-background-strong)",
+};
+
 // [Joshen] Just for visibility this is causing some hook errors in the browser
 export const Grid = memo(
   forwardRef<DataGridHandle, IGrid>(
@@ -214,7 +223,7 @@ export const Grid = memo(
             onRowsChange={onRowsChange}
             onSelectedCellChange={onSelectedCellChange}
             onSelectedRowsChange={onSelectedRowsChange}
-            style={gridStyles}
+            style={gridStyles2}
             onCellDoubleClick={(props) => onRowDoubleClick(props.row, props.column)}
             onCellKeyDown={handleCopyCell}
           />

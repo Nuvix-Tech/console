@@ -231,7 +231,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                   [styles.floating]: isFocused || isFilled,
                 })}
               >
-                {label} {optional}
+                {label} {optional ?? ""}
               </Text>
             )}
             {children}
