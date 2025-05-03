@@ -67,7 +67,7 @@ const Header = ({ sorts, filters, customHeader }: HeaderProps) => {
   const snap = useTableEditorTableStateSnapshot();
 
   return (
-    <div className="surface-background">
+    <div className="neutral-background-medium">
       <div className="flex h-10 justify-between items-center px-1.5 gap-2 overflow-x-auto ">
         {customHeader ? (
           <>{customHeader}</>

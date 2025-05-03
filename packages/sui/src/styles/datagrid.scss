@@ -1,6 +1,10 @@
-.rdg-cell.rdg-cell-frozen {
-    background-color: var(--neutral-background-weak);
+[role="gridcell"].rdg-cell.rdg-cell-frozen {
+    // background-color: var(--neutral-background-medium);
 }
+
+// [role="gridcell"].rdg-cell.rdg-cell-frozen {
+//     background-color: var(--neutral-background-weak);
+// }
 
 .rdg-cell.rdg-cell-frozen {
     // backdrop-filter: blur(14px);

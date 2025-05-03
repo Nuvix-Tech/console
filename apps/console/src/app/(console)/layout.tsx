@@ -9,19 +9,19 @@ export default function ({ children }: { children: React.ReactNode }) {
     <>
       <ConsoleWrapper>
         <Row fill position="relative">
-          <Background
-            position="absolute"
-            gradient={{
-              colorEnd: "neutral-background-weak",
-              colorStart: "brand-alpha-medium",
-              display: true,
-              height: 180,
-              opacity: 40,
-              tilt: -31,
-              width: 150,
-              x: 0,
-              y: 0,
-            }}
+          {/* <Background
+            position="absolute" 
+            // gradient={{
+            //   colorEnd: "neutral-background-weak",
+            //   colorStart: "brand-alpha-medium",
+            //   display: true,
+            //   height: 180,
+            //   opacity: 40,
+            //   tilt: -31,
+            //   width: 150,
+            //   x: 0,
+            //   y: 0,
+            // }}
             // dots={{
             //   color: "accent-background-strong",
             //   display: true,
@@ -42,6 +42,7 @@ export default function ({ children }: { children: React.ReactNode }) {
             //   color: "accent-solid-weak",
             // }}
           />
+          */}
           <Stack
             width="full"
             height="full"

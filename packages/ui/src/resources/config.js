@@ -8,10 +8,10 @@ const style = {
   neutral: "gray", // sand | gray | slate
   brand: "custom", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan
   accent: "custom", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan
-  solid: "inverse", // color | contrast | inverse
+  solid: "color", // color | contrast | inverse
   solidStyle: "plastic", // flat | plastic
   border: "conservative", // rounded | playful | conservative
-  surface: "translucent", // filled | translucent
+  surface: "filled", // filled | translucent
   transition: "all", // all | micro | macro
   scaling: "100", // 90 | 95 | 100 | 105 | 110
 };
