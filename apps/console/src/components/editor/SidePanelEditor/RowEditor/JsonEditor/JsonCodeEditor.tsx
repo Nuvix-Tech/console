@@ -13,7 +13,7 @@ const JsonEditor = ({ value = "", readOnly = false, onInputChange = noop }: Json
   return (
     <Editor
       className="monaco-editor"
-      theme="supabase"
+      theme="nuvix"
       defaultLanguage="json"
       value={value}
       loading={<h4>Loading</h4>}

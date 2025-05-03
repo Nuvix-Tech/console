@@ -3,7 +3,7 @@ import { isEqual } from "lodash";
 import { FilterIcon, Plus } from "lucide-react";
 import { KeyboardEvent, useCallback, useMemo, useState } from "react";
 
-import { formatFilterURLParams } from "../../../SupabaseGrid.utils";
+import { formatFilterURLParams } from "../../../NuvixGrid.utils";
 import type { Filter } from "../../../types";
 
 import FilterRow from "./FilterRow";

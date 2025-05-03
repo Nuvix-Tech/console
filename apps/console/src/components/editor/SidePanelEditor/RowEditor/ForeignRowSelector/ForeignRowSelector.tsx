@@ -9,7 +9,7 @@ import {
   formatFilterURLParams,
   formatSortURLParams,
   sortsToUrlParams,
-} from "@/components/grid/SupabaseGrid.utils";
+} from "@/components/grid/NuvixGrid.utils";
 import RefreshButton from "@/components/grid/components/header/RefreshButton";
 import FilterPopover from "@/components/grid/components/header/filter/FilterPopover";
 import { SortPopover } from "@/components/grid/components/header/sort";

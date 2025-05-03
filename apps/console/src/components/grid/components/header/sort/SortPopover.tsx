@@ -3,7 +3,7 @@ import { isEqual } from "lodash";
 import { ChevronDown, List } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 
-import { formatSortURLParams } from "@/components/grid/SupabaseGrid.utils";
+import { formatSortURLParams } from "@/components/grid/NuvixGrid.utils";
 import { DropdownControl } from "@/components/grid/components/common/DropdownControl";
 import type { Sort } from "@/components/grid/types";
 import { useTableEditorTableStateSnapshot } from "@/lib/store/table";

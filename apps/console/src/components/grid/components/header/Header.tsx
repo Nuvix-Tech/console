@@ -9,7 +9,7 @@ import {
   filtersToUrlParams,
   saveTableEditorStateToLocalStorage,
   sortsToUrlParams,
-} from "../../SupabaseGrid.utils";
+} from "../../NuvixGrid.utils";
 // import GridHeaderActions from "components/interfaces/TableGridEditor/GridHeaderActions";
 // import { ButtonTooltip } from "components/ui/ButtonTooltip";
 // import { useSendEventMutation } from "data/telemetry/send-event-mutation";

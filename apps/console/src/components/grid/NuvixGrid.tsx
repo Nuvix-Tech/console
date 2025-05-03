@@ -17,7 +17,7 @@ import {
   formatFilterURLParams,
   formatSortURLParams,
   saveTableEditorStateToLocalStorage,
-} from "./SupabaseGrid.utils";
+} from "./NuvixGrid.utils";
 import { Shortcuts } from "./components/common/Shortcuts";
 import Footer from "./components/footer/Footer";
 import { Grid } from "./components/grid/Grid";
@@ -25,14 +25,13 @@ import Header, { HeaderProps } from "./components/header/Header";
 import { RowContextMenu } from "./components/menu";
 import { Filter, GridProps } from "./types";
 import { useProjectStore } from "@/lib/store";
-import { useQuery } from "@tanstack/react-query";
 import { useTableEditorFiltersSort } from "@/hooks/useTableEditorFilterSort";
 import { Column } from "@nuvix/ui/components";
 import { TableParam } from "@/types";
 
 const EMPTY_ARR: any[] = [];
 
-export const SupabaseGrid = ({
+export const NuvixGrid = ({
   customHeader,
   gridProps,
   children,

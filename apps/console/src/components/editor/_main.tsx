@@ -3,7 +3,7 @@ import { useParams, useRouter } from "next/navigation";
 import { Suspense, useCallback, useMemo } from "react";
 import { isUndefined } from "lodash";
 
-import { SupabaseGrid } from "../grid/SupabaseGrid";
+import { NuvixGrid } from "../grid/NuvixGrid";
 import { TableEditorTableStateContextProvider } from "@/lib/store/table";
 import { useProjectStore } from "@/lib/store";
 import {
@@ -22,6 +22,7 @@ import { Feedback } from "@nuvix/ui/components";
 import SidePanelEditor from "./SidePanelEditor/SidePanelEditor";
 import { useSearchQuery } from "@/hooks/useQuery";
 import { TableParam } from "@/types";
+import DeleteConfirmationDialogs from "./components/_delete_dialog";
 
 // Placeholder component for loading state
 const LoadingState = () => <div>Loading...</div>;
@@ -149,7 +150,7 @@ export const TableEditor = () => {
         table={table}
         editable={editable}
       >
-        <SupabaseGrid
+        <NuvixGrid
           key={gridKey}
           gridProps={{ height: "100%" }}
           customHeader={
@@ -167,13 +168,16 @@ export const TableEditor = () => {
           {/* {(isViewSelected || isTableSelected) && selectedView === 'definition' && (
               <TableDefinition entity={table} />
             )} */}
-        </SupabaseGrid>
+        </NuvixGrid>
 
         <SidePanelEditor
           editable={editable}
           selectedTable={isTableLike(table) ? table : undefined}
           onTableCreated={onTableCreated}
-          // onTableDeleted={onTableDeleted}
+        />
+        <DeleteConfirmationDialogs
+          selectedTable={isTableLike(selectedTable) ? selectedTable : undefined}
+          onTableDeleted={onTableDeleted}
         />
       </TableEditorTableStateContextProvider>
     </>

@@ -2,7 +2,7 @@ import { ArrowLeft, ArrowRight, HelpCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 
 // import { useParams } from "common";
-import { formatFilterURLParams } from "@/components/grid/SupabaseGrid.utils";
+import { formatFilterURLParams } from "@/components/grid/NuvixGrid.utils";
 // import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
 import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
 import { isTableLike } from "@/data/table-editor/table-editor-types";

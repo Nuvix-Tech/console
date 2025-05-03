@@ -143,7 +143,7 @@ export const TextEditor = ({
           <div className="w-full h-full flex-grow">
             <Editor
               key={value}
-              theme="supabase"
+              theme="nuvix"
               className="monaco-editor"
               defaultLanguage="markdown"
               value={strValue}

@@ -8,7 +8,7 @@ import {
 import { Query } from "@nuvix/pg-meta/src/query";
 import { getTableRowsSql } from "@nuvix/pg-meta/src/query/table-row-query";
 // import { IS_PLATFORM } from "common";
-import { parseSupaTable } from "@/components/grid/SupabaseGrid.utils";
+import { parseSupaTable } from "@/components/grid/NuvixGrid.utils";
 import { Filter, Sort, SupaRow, SupaTable } from "@/components/grid/types";
 import { prefetchTableEditor } from "@/data/table-editor/table-editor-query";
 import {

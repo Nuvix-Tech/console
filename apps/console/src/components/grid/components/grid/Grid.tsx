@@ -1,7 +1,7 @@
 import { forwardRef, memo, useRef } from "react";
 import { DataGrid, CalculatedColumn, DataGridHandle } from "react-data-grid";
 
-import { handleCopyCell } from "@/components/grid/SupabaseGrid.utils";
+import { handleCopyCell } from "@/components/grid/NuvixGrid.utils";
 // import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
 // import AlertError from "components/ui/AlertError";
 import { useForeignKeyConstraintsQuery } from "@/data/database/foreign-key-constraints-query";

@@ -1,6 +1,6 @@
 import { Query } from "@nuvix/pg-meta/src/query";
 import { QueryClient, useQuery, useQueryClient, type UseQueryOptions } from "@tanstack/react-query";
-import { parseSupaTable } from "@/components/grid/SupabaseGrid.utils";
+import { parseSupaTable } from "@/components/grid/NuvixGrid.utils";
 import type { Filter, SupaTable } from "@/components/grid/types";
 import { prefetchTableEditor } from "@/data/table-editor/table-editor-query";
 import { RoleImpersonationState, wrapWithRoleImpersonation } from "@/lib/role-impersonation";
