@@ -43,10 +43,10 @@ export const gridStyles = {
 
 export const gridStyles2 = {
   ["--rdg-color" as any]: "var(--neutral-on-background-strong)",
-  ["--rdg-background-color" as any]: "var(--neutral-alpha-weak)",
+  ["--rdg-background-color" as any]: "var(--static-transparent)",
   ["--rdg-row-hover-background-color" as any]: "var(--neutral-background-medium)",
-  ["--rdg-border-color" as any]: "var(--neutral-alpha-medium)",
-  ["--rdg-header-background-color" as any]: "var(--neutral-alpha-strong)",
+  ["--rdg-border-color" as any]: "var(--surface-border)",
+  ["--rdg-header-background-color" as any]: "var(--surface-background)",
   ["--rdg-row-selected-background-color" as any]: "var(--neutral-background-strong)",
 };
 
@@ -212,7 +212,7 @@ export const Grid = memo(
 
           <DataGrid
             ref={ref}
-            className={`${gridClass} flex-grow`}
+            className={`${gridClass} flex-grow !border-r-0 !border-l-0`}
             rowClass={rowClass}
             columns={snap.gridColumns as CalculatedColumn<any, any>[]}
             rows={rows ?? []}

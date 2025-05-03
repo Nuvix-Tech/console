@@ -130,11 +130,13 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
         // position={alwaysFull ? "relative" : "absolute"}
         vertical="space-between"
         overflowX="hidden"
-        // border={"neutral-medium"}
-        style={{
-          borderWidth: 0,
-          // borderRightWidth: border ? 1 : 0,
-        }}
+        border={"surface"}
+        style={
+          {
+            // borderWidth: 0,
+            // borderRightWidth: border ? 1 : 0,
+          }
+        }
         radius="l"
         zIndex={10}
         overflowY="auto"
@@ -202,13 +204,15 @@ export const SecondSidebar = ({ noMarg, noBg, border = true }: SecondSidebarProp
           gap="m"
           position="relative"
           background={noBg ? "transparent" : "surface"}
-          // border="neutral-medium"
+          border="surface"
           overflowX="hidden"
           overflowY="auto"
-          style={{
-            borderWidth: 0,
-            // borderRightWidth: border ? 1 : 0,
-          }}
+          style={
+            {
+              // borderWidth: 0,
+              // borderRightWidth: border ? 1 : 0,
+            }
+          }
           radius="l"
         >
           <Column fillWidth gap="s" paddingBottom="56">

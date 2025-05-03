@@ -122,7 +122,7 @@ export const NuvixGrid = ({
   return (
     <DndProvider backend={HTML5Backend} context={window}>
       <Column
-        background="neutral-alpha-weak"
+        // background="neutral-alpha-weak"
         border="neutral-alpha-medium"
         fill
         radius="l"

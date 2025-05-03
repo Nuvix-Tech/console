@@ -37,7 +37,7 @@ const ProjectHeader: React.FC<HeaderProps> = () => {
       <Row
         hide="s"
         as="header"
-        // borderBottom="neutral-medium"
+        border="surface"
         fillWidth
         // position="fixed"
         zIndex={10}
@@ -45,6 +45,7 @@ const ProjectHeader: React.FC<HeaderProps> = () => {
         gap="12"
         paddingX="m"
         height="64"
+        minHeight="64"
         vertical="center"
         background="surface"
         ref={headerRef}

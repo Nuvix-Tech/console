@@ -162,7 +162,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       [styles.error]: displayError && debouncedValue !== "",
     });
 
-    const optional = labelOptional && `(${labelOptional})`;
+    const optional = labelOptional ? `(${labelOptional})` : "";
 
     return (
       <Flex
