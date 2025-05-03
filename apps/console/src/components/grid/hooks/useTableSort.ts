@@ -1,10 +1,10 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo } from "react";
 
-import { formatSortURLParams, sortsToUrlParams } from '@/components/grid/NuvixGrid.utils'
-import type { Sort } from '@/components/grid/types'
-import { useSaveTableEditorState } from './useSaveTableEditorState'
-import { useTableEditorFiltersSort } from '@/hooks/useTableEditorFilterSort'
-import { useTableEditorTableStateSnapshot } from '@/lib/store/table'
+import { formatSortURLParams, sortsToUrlParams } from "@/components/grid/NuvixGrid.utils";
+import type { Sort } from "@/components/grid/types";
+import { useSaveTableEditorState } from "./useSaveTableEditorState";
+import { useTableEditorFiltersSort } from "@/hooks/useTableEditorFilterSort";
+import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 
 /**
  * Hook for managing table sort URL parameters and saving.
@@ -14,37 +14,37 @@ import { useTableEditorTableStateSnapshot } from '@/lib/store/table'
  * Does NOT interact with snapshot directly.
  */
 export function useTableSort() {
-    const { sorts: urlSorts, setParams } = useTableEditorFiltersSort()
-    const snap = useTableEditorTableStateSnapshot()
-    const { saveSortsAndTriggerSideEffects } = useSaveTableEditorState()
+  const { sorts: urlSorts, setParams } = useTableEditorFiltersSort();
+  const snap = useTableEditorTableStateSnapshot();
+  const { saveSortsAndTriggerSideEffects } = useSaveTableEditorState();
 
-    const tableName = useMemo(() => snap.table?.name || '', [snap])
+  const tableName = useMemo(() => snap.table?.name || "", [snap]);
 
-    const sorts = useMemo(() => {
-        return formatSortURLParams(tableName, urlSorts)
-    }, [tableName, urlSorts])
+  const sorts = useMemo(() => {
+    return formatSortURLParams(tableName, urlSorts);
+  }, [tableName, urlSorts]);
 
-    const onApplySorts = useCallback(
-        (appliedSorts: Sort[]) => {
-            if (!tableName) {
-                return console.warn(
-                    '[useTableSort] Table name missing in callback, cannot apply sort correctly.'
-                )
-            }
+  const onApplySorts = useCallback(
+    (appliedSorts: Sort[]) => {
+      if (!tableName) {
+        return console.warn(
+          "[useTableSort] Table name missing in callback, cannot apply sort correctly.",
+        );
+      }
 
-            const sortsWithTable = appliedSorts.map((sort) => ({ ...sort, table: tableName }))
-            const newUrlSorts = sortsToUrlParams(sortsWithTable)
+      const sortsWithTable = appliedSorts.map((sort) => ({ ...sort, table: tableName }));
+      const newUrlSorts = sortsToUrlParams(sortsWithTable);
 
-            setParams((prevParams) => ({ ...prevParams, sort: newUrlSorts }))
+      setParams((prevParams) => ({ ...prevParams, sort: newUrlSorts }));
 
-            saveSortsAndTriggerSideEffects(newUrlSorts)
-        },
-        [snap, setParams, saveSortsAndTriggerSideEffects]
-    )
+      saveSortsAndTriggerSideEffects(newUrlSorts);
+    },
+    [snap, setParams, saveSortsAndTriggerSideEffects],
+  );
 
-    return {
-        sorts,
-        urlSorts,
-        onApplySorts,
-    }
+  return {
+    sorts,
+    urlSorts,
+    onApplySorts,
+  };
 }

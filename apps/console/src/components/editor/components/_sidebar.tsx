@@ -5,9 +5,7 @@ import { Column, Spinner, ToggleButton } from "@nuvix/ui/components"; // Assumin
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
-export const Sidebar = () => (
-  <SidebarContent />
-);
+export const Sidebar = () => <SidebarContent />;
 
 const SidebarContent = () => {
   const { project, sdk } = useProjectStore();
@@ -68,16 +66,18 @@ const SidebarContent = () => {
       <div className="flex items-center justify-center h-full">
         <Spinner size="l" />
       </div>
-    )
+    );
   }
 
   if (error) {
     return (
       <div className="p-4 text-center text-red-500">
         <p>Error loading tables: {error.message}</p>
-        <button onClick={() => setError(null)} className="mt-2 text-blue-500">Retry</button>
+        <button onClick={() => setError(null)} className="mt-2 text-blue-500">
+          Retry
+        </button>
       </div>
-    )
+    );
   }
 
   if (!tables || tables.length === 0) {
@@ -97,7 +97,7 @@ const SidebarContent = () => {
             truncate
             selected={table.id === currentTableId}
             label={table.name}
-            href={projectId ? `/project/${projectId}/editor/${table.id}` : '#'}
+            href={projectId ? `/project/${projectId}/editor/${table.id}` : "#"}
           />
         ))}
       </Column>

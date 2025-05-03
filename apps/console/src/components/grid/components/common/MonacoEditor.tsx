@@ -1,5 +1,4 @@
 import Editor from "@monaco-editor/react";
-import { useEffect, useState } from "react";
 
 type MonacoEditorProps = {
   width?: string | number | undefined;
@@ -20,7 +19,6 @@ export const MonacoEditor = ({
   onChange,
   onMount,
 }: MonacoEditorProps) => {
-  const [theme, setTheme] = useState("light");
   function handleEditorOnMount(editor: any) {
     // add margin above first line
     editor.changeViewZones((accessor: any) => {
@@ -44,39 +42,11 @@ export const MonacoEditor = ({
     if (onMount) onMount(editor);
   }
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const htmlElement = document.documentElement;
-      const initialTheme = htmlElement.getAttribute("data-theme");
-
-      if (initialTheme) {
-        setTheme(initialTheme);
-      }
-
-      const observer = new MutationObserver((mutationsList) => {
-        for (const mutation of mutationsList) {
-          if (mutation.type === "attributes" && mutation.attributeName === "data-theme") {
-            // Check if the mutated target is an Element before accessing getAttribute
-            if (mutation.target instanceof Element) {
-              setTheme(mutation.target.getAttribute("data-theme") || "");
-            }
-          }
-        }
-      });
-
-      observer.observe(htmlElement, { attributes: true });
-
-      return () => {
-        observer.disconnect();
-      };
-    }
-  }, []);
-
   return (
     <Editor
       width={width}
       height={height || "200px"}
-      theme={theme}
+      theme={"nuvix"}
       wrapperProps={{
         className: "grid-monaco-editor-container",
       }}
