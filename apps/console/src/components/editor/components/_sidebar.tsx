@@ -86,11 +86,13 @@ const SidebarContent = () => {
 
   return (
     <div className="h-full w-full">
-      <Column gap="4" padding="12">
+      <Column gap="1" padding="4">
         {tables.map((table) => (
           <ToggleButton
             fillWidth
+            size="s"
             justifyContent="flex-start"
+            className="truncate line-clamp-1"
             key={table.id}
             truncate
             selected={table.id === currentTableId}
