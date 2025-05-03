@@ -42,12 +42,13 @@ export const gridStyles = {
 };
 
 export const gridStyles2 = {
-  ["--rdg-color" as any]: "var(--neutral-on-background-strong)",
+  ["--rdg-color" as any]: "var(--neutral-on-background-medium)",
   ["--rdg-background-color" as any]: "var(--page-background)",
-  ["--rdg-row-hover-background-color" as any]: "var(--neutral-background-medium)",
+  ["--rdg-row-hover-background-color" as any]: "var(--neutral-solid-weak)",
   ["--rdg-border-color" as any]: "var(--neutral-alpha-medium)",
   ["--rdg-header-background-color" as any]: "var(--neutral-background-medium)",
   ["--rdg-row-selected-background-color" as any]: "var(--neutral-background-medium)",
+  ["--rdg-row-selected-hover-background-color" as any]: "var(--neutral-background-strong)",
 };
 
 // [Joshen] Just for visibility this is causing some hook errors in the browser

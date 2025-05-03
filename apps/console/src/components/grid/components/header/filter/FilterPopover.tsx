@@ -11,6 +11,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/p
 import { Button } from "@nuvix/ui/components";
 import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { Separator } from "@nuvix/sui/components/separator";
+import { cn } from "@nuvix/sui/lib/utils";
 
 export interface FilterPopoverProps {
   filters: string[];
@@ -32,7 +33,9 @@ const FilterPopover = ({ filters, portal = true, onApplyFilters }: FilterPopover
         <Button
           size="s"
           variant="tertiary"
-          type={(filters || []).length > 0 ? "link" : "text"}
+          className={cn({
+            "!text-[var(--brand-on-background-medium)]": (filters || []).length > 0,
+          })}
           prefixIcon={<FilterIcon size={16} />}
         >
           {btnText}

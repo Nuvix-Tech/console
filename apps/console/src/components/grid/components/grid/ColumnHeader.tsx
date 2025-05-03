@@ -12,6 +12,7 @@ import { ColumnMenu } from "../menu";
 import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import { getForeignKeyCascadeAction } from "@/components/editor/SidePanelEditor/ColumnEditor/ColumnEditor.utils";
+import { Text } from "@nuvix/ui/components";
 
 export function ColumnHeader<R>({
   column,
@@ -109,18 +110,18 @@ export function ColumnHeader<R>({
   });
 
   const opacity = isDragging ? 0 : 1;
-  const cursor = column.frozen ? "sb-grid-column-header--cursor" : "";
+  const cursor = column.frozen ? "nx-grid-column-header--cursor" : "";
   drag(drop(ref));
 
   return (
     <div ref={ref} data-handler-id={handlerId} style={{ opacity }} className="w-full group/gridcol">
-      <div className={`sb-grid-column-header ${cursor} flex w-full items-center justify-between`}>
-        <div className="sb-grid-column-header__inner space-x-2">
+      <div className={`nx-grid-column-header ${cursor} flex w-full items-center justify-between`}>
+        <div className="nx-grid-column-header__inner space-x-2 items-center flex justify-center">
           {renderColumnIcon(columnType, { name: column.name as string, foreignKey })}
           {isPrimaryKey && (
             <Tooltip>
               <TooltipTrigger>
-                <div className="sb-grid-column-header__inner__primary-key">
+                <div className="nx-grid-column-header__inner__primary-key brand-on-background-weak">
                   <Key size={14} strokeWidth={2} />
                 </div>
               </TooltipTrigger>
@@ -129,13 +130,24 @@ export function ColumnHeader<R>({
               </TooltipContent>
             </Tooltip>
           )}
-          <span className="sb-grid-column-header__inner__name" title={hoverValue}>
+          <Text
+            as="span"
+            variant="label-strong-s"
+            onBackground="neutral-strong"
+            className="nx-grid-column-header__inner__name"
+            title={hoverValue}
+          >
             {column.name}
-          </span>
-          <span className="sb-grid-column-header__inner__format neutral-on-background-weak">
+          </Text>
+          <Text
+            as="span"
+            variant="body-default-xs"
+            onBackground="neutral-weak"
+            className="nx-grid-column-header__inner__format"
+          >
             {columnFormat}
             {columnFormat === "bytea" ? ` (hex)` : ""}
-          </span>
+          </Text>
           {isEncrypted && (
             <Tooltip>
               <TooltipTrigger>
@@ -163,7 +175,7 @@ function renderColumnIcon(
       // [Joshen] Look into this separately but this should be a hover card instead
       return (
         <Tooltip>
-          <TooltipTrigger>
+          <TooltipTrigger className="brand-on-background-weak">
             <Link size={14} strokeWidth={2} />
           </TooltipTrigger>
           <TooltipContent side="bottom">

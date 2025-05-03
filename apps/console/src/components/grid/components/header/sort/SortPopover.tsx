@@ -11,6 +11,7 @@ import SortRow from "./SortRow";
 import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/popover";
 import { Button } from "@nuvix/ui/components";
 import { Separator } from "@nuvix/sui/components/separator";
+import { cn } from "@nuvix/sui/lib/utils";
 
 export interface SortPopoverProps {
   sorts: string[];
@@ -32,7 +33,9 @@ const SortPopover = ({ sorts, portal = true, onApplySorts }: SortPopoverProps) =
         <Button
           size="s"
           variant="tertiary"
-          type={(sorts || []).length > 0 ? "link" : "text"}
+          className={cn({
+            "!text-[var(--brand-on-background-medium)]": (sorts || []).length > 0,
+          })}
           prefixIcon={<List size={18} />}
         >
           {btnText}
