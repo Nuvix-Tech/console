@@ -1,5 +1,4 @@
 import { noop } from "lodash";
-// import { Select } from "ui";
 
 // import type { EnumeratedType } from "@/data/enumerated-types/enumerated-types-query";
 import { POSTGRES_DATA_TYPES } from "../SidePanelEditor.constants";
@@ -7,7 +6,7 @@ import type { ColumnField } from "../SidePanelEditor.types";
 import { typeExpressionSuggestions } from "./ColumnEditor.constants";
 import type { Suggestion } from "./ColumnEditor.types";
 import InputWithSuggestions from "./InputWithSuggestions";
-import { Select } from "@nuvix/ui/components";
+import { Select } from "@/components/others/ui";
 
 type EnumeratedType = {
   name: string;
@@ -44,9 +43,8 @@ const ColumnDefaultValue = ({
       return (
         <Select
           label="Default Value"
-          labelAsPlaceholder
           value={formattedValue}
-          onChange={(event: any) => onUpdateField({ defaultValue: event.target.value })}
+          onValueChange={(value) => onUpdateField({ defaultValue: value })}
           options={[
             { value: "", label: "NULL" },
             ...enumValues.map((value: string) => ({ value, label: value })),

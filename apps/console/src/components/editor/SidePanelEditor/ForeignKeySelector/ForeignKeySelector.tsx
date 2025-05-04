@@ -19,6 +19,8 @@ import { generateCascadeActionDescription } from "./ForeignKeySelector.utils";
 import { useProjectStore } from "@/lib/store";
 import { SidePanel } from "@/ui/SidePanel";
 import InformationBox from "@/ui/InformationBox";
+import { Select } from "@/components/others/ui";
+import { Button, IconButton } from "@nuvix/ui/components";
 
 const EMPTY_STATE: ForeignKey = {
   id: undefined,
@@ -225,62 +227,54 @@ export const ForeignKeySelector = ({
             url="https://www.postgresql.org/docs/current/tutorial-fk.html"
             urlLabel="Postgres Foreign Key Documentation"
           />
-          {/* <Listbox
+          <Select
             id="schema"
             label="Select a schema"
             value={fk.schema}
-            onChange={(value: string) => updateSelectedSchema(value)}
-          >
-            {schemas?.map((schema) => {
-              return (
-                <Listbox.Option
-                  key={schema.id}
-                  value={schema.name}
-                  label={schema.name}
-                  className="min-w-96"
-                  addOnBefore={() => <Database size={16} strokeWidth={1.5} />}
-                >
+            onValueChange={(value: string) => updateSelectedSchema(value)}
+            options={
+              schemas?.map((schema) => ({
+                value: schema.name,
+                label: schema.name,
+                view: (
                   <div className="flex items-center gap-2">
                     <span className="hidden">{schema.name}</span>
                     <span className="text-foreground">{schema.name}</span>
                   </div>
-                </Listbox.Option>
-              );
-            })}
-          </Listbox>
+                ),
+                icon: <Database size={16} strokeWidth={1.5} />,
+              })) ?? []
+            }
+          />
 
-          <Listbox
+          <Select
             id="table"
             label="Select a table to reference to"
-            value={selectedTable?.id ?? 1}
-            onChange={(value: string) => updateSelectedTable(Number(value))}
-          >
-            <Listbox.Option key="empty" className="min-w-96" value={1} label="---">
-              ---
-            </Listbox.Option>
-            {sortBy(tables, ["schema"]).map((table) => {
-              return (
-                <Listbox.Option
-                  key={table.id}
-                  value={table.id}
-                  label={table.name}
-                  className="min-w-96"
-                  addOnBefore={() => <Table size={16} strokeWidth={1.5} />}
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="hidden">{table.name}</span>
-                    <span className="text-foreground-lighter">{table.schema}</span>
-                    <span className="text-foreground">{table.name}</span>
-                  </div>
-                </Listbox.Option>
-              );
-            })}
-          </Listbox>
+            value={(selectedTable?.id ?? 1).toString()}
+            onValueChange={(value: string) => updateSelectedTable(Number(value))}
+            options={[
+              { value: "1", label: "---" },
+              ...sortBy(tables, ["schema"]).map((table) => {
+                return {
+                  label: table.name,
+                  value: table.id.toString(),
+                  view: (
+                    <div className="flex items-center gap-2">
+                      <span className="hidden">{table.name}</span>
+                      <span className="text-foreground-lighter">{table.schema}</span>
+                      <span className="text-foreground">{table.name}</span>
+                    </div>
+                  ),
+                  icon: <Table size={16} strokeWidth={1.5} />,
+                };
+              }),
+            ]}
+          />
 
           {fk.schema && fk.table && (
             <>
               <div className="flex flex-col gap-y-3">
-                <label className="text-foreground-light text-sm">
+                <label className="text-muted-foreground text-sm">
                   Select columns from{" "}
                   <code className="text-xs">
                     {fk.schema}.{fk.table}
@@ -288,10 +282,10 @@ export const ForeignKeySelector = ({
                   to reference to
                 </label>
                 <div className="grid grid-cols-10 gap-y-2">
-                  <div className="col-span-5 text-xs text-foreground-lighter">
+                  <div className="col-span-5 text-xs text-muted-foreground">
                     {selectedSchema}.{table.name.length > 0 ? table.name : "[unnamed table]"}
                   </div>
-                  <div className="col-span-4 text-xs text-foreground-lighter text-right">
+                  <div className="col-span-4 text-xs text-muted-foreground text-right">
                     {fk.schema}.{fk.table}
                   </div>
                   {fk.columns.length === 0 && (
@@ -304,65 +298,61 @@ export const ForeignKeySelector = ({
                   {fk.columns.map((_, idx) => (
                     <Fragment key={`${uuidv4()}`}>
                       <div className="col-span-4">
-                        <Listbox
+                        <Select
                           id="column"
                           value={fk.columns[idx].source}
-                          onChange={(value: string) => updateSelectedColumn(idx, "source", value)}
-                        >
-                          <Listbox.Option key="empty" value={""} label="---" className="!w-[170px]">
-                            ---
-                          </Listbox.Option>
-                          {(table?.columns ?? [])
-                            .filter((x) => x.name.length !== 0)
-                            .map((column) => (
-                              <Listbox.Option
-                                key={column.id}
-                                value={column.name}
-                                label={column.name}
-                                className="!w-[170px]"
-                              >
-                                <div className="flex items-center gap-2">
-                                  <span className="text-foreground">{column.name}</span>
-                                  <span className="text-foreground-lighter">
-                                    {column.format === "" ? "-" : column.format}
-                                  </span>
-                                </div>
-                              </Listbox.Option>
-                            ))}
-                        </Listbox>
+                          onValueChange={(value: string) =>
+                            updateSelectedColumn(idx, "source", value)
+                          }
+                          options={[
+                            { value: "", label: "---" },
+                            ...(table?.columns ?? [])
+                              .filter((x) => x.name.length !== 0)
+                              .map((column) => ({
+                                value: column.name,
+                                label: column.name,
+                                view: (
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-foreground">{column.name}</span>
+                                    <span className="text-foreground-lighter">
+                                      {column.format === "" ? "-" : column.format}
+                                    </span>
+                                  </div>
+                                ),
+                              })),
+                          ]}
+                        />
                       </div>
                       <div className="col-span-1 flex justify-center items-center">
                         <ArrowRight />
                       </div>
                       <div className="col-span-4">
-                        <Listbox
+                        <Select
                           id="column"
                           value={fk.columns[idx].target}
-                          onChange={(value: string) => updateSelectedColumn(idx, "target", value)}
-                        >
-                          <Listbox.Option key="empty" value={""} label="---" className="!w-[170px]">
-                            ---
-                          </Listbox.Option>
-                          {(selectedTable?.columns ?? []).map((column) => (
-                            <Listbox.Option
-                              key={column.id}
-                              value={column.name}
-                              label={column.name}
-                              className="!w-[170px]"
-                            >
-                              <div className="flex items-center gap-2">
-                                <span className="text-foreground">{column.name}</span>
-                                <span className="text-foreground-lighter">{column.format}</span>
-                              </div>
-                            </Listbox.Option>
-                          ))}
-                        </Listbox>
+                          onValueChange={(value: string) =>
+                            updateSelectedColumn(idx, "target", value)
+                          }
+                          options={[
+                            { value: "", label: "---" },
+                            ...(selectedTable?.columns ?? []).map((column) => ({
+                              value: column.name,
+                              label: column.name,
+                              view: (
+                                <div className="flex items-center gap-2">
+                                  <span className="text-foreground">{column.name}</span>
+                                  <span className="text-foreground-lighter">{column.format}</span>
+                                </div>
+                              ),
+                            })),
+                          ]}
+                        />
                       </div>
                       <div className="col-span-1 flex justify-end items-center">
-                        <Button
-                          type="default"
-                          className="px-1"
-                          icon={<X />}
+                        <IconButton
+                          variant="ghost"
+                          size="s"
+                          icon={<X size={14} />}
                           disabled={fk.columns.length === 1}
                           onClick={() => onRemoveColumn(idx)}
                         />
@@ -371,7 +361,7 @@ export const ForeignKeySelector = ({
                   ))}
                 </div>
                 <div className="space-y-2">
-                  <Button type="default" onClick={addColumn}>
+                  <Button variant="secondary" size="s" onClick={addColumn}>
                     Add another column
                   </Button>
                   {errors.columns && <p className="text-red-900 text-sm">{errors.columns}</p>}
@@ -459,11 +449,12 @@ export const ForeignKeySelector = ({
                 urlLabel="More information"
               />
 
-              <Listbox
+              <Select
                 id="updateAction"
-                value={fk.updateAction}
                 label="Action if referenced row is updated"
-                descriptionText={
+                value={fk.updateAction}
+                onValueChange={(value: string) => updateCascadeAction("updateAction", value)}
+                helperText={
                   <p>
                     {generateCascadeActionDescription(
                       "update",
@@ -472,47 +463,48 @@ export const ForeignKeySelector = ({
                     )}
                   </p>
                 }
-                onChange={(value: string) => updateCascadeAction("updateAction", value)}
-              >
-                {FOREIGN_KEY_CASCADE_OPTIONS.filter((option) =>
+                options={FOREIGN_KEY_CASCADE_OPTIONS.filter((option) =>
                   ["no-action", "cascade", "restrict"].includes(option.key),
-                ).map((option) => (
-                  <Listbox.Option key={option.key} value={option.value} label={option.label}>
-                    <p className="text-foreground">{option.label}</p>
-                  </Listbox.Option>
-                ))}
-              </Listbox>
+                ).map((option) => ({
+                  value: option.value,
+                  label: option.label,
+                  view: (
+                    <div className="flex items-center gap-2">
+                      <span className="text-foreground">{option.label}</span>
+                    </div>
+                  ),
+                }))}
+              />
 
-              <Listbox
+              <Select
                 id="deletionAction"
-                value={fk.deletionAction}
-                className="[&>div>label]:flex [&>div>label]:items-center"
                 label="Action if referenced row is removed"
-                // @ts-ignore
-                labelOptional={
+                value={fk.deletionAction}
+                onValueChange={(value: string) => updateCascadeAction("deletionAction", value)}
+                optionalText={
                   <DocsButton href="https://supabase.com/docs/guides/database/postgres/cascade-deletes" />
                 }
-                descriptionText={
-                  <>
-                    <p>
-                      {generateCascadeActionDescription(
-                        "delete",
-                        fk.deletionAction,
-                        `${fk.schema}.${fk.table}`,
-                      )}
-                    </p>
-                  </>
+                helperText={
+                  <p>
+                    {generateCascadeActionDescription(
+                      "delete",
+                      fk.deletionAction,
+                      `${fk.schema}.${fk.table}`,
+                    )}
+                  </p>
                 }
-                onChange={(value: string) => updateCascadeAction("deletionAction", value)}
-              >
-                {FOREIGN_KEY_CASCADE_OPTIONS.map((option) => (
-                  <Listbox.Option key={option.key} value={option.value} label={option.label}>
-                    <p className="text-foreground">{option.label}</p>
-                  </Listbox.Option>
-                ))}
-              </Listbox>
+                options={FOREIGN_KEY_CASCADE_OPTIONS.map((option) => ({
+                  value: option.value,
+                  label: option.label,
+                  view: (
+                    <div className="flex items-center gap-2">
+                      <span className="text-foreground">{option.label}</span>
+                    </div>
+                  ),
+                }))}
+              />
             </>
-          )} */}
+          )}
         </div>
       </SidePanel.Content>
     </SidePanel>

@@ -1,3 +1,4 @@
+import { Code } from "@chakra-ui/react";
 import type { PostgresTable, PostgresColumn } from "@nuvix/pg-meta";
 
 interface Props {
@@ -10,13 +11,13 @@ const HeaderTitle: React.FC<Props> = ({ table, column }) => {
   if (!column) {
     return (
       <>
-        Add new column to <code>{table.name}</code>
+        Add new column to <Code>{table.name}</Code>
       </>
     );
   }
   return (
     <>
-      Update column <code>{column.name}</code> from <code>{column.table}</code>
+      Update column <Code>{column.name}</Code> from <Code>{column.table}</Code>
     </>
   );
 };

@@ -34,6 +34,7 @@ import {
 } from "@nuvix/sui/components/command";
 import { Alert, AlertDescription, AlertTitle } from "@nuvix/sui/components/alert";
 import { Input } from "@/components/others/ui";
+import { Code } from "@chakra-ui/react";
 
 interface ColumnTypeProps {
   value: string;
@@ -171,7 +172,7 @@ const ColumnType = ({
             aria-expanded={open}
             className={cn(
               "w-full justify-between line-clamp-1 turncate",
-              !value && "text-foreground-lighter",
+              !value && "text-muted-foreground",
             )}
             suffixIcon={<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />}
           >
@@ -223,7 +224,7 @@ const ColumnType = ({
                         value={option.format}
                         className={cn("relative", option.format === value ? "bg-surface-200" : "")}
                         onSelect={(value: string) => {
-                          // [Joshen] For camel case types specifically, format property includes escaped double quotes
+                          // For camel case types specifically, format property includes escaped double quotes
                           // which will cause the POST columns call to error out. So we strip it specifically in this context
                           onOptionSelect(
                             option.schema === "public" ? value.replaceAll('"', "") : value,
@@ -264,13 +265,13 @@ const ColumnType = ({
           <Icon name="warningTriangle" size="s" />
           <AlertTitle>
             {" "}
-            It is recommended to use <code className="text-xs">{recommendation.alternative}</code>{" "}
+            It is recommended to use <Code className="text-xs">{recommendation.alternative}</Code>{" "}
             instead
           </AlertTitle>
           <AlertDescription>
             <p>
               Postgres recommends against using the data type{" "}
-              <code className="text-xs">{value}</code> unless you have a very specific use case.
+              <Code className="text-xs">{value}</Code> unless you have a very specific use case.
             </p>
             <div className="flex items-center space-x-2 mt-3">
               <Button

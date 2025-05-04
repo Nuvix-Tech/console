@@ -4,8 +4,6 @@ import { ExternalLink, Plus } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-// import { useParams } from "common";
-// import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
 import { FormSection, FormSectionContent, FormSectionLabel } from "@/ui/Forms/FormSection";
 import {
   CONSTRAINT_TYPE,
@@ -73,7 +71,7 @@ const ColumnEditor = ({
   saveChanges = noop,
   updateEditorDirty = noop,
 }: ColumnEditorProps) => {
-  const { ref } = useParams();
+  const { id: ref } = useParams();
   const { project, sdk } = useProjectStore();
 
   const [errors, setErrors] = useState<Dictionary<any>>({});
@@ -223,14 +221,14 @@ const ColumnEditor = ({
             placeholder="column_name"
             errorText={errors.name}
             value={columnFields?.name ?? ""}
-            onChange={(event: any) => onUpdateField({ name: event.target.value })}
+            onChange={(event) => onUpdateField({ name: event.target.value })}
           />
           <Input
             label="Description"
             optionalText="Optional"
             type="text"
             value={columnFields?.comment ?? ""}
-            onChange={(event: any) => onUpdateField({ comment: event.target.value })}
+            onChange={(event) => onUpdateField({ comment: event.target.value })}
           />
         </FormSectionContent>
       </FormSection>
@@ -241,23 +239,25 @@ const ColumnEditor = ({
             className="lg:!col-span-4"
             description={
               <div className="space-y-2">
-                <Button variant="secondary" size="s" prefixIcon={<Plus strokeWidth={2} />}>
-                  <Link href={`/project/${ref}/database/types`} target="_blank" rel="noreferrer">
-                    Create enum types
-                  </Link>
+                <Button
+                  variant="secondary"
+                  size="s"
+                  prefixIcon={<Plus strokeWidth={2} />}
+                  href={`/project/${ref}/database/types`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Create enum types
                 </Button>
                 <Button
                   variant="secondary"
                   size="s"
                   prefixIcon={<ExternalLink size={14} strokeWidth={2} />}
+                  href="https://supabase.com/docs/guides/database/tables#data-types"
+                  target="_blank"
+                  rel="noreferrer"
                 >
-                  <Link
-                    href="https://supabase.com/docs/guides/database/tables#data-types"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    About data types
-                  </Link>
+                  About data types
                 </Button>
               </div>
             }

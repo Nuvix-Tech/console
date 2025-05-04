@@ -1,5 +1,4 @@
 "use client";
-import { Field } from "@/components/cui/field";
 import { Field as ChakraField, Stack } from "@chakra-ui/react";
 import { Input as Input_Cui, InputGroup, InputProps, InputAddonProps } from "@chakra-ui/react";
 import * as React from "react";
@@ -41,6 +40,7 @@ export const Input = React.forwardRef<HTMLInputElement, RootInputProps & RootFie
         width="full"
         justifyContent="space-between"
         alignItems={isHoriz ? "flex-start" : undefined}
+        required={rest.required}
       >
         {label && (
           <ChakraField.Label

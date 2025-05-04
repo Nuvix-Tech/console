@@ -1,7 +1,5 @@
 import { useState } from "react";
-// import { Button } from "ui";
 
-// import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
 import { useForeignKeyConstraintsQuery } from "@/data/database/foreign-key-constraints-query";
 import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
 import { ForeignKeySelector } from "../ForeignKeySelector/ForeignKeySelector";
@@ -9,7 +7,7 @@ import type { ForeignKey } from "../ForeignKeySelector/ForeignKeySelector.types"
 import type { ColumnField } from "../SidePanelEditor.types";
 import { ForeignKeyRow } from "../TableEditor/ForeignKeysManagement/ForeignKeyRow";
 import { checkIfRelationChanged } from "../TableEditor/ForeignKeysManagement/ForeignKeysManagement.utils";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useProjectStore } from "@/lib/store";
 import { Button } from "@nuvix/ui/components";
 import { TableParam } from "@/types";
@@ -111,7 +109,7 @@ const ColumnForeignKey = ({
           </div>
         )}
 
-        <Button type="default" className="w-min" onClick={() => setOpen(true)}>
+        <Button variant="secondary" size="s" className="w-min" onClick={() => setOpen(true)}>
           Add foreign key
         </Button>
       </div>
