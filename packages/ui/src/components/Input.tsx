@@ -210,8 +210,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               id={id}
               placeholder={
                 labelAsPlaceholder
-                  ? (label ?? props.placeholder) + ` ${optional}`
-                  : props.placeholder + ` ${optional}`
+                  ? (label ?? props.placeholder ?? "") + ` ${optional}`
+                  : (props.placeholder ?? "" + ` ${optional}`)
               }
               onFocus={handleFocus}
               onBlur={handleBlur}

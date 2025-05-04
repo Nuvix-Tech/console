@@ -73,7 +73,9 @@ const SidePanel = ({
   ...props
 }: SidePanelProps) => {
   const footerContent = customFooter ? (
-    customFooter
+    <SheetFooter>
+      <div className="w-full relative">{customFooter}</div>
+    </SheetFooter>
   ) : (
     <SheetFooter>
       <div>
@@ -126,11 +128,7 @@ const SidePanel = ({
       )}
 
       <SheetContent
-        className={classNames(
-          getSize(size),
-          className,
-          "sm:max-w-[inherit] h-full overflow-y-auto",
-        )}
+        className={classNames(getSize(size), className, "sm:max-w-[inherit] h-full")}
         onOpenAutoFocus={props.onOpenAutoFocus}
         onCloseAutoFocus={props.onCloseAutoFocus}
         onEscapeKeyDown={props.onEscapeKeyDown}
@@ -142,7 +140,7 @@ const SidePanel = ({
         }}
       >
         {header && <SheetHeader>{header}</SheetHeader>}
-        <div className="size-full">{children}</div>
+        <div className="h-full overflow-y-auto">{children}</div>
         {!hideFooter && footerContent}
       </SheetContent>
     </Sheet>
@@ -156,19 +154,19 @@ export function Separator() {
 const getSize = (size: CustomProps["size"]) => {
   switch (size) {
     case "medium":
-      return "sm:w-md";
-    case "large":
-      return "sm:w-lg";
-    case "xlarge":
       return "sm:w-xl";
-    case "xxlarge":
+    case "large":
       return "sm:w-2xl";
-    case "xxxlarge":
+    case "xlarge":
       return "sm:w-3xl";
-    case "xxxxlarge":
+    case "xxlarge":
       return "sm:w-4xl";
+    case "xxxlarge":
+      return "sm:w-5xl";
+    case "xxxxlarge":
+      return "sm:w-6xl";
     default:
-      return "";
+      return "w-full";
   }
 };
 

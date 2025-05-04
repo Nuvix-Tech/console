@@ -4,6 +4,7 @@ import Link from "next/link";
 // import Papa from 'papaparse'
 import { toast } from "sonner";
 import { useSnapshot } from "valtio";
+import { cva, VariantProps } from "class-variance-authority";
 
 import { IS_PLATFORM } from "@/lib/constants";
 import {
@@ -45,6 +46,28 @@ import { useTableEditorStateSnapshot } from "@/lib/store/table-editor";
 import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
 import { cn } from "@nuvix/sui/lib/utils";
 
+export const TreeViewItemVariant = cva(
+  // [Joshen Temp]: aria-selected:text-foreground not working as aria-selected property not rendered in DOM,
+  // [Joshen Temp]: aria-selected:!bg-selection not working as aria-selected property not rendered in DOM
+  "w-full group relative transition-colors h-[28px] flex items-center gap-3 text-sm cursor-pointer select-none text-foreground-light hover:bg-control aria-expanded:bg-transparent data-[state=open]:bg-transparent", // data-[state=open]:bg-control bg state for context menu open
+  {
+    variants: {
+      isSelected: {
+        true: "text-foreground !bg-selection", // bg state for context menu open
+        false: "",
+      },
+      isOpened: {
+        true: "bg-control",
+        false: "",
+      },
+      isPreview: {
+        true: "bg-control text-foreground",
+        false: "",
+      },
+    },
+  },
+);
+
 export interface EntityListItemProps {
   id: number | string;
   projectRef: string;
@@ -67,10 +90,10 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
   // const isTableEditorTabsEnabled = useIsTableEditorTabsEnabled()
   // const tabId = createTabId(entity.type, { id: entity.id })
   // const tabStore = getTabsStore(projectRef)
-  // const isPreview = isTableEditorTabsEnabled ? tabStore.previewTabId === tabId : false
+  const isPreview = false; // isTableEditorTabsEnabled ? tabStore.previewTabId === tabId : false
 
   // const tabs = useSnapshot(tabStore)
-  // const isOpened = Object.values(tabs.tabsMap).some((tab) => tab.metadata?.tableId === entity.id)
+  const isOpened = true; // Object.values(tabs.tabsMap).some((tab) => tab.metadata?.tableId === entity.id)
   const isActive = Number(id) === entity.id;
   const canEdit = isActive && !isLocked;
 
@@ -225,13 +248,17 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
       href={`/project/${projectRef}/editor/${entity.id}?schema=${entity.schema}`}
       role="button"
       aria-label={`View ${entity.name}`}
+      fillWidth
       className={cn(
-        // TreeViewItemVariant({
-        //   isSelected: isActive && !isPreview,
-        //   isOpened: isOpened && !isPreview,
-        //   isPreview,
-        // }),
-        "px-4",
+        TreeViewItemVariant({
+          isSelected: isActive && !isPreview,
+          isOpened: isOpened && !isPreview,
+          isPreview,
+        }),
+        "!px-4 flex items-center justify-between !mx-0",
+        {
+          "bg-[var(--neutral-alpha-weak)]": isActive && !isPreview,
+        },
       )}
       // onDoubleClick={(e) => {
       //   e.preventDefault()

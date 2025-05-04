@@ -9,10 +9,12 @@ import { useState, useEffect } from "react";
 export const Sidebar = () => {
   return (
     <div className="h-full w-full">
-      <div className="w-full py-4 px-2 border-b border-b-border">
-        <Text variant="label-strong-l">Table Editor</Text>
+      <div className="w-full pb-3 px-3 border-b border-b-border">
+        <Text variant="label-default-xl">Table Editor</Text>
       </div>
-      <TableEditorMenu />
+      <div className="h-full min-h-[calc(100svh-140px)]">
+        <TableEditorMenu />
+      </div>
     </div>
   );
 };

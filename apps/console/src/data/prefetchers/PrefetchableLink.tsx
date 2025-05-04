@@ -1,7 +1,7 @@
-import Link from "next/link";
+import { SmartLink } from "@nuvix/ui/components";
 import { ComponentProps, forwardRef, useRef } from "react";
 
-type LinkProps = ComponentProps<typeof Link>;
+type LinkProps = ComponentProps<typeof SmartLink>;
 
 export interface PrefetchableLinkProps extends Omit<LinkProps, "onMouseEnter" | "onMouseLeave"> {
   prefetcher: () => void;
@@ -37,9 +37,15 @@ const PrefetchableLink = forwardRef<HTMLAnchorElement, PrefetchableLinkProps>(
     }
 
     return (
-      <Link ref={ref} {...props} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+      <SmartLink
+        unstyled
+        ref={ref}
+        {...props}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+      >
         {children}
-      </Link>
+      </SmartLink>
     );
   },
 );

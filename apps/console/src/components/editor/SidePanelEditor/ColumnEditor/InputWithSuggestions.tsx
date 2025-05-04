@@ -19,7 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "@nuvix/sui/components/dropdown-menu";
 import type { Suggestion } from "./ColumnEditor.types";
-import { Button, Input } from "@nuvix/ui/components";
+import { Button, IconButton, Input } from "@nuvix/ui/components";
 
 const MAX_SUGGESTIONS = 3;
 
@@ -89,8 +89,9 @@ const InputWithSuggestions = ({
         layout={layout}
         disabled={disabled}
         className={className}
-        inputClass="pr-10"
         type="text"
+        labelAsPlaceholder
+        height="s"
         value={value}
         onChange={onInputChange}
         data-testid={dataTestId}
@@ -98,14 +99,14 @@ const InputWithSuggestions = ({
           showSuggestions && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
-                  type="default"
-                  className="!px-1 mr-0.5"
+                <IconButton
+                  variant="ghost"
+                  size="s"
                   tooltip={suggestionsTooltip || "Suggestions"}
                   tooltipPosition="bottom"
                 >
                   <List strokeWidth={1.5} size={14} />
-                </Button>
+                </IconButton>
               </DropdownMenuTrigger>
 
               <DropdownMenuContent align="end" side="bottom">

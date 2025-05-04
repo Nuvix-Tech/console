@@ -116,9 +116,5 @@
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.2"
   },
-  "trustedDependencies": [
-    "@biomejs/biome",
-    "@parcel/watcher",
-    "sharp"
-  ]
+  "trustedDependencies": ["@biomejs/biome", "@parcel/watcher", "sharp"]
 }

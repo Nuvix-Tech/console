@@ -8,6 +8,7 @@ import {
   PopoverContent,
   PopoverTrigger,
   Popover,
+  Input as Input_SUI,
 } from "@nuvix/sui/components";
 
 import { useForeignKeyConstraintsQuery } from "@/data/database/foreign-key-constraints-query";
@@ -22,8 +23,9 @@ import { ForeignKey } from "../ForeignKeySelector/ForeignKeySelector.types";
 import type { ColumnField } from "../SidePanelEditor.types";
 import { checkIfRelationChanged } from "./ForeignKeysManagement/ForeignKeysManagement.utils";
 import { useProjectStore } from "@/lib/store";
-import { Button, Checkbox, Input, Tag } from "@nuvix/ui/components";
+import { Button, IconButton, Input, Tag, Checkbox as Checkbox_UI } from "@nuvix/ui/components";
 import { cn } from "@nuvix/sui/lib/utils";
+import { Checkbox } from "@/components/cui/checkbox";
 
 /**
  * [Joshen] For context:
@@ -109,30 +111,27 @@ const Column = ({
     <div className="flex w-full items-center">
       <div className={`w-[5%] ${!isNewRecord ? "hidden" : ""}`}>
         <div className="cursor-drag" {...dragHandleProps}>
-          <Menu strokeWidth={1} size={16} />
+          <Menu strokeWidth={1} size={14} />
         </div>
       </div>
       <div className="w-[25%]">
         <div className="flex w-[95%] items-center justify-between">
-          <Input
-            // size="small"
-            height="s"
+          <Input_SUI
             value={column.name}
             title={column.name}
             disabled={hasImportContent}
-            labelAsPlaceholder
             placeholder="column_name"
             className={cn(
-              "[&>div>div>div>input]:py-1.5 [&>div>div>div>input]:border-r-transparent [&>div>div>div>input]:rounded-r-none",
               hasImportContent ? "opacity-50" : "",
+              "!h-[32px] rounded-l border-solid !border-surface-300 border-r-0 rounded-r-none text-xs",
             )}
             onChange={(event: any) => onUpdateColumn({ name: event.target.value })}
           />
           {relations.filter((r) => !r.toRemove).length === 0 ? (
             <Button
-              type="dashed"
+              size="s"
               variant="secondary"
-              className="rounded-l-none h-[30px] py-0 px-2"
+              className="!rounded-l-none !h-[30px] py-0 px-2 !border-dashed"
               onClick={() => onEditForeignKey()}
             >
               <Link size={12} />
@@ -140,7 +139,7 @@ const Column = ({
           ) : (
             <Popover open={open} onOpenChange={setOpen} modal={false}>
               <PopoverTrigger asChild>
-                <Button type="default" className="rounded-l-none h-[30px] py-0 px-2">
+                <Button size="s" variant="secondary" className="rounded-l-none h-[30px] py-0 px-2">
                   <Link size={12} />
                 </Button>
               </PopoverTrigger>
@@ -266,9 +265,9 @@ const Column = ({
       </div>
       <div className="w-[10%]">
         <Checkbox
-          label=""
-          isChecked={column.isPrimaryKey}
-          onToggle={() => {
+          size={"sm"}
+          checked={column.isPrimaryKey}
+          onCheckedChange={() => {
             const updatedValue = !column.isPrimaryKey;
             onUpdateColumn({
               isPrimaryKey: updatedValue,
@@ -283,16 +282,16 @@ const Column = ({
           <Popover>
             <PopoverTrigger
               data-testid={`${column.name}-extra-options`}
-              className="group flex items-center -space-x-1"
+              className="group flex items-center -space-x-1 relative"
             >
               {settingsCount > 0 && (
-                <div className="rounded-full bg-foreground h-4 w-4 flex items-center justify-center text-xs text-background">
+                <div className="rounded-full bg-foreground size-3 flex items-center justify-center text-[10px] text-background absolute top-1">
                   {settingsCount}
                 </div>
               )}
-              <div className="text-foreground-light transition-colors group-hover:text-foreground">
+              <IconButton variant="ghost">
                 <Settings size={16} strokeWidth={1} />
-              </div>
+              </IconButton>
             </PopoverTrigger>
             <PopoverContent align="end" className="w-96 p-0">
               <div className="flex items-center justify-center bg-surface-200 space-y-1 py-1.5 px-3 border-b border-overlay">
@@ -301,7 +300,7 @@ const Column = ({
 
               <div className="flex flex-col space-y-1" key={`${column.id}_configuration`}>
                 {!column.isPrimaryKey && (
-                  <Checkbox
+                  <Checkbox_UI
                     label="Is Nullable"
                     description="Specify if the column can assume a NULL value if no value is provided"
                     checked={column.isNullable}
@@ -309,7 +308,7 @@ const Column = ({
                     onChange={() => onUpdateColumn({ isNullable: !column.isNullable })}
                   />
                 )}
-                <Checkbox
+                <Checkbox_UI
                   label="Is Unique"
                   description="Enforce if values in the column should be unique across rows"
                   checked={column.isUnique}
@@ -317,7 +316,7 @@ const Column = ({
                   onChange={() => onUpdateColumn({ isUnique: !column.isUnique })}
                 />
                 {column.format.includes("int") && (
-                  <Checkbox
+                  <Checkbox_UI
                     label="Is Identity"
                     description="Automatically assign a sequential unique number to the column"
                     checked={column.isIdentity}
@@ -331,7 +330,7 @@ const Column = ({
                 )}
 
                 {!column.isPrimaryKey && (
-                  <Checkbox
+                  <Checkbox_UI
                     label="Define as Array"
                     description="Define your column as a variable-length multidimensional array"
                     checked={column.isArray}
@@ -350,9 +349,14 @@ const Column = ({
       </div>
       {!hasImportContent && (
         <div className="flex w-[5%] justify-end">
-          <button className="cursor-pointer" onClick={() => onRemoveColumn()}>
+          <IconButton
+            variant="ghost"
+            size="s"
+            className="cursor-pointer"
+            onClick={() => onRemoveColumn()}
+          >
             <X size={16} strokeWidth={1} />
-          </button>
+          </IconButton>
         </div>
       )}
     </div>

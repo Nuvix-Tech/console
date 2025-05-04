@@ -71,6 +71,7 @@ const SchemaSelector = ({
     <div className={className}>
       {isSchemasLoading && (
         <Button
+          fillWidth
           variant="secondary"
           key="schema-selector-skeleton"
           className="w-full [&>span]:w-full"
@@ -97,8 +98,10 @@ const SchemaSelector = ({
         <Popover open={open} onOpenChange={setOpen} modal={false}>
           <PopoverTrigger asChild>
             <Button
+              fillWidth
               size={size}
               disabled={disabled}
+              justifyContent="space-between"
               variant="secondary"
               data-testid="schema-selector"
               className={`w-full [&>span]:w-full !pr-1 space-x-1`}

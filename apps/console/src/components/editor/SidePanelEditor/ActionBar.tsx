@@ -35,8 +35,13 @@ const ActionBar = ({
   };
 
   return (
-    <div className="flex w-full justify-end space-x-3 border-t border-default px-3 py-4">
-      <Button type="button" onClick={closePanel} disabled={isRunning || loading}>
+    <div className="flex w-full justify-end space-x-3 border-t border-default px-3 py-4 relative">
+      <Button
+        type="button"
+        variant="secondary"
+        onClick={closePanel}
+        disabled={isRunning || loading}
+      >
         {backButtonLabel}
       </Button>
 

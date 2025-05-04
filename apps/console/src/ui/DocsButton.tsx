@@ -12,8 +12,10 @@ export const DocsButton = ({ href, abbrev = true, className }: DocsButtonProps) 
     <Button
       asChild
       type="default"
+      variant="secondary"
+      size="s"
       className={className}
-      prefixIcon={<BookOpen />}
+      prefixIcon={<BookOpen size={16} />}
       onClick={(e) => e.stopPropagation()}
     >
       <a target="_blank" rel="noopener noreferrer" href={href}>

@@ -56,6 +56,7 @@ import {
   CommandList,
 } from "@nuvix/sui/components/command";
 import { Alert, AlertDescription, AlertTitle } from "@nuvix/sui/components/alert";
+import { ScrollArea } from "@nuvix/sui/components";
 
 interface ColumnTypeProps {
   value: string;
@@ -137,6 +138,7 @@ const ColumnType = ({
             label={showLabel ? "Type" : ""}
             // layout={showLabel ? layout : undefined}
             className="md:gap-x-0 [&>div>div]:text-left"
+            width="100%"
             height="s"
             hasPrefix={inferIcon(
               POSTGRES_DATA_TYPE_OPTIONS.find((x) => x.name === value)?.type ?? "",
@@ -185,13 +187,19 @@ const ColumnType = ({
           <Button
             type="default"
             role="combobox"
+            variant="secondary"
             size={"s"}
+            justifyContent="space-between"
+            fillWidth
             aria-expanded={open}
-            className={cn("w-full justify-between", !value && "text-foreground-lighter")}
+            className={cn(
+              "w-full justify-between line-clamp-1 turncate",
+              !value && "text-foreground-lighter",
+            )}
             suffixIcon={<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />}
           >
             {value ? (
-              <div className="flex gap-2 items-center">
+              <div className="flex gap-2 items-center turncate max-w-[95%]">
                 <span>{inferIcon(getOptionByName(value)?.type ?? "")}</span>
                 {value.replaceAll('"', "")}
               </div>
@@ -201,90 +209,82 @@ const ColumnType = ({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[460px] p-0" side="bottom" align="center">
-          <ScrollArea className="h-[335px]">
-            <Command>
-              <CommandInput placeholder="Search types..." />
-              <CommandEmpty>Type not found.</CommandEmpty>
+          <Command>
+            <CommandInput placeholder="Search types..." />
+            <CommandEmpty>Type not found.</CommandEmpty>
 
-              <CommandList>
-                <CommandGroup>
-                  {POSTGRES_DATA_TYPE_OPTIONS.map((option: PostgresDataTypeOption) => (
-                    <CommandItem
-                      key={option.name}
-                      value={option.name}
-                      className={cn("relative", option.name === value ? "bg-surface-200" : "")}
-                      onSelect={(value: string) => {
-                        onOptionSelect(value);
-                        setOpen(false);
-                      }}
-                    >
-                      <div className="flex items-center gap-2 pr-6">
-                        <span>{inferIcon(option.type)}</span>
-                        <span className="text-foreground">{option.name}</span>
-                        <span className="text-foreground-lighter">{option.description}</span>
-                      </div>
-                      <span className="absolute right-3 top-2">
-                        {option.name === value ? <Check className="text-brand" size={14} /> : ""}
-                      </span>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-                {enumTypes.length > 0 && (
-                  <>
-                    <CommandItem>Other types</CommandItem>
-                    <CommandGroup>
-                      {enumTypes.map((option) => (
-                        <CommandItem
-                          key={option.id}
-                          value={option.format}
-                          className={cn(
-                            "relative",
-                            option.format === value ? "bg-surface-200" : "",
-                          )}
-                          onSelect={(value: string) => {
-                            // [Joshen] For camel case types specifically, format property includes escaped double quotes
-                            // which will cause the POST columns call to error out. So we strip it specifically in this context
-                            onOptionSelect(
-                              option.schema === "public" ? value.replaceAll('"', "") : value,
-                            );
-                            setOpen(false);
-                          }}
-                        >
-                          <div className="flex items-center gap-2">
-                            <div>
-                              <ListPlus size={16} className="text-foreground" strokeWidth={1.5} />
-                            </div>
-                            <span className="text-foreground">
-                              {option.format.replaceAll('"', "")}
-                            </span>
-                            {option.comment !== undefined && (
-                              <span
-                                title={option.comment ?? ""}
-                                className="text-foreground-lighter"
-                              >
-                                {option.comment}
-                              </span>
-                            )}
-                            {option.format === value && (
-                              <span className="absolute right-3 top-2">
-                                <Check className="text-brand" size={14} />
-                              </span>
-                            )}
+            <CommandList className="max-h-[335px] overflow-y-auto">
+              <CommandGroup>
+                {POSTGRES_DATA_TYPE_OPTIONS.map((option: PostgresDataTypeOption) => (
+                  <CommandItem
+                    key={option.name}
+                    value={option.name}
+                    className={cn("relative", option.name === value ? "bg-surface-200" : "")}
+                    onSelect={(value: string) => {
+                      onOptionSelect(value);
+                      setOpen(false);
+                    }}
+                  >
+                    <div className="flex items-center gap-2 pr-6">
+                      <span>{inferIcon(option.type)}</span>
+                      <span className="text-foreground">{option.name}</span>
+                      <span className="text-foreground-lighter">{option.description}</span>
+                    </div>
+                    <span className="absolute right-3 top-2">
+                      {option.name === value ? <Check className="text-brand" size={14} /> : ""}
+                    </span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+              {enumTypes.length > 0 && (
+                <>
+                  <CommandItem>Other types</CommandItem>
+                  <CommandGroup>
+                    {enumTypes.map((option) => (
+                      <CommandItem
+                        key={option.id}
+                        value={option.format}
+                        className={cn("relative", option.format === value ? "bg-surface-200" : "")}
+                        onSelect={(value: string) => {
+                          // [Joshen] For camel case types specifically, format property includes escaped double quotes
+                          // which will cause the POST columns call to error out. So we strip it specifically in this context
+                          onOptionSelect(
+                            option.schema === "public" ? value.replaceAll('"', "") : value,
+                          );
+                          setOpen(false);
+                        }}
+                      >
+                        <div className="flex items-center gap-2">
+                          <div>
+                            <ListPlus size={16} className="text-foreground" strokeWidth={1.5} />
                           </div>
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </>
-                )}
-              </CommandList>
-            </Command>
-          </ScrollArea>
+                          <span className="text-foreground">
+                            {option.format.replaceAll('"', "")}
+                          </span>
+                          {option.comment !== undefined && (
+                            <span title={option.comment ?? ""} className="text-foreground-lighter">
+                              {option.comment}
+                            </span>
+                          )}
+                          {option.format === value && (
+                            <span className="absolute right-3 top-2">
+                              <Check className="text-brand" size={14} />
+                            </span>
+                          )}
+                        </div>
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </>
+              )}
+            </CommandList>
+          </Command>
         </PopoverContent>
       </Popover>
 
       {showRecommendation && recommendation !== undefined && (
         <Alert variant="warning" className="mt-2">
-          <Icon name="warningTriangle" />
+          <Icon name="warningTriangle" size="s" />
           <AlertTitle>
             {" "}
             It is recommended to use <code className="text-xs">{recommendation.alternative}</code>{" "}
@@ -296,36 +296,28 @@ const ColumnType = ({
               <code className="text-xs">{value}</code> unless you have a very specific use case.
             </p>
             <div className="flex items-center space-x-2 mt-3">
-              <Button type="default" prefixIcon={<ExternalLink />}>
-                {/* asChild */}
+              <Button
+                asChild
+                type="default"
+                size="s"
+                variant="secondary"
+                prefixIcon={<ExternalLink size={14} />}
+              >
                 <Link href={recommendation.reference} target="_blank" rel="noreferrer">
                   Read more
                 </Link>
               </Button>
-              <Button type="primary" onClick={() => onOptionSelect(recommendation.alternative)}>
+              <Button
+                variant="primary"
+                size="s"
+                onClick={() => onOptionSelect(recommendation.alternative)}
+              >
                 Use {recommendation.alternative}
               </Button>
             </div>
           </AlertDescription>
         </Alert>
       )}
-    </div>
-  );
-};
-
-export const ScrollArea = ({
-  children,
-  className,
-}: { children: ReactNode; className?: string }) => {
-  return (
-    <div
-      className={cn(
-        "h-full w-full overflow-hidden rounded-md border bg-surface-100",
-        "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:duration-200",
-        className,
-      )}
-    >
-      {children}
     </div>
   );
 };

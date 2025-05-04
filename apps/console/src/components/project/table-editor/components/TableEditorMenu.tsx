@@ -153,13 +153,14 @@ const TableEditorMenu = () => {
           <div className="grid gap-3 mx-4">
             {!isLocked ? (
               <Button
+                fillWidth
                 title="Create a new table"
                 label="New table"
                 disabled={!canCreateTables}
                 size="s"
                 prefixIcon={<Plus size={14} strokeWidth={1.5} className="text-foreground-muted" />}
-                type="default"
-                className="justify-start"
+                variant="secondary"
+                justifyContent="flex-start"
                 onClick={snap.onAddTable}
                 tooltip={
                   !canCreateTables ? "You need additional permissions to create tables" : undefined
@@ -282,7 +283,7 @@ const TableEditorMenu = () => {
                 // />
               )}
               {entityTypes.length > 0 && (
-                <div className="flex flex-1 flex-grow" data-testid="tables-list">
+                <div className="flex flex-1 flex-grow h-full" data-testid="tables-list">
                   <InfiniteList
                     items={entityTypes}
                     // @ts-expect-error

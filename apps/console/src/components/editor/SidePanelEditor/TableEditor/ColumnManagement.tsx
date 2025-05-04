@@ -143,7 +143,13 @@ const ColumnManagement = ({
         <div className="flex items-center justify-between w-full">
           <h5>Columns</h5>
           <div className="flex items-center gap-x-2">
-            <Button asChild type="default" prefixIcon={<ExternalLink size={12} strokeWidth={2} />}>
+            <Button
+              asChild
+              size="s"
+              variant="secondary"
+              type="button"
+              prefixIcon={<ExternalLink size={12} strokeWidth={2} />}
+            >
               <a
                 href="https://supabase.com/docs/guides/database/tables#data-types"
                 target="_blank"
@@ -157,16 +163,30 @@ const ColumnManagement = ({
                 <div className="py-3 border-r" />
                 {hasImportContent ? (
                   <div className="flex items-center gap-x-2">
-                    <Button type="default" prefixIcon={<Edit />} onClick={onSelectImportData}>
+                    <Button
+                      size="s"
+                      variant="secondary"
+                      type="button"
+                      prefixIcon={<Edit size={14} />}
+                      onClick={onSelectImportData}
+                    >
                       Edit content
                     </Button>
-                    <Button type="danger" prefixIcon={<Trash />} onClick={onClearImportContent}>
+                    <Button
+                      size="s"
+                      variant="danger"
+                      type="button"
+                      prefixIcon={<Trash size={14} />}
+                      onClick={onClearImportContent}
+                    >
                       Remove content
                     </Button>
                   </div>
                 ) : (
                   <Button
-                    type="default"
+                    size="s"
+                    variant="secondary"
+                    type="button"
                     onClick={() => {
                       onSelectImportData();
                       // sendEvent({
@@ -219,7 +239,7 @@ const ColumnManagement = ({
           <div className="flex w-full px-3">
             {/* Drag handle */}
             {isNewRecord && <div className="w-[5%]" />}
-            <div className="w-[25%] flex items-center space-x-2">
+            <div className="w-[25%] flex items-center !space-x-2">
               <h5 className="text-xs text-foreground-lighter">Name</h5>
               <Tooltip>
                 <TooltipTrigger>
@@ -234,7 +254,7 @@ const ColumnManagement = ({
             <div className="w-[25%]">
               <h5 className="text-xs text-foreground-lighter">Type</h5>
             </div>
-            <div className={`${isNewRecord ? "w-[25%]" : "w-[30%]"} flex items-center space-x-2`}>
+            <div className={`${isNewRecord ? "w-[25%]" : "w-[30%]"} flex items-center !space-x-2`}>
               <h5 className="text-xs text-foreground-lighter">Default Value</h5>
               <Tooltip>
                 <TooltipTrigger>
@@ -345,7 +365,7 @@ const ColumnManagement = ({
 
         {!hasImportContent && (
           <div className="flex items-center justify-center rounded border border-strong border-dashed py-3">
-            <Button type="default" onClick={() => onAddColumn()}>
+            <Button variant="secondary" size="s" onClick={() => onAddColumn()}>
               Add column
             </Button>
           </div>
