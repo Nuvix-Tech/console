@@ -91,7 +91,7 @@ function InfiniteList<T, P>({
   hasNextPage = false,
   isLoadingNextPage = false,
   getItemSize = () => 40,
-  onLoadNextPage = () => {},
+  onLoadNextPage = () => { },
   ItemComponent = () => null,
   LoaderComponent,
 }: InfiniteListProps<T, P>) {
@@ -99,7 +99,7 @@ function InfiniteList<T, P>({
 
   // Only load 1 page of items at a time
   // Pass an empty callback to InfiniteLoader in case it asks to load more than once
-  const loadMoreItems = isLoadingNextPage ? () => {} : onLoadNextPage;
+  const loadMoreItems = isLoadingNextPage ? () => { } : onLoadNextPage;
 
   // Every row is loaded except for our loading indicator row
   const isItemLoaded = (index: number) => {
