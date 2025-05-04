@@ -1,7 +1,7 @@
 import Editor, { OnChange } from "@monaco-editor/react";
 import { noop } from "lodash";
 
-// [Joshen] Should just use CodeEditor instead of declaring Editor here so that all the mount logic is consistent
+// Should just use CodeEditor instead of declaring Editor here so that all the mount logic is consistent
 
 interface JsonEditorProps {
   value: string;

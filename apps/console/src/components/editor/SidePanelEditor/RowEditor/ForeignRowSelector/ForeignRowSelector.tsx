@@ -3,7 +3,6 @@ import { useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
-// import { useParams } from "common";
 import {
   filtersToUrlParams,
   formatFilterURLParams,
@@ -21,19 +20,18 @@ import { useTableRowsQuery } from "@/data/table-rows/table-rows-query";
 //   RoleImpersonationState,
 //   useRoleImpersonationStateSnapshot,
 // } from "state/role-impersonation-state";
-// import { TableEditorTableStateContextProvider } from "state/table-editor-table";
-// import { Button, SidePanel } from "ui";
 import ActionBar from "../../ActionBar";
 import { ForeignKey } from "../../ForeignKeySelector/ForeignKeySelector.types";
 import { convertByteaToHex } from "../RowEditor.utils";
 import Pagination from "./Pagination";
 import SelectorGrid from "./SelectorGrid";
 import { useProjectStore } from "@/lib/store";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { SidePanel } from "@/ui/SidePanel";
 import { TableEditorTableStateContextProvider } from "@/lib/store/table";
 import { Button } from "@nuvix/ui/components";
 import { TableParam } from "@/types";
+import { Code } from "@chakra-ui/react";
 
 export interface ForeignRowSelectorProps {
   visible: boolean;
@@ -59,7 +57,7 @@ const ForeignRowSelector = ({
   const { tableId: _tableId, schema: schemaName, table: tableName, columns } = foreignKey ?? {};
   const tableId = _tableId ? Number(_tableId) : undefined;
 
-  // [Joshen] Only show Set NULL CTA if its a 1:1 foreign key, and source column is nullable
+  // Only show Set NULL CTA if its a 1:1 foreign key, and source column is nullable
   // As this wouldn't be straightforward for composite foreign keys
   const sourceColumn = (selectedTable?.columns ?? []).find((c) => c.name === columns?.[0].source);
   const isNullable = (columns ?? []).length === 1 && sourceColumn?.is_nullable;
@@ -126,9 +124,9 @@ const ForeignRowSelector = ({
       header={
         <div>
           Select a record to reference from{" "}
-          <code className="font-mono text-sm">
+          <Code className="font-mono text-sm">
             {schemaName}.{tableName}
-          </code>
+          </Code>
         </div>
       }
       onCancel={closePanel}
@@ -161,7 +159,7 @@ const ForeignRowSelector = ({
               table={table}
               editable={false}
             >
-              <div className="h-full flex flex-col">
+              <div className="h-full flex flex-col bg-muted">
                 <div className="flex items-center justify-between my-2 mx-3">
                   <div className="flex items-center">
                     <RefreshButton tableId={table?.id} isRefetching={isRefetching} />
@@ -187,6 +185,8 @@ const ForeignRowSelector = ({
                       <div className="pl-3">
                         <Button
                           type="default"
+                          variant="secondary"
+                          size="s"
                           onClick={() => {
                             if (columns?.length === 1) onSelect({ [columns[0].source]: null });
                           }}

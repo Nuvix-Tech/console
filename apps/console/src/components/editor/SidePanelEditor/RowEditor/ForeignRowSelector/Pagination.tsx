@@ -1,4 +1,4 @@
-import { Button } from "@nuvix/ui/components";
+import { IconButton } from "@nuvix/ui/components";
 import { Loader, ArrowLeft, ArrowRight } from "lucide-react";
 
 export interface PaginationProps {
@@ -30,22 +30,20 @@ const Pagination = ({
     <div className="flex items-center gap-2">
       {isLoading && <Loader size={14} className="animate-spin" />}
 
-      <Button
-        prefixIcon={<ArrowLeft />}
+      <IconButton
+        icon={<ArrowLeft size={14} />}
         variant="secondary"
         disabled={page <= 1 || isLoading}
         onClick={onPreviousPage}
         title="Previous Page"
-        style={{ padding: "3px 10px" }}
       />
 
-      <Button
-        suffixIcon={<ArrowRight />}
+      <IconButton
+        icon={<ArrowRight size={14} />}
         variant="secondary"
         disabled={hasRunOutOfRows || isLoading}
         onClick={onNextPage}
         title="Next Page"
-        style={{ padding: "3px 10px" }}
       />
     </div>
   );

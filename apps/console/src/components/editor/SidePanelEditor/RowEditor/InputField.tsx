@@ -7,13 +7,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@nuvix/sui/components";
-import { Button, IconButton, Select as Select_UI } from "@nuvix/ui/components";
+import { Button, IconButton } from "@nuvix/ui/components";
 import { DATETIME_TYPES, JSON_TYPES, TEXT_TYPES } from "../SidePanelEditor.constants";
 import { DateTimeInput } from "./DateTimeInput";
 import type { EditValue, RowField } from "./RowEditor.types";
 import { isValueTruncated } from "./RowEditor.utils";
-import { Textarea } from "@nuvix/ui/components";
-import { Input } from "@/components/others/ui";
+import { Input, Select, Textarea } from "@/components/others/ui";
 
 export interface InputFieldProps {
   field: RowField;
@@ -41,14 +40,13 @@ const InputField = ({
         <div className="text-area-text-sm">
           <Textarea
             data-testid={`${field.name}-input`}
-            layout="horizontal"
+            orientation="horizontal"
             label={field.name}
             className="text-sm"
-            description={field.comment}
-            labelOptional={field.format}
+            helperText={field.comment}
+            optionalText={field.format}
             disabled={!isEditable}
-            error={!!errors[field.name]}
-            errorMessage={errors[field.name]}
+            errorText={errors[field.name]}
             rows={5}
             value={field.value ?? ""}
             placeholder={
@@ -64,21 +62,18 @@ const InputField = ({
       );
     } else {
       return (
-        <Select_UI
-          // size="md"
-          // layout="horizontal"
+        <Select
+          size="md"
+          orientation="horizontal"
           value={field.value ?? ""}
           label={field.name}
-          labelOptional={field.format}
-          description={field.comment}
+          placeholder="---"
+          optionalText={field.format}
+          helperText={field.comment}
           disabled={!isEditable}
-          error={!!errors[field.name]}
-          errorMessage={errors[field.name]}
-          onSelect={(value) => onUpdateField({ [field.name]: value })}
-          options={[
-            { value: "", label: "---" },
-            ...field.enums.map((value: string) => ({ value, label: value })),
-          ]}
+          errorText={errors[field.name]}
+          onValueChange={(value) => onUpdateField({ [field.name]: value })}
+          options={[...field.enums.map((value: string) => ({ value, label: value }))]}
         />
       );
     }
@@ -139,11 +134,11 @@ const InputField = ({
       <div className="text-area-text-sm">
         <Textarea
           data-testid={`${field.name}-input`}
-          layout="horizontal"
+          orientation="horizontal"
           label={field.name}
           className="text-sm"
           resize="vertical"
-          description={
+          helperText={
             <>
               {field.comment && <p>{field.comment}</p>}
               {isTruncated && (
@@ -155,9 +150,9 @@ const InputField = ({
             </>
           }
           // textAreaClassName="pr-8"
-          labelOptional={field.format}
+          optionalText={field.format}
           disabled={!isEditable || isTruncated}
-          error={errors[field.name]}
+          errorText={errors[field.name]}
           rows={5}
           value={field.value ?? ""}
           placeholder={
@@ -263,26 +258,19 @@ const InputField = ({
     const defaultValue = field.value === null ? undefined : field.value;
 
     return (
-      // <FormItemLayout
-      //   isReactForm={false}
-      //   layout="horizontal"
-      //   label={field.name}
-      //   labelOptional={field.format}
-      //   description={field.comment}
-      //   className="[&>div:first-child>span]:text-foreground-lighter"
-      // >
-      <Select_UI
-        // size="md"
-        // layout="horizontal"
-        value={defaultValue === null ? "null" : defaultValue}
+      <Select
+        size="md"
+        orientation="horizontal"
+        value={field.value === null ? "null" : field.value}
         label={field.name}
-        labelOptional={field.format}
-        description={field.comment}
+        placeholder="---"
+        optionalText={field.format}
+        helperText={field.comment}
         disabled={!isEditable}
-        onSelect={(value) => onUpdateField({ [field.name]: value })}
-        options={[...options.map((option) => ({ value: option.value, label: option.value }))]}
+        errorText={errors[field.name]}
+        onValueChange={(value) => onUpdateField({ [field.name]: value === "null" ? null : value })}
+        options={options.map((option) => ({ value: option.value, label: option.label }))}
       />
-      // </FormItemLayout>
     );
   }
 

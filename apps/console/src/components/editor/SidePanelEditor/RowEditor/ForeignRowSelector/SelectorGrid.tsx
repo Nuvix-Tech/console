@@ -12,6 +12,7 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import { convertByteaToHex } from "../RowEditor.utils";
 import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
+import { gridStyles2 } from "@/components/grid/components/grid/Grid";
 
 export interface SelectorGridProps {
   rows: SupaRow[];
@@ -86,7 +87,7 @@ const SelectorGrid = ({ rows, onRowSelect }: SelectorGridProps) => {
     <DataGrid
       columns={columns}
       rows={rows}
-      style={{ height: "100%" }}
+      style={{ ...gridStyles2, height: "100%" }}
       onCellClick={(props) => onRowSelect(props.row)}
       rowClass={() => "cursor-pointer"}
     />

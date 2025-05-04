@@ -2,9 +2,6 @@ import { AlignLeft } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-// import { useParams } from "common";
-// import { ButtonTooltip } from "components/ui/ButtonTooltip";
-// import TwoOptionToggle from "components/ui/TwoOptionToggle";
 import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
 import { isTableLike } from "@/data/table-editor/table-editor-types";
 import { useGetCellValueMutation } from "@/data/table-rows/get-cell-value-mutation";
@@ -14,12 +11,13 @@ import ActionBar from "../../ActionBar";
 import { isValueTruncated } from "../RowEditor.utils";
 import { DrilldownViewer } from "./DrilldownViewer";
 import JsonCodeEditor from "./JsonCodeEditor";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useProjectStore } from "@/lib/store";
 import { SidePanel } from "@/ui/SidePanel";
 import { cn } from "@nuvix/sui/lib/utils";
-import { Button } from "@nuvix/ui/components";
+import { Button, IconButton } from "@nuvix/ui/components";
 import { TableParam } from "@/types";
+import { TwoOptionToggle } from "@/components/others/ui";
 
 interface JsonEditProps {
   row?: { [key: string]: any };
@@ -142,25 +140,24 @@ const JsonEdit = ({
               Viewing JSON Field: <code>{column}</code>
             </p>
           )}
-          {/* {(!isTruncated || (isTruncated && isSuccess)) && (
+          {(!isTruncated || (isTruncated && isSuccess)) && (
             <div className="flex items-center gap-x-2">
               {view === "edit" && (
-                <ButtonTooltip
-                  type="default"
+                <IconButton
+                  variant="ghost"
                   icon={<AlignLeft />}
-                  className="px-1"
                   onClick={() => prettify()}
-                  tooltip={{ content: { side: "bottom", text: "Prettify JSON" } }}
+                  tooltip={"Prettify JSON"}
+                  tooltipPosition="bottom"
                 />
               )}
               <TwoOptionToggle
                 options={["view", "edit"]}
                 activeOption={view}
-                borderOverride="border-muted"
                 onClickOption={setView}
               />
             </div>
-          )} */}
+          )}
         </div>
       }
       visible={visible}

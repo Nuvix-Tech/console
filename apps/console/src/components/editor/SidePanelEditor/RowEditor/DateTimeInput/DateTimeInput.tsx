@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@nuvix/sui/components/dropdown-menu";
 import { getColumnType } from "./DateTimeInput.utils";
-import { Button, IconButton } from "@nuvix/ui/components";
+import { IconButton } from "@nuvix/ui/components";
 import { cn } from "@nuvix/sui/lib/utils";
 import { Input } from "@/components/others/ui";
 

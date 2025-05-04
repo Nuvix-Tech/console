@@ -139,7 +139,7 @@ const SidePanel = ({
           if (props.onInteractOutside) props.onInteractOutside(event);
         }}
       >
-        {header && <SheetHeader>{header}</SheetHeader>}
+        {header && <SheetHeader className="flex-row">{header}</SheetHeader>}
         <div className="h-full overflow-y-auto">{children}</div>
         {!hideFooter && footerContent}
       </SheetContent>

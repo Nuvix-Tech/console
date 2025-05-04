@@ -1,6 +1,13 @@
 "use client";
 import { Field as ChakraField, Stack } from "@chakra-ui/react";
-import { Input as Input_Cui, InputGroup, InputProps, InputAddonProps } from "@chakra-ui/react";
+import {
+  Input as Input_Cui,
+  InputGroup,
+  InputProps,
+  InputAddonProps,
+  Textarea as ChakraTextarea,
+  TextareaProps,
+} from "@chakra-ui/react";
 import * as React from "react";
 import { RootFieldProps } from "./types";
 
@@ -62,3 +69,53 @@ export const Input = React.forwardRef<HTMLInputElement, RootInputProps & RootFie
     );
   },
 );
+
+interface RootTextareaProps extends TextareaProps {
+  hasSuffix?: React.ReactNode;
+}
+
+export const TextArea = React.forwardRef<HTMLTextAreaElement, RootTextareaProps & RootFieldProps>(
+  function TextAreaField(props, ref) {
+    const { label, errorText, helperText, optionalText, orientation, hasSuffix, ...rest } = props;
+
+    const optional =
+      typeof optionalText === "string" ? (
+        <span className="text-xs ml-1 text-[var(--neutral-on-background-weak)]">
+          {optionalText}
+        </span>
+      ) : (
+        optionalText
+      );
+    const isHoriz = orientation === "horizontal";
+
+    return (
+      <ChakraField.Root
+        orientation={orientation}
+        width="full"
+        justifyContent="space-between"
+        alignItems={isHoriz ? "flex-start" : undefined}
+        required={rest.required}
+      >
+        {label && (
+          <ChakraField.Label
+            flexDir={isHoriz ? "column" : undefined}
+            alignItems={isHoriz ? "start" : undefined}
+          >
+            {label}
+            <ChakraField.RequiredIndicator fallback={optional} />
+          </ChakraField.Label>
+        )}
+        <Stack width={isHoriz ? "sm" : "full"} gap="2">
+          <div className="w-full relative">
+            <ChakraTextarea ref={ref} paddingRight={hasSuffix ? "4" : undefined} {...rest} />
+            {hasSuffix && <div className="absolute top-1 right-1">{hasSuffix}</div>}
+          </div>
+          {helperText && <ChakraField.HelperText>{helperText}</ChakraField.HelperText>}
+          {errorText && <ChakraField.ErrorText>{errorText}</ChakraField.ErrorText>}
+        </Stack>
+      </ChakraField.Root>
+    );
+  },
+);
+
+export { TextArea as Textarea };

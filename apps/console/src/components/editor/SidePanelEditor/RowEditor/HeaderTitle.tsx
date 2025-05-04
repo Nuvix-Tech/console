@@ -1,3 +1,5 @@
+import { Code } from "@chakra-ui/react";
+
 interface HeaderTitleProps {
   isNewRecord: boolean;
   tableName?: string;
@@ -9,7 +11,7 @@ const HeaderTitle = ({ isNewRecord, tableName }: HeaderTitleProps) => {
   return (
     <>
       {header}
-      {tableName && <span className="text-code font-mono">{tableName}</span>}
+      {tableName && <Code>{tableName}</Code>}
     </>
   );
 };

@@ -305,7 +305,6 @@ export const ForeignKeySelector = ({
                             updateSelectedColumn(idx, "source", value)
                           }
                           options={[
-                            { value: "", label: "---" },
                             ...(table?.columns ?? [])
                               .filter((x) => x.name.length !== 0)
                               .map((column) => ({
@@ -334,7 +333,6 @@ export const ForeignKeySelector = ({
                             updateSelectedColumn(idx, "target", value)
                           }
                           options={[
-                            { value: "", label: "---" },
                             ...(selectedTable?.columns ?? []).map((column) => ({
                               value: column.name,
                               label: column.name,
