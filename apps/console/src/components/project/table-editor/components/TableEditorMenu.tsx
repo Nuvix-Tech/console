@@ -1,4 +1,3 @@
-// import { PermissionAction } from '@supabase/shared-types/out/constants'
 import { partition } from "lodash";
 import { Filter, Plus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -11,7 +10,7 @@ import { useEffect, useMemo, useState } from "react";
 // import AlertError from '@/ui/AlertError'
 // import { ButtonTooltip } from '@/ui/ButtonTooltip'
 import InfiniteList from "@/ui/InfiniteList";
-// import SchemaSelector from '@/ui/SchemaSelector'
+import SchemaSelector from "@/ui/SchemaSelector";
 import { useSchemasQuery } from "@/data/database/schemas-query";
 import { ENTITY_TYPE } from "@/data/entity-types/entity-type-constants";
 import { useEntityTypesQuery } from "@/data/entity-types/entity-types-infinite-query";
@@ -45,8 +44,9 @@ import { useParams } from "next/navigation";
 import { useTableEditorStateSnapshot } from "@/lib/store/table-editor";
 import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
 import { useProjectStore } from "@/lib/store";
-import { Button, Checkbox } from "@nuvix/ui/components";
+import { Button, Checkbox, Feedback } from "@nuvix/ui/components";
 import EditorMenuListSkeleton from "./EditorMenuListSkeleton";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 const TableEditorMenu = () => {
   const { id: ref, tableId: _id } = useParams();
@@ -89,7 +89,7 @@ const TableEditorMenu = () => {
   );
 
   const entityTypes = useMemo(
-    () => (data as any)?.pages.flatMap((page: any) => page.data.entities),
+    () => (data as any)?.pages.flatMap((page: any) => page.data.entities) || [],
     [(data as any)?.pages],
   );
 
@@ -117,7 +117,7 @@ const TableEditorMenu = () => {
     if (selectedTable?.schema) {
       setSelectedSchema(selectedTable.schema);
     }
-  }, [selectedTable?.schema]);
+  }, [selectedTable?.schema, setSelectedSchema]);
 
   // useEffect(() => {
   //   // Clean up tabs + recent items for any tables that might have been removed outside of the dashboard session
@@ -125,6 +125,16 @@ const TableEditorMenu = () => {
   //     tableEditorTabsCleanUp({ ref, schemas: [selectedSchema], entities: entityTypes })
   //   }
   // }, [entityTypes])
+
+  const handleToggleEntityType = (value: string) => {
+    setVisibleTypes((prev) =>
+      prev.includes(value) ? prev.filter((type) => type !== value) : [...prev, value],
+    );
+  };
+
+  const handleSelectOnlyEntityType = (value: string) => {
+    setVisibleTypes([value]);
+  };
 
   return (
     <>
@@ -151,7 +161,9 @@ const TableEditorMenu = () => {
                 type="default"
                 className="justify-start"
                 onClick={snap.onAddTable}
-                tooltip={"You need additional permissions to create tables"}
+                tooltip={
+                  !canCreateTables ? "You need additional permissions to create tables" : undefined
+                }
               >
                 New table
               </Button>
@@ -160,7 +172,7 @@ const TableEditorMenu = () => {
                 <AlertTitle className="text-sm">Viewing protected schema</AlertTitle>
                 <AlertDescription className="text-xs">
                   <p className="mb-2">
-                    This schema is managed by Supabase and is read-only through the table editor
+                    This schema is managed by Nuvix and is read-only through the table editor
                   </p>
                   <Button type="default" size="s" onClick={() => setShowModal(true)}>
                     Learn more
@@ -171,7 +183,7 @@ const TableEditorMenu = () => {
           </div>
         </div>
         <div className="flex flex-auto flex-col gap-2 pb-4">
-          <InnerSideBarFilters className="mx-2">
+          {/* <InnerSideBarFilters className="mx-2">
             <InnerSideBarFilterSearchInput
               autoFocus={!isMobile}
               name="search-tables"
@@ -218,13 +230,7 @@ const TableEditorMenu = () => {
                             id={key}
                             name={key}
                             isChecked={visibleTypes.includes(value)}
-                            onToggle={() => {
-                              if (visibleTypes.includes(value)) {
-                                setVisibleTypes(visibleTypes.filter((y) => y !== value));
-                              } else {
-                                setVisibleTypes(visibleTypes.concat([value]));
-                              }
-                            }}
+                            onToggle={() => handleToggleEntityType(value)}
                           />
                           <Label htmlFor={key} className="capitalize text-xs">
                             {key.toLowerCase().replace("_", " ")}
@@ -233,7 +239,7 @@ const TableEditorMenu = () => {
                         <Button
                           size="s"
                           type="default"
-                          onClick={() => setVisibleTypes([value])}
+                          onClick={() => handleSelectOnlyEntityType(value)}
                           className="transition opacity-0 group-hover:opacity-100 h-auto px-1 py-0.5"
                         >
                           Select only
@@ -244,29 +250,38 @@ const TableEditorMenu = () => {
                 </div>
               </PopoverContent>
             </Popover>
-          </InnerSideBarFilters>
+          </InnerSideBarFilters> */}
 
           {isLoading && <EditorMenuListSkeleton />}
 
           {isError && (
             <div className="mx-4">
-              <AlertError error={(error ?? null) as any} subject="Failed to retrieve tables" />
+              <Feedback
+                variant="danger"
+                title="Failed to retrieve tables"
+                description={error?.message || "An unexpected error occurred"}
+              />
             </div>
           )}
 
           {isSuccess && (
             <>
-              {searchText.length === 0 && (entityTypes?.length ?? 0) <= 0 && (
-                <TableMenuEmptyState />
+              {searchText.length === 0 && entityTypes.length === 0 && <TableMenuEmptyState />}
+              {searchText.length > 0 && entityTypes.length === 0 && (
+                <div className="mx-4">
+                  <Feedback
+                    variant="info"
+                    title="No results found"
+                    description={`Your search for "${searchText}" did not return any results`}
+                  />
+                </div>
+                // <InnerSideBarEmptyPanel
+                //   className="mx-2"
+                //   title="No results found"
+                //   description={`Your search for "${searchText}" did not return any results`}
+                // />
               )}
-              {searchText.length > 0 && (entityTypes?.length ?? 0) <= 0 && (
-                <InnerSideBarEmptyPanel
-                  className="mx-2"
-                  title="No results found"
-                  description={`Your search for "${searchText}" did not return any results`}
-                />
-              )}
-              {(entityTypes?.length ?? 0) > 0 && (
+              {entityTypes.length > 0 && (
                 <div className="flex flex-1 flex-grow" data-testid="tables-list">
                   <InfiniteList
                     items={entityTypes}
@@ -280,7 +295,7 @@ const TableEditorMenu = () => {
                     getItemSize={() => 28}
                     hasNextPage={hasNextPage}
                     isLoadingNextPage={isFetchingNextPage}
-                    onLoadNextPage={() => fetchNextPage()}
+                    onLoadNextPage={fetchNextPage}
                   />
                 </div>
               )}
@@ -289,7 +304,7 @@ const TableEditorMenu = () => {
         </div>
       </div>
 
-      <ProtectedSchemaModal visible={showModal} onClose={() => setShowModal(false)} />
+      {/* <ProtectedSchemaModal visible={showModal} onClose={() => setShowModal(false)} /> */}
     </>
   );
 };

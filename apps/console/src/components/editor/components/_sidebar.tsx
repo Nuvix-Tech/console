@@ -1,12 +1,25 @@
+import TableEditorMenu from "@/components/project/table-editor/components/TableEditorMenu";
 import { useGetTables } from "@/data/tables/tables-query";
 import { useProjectStore } from "@/lib/store";
 import { TableParam } from "@/types";
-import { Column, Spinner, ToggleButton } from "@nuvix/ui/components"; // Assuming Loading/ErrorMessage exist
+import { Column, Spinner, Text, ToggleButton } from "@nuvix/ui/components";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
-export const Sidebar = () => <SidebarContent />;
+export const Sidebar = () => {
+  return (
+    <div className="h-full w-full">
+      <div className="w-full py-4 px-2 border-b border-b-border">
+        <Text variant="label-strong-l">Table Editor</Text>
+      </div>
+      <TableEditorMenu />
+    </div>
+  );
+};
 
+/**
+ * @deprecated
+ */
 const SidebarContent = () => {
   const { project, sdk } = useProjectStore();
   const params = useParams<TableParam & { id: string }>();
