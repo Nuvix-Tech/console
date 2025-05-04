@@ -25,7 +25,14 @@ export const Input = React.forwardRef<HTMLInputElement, RootInputProps & RootFie
       ...rest
     } = props;
 
-    const optional = typeof optionalText === 'string' ? (<span className="text-xs ml-1 text-[var(--neutral-on-background-weak)]">{optionalText}</span>) : optionalText;
+    const optional =
+      typeof optionalText === "string" ? (
+        <span className="text-xs ml-1 text-[var(--neutral-on-background-weak)]">
+          {optionalText}
+        </span>
+      ) : (
+        optionalText
+      );
     const isHoriz = orientation === "horizontal";
 
     return (
@@ -36,7 +43,10 @@ export const Input = React.forwardRef<HTMLInputElement, RootInputProps & RootFie
         alignItems={isHoriz ? "flex-start" : undefined}
       >
         {label && (
-          <ChakraField.Label flexDir={isHoriz ? "column" : undefined} alignItems={isHoriz ? "start" : undefined}>
+          <ChakraField.Label
+            flexDir={isHoriz ? "column" : undefined}
+            alignItems={isHoriz ? "start" : undefined}
+          >
             {label}
             <ChakraField.RequiredIndicator fallback={optional} />
           </ChakraField.Label>

@@ -154,8 +154,8 @@ const Pagination = () => {
             <p className="text-xs neutral-on-background-medium">Page</p>
             <Input
               min={1}
-              size={'xs'}
-              width={'12'}
+              size={"xs"}
+              width={"12"}
               max={maxPages}
               value={value}
               onChange={(e) => setValue(e.target.value)}

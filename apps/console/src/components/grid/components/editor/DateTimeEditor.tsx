@@ -88,7 +88,7 @@ function BaseEditor<TRow, TSummaryRow = unknown>({
             ref={ref}
             value={inputValue ?? ""}
             placeholder={format}
-            variant={'subtle'}
+            variant={"subtle"}
             onChange={(e) => setInputValue(e.target.value)}
             className="!border-0 !rounded-none bg-[var(--neutral-alpha-medium)] !outline-none !ring-0 !ring-offset-0"
           />

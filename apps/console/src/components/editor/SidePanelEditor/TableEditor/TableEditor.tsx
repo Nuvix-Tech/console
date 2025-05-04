@@ -314,7 +314,7 @@ const TableEditor = ({
               ? setRlsConfirmVisible(true)
               : onUpdateField({ isRLSEnabled: !tableFields.isRLSEnabled });
           }}
-        // size="medium"
+          // size="medium"
         />
         {tableFields.isRLSEnabled ? (
           <Feedback
@@ -375,7 +375,7 @@ const TableEditor = ({
               // });
               onUpdateField({ isRealtimeEnabled: !tableFields.isRealtimeEnabled });
             }}
-          // size="medium"
+            // size="medium"
           />
         )}
       </SidePanel.Content>
@@ -406,7 +406,7 @@ const TableEditor = ({
               description="This will copy all the data in the table into the new table"
               isChecked={isDuplicateRows}
               onToggle={() => setIsDuplicateRows(!isDuplicateRows)}
-            // size="medium"
+              // size="medium"
             />
           </>
         )}

@@ -283,8 +283,9 @@ const ColumnManagement = ({
                 {(droppableProvided: DroppableProvided) => (
                   <div
                     ref={droppableProvided.innerRef}
-                    className={`space-y-2 rounded-md bg-[var(--neutral-alpha-weak)] px-3 py-2 ${isNewRecord ? "" : "-mx-3"
-                      }`}
+                    className={`space-y-2 rounded-md bg-[var(--neutral-alpha-weak)] px-3 py-2 ${
+                      isNewRecord ? "" : "-mx-3"
+                    }`}
                   >
                     {primaryKeyColumns.map((column: ColumnField, index: number) => (
                       <Draggable key={column.id} draggableId={column.id} index={index}>

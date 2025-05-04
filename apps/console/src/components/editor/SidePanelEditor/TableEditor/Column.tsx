@@ -122,10 +122,7 @@ const Column = ({
             disabled={hasImportContent}
             placeholder="column_name"
             size="xs"
-            className={cn(
-              hasImportContent ? "opacity-50" : "",
-              "!border-r-0 !rounded-r-none",
-            )}
+            className={cn(hasImportContent ? "opacity-50" : "", "!border-r-0 !rounded-r-none")}
             onChange={(event: any) => onUpdateColumn({ name: event.target.value })}
           />
           {relations.filter((r) => !r.toRemove).length === 0 ? (
@@ -251,8 +248,9 @@ const Column = ({
             size="xs"
             value={column.defaultValue ?? ""}
             disabled={column.format.includes("int") && column.isIdentity}
-            className={`rounded bg-surface-100 lg:gap-0 ${column.format.includes("int") && column.isIdentity ? "opacity-50" : ""
-              }`}
+            className={`rounded bg-surface-100 lg:gap-0 ${
+              column.format.includes("int") && column.isIdentity ? "opacity-50" : ""
+            }`}
             suggestions={suggestions}
             suggestionsHeader="Suggested expressions"
             suggestionsTooltip="Suggested expressions"
