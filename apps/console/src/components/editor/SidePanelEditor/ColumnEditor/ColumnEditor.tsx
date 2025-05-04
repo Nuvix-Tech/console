@@ -18,8 +18,6 @@ import {
 } from "@/data/database/foreign-key-constraints-query";
 import { useEnumeratedTypesQuery } from "@/data/enumerated-types/enumerated-types-query";
 import { PROTECTED_SCHEMAS_WITHOUT_EXTENSIONS } from "@/lib/constants/schemas";
-// import type { Dictionary } from "types";
-// import { Button, Checkbox, Input, SidePanel, Toggle } from "ui";
 import ActionBar from "../ActionBar";
 import type { ForeignKey } from "../ForeignKeySelector/ForeignKeySelector.types";
 import { formatForeignKeys } from "../ForeignKeySelector/ForeignKeySelector.utils";
@@ -45,7 +43,8 @@ import { Dictionary } from "@/components/grid/types";
 import { useProjectStore } from "@/lib/store";
 import { useParams } from "next/navigation";
 import { SidePanel } from "@/ui/SidePanel";
-import { Button, Checkbox, Input, Switch } from "@nuvix/ui/components";
+import { Button, Checkbox, Switch } from "@nuvix/ui/components";
+import { Input } from "@/components/others/ui";
 
 export interface ColumnEditorProps {
   column?: Readonly<PostgresColumn>;
@@ -220,15 +219,17 @@ const ColumnEditor = ({
           <Input
             label="Name"
             type="text"
-            description="Recommended to use lowercase and use an underscore to separate words e.g. column_name"
+            orientation="horizontal"
+            helperText="Recommended to use lowercase and use an underscore to separate words e.g. column_name"
             placeholder="column_name"
-            error={errors.name}
+            errorText={errors.name}
             value={columnFields?.name ?? ""}
             onChange={(event: any) => onUpdateField({ name: event.target.value })}
           />
           <Input
+            orientation="horizontal"
             label="Description"
-            labelOptional="Optional"
+            optionalText="Optional"
             type="text"
             value={columnFields?.comment ?? ""}
             onChange={(event: any) => onUpdateField({ comment: event.target.value })}
@@ -369,7 +370,7 @@ const ColumnEditor = ({
           />
           <Input
             label="CHECK Constraint"
-            labelOptional="Optional"
+            optionalText="Optional"
             placeholder={placeholder}
             type="text"
             value={columnFields?.check ?? ""}

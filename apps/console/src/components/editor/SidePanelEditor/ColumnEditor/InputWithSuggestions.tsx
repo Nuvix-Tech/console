@@ -9,7 +9,6 @@ import { noop } from "lodash";
 import { List } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-// import { ButtonTooltip } from "components/ui/ButtonTooltip";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,7 +18,8 @@ import {
   DropdownMenuTrigger,
 } from "@nuvix/sui/components/dropdown-menu";
 import type { Suggestion } from "./ColumnEditor.types";
-import { Button, IconButton, Input } from "@nuvix/ui/components";
+import { IconButton } from "@nuvix/ui/components";
+import { Input } from "@/components/others/ui";
 
 const MAX_SUGGESTIONS = 3;
 
@@ -27,7 +27,7 @@ interface InputWithSuggestionsProps {
   label?: string;
   description?: string;
   placeholder?: string;
-  size?: "small" | "tiny" | "medium" | "large";
+  size?: "xs" | "sm" | "md" | "lg" | "xl";
   layout?: "horizontal" | "vertical";
   disabled?: boolean;
   className?: string;
@@ -83,15 +83,13 @@ const InputWithSuggestions = ({
     <div ref={ref} className="relative">
       <Input
         label={label}
-        description={description}
+        helperText={description}
         placeholder={placeholder}
-        // size={size}
-        layout={layout}
+        size={size}
+        orientation={layout}
         disabled={disabled}
         className={className}
         type="text"
-        labelAsPlaceholder
-        height="s"
         value={value}
         onChange={onInputChange}
         data-testid={dataTestId}

@@ -4,9 +4,7 @@ import { ArrowRight, Database, HelpCircle, Table, X } from "lucide-react";
 import { Fragment, useEffect, useState } from "react";
 import { AlertDescription, AlertTitle, Alert } from "@nuvix/sui/components/alert";
 
-// import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
-// import { DocsButton } from "components/ui/DocsButton";
-// import InformationBox from "components/ui/InformationBox";
+import { DocsButton } from "@/ui/DocsButton";
 import { FOREIGN_KEY_CASCADE_ACTION } from "@/data/database/database-query-constants";
 import { useSchemasQuery } from "@/data/database/schemas-query";
 import { useTablesQuery } from "@/data/tables/tables-query";
@@ -20,6 +18,7 @@ import type { ForeignKey } from "./ForeignKeySelector.types";
 import { generateCascadeActionDescription } from "./ForeignKeySelector.utils";
 import { useProjectStore } from "@/lib/store";
 import { SidePanel } from "@/ui/SidePanel";
+import InformationBox from "@/ui/InformationBox";
 
 const EMPTY_STATE: ForeignKey = {
   id: undefined,
@@ -217,9 +216,7 @@ export const ForeignKeySelector = ({
     >
       <SidePanel.Content>
         <div className="py-6 space-y-6">
-          Will Be Implemented check:
-          apps/console/src/components/editor/SidePanelEditor/ForeignKeySelector/ForeignKeySelector.tsx
-          {/* <InformationBox
+          <InformationBox
             icon={<HelpCircle size={20} strokeWidth={1.5} />}
             title="What are foreign keys?"
             description={`Foreign keys help maintain referential integrity of your data by ensuring that no
@@ -227,7 +224,7 @@ export const ForeignKeySelector = ({
                 table.`}
             url="https://www.postgresql.org/docs/current/tutorial-fk.html"
             urlLabel="Postgres Foreign Key Documentation"
-          /> */}
+          />
           {/* <Listbox
             id="schema"
             label="Select a schema"
@@ -250,8 +247,8 @@ export const ForeignKeySelector = ({
                 </Listbox.Option>
               );
             })}
-          </Listbox> */}
-          {/* 
+          </Listbox>
+
           <Listbox
             id="table"
             label="Select a table to reference to"
@@ -270,7 +267,7 @@ export const ForeignKeySelector = ({
                   className="min-w-96"
                   addOnBefore={() => <Table size={16} strokeWidth={1.5} />}
                 >
-                  <div className="flex items-center gap-2"> 
+                  <div className="flex items-center gap-2">
                     <span className="hidden">{table.name}</span>
                     <span className="text-foreground-lighter">{table.schema}</span>
                     <span className="text-foreground">{table.name}</span>
@@ -279,8 +276,8 @@ export const ForeignKeySelector = ({
               );
             })}
           </Listbox>
-          */}
-          {/* {fk.schema && fk.table && (
+
+          {fk.schema && fk.table && (
             <>
               <div className="flex flex-col gap-y-3">
                 <label className="text-foreground-light text-sm">
@@ -298,11 +295,11 @@ export const ForeignKeySelector = ({
                     {fk.schema}.{fk.table}
                   </div>
                   {fk.columns.length === 0 && (
-                    <Alert_Shadcn_ className="col-span-10 py-2 px-3">
-                      <AlertDescription_Shadcn_>
+                    <Alert className="col-span-10 py-2 px-3">
+                      <AlertDescription>
                         There are no foreign key relations between the tables
-                      </AlertDescription_Shadcn_>
-                    </Alert_Shadcn_>
+                      </AlertDescription>
+                    </Alert>
                   )}
                   {fk.columns.map((_, idx) => (
                     <Fragment key={`${uuidv4()}`}>
@@ -379,11 +376,11 @@ export const ForeignKeySelector = ({
                   </Button>
                   {errors.columns && <p className="text-red-900 text-sm">{errors.columns}</p>}
                   {hasTypeErrors && (
-                    <Alert_Shadcn_ variant="warning">
-                      <AlertTitle_Shadcn_>Column types do not match</AlertTitle_Shadcn_>
-                      <AlertDescription_Shadcn_>
+                    <Alert variant="warning">
+                      <AlertTitle>Column types do not match</AlertTitle>
+                      <AlertDescription>
                         The following columns cannot be referenced as they are not of the same type:
-                      </AlertDescription_Shadcn_>
+                      </AlertDescription>
                       <ul className="list-disc pl-5 mt-2 text-foreground-light">
                         {(errors?.types ?? []).map((x, idx: number) => {
                           if (x === undefined) return null;
@@ -397,15 +394,15 @@ export const ForeignKeySelector = ({
                           );
                         })}
                       </ul>
-                    </Alert_Shadcn_>
+                    </Alert>
                   )}
                   {hasTypeNotices && (
-                    <Alert_Shadcn_>
-                      <AlertTitle_Shadcn_>Column types will be updated</AlertTitle_Shadcn_>
-                      <AlertDescription_Shadcn_>
+                    <Alert>
+                      <AlertTitle>Column types will be updated</AlertTitle>
+                      <AlertDescription>
                         The following columns will have their types updated to match their
                         referenced column
-                      </AlertDescription_Shadcn_>
+                      </AlertDescription>
                       <ul className="list-disc pl-5 mt-2 text-foreground-light">
                         {(errors?.typeNotice ?? []).map((x, idx: number) => {
                           if (x === undefined) return null;
@@ -419,7 +416,7 @@ export const ForeignKeySelector = ({
                           );
                         })}
                       </ul>
-                    </Alert_Shadcn_>
+                    </Alert>
                   )}
                 </div>
               </div>

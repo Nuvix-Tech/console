@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-// import { Input, SidePanel } from "ui";
 
 import { useSchemaCreateMutation } from "@/data/database/schema-create-mutation";
 import ActionBar from "./ActionBar";
 import { SidePanel } from "@/ui/SidePanel";
-import { Input } from "@nuvix/ui/components";
+import { Input } from "@/components/others/ui";
 import { useProjectStore } from "@/lib/store";
 
 interface SchemaEditorProps {
@@ -72,10 +71,8 @@ const SchemaEditor = ({ visible, closePanel }: SchemaEditorProps) => {
           <div className="space-y-10 py-6">
             <Input
               label="Name"
-              labelAsPlaceholder
               type="text"
-              error={!!errors?.name}
-              errorMessage={errors?.name}
+              errorText={errors?.name}
               value={name}
               onChange={(event: any) => setName(event.target.value)}
             />

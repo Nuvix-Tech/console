@@ -13,29 +13,6 @@ import Link from "next/link";
 import { ReactNode, useState } from "react";
 
 import type { EnumeratedType } from "@/data/enumerated-types/enumerated-types-query";
-// import {
-//   AlertDescription_Shadcn_,
-//   AlertTitle_Shadcn_,
-//   Alert_Shadcn_,
-//   Button,
-//   CommandEmpty_Shadcn_,
-//   CommandGroup_Shadcn_,
-//   CommandInput_Shadcn_,
-//   CommandItem_Shadcn_,
-//   CommandList_Shadcn_,
-//   Command_Shadcn_,
-//   CriticalIcon,
-//   Input,
-//   Label_Shadcn_,
-//   PopoverContent_Shadcn_,
-//   PopoverTrigger_Shadcn_,
-//   Popover_Shadcn_,
-//   ScrollArea,
-//   Tooltip,
-//   TooltipContent,
-//   TooltipTrigger,
-//   cn,
-// } from "ui";
 import {
   POSTGRES_DATA_TYPES,
   POSTGRES_DATA_TYPE_OPTIONS,
@@ -43,7 +20,7 @@ import {
 } from "../SidePanelEditor.constants";
 import type { PostgresDataTypeOption } from "../SidePanelEditor.types";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
-import { Button, Icon, Input } from "@nuvix/ui/components";
+import { Button, Icon } from "@nuvix/ui/components";
 import { Label } from "@nuvix/sui/components/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/popover";
 import { cn } from "@nuvix/sui/lib/utils";
@@ -56,7 +33,7 @@ import {
   CommandList,
 } from "@nuvix/sui/components/command";
 import { Alert, AlertDescription, AlertTitle } from "@nuvix/sui/components/alert";
-import { ScrollArea } from "@nuvix/sui/components";
+import { Input } from "@/components/others/ui";
 
 interface ColumnTypeProps {
   value: string;
@@ -136,15 +113,15 @@ const ColumnType = ({
             readOnly
             disabled
             label={showLabel ? "Type" : ""}
-            // layout={showLabel ? layout : undefined}
+            orientation={showLabel ? layout : undefined}
             className="md:gap-x-0 [&>div>div]:text-left"
             width="100%"
-            height="s"
+            size={"sm"}
             hasPrefix={inferIcon(
               POSTGRES_DATA_TYPE_OPTIONS.find((x) => x.name === value)?.type ?? "",
             )}
             value={value}
-            description={showLabel ? unsupportedDataTypeText : undefined}
+            helperText={showLabel ? unsupportedDataTypeText : undefined}
           />
         </TooltipTrigger>
         {!showLabel && (
@@ -164,9 +141,9 @@ const ColumnType = ({
             readOnly
             disabled
             label={showLabel ? "Type" : ""}
-            // layout={showLabel ? "horizontal" : undefined}
+            orientation={showLabel ? "horizontal" : undefined}
             className="md:gap-x-0"
-            // size="small"
+            size="sm"
             value={value}
           />
         </TooltipTrigger>

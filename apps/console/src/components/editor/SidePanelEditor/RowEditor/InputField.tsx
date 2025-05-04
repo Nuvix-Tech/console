@@ -6,20 +6,14 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
 } from "@nuvix/sui/components";
-import { Button, IconButton, Input, Select as Select_UI } from "@nuvix/ui/components";
-// import { FormItemLayout } from "ui-patterns/form/FormItemLayout/FormItemLayout";
+import { Button, IconButton, Select as Select_UI } from "@nuvix/ui/components";
 import { DATETIME_TYPES, JSON_TYPES, TEXT_TYPES } from "../SidePanelEditor.constants";
 import { DateTimeInput } from "./DateTimeInput";
 import type { EditValue, RowField } from "./RowEditor.types";
 import { isValueTruncated } from "./RowEditor.utils";
 import { Textarea } from "@nuvix/ui/components";
+import { Input } from "@/components/others/ui";
 
 export interface InputFieldProps {
   field: RowField;
@@ -94,11 +88,11 @@ const InputField = ({
     return (
       <Input
         data-testid={`${field.name}-input`}
-        layout="horizontal"
+        orientation="horizontal"
         placeholder="NULL"
         label={field.name}
         value={field.value ?? ""}
-        description={
+        helperText={
           <>
             {field.comment && (
               <span className="text-sm text-foreground-lighter">{field.comment} </span>
@@ -113,9 +107,9 @@ const InputField = ({
             {field.comment && <span className="text-sm text-foreground-lighter">{`)`}</span>}
           </>
         }
-        labelOptional={field.format}
+        optionalText={field.format}
         disabled={!isEditable}
-        error={errors[field.name]}
+        errorText={errors[field.name]}
         onChange={(event: any) => onUpdateField({ [field.name]: event.target.value })}
         hasSuffix={
           isEditable && (
@@ -206,10 +200,10 @@ const InputField = ({
     return (
       <Input
         data-testid={`${field.name}-input`}
-        layout="horizontal"
+        orientation="horizontal"
         value={field.value ?? ""}
         label={field.name}
-        description={
+        helperText={
           <>
             {field.comment && <p>{field.comment}</p>}
             {isTruncated && (
@@ -220,10 +214,10 @@ const InputField = ({
             )}
           </>
         }
-        labelOptional={field.format}
+        optionalText={field.format}
         disabled={!isEditable || isTruncated}
         placeholder={field?.defaultValue ?? "NULL"}
-        error={errors[field.name]}
+        errorText={errors[field.name]}
         onChange={(event: any) => onUpdateField({ [field.name]: event.target.value })}
         hasSuffix={
           <Button
@@ -296,17 +290,16 @@ const InputField = ({
     return (
       <Input
         data-testid={`${field.name}-input`}
-        layout="horizontal"
+        orientation="horizontal"
         label={field.name}
-        description={
+        helperText={
           <>
             {field.comment && <p>{field.comment}</p>}
             <p>Bytea columns are edited and displayed as hex in the dashboard</p>
           </>
         }
-        labelOptional={field.format}
-        error={!!errors[field.name]}
-        errorMessage={errors[field.name]}
+        optionalText={field.format}
+        errorText={errors[field.name]}
         value={field.value ?? ""}
         placeholder={`\\x`}
         disabled={!isEditable}
@@ -318,12 +311,11 @@ const InputField = ({
   return (
     <Input
       data-testid={`${field.name}-input`}
-      layout="horizontal"
+      orientation="horizontal"
       label={field.name}
-      description={field.comment}
-      labelOptional={field.format}
-      error={!!errors[field.name]}
-      errorMessage={errors[field.name]}
+      helperText={field.comment}
+      optionalText={field.format}
+      errorText={errors[field.name]}
       value={field.value ?? ""}
       placeholder={
         field.isIdentity

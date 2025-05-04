@@ -26,8 +26,8 @@ img {
 
 /* SELECTION */
 ::selection {
-    background: var(--neutral-on-background-medium);
-    color: var(--neutral-background-strong);
+    background: var(--neutral-on-background-medium) !important;
+    color: var(--neutral-background-strong) !important;
 }
 
 /* LINK */
@@ -65,6 +65,10 @@ a:not(.button) {
 
 ::-webkit-scrollbar-corner {
     background-color: var(--static-transparent);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
 }
 
 [data-theme='dark'] .is-only-dark {

@@ -6,10 +6,8 @@ import React, {
   forwardRef,
   useState,
 } from "react";
-// import styleHandler from 'ui/src/lib/theme/styleHandler'
-// import InputIconContainer from '../form/Layout/InputIconContainer'
 import { Button, Icon } from "@nuvix/ui/components";
-import { Input as Input_Shadcn_ } from "@nuvix/sui/components/input";
+import { Input as Input_Shadcn_ } from "@/components/others/ui";
 import { cn } from "@nuvix/sui/lib/utils";
 
 export const HIDDEN_PLACEHOLDER = "**** **** **** ****";
@@ -46,7 +44,6 @@ const Input = forwardRef<
     const [copyLabel, setCopyLabel] = useState("Copy");
     const [hidden, setHidden] = useState(true);
 
-    // const __styles = styleHandler('input')
     const __styles = {
       base: "relative",
       with_icon: "pl-10",
@@ -56,7 +53,6 @@ const Input = forwardRef<
     function _onCopy(value: any) {
       navigator.clipboard.writeText(value)?.then(
         function () {
-          /* clipboard successfully set */
           setCopyLabel("Copied");
           setTimeout(function () {
             setCopyLabel("Copy");
