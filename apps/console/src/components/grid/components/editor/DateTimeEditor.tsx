@@ -88,8 +88,9 @@ function BaseEditor<TRow, TSummaryRow = unknown>({
             ref={ref}
             value={inputValue ?? ""}
             placeholder={format}
+            variant={'subtle'}
             onChange={(e) => setInputValue(e.target.value)}
-            className="border-0 rounded-none bg-dash-sidebar outline-none !ring-0 !ring-offset-0"
+            className="!border-0 !rounded-none bg-[var(--neutral-alpha-medium)] !outline-none !ring-0 !ring-offset-0"
           />
         </BlockKeys>
         <div className="px-3 py-1 flex flex-col gap-y-0.5">

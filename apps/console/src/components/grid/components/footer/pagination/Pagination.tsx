@@ -1,27 +1,20 @@
 import { ArrowLeft, ArrowRight, HelpCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 
-// import { useParams } from "common";
 import { formatFilterURLParams } from "@/components/grid/NuvixGrid.utils";
-// import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
 import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
 import { isTableLike } from "@/data/table-editor/table-editor-types";
 import { THRESHOLD_COUNT, useTableRowsCountQuery } from "@/data/table-rows/table-rows-count-query";
 // import { useUrlState } from "hooks/ui/useUrlState";
 // import { RoleImpersonationState } from "lib/role-impersonation";
 // import { useRoleImpersonationStateSnapshot } from "state/role-impersonation-state";
-// import { useTableEditorStateSnapshot } from "state/table-editor";
 
-// import { Button, Tooltip, TooltipContent, TooltipTrigger } from "ui";
-// import { Input } from "ui-patterns/DataInputs/Input";
-// import ConfirmationModal from "ui-patterns/Dialogs/ConfirmationModal";
 import { DropdownControl } from "../../common/DropdownControl";
 import { formatEstimatedCount } from "./Pagination.utils";
 import { useParams, useSearchParams } from "next/navigation";
 import { useProjectStore } from "@/lib/store";
 import { useTableEditorStore } from "@/lib/store/table-editor";
 import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
-import { useQuery } from "@tanstack/react-query";
 import { Button, IconButton } from "@nuvix/ui/components";
 import { Input } from "@/components/editor/components";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
@@ -160,8 +153,9 @@ const Pagination = () => {
             />
             <p className="text-xs neutral-on-background-medium">Page</p>
             <Input
-              className="w-12 h-8"
               min={1}
+              size={'xs'}
+              width={'12'}
               max={maxPages}
               value={value}
               onChange={(e) => setValue(e.target.value)}

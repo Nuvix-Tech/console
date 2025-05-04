@@ -8,7 +8,6 @@ import {
   PopoverContent,
   PopoverTrigger,
   Popover,
-  Input as Input_SUI,
 } from "@nuvix/sui/components";
 
 import { useForeignKeyConstraintsQuery } from "@/data/database/foreign-key-constraints-query";
@@ -23,9 +22,10 @@ import { ForeignKey } from "../ForeignKeySelector/ForeignKeySelector.types";
 import type { ColumnField } from "../SidePanelEditor.types";
 import { checkIfRelationChanged } from "./ForeignKeysManagement/ForeignKeysManagement.utils";
 import { useProjectStore } from "@/lib/store";
-import { Button, IconButton, Input, Tag, Checkbox as Checkbox_UI } from "@nuvix/ui/components";
+import { Button, IconButton, Tag, Checkbox as Checkbox_UI } from "@nuvix/ui/components";
 import { cn } from "@nuvix/sui/lib/utils";
 import { Checkbox } from "@/components/cui/checkbox";
+import { Input } from "@/components/others/ui";
 
 /**
  * [Joshen] For context:
@@ -116,14 +116,15 @@ const Column = ({
       </div>
       <div className="w-[25%]">
         <div className="flex w-[95%] items-center justify-between">
-          <Input_SUI
+          <Input
             value={column.name}
             title={column.name}
             disabled={hasImportContent}
             placeholder="column_name"
+            size="xs"
             className={cn(
               hasImportContent ? "opacity-50" : "",
-              "!h-[32px] rounded-l border-solid !border-surface-300 border-r-0 rounded-r-none text-xs",
+              "!border-r-0 !rounded-r-none",
             )}
             onChange={(event: any) => onUpdateColumn({ name: event.target.value })}
           />
@@ -247,12 +248,11 @@ const Column = ({
                 ? "EMPTY"
                 : "NULL"
             }
-            size="small"
+            size="xs"
             value={column.defaultValue ?? ""}
             disabled={column.format.includes("int") && column.isIdentity}
-            className={`rounded bg-surface-100 lg:gap-0 ${
-              column.format.includes("int") && column.isIdentity ? "opacity-50" : ""
-            }`}
+            className={`rounded bg-surface-100 lg:gap-0 ${column.format.includes("int") && column.isIdentity ? "opacity-50" : ""
+              }`}
             suggestions={suggestions}
             suggestionsHeader="Suggested expressions"
             suggestionsTooltip="Suggested expressions"
@@ -263,7 +263,7 @@ const Column = ({
           />
         </div>
       </div>
-      <div className="w-[10%]">
+      <div className="w-[10%] h-full items-center flex">
         <Checkbox
           size={"sm"}
           checked={column.isPrimaryKey}

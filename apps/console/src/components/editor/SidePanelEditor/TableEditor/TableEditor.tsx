@@ -43,8 +43,9 @@ import { useTableEditorStore } from "@/lib/store/table-editor";
 import { useProjectStore } from "@/lib/store";
 import { useSearchQuery } from "@/hooks/useQuery";
 import { SidePanel } from "@/ui/SidePanel";
-import { Checkbox, Feedback, Input, Tag } from "@nuvix/ui/components";
+import { Checkbox, Feedback, Tag } from "@nuvix/ui/components";
 import ConfirmationModal from "../../components/_confim_dialog";
+import { Input } from "@/components/others/ui";
 // import { useSendEventMutation } from "@/data/telemetry/send-event-mutation";
 // import { useSelectedOrganization } from "hooks/misc/useSelectedOrganization";
 
@@ -278,16 +279,16 @@ const TableEditor = ({
         <Input
           data-testid="table-name-input"
           label="Name"
-          layout="horizontal"
+          orientation="horizontal"
           type="text"
-          error={errors.name}
+          errorText={errors.name}
           value={tableFields?.name}
           onChange={(event: any) => onUpdateField({ name: event.target.value })}
         />
         <Input
           label="Description"
           placeholder="Optional"
-          layout="horizontal"
+          orientation="horizontal"
           type="text"
           value={tableFields?.comment ?? ""}
           onChange={(event: any) => onUpdateField({ comment: event.target.value })}
@@ -313,7 +314,7 @@ const TableEditor = ({
               ? setRlsConfirmVisible(true)
               : onUpdateField({ isRLSEnabled: !tableFields.isRLSEnabled });
           }}
-          // size="medium"
+        // size="medium"
         />
         {tableFields.isRLSEnabled ? (
           <Feedback
@@ -374,7 +375,7 @@ const TableEditor = ({
               // });
               onUpdateField({ isRealtimeEnabled: !tableFields.isRealtimeEnabled });
             }}
-            // size="medium"
+          // size="medium"
           />
         )}
       </SidePanel.Content>
@@ -405,7 +406,7 @@ const TableEditor = ({
               description="This will copy all the data in the table into the new table"
               isChecked={isDuplicateRows}
               onToggle={() => setIsDuplicateRows(!isDuplicateRows)}
-              // size="medium"
+            // size="medium"
             />
           </>
         )}

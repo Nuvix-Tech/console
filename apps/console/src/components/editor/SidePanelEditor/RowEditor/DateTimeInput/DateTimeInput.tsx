@@ -9,8 +9,9 @@ import {
   DropdownMenuTrigger,
 } from "@nuvix/sui/components/dropdown-menu";
 import { getColumnType } from "./DateTimeInput.utils";
-import { Button, IconButton, Input } from "@nuvix/ui/components";
+import { Button, IconButton } from "@nuvix/ui/components";
 import { cn } from "@nuvix/sui/lib/utils";
+import { Input } from "@/components/others/ui";
 
 interface DateTimeInputProps {
   name: string;
@@ -40,10 +41,10 @@ const DateTimeInput = ({
 
   return (
     <Input
-      layout="horizontal"
-      className={cn("w-full [&>div>div>div>input]:pr-10")}
+      orientation="horizontal"
+      className={cn("w-full")}
       label={name}
-      description={
+      helperText={
         <div className="space-y-1">
           {description}
           {format.includes("tz") && (
@@ -51,10 +52,8 @@ const DateTimeInput = ({
           )}
         </div>
       }
-      labelOptional={format}
-      // size="small"
-      // height="s"
-      labelAsPlaceholder
+      optionalText={format}
+      size="sm"
       value={value}
       type={inputType}
       step={inputType == "datetime-local" || inputType == "time" ? "1" : undefined}

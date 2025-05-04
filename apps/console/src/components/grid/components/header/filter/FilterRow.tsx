@@ -5,7 +5,8 @@ import { DropdownControl } from "@/components/grid/components/common/DropdownCon
 import type { Filter, FilterOperator } from "@/components/grid/types";
 import { FilterOperatorOptions } from "./Filter.constants";
 import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
-import { Button, IconButton, Input } from "@nuvix/ui/components";
+import { Button, IconButton } from "@nuvix/ui/components";
+import { Input } from "@/components/others/ui";
 
 export interface FilterRowProps {
   filterIdx: number;
@@ -75,10 +76,8 @@ const FilterRow = ({ filter, filterIdx, onChange, onDelete, onKeyDown }: FilterR
         </Button>
       </DropdownControl>
       <Input
-        labelAsPlaceholder
-        height="s"
-        inputClass="!text-xs !min-h-8 !rounded-md"
         placeholder={placeholder}
+        size={'xs'}
         value={filter.value}
         onChange={(event) =>
           onChange(filterIdx, {

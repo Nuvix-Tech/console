@@ -219,7 +219,6 @@ const ColumnEditor = ({
           <Input
             label="Name"
             type="text"
-            orientation="horizontal"
             helperText="Recommended to use lowercase and use an underscore to separate words e.g. column_name"
             placeholder="column_name"
             errorText={errors.name}
@@ -227,7 +226,6 @@ const ColumnEditor = ({
             onChange={(event: any) => onUpdateField({ name: event.target.value })}
           />
           <Input
-            orientation="horizontal"
             label="Description"
             optionalText="Optional"
             type="text"
