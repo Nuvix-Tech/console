@@ -235,8 +235,8 @@ export const JsonEditor = <TRow, TSummaryRow = unknown>({
     >
       <div
         className={`${
-          !!value && jsonString.trim().length == 0 ? "sb-grid-fill-container" : ""
-        } sb-grid-json-editor__trigger`}
+          !!value && jsonString.trim().length == 0 ? "nx-grid-fill-container" : ""
+        } nx-grid-json-editor__trigger`}
         onClick={() => setIsPopoverOpen(!isPopoverOpen)}
       >
         {value === null || value === "" ? <NullValue /> : jsonString}

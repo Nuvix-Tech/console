@@ -119,7 +119,7 @@ const SidePanel = ({
   return (
     <Sheet open={open} onOpenChange={handleOpenChange} defaultOpen={defaultOpen}>
       {triggerElement && (
-        <SheetTrigger asChild className={styles["sbui-sidepanel__trigger"]}>
+        <SheetTrigger asChild className={styles["nxui-sidepanel__trigger"]}>
           {triggerElement}
         </SheetTrigger>
       )}
@@ -174,7 +174,7 @@ export function Content({
   children: React.ReactNode;
   className?: string;
 }) {
-  return <div className={classNames(styles["sbui-sidepanel-content"], className)}>{children}</div>;
+  return <div className={classNames(styles["nxui-sidepanel-content"], className)}>{children}</div>;
 }
 
 SidePanel.Content = Content;

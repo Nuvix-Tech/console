@@ -193,8 +193,8 @@ export const TextEditor = <TRow, TSummaryRow = unknown>({
       >
         <div
           className={cn(
-            !!value && value.toString().trim().length === 0 && "sb-grid-fill-container",
-            "sb-grid-text-editor__trigger",
+            !!value && value.toString().trim().length === 0 && "nx-grid-fill-container",
+            "nx-grid-text-editor__trigger",
           )}
           onClick={() => setIsPopoverOpen(!isPopoverOpen)}
         >

@@ -98,7 +98,7 @@ const TableNode = ({
                     size={8}
                     strokeWidth={1}
                     className={cn(
-                      // 'sb-grid-column-header__inner__primary-key'
+                      "nx-grid-column-header__inner__primary-key",
                       "flex-shrink-0",
                       "text-light",
                     )}

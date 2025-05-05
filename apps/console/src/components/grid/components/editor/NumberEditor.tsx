@@ -33,7 +33,7 @@ export function NumberEditor<TRow, TSummaryRow = unknown>({
       onValueChange={onChange}
       variant={"subtle"}
     >
-      <NumberInputField className="sb-grid-number-editor" />
+      <NumberInputField className="nx-grid-number-editor" />
     </NumberInputRoot>
   );
 }

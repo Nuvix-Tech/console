@@ -44,7 +44,7 @@ function BaseEditor<TRow, TSummaryRow = unknown>({
 
   return (
     <Input
-      className="sb-grid-time-editor"
+      className="nx-grid-time-editor"
       ref={autoFocusAndSelect}
       value={timeValue ?? ""}
       onChange={onChange}

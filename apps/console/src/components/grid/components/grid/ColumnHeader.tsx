@@ -3,10 +3,8 @@ import { ArrowRight, Key, Link, Lock } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 
-// import { getForeignKeyCascadeAction } from "components/interfaces/TableGridEditor/SidePanelEditor/ColumnEditor/ColumnEditor.utils";
 import { FOREIGN_KEY_CASCADE_ACTION } from "@/data/database/database-query-constants";
 
-// import { Tooltip, TooltipContent, TooltipTrigger } from "ui";
 import type { ColumnHeaderProps, ColumnType, DragItem, GridForeignKey } from "../../types";
 import { ColumnMenu } from "../menu";
 import { useTableEditorTableStateSnapshot } from "@/lib/store/table";

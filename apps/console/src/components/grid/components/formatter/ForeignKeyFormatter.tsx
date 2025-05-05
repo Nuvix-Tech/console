@@ -53,8 +53,8 @@ export const ForeignKeyFormatter = (props: Props) => {
     foreignKeyColumn?.format === "bytea" && !!value ? convertByteaToHex(value) : value;
 
   return (
-    <div className="sb-grid-foreign-key-formatter flex justify-between">
-      <span className="sb-grid-foreign-key-formatter__text">
+    <div className="nx-grid-foreign-key-formatter flex justify-between">
+      <span className="nx-grid-foreign-key-formatter__text">
         {formattedValue === null ? <NullValue /> : formattedValue}
       </span>
       {relationship !== undefined && targetTable !== undefined && formattedValue !== null && (

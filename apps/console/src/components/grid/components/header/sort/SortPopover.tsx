@@ -146,7 +146,7 @@ const SortOverlay = ({ sorts: sortsFromUrl, onApplySorts }: SortOverlayProps) =>
               variant="tertiary"
               type="text"
               suffixIcon={<ChevronDown size="14" className="neutral-on-background-medium" />}
-              className="sb-grid-dropdown__item-trigger"
+              className="nx-grid-dropdown__item-trigger"
               data-testid="table-editor-pick-column-to-sort-button"
             >
               <span>Pick {sorts.length > 1 ? "another" : "a"} column to sort by</span>

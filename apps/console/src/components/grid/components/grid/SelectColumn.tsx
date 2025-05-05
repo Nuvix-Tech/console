@@ -126,7 +126,7 @@ function SelectCellFormatter({
   }
 
   return (
-    <div className="sb-grid-select-cell__formatter flex justify-between items-center">
+    <div className="nx-grid-select-cell__formatter flex justify-between items-center">
       <Checkbox
         size={"sm"}
         checked={value}
@@ -179,7 +179,7 @@ function SelectCellHeader({
   }
 
   return (
-    <div className="sb-grid-select-cell__header">
+    <div className="nx-grid-select-cell__header">
       <Checkbox
         size={"sm"}
         checked={isIndeterminate ? "indeterminate" : value}
@@ -190,7 +190,7 @@ function SelectCellHeader({
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledBy}
         tabIndex={tabIndex}
-        className="sb-grid-select-cell__header__input"
+        className="nx-grid-select-cell__header__input"
       />
     </div>
   );

@@ -33,7 +33,7 @@ const columnRender = (name: string, isPrimaryKey = false) => {
         </Tooltip>
       )}
 
-      <span className="sb-grid-column-header__inner__name">{name}</span>
+      <span className="nx-grid-column-header__inner__name">{name}</span>
     </div>
   );
 };
@@ -50,7 +50,7 @@ const formatter = ({ column, format, row }: { column: string; format: string; ro
           : row[column];
 
   return (
-    <div className="group sb-grid-select-cell__formatter overflow-hidden">
+    <div className="group nx-grid-select-cell__formatter overflow-hidden">
       {formattedValue === null ? (
         <NullValue />
       ) : (
