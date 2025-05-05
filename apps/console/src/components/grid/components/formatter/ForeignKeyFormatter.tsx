@@ -2,21 +2,16 @@ import { ArrowRight } from "lucide-react";
 import type { PropsWithChildren } from "react";
 import type { RenderCellProps } from "react-data-grid";
 
-// import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
-// import { ButtonTooltip } from "components/ui/ButtonTooltip";
 import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
 import { useTablesQuery } from "@/data/tables/tables-query";
-// import { Popover_Shadcn_, PopoverContent_Shadcn_, PopoverTrigger_Shadcn_ } from "ui";
 import type { SupaRow } from "../../types";
 import { NullValue } from "../common/NullValue";
 import { ReferenceRecordPeek } from "./ReferenceRecordPeek";
 import { useProjectStore } from "@/lib/store";
-import { useTableEditorStore } from "@/lib/store/table-editor";
-import { convertByteaToHex } from "@/lib/helpers";
 import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/popover";
 import { IconButton } from "@nuvix/ui/components";
-import { useQuery } from "@tanstack/react-query";
 import { isTableLike } from "@/data/table-editor/table-editor-types";
+import { convertByteaToHex } from "@/components/editor/SidePanelEditor/RowEditor/RowEditor.utils";
 
 interface Props extends PropsWithChildren<RenderCellProps<SupaRow, unknown>> {
   tableId: string;

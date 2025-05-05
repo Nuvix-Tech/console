@@ -1,11 +1,10 @@
-import { ArrowLeft, ArrowRight, HelpCircle } from "lucide-react";
+import { ArrowLeft, ArrowRight, HelpCircle, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { formatFilterURLParams } from "@/components/grid/NuvixGrid.utils";
 import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
 import { isTableLike } from "@/data/table-editor/table-editor-types";
 import { THRESHOLD_COUNT, useTableRowsCountQuery } from "@/data/table-rows/table-rows-count-query";
-// import { useUrlState } from "hooks/ui/useUrlState";
 // import { RoleImpersonationState } from "lib/role-impersonation";
 // import { useRoleImpersonationStateSnapshot } from "state/role-impersonation-state";
 
@@ -15,11 +14,12 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useProjectStore } from "@/lib/store";
 import { useTableEditorStore } from "@/lib/store/table-editor";
 import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
-import { Button, IconButton } from "@nuvix/ui/components";
+import { Button } from "@nuvix/ui/components";
 import { Input } from "@/components/editor/components";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import ConfirmationModal from "@/components/editor/components/_confim_dialog";
 import { TableParam } from "@/types";
+import { IconButton } from "@chakra-ui/react";
 
 const rowsPerPageOptions = [
   { value: 100, label: "100 rows" },
@@ -42,7 +42,7 @@ const Pagination = () => {
   });
 
   // rowsCountEstimate is only applicable to table entities
-  const rowsCountEstimate = null;
+  const rowsCountEstimate = isTableLike(selectedTable) ? selectedTable.live_rows_estimate : null;
 
   const filter = params.getAll("filter");
   const filters = formatFilterURLParams(filter as string[]);
@@ -146,11 +146,13 @@ const Pagination = () => {
         <>
           <div className="flex items-center gap-x-2">
             <IconButton
-              icon={<ArrowLeft size={18} />}
-              variant="ghost"
+              variant="outline"
+              size="xs"
               disabled={page <= 1 || isLoading}
               onClick={onPreviousPage}
-            />
+            >
+              <ArrowLeft />
+            </IconButton>
             <p className="text-xs neutral-on-background-medium">Page</p>
             <Input
               min={1}
@@ -175,12 +177,13 @@ const Pagination = () => {
             <p className="text-xs neutral-on-background-medium">of {totalPages.toLocaleString()}</p>
 
             <IconButton
-              icon={<ArrowRight size={18} />}
-              type="outline"
-              variant="ghost"
+              variant="outline"
+              size={"xs"}
               disabled={page >= maxPages || isLoading}
               onClick={onNextPage}
-            />
+            >
+              <ArrowRight />
+            </IconButton>
 
             <DropdownControl
               options={rowsPerPageOptions}
@@ -204,17 +207,17 @@ const Pagination = () => {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <IconButton
-                    size="s"
-                    variant="ghost"
-                    type="text"
-                    icon={isFetching ? "refresh" : "helpCircle"}
+                    size="xs"
+                    variant="outline"
                     onClick={() => {
                       // Show warning if either NOT a table entity, or table rows estimate is beyond threshold
                       if (rowsCountEstimate === null || data.count > THRESHOLD_COUNT) {
                         setIsConfirmFetchExactCountModalOpen(true);
                       } else snap.setEnforceExactCount(true);
                     }}
-                  />
+                  >
+                    {isFetching ? <Loader2 className="animate-spin" /> : <HelpCircle />}
+                  </IconButton>
                 </TooltipTrigger>
                 <TooltipContent side="top" className="w-72">
                   This is an estimated value as your table has more than{" "}

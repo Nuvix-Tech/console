@@ -1,21 +1,19 @@
 import { Key } from "lucide-react";
 import { DataGrid, Column } from "react-data-grid";
 
-// import { useParams } from "common";
 import { COLUMN_MIN_WIDTH } from "../../constants";
 import { ESTIMATED_CHARACTER_PIXEL_WIDTH, getColumnDefaultWidth } from "../../utils/gridColumns";
-// import { EditorTablePageLink } from "data/prefetchers/project.$ref.editor.$id";
-// import { Button, cn, Tooltip, TooltipContent, TooltipTrigger } from "ui";
-// import ShimmeringLoader from "ui-patterns/ShimmeringLoader";
 import { useProjectStore } from "@/lib/store";
-import { useQuery } from "@tanstack/react-query";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import { convertByteaToHex } from "@/lib/helpers";
 import { cn } from "@nuvix/sui/lib/utils";
-import { Button } from "@nuvix/ui/components";
 import { PostgresTable } from "@nuvix/pg-meta";
 import { useTableRowsQuery } from "@/data/table-rows/table-rows-query";
 import { gridStyles } from "../grid/Grid";
+import { SkeletonText } from "@/components/cui/skeleton";
+import { EditorTablePageLink } from "@/data/prefetchers/project.$ref.editor.$id";
+import { Button } from "@chakra-ui/react";
+import { useParams } from "next/navigation";
 
 interface ReferenceRecordPeekProps {
   table: PostgresTable;
@@ -24,7 +22,7 @@ interface ReferenceRecordPeekProps {
 }
 
 export const ReferenceRecordPeek = ({ table, column, value }: ReferenceRecordPeekProps) => {
-  // const { ref } = useParams();
+  const { id: ref } = useParams<{ id: string }>();
   const { project, sdk } = useProjectStore();
 
   const { data, error, isSuccess, isError, isLoading } = useTableRowsQuery(
@@ -115,8 +113,7 @@ export const ReferenceRecordPeek = ({ table, column, value }: ReferenceRecordPee
             <div className="w-96 px-2">
               {isLoading && (
                 <div className="py-2">
-                  {/* <ShimmeringLoader /> */}
-                  loading...
+                  <SkeletonText noOfLines={1} />
                 </div>
               )}
               {isError && (
@@ -131,16 +128,16 @@ export const ReferenceRecordPeek = ({ table, column, value }: ReferenceRecordPee
         style={gridStyles}
       />
       <div className="flex items-center justify-end px-2 py-1">
-        {/* <EditorTablePageLink
+        <EditorTablePageLink
           href={`/project/${ref}/editor/${table.id}?schema=${table.schema}&filter=${column}%3Aeq%3A${value}`}
           projectRef={ref}
           id={String(table.id)}
           filters={[{ column, operator: "=", value: String(value) }]}
-        > */}
-        <Button type="button" size="s">
-          Open table
-        </Button>
-        {/* </EditorTablePageLink> */}
+        >
+          <Button variant="solid" size="sm" as={"span"}>
+            Open table
+          </Button>
+        </EditorTablePageLink>
       </div>
     </>
   );
