@@ -2,12 +2,9 @@ import { forwardRef, memo, useRef } from "react";
 import { DataGrid, CalculatedColumn, DataGridHandle } from "react-data-grid";
 
 import { handleCopyCell } from "@/components/grid/NuvixGrid.utils";
-// import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
-// import AlertError from "components/ui/AlertError";
 import { useForeignKeyConstraintsQuery } from "@/data/database/foreign-key-constraints-query";
 // import { useSendEventMutation } from "data/telemetry/send-event-mutation";
-// import { GenericSkeletonLoader } from "ui-patterns";
-import type { GridProps, SupaRow } from "../../types";
+import type { Filter, GridProps, SupaRow } from "../../types";
 import { useOnRowsChange } from "./Grid.utils";
 import RowRenderer from "./RowRenderer";
 import { useTableEditorStore } from "@/lib/store/table-editor";
@@ -15,8 +12,9 @@ import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { useAppStore, useProjectStore } from "@/lib/store";
 import { cn } from "@nuvix/sui/lib/utils";
 import { Button } from "@nuvix/ui/components";
-import { Alert } from "@chakra-ui/react";
 import { formatForeignKeys } from "@/components/editor/SidePanelEditor/ForeignKeySelector/ForeignKeySelector.utils";
+import { GenericSkeletonLoader } from "@/components/editor/components/GenericSkeleton";
+import { Alert, AlertDescription, AlertTitle } from "@nuvix/sui/components";
 
 const rowKeyGetter = (row: SupaRow) => {
   return row?.idx ?? -1;
@@ -28,8 +26,8 @@ interface IGrid extends GridProps {
   isLoading: boolean;
   isSuccess: boolean;
   isError: boolean;
-  filters: any[]; // Filter
-  onApplyFilters: (appliedFilters: any[]) => void;
+  filters: Filter[];
+  onApplyFilters: (appliedFilters: Filter[]) => void;
 }
 
 export const gridStyles = {
@@ -44,14 +42,14 @@ export const gridStyles = {
 export const gridStyles2 = {
   ["--rdg-color" as any]: "var(--neutral-on-background-medium)",
   ["--rdg-background-color" as any]: "var(--page-background)",
-  ["--rdg-row-hover-background-color" as any]: "var(--neutral-solid-weak)",
+  ["--rdg-row-hover-background-color" as any]: "var(--accent-background-weak)",
   ["--rdg-border-color" as any]: "var(--neutral-alpha-medium)",
   ["--rdg-header-background-color" as any]: "var(--neutral-background-medium)",
   ["--rdg-row-selected-background-color" as any]: "var(--neutral-background-medium)",
   ["--rdg-row-selected-hover-background-color" as any]: "var(--neutral-background-strong)",
 };
 
-// [Joshen] Just for visibility this is causing some hook errors in the browser
+// Just for visibility this is causing some hook errors in the browser
 export const Grid = memo(
   forwardRef<DataGridHandle, IGrid>(
     (
@@ -144,28 +142,19 @@ export const Grid = memo(
               style={{ height: `calc(100% - 35px)` }}
               className="absolute top-9 z-[2] p-2 w-full"
             >
-              {/* {isLoading && <GenericSkeletonLoader />}*/}
-              {isLoading && (
-                <div className="flex items-center justify-center h-full">
-                  <p className="text-sm text-light">Loading...</p>
-                </div>
-              )}
+              {isLoading && <GenericSkeletonLoader />}
 
               {isError && (
-                <Alert.Root>
-                  <Alert.Indicator>
-                    <Alert.Title>Failed to retrieve rows from table</Alert.Title>
-                    <Alert.Content>
-                      <p className="text-sm text-light">Error: {error?.message}</p>
-                    </Alert.Content>
-                  </Alert.Indicator>
+                <Alert>
+                  <AlertTitle>Failed to retrieve rows from table</AlertTitle>
+                  <p className="text-sm text-light">Error: {error?.message}</p>
                   {filters.length > 0 && (
-                    <Alert.Description>
+                    <AlertDescription>
                       Verify that the filter values are correct, as the error may stem from an
                       incorrectly applied filter
-                    </Alert.Description>
+                    </AlertDescription>
                   )}
-                </Alert.Root>
+                </Alert>
               )}
               {isSuccess && (
                 <>

@@ -117,8 +117,8 @@ export const TimestampInfo = ({
           }, 1000);
         }}
         className={cn(
-          "relative cursor-pointer flex gap-y-2 gap-x-0.5 hover:bg-surface-100 px-2 py-1 group",
-          { "bg-surface-100": copied },
+          "relative cursor-pointer flex gap-y-2 gap-x-0.5 hover:bg-muted text-muted-foreground px-2 py-1 group",
+          { "bg-muted text-muted-foreground": copied },
         )}
       >
         <div className="flex items-center gap-x-2 text-left truncate">
@@ -128,7 +128,7 @@ export const TimestampInfo = ({
         <div className="relative flex items-center gap-x-2 flex-grow">
           <div className="border-t w-full border-dashed z-10" />
           {copied && (
-            <span className="flex items-center justify-end w-full absolute inset-0 items-right text-brand-600 bg-surface-100">
+            <span className="flex items-center justify-end w-full absolute inset-0 items-right text-brand-600 bg-muted">
               Copied!
             </span>
           )}
@@ -143,7 +143,7 @@ export const TimestampInfo = ({
       <TooltipTrigger
         asChild
         ref={triggerRef}
-        className={`text-xs ${className} border-b border-transparent hover:border-dashed hover:border-foreground-light`}
+        className={`text-xs ${className} border-b border-transparent hover:border-dashed hover:border-muted-foreground`}
       >
         <span>
           {displayAs === "local"
@@ -151,7 +151,11 @@ export const TimestampInfo = ({
             : timestampUtcFormatter({ utcTimestamp, format: labelFormat })}
         </span>
       </TooltipTrigger>
-      <TooltipContent align={align} side="right" className="font-mono p-0 py-1 min-w-80">
+      <TooltipContent
+        align={align}
+        side="right"
+        className="font-mono p-0 py-1 min-w-80 bg-secondary text-secondary-foreground"
+      >
         <TooltipRow label="UTC" value={utc} />
         <TooltipRow label={localTimezone} value={local} />
         <TooltipRow label="Relative" value={relative} />

@@ -1,6 +1,6 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
-import { Suspense, useCallback, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { isUndefined } from "lodash";
 
 import { NuvixGrid } from "../grid/NuvixGrid";

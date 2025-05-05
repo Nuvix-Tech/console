@@ -3,9 +3,7 @@ import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@nuvix/sui/components/select";
@@ -36,23 +34,6 @@ export const BooleanEditor = <TRow, TSummaryRow = unknown>({
 
   return (
     <>
-      {/* <Select
-        autoFocus
-        id="boolean-editor"
-        name="boolean-editor"
-        height="s"
-        labelAsPlaceholder
-        onBlur={onBlur}
-        onSelect={onChange}
-        defaultValue={value === null ? "null" : value.toString()}
-        style={{ width: `${gridColumn?.width || column.width}px` }}
-        options={[
-          { label: "TRUE", value: "true" },
-          { label: "FALSE", value: "false" },
-          ...(isNullable ? [{ label: "NULL", value: "null" }] : []),
-        ]}
-        
-      /> */}
       <Select
         defaultValue={value === null ? "null" : value.toString()}
         defaultOpen

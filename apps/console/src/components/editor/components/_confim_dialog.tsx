@@ -6,12 +6,11 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@nuvix/sui/components/dialog";
-import { cn } from "@nuvix/sui/lib/utils";
-import { Button } from "@nuvix/sui/components/button";
-import { Separator } from "@nuvix/sui/components/separator";
+import { Button } from "@chakra-ui/react";
 
 export interface ConfirmationModalProps {
   loading?: boolean;
@@ -80,8 +79,8 @@ const ConfirmationModal = forwardRef<
           }
         }}
       >
-        <DialogContent ref={ref} className="p-0 gap-0 pb-5 !block">
-          <DialogHeader className={cn("border-b px-4 py-5")}>
+        <DialogContent ref={ref}>
+          <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
             {description && <DialogDescription>{description}</DialogDescription>}
           </DialogHeader>
@@ -97,17 +96,14 @@ const ConfirmationModal = forwardRef<
           )}
           {children && (
             <>
-              {/* <DialogSection padding={'small'}>{children}</DialogSection>
-                            <DialogSectionSeparator /> */}
-              <div className="px-5 py-5">{children}</div>
-              <Separator />
+              <div className="py-3">{children}</div>
             </>
           )}
-          <div className="flex gap-2 px-5 pt-5 justify-end">
+          <DialogFooter>
             <Button
               size="sm"
               type="button"
-              variant="secondary"
+              variant="subtle"
               disabled={loading}
               onClick={() => onCancel()}
             >
@@ -115,25 +111,20 @@ const ConfirmationModal = forwardRef<
             </Button>
 
             <Button
-              block
               size="sm"
-              // @ts-ignore
-              variant={
-                variant === "destructive"
-                  ? "destructive"
-                  : variant === "warning"
-                    ? "warning"
-                    : "default"
+              variant="solid"
+              colorPalette={
+                variant === "destructive" ? "red" : variant === "warning" ? "yellow" : "bg"
               }
-              htmlType="submit"
+              type="submit"
               loading={loading}
               disabled={loading || disabled}
               onClick={onSubmit}
               className="truncate"
             >
-              {confirmLabel}
+              {loading ? confirmLabelLoading : confirmLabel}
             </Button>
-          </div>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     );

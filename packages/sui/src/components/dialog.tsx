@@ -6,6 +6,9 @@ import { XIcon } from "lucide-react";
 
 import { cn } from "@nuvix/sui/lib/utils";
 
+export type DialogProps = React.ComponentProps<typeof DialogPrimitive.Root>;
+export type DialogContentProps = React.ComponentProps<typeof DialogPrimitive.Content>;
+
 function Dialog({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />;
 }

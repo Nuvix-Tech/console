@@ -1,16 +1,13 @@
 "use client";
 
-import * as Dialog from "@radix-ui/react-dialog";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetHeader,
-  SheetTitle,
   SheetTrigger,
 } from "@nuvix/sui/components/sheet";
+import { DialogProps, DialogContentProps } from "@nuvix/sui/components/dialog";
 import React from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import { Button } from "@nuvix/ui/components";
@@ -20,9 +17,9 @@ import classNames from "classnames";
 export type SidePanelProps = RadixProps & CustomProps;
 
 interface RadixProps
-  extends Dialog.DialogProps,
+  extends DialogProps,
     Pick<
-      Dialog.DialogContentProps,
+      DialogContentProps,
       | "onOpenAutoFocus"
       | "onCloseAutoFocus"
       | "onEscapeKeyDown"
@@ -72,37 +69,37 @@ const SidePanel = ({
   tooltip,
   ...props
 }: SidePanelProps) => {
-  const footerContent = customFooter ? (
-    <SheetFooter>
-      <div className="w-full relative">{customFooter}</div>
-    </SheetFooter>
-  ) : (
-    <SheetFooter>
-      <div>
-        <Button
-          disabled={loading}
-          variant="secondary"
-          onClick={() => (onCancel ? onCancel() : null)}
-        >
-          {cancelText}
-        </Button>
-      </div>
-      {onConfirm !== undefined && (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <span className="inline-block">
-              <Button
-                variant="primary"
-                disabled={disabled || loading}
-                loading={loading}
-                onClick={() => (onConfirm ? onConfirm() : null)}
-              >
-                {confirmText}
-              </Button>
-            </span>
-          </TooltipTrigger>
-          {tooltip !== undefined && <TooltipContent side="bottom">{tooltip}</TooltipContent>}
-        </Tooltip>
+  const footerContent = (
+    <SheetFooter className="p-0 border-t">
+      {customFooter ? (
+        <div className="w-full relative">{customFooter}</div>
+      ) : (
+        <>
+          <Button
+            disabled={loading}
+            variant="secondary"
+            onClick={() => (onCancel ? onCancel() : null)}
+          >
+            {cancelText}
+          </Button>
+          {onConfirm !== undefined && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="inline-block">
+                  <Button
+                    variant="primary"
+                    disabled={disabled || loading}
+                    loading={loading}
+                    onClick={() => (onConfirm ? onConfirm() : null)}
+                  >
+                    {confirmText}
+                  </Button>
+                </span>
+              </TooltipTrigger>
+              {tooltip !== undefined && <TooltipContent side="bottom">{tooltip}</TooltipContent>}
+            </Tooltip>
+          )}
+        </>
       )}
     </SheetFooter>
   );
@@ -128,7 +125,7 @@ const SidePanel = ({
       )}
 
       <SheetContent
-        className={classNames(getSize(size), className, "sm:max-w-[inherit] h-full")}
+        className={classNames(getSize(size), className, "sm:max-w-[inherit] h-full gap-0")}
         onOpenAutoFocus={props.onOpenAutoFocus}
         onCloseAutoFocus={props.onCloseAutoFocus}
         onEscapeKeyDown={props.onEscapeKeyDown}
@@ -139,7 +136,7 @@ const SidePanel = ({
           if (props.onInteractOutside) props.onInteractOutside(event);
         }}
       >
-        {header && <SheetHeader className="flex-row">{header}</SheetHeader>}
+        {header && <SheetHeader className="flex-row border-b w-full">{header}</SheetHeader>}
         <div className="h-full overflow-y-auto">{children}</div>
         {!hideFooter && footerContent}
       </SheetContent>

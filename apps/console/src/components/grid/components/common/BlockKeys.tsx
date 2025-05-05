@@ -1,23 +1,5 @@
-// import { useClickedOutside } from "hooks/ui/useClickedOutside";
-import { KeyboardEvent, ReactNode, useCallback, useEffect, useRef, useState } from "react";
-
-function useClickedOutside(ref: React.RefObject<HTMLElement | null>) {
-  const [isClickedOutside, setIsClickedOutside] = useState(false);
-  const handleClickOutside = (event: MouseEvent) => {
-    if (ref.current && !ref.current.contains(event.target as Node)) {
-      setIsClickedOutside(true);
-    } else {
-      setIsClickedOutside(false);
-    }
-  };
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [ref]);
-  return isClickedOutside;
-}
+import { useClickedOutside } from "@/hooks/useClickOutside";
+import { KeyboardEvent, ReactNode, useCallback, useEffect, useRef } from "react";
 
 interface BlockKeysProps {
   value: string | null;

@@ -18,6 +18,7 @@ import {
   TimestampInfo,
   timestampLocalFormatter,
 } from "@/components/editor/components/_timestamp_info";
+import { Kbd } from "@chakra-ui/react";
 
 interface BaseEditorProps<TRow, TSummaryRow = unknown>
   extends RenderEditCellProps<TRow, TSummaryRow> {
@@ -90,15 +91,15 @@ function BaseEditor<TRow, TSummaryRow = unknown>({
             placeholder={format}
             variant={"subtle"}
             onChange={(e) => setInputValue(e.target.value)}
-            className="!border-0 !rounded-none bg-[var(--neutral-alpha-medium)] !outline-none !ring-0 !ring-offset-0"
+            className="!border-0 !rounded-none !bg-[var(--neutral-alpha-weak)] !outline-none !ring-0 !ring-offset-0"
           />
         </BlockKeys>
         <div className="px-3 py-1 flex flex-col gap-y-0.5">
-          <p className="text-xs text-foreground-lighter">Formatted value:</p>
+          <p className="text-xs text-secondary-foreground">Formatted value:</p>
           {(inputValue ?? "").length === 0 ? (
-            <p className="text-sm font-mono text-foreground-light">Enter a valid date format</p>
+            <p className="text-sm font-mono text-muted-foreground">Enter a valid date format</p>
           ) : timeValue === "Invalid Date" ? (
-            <p className="text-sm font-mono text-foreground-light">Invalid date format</p>
+            <p className="text-sm font-mono text-muted-foreground">Invalid date format</p>
           ) : type === "datetimetz" ? (
             <TimestampInfo
               displayAs="utc"
@@ -123,16 +124,12 @@ function BaseEditor<TRow, TSummaryRow = unknown>({
         <div className="px-3 pt-1 pb-2 flex justify-between gap-x-1">
           <div className="space-y-1">
             <div className="flex items-center space-x-2">
-              <div className="px-1.5 h-[22px] rounded bg-muted border border-secondary flex items-center justify-center">
-                <span className="text-[10px]">⏎</span>
-              </div>
-              <p className="text-xs text-foreground-light">Save changes</p>
+              <Kbd>⏎</Kbd>
+              <p className="text-xs text-muted-foreground">Save changes</p>
             </div>
             <div className="flex items-center space-x-2">
-              <div className="px-1 h-[22px] rounded bg-muted border border-secondary flex items-center justify-center">
-                <span className="text-[10px]">Esc</span>
-              </div>
-              <p className="text-xs text-foreground-light">Cancel changes</p>
+              <Kbd>Esc</Kbd>
+              <p className="text-xs text-muted-foreground">Cancel changes</p>
             </div>
           </div>
           <div className="flex">

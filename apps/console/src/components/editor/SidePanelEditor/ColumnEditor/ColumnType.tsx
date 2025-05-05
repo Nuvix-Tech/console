@@ -169,15 +169,15 @@ const ColumnType = ({
             size="xs"
             justifyContent="space-between"
             aria-expanded={open}
-            className={cn(!value && "text-muted-foreground")}
+            className={cn(!value && "text-muted-foreground truncate")}
           >
             {value ? (
-              <div className="flex gap-2 items-center">
+              <div className="flex gap-2 items-center max-w-[90%]">
                 <span>{inferIcon(getOptionByName(value)?.type ?? "")}</span>
                 <span className="truncate">{value.replaceAll('"', "")}</span>
               </div>
             ) : (
-              "Choose a column type..."
+              <span className="truncate max-w-[85%]">{"Choose a column type..."}</span>
             )}
             <ChevronsUpDown className="opacity-50" />
           </ChakraButton>
