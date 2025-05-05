@@ -1,7 +1,7 @@
 import type { RenderEditCellProps } from "react-data-grid";
 
 import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
-import { Select } from "@nuvix/ui/components";
+import { Select } from "@/components/others/ui";
 
 interface SelectEditorProps<TRow, TSummaryRow = unknown>
   extends RenderEditCellProps<TRow, TSummaryRow> {
@@ -22,8 +22,10 @@ export function SelectEditor<TRow, TSummaryRow = unknown>({
 
   const value = row[column.key as keyof TRow] as unknown as string;
 
+  const nullableValue = isNullable ? "___NULL___" : "";
+
   function onChange(value: string) {
-    if (!value || value == "") {
+    if (!value || value == nullableValue) {
       onRowChange({ ...row, [column.key]: null }, true);
     } else {
       onRowChange({ ...row, [column.key]: value }, true);
@@ -39,17 +41,17 @@ export function SelectEditor<TRow, TSummaryRow = unknown>({
       autoFocus
       id="select-editor"
       name="select-editor"
-      // size="s"
-      defaultValue={value ?? ""}
-      className="sb-grid-select-editor !gap-2"
+      size="md"
+      defaultValue={value ? [value] : []}
+      className="sb-grid-select-editor"
       style={{ width: `${gridColumn?.width || column.width}px` }}
-      onSelect={onChange}
+      onValueChange={onChange}
       onBlur={onBlur}
       options={[
-        ...(isNullable ? [{ label: "NULL", value: "" }] : []),
+        ...(isNullable ? [{ label: "NULL", value: nullableValue }] : []),
         ...options.map(({ label, _value }) => ({ label, value: _value })),
       ]}
-      value={value ?? ""}
+      value={value ?? nullableValue}
       placeholder={(gridColumn as any)?.defaultValue ?? ""}
     />
   );

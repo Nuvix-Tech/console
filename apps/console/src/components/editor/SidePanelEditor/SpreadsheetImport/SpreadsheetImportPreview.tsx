@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import type { SpreadsheetData } from "./SpreadsheetImport.types";
 import SpreadsheetPreviewGrid from "./SpreadsheetPreviewGrid";
-import { Badge, Collapsible } from "@chakra-ui/react";
+import { Badge, Code, Collapsible } from "@chakra-ui/react";
 import { SidePanel } from "@/ui/SidePanel";
 import { Button } from "@nuvix/ui/components";
 import { cn } from "@nuvix/sui/lib/utils";
@@ -169,9 +169,9 @@ const SpreadsheetImportPreview = ({
                             <ArrowRight size={14} />
                             <p className="text-sm">Extra field(s):</p>
                             {error.data?.__parsed_extra.map((value: any, i: number) => (
-                              <code key={i} className="text-xs">
+                              <Code key={i} className="text-xs">
                                 {value}
-                              </code>
+                              </Code>
                             ))}
                           </>
                         )}

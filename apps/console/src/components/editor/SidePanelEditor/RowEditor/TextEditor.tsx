@@ -18,6 +18,7 @@ import { Button } from "@nuvix/ui/components";
 import { TableParam } from "@/types";
 import { TwoOptionToggle } from "@/components/others/ui";
 import { Markdown } from "@/components/others/markdown";
+import { Code } from "@chakra-ui/react";
 
 interface TextEditorProps {
   visible: boolean;
@@ -113,7 +114,7 @@ export const TextEditor = ({
       header={
         <div className="flex items-center justify-between">
           <p>
-            {readOnly ? "Viewing" : "Editing"} value of: <code>{column}</code>
+            {readOnly ? "Viewing" : "Editing"} value of: <Code>{column}</Code>
           </p>
           {(!isTruncated || (isTruncated && isSuccess)) && (
             <TwoOptionToggle

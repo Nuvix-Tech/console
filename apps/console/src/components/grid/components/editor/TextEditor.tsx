@@ -5,22 +5,19 @@ import { toast } from "sonner";
 
 import { MAX_CHARACTERS } from "@nuvix/pg-meta/src/query/table-row-query";
 
-// import { useParams } from "common";
 import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
 import { isTableLike } from "@/data/table-editor/table-editor-types";
 import { useGetCellValueMutation } from "@/data/table-rows/get-cell-value-mutation";
-// import { useSelectedProject } from "hooks/misc/useSelectedProject";
 import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { Button, IconButton, useToast } from "@nuvix/ui/components";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import { cn } from "@nuvix/sui/lib/utils";
-// import ConfirmationModal from "ui-patterns/Dialogs/ConfirmationModal";
-import { BlockKeys } from "../common/BlockKeys";
+import { BlockKeys, Key } from "../common/BlockKeys";
 import { EmptyValue } from "../common/EmptyValue";
 import { MonacoEditor } from "../common/MonacoEditor";
 import { NullValue } from "../common/NullValue";
 import { TruncatedWarningOverlay } from "./TruncatedWarningOverlay";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useProjectStore } from "@/lib/store";
 import { useTableEditorStore } from "@/lib/store/table-editor";
 import Popover from "@/components/editor/components/_popover";
@@ -99,7 +96,7 @@ export const TextEditor = <TRow, TSummaryRow = unknown>({
       }
       setIsPopoverOpen(false);
     },
-    [], // isSuccess
+    [isSuccess],
   );
 
   const onSelectExpand = () => {
@@ -153,19 +150,15 @@ export const TextEditor = <TRow, TSummaryRow = unknown>({
                 onChange={onChange}
               />
               {isEditable && (
-                <div className="flex items-start justify-between p-2 bg-surface-200 space-x-2">
+                <div className="flex items-start justify-between p-2 space-x-2">
                   <div className="space-y-1">
                     <div className="flex items-center space-x-2">
-                      <div className="px-1.5 py-[2.5px] rounded bg-surface-300 border border-strong flex items-center justify-center">
-                        <span className="text-[10px]">⏎</span>
-                      </div>
-                      <p className="text-xs text-foreground-light">Save changes</p>
+                      <Key>⏎</Key>
+                      <p className="text-xs text-muted-foreground">Save changes</p>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <div className="px-1 py-[2.5px] rounded bg-surface-300 border border-strong flex items-center justify-center">
-                        <span className="text-[10px]">Esc</span>
-                      </div>
-                      <p className="text-xs text-foreground-light">Cancel changes</p>
+                      <Key>Esc</Key>
+                      <p className="text-xs text-muted-foreground">Cancel changes</p>
                     </div>
                   </div>
                   <div className="flex flex-col items-end gap-y-1">
@@ -217,7 +210,7 @@ export const TextEditor = <TRow, TSummaryRow = unknown>({
           saveChanges(null);
         }}
       >
-        <p className="text-sm text-foreground-light">
+        <p className="text-sm text-muted-foreground">
           Are you sure you wish to set this value to NULL? This action cannot be undone.
         </p>
       </ConfirmationModal>

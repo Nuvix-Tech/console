@@ -3,7 +3,7 @@ import { ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { RenderEditCellProps } from "react-data-grid";
 
-import { BlockKeys } from "../common/BlockKeys";
+import { BlockKeys, Key } from "../common/BlockKeys";
 import { Input } from "@/components/editor/components";
 import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/popover";
 import { cn } from "@nuvix/sui/lib/utils";
@@ -18,7 +18,6 @@ import {
   TimestampInfo,
   timestampLocalFormatter,
 } from "@/components/editor/components/_timestamp_info";
-import { Kbd } from "@chakra-ui/react";
 
 interface BaseEditorProps<TRow, TSummaryRow = unknown>
   extends RenderEditCellProps<TRow, TSummaryRow> {
@@ -124,11 +123,11 @@ function BaseEditor<TRow, TSummaryRow = unknown>({
         <div className="px-3 pt-1 pb-2 flex justify-between gap-x-1">
           <div className="space-y-1">
             <div className="flex items-center space-x-2">
-              <Kbd>⏎</Kbd>
+              <Key>⏎</Key>
               <p className="text-xs text-muted-foreground">Save changes</p>
             </div>
             <div className="flex items-center space-x-2">
-              <Kbd>Esc</Kbd>
+              <Key>Esc</Key>
               <p className="text-xs text-muted-foreground">Cancel changes</p>
             </div>
           </div>

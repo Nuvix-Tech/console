@@ -145,9 +145,9 @@ const ForeignRowSelector = ({
             <div className="flex h-full py-6 flex-col items-center justify-center">
               <p className="text-sm text-foreground-light">
                 Unable to load rows from{" "}
-                <code>
+                <Code>
                   {schemaName}.{tableName}
-                </code>
+                </Code>
                 . Please try again or contact support.
               </p>
             </div>

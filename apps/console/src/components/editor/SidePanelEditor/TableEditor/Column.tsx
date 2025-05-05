@@ -25,6 +25,7 @@ import { Button, IconButton, Tag, Checkbox as Checkbox_UI } from "@nuvix/ui/comp
 import { cn } from "@nuvix/sui/lib/utils";
 import { Checkbox } from "@/components/cui/checkbox";
 import { Input } from "@/components/others/ui";
+import { Code } from "@chakra-ui/react";
 
 /**
  * For context:
@@ -186,9 +187,9 @@ const Column = ({
                                         .filter((c) => c.source === column.name)
                                         .map((c) => {
                                           return (
-                                            <code key={`${c.source}-${c.target}`}>
+                                            <Code key={`${c.source}-${c.target}`}>
                                               {relation.schema}.{relation.table}.{c.target}
-                                            </code>
+                                            </Code>
                                           );
                                         })}
                                       {relation.columns.length > 1 && (

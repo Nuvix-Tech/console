@@ -2,6 +2,7 @@ import * as React from "react";
 import type { RenderEditCellProps } from "react-data-grid";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { Input } from "@chakra-ui/react";
 
 dayjs.extend(customParseFormat);
 
@@ -42,7 +43,7 @@ function BaseEditor<TRow, TSummaryRow = unknown>({
   }
 
   return (
-    <input
+    <Input
       className="sb-grid-time-editor"
       ref={autoFocusAndSelect}
       value={timeValue ?? ""}
@@ -50,6 +51,7 @@ function BaseEditor<TRow, TSummaryRow = unknown>({
       onBlur={() => onClose(true)}
       type="time"
       step="1"
+      variant={"subtle"}
     />
   );
 }

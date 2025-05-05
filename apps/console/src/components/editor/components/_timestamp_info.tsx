@@ -151,11 +151,7 @@ export const TimestampInfo = ({
             : timestampUtcFormatter({ utcTimestamp, format: labelFormat })}
         </span>
       </TooltipTrigger>
-      <TooltipContent
-        align={align}
-        side="right"
-        className="font-mono p-0 py-1 min-w-80 bg-secondary text-secondary-foreground"
-      >
+      <TooltipContent align={align} side="right" className="font-mono p-0 py-1 min-w-80">
         <TooltipRow label="UTC" value={utc} />
         <TooltipRow label={localTimezone} value={local} />
         <TooltipRow label="Relative" value={relative} />

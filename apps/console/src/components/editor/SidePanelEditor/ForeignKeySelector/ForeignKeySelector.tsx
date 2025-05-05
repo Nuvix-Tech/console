@@ -21,6 +21,7 @@ import { SidePanel } from "@/ui/SidePanel";
 import InformationBox from "@/ui/InformationBox";
 import { Select } from "@/components/others/ui";
 import { Button, IconButton } from "@nuvix/ui/components";
+import { Code } from "@chakra-ui/react";
 
 const EMPTY_STATE: ForeignKey = {
   id: undefined,
@@ -276,9 +277,9 @@ export const ForeignKeySelector = ({
               <div className="flex flex-col gap-y-3">
                 <label className="text-muted-foreground text-sm">
                   Select columns from{" "}
-                  <code className="text-xs">
+                  <Code className="text-xs">
                     {fk.schema}.{fk.table}
-                  </code>{" "}
+                  </Code>{" "}
                   to reference to
                 </label>
                 <div className="grid grid-cols-10 gap-y-2">
@@ -374,9 +375,9 @@ export const ForeignKeySelector = ({
                           if (x === undefined) return null;
                           return (
                             <li key={`type-error-${idx}`}>
-                              <code className="text-xs">{fk.columns[idx]?.source}</code> (
+                              <Code className="text-xs">{fk.columns[idx]?.source}</Code> (
                               {x.sourceType}) and{" "}
-                              <code className="text-xs">{fk.columns[idx]?.target}</code>(
+                              <Code className="text-xs">{fk.columns[idx]?.target}</Code>(
                               {x.targetType})
                             </li>
                           );
@@ -397,7 +398,7 @@ export const ForeignKeySelector = ({
                           return (
                             <li key={`type-error-${idx}`}>
                               <div className="flex items-center gap-x-1">
-                                <code className="text-xs">{fk.columns[idx]?.source}</code>{" "}
+                                <Code className="text-xs">{fk.columns[idx]?.source}</Code>{" "}
                                 <ArrowRight /> {x.targetType}
                               </div>
                             </li>
@@ -422,18 +423,18 @@ export const ForeignKeySelector = ({
                     </p>
                     <ul className="mt-2 list-disc pl-4 space-y-1">
                       <li>
-                        <code className="text-xs">Cascade</code>: if the referencing table
+                        <Code className="text-xs">Cascade</Code>: if the referencing table
                         represents something that is a component of what is represented by the
                         referenced table and cannot exist independently
                       </li>
                       <li>
-                        <code className="text-xs">Restrict</code> or{" "}
-                        <code className="text-xs">No action</code>: if the two tables represent
+                        <Code className="text-xs">Restrict</Code> or{" "}
+                        <Code className="text-xs">No action</Code>: if the two tables represent
                         independent objects
                       </li>
                       <li>
-                        <code className="text-xs">Set NULL</code> or{" "}
-                        <code className="text-xs">Set default</code>: if a foreign-key relationship
+                        <Code className="text-xs">Set NULL</Code> or{" "}
+                        <Code className="text-xs">Set default</Code>: if a foreign-key relationship
                         represents optional information
                       </li>
                     </ul>

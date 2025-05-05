@@ -4,6 +4,7 @@ import { HelpCircle } from "lucide-react";
 import { getForeignKeyCascadeAction } from "../ColumnEditor/ColumnEditor.utils";
 import type { ForeignKey } from "./ForeignKeySelector.types";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
+import { Code } from "@chakra-ui/react";
 
 export const formatForeignKeys = (fks: ForeignKeyConstraint[]): ForeignKey[] => {
   return fks.map((x) => {
@@ -33,7 +34,7 @@ export const generateCascadeActionDescription = (
       return (
         <>
           <span className="text-foreground-light">{actionName}</span>: {actionVerb} a record from{" "}
-          <code className="text-xs text-foreground-light">{reference}</code> will{" "}
+          <Code className="text-xs text-foreground-light">{reference}</Code> will{" "}
           <span className="text-amber-900 opacity-75">raise an error</span> if there are records
           existing in this table that reference it
         </>
@@ -42,7 +43,7 @@ export const generateCascadeActionDescription = (
       return (
         <>
           <span className="text-foreground-light">{actionName}</span>: {actionVerb} a record from{" "}
-          <code className="text-xs text-foreground-light">{reference}</code> will{" "}
+          <Code className="text-xs text-foreground-light">{reference}</Code> will{" "}
           <span className="text-amber-900 opacity-75">also {action}</span> any records that
           reference it in this table
         </>
@@ -61,7 +62,7 @@ export const generateCascadeActionDescription = (
             </TooltipContent>
           </Tooltip>
           : {actionVerb} a record from{" "}
-          <code className="text-xs text-foreground-light">{reference}</code> will{" "}
+          <Code className="text-xs text-foreground-light">{reference}</Code> will{" "}
           <span className="text-amber-900 opacity-75">prevent {actionVerb.toLowerCase()}</span>{" "}
           existing referencing rows from this table.
         </>
@@ -70,7 +71,7 @@ export const generateCascadeActionDescription = (
       return (
         <>
           <span className="text-foreground-light">{actionName}</span>: {actionVerb} a record from{" "}
-          <code className="text-xs text-foreground-light">{reference}</code> will set the value of
+          <Code className="text-xs text-foreground-light">{reference}</Code> will set the value of
           any existing records in this table referencing it to their{" "}
           <span className="text-amber-900 opacity-75">default value</span>
         </>
@@ -79,7 +80,7 @@ export const generateCascadeActionDescription = (
       return (
         <>
           <span className="text-foreground-light">{actionName}</span>: {actionVerb} a record from{" "}
-          <code className="text-xs text-foreground-light">{reference}</code> will set the value of
+          <Code className="text-xs text-foreground-light">{reference}</Code> will set the value of
           any existing records in this table referencing it{" "}
           <span className="text-amber-900 opacity-75">to NULL</span>
         </>

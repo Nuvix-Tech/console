@@ -23,6 +23,7 @@ import SidePanelEditor from "./SidePanelEditor/SidePanelEditor";
 import { useSearchQuery } from "@/hooks/useQuery";
 import { TableParam } from "@/types";
 import DeleteConfirmationDialogs from "./components/_delete_dialog";
+import { Code } from "@chakra-ui/react";
 
 // Placeholder component for loading state
 const LoadingState = () => <div>Loading...</div>;
@@ -157,7 +158,7 @@ export const TableEditor = () => {
             (isViewSelected || isTableSelected) && selectedView === "definition" ? (
               <div className="flex items-center space-x-2">
                 <p>
-                  SQL Definition of <code className="text-sm">{table.name}</code>
+                  SQL Definition of <Code className="text-sm">{table.name}</Code>
                 </p>
                 <p className="text-foreground-light text-sm">(Read only)</p>
               </div>

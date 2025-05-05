@@ -4,13 +4,12 @@ import type { RenderEditCellProps } from "react-data-grid";
 
 import { prettifyJSON, removeJSONTrailingComma, tryParseJson } from "@/lib/helpers";
 import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
-// import { Popover, Tooltip, TooltipContent, TooltipTrigger } from "ui";
-import { BlockKeys } from "../common/BlockKeys";
+import { BlockKeys, Key } from "../common/BlockKeys";
 import { MonacoEditor } from "../common/MonacoEditor";
 import { NullValue } from "../common/NullValue";
 import { TruncatedWarningOverlay } from "./TruncatedWarningOverlay";
 import { useProjectStore } from "@/lib/store";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useToast } from "@nuvix/ui/components";
 import { MAX_ARRAY_SIZE, MAX_CHARACTERS } from "../../constants";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
@@ -200,20 +199,16 @@ export const JsonEditor = <TRow, TSummaryRow = unknown>({
               readOnly={!isEditable}
               onChange={onChange}
             />
-            <div className="flex items-start justify-between p-2 bg-surface-200 gap-x-2">
+            <div className="flex items-start justify-between p-2 gap-x-2">
               {isEditable && (
                 <div className="space-y-1">
                   <div className="flex items-center space-x-2">
-                    <div className="px-1.5 py-[2.5px] rounded bg-selection border border-strong flex items-center justify-center">
-                      <span className="text-[10px]">⏎</span>
-                    </div>
-                    <p className="text-xs text-foreground-light">Save changes</p>
+                    <Key>⏎</Key>
+                    <p className="text-xs text-muted-foreground">Save changes</p>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <div className="px-1 py-[2.5px] rounded bg-selection border border-strong flex items-center justify-center">
-                      <span className="text-[10px]">Esc</span>
-                    </div>
-                    <p className="text-xs text-foreground-light">Cancel changes</p>
+                    <Key>Esc</Key>
+                    <p className="text-xs text-muted-foreground">Cancel changes</p>
                   </div>
                 </div>
               )}

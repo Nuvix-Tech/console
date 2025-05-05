@@ -1,3 +1,5 @@
+import { NumberInputField, NumberInputRoot } from "@/components/cui/number-input";
+import { NumberInputValueChangeDetails } from "@chakra-ui/react";
 import type { RenderEditCellProps } from "react-data-grid";
 
 function autoFocusAndSelect(input: HTMLInputElement | null) {
@@ -13,8 +15,8 @@ export function NumberEditor<TRow, TSummaryRow = unknown>({
 }: RenderEditCellProps<TRow, TSummaryRow>) {
   const value = row[column.key as keyof TRow] as unknown as string;
 
-  function onChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const _value = event.target.value;
+  function onChange(details: NumberInputValueChangeDetails) {
+    const _value = details.value;
     if (_value === "") onRowChange({ ...row, [column.key]: null });
     else onRowChange({ ...row, [column.key]: _value });
   }
@@ -24,13 +26,14 @@ export function NumberEditor<TRow, TSummaryRow = unknown>({
   }
 
   return (
-    <input
-      className="sb-grid-number-editor"
+    <NumberInputRoot
+      onBlur={onBlur}
       ref={autoFocusAndSelect}
       value={value ?? ""}
-      onChange={onChange}
-      onBlur={onBlur}
-      type="number"
-    />
+      onValueChange={onChange}
+      variant={"subtle"}
+    >
+      <NumberInputField className="sb-grid-number-editor" />
+    </NumberInputRoot>
   );
 }

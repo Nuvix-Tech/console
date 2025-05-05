@@ -23,6 +23,7 @@ import { useParams } from "next/navigation";
 import { Button } from "@nuvix/ui/components";
 import { SidePanel } from "@/ui/SidePanel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@nuvix/sui/components/tabs";
+import { Code } from "@chakra-ui/react";
 
 const MAX_CSV_SIZE = 1024 * 1024 * 100; // 100 MB
 
@@ -190,9 +191,9 @@ const SpreadsheetImport = ({
         selectedTable !== undefined ? (
           <>
             Add data to{" "}
-            <code className="text-sm">
+            <Code className="text-sm">
               {selectedTable.schema}.{selectedTable.name}
-            </code>
+            </Code>
           </>
         ) : (
           "Add content to new table"

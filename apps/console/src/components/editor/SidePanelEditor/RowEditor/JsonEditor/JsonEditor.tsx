@@ -18,6 +18,7 @@ import { cn } from "@nuvix/sui/lib/utils";
 import { Button, IconButton } from "@nuvix/ui/components";
 import { TableParam } from "@/types";
 import { TwoOptionToggle } from "@/components/others/ui";
+import { Code } from "@chakra-ui/react";
 
 interface JsonEditProps {
   row?: { [key: string]: any };
@@ -133,11 +134,11 @@ const JsonEdit = ({
         <div className="flex items-center justify-between">
           {view === "edit" ? (
             <p>
-              {readOnly ? "Viewing" : "Editing"} JSON Field: <code>{column}</code>
+              {readOnly ? "Viewing" : "Editing"} JSON Field: <Code>{column}</Code>
             </p>
           ) : (
             <p>
-              Viewing JSON Field: <code>{column}</code>
+              Viewing JSON Field: <Code>{column}</Code>
             </p>
           )}
           {(!isTruncated || (isTruncated && isSuccess)) && (
@@ -145,7 +146,7 @@ const JsonEdit = ({
               {view === "edit" && (
                 <IconButton
                   variant="ghost"
-                  icon={<AlignLeft />}
+                  icon={<AlignLeft size={18} />}
                   onClick={() => prettify()}
                   tooltip={"Prettify JSON"}
                   tooltipPosition="bottom"
