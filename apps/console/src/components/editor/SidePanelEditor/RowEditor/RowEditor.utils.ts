@@ -6,7 +6,6 @@ import type {
 } from "@nuvix/pg-meta";
 import dayjs from "dayjs";
 import { compact, isEqual, isNull, isString, omitBy } from "lodash";
-// import type { Dictionary } from "types";
 
 import { MAX_CHARACTERS } from "@nuvix/pg-meta/src/query/table-row-query";
 import { minifyJSON, tryParseJson } from "@/lib/helpers";
@@ -188,7 +187,7 @@ const convertInputDatetimeToPostgresDatetime = (format: string, value: string | 
   }
 };
 
-// [Joshen] JFYI this presents a small problem in particular when creating a new row
+// JFYI this presents a small problem in particular when creating a new row
 // given that we don't include null properties. Because of that if the column has a default
 // value, the column value will then always be the default value, instead of null
 // which may be considered a bug if e.g for a boolean column the user specifically selects "NULL" option

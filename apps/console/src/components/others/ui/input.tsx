@@ -108,7 +108,7 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, RootTextareaProps 
         <Stack width={isHoriz ? "sm" : "full"} gap="2">
           <div className="w-full relative">
             <ChakraTextarea ref={ref} paddingRight={hasSuffix ? "4" : undefined} {...rest} />
-            {hasSuffix && <div className="absolute top-1 right-1">{hasSuffix}</div>}
+            {hasSuffix && <div className="absolute !top-2 !right-2">{hasSuffix}</div>}
           </div>
           {helperText && <ChakraField.HelperText>{helperText}</ChakraField.HelperText>}
           {errorText && <ChakraField.ErrorText>{errorText}</ChakraField.ErrorText>}

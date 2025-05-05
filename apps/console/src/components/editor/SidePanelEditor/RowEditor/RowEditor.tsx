@@ -3,8 +3,6 @@ import { isEmpty, noop, partition } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 
 import { useForeignKeyConstraintsQuery } from "@/data/database/foreign-key-constraints-query";
-// import type { Dictionary } from "types";
-// import { SidePanel } from "ui";
 import ActionBar from "../ActionBar";
 import { formatForeignKeys } from "../ForeignKeySelector/ForeignKeySelector.utils";
 import ForeignRowSelector from "./ForeignRowSelector/ForeignRowSelector";

@@ -1,6 +1,5 @@
 import { Button } from "@nuvix/ui/components";
 import { ExternalLink, Maximize2, Minimize2 } from "lucide-react";
-import Link from "next/link";
 import { ReactNode, useState, forwardRef } from "react";
 
 interface InformationBoxProps {
@@ -73,10 +72,16 @@ const InformationBox = forwardRef<HTMLDivElement, InformationBoxProps>(
 
               {url && (
                 <div>
-                  <Button asChild type="default" prefixIcon={<ExternalLink />}>
-                    <Link href={url} target="_blank" rel="noreferrer">
-                      {urlLabel}
-                    </Link>
+                  <Button
+                    type="default"
+                    variant="secondary"
+                    size="s"
+                    prefixIcon={<ExternalLink size={14} />}
+                    href={url}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {urlLabel}
                   </Button>
                 </div>
               )}

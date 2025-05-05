@@ -242,7 +242,7 @@ const ColumnEditor = ({
                 <Button
                   variant="secondary"
                   size="s"
-                  prefixIcon={<Plus strokeWidth={2} />}
+                  prefixIcon={<Plus size={14} strokeWidth={2} />}
                   href={`/project/${ref}/database/types`}
                   target="_blank"
                   rel="noreferrer"

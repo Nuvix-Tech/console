@@ -126,12 +126,14 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
             <SelectContent>
               {collection.items.map((option, id) => (
                 <SelectItem key={id} item={option} className="flex items-center gap-2">
-                  {option.icon && <span>{option.icon}</span>}
-                  <div className="flex flex-col">
-                    <span>{option.view}</span>
-                    {option.description && (
-                      <span className="text-secondary-foreground">{option.description}</span>
-                    )}
+                  <div className="flex gap-2 justify-start items-center">
+                    {option.icon && <span>{option.icon}</span>}
+                    <div className="flex flex-col">
+                      <span>{option.view ?? option.label}</span>
+                      {option.description && (
+                        <span className="text-secondary-foreground">{option.description}</span>
+                      )}
+                    </div>
                   </div>
                 </SelectItem>
               ))}
