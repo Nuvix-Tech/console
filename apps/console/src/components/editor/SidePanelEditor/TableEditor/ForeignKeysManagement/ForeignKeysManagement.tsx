@@ -1,9 +1,5 @@
 import { useState } from "react";
-// import { Button } from "ui";
 
-// import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
-// import AlertError from "components/ui/AlertError";
-// import { GenericSkeletonLoader } from "components/ui/ShimmeringLoader";
 import { useForeignKeyConstraintsQuery } from "@/data/database/foreign-key-constraints-query";
 import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
 import type { ResponseError } from "@/types";
@@ -15,6 +11,7 @@ import { checkIfRelationChanged } from "./ForeignKeysManagement.utils";
 import { useProjectStore } from "@/lib/store";
 import { Alert, AlertDescription, AlertTitle } from "@nuvix/sui/components/alert";
 import { Button } from "@nuvix/ui/components";
+import { SkeletonText } from "@/components/cui/skeleton";
 
 interface ForeignKeysManagementProps {
   table: TableField;
@@ -61,18 +58,10 @@ export const ForeignKeysManagement = ({
       <div className="w-full space-y-4 ">
         <h5>Foreign keys</h5>
 
-        {/* {isLoading && <GenericSkeletonLoader />} */}
-        {isLoading && "loading ....."}
-
-        {/* {isError && (
-          <AlertError
-            error={error as unknown as ResponseError}
-            subject="Failed to retrieve foreign key relationships"
-          />
-        )} */}
+        {isLoading && <SkeletonText noOfLines={3} gap={3} />}
 
         {isError && (
-          <Alert>
+          <Alert variant="error">
             <AlertTitle>Failed to retrieve foreign key relationships</AlertTitle>
             <AlertDescription>{error.message}</AlertDescription>
           </Alert>

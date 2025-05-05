@@ -8,6 +8,7 @@ export default function RLSDisableModalContent() {
     <div className="text-sm text-foreground-light grid gap-4">
       <div className="grid gap-3">
         <Feedback
+          textSize="s"
           variant="warning"
           title="This table will be publicly readable and writable"
           icon
@@ -29,10 +30,10 @@ export default function RLSDisableModalContent() {
             <div>
               <strong>Before you turn off Row Level Security, consider:</strong>
               <ul className="space-y-2 mt-2">
-                <li className="list-disc ml-1">
+                <li className="list-disc">
                   Any personal information in this table will be publicly accessible.
                 </li>
-                <li className="list-disc ml-1">
+                <li className="list-disc">
                   Anyone will be able to modify, add or delete any row in this table.
                 </li>
               </ul>

@@ -1,7 +1,6 @@
 import { AlertCircle, ArrowRight, ChevronDown, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 
-// import { Badge, Button, cn, Collapsible, SidePanel } from "ui";
 import type { SpreadsheetData } from "./SpreadsheetImport.types";
 import SpreadsheetPreviewGrid from "./SpreadsheetPreviewGrid";
 import { Badge, Collapsible } from "@chakra-ui/react";

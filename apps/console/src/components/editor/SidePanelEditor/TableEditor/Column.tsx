@@ -12,7 +12,6 @@ import {
 
 import { useForeignKeyConstraintsQuery } from "@/data/database/foreign-key-constraints-query";
 import type { EnumeratedType } from "@/data/enumerated-types/enumerated-types-query";
-// import { EMPTY_ARR, EMPTY_OBJ } from "lib/void";
 import { useState } from "react";
 import { typeExpressionSuggestions } from "../ColumnEditor/ColumnEditor.constants";
 import type { Suggestion } from "../ColumnEditor/ColumnEditor.types";
@@ -28,7 +27,7 @@ import { Checkbox } from "@/components/cui/checkbox";
 import { Input } from "@/components/others/ui";
 
 /**
- * [Joshen] For context:
+ * For context:
  *
  * Fields which primary key columns will not bother with these configurations:
  * - Default value
@@ -122,7 +121,10 @@ const Column = ({
             disabled={hasImportContent}
             placeholder="column_name"
             size="xs"
-            className={cn(hasImportContent ? "opacity-50" : "", "!border-r-0 !rounded-r-none")}
+            className={cn(
+              hasImportContent ? "opacity-50" : "",
+              "!border-r-0 !rounded-r-none !outline-none",
+            )}
             onChange={(event: any) => onUpdateColumn({ name: event.target.value })}
           />
           {relations.filter((r) => !r.toRemove).length === 0 ? (
@@ -137,7 +139,11 @@ const Column = ({
           ) : (
             <Popover open={open} onOpenChange={setOpen} modal={false}>
               <PopoverTrigger asChild>
-                <Button size="s" variant="secondary" className="rounded-l-none h-[30px] py-0 px-2">
+                <Button
+                  size="s"
+                  variant="secondary"
+                  className="!rounded-l-none !h-[30px] py-0 px-2"
+                >
                   <Link size={12} />
                 </Button>
               </PopoverTrigger>
@@ -287,7 +293,7 @@ const Column = ({
                   {settingsCount}
                 </div>
               )}
-              <IconButton variant="ghost">
+              <IconButton variant="tertiary">
                 <Settings size={16} strokeWidth={1} />
               </IconButton>
             </PopoverTrigger>
@@ -301,25 +307,25 @@ const Column = ({
                   <Checkbox_UI
                     label="Is Nullable"
                     description="Specify if the column can assume a NULL value if no value is provided"
-                    checked={column.isNullable}
+                    isChecked={column.isNullable}
                     className="p-4"
-                    onChange={() => onUpdateColumn({ isNullable: !column.isNullable })}
+                    onToggle={() => onUpdateColumn({ isNullable: !column.isNullable })}
                   />
                 )}
                 <Checkbox_UI
                   label="Is Unique"
                   description="Enforce if values in the column should be unique across rows"
-                  checked={column.isUnique}
+                  isChecked={column.isUnique}
                   className="p-4"
-                  onChange={() => onUpdateColumn({ isUnique: !column.isUnique })}
+                  onToggle={() => onUpdateColumn({ isUnique: !column.isUnique })}
                 />
                 {column.format.includes("int") && (
                   <Checkbox_UI
                     label="Is Identity"
                     description="Automatically assign a sequential unique number to the column"
-                    checked={column.isIdentity}
+                    isChecked={column.isIdentity}
                     className="p-4"
-                    onChange={() => {
+                    onToggle={() => {
                       const isIdentity = !column.isIdentity;
                       const isArray = isIdentity ? false : column.isArray;
                       onUpdateColumn({ isIdentity, isArray });
@@ -331,9 +337,9 @@ const Column = ({
                   <Checkbox_UI
                     label="Define as Array"
                     description="Define your column as a variable-length multidimensional array"
-                    checked={column.isArray}
+                    isChecked={column.isArray}
                     className="p-4"
-                    onChange={() => {
+                    onToggle={() => {
                       const isArray = !column.isArray;
                       const isIdentity = isArray ? false : column.isIdentity;
                       onUpdateColumn({ isArray, isIdentity });

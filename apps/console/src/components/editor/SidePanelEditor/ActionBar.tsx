@@ -53,6 +53,7 @@ const ActionBar = ({
           onClick={onSelectApply}
           disabled={disableApply || isRunning || loading}
           loading={isRunning || loading}
+          variant="primary"
         >
           {applyButtonLabel}
         </Button>

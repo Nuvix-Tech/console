@@ -1,10 +1,10 @@
 import type { PostgresPrimaryKey, PostgresTable } from "@nuvix/pg-meta";
 import { chunk, find, isEmpty, isEqual } from "lodash";
-// import Papa from "papaparse";
+import Papa from "papaparse";
 import { toast } from "sonner";
 
 import { Query } from "@nuvix/pg-meta/src/query";
-// import SparkBar from "components/ui/SparkBar";
+import SparkBar from "@/ui/SparkBar";
 import { createDatabaseColumn } from "@/data/database-columns/database-column-create-mutation";
 import { deleteDatabaseColumn } from "@/data/database-columns/database-column-delete-mutation";
 import { updateDatabaseColumn } from "@/data/database-columns/database-column-update-mutation";
@@ -13,7 +13,7 @@ import { FOREIGN_KEY_CASCADE_ACTION } from "@/data/database/database-query-const
 import { ForeignKeyConstraint } from "@/data/database/foreign-key-constraints-query";
 import { databaseKeys } from "@/data/database/keys";
 import { entityTypeKeys } from "@/data/entity-types/keys";
-// import { prefetchEditorTablePage } from "@/data/prefetchers/project.$ref.editor.$id";
+import { prefetchEditorTablePage } from "@/data/prefetchers/project.$ref.editor.$id";
 import { getQueryClient } from "@/data/query-client";
 import { executeSql } from "@/data/sql/execute-sql-query";
 import { tableEditorKeys } from "@/data/table-editor/keys";
@@ -518,7 +518,7 @@ export const createTable = async ({
           (progress: number) => {
             toast.loading(
               <div className="flex flex-col space-y-2" style={{ minWidth: "220px" }}>
-                {/* <SparkBar
+                <SparkBar
                   value={progress}
                   max={100}
                   type="horizontal"
@@ -527,8 +527,7 @@ export const createTable = async ({
                   labelBottomClass=""
                   labelTop={`${progress.toFixed(2)}%`}
                   labelTopClass="tabular-nums"
-                /> */}
-                IMPORTING
+                />
               </div>,
               { id: toastId },
             );
@@ -563,7 +562,7 @@ export const createTable = async ({
           (progress: number) => {
             toast.loading(
               <div className="flex flex-col space-y-2" style={{ minWidth: "220px" }}>
-                {/* <SparkBar
+                <SparkBar
                   value={progress}
                   max={100}
                   type="horizontal"
@@ -572,8 +571,7 @@ export const createTable = async ({
                   labelBottomClass=""
                   labelTop={`${progress.toFixed(2)}%`}
                   labelTopClass="tabular-nums"
-                /> */}
-                PROGRESS IS HERE
+                />
               </div>,
               { id: toastId },
             );
@@ -592,12 +590,12 @@ export const createTable = async ({
       }
     }
 
-    // await prefetchEditorTablePage({
-    //   queryClient,
-    //   projectRef,
-    //   sdk,
-    //   id: table.id,
-    // });
+    await prefetchEditorTablePage({
+      queryClient,
+      projectRef,
+      sdk,
+      id: table.id,
+    });
 
     // Finally, return the created table
     return table;
@@ -774,53 +772,53 @@ export const insertRowsViaSpreadsheet = async (
   let insertError: any = undefined;
   const t1: any = new Date();
   return new Promise((resolve) => {
-    //   Papa.parse(file, {
-    //     header: true,
-    //     // dynamicTyping has to be disabled so that "00001" doesn't get parsed as 1.
-    //     dynamicTyping: false,
-    //     skipEmptyLines: true,
-    //     chunkSize: CHUNK_SIZE,
-    //     quoteChar: file.type === "text/tab-separated-values" ? "" : '"',
-    //     chunk: async (results: any, parser: any) => {
-    //       parser.pause();
-    //       const formattedData = results.data.map((row: any) => {
-    //         const formattedRow: any = {};
-    //         selectedHeaders.forEach((header) => {
-    //           const column = table.columns?.find((c) => c.name === header);
-    //           if ((column?.data_type ?? "") === "ARRAY" || (column?.format ?? "").includes("json")) {
-    //             formattedRow[header] = tryParseJson(row[header]);
-    //           } else if (row[header] === "") {
-    //             // if the cell is empty string, convert it to NULL
-    //             formattedRow[header] = column?.is_nullable ? null : "";
-    //           } else {
-    //             formattedRow[header] = row[header];
-    //           }
-    //         });
-    //         return formattedRow;
-    //       });
-    //       const insertQuery = new Query()
-    //         .from(table.name, table.schema)
-    //         .insert(formattedData)
-    //         .toSql();
-    //       try {
-    //         await executeSql({ projectRef, sdk, sql: insertQuery });
-    //       } catch (error) {
-    //         console.warn(error);
-    //         insertError = error;
-    //         parser.abort();
-    //       }
-    //       chunkNumber += 1;
-    //       const progress = (chunkNumber * CHUNK_SIZE) / file.size;
-    //       const progressPercentage = progress > 1 ? 100 : progress * 100;
-    //       onProgressUpdate(progressPercentage);
-    //       parser.resume();
-    //     },
-    //     complete: () => {
-    //       const t2: any = new Date();
-    //       console.log(`Total time taken for importing spreadsheet: ${(t2 - t1) / 1000} seconds`);
-    //       resolve({ error: insertError });
-    //     },
-    //   });
+    Papa.parse(file, {
+      header: true,
+      // dynamicTyping has to be disabled so that "00001" doesn't get parsed as 1.
+      dynamicTyping: false,
+      skipEmptyLines: true,
+      chunkSize: CHUNK_SIZE,
+      quoteChar: file.type === "text/tab-separated-values" ? "" : '"',
+      chunk: async (results: any, parser: any) => {
+        parser.pause();
+        const formattedData = results.data.map((row: any) => {
+          const formattedRow: any = {};
+          selectedHeaders.forEach((header) => {
+            const column = table.columns?.find((c) => c.name === header);
+            if ((column?.data_type ?? "") === "ARRAY" || (column?.format ?? "").includes("json")) {
+              formattedRow[header] = tryParseJson(row[header]);
+            } else if (row[header] === "") {
+              // if the cell is empty string, convert it to NULL
+              formattedRow[header] = column?.is_nullable ? null : "";
+            } else {
+              formattedRow[header] = row[header];
+            }
+          });
+          return formattedRow;
+        });
+        const insertQuery = new Query()
+          .from(table.name, table.schema)
+          .insert(formattedData)
+          .toSql();
+        try {
+          await executeSql({ projectRef, sdk, sql: insertQuery });
+        } catch (error) {
+          console.warn(error);
+          insertError = error;
+          parser.abort();
+        }
+        chunkNumber += 1;
+        const progress = (chunkNumber * CHUNK_SIZE) / file.size;
+        const progressPercentage = progress > 1 ? 100 : progress * 100;
+        onProgressUpdate(progressPercentage);
+        parser.resume();
+      },
+      complete: () => {
+        const t2: any = new Date();
+        console.log(`Total time taken for importing spreadsheet: ${(t2 - t1) / 1000} seconds`);
+        resolve({ error: insertError });
+      },
+    });
   });
 };
 

@@ -17,11 +17,8 @@ import {
 import { useEnumeratedTypesQuery } from "@/data/enumerated-types/enumerated-types-query";
 // import { useIsFeatureEnabled } from "hooks/misc/useIsFeatureEnabled";
 import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
-// import { useUrlState } from "hooks/ui/useUrlState";
 import { PROTECTED_SCHEMAS_WITHOUT_EXTENSIONS } from "@/lib/constants/schemas";
-// import { Badge, Checkbox, Input, SidePanel } from "ui";
 // import { Admonition } from "ui-patterns";
-// import ConfirmationModal from "ui-patterns/Dialogs/ConfirmationModal";
 import ActionBar from "../ActionBar";
 import type { ForeignKey } from "../ForeignKeySelector/ForeignKeySelector.types";
 import { formatForeignKeys } from "../ForeignKeySelector/ForeignKeySelector.utils";
@@ -92,7 +89,6 @@ const TableEditor = ({
   const realtimeEnabled = false; //useIsFeatureEnabled("realtime:all");
   // const { mutate: sendEvent } = useSendEventMutation();
 
-  // const [params, setParams] = useUrlState();
   const { params, setQueryParam } = useSearchQuery();
   useEffect(() => {
     if (params.get("create") === "table" && snap.ui.open === "none") {
@@ -320,6 +316,7 @@ const TableEditor = ({
           <Feedback
             variant="info"
             className="!mt-3"
+            textVariant="label-default-s"
             title="Policies are required to query data"
             description={
               <>
@@ -340,6 +337,7 @@ const TableEditor = ({
           <Feedback
             variant="warning"
             className="!mt-3"
+            textVariant="label-default-s"
             title="You are allowing anonymous access to your table"
             description={
               <>

@@ -21,6 +21,7 @@ import {
 import type { PostgresDataTypeOption } from "../SidePanelEditor.types";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import { Button, Icon } from "@nuvix/ui/components";
+import { Button as ChakraButton } from "@chakra-ui/react";
 import { Label } from "@nuvix/sui/components/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/popover";
 import { cn } from "@nuvix/sui/lib/utils";
@@ -162,29 +163,24 @@ const ColumnType = ({
       {showLabel && <Label className="text-foreground-light">Type</Label>}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button
-            type="default"
+          <ChakraButton
             role="combobox"
-            variant="secondary"
-            size={"s"}
+            variant="outline"
+            size="xs"
             justifyContent="space-between"
-            fillWidth
             aria-expanded={open}
-            className={cn(
-              "w-full justify-between line-clamp-1 turncate",
-              !value && "text-muted-foreground",
-            )}
-            suffixIcon={<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />}
+            className={cn(!value && "text-muted-foreground")}
           >
             {value ? (
-              <div className="flex gap-2 items-center turncate max-w-[95%]">
+              <div className="flex gap-2 items-center">
                 <span>{inferIcon(getOptionByName(value)?.type ?? "")}</span>
-                {value.replaceAll('"', "")}
+                <span className="truncate">{value.replaceAll('"', "")}</span>
               </div>
             ) : (
               "Choose a column type..."
             )}
-          </Button>
+            <ChevronsUpDown className="opacity-50" />
+          </ChakraButton>
         </PopoverTrigger>
         <PopoverContent className="w-[460px] p-0" side="bottom" align="center">
           <Command>

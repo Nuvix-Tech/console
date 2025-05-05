@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-// import Papa from "papaparse";
+import Papa from "papaparse";
 import { has, includes } from "lodash";
 import { tryParseJson } from "@/lib/helpers";
 import { UPLOAD_FILE_EXTENSIONS } from "./SpreadsheetImport.constants";
@@ -10,26 +10,26 @@ export const parseSpreadsheetText: any = (text: string) => {
   const columnTypeMap: Record<any, any> = {};
   let previewRows: any[] = [];
   return new Promise((resolve) => {
-    // Papa.parse(text, {
-    //   header: true,
-    //   dynamicTyping: false,
-    //   skipEmptyLines: true,
-    //   complete: (results) => {
-    //     const headers = results.meta.fields || [];
-    //     const rows = results.data;
-    //     const errors = results.errors;
-    //     headers.forEach((header) => {
-    //       const type = inferColumnType(header, results.data as any[]);
-    //       if (!has(columnTypeMap, header)) {
-    //         columnTypeMap[header] = type;
-    //       } else if (columnTypeMap[header] !== type) {
-    //         columnTypeMap[header] = "text";
-    //       }
-    //     });
-    //     previewRows = results.data.slice(0, 20);
-    //     resolve({ headers, rows, previewRows, columnTypeMap, errors });
-    //   },
-    // });
+    Papa.parse(text, {
+      header: true,
+      dynamicTyping: false,
+      skipEmptyLines: true,
+      complete: (results) => {
+        const headers = results.meta.fields || [];
+        const rows = results.data;
+        const errors = results.errors;
+        headers.forEach((header) => {
+          const type = inferColumnType(header, results.data as any[]);
+          if (!has(columnTypeMap, header)) {
+            columnTypeMap[header] = type;
+          } else if (columnTypeMap[header] !== type) {
+            columnTypeMap[header] = "text";
+          }
+        });
+        previewRows = results.data.slice(0, 20);
+        resolve({ headers, rows, previewRows, columnTypeMap, errors });
+      },
+    });
   });
 };
 
@@ -51,45 +51,45 @@ export const parseSpreadsheet = (
   const errors: any[] = [];
 
   return new Promise((resolve) => {
-    // Papa.parse(file, {
-    //   header: true,
-    //   dynamicTyping: false,
-    //   skipEmptyLines: true,
-    //   worker: true,
-    //   quoteChar: file.type === "text/tab-separated-values" ? "" : '"',
-    //   chunkSize: CHUNK_SIZE,
-    //   chunk: (results) => {
-    //     headers = results.meta.fields as string[];
-    //     headers.forEach((header) => {
-    //       const type = inferColumnType(header, results.data as any[]);
-    //       if (!has(columnTypeMap, header)) {
-    //         columnTypeMap[header] = type;
-    //       } else if (columnTypeMap[header] !== type) {
-    //         columnTypeMap[header] = "text";
-    //       }
-    //     });
-    //     rowCount += results.data.length;
-    //     previewRows = results.data.slice(0, 20);
-    //     if (results.errors.length > 0) {
-    //       const formattedErrors = results.errors.map((error) => {
-    //         return { ...error, data: results.data[error.row] };
-    //       });
-    //       errors.push(...formattedErrors);
-    //     }
-    //     chunkNumber += 1;
-    //     const progress = (chunkNumber * CHUNK_SIZE) / file.size;
-    //     onProgressUpdate(progress > 1 ? 100 : Number((progress * 100).toFixed(2)));
-    //   },
-    //   complete: () => {
-    //     const data = { headers, rowCount, previewRows, columnTypeMap, errors };
-    //     resolve(data);
-    //   },
-    // });
+    Papa.parse(file, {
+      header: true,
+      dynamicTyping: false,
+      skipEmptyLines: true,
+      worker: true,
+      quoteChar: file.type === "text/tab-separated-values" ? "" : '"',
+      chunkSize: CHUNK_SIZE,
+      chunk: (results) => {
+        headers = results.meta.fields as string[];
+        headers.forEach((header) => {
+          const type = inferColumnType(header, results.data as any[]);
+          if (!has(columnTypeMap, header)) {
+            columnTypeMap[header] = type;
+          } else if (columnTypeMap[header] !== type) {
+            columnTypeMap[header] = "text";
+          }
+        });
+        rowCount += results.data.length;
+        previewRows = results.data.slice(0, 20);
+        if (results.errors.length > 0) {
+          const formattedErrors = results.errors.map((error) => {
+            return { ...error, data: results.data[error.row as number] };
+          });
+          errors.push(...formattedErrors);
+        }
+        chunkNumber += 1;
+        const progress = (chunkNumber * CHUNK_SIZE) / file.size;
+        onProgressUpdate(progress > 1 ? 100 : Number((progress * 100).toFixed(2)));
+      },
+      complete: () => {
+        const data = { headers, rowCount, previewRows, columnTypeMap, errors };
+        resolve(data);
+      },
+    });
   });
 };
 
 export const revertSpreadsheet = (headers: string[], rows: any[]) => {
-  // return Papa.unparse(rows, { columns: headers });
+  return Papa.unparse(rows, { columns: headers });
 };
 
 export const inferColumnType = (column: string, rows: object[]) => {

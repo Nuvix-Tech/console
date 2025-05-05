@@ -1,14 +1,12 @@
 import { ArrowRight, Table2Icon } from "lucide-react";
 import Link from "next/link";
-// import SVG from "react-inlinesvg";
 
-// import { useParams } from "common";
 import { BASE_PATH } from "@/lib/constants";
-// import { Badge, Button, cn } from "ui";
 import type { ForeignKey } from "../../ForeignKeySelector/ForeignKeySelector.types";
 import { Button, Tag } from "@nuvix/ui/components";
 import { cn } from "@nuvix/sui/lib/utils";
 import { useParams } from "next/navigation";
+import { Code } from "@chakra-ui/react";
 
 interface ForeignKeyProps {
   foreignKey: ForeignKey;
@@ -56,7 +54,7 @@ export const ForeignKeyRow = ({
                 {status}
               </Tag>
             )}
-            <p className="text-sm text-foreground-light">
+            <p className="text-sm text-muted-foreground">
               {foreignKey.columns.length > 1 ? "Composite foreign" : "Foreign"} key relation to:
             </p>
             <Button
@@ -69,8 +67,8 @@ export const ForeignKeyRow = ({
                 //   className="table-icon"
                 //   src={`${BASE_PATH}/img/icons/table-icon.svg`}
                 //   style={{ width: `16px`, height: `16px`, strokeWidth: "1px" }}
-                //   preProcessor={(code: any) =>
-                //     code.replace(/svg/, 'svg class="m-auto text-color-inherit"')
+                //   preProcessor={(Code: any) =>
+                //     Code.replace(/svg/, 'svg class="m-auto text-color-inherit"')
                 //   }
                 //   loader={<span className="block w-4 h-4 bg-[#133929] rounded-sm" />}
                 //   cacheRequests={true}
@@ -92,30 +90,30 @@ export const ForeignKeyRow = ({
         <div className="flex flex-col gap-y-1">
           {foreignKey.columns.map((x, idx) => (
             <div key={`relation-${idx}}`} className="flex items-center gap-x-2">
-              <code
-                className={cn("text-xs", (x?.source ?? "").length === 0 && "text-foreground-light")}
+              <Code
+                className={cn("text-xs", (x?.source ?? "").length === 0 && "text-muted-foreground")}
               >
                 {x.source || "[column_name]"}
-              </code>
+              </Code>
               <ArrowRight size={16} />
-              <code className="text-xs">
+              <Code className="text-xs">
                 {foreignKey.schema}.{foreignKey.table}.{x.target}
-              </code>
+              </Code>
             </div>
           ))}
         </div>
       </div>
       {!disabled && (
         <div className="flex items-center gap-x-2">
-          <Button type="default" onClick={onSelectEdit}>
+          <Button variant="secondary" size="s" onClick={onSelectEdit}>
             Edit
           </Button>
           {foreignKey.toRemove ? (
-            <Button type="default" onClick={onSelectUndoRemove}>
+            <Button variant="secondary" size="s" onClick={onSelectUndoRemove}>
               Cancel remove
             </Button>
           ) : (
-            <Button type="default" onClick={onSelectRemove}>
+            <Button variant="secondary" size="s" onClick={onSelectRemove}>
               Remove
             </Button>
           )}

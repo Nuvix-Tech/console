@@ -1,4 +1,3 @@
-// import type { PostgresColumn, PostgresTable } from "@nuvix/pg-meta";
 import { useQueryClient } from "@tanstack/react-query";
 import { isEmpty, isUndefined, noop } from "lodash";
 import { useState } from "react";
@@ -75,8 +74,7 @@ const SidePanelEditor = ({
   const { id: ref } = useParams();
   const snap = useTableEditorStore();
   // const isTableEditorTabsEnabled = useIsTableEditorTabsEnabled();
-  // const [_, setParams] = useUrlState({ arrayKeys: ["filter", "sort"] });
-  console.log(snap, "<----- SNAP ----! \n\n\n");
+
   const queryClient = useQueryClient();
   const { project, sdk } = useProjectStore();
 

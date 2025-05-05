@@ -1,3 +1,4 @@
+import { gridStyles2 } from "@/components/grid/components/grid/Grid";
 import { cn } from "@nuvix/sui/lib/utils";
 import { DataGrid } from "react-data-grid";
 
@@ -50,7 +51,7 @@ const SpreadsheetPreviewGrid = ({
       })}
       rows={previewRows}
       className="!border-l !border-r"
-      style={{ height: height || `${34 + 34 * (previewRows.length || 1)}px` }}
+      style={{ ...gridStyles2, height: height || `${34 + 34 * (previewRows.length || 1)}px` }}
     />
   );
 };

@@ -1,7 +1,6 @@
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
-// import { Button, cn, Collapsible, SidePanel } from "ui";
 import type { SpreadsheetData } from "./SpreadsheetImport.types";
 import { Collapsible } from "@chakra-ui/react";
 import { SidePanel } from "@/ui/SidePanel";

@@ -5,10 +5,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-// import { useParams } from "common";
 // import { useSendEventMutation } from "@/data/telemetry/send-event-mutation";
-// import { useSelectedOrganization } from "hooks/misc/useSelectedOrganization";
-// import { Button, SidePanel, Tabs } from "ui";
 import ActionBar from "../ActionBar";
 import type { ImportContent } from "../TableEditor/TableEditor.types";
 import SpreadSheetFileUpload from "./SpreadSheetFileUpload";

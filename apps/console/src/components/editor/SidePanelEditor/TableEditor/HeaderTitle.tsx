@@ -1,3 +1,5 @@
+import { Code } from "@chakra-ui/react";
+
 interface HeaderTitleProps {
   schema: string;
   table?: { name: string };
@@ -8,20 +10,20 @@ const HeaderTitle = ({ schema, table, isDuplicating }: HeaderTitleProps) => {
   if (!table) {
     return (
       <>
-        Create a new table under <code className="text-sm">{schema}</code>
+        Create a new table under <Code className="text-sm">{schema}</Code>
       </>
     );
   }
   if (isDuplicating) {
     return (
       <>
-        Duplicate table <code className="text-sm">{table?.name}</code>
+        Duplicate table <Code className="text-sm">{table?.name}</Code>
       </>
     );
   }
   return (
     <>
-      Update table <code className="text-sm">{table?.name}</code>
+      Update table <Code className="text-sm">{table?.name}</Code>
     </>
   );
 };

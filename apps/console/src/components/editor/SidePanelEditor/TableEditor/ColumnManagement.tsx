@@ -9,11 +9,9 @@ import {
   DroppableProvided,
 } from "react-beautiful-dnd";
 
-// import { useParams } from "common";
 import InformationBox from "@/ui/InformationBox";
 import type { EnumeratedType } from "@/data/enumerated-types/enumerated-types-query";
 // import { useSendEventMutation } from "@/data/telemetry/send-event-mutation";
-// import { useSelectedOrganization } from "hooks/misc/useSelectedOrganization";
 import {
   AlertDescription,
   AlertTitle,
@@ -144,19 +142,15 @@ const ColumnManagement = ({
           <h5>Columns</h5>
           <div className="flex items-center gap-x-2">
             <Button
-              asChild
               size="s"
               variant="secondary"
               type="button"
               prefixIcon={<ExternalLink size={12} strokeWidth={2} />}
+              href="https://supabase.com/docs/guides/database/tables#data-types"
+              target="_blank"
+              rel="noreferrer"
             >
-              <a
-                href="https://supabase.com/docs/guides/database/tables#data-types"
-                target="_blank"
-                rel="noreferrer"
-              >
-                About data types
-              </a>
+              About data types
             </Button>
             {isNewRecord && (
               <>
@@ -216,7 +210,9 @@ const ColumnManagement = ({
 
         {primaryKeyColumns.length === 0 && (
           <Alert variant="warning">
-            <Icon name="warningTriangle" />
+            <span className="size-4">
+              <Icon name="warningTriangle" />
+            </span>
             <AlertTitle>Warning: No primary keys selected</AlertTitle>
             <AlertDescription>
               Tables should have at least one column as the primary key to identify each row.
