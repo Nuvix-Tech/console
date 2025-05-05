@@ -56,7 +56,7 @@ const Footer = ({ isRefetching }: FooterProps) => {
 
         {(isViewSelected || isTableSelected) && (
           <TwoOptionToggle
-            size="sm"
+            size="xs"
             options={["definition", "data"]}
             activeOption={selectedView}
             onClickOption={setSelectedView}

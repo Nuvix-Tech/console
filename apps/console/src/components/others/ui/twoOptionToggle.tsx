@@ -1,4 +1,4 @@
-import { Button, ButtonProps } from "@chakra-ui/react";
+import { Button, ButtonGroup, ButtonProps } from "@chakra-ui/react";
 
 interface TwoOptionToggleProps<T extends string>
   extends Omit<ButtonProps, "onClick" | "title" | "children" | "label" | "size"> {
@@ -15,27 +15,29 @@ export const TwoOptionToggle = <T extends string>({
   size,
   ...rest
 }: TwoOptionToggleProps<T>) => {
-  const nSize = size === "s" ? "sm" : size;
+  const nSize = size === "s" ? "xs" : size;
   return (
     <div className="flex items-center gap-0">
-      <Button
-        {...rest}
-        size={nSize}
-        onClick={() => onClickOption(options[0])}
-        variant={activeOption === options[0] ? "solid" : "subtle"}
-        borderStartRadius={"l1"}
-      >
-        {options[0]}
-      </Button>
-      <Button
-        {...rest}
-        size={nSize}
-        onClick={() => onClickOption(options[1])}
-        variant={activeOption === options[1] ? "solid" : "subtle"}
-        borderEndRadius={"l1"}
-      >
-        {options[1]}
-      </Button>
+      <ButtonGroup size={nSize} attached>
+        <Button
+          {...rest}
+          onClick={() => onClickOption(options[0])}
+          variant={activeOption === options[0] ? "solid" : "subtle"}
+          borderStartRadius={"l2"}
+          borderEndRadius="none"
+        >
+          {options[0]}
+        </Button>
+        <Button
+          {...rest}
+          onClick={() => onClickOption(options[1])}
+          variant={activeOption === options[1] ? "solid" : "subtle"}
+          borderStartRadius="none"
+          borderEndRadius={"l2"}
+        >
+          {options[1]}
+        </Button>
+      </ButtonGroup>
     </div>
   );
 };

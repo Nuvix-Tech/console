@@ -1,3 +1,5 @@
+@reference './globals.css';
+
 .nx-grid {
     @apply flex h-full flex-col;
 }
@@ -6,17 +8,6 @@
     content: '';
     display: inline-block;
     width: 100%;
-}
-
-.rdg-cell {
-    @apply flex;
-    @apply text-grid;
-    @apply border-border border-r border-b;
-    @apply text-foreground;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: inherit;
 }
 
 // Apply parent bg colour while editing
@@ -37,17 +28,10 @@
 }
 
 .rdg {
-    @apply box-border select-none overflow-x-auto overflow-y-scroll;
-    @apply border-t border-r-0 border-l-0;
+    @apply select-none;
     contain: strict;
     -webkit-user-select: none;
     font-size: 14px;
-}
-
-.rdg *,
-.rdg ::after,
-.rdg ::before {
-    box-sizing: inherit;
 }
 
 @supports not (contain: strict) {
@@ -84,20 +68,16 @@
     @apply border-border border-b;
 }
 
-.rdg-header-row .rdg-cell p {
-    @apply text-typography-body-light [[data-theme*=dark]_&]:text-typography-body-dark;
-}
-
 .rdg-header-row .rdg-cell .react-contextmenu-wrapper {
     @apply flex h-full items-center px-2 transition duration-100 ease-in-out;
 }
 
 .rdg-header-row .rdg-cell .react-contextmenu-wrapper:hover {
-    @apply bg-surface-200;
+    @apply bg-popover;
 }
 
 .rdg-header-row .rdg-checkbox {
-    @apply bg-surface-200 border-border rounded-sm border;
+    @apply bg-popover border-border rounded-sm border;
 }
 
 .rdg-header-row .rdg-checkbox-input:checked+.rdg-checkbox {
@@ -119,8 +99,7 @@
 */
 
 .rdg-row {
-    @apply bg-dash-sidebar transition-colors;
-    @apply hover:bg-surface-200;
+    @apply transition-colors;
 }
 
 /* edit button */
@@ -136,155 +115,37 @@
     opacity: 1 !important;
 }
 
-/* select row */
-.rdg-row[aria-selected='true'] {
-    @apply bg-surface-200;
-}
-
 .tab-cursor {
     cursor: pointer !important;
 }
 
-/*
-  Checkbox
-*/
-
-.nx-grid {
-
-    /* reset styles */
-    [type='checkbox'] {
-        webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-        padding: 0;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-        display: inline-block;
-        vertical-align: middle;
-        background-origin: border-box;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        flex-shrink: 0;
-        height: 1rem;
-        width: 1rem;
-        color: #2563eb;
-        background-color: #fff;
-        border-color: #6b7280;
-        border-width: 1px;
-    }
-
-    [type='checkbox']:checked {
-        @apply bg-foreground;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='hsl(0, 0%, 100%)'%3E%3Cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3E%3C/svg%3E") !important;
-    }
-
-    [type='checkbox']:indeterminate {
-        @apply bg-foreground;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='hsl(0, 0%, 100%)'%3E%3Crect x='3' y='7' width='10' height='2'/%3E%3C/svg%3E") !important;
-
-        [data-theme='dark'] & {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='hsl(0, 0%, 0%)'%3E%3Crect x='3' y='7' width='10' height='2'/%3E%3C/svg%3E") !important;
-        }
-    }
-
-    [type='checkbox'] {
-        @apply cursor-pointer rounded border border-solid;
-
-        @apply text-foreground border-strong transition-all;
-        @apply hover:border-foreground focus:ring-0 focus:outline-none;
-
-        @apply bg-control;
-
-        margin-top: 2px;
-    }
-}
-
-/* Dark mode */
-[data-theme='dark'] .nx-grid [type='checkbox']:checked {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='hsl(0, 0%, 0%)'%3E%3Cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3E%3C/svg%3E") !important;
-}
 
 /*
   React Contexify
 */
 
-.react-contexify {
-    position: fixed;
-    opacity: 0;
-    user-select: none;
-    background-color: #fff;
-    box-sizing: border-box;
-    box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.3);
-    border-radius: 6px;
-    padding: 6px 0;
-    min-width: 200px;
-    z-index: 100;
+:root {
+    --contexify-zIndex: 666;
+    --contexify-menu-minWidth: 220px;
+    --contexify-menu-padding: 6px;
+    --contexify-menu-radius: 6px;
+    --contexify-menu-bgColor: var(--popover);
+    --contexify-menu-shadow: 0 0 0 1px var(--neutral-border-medium);
+    --contexify-menu-negatePadding: var(--contexify-menu-padding);
+
+    --contexify-separator-color: var(--neutral-border-medium);
+    --contexify-separator-margin: 5px;
+    --contexify-itemContent-padding: 6px;
+    --contexify-activeItem-radius: 4px;
+    --contexify-item-color: var(--popover-foreground);
+    --contexify-activeItem-color: var(--neutral-on-background-medium);
+    --contexify-activeItem-bgColor: var(--neutral-alpha-medium);
+    --contexify-rightSlot-color: var(--muted-foreground);
+    --contexify-activeRightSlot-color: var(--neutral-on-background-medium);
+    --contexify-arrow-color: var(--muted-foreground);
+    --contexify-activeArrow-color: var(--neutral-on-background-medium);
 }
 
-.react-contexify__submenu--is-open,
-.react-contexify__submenu--is-open>.react-contexify__item__content {
-    color: white;
-    background-color: #4393e6;
-}
-
-.react-contexify__submenu--is-open>.react-contexify__submenu {
-    pointer-events: initial;
-    opacity: 1;
-}
-
-.react-contexify .react-contexify__submenu {
-    position: absolute;
-    /* negate padding */
-    top: -6px;
-    pointer-events: none;
-    transition: opacity 0.275s;
-}
-
-.react-contexify__submenu-arrow {
-    margin-left: auto;
-    font-size: 12px;
-}
-
-.react-contexify__will-leave--disabled {
-    pointer-events: none;
-}
-
-.react-contexify__item {
-    cursor: pointer;
-    position: relative;
-}
-
-.react-contexify__item:focus {
-    outline: 0;
-}
-
-.react-contexify__item:not(.react-contexify__item--disabled):hover>.react-contexify__item__content,
-.react-contexify__item:not(.react-contexify__item--disabled):focus>.react-contexify__item__content {
-    color: white;
-    background-color: #4393e6;
-}
-
-.react-contexify__item:not(.react-contexify__item--disabled):hover>.react-contexify__submenu {
-    pointer-events: initial;
-    opacity: 1;
-}
-
-.react-contexify__item--disabled {
-    cursor: default;
-    opacity: 0.5;
-}
-
-.react-contexify__item__content {
-    font-size: 13px;
-    padding: 6px 12px;
-    display: flex;
-    align-items: center;
-    white-space: nowrap;
-    color: #333;
-    position: relative;
-}
 
 .rdg__segmented-control {
     @apply border-border relative mx-2 h-8 rounded-md border;
@@ -293,8 +154,8 @@
 .rdg__segmented-control__button {
     @apply absolute top-0 inline-flex h-full items-center justify-center;
     @apply text-xs font-medium;
-    @apply text-border-muted;
-    @apply active:bg-alternative hover:text-white focus:z-10 focus:outline-none;
+    // @apply text-border-muted;
+    @apply active:bg-accent hover:text-white focus:z-10 focus:outline-none;
     @apply transition duration-150 ease-in-out;
     @apply cursor-pointer;
     z-index: 1;
@@ -313,7 +174,7 @@
 }
 
 .rdg__segmented-control__label {
-    @apply bg-overlay-hover border-control z-0 inline-block h-full transform rounded border shadow transition duration-200 ease-in-out;
+    @apply bg-muted z-0 inline-block h-full transform rounded border shadow transition duration-200 ease-in-out;
 }
 
 .rdg__segmented-control__label--left {
@@ -342,14 +203,6 @@
 }
 
 /*
-  NullValue
-*/
-
-.null-value {
-    @apply block;
-}
-
-/*
   CheckboxEditor
 */
 
@@ -360,61 +213,6 @@
 .nx-grid-checkbox-editor__input {
     @apply h-4 w-4;
     outline: 4px auto -webkit-focus-ring-color;
-}
-
-/*
-  JsonEditor
-*/
-
-.nx-grid-json-editor__trigger {
-    @apply text-grid overflow-hidden overflow-ellipsis px-2;
-}
-
-/*
-  NumberEditor
-*/
-
-.nx-grid-number-editor {
-    @apply h-full w-full px-2;
-}
-
-/*
-  SelectEditor
-*/
-
-.nx-grid-select-editor {
-    button {
-        @apply border-none rounded-none shadow-none;
-        box-shadow: none !important;
-    }
-}
-
-/*
-  TextEditor
-*/
-
-.nx-grid-text-editor__trigger {
-    @apply text-grid overflow-hidden overflow-ellipsis px-2;
-}
-
-/*
-  TimeEditor
-*/
-
-.nx-grid-time-editor {
-    @apply h-full w-full px-2;
-}
-
-/*
-  Footer
-*/
-
-.nx-grid-footer {
-    @apply bg-surface-100 flex h-10 items-center justify-between px-2;
-}
-
-.nx-grid-footer__inner {
-    @apply flex items-center;
 }
 
 /*
@@ -442,17 +240,16 @@
 }
 
 .nx-grid-column-header__inner {
-    @apply flex items-center gap-2 overflow-hidden overflow-ellipsis;
+    @apply flex items-center overflow-hidden overflow-ellipsis;
 }
 
 .nx-grid-column-header__inner__name {
-    @apply text-foreground overflow-hidden overflow-ellipsis text-xs select-text;
+    @apply overflow-hidden overflow-ellipsis text-xs select-text;
 }
 
 .nx-grid-column-header__inner__format {
     @apply text-xs;
     @apply overflow-hidden overflow-ellipsis font-normal;
-    @apply text-foreground-light;
 }
 
 .nx-grid-column-header__inner__primary-key {
@@ -460,7 +257,7 @@
 }
 
 .nx-grid-column-header__inner svg {
-    @apply border-brand text-brand;
+    // @apply border-brand text-brand;
 }
 
 /*
@@ -493,7 +290,7 @@
 
 .nx-grid-select-cell__header__input {
     /* @apply focus:ring-brand-300; */
-    @apply border-background-surface-100;
+    // @apply border-background-surface-100;
 }
 
 /*
@@ -501,7 +298,7 @@
 */
 
 .nx-grid-header {
-    @apply bg-surface-100 flex h-10 justify-between px-2;
+    @apply flex h-10 justify-between px-2;
 }
 
 .nx-grid-header__inner {
@@ -521,7 +318,7 @@
 */
 
 .nx-grid-status-label {
-    @apply text-grid text-white;
+    @apply text-white;
 }
 
 .nx-grid-status-label__no-msg {
@@ -530,14 +327,6 @@
 
 .nx-grid-status-label__no-msg>div {
     @apply m-auto h-2 w-2 rounded-full bg-green-900;
-}
-
-/*
-  Empty value
-*/
-
-.nx-grid-empty-value {
-    @apply block;
 }
 
 /*
