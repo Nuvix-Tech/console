@@ -1,5 +1,4 @@
 import { ArrowRight, Table2Icon } from "lucide-react";
-import Link from "next/link";
 
 import { BASE_PATH } from "@/lib/constants";
 import type { ForeignKey } from "../../ForeignKeySelector/ForeignKeySelector.types";
@@ -48,9 +47,7 @@ export const ForeignKeyRow = ({
           )}
           <div className="flex items-center gap-x-2">
             {status !== undefined && (
-              <Tag
-                variant={status === "ADD" ? "brand" : status === "UPDATE" ? "warning" : "danger"}
-              >
+              <Tag variant={status === "ADD" ? "info" : status === "UPDATE" ? "warning" : "danger"}>
                 {status}
               </Tag>
             )}
@@ -59,9 +56,10 @@ export const ForeignKeyRow = ({
             </p>
             <Button
               asChild
-              type="default"
               title={`${foreignKey.schema}.${foreignKey.table}`}
-              className="py-0.5 px-1.5 font-mono"
+              className="py-0.5 px-1.5 !font-mono"
+              size="s"
+              variant="tertiary"
               prefixIcon={
                 // <SVG
                 //   className="table-icon"
@@ -73,16 +71,13 @@ export const ForeignKeyRow = ({
                 //   loader={<span className="block w-4 h-4 bg-[#133929] rounded-sm" />}
                 //   cacheRequests={true}
                 // />
-                <Table2Icon size={20} />
+                <Table2Icon size={14} />
               }
+              target="_blank"
+              rel="norefererer"
+              href={`/project/${ref}/editor/${foreignKey.tableId}`}
             >
-              <Link
-                target="_blank"
-                rel="norefererer"
-                href={`/project/${ref}/editor/${foreignKey.tableId}`}
-              >
-                {foreignKey.schema}.{foreignKey.table}
-              </Link>
+              {foreignKey.schema}.{foreignKey.table}
             </Button>
           </div>
         </div>
@@ -113,7 +108,7 @@ export const ForeignKeyRow = ({
               Cancel remove
             </Button>
           ) : (
-            <Button variant="secondary" size="s" onClick={onSelectRemove}>
+            <Button variant="danger" size="s" onClick={onSelectRemove}>
               Remove
             </Button>
           )}

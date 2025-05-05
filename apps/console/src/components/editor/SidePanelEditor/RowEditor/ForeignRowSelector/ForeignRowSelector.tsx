@@ -161,7 +161,7 @@ const ForeignRowSelector = ({
             >
               <div className="h-full flex flex-col bg-muted">
                 <div className="flex items-center justify-between my-2 mx-3">
-                  <div className="flex items-center">
+                  <div className="flex items-center gap-4">
                     <RefreshButton tableId={table?.id} isRefetching={isRefetching} />
                     <FilterPopover
                       portal={false}

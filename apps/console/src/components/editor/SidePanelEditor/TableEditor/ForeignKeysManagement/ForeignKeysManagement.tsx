@@ -109,7 +109,7 @@ export const ForeignKeysManagement = ({
         )}
 
         <div className="flex items-center justify-center rounded border border-strong border-dashed py-3">
-          <Button type="default" onClick={() => setOpen(true)}>
+          <Button variant="secondary" size="s" type="default" onClick={() => setOpen(true)}>
             Add foreign key relation
           </Button>
         </div>

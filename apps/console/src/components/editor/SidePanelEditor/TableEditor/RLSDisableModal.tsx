@@ -5,7 +5,7 @@ import { Feedback } from "@nuvix/ui/components";
 
 export default function RLSDisableModalContent() {
   return (
-    <div className="text-sm text-foreground-light grid gap-4">
+    <div className="text-sm text-muted-foreground grid gap-4">
       <div className="grid gap-3">
         <Feedback
           textSize="s"
@@ -27,9 +27,9 @@ export default function RLSDisableModalContent() {
 
           <li className="flex gap-3">
             <Lock size={14} className="flex-shrink-0" />
-            <div>
+            <div className="text-xs">
               <strong>Before you turn off Row Level Security, consider:</strong>
-              <ul className="space-y-2 mt-2">
+              <ul className="space-y-2 !mt-2">
                 <li className="list-disc">
                   Any personal information in this table will be publicly accessible.
                 </li>

@@ -22,10 +22,10 @@ export interface FilterPopoverProps {
 const FilterPopover = ({ filters, portal = true, onApplyFilters }: FilterPopoverProps) => {
   const [open, setOpen] = useState(false);
 
-  const btnText =
-    (filters || []).length > 0
-      ? `Filtered by ${filters.length} rule${filters.length > 1 ? "s" : ""}`
-      : "Filter";
+  const btnText = "Filter";
+  // (filters || []).length > 0
+  //   ? `Filtered by ${filters.length} rule${filters.length > 1 ? "s" : ""}`
+  //   : "Filter";
 
   return (
     <Popover open={open} onOpenChange={setOpen} modal={false}>
@@ -39,6 +39,7 @@ const FilterPopover = ({ filters, portal = true, onApplyFilters }: FilterPopover
           prefixIcon={<FilterIcon size={16} />}
         >
           {btnText}
+          {(filters || []).length > 0 && <TopDot value={(filters || []).length} />}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="p-0 w-96" side="bottom" align="start">
@@ -158,5 +159,19 @@ const FilterOverlay = ({ filters: filtersFromUrl, onApplyFilters }: FilterOverla
         </Button>
       </div>
     </div>
+  );
+};
+
+export const TopDot = ({ value, className }: { value?: string | number; className?: string }) => {
+  return (
+    <span
+      className={cn(
+        "absolute bg-primary hidden size-4 text-xs text-primary-foreground rounded-full left-0 top-0",
+        { block: value },
+        className,
+      )}
+    >
+      {value}
+    </span>
   );
 };

@@ -107,7 +107,7 @@ const InputWithSuggestions = ({
                 </IconButton>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent align="end" side="bottom">
+              <DropdownMenuContent align="end" side="bottom" className="max-w-[400px]">
                 <DropdownMenuLabel>{suggestionsHeader || "Suggestions"}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {filteredSuggestions.map((suggestion: Suggestion) => (

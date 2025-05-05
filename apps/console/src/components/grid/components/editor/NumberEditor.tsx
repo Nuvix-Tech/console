@@ -4,7 +4,6 @@ import type { RenderEditCellProps } from "react-data-grid";
 
 function autoFocusAndSelect(input: HTMLInputElement | null) {
   input?.focus();
-  input?.select();
 }
 
 export function NumberEditor<TRow, TSummaryRow = unknown>({
@@ -32,8 +31,10 @@ export function NumberEditor<TRow, TSummaryRow = unknown>({
       value={value ?? ""}
       onValueChange={onChange}
       variant={"subtle"}
+      size={"xs"}
+      borderRadius={"none"}
     >
-      <NumberInputField className="nx-grid-number-editor" />
+      <NumberInputField className="nx-grid-number-editor" borderRadius={'none'} />
     </NumberInputRoot>
   );
 }

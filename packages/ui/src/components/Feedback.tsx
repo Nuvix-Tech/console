@@ -35,6 +35,8 @@ const Feedback = forwardRef<HTMLDivElement, FeedbackProps>(
       onClose,
       actionButtonProps,
       children,
+      textVariant = "body-default-s",
+      textSize = "m",
       ...rest
     },
     ref,
@@ -52,10 +54,11 @@ const Feedback = forwardRef<HTMLDivElement, FeedbackProps>(
         {...rest}
       >
         {icon && (
-          <Flex paddingY="16" paddingLeft="16">
+          <Flex paddingY="12" paddingLeft="12">
             <Icon
               padding="4"
               radius="m"
+              size="s"
               border={`${variant}-medium`}
               onBackground={`${variant}-medium`}
               name={variantIconMap[variant]}
@@ -63,15 +66,15 @@ const Feedback = forwardRef<HTMLDivElement, FeedbackProps>(
             />
           </Flex>
         )}
-        <Flex fillWidth padding="16" gap="24" vertical="center" direction="column">
+        <Flex fillWidth padding="12" gap="24" vertical="center" direction="column">
           {(title || description) && (
             <Flex direction="column" fillWidth gap="4">
               {title && (
-                <Flex fillWidth gap="16">
+                <Flex fillWidth gap="12">
                   <Flex fillWidth paddingY="4">
                     <Text
-                      variant="heading-strong-m"
-                      size="xs"
+                      variant="heading-strong-xs"
+                      size={textSize}
                       onBackground={`${variant}-medium`}
                       role="heading"
                       aria-level={4}
@@ -94,7 +97,7 @@ const Feedback = forwardRef<HTMLDivElement, FeedbackProps>(
               )}
               {description && (
                 <Flex fillWidth>
-                  <Text variant="body-default-s" size="xs" onBackground={`${variant}-weak`}>
+                  <Text variant={textVariant} size="xs" onBackground={`${variant}-weak`}>
                     {description}
                   </Text>
                 </Flex>

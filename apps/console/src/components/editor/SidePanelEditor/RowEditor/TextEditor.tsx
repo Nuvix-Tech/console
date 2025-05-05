@@ -119,7 +119,7 @@ export const TextEditor = ({
           {(!isTruncated || (isTruncated && isSuccess)) && (
             <TwoOptionToggle
               options={["view", "edit"]}
-              size="s"
+              size="xs"
               activeOption={view}
               onClickOption={setView}
             />
@@ -177,7 +177,6 @@ export const TextEditor = ({
               className="bg-background markdown-body"
               content={strValue}
             />
-            <div>{strValue}</div>
           </SidePanel.Content>
         )}
         {isTruncated && !isSuccess && (

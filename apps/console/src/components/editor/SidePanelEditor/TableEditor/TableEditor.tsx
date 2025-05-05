@@ -316,6 +316,7 @@ const TableEditor = ({
           <Feedback
             variant="info"
             className="!mt-3"
+            textSize="s"
             textVariant="label-default-s"
             title="Policies are required to query data"
             description={

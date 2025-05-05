@@ -153,6 +153,7 @@ const JsonEdit = ({
                 />
               )}
               <TwoOptionToggle
+                size="xs"
                 options={["view", "edit"]}
                 activeOption={view}
                 onClickOption={setView}

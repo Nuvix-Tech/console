@@ -300,7 +300,6 @@ export const ForeignKeySelector = ({
                     <Fragment key={`${uuidv4()}`}>
                       <div className="col-span-4">
                         <Select
-                          id="column"
                           value={fk.columns[idx].source}
                           onValueChange={(value: string) =>
                             updateSelectedColumn(idx, "source", value)
@@ -328,7 +327,6 @@ export const ForeignKeySelector = ({
                       </div>
                       <div className="col-span-4">
                         <Select
-                          id="column"
                           value={fk.columns[idx].target}
                           onValueChange={(value: string) =>
                             updateSelectedColumn(idx, "target", value)
@@ -370,11 +368,11 @@ export const ForeignKeySelector = ({
                       <AlertDescription>
                         The following columns cannot be referenced as they are not of the same type:
                       </AlertDescription>
-                      <ul className="list-disc pl-5 mt-2 text-foreground-light">
+                      <ul className="list-disc pl-5 mt-2 text-muted-foreground">
                         {(errors?.types ?? []).map((x, idx: number) => {
                           if (x === undefined) return null;
                           return (
-                            <li key={`type-error-${idx}`}>
+                            <li key={`type-error-${idx}`} className="flex items-center gap-x-1">
                               <Code className="text-xs">{fk.columns[idx]?.source}</Code> (
                               {x.sourceType}) and{" "}
                               <Code className="text-xs">{fk.columns[idx]?.target}</Code>(
@@ -392,15 +390,15 @@ export const ForeignKeySelector = ({
                         The following columns will have their types updated to match their
                         referenced column
                       </AlertDescription>
-                      <ul className="list-disc pl-5 mt-2 text-foreground-light">
+                      <ul className="pl-5 mt-2 text-muted-foreground list-disc w-full">
                         {(errors?.typeNotice ?? []).map((x, idx: number) => {
                           if (x === undefined) return null;
                           return (
                             <li key={`type-error-${idx}`}>
-                              <div className="flex items-center gap-x-1">
+                              <span className="flex items-center gap-x-1">
                                 <Code className="text-xs">{fk.columns[idx]?.source}</Code>{" "}
                                 <ArrowRight /> {x.targetType}
-                              </div>
+                              </span>
                             </li>
                           );
                         })}

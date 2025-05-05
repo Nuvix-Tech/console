@@ -1,9 +1,5 @@
 @reference './globals.css';
 
-.nx-grid {
-    @apply flex h-full flex-col;
-}
-
 .nx-grid-fill-container:after {
     content: '';
     display: inline-block;
@@ -24,7 +20,7 @@
 }
 
 .rdg-cell[aria-selected='true'] {
-    box-shadow: inset 0 0 0 1px #24b47e;
+    box-shadow: inset 0 0 0 1px #24b47e !important;
 }
 
 .rdg {
@@ -48,50 +44,6 @@
     height: 0;
     width: 0;
     outline: 0;
-}
-
-/*
-  Row header
-*/
-
-.rdg-header-row {
-    @apply select-none border-none;
-}
-
-.rdg-header-row {
-    height: var(--header-row-height);
-    line-height: var(--header-row-height);
-    top: 0;
-}
-
-.rdg-header-row .rdg-cell {
-    @apply border-border border-b;
-}
-
-.rdg-header-row .rdg-cell .react-contextmenu-wrapper {
-    @apply flex h-full items-center px-2 transition duration-100 ease-in-out;
-}
-
-.rdg-header-row .rdg-cell .react-contextmenu-wrapper:hover {
-    @apply bg-popover;
-}
-
-.rdg-header-row .rdg-checkbox {
-    @apply bg-popover border-border rounded-sm border;
-}
-
-.rdg-header-row .rdg-checkbox-input:checked+.rdg-checkbox {
-    @apply border-border border-4 bg-green-900;
-}
-
-.rdg-header-row .rdg-checkbox-input:focus+.rdg-checkbox {
-    box-shadow: none;
-}
-
-.rdg-cell .Select {
-    max-height: 30px;
-    font-size: 12px;
-    font-weight: 400;
 }
 
 /*
@@ -146,87 +98,6 @@
     --contexify-activeArrow-color: var(--neutral-on-background-medium);
 }
 
-
-.rdg__segmented-control {
-    @apply border-border relative mx-2 h-8 rounded-md border;
-}
-
-.rdg__segmented-control__button {
-    @apply absolute top-0 inline-flex h-full items-center justify-center;
-    @apply text-xs font-medium;
-    // @apply text-border-muted;
-    @apply active:bg-accent hover:text-white focus:z-10 focus:outline-none;
-    @apply transition duration-150 ease-in-out;
-    @apply cursor-pointer;
-    z-index: 1;
-}
-
-.rdg__segmented-control__button--option {
-    @apply text-background;
-}
-
-.rdg__segmented-control__button--right {
-    @apply right-0;
-}
-
-.rdg__segmented-control__button--left {
-    @apply left-0;
-}
-
-.rdg__segmented-control__label {
-    @apply bg-muted z-0 inline-block h-full transform rounded border shadow transition duration-200 ease-in-out;
-}
-
-.rdg__segmented-control__label--left {
-    @apply translate-x-0;
-}
-
-.rdg__segmented-control__label--right {
-    @apply translate-x-12;
-}
-
-.rdg__segmented-control__options-label {
-    @apply uppercase;
-    color: inherit;
-}
-
-/*
-  DropdownControl
-*/
-
-.dropdown-control {
-    @apply overflow-auto;
-}
-
-.dropdown-control .nxui-typography {
-    @apply block px-2 py-4;
-}
-
-/*
-  CheckboxEditor
-*/
-
-.nx-grid-checkbox-editor {
-    @apply flex h-full w-full;
-}
-
-.nx-grid-checkbox-editor__input {
-    @apply h-4 w-4;
-    outline: 4px auto -webkit-focus-ring-color;
-}
-
-/*
-  ForeignKeyFormatter
-*/
-
-.nx-grid-foreign-key-formatter {
-    @apply flex w-full items-center justify-between;
-}
-
-.nx-grid-foreign-key-formatter__text {
-    @apply m-0 flex-grow overflow-hidden overflow-ellipsis;
-}
-
 /*
   ColumnHeader
 */
@@ -256,77 +127,13 @@
     @apply flex rotate-45 transform items-center;
 }
 
-.nx-grid-column-header__inner svg {
-    // @apply border-brand text-brand;
-}
-
-/*
-  Grid
-*/
-
-.nx-grid-grid--loading {
-    @apply flex justify-center bg-transparent;
-}
-
-.nx-grid-grid--loading__inner {
-    @apply flex items-center;
-}
-
-.nx-grid-grid--loading__inner__text {
-    @apply m-8;
-}
-
 /*
   SelectColumn
 */
 
-.nx-grid-select-cell__formatter {
-    @apply flex h-full w-full items-center justify-between;
-}
-
-.nx-grid-select-cell__header {
-    @apply flex h-full w-full items-center justify-between;
-}
-
 .nx-grid-select-cell__header__input {
     /* @apply focus:ring-brand-300; */
     // @apply border-background-surface-100;
-}
-
-/*
-  Header
-*/
-
-.nx-grid-header {
-    @apply flex h-10 justify-between px-2;
-}
-
-.nx-grid-header__inner {
-    @apply flex items-center space-x-2;
-}
-
-.nx-grid-header__inner__divider {
-    @apply py-2;
-}
-
-.row_header__selected-rows {
-    @apply ml-2 mr-2;
-}
-
-/*
-  StatusLabel
-*/
-
-.nx-grid-status-label {
-    @apply text-white;
-}
-
-.nx-grid-status-label__no-msg {
-    @apply flex h-5 w-5;
-}
-
-.nx-grid-status-label__no-msg>div {
-    @apply m-auto h-2 w-2 rounded-full bg-green-900;
 }
 
 /*

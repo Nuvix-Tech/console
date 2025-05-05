@@ -12,6 +12,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/p
 import { Button } from "@nuvix/ui/components";
 import { Separator } from "@nuvix/sui/components/separator";
 import { cn } from "@nuvix/sui/lib/utils";
+import { TopDot } from "../filter/FilterPopover";
 
 export interface SortPopoverProps {
   sorts: string[];
@@ -22,10 +23,10 @@ export interface SortPopoverProps {
 const SortPopover = ({ sorts, portal = true, onApplySorts }: SortPopoverProps) => {
   const [open, setOpen] = useState(false);
 
-  const btnText =
-    (sorts || []).length > 0
-      ? `Sorted by ${sorts.length} rule${sorts.length > 1 ? "s" : ""}`
-      : "Sort";
+  const btnText = "Sort";
+  // (sorts || []).length > 0
+  //   ? `Sorted by ${sorts.length} rule${sorts.length > 1 ? "s" : ""}`
+  //   : "Sort";
 
   return (
     <Popover modal={false} open={open} onOpenChange={setOpen}>
@@ -39,6 +40,7 @@ const SortPopover = ({ sorts, portal = true, onApplySorts }: SortPopoverProps) =
           prefixIcon={<List size={18} />}
         >
           {btnText}
+          {(sorts || []).length > 0 && <TopDot value={sorts.length} />}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="p-0 w-96" side="bottom" align="start">
