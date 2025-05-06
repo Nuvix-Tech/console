@@ -1,5 +1,5 @@
 import { partition } from "lodash";
-import { Filter, Plus } from "lucide-react";
+import { CheckIcon, Filter, Plus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 // import { useBreakpoint } from 'common/hooks/useBreakpoint'
@@ -37,7 +37,7 @@ import { useProjectStore } from "@/lib/store";
 import { Button, Checkbox, Feedback } from "@nuvix/ui/components";
 import EditorMenuListSkeleton from "./EditorMenuListSkeleton";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
-import { Input, InputGroup, Stack } from "@chakra-ui/react";
+import { IconButton, Input, InputGroup, Stack } from "@chakra-ui/react";
 
 const TableEditorMenu = () => {
   const { id: ref, tableId: _id } = useParams();
@@ -175,33 +175,39 @@ const TableEditorMenu = () => {
           </div>
         </div>
         <div className="flex flex-auto flex-col gap-2 pb-4">
-          <Stack flexDir={"row"} gap={"2"} justifyContent={"space-between"} alignItems={"center"}>
+          <Stack
+            flexDir={"row"}
+            gap={"2"}
+            justifyContent={"space-between"}
+            alignItems={"center"}
+            className="mx-4"
+          >
             <InputGroup
               endElement={
                 <DropdownMenu>
-                  <DropdownMenuTrigger className="text-muted-foreground transition-all group-hover:text-foreground data-[state=open]:text-foreground">
+                  <DropdownMenuTrigger className="text-4xl text-muted-foreground transition-all group-hover:text-foreground data-[state=open]:text-foreground">
                     &middot;
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent side="bottom" align="start" className="w-44">
+                  <DropdownMenuContent side="bottom" align="start" className="w-38">
                     <DropdownMenuItem
-                      key="copy-name"
-                      className="space-x-2"
+                      className="justify-between"
                       onClick={(e) => {
                         e.stopPropagation();
                         setSort("alphabetical");
                       }}
                     >
                       Alphabetical
+                      {sort === "alphabetical" && <CheckIcon />}
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      key="copy-name"
-                      className="space-x-2"
+                      className="justify-between"
                       onClick={(e) => {
                         e.stopPropagation();
                         setSort("grouped-alphabetical");
                       }}
                     >
                       Entity Type
+                      {sort === "grouped-alphabetical" && <CheckIcon />}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -219,34 +225,42 @@ const TableEditorMenu = () => {
             </InputGroup>
             <Popover>
               <PopoverTrigger asChild>
-                <Button
-                  type={visibleTypes.length !== 5 ? "default" : "dashed"}
-                  className="h-[32px] md:h-[28px] px-1.5"
-                  prefixIcon={<Filter />}
-                />
+                <IconButton
+                  size={"xs"}
+                  colorPalette={"gray"}
+                  variant={visibleTypes.length !== 5 ? "ghost" : "subtle"}
+                >
+                  <Filter />
+                </IconButton>
               </PopoverTrigger>
               <PopoverContent className="p-0 w-56" side="bottom" align="center">
                 <div className="px-3 pt-3 pb-2 flex flex-col gap-y-2">
                   <p className="text-xs">Show entity types</p>
-                  <div className="flex flex-col">
+                  <div className="flex flex-col w-full">
                     {Object.entries(ENTITY_TYPE).map(([key, value]) => (
-                      <div key={key} className="group flex items-center justify-between py-0.5">
-                        <div className="flex items-center gap-x-2">
+                      <div
+                        key={key}
+                        className="group flex items-center justify-between py-0.5 w-full"
+                      >
+                        <div className="flex items-center gap-x-2 grow">
                           <Checkbox
                             id={key}
                             name={key}
                             isChecked={visibleTypes.includes(value)}
                             onToggle={() => handleToggleEntityType(value)}
                           />
-                          <Label htmlFor={key} className="capitalize text-xs">
+                          <Label
+                            htmlFor={key}
+                            className="capitalize text-xs text-nowrap line-clamp-1"
+                          >
                             {key.toLowerCase().replace("_", " ")}
                           </Label>
                         </div>
                         <Button
                           size="s"
-                          type="default"
+                          variant="secondary"
                           onClick={() => handleSelectOnlyEntityType(value)}
-                          className="transition opacity-0 group-hover:opacity-100 h-auto px-1 py-0.5"
+                          className="transition !opacity-0 group-hover:!opacity-100 !shrink"
                         >
                           Select only
                         </Button>

@@ -355,11 +355,9 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
                   </DropdownMenuItem>
 
                   <DropdownMenuSub>
-                    <DropdownMenuSubTrigger className="gap-x-2" asChild>
-                      <DropdownMenuItem key="sub-menu" className="space-x-2">
-                        <Download size={12} />
-                        Export data
-                      </DropdownMenuItem>
+                    <DropdownMenuSubTrigger className="gap-x-2 space-x-2 text-muted-foreground">
+                      <Download size={12} />
+                      Export data
                     </DropdownMenuSubTrigger>
                     <DropdownMenuSubContent>
                       <DropdownMenuItem
