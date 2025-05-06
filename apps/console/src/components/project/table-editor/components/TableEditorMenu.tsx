@@ -2,13 +2,9 @@ import { partition } from "lodash";
 import { Filter, Plus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
-// import { useParams } from 'common'
 // import { useBreakpoint } from 'common/hooks/useBreakpoint'
 // import { useIsTableEditorTabsEnabled } from '@/components/interfaces/App/FeaturePreview/FeaturePreviewContext'
 // import { ProtectedSchemaModal } from '@/components/interfaces/Database/ProtectedSchemaWarning'
-// import EditorMenuListSkeleton from '@/components/layouts/TableEditorLayout/EditorMenuListSkeleton'
-// import AlertError from '@/ui/AlertError'
-// import { ButtonTooltip } from '@/ui/ButtonTooltip'
 import InfiniteList from "@/ui/InfiniteList";
 import SchemaSelector from "@/ui/SchemaSelector";
 import { useSchemasQuery } from "@/data/database/schemas-query";
@@ -16,8 +12,6 @@ import { ENTITY_TYPE } from "@/data/entity-types/entity-type-constants";
 import { useEntityTypesQuery } from "@/data/entity-types/entity-types-infinite-query";
 import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
 // import { useCheckPermissions } from 'hooks/misc/useCheckPermissions'
-// import { useLocalStorage } from 'hooks/misc/useLocalStorage'
-// import { useQuerySchemaState } from 'hooks/misc/useSchemaQueryState'
 import { PROTECTED_SCHEMAS } from "@/lib/constants/schemas";
 // import { useTableEditorStateSnapshot } from 'state/table-editor'
 import {
@@ -28,15 +22,11 @@ import {
   PopoverContent,
   PopoverTrigger,
   Popover,
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
 } from "@nuvix/sui/components";
-// import {
-//   InnerSideBarEmptyPanel,
-//   InnerSideBarFilterSearchInput,
-//   InnerSideBarFilterSortDropdown,
-//   InnerSideBarFilterSortDropdownItem,
-//   InnerSideBarFilters,
-// } from 'ui-patterns/InnerSideMenu'
-// import { useProjectContext } from '../ProjectLayout/ProjectContext'
 // import { tableEditorTabsCleanUp } from '../Tabs/Tabs.utils'
 import EntityListItem from "./EntityListItem";
 import { TableMenuEmptyState } from "./TableMenuEmptyState";
@@ -47,6 +37,7 @@ import { useProjectStore } from "@/lib/store";
 import { Button, Checkbox, Feedback } from "@nuvix/ui/components";
 import EditorMenuListSkeleton from "./EditorMenuListSkeleton";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { Input, InputGroup, Stack } from "@chakra-ui/react";
 
 const TableEditorMenu = () => {
   const { id: ref, tableId: _id } = useParams();
@@ -184,34 +175,48 @@ const TableEditorMenu = () => {
           </div>
         </div>
         <div className="flex flex-auto flex-col gap-2 pb-4">
-          {/* <InnerSideBarFilters className="mx-2">
-            <InnerSideBarFilterSearchInput
-              autoFocus={!isMobile}
-              name="search-tables"
-              value={searchText}
-              placeholder="Search tables..."
-              aria-labelledby="Search tables"
-              onChange={(e) => setSearchText(e.target.value)}
+          <Stack flexDir={"row"} gap={"2"} justifyContent={"space-between"} alignItems={"center"}>
+            <InputGroup
+              endElement={
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="text-muted-foreground transition-all group-hover:text-foreground data-[state=open]:text-foreground">
+                    &middot;
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent side="bottom" align="start" className="w-44">
+                    <DropdownMenuItem
+                      key="copy-name"
+                      className="space-x-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSort("alphabetical");
+                      }}
+                    >
+                      Alphabetical
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      key="copy-name"
+                      className="space-x-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSort("grouped-alphabetical");
+                      }}
+                    >
+                      Entity Type
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              }
             >
-              <InnerSideBarFilterSortDropdown
-                value={sort}
-                onValueChange={(value: any) => setSort(value)}
-              >
-                <InnerSideBarFilterSortDropdownItem
-                  key="alphabetical"
-                  value="alphabetical"
-                  className="flex gap-2"
-                >
-                  Alphabetical
-                </InnerSideBarFilterSortDropdownItem>
-                <InnerSideBarFilterSortDropdownItem
-                  key="grouped-alphabetical"
-                  value="grouped-alphabetical"
-                >
-                  Entity Type
-                </InnerSideBarFilterSortDropdownItem>
-              </InnerSideBarFilterSortDropdown>
-            </InnerSideBarFilterSearchInput>
+              <Input
+                size={"xs"}
+                autoFocus={!isMobile}
+                name="search-tables"
+                value={searchText}
+                placeholder="Search tables..."
+                aria-labelledby="Search tables"
+                onChange={(e) => setSearchText(e.target.value)}
+              />
+            </InputGroup>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -251,12 +256,12 @@ const TableEditorMenu = () => {
                 </div>
               </PopoverContent>
             </Popover>
-          </InnerSideBarFilters> */}
+          </Stack>
 
           {isLoading && <EditorMenuListSkeleton />}
 
           {isError && (
-            <div className="mx-4">
+            <div className="mx-1">
               <Feedback
                 variant="danger"
                 title="Failed to retrieve tables"
@@ -269,7 +274,7 @@ const TableEditorMenu = () => {
             <>
               {searchText.length === 0 && entityTypes.length === 0 && <TableMenuEmptyState />}
               {searchText.length > 0 && entityTypes.length === 0 && (
-                <div className="mx-4">
+                <div className="mx-1">
                   <Feedback
                     variant="info"
                     title="No results found"

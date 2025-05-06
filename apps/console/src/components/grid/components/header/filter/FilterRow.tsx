@@ -39,15 +39,15 @@ const FilterRow = ({ filter, filterIdx, onChange, onDelete, onKeyDown }: FilterR
         onSelect={(nextColumn) => onChange(filterIdx, { ...filter, column: nextColumn as string })}
       >
         <Button
-          // asChild
+          asChild
           size="s"
           variant="secondary"
           prefixIcon={
-            <div className="text-foreground-lighter">
+            <div className="text-muted-foreground">
               <ChevronDown strokeWidth={1.5} size={18} />
             </div>
           }
-          className="w-32 justify-start"
+          className="!w-32 justify-start"
         >
           <span>{column?.name ?? ""}</span>
         </Button>
@@ -67,7 +67,7 @@ const FilterRow = ({ filter, filterIdx, onChange, onDelete, onKeyDown }: FilterR
           size="s"
           variant="secondary"
           prefixIcon={
-            <div className="text-foreground-lighter">
+            <div className="text-muted-foreground">
               <ChevronDown strokeWidth={1.5} size={18} />
             </div>
           }

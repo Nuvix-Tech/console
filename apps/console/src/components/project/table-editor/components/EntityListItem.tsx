@@ -1,7 +1,7 @@
-// import saveAs from 'file-saver'
+import saveAs from "file-saver";
 import { Clipboard, Copy, Download, Edit, Lock, MoreHorizontal, Trash, Unlock } from "lucide-react";
 import Link from "next/link";
-// import Papa from 'papaparse'
+import Papa from "papaparse";
 import { toast } from "sonner";
 import { useSnapshot } from "valtio";
 import { cva, VariantProps } from "class-variance-authority";
@@ -176,11 +176,11 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
       });
 
       if (formattedRows.length > 0) {
-        // const csv = Papa.unparse(formattedRows, {
-        //   columns: supaTable.columns.map((column) => column.name),
-        // })
-        // const csvData = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
-        // saveAs(csvData, `${entity!.name}_rows.csv`)
+        const csv = Papa.unparse(formattedRows, {
+          columns: supaTable.columns.map((column) => column.name),
+        });
+        const csvData = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+        saveAs(csvData, `${entity!.name}_rows.csv`);
       }
 
       toast.success(`Successfully exported ${entity.name} as CSV`, { id: toastId });
@@ -230,7 +230,7 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
       });
 
       if (formattedRows.length > 0) {
-        // const sqlStatements = formatTableRowsToSQL(supaTable, formattedRows)
+        // const sqlStatements = formatTableRowsToSQl(supaTable, formattedRows)
         // const sqlData = new Blob([sqlStatements], { type: 'text/sql;charset=utf-8;' })
         // saveAs(sqlData, `${entity!.name}_rows.sql`)
       }
@@ -355,9 +355,11 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
                   </DropdownMenuItem>
 
                   <DropdownMenuSub>
-                    <DropdownMenuSubTrigger className="gap-x-2">
-                      <Download size={12} />
-                      Export data
+                    <DropdownMenuSubTrigger className="gap-x-2" asChild>
+                      <DropdownMenuItem key="sub-menu" className="space-x-2">
+                        <Download size={12} />
+                        Export data
+                      </DropdownMenuItem>
                     </DropdownMenuSubTrigger>
                     <DropdownMenuSubContent>
                       <DropdownMenuItem

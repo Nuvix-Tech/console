@@ -24,9 +24,14 @@ import { useSearchQuery } from "@/hooks/useQuery";
 import { TableParam } from "@/types";
 import DeleteConfirmationDialogs from "./components/_delete_dialog";
 import { Code } from "@chakra-ui/react";
+import { Loader } from "lucide-react";
 
 // Placeholder component for loading state
-const LoadingState = () => <div>Loading...</div>;
+const LoadingState = () => (
+  <div className="size-full justify-center items-center flex">
+    <Loader className="animate-spin" />
+  </div>
+);
 
 // Placeholder component for error/not found state
 const TableNotFound = ({ id }: { id: number | undefined }) => (
@@ -57,15 +62,15 @@ export const TableEditor = () => {
   }, [tableIdParam]);
 
   // Redirect if tableId is invalid or missing after parsing
-  if (isUndefined(tableId)) {
-    // Redirect to the base editor page if no valid table ID is present
-    // Consider if this redirect is always the desired behavior
-    if (typeof window !== "undefined") {
-      // Ensure router is used client-side
-      router.replace(`/project/${projectRef}/editor`);
-    }
-    return <TableNotFound id={tableId} />; // Show message while redirecting or if redirect fails
-  }
+  // if (isUndefined(tableId)) {
+  //   // Redirect to the base editor page if no valid table ID is present
+  //   // Consider if this redirect is always the desired behavior
+  //   if (typeof window !== "undefined") {
+  //     // Ensure router is used client-side
+  //     router.replace(`/project/${projectRef}/editor`);
+  //   }
+  //   return <TableNotFound id={tableId} />; // Show message while redirecting or if redirect fails
+  // }
 
   const {
     data: selectedTable,

@@ -31,9 +31,9 @@ export const DropdownControl = ({
       <DropdownMenuContent side={side} align={align}>
         <div className="dropdown-control" style={{ maxHeight: "30vh" }}>
           {options.length === 0 && <p className="dropdown-control__empty-text">No more items</p>}
-          {options.map((x) => {
+          {options.map((x, id) => {
             return (
-              <DropdownMenuItem key={x.value} onClick={() => onSelect(x.value)}>
+              <DropdownMenuItem key={id} onClick={() => onSelect(x.value)}>
                 <div className="flex items-center gap-2">
                   {x.preLabel && <span className="grow text-muted-foreground">{x.preLabel}</span>}
                   <span>{x.label}</span>

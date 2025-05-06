@@ -1,10 +1,5 @@
 import TableEditorMenu from "@/components/project/table-editor/components/TableEditorMenu";
-import { useGetTables } from "@/data/tables/tables-query";
-import { useProjectStore } from "@/lib/store";
-import { TableParam } from "@/types";
-import { Column, Spinner, Text, ToggleButton } from "@nuvix/ui/components";
-import { useParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { Text } from "@nuvix/ui/components";
 
 export const Sidebar = () => {
   return (
