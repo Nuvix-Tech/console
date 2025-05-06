@@ -234,7 +234,7 @@ export const createColumn = async ({
   const toastId = _toastId ?? toast.loading(`Creating column "${payload.name}"...`);
   try {
     // Once pg-meta supports composite keys, we can remove this logic
-    const { isPrimaryKey, ...formattedPayload } = payload;
+    const { is_primary_key: isPrimaryKey, ...formattedPayload } = payload;
     const column = await createDatabaseColumn({
       projectRef: projectRef,
       sdk,
@@ -299,7 +299,7 @@ export const updateColumn = async ({
   skipSuccessMessage?: boolean;
 }) => {
   try {
-    const { isPrimaryKey, ...formattedPayload } = payload;
+    const { is_primary_key: isPrimaryKey, ...formattedPayload } = payload;
     const column = await updateDatabaseColumn({
       projectRef,
       sdk,

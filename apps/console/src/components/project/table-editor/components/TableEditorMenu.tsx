@@ -1,5 +1,5 @@
 import { partition } from "lodash";
-import { CheckIcon, Filter, Plus } from "lucide-react";
+import { Filter, Plus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 // import { useBreakpoint } from 'common/hooks/useBreakpoint'
@@ -25,7 +25,7 @@ import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuItem,
+  DropdownMenuCheckboxItem,
 } from "@nuvix/sui/components";
 // import { tableEditorTabsCleanUp } from '../Tabs/Tabs.utils'
 import EntityListItem from "./EntityListItem";
@@ -37,7 +37,7 @@ import { useProjectStore } from "@/lib/store";
 import { Button, Checkbox, Feedback } from "@nuvix/ui/components";
 import EditorMenuListSkeleton from "./EditorMenuListSkeleton";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
-import { IconButton, Input, InputGroup, Stack } from "@chakra-ui/react";
+import { IconButton, Input, InputGroup, Stack, Button as ChakraButton } from "@chakra-ui/react";
 
 const TableEditorMenu = () => {
   const { id: ref, tableId: _id } = useParams();
@@ -129,10 +129,10 @@ const TableEditorMenu = () => {
 
   return (
     <>
-      <div className="flex flex-col flex-grow gap-5 pt-5 h-full">
+      <div className="flex flex-col flex-grow gap-3 pt-5 h-full">
         <div className="flex flex-col gap-y-1.5">
           <SchemaSelector
-            className="mx-4"
+            className="mx-2"
             selectedSchemaName={selectedSchema}
             onSelectSchema={(name: string) => {
               setSearchText("");
@@ -141,7 +141,7 @@ const TableEditorMenu = () => {
             onSelectCreateSchema={() => snap.onAddSchema()}
           />
 
-          <div className="grid gap-3 mx-4">
+          <div className="grid gap-3 mx-2">
             {!isLocked ? (
               <Button
                 fillWidth
@@ -166,7 +166,7 @@ const TableEditorMenu = () => {
                   <p className="mb-2">
                     This schema is managed by Nuvix and is read-only through the table editor
                   </p>
-                  <Button type="default" size="s" onClick={() => setShowModal(true)}>
+                  <Button size="s" onClick={() => setShowModal(true)}>
                     Learn more
                   </Button>
                 </AlertDescription>
@@ -180,7 +180,7 @@ const TableEditorMenu = () => {
             gap={"2"}
             justifyContent={"space-between"}
             alignItems={"center"}
-            className="mx-4"
+            className="mx-2"
           >
             <InputGroup
               endElement={
@@ -189,26 +189,18 @@ const TableEditorMenu = () => {
                     &middot;
                   </DropdownMenuTrigger>
                   <DropdownMenuContent side="bottom" align="start" className="w-38">
-                    <DropdownMenuItem
-                      className="justify-between"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSort("alphabetical");
-                      }}
+                    <DropdownMenuCheckboxItem
+                      checked={sort === "alphabetical"}
+                      onCheckedChange={() => setSort("alphabetical")}
                     >
                       Alphabetical
-                      {sort === "alphabetical" && <CheckIcon />}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="justify-between"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSort("grouped-alphabetical");
-                      }}
+                    </DropdownMenuCheckboxItem>
+                    <DropdownMenuCheckboxItem
+                      checked={sort === "grouped-alphabetical"}
+                      onCheckedChange={() => setSort("grouped-alphabetical")}
                     >
                       Entity Type
-                      {sort === "grouped-alphabetical" && <CheckIcon />}
-                    </DropdownMenuItem>
+                    </DropdownMenuCheckboxItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               }
@@ -228,7 +220,7 @@ const TableEditorMenu = () => {
                 <IconButton
                   size={"xs"}
                   colorPalette={"gray"}
-                  variant={visibleTypes.length !== 5 ? "ghost" : "subtle"}
+                  variant={visibleTypes.length !== 5 ? "surface" : "ghost"}
                 >
                   <Filter />
                 </IconButton>
@@ -256,14 +248,14 @@ const TableEditorMenu = () => {
                             {key.toLowerCase().replace("_", " ")}
                           </Label>
                         </div>
-                        <Button
-                          size="s"
-                          variant="secondary"
+                        <ChakraButton
+                          size="xs"
+                          variant="surface"
                           onClick={() => handleSelectOnlyEntityType(value)}
                           className="transition !opacity-0 group-hover:!opacity-100 !shrink"
                         >
                           Select only
-                        </Button>
+                        </ChakraButton>
                       </div>
                     ))}
                   </div>
