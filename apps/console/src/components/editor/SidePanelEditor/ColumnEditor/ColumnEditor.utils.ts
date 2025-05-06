@@ -90,22 +90,22 @@ export const generateCreateColumnPayload = (
   const isIdentity = field.format.includes("int") ? field.isIdentity : false;
   const defaultValue = field.defaultValue as any;
   const payload: CreateColumnPayload = {
-    tableId,
-    isIdentity,
+    table_id: tableId,
+    is_identity: isIdentity,
     name: field.name.trim(),
     comment: field.comment?.trim(),
     type: field.isArray ? `${field.format}[]` : field.format,
     check: field.check?.trim() || undefined,
-    isUnique: field.isUnique,
-    isPrimaryKey: field.isPrimaryKey,
-    ...(!field.isPrimaryKey && !isIdentity && { isNullable: field.isNullable }),
+    is_unique: field.isUnique,
+    is_primary_key: field.isPrimaryKey,
+    ...(!field.isPrimaryKey && !isIdentity && { is_nullable: field.isNullable }),
     ...(!isIdentity && {
-      defaultValue:
+      default_value:
         field.isArray && defaultValue ? formatArrayToPostgresArray(defaultValue) : defaultValue,
     }),
     ...(!isIdentity &&
       defaultValue && {
-        defaultValueFormat:
+        default_value_format:
           isNull(defaultValue) || isSQLExpression(defaultValue)
             ? "expression"
             : ("literal" as "expression" | "literal"),
@@ -147,23 +147,23 @@ export const generateUpdateColumnPayload = (
   }
   if (!isEqual(originalColumn.default_value, field.defaultValue)) {
     const defaultValue = field.defaultValue;
-    payload.defaultValue = defaultValue as unknown as Record<string, never> | undefined;
-    payload.defaultValueFormat =
+    payload.default_value = defaultValue as unknown as Record<string, never> | undefined;
+    payload.default_value_format =
       isNull(defaultValue) || isSQLExpression(defaultValue)
         ? "expression"
         : ("literal" as "expression" | "literal");
   }
   if (!isEqual(originalColumn.is_identity, field.isIdentity)) {
-    payload.isIdentity = field.isIdentity;
+    payload.is_identity = field.isIdentity;
   }
   if (!isEqual(originalColumn.is_nullable, field.isNullable)) {
-    payload.isNullable = field.isNullable;
+    payload.is_nullable = field.isNullable;
   }
   if (!isEqual(originalColumn.is_unique, field.isUnique)) {
-    payload.isUnique = field.isUnique;
+    payload.is_unique = field.isUnique;
   }
   if (!isEqual(isOriginallyPrimaryKey, field.isPrimaryKey)) {
-    payload.isPrimaryKey = field.isPrimaryKey;
+    payload.is_primary_key = field.isPrimaryKey;
   }
 
   return payload;

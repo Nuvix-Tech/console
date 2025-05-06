@@ -5,8 +5,9 @@ import type { components } from "@/data/api";
 import { handleError, patch } from "@/data/fetchers";
 import type { ResponseError } from "@/types";
 import { ProjectSdk } from "@/lib/sdk";
+import { PostgresColumnUpdate } from "@nuvix/pg-meta";
 
-export type UpdateColumnBody = components["schemas"]["UpdateColumnBody"];
+export type UpdateColumnBody = PostgresColumnUpdate;
 
 export type DatabaseColumnUpdateVariables = {
   projectRef?: string;

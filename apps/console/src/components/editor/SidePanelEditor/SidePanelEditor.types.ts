@@ -3,11 +3,11 @@ import { CreateColumnBody } from "@/data/database-columns/database-column-create
 import { UpdateColumnBody } from "@/data/database-columns/database-column-update-mutation";
 
 export interface CreateColumnPayload extends CreateColumnBody {
-  isPrimaryKey?: boolean;
+  is_primary_key?: boolean;
 }
 
 export interface UpdateColumnPayload extends UpdateColumnBody {
-  isPrimaryKey?: boolean;
+  is_primary_key?: boolean;
 }
 
 export interface CreateTablePayload {
