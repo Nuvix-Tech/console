@@ -19,7 +19,7 @@ export type TableDeleteVariables = {
 };
 
 export async function deleteTable({ projectRef, sdk, id, cascade = false }: TableDeleteVariables) {
-  const { data, error } = await del("/tables", sdk, {
+  const { data, error } = await del(`/tables/${id}`, sdk, {
     query: { id, cascade },
   });
 

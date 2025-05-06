@@ -22,7 +22,7 @@ export async function getDatabasePolicies(
       included_schemas: schema || "",
       excluded_schemas: "",
     },
-    // signal,
+    signal,
   });
 
   if (error) handleError(error);

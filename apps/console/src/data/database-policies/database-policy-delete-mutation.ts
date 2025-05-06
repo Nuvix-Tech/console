@@ -13,7 +13,7 @@ export type DatabasePolicyDeleteVariables = {
 };
 
 export async function deleteDatabasePolicy({ projectRef, sdk, id }: DatabasePolicyDeleteVariables) {
-  const { data, error } = await del("/policies", sdk, {
+  const { data, error } = await del(`/policies/${id}`, sdk, {
     query: { id },
   });
 

@@ -24,7 +24,7 @@ export async function updateDatabasePolicy({
   id,
   payload,
 }: DatabasePolicyUpdateVariables) {
-  const { data, error } = await patch("/policies", sdk, {
+  const { data, error } = await patch(`/policies/${id}`, sdk, {
     query: { id },
     payload,
   });

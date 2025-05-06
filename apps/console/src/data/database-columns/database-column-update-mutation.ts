@@ -21,9 +21,9 @@ export async function updateDatabaseColumn({
   id,
   payload,
 }: DatabaseColumnUpdateVariables) {
-  const { data, error } = await patch("/columns", sdk, {
-    query: { id },
+  const { data, error } = await patch(`/columns/${id}`, sdk, {
     payload,
+    query: { id },
   });
 
   if (error) handleError(error);

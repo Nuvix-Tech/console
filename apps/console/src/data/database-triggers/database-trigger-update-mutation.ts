@@ -19,7 +19,7 @@ export async function updateDatabaseTrigger({
   sdk,
   payload,
 }: DatabaseTriggerUpdateVariables) {
-  const { data, error } = await patch("/triggers", sdk, {
+  const { data, error } = await patch(`/triggers/${id}`, sdk, {
     query: { id },
     payload,
   });

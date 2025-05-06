@@ -20,7 +20,7 @@ export async function deleteDatabaseTrigger({
   projectRef,
   sdk,
 }: DatabaseTriggerDeleteVariables) {
-  const { data, error } = await del("/triggers", sdk, {
+  const { data, error } = await del(`/triggers/${id}`, sdk, {
     query: { id },
   });
 

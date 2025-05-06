@@ -34,7 +34,7 @@ export async function updateDatabasePublication({
   if (publish_delete !== undefined) body.publish_delete = publish_delete;
   if (publish_truncate !== undefined) body.publish_truncate = publish_truncate;
 
-  const { data, error } = await patch("/publications", sdk, {
+  const { data, error } = await patch(`/publications/${id}`, sdk, {
     query: { id },
     payload: body,
   });
