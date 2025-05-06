@@ -141,7 +141,7 @@ export const parseValue = (originalValue: any, format: string) => {
 };
 
 const parseDescription = (description: string | null) => {
-  // [Joshen] Definitely can find a better way to parse the description, but this suffices for now
+  // [Unkown] Definitely can find a better way to parse the description, but this suffices for now
   if (!description) return "";
   const commentLines = compact(description.split("\n"));
   if (commentLines.length == 1) {

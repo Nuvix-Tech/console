@@ -42,6 +42,18 @@ export const useDatabaseTriggerUpdateMutation = ({
 
   return useMutation({
     mutationFn: (vars) => updateDatabaseTrigger(vars),
+    async onSuccess(data, variables, context) {
+      const { projectRef } = variables;
+      await queryClient.invalidateQueries({ queryKey: databaseTriggerKeys.list(projectRef) });
+      await onSuccess?.(data, variables, context);
+    },
+    async onError(data, variables, context) {
+      if (onError === undefined) {
+        toast.error(`Failed to update database trigger: ${data.message}`);
+      } else {
+        onError(data, variables, context);
+      }
+    },
     ...options,
   });
 };

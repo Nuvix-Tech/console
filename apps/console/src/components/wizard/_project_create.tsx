@@ -72,7 +72,6 @@ export const CreateProject: React.FC<CreateProjectProps> = ({ children, ...props
                     validationSchema={schema}
                     onSubmit={async (values, { resetForm }) => {
                       const { id, name } = values;
-                      console.log("submitting", id, name);
                       await onSubmit(name, resetForm, id);
                     }}
                   >

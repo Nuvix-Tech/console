@@ -48,6 +48,18 @@ export const useEnumeratedTypeCreateMutation = ({
 
   return useMutation({
     mutationFn: (vars) => createEnumeratedType(vars),
+    async onSuccess(data, variables, context) {
+      const { projectRef } = variables;
+      await queryClient.invalidateQueries({ queryKey: enumeratedTypesKeys.list(projectRef) });
+      await onSuccess?.(data, variables, context);
+    },
+    async onError(data, variables, context) {
+      if (onError === undefined) {
+        toast.error(`Failed to create enumerated type: ${data.message}`);
+      } else {
+        onError(data, variables, context);
+      }
+    },
     ...options,
   });
 };

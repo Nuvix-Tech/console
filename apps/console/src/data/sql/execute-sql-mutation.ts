@@ -35,11 +35,30 @@ export const useExecuteSqlMutation = ({
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (args) => executeSql(args),
+    async onSuccess(data, variables, context) {
+      const { contextualInvalidation, sql, projectRef } = variables;
+
+      // Default to false for now, only used for SQL editor to dynamically invalidate
+      if (contextualInvalidation && projectRef) {
+        const invalidationKeys = inferInvalidationKeys(projectRef, sql);
+        await Promise.all(
+          invalidationKeys.map((key) => queryClient.invalidateQueries({ queryKey: key })),
+        );
+      }
+      await onSuccess?.(data, variables, context);
+    },
+    async onError(data, variables, context) {
+      if (onError === undefined) {
+        toast.error(`Failed to execute SQL: ${data.message}`);
+      } else {
+        onError(data, variables, context);
+      }
+    },
     ...options,
   });
 };
 
-// [Joshen] Can expand this further eventually, but just covering certain easy cases for now
+// [Unkown] Can expand this further eventually, but just covering certain easy cases for now
 const inferInvalidationKeys = (ref: string, sql: string) => {
   const keys = [];
   const sqlLower = sql.toLowerCase();

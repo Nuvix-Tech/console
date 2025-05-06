@@ -100,7 +100,7 @@ const FilterOverlay = ({ filters: filtersFromUrl, onApplyFilters }: FilterOverla
   }, []);
 
   const onSelectApplyFilters = () => {
-    // [Joshen] Trim empty spaces in input for only UUID type columns
+    // [Unkown] Trim empty spaces in input for only UUID type columns
     const formattedFilters = filters.map((f) => {
       const column = snap.table.columns.find((c) => c.name === f.column);
       if (column?.format === "uuid") return { ...f, value: f.value.trim() };

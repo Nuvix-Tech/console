@@ -47,8 +47,8 @@ import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
 import { cn } from "@nuvix/sui/lib/utils";
 
 export const TreeViewItemVariant = cva(
-  // [Joshen Temp]: aria-selected:text-foreground not working as aria-selected property not rendered in DOM,
-  // [Joshen Temp]: aria-selected:!bg-selection not working as aria-selected property not rendered in DOM
+  // [Unkown Temp]: aria-selected:text-foreground not working as aria-selected property not rendered in DOM,
+  // [Unkown Temp]: aria-selected:!bg-selection not working as aria-selected property not rendered in DOM
   "w-full group relative transition-colors h-[28px] flex items-center gap-3 text-sm cursor-pointer select-none text-foreground-light hover:bg-control aria-expanded:bg-transparent data-[state=open]:bg-transparent", // data-[state=open]:bg-control bg state for context menu open
   {
     variants: {

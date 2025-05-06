@@ -43,6 +43,26 @@ export const useTableCreateMutation = ({
 
   return useMutation({
     mutationFn: (vars) => createTable(vars),
+    async onSuccess(data, variables, context) {
+      const { projectRef, payload } = variables;
+
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: tableKeys.list(projectRef, payload.schema, true),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: tableKeys.list(projectRef, payload.schema, false),
+        }),
+      ]);
+      await onSuccess?.(data, variables, context);
+    },
+    async onError(data, variables, context) {
+      if (onError === undefined) {
+        toast.error(`Failed to create database table: ${data.message}`);
+      } else {
+        onError(data, variables, context);
+      }
+    },
     ...options,
   });
 };

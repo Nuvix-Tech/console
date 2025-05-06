@@ -31,7 +31,7 @@ export type SidePanel =
 export type ConfirmationDialog =
   | { type: "table"; isDeleteWithCascade: boolean }
   | { type: "column"; column: PostgresColumn; isDeleteWithCascade: boolean }
-  // [Joshen] Just FYI callback, numRows, allRowsSelected is a temp workaround so that
+  // [Unkown] Just FYI callback, numRows, allRowsSelected is a temp workaround so that
   // DeleteConfirmationDialog can trigger dispatch methods after the successful deletion of rows.
   // Once we deprecate react tracked and move things to valtio, we can remove this.
   | {

@@ -3,6 +3,8 @@ import { useMutation, UseMutationOptions, useQueryClient } from "@tanstack/react
 import { del, handleError } from "@/data/fetchers";
 import type { ResponseError } from "@/types";
 import { ProjectSdk } from "@/lib/sdk";
+import { toast } from "sonner";
+import { databasePoliciesKeys } from "./keys";
 
 export type DatabasePolicyDeleteVariables = {
   projectRef: string;
@@ -33,6 +35,18 @@ export const useDatabasePolicyDeleteMutation = ({
 
   return useMutation({
     mutationFn: (vars) => deleteDatabasePolicy(vars),
+    async onSuccess(data, variables, context) {
+      const { projectRef } = variables;
+      await queryClient.invalidateQueries({ queryKey: databasePoliciesKeys.list(projectRef) });
+      await onSuccess?.(data, variables, context);
+    },
+    async onError(data, variables, context) {
+      if (onError === undefined) {
+        toast.error(`Failed to delete database policy: ${data.message}`);
+      } else {
+        onError(data, variables, context);
+      }
+    },
     ...options,
   });
 };

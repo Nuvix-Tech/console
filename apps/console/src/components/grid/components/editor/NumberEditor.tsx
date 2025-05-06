@@ -34,7 +34,7 @@ export function NumberEditor<TRow, TSummaryRow = unknown>({
       size={"xs"}
       borderRadius={"none"}
     >
-      <NumberInputField className="nx-grid-number-editor" borderRadius={'none'} />
+      <NumberInputField className="nx-grid-number-editor" borderRadius={"none"} />
     </NumberInputRoot>
   );
 }

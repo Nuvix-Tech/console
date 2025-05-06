@@ -27,7 +27,7 @@ export const SelectColumn: CalculatedColumn<any, any> = {
   frozen: true,
   // isLastFrozenColumn: false,
   renderHeaderCell: (props: RenderHeaderCellProps<unknown>) => {
-    // [Joshen] formatter is actually a valid React component, so we can use hooks here
+    // [Unkown] formatter is actually a valid React component, so we can use hooks here
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const { isRowSelected, onRowSelectionChange } = useHeaderRowSelection();
 

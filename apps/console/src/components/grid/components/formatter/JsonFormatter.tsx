@@ -11,7 +11,7 @@ export const JsonFormatter = (p: PropsWithChildren<RenderCellProps<SupaRow, unkn
   if (value === null) return <NullValue />;
   if (value === "") return <EmptyValue />;
 
-  // [Joshen] With reference to table-rows-query, we're only pulling max n characters on text/jsonb columns
+  // [Unkown] With reference to table-rows-query, we're only pulling max n characters on text/jsonb columns
   // If column value is longer, value will be concatenated with ..., and we just want to make sure the JSON
   // still renders seemingly like JSON in the grid
   const isTruncated = typeof value === "string" && value.endsWith("...");

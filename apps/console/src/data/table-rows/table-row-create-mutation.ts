@@ -69,6 +69,20 @@ export const useTableRowCreateMutation = ({
 
   return useMutation({
     mutationFn: (vars) => createTableRow(vars),
+    async onSuccess(data, variables, context) {
+      const { projectRef, table } = variables;
+      await queryClient.invalidateQueries({
+        queryKey: tableRowKeys.tableRowsAndCount(projectRef, table.id),
+      });
+      await onSuccess?.(data, variables, context);
+    },
+    async onError(data, variables, context) {
+      if (onError === undefined) {
+        toast.error(data.message);
+      } else {
+        onError(data, variables, context);
+      }
+    },
     ...options,
   });
 };

@@ -8,7 +8,7 @@ type GetViewDefinitionArgs = {
   id?: number;
 };
 
-// [Joshen] Eventually move this into entity-definition-query
+// [Unkown] Eventually move this into entity-definition-query
 export const getViewDefinitionSql = ({ id }: GetViewDefinitionArgs) => {
   if (!id) {
     throw new Error("id is required");

@@ -130,7 +130,7 @@ export const generateUpdateColumnPayload = (
   const check = field.check?.trim();
 
   const payload: Partial<UpdateColumnPayload> = {};
-  // [Joshen] Trimming on the original name as well so we don't rename columns that already
+  // [Unkown] Trimming on the original name as well so we don't rename columns that already
   // contain whitespaces (and accidentally bringing user apps down)
   if (!isEqual(originalColumn.name.trim(), name)) {
     payload.name = name;

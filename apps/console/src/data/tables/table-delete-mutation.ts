@@ -19,7 +19,7 @@ export type TableDeleteVariables = {
 };
 
 export async function deleteTable({ projectRef, sdk, id, cascade = false }: TableDeleteVariables) {
-  const { data, error } = await del("/platform/pg-meta/{ref}/tables", sdk, {
+  const { data, error } = await del("/tables", sdk, {
     query: { id, cascade },
   });
 
@@ -44,6 +44,25 @@ export const useTableDeleteMutation = ({
 
   return useMutation({
     mutationFn: (vars) => deleteTable(vars),
+    async onSuccess(data, variables, context) {
+      const { id, projectRef, schema } = variables;
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: tableEditorKeys.tableEditor(projectRef, id) }),
+        queryClient.invalidateQueries({ queryKey: tableKeys.list(projectRef, schema) }),
+        queryClient.invalidateQueries({ queryKey: entityTypeKeys.list(projectRef) }),
+        // invalidate all views from this schema
+        queryClient.invalidateQueries({ queryKey: viewKeys.listBySchema(projectRef, schema) }),
+      ]);
+
+      await onSuccess?.(data, variables, context);
+    },
+    async onError(data, variables, context) {
+      if (onError === undefined) {
+        toast.error(`Failed to delete database table: ${data.message}`);
+      } else {
+        onError(data, variables, context);
+      }
+    },
     ...options,
   });
 };

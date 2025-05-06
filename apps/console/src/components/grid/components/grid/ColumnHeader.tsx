@@ -170,7 +170,7 @@ function renderColumnIcon(
   const { name, foreignKey } = columnMeta;
   switch (type) {
     case "foreign_key":
-      // [Joshen] Look into this separately but this should be a hover card instead
+      // [Unkown] Look into this separately but this should be a hover card instead
       return (
         <Tooltip>
           <TooltipTrigger className="brand-on-background-weak">

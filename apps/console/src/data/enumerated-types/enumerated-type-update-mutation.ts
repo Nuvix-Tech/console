@@ -74,6 +74,18 @@ export const useEnumeratedTypeUpdateMutation = ({
 
   return useMutation({
     mutationFn: (vars) => updateEnumeratedType(vars),
+    async onSuccess(data, variables, context) {
+      const { projectRef } = variables;
+      await queryClient.invalidateQueries({ queryKey: enumeratedTypesKeys.list(projectRef) });
+      await onSuccess?.(data, variables, context);
+    },
+    async onError(data, variables, context) {
+      if (onError === undefined) {
+        toast.error(`Failed to add value to enumerated type: ${data.message}`);
+      } else {
+        onError(data, variables, context);
+      }
+    },
     ...options,
   });
 };

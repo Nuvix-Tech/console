@@ -50,6 +50,16 @@ export const useGetCellValueMutation = ({
 > = {}) => {
   return useMutation({
     mutationFn: (vars) => getCellValue(vars),
+    async onSuccess(data, variables, context) {
+      await onSuccess?.(data, variables, context);
+    },
+    async onError(data, variables, context) {
+      if (onError === undefined) {
+        toast.error(data.message);
+      } else {
+        onError(data, variables, context);
+      }
+    },
     ...options,
   });
 };

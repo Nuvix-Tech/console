@@ -1,4 +1,4 @@
-// [Joshen] Chuck this into the UI library with proper positioning logic via radix
+// [Unkown] Chuck this into the UI library with proper positioning logic via radix
 // and proper width derivation using useRef. Unable to pass a ref to the Input component
 //
 // For now a couple of things are a bit hacky like width derivation, z-index, selection of suggestion

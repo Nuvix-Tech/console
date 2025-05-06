@@ -42,7 +42,7 @@ import { useTableEditorFiltersSort } from "@/hooks/useTableEditorFilterSort";
 import { fetchAllTableRows, useTableRowsQuery } from "@/data/table-rows/table-rows-query";
 import { useTableRowsCountQuery } from "@/data/table-rows/table-rows-count-query";
 import { toast } from "sonner";
-// [Joshen] CSV exports require this guard as a fail-safe if the table is
+// [Unkown] CSV exports require this guard as a fail-safe if the table is
 // just too large for a browser to keep all the rows in memory before
 // exporting. Either that or export as multiple CSV sheets with max n rows each
 export const MAX_EXPORT_ROW_COUNT = 500000;
@@ -102,7 +102,7 @@ const DefaultHeader = () => {
 
   const canAddNew = onAddRow !== undefined || onAddColumn !== undefined;
 
-  // [Joshen] Using this logic to block both column and row creation/update/delete
+  // [Unkown] Using this logic to block both column and row creation/update/delete
   const canCreateColumns = true; // useCheckPermissions(PermissionAction.TENANT_SQL_ADMIN_WRITE, "columns");
 
   const { filters, sorts, setParams } = useTableEditorFiltersSort();

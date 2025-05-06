@@ -42,6 +42,16 @@ export const useDatabaseColumnUpdateMutation = ({
 > = {}) => {
   return useMutation({
     mutationFn: (vars) => updateDatabaseColumn(vars),
+    async onSuccess(data, variables, context) {
+      await onSuccess?.(data, variables, context);
+    },
+    async onError(data, variables, context) {
+      if (onError === undefined) {
+        toast.error(`Failed to update database column: ${data.message}`);
+      } else {
+        onError(data, variables, context);
+      }
+    },
     ...options,
   });
 };

@@ -188,7 +188,6 @@ export class Schema {
     const data = await this.client.call("get", uri, apiHeaders, payload);
     if (data) {
       const ncol = data.columns.map((c: any) => ({ ...c, format: c.type }));
-      console.log(data, "e909d009999d9sd9d9", ncol);
       data.columns = ncol;
       return data;
     }

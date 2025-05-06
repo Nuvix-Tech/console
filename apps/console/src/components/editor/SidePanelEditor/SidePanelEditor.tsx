@@ -200,7 +200,7 @@ const SidePanelEditor = ({
       try {
         await saveRow(payload, isNewRecord, configuration, () => {});
       } catch (error) {
-        // [Joshen] No error handler required as error is handled within saveRow
+        // [Unkown] No error handler required as error is handled within saveRow
       } finally {
         resolve();
       }
@@ -506,7 +506,7 @@ const SidePanelEditor = ({
           );
         } else {
           // if (isTableEditorTabsEnabled && ref && payload.name) {
-          //   // [Joshen] Only table entities can be updated via the dashboard
+          //   // [Unkown] Only table entities can be updated via the dashboard
           //   const tabId = createTabId(ENTITY_TYPE.TABLE, { id: selectedTable.id });
           //   updateTab(ref, tabId, { label: payload.name });
           // }
@@ -606,7 +606,7 @@ const SidePanelEditor = ({
       snap.closeSidePanel();
     }
   };
-  console.log(snap.sidePanel?.type, "THE TYPE!!", isUndefined(selectedTable));
+
   return (
     <>
       {!isUndefined(selectedTable) && (

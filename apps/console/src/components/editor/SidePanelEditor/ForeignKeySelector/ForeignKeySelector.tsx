@@ -159,7 +159,7 @@ export const ForeignKeySelector = ({
       const targetType =
         tType ?? selectedTable?.columns?.find((col) => col.name === target)?.format ?? "";
 
-      // [Joshen] Doing this way so that its more readable
+      // [Unkown] Doing this way so that its more readable
       // If either source or target not selected yet, thats okay
       if (source === "" || target === "") {
         return typeErrors.push(undefined);

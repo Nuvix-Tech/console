@@ -160,7 +160,7 @@ export const TableEditor = () => {
                 <p>
                   SQL Definition of <Code className="text-sm">{table.name}</Code>
                 </p>
-                <p className="text-foreground-light text-sm">(Read only)</p>
+                <p className="text-muted-foreground text-sm">(Read only)</p>
               </div>
             ) : null
           }

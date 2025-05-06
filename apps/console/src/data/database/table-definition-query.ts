@@ -9,7 +9,7 @@ type GetTableDefinitionArgs = {
   id?: number;
 };
 
-// [Joshen] Eventually move this into entity-definition-query
+// [Unkown] Eventually move this into entity-definition-query
 const getTableDefinitionSql = ({ id }: GetTableDefinitionArgs) => {
   const sql = /* SQL */ `
     ${CREATE_PG_GET_TABLEDEF_SQL}

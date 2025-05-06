@@ -84,7 +84,7 @@ const RowEditor = ({
         : undefined,
     [foreignKeys, referenceRow?.foreignKey?.id],
   );
-  console.log(visible, "IDJ");
+
   useEffect(() => {
     if (visible) {
       setErrors({});

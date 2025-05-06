@@ -46,6 +46,18 @@ export const useDatabaseRoleDeleteMutation = ({
 
   return useMutation({
     mutationFn: (vars) => deleteDatabaseRole(vars),
+    async onSuccess(data, variables, context) {
+      const { projectRef } = variables;
+      await invalidateRolesQuery(queryClient, projectRef);
+      await onSuccess?.(data, variables, context);
+    },
+    async onError(data, variables, context) {
+      if (onError === undefined) {
+        toast.error(`Failed to delete database role: ${data.message}`);
+      } else {
+        onError(data, variables, context);
+      }
+    },
     ...options,
   });
 };

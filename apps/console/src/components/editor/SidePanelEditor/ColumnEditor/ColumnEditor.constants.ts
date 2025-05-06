@@ -27,7 +27,7 @@ const defaultTextBasedValues: Suggestion[] = [
   },
 ];
 
-// [Joshen] For now this is a curate mapping, ideally we could look into
+// [Unkown] For now this is a curate mapping, ideally we could look into
 // using meta-store's extensions to generate this partially on top of vanilla expressions
 export const typeExpressionSuggestions: Dictionary<Suggestion[]> = {
   uuid: [

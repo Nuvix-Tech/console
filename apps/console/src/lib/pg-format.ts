@@ -1,4 +1,4 @@
-// [Joshen] These are from https://github.com/datalanche/node-pg-format/blob/master/lib/index.js
+// [Unkown] These are from https://github.com/datalanche/node-pg-format/blob/master/lib/index.js
 function formatDate(date: any) {
   date = date.replace("T", " ");
   date = date.replace("Z", "+00");

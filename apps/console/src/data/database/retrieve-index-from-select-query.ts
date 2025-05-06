@@ -17,7 +17,7 @@ export type GetInvolvedIndexesFromSelectQueryResponse = {
   table: string;
 };
 
-// [Joshen] This is experimental - hence why i'm chucking a create or replace query like this here
+// [Unkown] This is experimental - hence why i'm chucking a create or replace query like this here
 // [Alaister] Based on: https://github.com/supabase/index_advisor/blob/ddb9b4ed17692ef8dbf049fad806426a851a3079/index_advisor--0.2.0.sql
 
 export async function getInvolvedIndexesInSelectQuery({
@@ -139,7 +139,7 @@ export const useGetIndexesFromSelectQuery = <TData = GetInvolvedIndexesFromSelec
     TData
   > = {},
 ) => {
-  // [Joshen] Only get indexes for queries starting with these
+  // [Unkown] Only get indexes for queries starting with these
   const formattedQuery = (query ?? "").trim().toLowerCase();
   const isValidQueryForIndexing =
     formattedQuery.startsWith("select") ||

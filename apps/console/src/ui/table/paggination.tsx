@@ -61,7 +61,6 @@ export const Pagination = (props: PaginationProps) => {
   };
 
   const handlePageSizeChange = (value: number) => {
-    console.log(value, ")__");
     const params = new URLSearchParams(searchParams.toString());
     params.set("limit", value.toString());
     if (onPageSizeChange) {

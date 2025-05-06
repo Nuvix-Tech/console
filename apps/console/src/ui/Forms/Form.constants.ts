@@ -10,7 +10,7 @@ export const StringNumberOrNull = z
   .transform((value) => (value === null ? null : Number(value)));
 
 /**
- * [Joshen] After wrangling with RHF I think this is the easiest way to handle nullable number fields
+ * [Unkown] After wrangling with RHF I think this is the easiest way to handle nullable number fields
  * - Declare the field normally as you would in the zod form schema (e.g field: z.number().nullable())
  * - In the InputField, add a form.register call `{...form.register('field_name', { setValueAs: setValueAsNullableNumber })}`
  */
