@@ -43,8 +43,8 @@ export const SchemaGraph = () => {
 
   const [isDownloading, setIsDownloading] = useState(false);
 
-  const miniMapNodeColor = "var(--neutral-on-background-strong)";
-  const miniMapMaskColor = "var(--neutral-background-strong)";
+  const miniMapNodeColor = "var(--neutral-on-solid-medium)";
+  const miniMapMaskColor = "var(--neutral-solid-medium)";
 
   const reactFlowInstance = useReactFlow<Node<TableNodeData>>();
   const nodeTypes = useMemo(
@@ -181,7 +181,13 @@ export const SchemaGraph = () => {
   }, [isSuccessTables, isSuccessSchemas, tables]);
 
   return (
-    <Column background="neutral-medium" border="neutral-medium" radius="l" overflow="hidden">
+    <Column
+      fillHeight
+      background="neutral-medium"
+      border="neutral-medium"
+      radius="l"
+      overflow="hidden"
+    >
       <div className="flex items-center justify-between py-2 px-4 border-b border-b-neutral-border-medium">
         {isLoadingSchemas && <Skeleton className="h-[34px] w-[260px]" />}
 
@@ -267,7 +273,7 @@ export const SchemaGraph = () => {
               </p>
             </div>
           ) : (
-            <div className="w-full h-full">
+            <div className="w-full h-full page-background">
               <ReactFlow
                 defaultNodes={[]}
                 defaultEdges={[]}
@@ -277,7 +283,7 @@ export const SchemaGraph = () => {
                   deletable: false,
                   style: {
                     stroke: "var(--neutral-border-strong)",
-                    strokeWidth: 0.1,
+                    strokeWidth: 0.7,
                   },
                 }}
                 nodeTypes={nodeTypes}
@@ -287,10 +293,10 @@ export const SchemaGraph = () => {
                 proOptions={{ hideAttribution: true }}
                 onNodeDragStop={() => saveNodePositions()}
               >
-                <Controls />
+                <Controls className="!bg-[var(--neutral-background-medium)]" />
                 <Background
                   gap={16}
-                  className="page-background [&>*]:stroke-muted-foreground opacity-[25%]"
+                  className="[&>*]:stroke-muted-foreground opacity-10"
                   variant={BackgroundVariant.Dots}
                   color={"inherit"}
                 />
@@ -299,14 +305,15 @@ export const SchemaGraph = () => {
                   zoomable
                   nodeColor={miniMapNodeColor}
                   maskColor={miniMapMaskColor}
-                  className="border rounded-md shadow-sm"
+                  nodeBorderRadius={10}
+                  className="border border-[var(--neutral-solid-strong)] !rounded-md overflow-hidden"
                 />
-                <SchemaGraphLegend />
               </ReactFlow>
             </div>
           )}
         </>
       )}
+      <SchemaGraphLegend />
     </Column>
   );
 };

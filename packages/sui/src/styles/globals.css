@@ -148,6 +148,9 @@
   --color-sidebar-border: var(--sidebar-border);
 
   --color-sidebar-ring: var(--sidebar-ring);
+
+  --xy-controls-button-background-color: var(--neutral-background-medium) !important;
+  --xy-controls-button-border-color: var(--neutral-border-medium) !important;
 }
 
 @layer base {
