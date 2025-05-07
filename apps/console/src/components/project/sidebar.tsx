@@ -52,7 +52,7 @@ const ProjectSidebar: React.FC = () => {
       <ResizablePanel
         minSize={showSubSidebar ? 23 : 18}
         maxSize={showSubSidebar ? 35 : 20}
-        className="hidden lg:flex"
+        className="hidden md:flex"
       >
         <Row gap="4" fill position="relative">
           <FirstSidebar />

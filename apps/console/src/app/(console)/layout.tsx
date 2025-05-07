@@ -51,8 +51,8 @@ export default function ({ children }: { children: React.ReactNode }) {
               className="backdrop-blur-xl"
               flexDirection={"row"}
               overflow="hidden"
-              padding={{ base: 0, lg: `var(--static-space-8)` }}
-              gap={{ base: 0, lg: `var(--static-space-8)` }}
+              padding={{ base: 0, md: `var(--static-space-8)` }}
+              gap={{ base: 0, md: `var(--static-space-8)` }}
             >
               {children}
             </Stack>
