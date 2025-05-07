@@ -220,6 +220,7 @@ export const SecondSidebar = ({ noMarg, noBg, border = true }: SecondSidebarProp
               <RevealFx
                 direction="column"
                 fillWidth
+                flex={"1"}
                 gap="s"
                 horizontal="start"
                 trigger
