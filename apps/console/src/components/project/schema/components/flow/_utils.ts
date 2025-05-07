@@ -1,8 +1,8 @@
 import dagre from "@dagrejs/dagre";
 import type { PostgresSchema, PostgresTable } from "@nuvix/pg-meta";
 import { uniqBy } from "lodash";
-import { Edge, Node, Position } from "reactflow";
-import "reactflow/dist/style.css";
+import { Edge, Node, Position } from "@xyflow/react";
+import "@xyflow/react/dist/style.css";
 
 import { tryParseJson } from "@/lib/helpers";
 import { TABLE_NODE_ROW_HEIGHT, TABLE_NODE_WIDTH, TableNodeData } from "./_table_node";
@@ -147,7 +147,7 @@ function findTablesHandleIds(
   return [];
 }
 
-export const getLayoutedElementsViaDagre = (nodes: Node[], edges: Edge[]) => {
+export const getLayoutedElementsViaDagre = (nodes: Node<TableNodeData>[], edges: Edge[]) => {
   const dagreGraph = new dagre.graphlib.Graph();
   dagreGraph.setDefaultEdgeLabel(() => ({}));
   dagreGraph.setGraph({
@@ -188,18 +188,18 @@ export const getLayoutedElementsViaDagre = (nodes: Node[], edges: Edge[]) => {
 };
 
 const getLayoutedElementsViaLocalStorage = (
-  nodes: Node[],
+  nodes: Node<TableNodeData>[],
   edges: Edge[],
   positions: { [key: string]: { x: number; y: number } },
 ) => {
   // [Joshen] Potentially look into auto fitting new nodes?
   // https://github.com/xyflow/xyflow/issues/1113
 
-  const nodesWithNoSavedPositons = nodes.filter((n) => !(n.id in positions));
+  const nodesWithNoSavedPositions = nodes.filter((n) => !(n.id in positions));
   let newNodeCount = 0;
   let basePosition = {
     x: 0,
-    y: -(NODE_SEP + TABLE_NODE_ROW_HEIGHT + nodesWithNoSavedPositons.length * 10),
+    y: -(NODE_SEP + TABLE_NODE_ROW_HEIGHT + nodesWithNoSavedPositions.length * 10),
   };
 
   nodes.forEach((node) => {

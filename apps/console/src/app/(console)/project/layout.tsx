@@ -17,6 +17,7 @@ export default function ({ children }: { children: React.ReactNode }) {
           <Stack
             minHeight={"calc(100% - 90px)"}
             top={{ base: "96px", md: 0 }}
+            height={"full"}
             overflowY="auto"
             position={"relative"}
             direction="column"

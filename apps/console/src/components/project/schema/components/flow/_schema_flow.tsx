@@ -11,7 +11,7 @@ import {
   useEdgesState,
   useNodesState,
   useReactFlow,
-} from "reactflow";
+} from "@xyflow/react";
 
 import { TableNode, TableNodeData } from "./_table_node";
 
@@ -27,10 +27,12 @@ export const SchemaFlow = ({ nodes: initialNodes, edges: initialEdges }: SchemaF
   const [nodes, setNodes] = useNodesState(initialNodes);
   const [edges, setEdges] = useEdgesState(initialEdges);
   const nodeTypes = useMemo(
-    () => ({ table: (props: NodeProps<TableNodeData>) => <TableNode {...props} placeholder /> }),
+    () => ({
+      table: (props: NodeProps<Node<TableNodeData>>) => <TableNode {...props} placeholder />,
+    }),
     [],
   );
-  const reactFlowInstance = useReactFlow<TableNodeData>();
+  const reactFlowInstance = useReactFlow<Node<TableNodeData>>();
 
   useEffect(() => {
     setNodes(initialNodes);

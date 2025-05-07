@@ -1,9 +1,10 @@
 import { DiamondIcon, ExternalLink, Fingerprint, Hash, Key, Table2 } from "lucide-react";
 import Link from "next/link";
-import { Handle, NodeProps } from "reactflow";
+import { Handle, NodeProps, Node } from "@xyflow/react";
 
 import { Button } from "@nuvix/sui/components/button";
 import { cn } from "@nuvix/sui/lib/utils";
+import { IconButton } from "@chakra-ui/react";
 
 // ReactFlow is scaling everything by the factor of 2
 const TABLE_NODE_WIDTH = 320;
@@ -30,7 +31,7 @@ const TableNode = ({
   targetPosition,
   sourcePosition,
   placeholder,
-}: NodeProps<TableNodeData> & { placeholder?: boolean }) => {
+}: NodeProps<Node<TableNodeData>> & { placeholder?: boolean }) => {
   // Important styles is a nasty hack to use Handles (required for edges calculations), but do not show them in the UI.
   // ref: https://github.com/wbkd/react-flow/discussions/2698
   const hiddenNodeConnector = "!h-px !w-px !min-w-0 !min-h-0 !cursor-grab !border-0 !opacity-0";
@@ -40,7 +41,7 @@ const TableNode = ({
   return (
     <>
       {data.isForeign ? (
-        <header className="text-[0.55rem] px-2 py-1 border-[0.5px] rounded-[4px] bg-alternative text-default flex gap-1 items-center">
+        <header className="text-[0.55rem] px-2 py-1 border-[0.5px] neutral-border-medium rounded-[4px] neutral-background-strong neutral-on-background-strong flex gap-1 items-center">
           {data.name}
           {targetPosition && (
             <Handle
@@ -53,25 +54,25 @@ const TableNode = ({
         </header>
       ) : (
         <div
-          className="border-[0.5px] overflow-hidden rounded-[4px] shadow-sm"
+          className="border-[0.5px] overflow-hidden rounded-[4px] shadow-sm neutral-border-medium"
           style={{ width: TABLE_NODE_WIDTH / 2 }}
         >
           <header
             className={cn(
-              "text-[0.55rem] pl-2 pr-1 bg-alternative text-default flex items-center justify-between",
+              "text-[0.55rem] pl-2 pr-1 neutral-background-strong neutral-on-background-strong flex items-center justify-between",
               itemHeight,
             )}
           >
             <div className="flex gap-x-1 items-center">
-              <Table2 strokeWidth={1} size={12} className="text-light" />
+              <Table2 strokeWidth={1} size={12} className="text-muted-foreground" />
               {data.name}
             </div>
             {data.id && !placeholder && (
-              <Button asChild className="px-0 w-[16px] h-[16px] rounded">
+              <IconButton asChild size={"xs"} variant="ghost" colorPalette="gray">
                 <Link href={`/project/${data.ref}/editor/${data.id}`}>
-                  <ExternalLink size={10} className="text-foreground-light" />
+                  <ExternalLink />
                 </Link>
-              </Button>
+              </IconButton>
             )}
           </header>
 
@@ -79,10 +80,10 @@ const TableNode = ({
             <div
               className={cn(
                 "text-[8px] leading-5 relative flex flex-row justify-items-start",
-                "bg-surface-100",
-                "border-t",
+                "neutral-background-medium neutral-on-background-medium",
+                "border-t neutral-border-medium",
                 "border-t-[0.5px]",
-                "hover:bg-scale-500 transition cursor-default",
+                "hover:bg-[var(--neutral-background-strong)] transition cursor-default",
                 itemHeight,
               )}
               key={column.id}
@@ -100,33 +101,41 @@ const TableNode = ({
                     className={cn(
                       "nx-grid-column-header__inner__primary-key",
                       "flex-shrink-0",
-                      "text-light",
+                      "text-muted-foreground",
                     )}
                   />
                 )}
                 {column.isNullable && (
-                  <DiamondIcon size={8} strokeWidth={1} className="flex-shrink-0 text-light" />
+                  <DiamondIcon
+                    size={8}
+                    strokeWidth={1}
+                    className="flex-shrink-0 text-muted-foreground"
+                  />
                 )}
                 {!column.isNullable && (
                   <DiamondIcon
                     size={8}
                     strokeWidth={1}
                     fill="currentColor"
-                    className="flex-shrink-0 text-light"
+                    className="flex-shrink-0 text-muted-foreground"
                   />
                 )}
                 {column.isUnique && (
-                  <Fingerprint size={8} strokeWidth={1} className="flex-shrink-0 text-light" />
+                  <Fingerprint
+                    size={8}
+                    strokeWidth={1}
+                    className="flex-shrink-0 text-muted-foreground"
+                  />
                 )}
                 {column.isIdentity && (
-                  <Hash size={8} strokeWidth={1} className="flex-shrink-0 text-light" />
+                  <Hash size={8} strokeWidth={1} className="flex-shrink-0 text-muted-foreground" />
                 )}
               </div>
-              <div className="flex w-full justify-between">
+              <div className="flex w-full justify-between items-center">
                 <span className="text-ellipsis overflow-hidden whitespace-nowrap max-w-[85px]">
                   {column.name}
                 </span>
-                <span className="px-2 inline-flex justify-end font-mono text-lighter text-[0.4rem]">
+                <span className="px-2 inline-flex justify-end font-mono text-muted-foreground text-[0.4rem]">
                   {column.format}
                 </span>
               </div>

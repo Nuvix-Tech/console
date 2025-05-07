@@ -13,8 +13,8 @@ export default async function ({
   return (
     <>
       <ProjectWrapper id={id}>
-        <Column className="project-main" vertical="space-between">
-          <Column className="">{children}</Column>
+        <Column className="project-main" fill>
+          {children}
           {/* <Footer /> */}
         </Column>
       </ProjectWrapper>

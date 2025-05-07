@@ -1,14 +1,17 @@
 import type { PostgresSchema } from "@nuvix/pg-meta";
 // import { toPng, toSvg } from 'html-to-image'
 import { Download, Loader2 } from "lucide-react";
-import { useTheme } from "next-themes";
 import { useEffect, useMemo, useState } from "react";
-import ReactFlow, { Background, BackgroundVariant, MiniMap, useReactFlow } from "reactflow";
-import "reactflow/dist/style.css";
+import {
+  ReactFlow,
+  Background,
+  BackgroundVariant,
+  MiniMap,
+  useReactFlow,
+  Controls,
+} from "@xyflow/react";
+import "@xyflow/react/dist/style.css";
 
-// import ProductEmptyState from 'components/to-be-cleaned/ProductEmptyState'
-// import AlertError from 'components/ui/AlertError'
-// import { ButtonTooltip } from 'components/ui/ButtonTooltip'
 import SchemaSelector from "@/ui/SchemaSelector";
 import { useSchemasQuery } from "@/data/database/schemas-query";
 import { useTablesQuery } from "@/data/tables/tables-query";
@@ -23,28 +26,27 @@ import {
 } from "@nuvix/sui/components/dropdown-menu";
 import { SchemaGraphLegend } from "./_graph_legend";
 import { getGraphDataFromTables, getLayoutedElementsViaDagre } from "./_utils";
-import { TableNode } from "./_table_node";
+import { TableNode, TableNodeData } from "./_table_node";
 import { useParams } from "next/navigation";
 import { useProjectStore } from "@/lib/store";
 import { LOCAL_STORAGE_KEYS } from "@/lib/constants";
-import { Button, IconButton } from "@nuvix/ui/components";
+import { Button, Column, IconButton } from "@nuvix/ui/components";
+import { Skeleton } from "@nuvix/sui/components";
+import { Node } from "@xyflow/react";
 
 // [Joshen] Persisting logic: Only save positions to local storage WHEN a node is moved OR when explicitly clicked to reset layout
 
 export const SchemaGraph = () => {
   const { id: ref } = useParams<{ id: string }>();
-  const { resolvedTheme } = useTheme();
   const { project, sdk } = useProjectStore((state) => state);
   const { selectedSchema, setSelectedSchema } = useQuerySchemaState();
 
   const [isDownloading, setIsDownloading] = useState(false);
 
-  const miniMapNodeColor = "#111318";
-  const miniMapMaskColor = resolvedTheme?.includes("dark")
-    ? "rgb(17, 19, 24, .8)"
-    : "rgb(237, 237, 237, .8)";
+  const miniMapNodeColor = "var(--neutral-on-background-strong)";
+  const miniMapMaskColor = "var(--neutral-background-strong)";
 
-  const reactFlowInstance = useReactFlow();
+  const reactFlowInstance = useReactFlow<Node<TableNodeData>>();
   const nodeTypes = useMemo(
     () => ({
       table: TableNode,
@@ -83,7 +85,7 @@ export const SchemaGraph = () => {
   );
 
   const resetLayout = () => {
-    const nodes = reactFlowInstance.getNodes();
+    const nodes = reactFlowInstance.getNodes(); // Corrected type to Node<TableNodeData>[]
     const edges = reactFlowInstance.getEdges();
 
     getLayoutedElementsViaDagre(nodes, edges);
@@ -176,14 +178,12 @@ export const SchemaGraph = () => {
         setTimeout(() => reactFlowInstance.fitView({})); // it needs to happen during next event tick
       });
     }
-  }, [isSuccessTables, isSuccessSchemas, tables, resolvedTheme]);
+  }, [isSuccessTables, isSuccessSchemas, tables]);
 
   return (
-    <>
-      <div className="flex items-center justify-between p-4 border-b border-muted">
-        {isLoadingSchemas && (
-          <div className="h-[34px] w-[260px] bg-muted-foreground rounded shimmering-loader" />
-        )}
+    <Column background="neutral-medium" border="neutral-medium" radius="l" overflow="hidden">
+      <div className="flex items-center justify-between py-2 px-4 border-b border-b-neutral-border-medium">
+        {isLoadingSchemas && <Skeleton className="h-[34px] w-[260px]" />}
 
         {isErrorSchemas && (
           // <AlertError error={errorSchemas as any} subject="Failed to retrieve schemas" />
@@ -205,12 +205,12 @@ export const SchemaGraph = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <IconButton
-                    size="s"
+                    size="m"
                     disabled={isDownloading}
-                    className="px-1.5"
-                    icon={<Download />}
+                    icon={<Download size={14} />}
                     tooltip={"Download current view"}
                     tooltipPosition="bottom"
+                    variant="secondary"
                   />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-32">
@@ -277,7 +277,7 @@ export const SchemaGraph = () => {
                   deletable: false,
                   style: {
                     stroke: "var(--neutral-border-strong)",
-                    strokeWidth: 1,
+                    strokeWidth: 0.1,
                   },
                 }}
                 nodeTypes={nodeTypes}
@@ -287,9 +287,10 @@ export const SchemaGraph = () => {
                 proOptions={{ hideAttribution: true }}
                 onNodeDragStop={() => saveNodePositions()}
               >
+                <Controls />
                 <Background
                   gap={16}
-                  className="[&>*]:stroke-muted-foreground opacity-[25%]"
+                  className="page-background [&>*]:stroke-muted-foreground opacity-[25%]"
                   variant={BackgroundVariant.Dots}
                   color={"inherit"}
                 />
@@ -306,6 +307,6 @@ export const SchemaGraph = () => {
           )}
         </>
       )}
-    </>
+    </Column>
   );
 };
