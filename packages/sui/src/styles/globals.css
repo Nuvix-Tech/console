@@ -40,6 +40,9 @@
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.705 0.015 286.067);
+
+  --xy-controls-button-background-color: var(--neutral-background-medium) !important;
+  --xy-controls-button-border-color: var(--neutral-border-medium) !important;
 }
 
 .dark {
@@ -148,9 +151,6 @@
   --color-sidebar-border: var(--sidebar-border);
 
   --color-sidebar-ring: var(--sidebar-ring);
-
-  --xy-controls-button-background-color: var(--neutral-background-medium) !important;
-  --xy-controls-button-border-color: var(--neutral-border-medium) !important;
 }
 
 @layer base {
@@ -167,4 +167,13 @@
   .grid-table-editor {
     @apply !rounded-none;
   }
+}
+
+.react-flow__controls-button {
+  background-color: var(--neutral-background-medium);
+  border-color: var(--neutral-border-medium);
+}
+
+.react-flow__controls-button:hover {
+  background-color: var(--neutral-background-strong) !important;
 }

@@ -1,5 +1,5 @@
 import type { PostgresSchema } from "@nuvix/pg-meta";
-// import { toPng, toSvg } from 'html-to-image'
+import { toPng, toSvg } from "html-to-image";
 import { Download, Loader2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -116,57 +116,57 @@ export const SchemaGraph = () => {
     const height = reactflowViewport.clientHeight;
     const { x, y, zoom } = reactFlowInstance.getViewport();
 
-    // if (format === 'svg') {
-    //     toSvg(reactflowViewport, {
-    //         backgroundColor: 'white',
-    //         width,
-    //         height,
-    //         style: {
-    //             width: width.toString(),
-    //             height: height.toString(),
-    //             transform: `translate(${x}px, ${y}px) scale(${zoom})`,
-    //         },
-    //     })
-    //         .then((data) => {
-    //             const a = document.createElement('a')
-    //             a.setAttribute('download', `supabase-schema-${ref}.svg`)
-    //             a.setAttribute('href', data)
-    //             a.click()
-    //             toast.success('Successfully downloaded as SVG')
-    //         })
-    //         .catch((error) => {
-    //             console.error('Failed to download:', error)
-    //             toast.error('Failed to download current view:', error.message)
-    //         })
-    //         .finally(() => {
-    //             setIsDownloading(false)
-    //         })
-    // } else if (format === 'png') {
-    //     toPng(reactflowViewport, {
-    //         backgroundColor: 'white',
-    //         width,
-    //         height,
-    //         style: {
-    //             width: width.toString(),
-    //             height: height.toString(),
-    //             transform: `translate(${x}px, ${y}px) scale(${zoom})`,
-    //         },
-    //     })
-    //         .then((data) => {
-    //             const a = document.createElement('a')
-    //             a.setAttribute('download', `supabase-schema-${ref}.png`)
-    //             a.setAttribute('href', data)
-    //             a.click()
-    //             toast.success('Successfully downloaded as PNG')
-    //         })
-    //         .catch((error) => {
-    //             console.error('Failed to download:', error)
-    //             toast.error('Failed to download current view:', error.message)
-    //         })
-    //         .finally(() => {
-    //             setIsDownloading(false)
-    //         })
-    // }
+    if (format === "svg") {
+      toSvg(reactflowViewport, {
+        backgroundColor: "white",
+        width,
+        height,
+        style: {
+          width: width.toString(),
+          height: height.toString(),
+          transform: `translate(${x}px, ${y}px) scale(${zoom})`,
+        },
+      })
+        .then((data) => {
+          const a = document.createElement("a");
+          a.setAttribute("download", `nuvix-schema-${ref}.svg`);
+          a.setAttribute("href", data);
+          a.click();
+          toast.success("Successfully downloaded as SVG");
+        })
+        .catch((error) => {
+          console.error("Failed to download:", error);
+          toast.error("Failed to download current view:", error.message);
+        })
+        .finally(() => {
+          setIsDownloading(false);
+        });
+    } else if (format === "png") {
+      toPng(reactflowViewport, {
+        backgroundColor: "white",
+        width,
+        height,
+        style: {
+          width: width.toString(),
+          height: height.toString(),
+          transform: `translate(${x}px, ${y}px) scale(${zoom})`,
+        },
+      })
+        .then((data) => {
+          const a = document.createElement("a");
+          a.setAttribute("download", `nuvix-schema-${ref}.png`);
+          a.setAttribute("href", data);
+          a.click();
+          toast.success("Successfully downloaded as PNG");
+        })
+        .catch((error) => {
+          console.error("Failed to download:", error);
+          toast.error("Failed to download current view:", error.message);
+        })
+        .finally(() => {
+          setIsDownloading(false);
+        });
+    }
   };
 
   useEffect(() => {
@@ -293,7 +293,7 @@ export const SchemaGraph = () => {
                 proOptions={{ hideAttribution: true }}
                 onNodeDragStop={() => saveNodePositions()}
               >
-                <Controls className="!bg-[var(--neutral-background-medium)]" />
+                <Controls className="!bg-[var(--neutral-background-medium)] !rounded-sm overflow-hidden" />
                 <Background
                   gap={16}
                   className="[&>*]:stroke-muted-foreground opacity-10"

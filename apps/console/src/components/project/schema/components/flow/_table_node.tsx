@@ -2,9 +2,9 @@ import { DiamondIcon, ExternalLink, Fingerprint, Hash, Key, Table2 } from "lucid
 import Link from "next/link";
 import { Handle, NodeProps, Node } from "@xyflow/react";
 
-import { Button } from "@nuvix/sui/components/button";
 import { cn } from "@nuvix/sui/lib/utils";
 import { IconButton } from "@chakra-ui/react";
+import { Text } from "@nuvix/ui/components";
 
 // ReactFlow is scaling everything by the factor of 2
 const TABLE_NODE_WIDTH = 320;
@@ -41,8 +41,14 @@ const TableNode = ({
   return (
     <>
       {data.isForeign ? (
-        <header className="text-[0.55rem] px-2 py-1 border-[0.5px] neutral-border-medium rounded-[4px] neutral-background-strong neutral-on-background-strong flex gap-1 items-center">
-          {data.name}
+        <header className="px-2 py-1 border-[0.5px] border-[var(--neutral-alpha-medium)] rounded-[4px] neutral-background-medium neutral-on-background-strong flex gap-1 items-center">
+          <Text
+            onBackground="neutral-medium"
+            variant="body-strong-xs"
+            className="truncate inline max-w-[98%]"
+          >
+            {data.name}
+          </Text>
           {targetPosition && (
             <Handle
               type="target"
@@ -54,23 +60,27 @@ const TableNode = ({
         </header>
       ) : (
         <div
-          className="border-[0.5px] overflow-hidden rounded-[4px] shadow-sm neutral-border-medium"
+          className="border-[0.5px] overflow-hidden rounded-[4px] border-[var(--neutral-alpha-medium)]"
           style={{ width: TABLE_NODE_WIDTH / 2 }}
         >
           <header
             className={cn(
-              "text-[0.55rem] pl-2 pr-1 neutral-background-strong neutral-on-background-strong flex items-center justify-between",
+              "pl-2 neutral-background-medium neutral-on-background-strong border flex items-center justify-between",
               itemHeight,
             )}
           >
-            <div className="flex gap-x-1 items-center">
+            <Text
+              className="flex gap-x-2 items-center truncate"
+              onBackground="neutral-medium"
+              variant="body-default-xs"
+            >
               <Table2 strokeWidth={1} size={12} className="text-muted-foreground" />
-              {data.name}
-            </div>
+              <span className="truncate max-w-[80%]">{data.name}</span>
+            </Text>
             {data.id && !placeholder && (
-              <IconButton asChild size={"xs"} variant="ghost" colorPalette="gray">
+              <IconButton asChild size={"2xs"} variant="plain">
                 <Link href={`/project/${data.ref}/editor/${data.id}`}>
-                  <ExternalLink />
+                  <ExternalLink className="text-muted-foreground" />
                 </Link>
               </IconButton>
             )}
@@ -80,9 +90,9 @@ const TableNode = ({
             <div
               className={cn(
                 "text-[8px] leading-5 relative flex flex-row justify-items-start",
-                "neutral-background-medium neutral-on-background-medium",
-                "border-t neutral-border-medium",
-                "border-t-[0.5px]",
+                "bg-muted neutral-on-background-medium",
+                "border-t border-[var(--neutral-alpha-medium)]",
+                "!border-t-[0.5px]",
                 "hover:bg-[var(--neutral-background-strong)] transition cursor-default",
                 itemHeight,
               )}
@@ -132,10 +142,13 @@ const TableNode = ({
                 )}
               </div>
               <div className="flex w-full justify-between items-center">
-                <span className="text-ellipsis overflow-hidden whitespace-nowrap max-w-[85px]">
+                <Text
+                  variant="body-default-xs"
+                  className="text-ellipsis overflow-hidden whitespace-nowrap max-w-[85px]"
+                >
                   {column.name}
-                </span>
-                <span className="px-2 inline-flex justify-end font-mono text-muted-foreground text-[0.4rem]">
+                </Text>
+                <span className="px-2 inline-flex justify-end font-mono text-muted-foreground text-[0.5rem]">
                   {column.format}
                 </span>
               </div>
