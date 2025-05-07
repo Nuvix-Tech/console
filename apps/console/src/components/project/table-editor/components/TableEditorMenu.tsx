@@ -267,10 +267,12 @@ const TableEditorMenu = () => {
           {isLoading && <EditorMenuListSkeleton />}
 
           {isError && (
-            <div className="mx-1 p-4 rounded-lg bg-red-50 dark:bg-background border border-red-200 dark:border-red-700">
+            <div className="mx-1 p-2 rounded-lg bg-red-50 dark:bg-muted border">
               <div className="flex flex-col gap-1">
-                <h4 className="text-sm font-medium text-destructive">Failed to retrieve tables</h4>
-                <p className="text-sm text-destructive-foreground">
+                <h4 className="text-sm font-semibold text-destructive">
+                  Failed to retrieve tables
+                </h4>
+                <p className="text-xs text-destructive-foreground">
                   {error?.message || "An unexpected error occurred"}
                 </p>
               </div>

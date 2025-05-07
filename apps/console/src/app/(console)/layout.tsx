@@ -3,6 +3,7 @@ import { Background, Row } from "@nuvix/ui/components";
 import { Stack } from "@chakra-ui/react";
 import type React from "react";
 import { Toaster } from "sonner";
+import { PanelGroup } from "@nuvix/sui/components/resizable";
 
 export default function ({ children }: { children: React.ReactNode }) {
   return (
@@ -43,17 +44,19 @@ export default function ({ children }: { children: React.ReactNode }) {
             // }}
           />
           */}
-          <Stack
-            width="full"
-            height="full"
-            className="backdrop-blur-xl"
-            flexDirection={"row"}
-            overflow="hidden"
-            padding={{ base: 0, lg: `var(--static-space-8)` }}
-            gap={{ base: 0, lg: `var(--static-space-16)` }}
-          >
-            {children}
-          </Stack>
+          <PanelGroup direction="horizontal">
+            <Stack
+              width="full"
+              height="full"
+              className="backdrop-blur-xl"
+              flexDirection={"row"}
+              overflow="hidden"
+              padding={{ base: 0, lg: `var(--static-space-8)` }}
+              gap={{ base: 0, lg: `var(--static-space-8)` }}
+            >
+              {children}
+            </Stack>
+          </PanelGroup>
         </Row>
         <Toaster richColors position="top-right" />
       </ConsoleWrapper>

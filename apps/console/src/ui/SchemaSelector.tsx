@@ -83,12 +83,12 @@ const SchemaSelector = ({
       )}
 
       {showError && isSchemasError && (
-        <Alert variant="warning" className="!px-3 !py-3">
-          <AlertTitle className="text-xs text-amber-900">Failed to load schemas</AlertTitle>
-          <AlertDescription className="text-xs mb-2 break-words">
-            Error: {(schemasError as any)?.message}
+        <Alert variant="error">
+          <AlertTitle className="text-xs">Failed to load schemas</AlertTitle>
+          <AlertDescription className="text-xs mb-1.5 break-words">
+            {(schemasError as any)?.message}
           </AlertDescription>
-          <Button variant="primary" type="default" size="s" onClick={() => refetchSchemas()}>
+          <Button variant="primary" size="s" onClick={() => refetchSchemas()}>
             Reload schemas
           </Button>
         </Alert>
@@ -106,19 +106,19 @@ const SchemaSelector = ({
               data-testid="schema-selector"
               className={`w-full [&>span]:w-full !pr-1 space-x-1`}
               suffixIcon={
-                <ChevronsUpDown className="text-foreground-muted" strokeWidth={2} size={14} />
+                <ChevronsUpDown className="text-muted-foreground" strokeWidth={2} size={14} />
               }
             >
               {selectedSchemaName ? (
                 <div className="w-full flex gap-1">
-                  <p className="text-foreground-lighter">schema</p>
+                  <p className="text-muted-foreground">schema</p>
                   <p className="text-foreground">
                     {selectedSchemaName === "*" ? "All schemas" : selectedSchemaName}
                   </p>
                 </div>
               ) : (
                 <div className="w-full flex gap-1">
-                  <p className="text-foreground-lighter">Choose a schema…</p>
+                  <p className="text-muted-foreground">Choose a schema…</p>
                 </div>
               )}
             </Button>
@@ -170,7 +170,7 @@ const SchemaSelector = ({
                       >
                         <span>{schema.name}</span>
                         {selectedSchemaName === schema.name && (
-                          <Check className="text-brand" strokeWidth={2} size={16} />
+                          <Check className="text-primary" strokeWidth={2} size={16} />
                         )}
                       </CommandItem>
                     ))}

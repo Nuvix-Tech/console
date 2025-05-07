@@ -6,6 +6,7 @@ import { useColorMode } from "../cui/color-mode";
 import { useProjectStore } from "@/lib/store";
 import { Stack } from "@chakra-ui/react";
 import { cn } from "@nuvix/sui/lib/utils";
+import { ResizablePanel } from "@nuvix/sui/components/resizable";
 
 export interface ProjectSidebarData {
   name: string;
@@ -39,20 +40,26 @@ const ProjectSidebar: React.FC = () => {
 
   return (
     <>
-      <Stack
+      {/* <Stack
         position="relative"
         as={"aside"}
         className={cn("lg:flex hidden", {
-          "lg:w-[17.5rem]": showSubSidebar,
-          "lg:w-[15.5rem]": !showSubSidebar,
+          // "lg:w-[17.5rem]": showSubSidebar,
+          // "lg:w-[15.5rem]": !showSubSidebar,
         })}
         height="full"
+      > */}
+      <ResizablePanel
+        minSize={showSubSidebar ? 23 : 18}
+        maxSize={showSubSidebar ? 35 : 20}
+        className="hidden lg:flex"
       >
         <Row gap="4" fill position="relative">
           <FirstSidebar />
           <SecondSidebar />
         </Row>
-      </Stack>
+      </ResizablePanel>
+      {/* </Stack> */}
     </>
   );
 };
