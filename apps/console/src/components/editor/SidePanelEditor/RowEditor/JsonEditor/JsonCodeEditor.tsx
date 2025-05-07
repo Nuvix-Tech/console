@@ -1,5 +1,7 @@
 import Editor, { OnChange } from "@monaco-editor/react";
 import { noop } from "lodash";
+import { useTheme } from "next-themes";
+import { useCallback } from "react";
 
 // Should just use CodeEditor instead of declaring Editor here so that all the mount logic is consistent
 
@@ -10,10 +12,20 @@ interface JsonEditorProps {
 }
 
 const JsonEditor = ({ value = "", readOnly = false, onInputChange = noop }: JsonEditorProps) => {
+  const { resolvedTheme } = useTheme();
+
+  const theme = useCallback(() => {
+    if (resolvedTheme === "dark") {
+      return "vs-dark";
+    } else {
+      return "light";
+    }
+  }, [resolvedTheme]);
+
   return (
     <Editor
       className="monaco-editor"
-      theme="nuvix"
+      theme={theme()}
       defaultLanguage="json"
       value={value}
       loading={<h4>Loading</h4>}

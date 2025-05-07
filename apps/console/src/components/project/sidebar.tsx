@@ -215,7 +215,7 @@ export const SecondSidebar = ({ noMarg, noBg, border = true }: SecondSidebarProp
           }
           radius="l"
         >
-          <Column fillWidth gap="s" paddingBottom="56">
+          <Column fill gap="s">
             {sidebar.first && (
               <RevealFx
                 direction="column"

@@ -1,33 +1,35 @@
+@reference "./globals.css";
+
 .monaco-editor {
     @apply relative overflow-visible;
     -webkit-text-size-adjust: 100%;
 }
 
-// .monaco-editor-alt.monaco-editor-alt,
-// .monaco-editor-alt>.monaco-editor {
-//     --vscode-editor-background: var(--page-background) !important;
-//     --vscode-editorGutter-background: var(--neutral-alpha-strong) !important;
-// }
+.monaco-editor-alt.monaco-editor-alt,
+.monaco-editor-alt>.monaco-editor {
+    --vscode-editor-background: var(--page-background) !important;
+    --vscode-editorGutter-background: var(--neutral-background-weak) !important;
+}
 
-// .monaco-editor-alt .current-line {
-//     border: 0 !important;
-// }
+.monaco-editor-alt .current-line {
+    border: 0 !important;
+}
 
-// [data-theme='dark'] .monaco-editor,
-// [data-theme='dark'] .monaco-diff-editor {
-//     --vscode-editor-background: var(--page-background) !important;
-//     --vscode-editorGutter-background: var(--background-surface) !important;
-//     color-scheme: dark;
-// }
+[data-theme='dark'] .monaco-editor,
+[data-theme='dark'] .monaco-diff-editor {
+    --vscode-editor-background: var(--neutral-background-medium) !important;
+    --vscode-editorGutter-background: var(--neutral-background-medium) !important;
+    color-scheme: dark;
+}
 
-// .monaco-editor,
-// .monaco-diff-editor {
-//     --vscode-editor-background: hsl(var(--page-background)) !important;
-//     --vscode-editorGutter-background: hsl(var(--background-dash-sidebar)) !important;
-// }
+.monaco-editor,
+.monaco-diff-editor {
+    --vscode-editor-background: var(--neutral-border-weak) !important;
+    --vscode-editorGutter-background: var(--neutral-border-weak) !important;
+}
 
 .gutter {
-    // @apply bg-border-control;
+    // @apply bg-muted;
     cursor: row-resize;
 }
 
@@ -37,7 +39,7 @@ label,
 div,
 section,
 span.th.tr.td.textarea {
-    /* @apply text-sm; */
+    @apply text-sm;
 }
 
 .grid-monaco-editor,

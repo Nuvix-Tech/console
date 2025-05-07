@@ -19,6 +19,7 @@ import { TableParam } from "@/types";
 import { TwoOptionToggle } from "@/components/others/ui";
 import { Markdown } from "@/components/others/markdown";
 import { Code } from "@chakra-ui/react";
+import { useTheme } from "next-themes";
 
 interface TextEditorProps {
   visible: boolean;
@@ -41,6 +42,15 @@ export const TextEditor = ({
   const { tableId } = useParams<TableParam>();
   const id = tableId ? Number(tableId) : undefined;
   const { project, sdk } = useProjectStore();
+  const { resolvedTheme } = useTheme();
+
+  const theme = useCallback(() => {
+    if (resolvedTheme === "dark") {
+      return "vs-dark";
+    } else {
+      return "light";
+    }
+  }, [resolvedTheme]);
 
   const { data: selectedTable } = useTableEditorQuery({
     projectRef: project?.$id,
@@ -141,7 +151,7 @@ export const TextEditor = ({
           <div className="w-full h-full flex-grow">
             <Editor
               key={value}
-              theme="nuvix"
+              theme={theme()}
               className="monaco-editor"
               defaultLanguage="markdown"
               value={strValue}

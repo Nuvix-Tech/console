@@ -1,4 +1,6 @@
 import Editor from "@monaco-editor/react";
+import { useTheme } from "next-themes";
+import { useCallback } from "react";
 
 type MonacoEditorProps = {
   width?: string | number | undefined;
@@ -42,11 +44,21 @@ export const MonacoEditor = ({
     if (onMount) onMount(editor);
   }
 
+  const { resolvedTheme } = useTheme();
+
+  const theme = useCallback(() => {
+    if (resolvedTheme === "dark") {
+      return "vs-dark";
+    } else {
+      return "light";
+    }
+  }, [resolvedTheme]);
+
   return (
     <Editor
       width={width}
       height={height || "200px"}
-      theme={"nuvix"}
+      theme={theme()}
       wrapperProps={{
         className: "grid-monaco-editor-container",
       }}

@@ -249,7 +249,7 @@ const TableEditorMenu = () => {
                           </Label>
                         </div>
                         <ChakraButton
-                          size="xs"
+                          size="2xs"
                           variant="surface"
                           onClick={() => handleSelectOnlyEntityType(value)}
                           className="transition !opacity-0 group-hover:!opacity-100 !shrink"
@@ -267,12 +267,13 @@ const TableEditorMenu = () => {
           {isLoading && <EditorMenuListSkeleton />}
 
           {isError && (
-            <div className="mx-1">
-              <Feedback
-                variant="danger"
-                title="Failed to retrieve tables"
-                description={error?.message || "An unexpected error occurred"}
-              />
+            <div className="mx-1 p-4 rounded-lg bg-red-50 dark:bg-background border border-red-200 dark:border-red-700">
+              <div className="flex flex-col gap-1">
+                <h4 className="text-sm font-medium text-destructive">Failed to retrieve tables</h4>
+                <p className="text-sm text-destructive-foreground">
+                  {error?.message || "An unexpected error occurred"}
+                </p>
+              </div>
             </div>
           )}
 

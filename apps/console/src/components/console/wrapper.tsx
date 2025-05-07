@@ -7,7 +7,15 @@ import LoadingUI from "../loading";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useApp } from "@/lib/store";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 2,
+      staleTime: 0,
+    },
+  },
+});
 
 const ConsoleWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
