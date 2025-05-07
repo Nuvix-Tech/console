@@ -25,11 +25,20 @@ interface HeaderProps {
 }
 
 const ProjectHeader: React.FC<HeaderProps> = () => {
+  return (
+    <>
+      <DesktopHeader />
+      <MobileHeader />
+    </>
+  );
+};
+
+ProjectHeader.displayName = "Header";
+
+export { ProjectHeader };
+
+const DesktopHeader = () => {
   const organization = useAppStore.use.organization?.();
-  const isDrawerOpen = useAppStore.use.isDrawerOpen();
-  const isSecondMenuOpen = useAppStore.use.isSecondMenuOpen();
-  const setIsDrawerOpen = useAppStore.use.setIsDrawerOpen();
-  const setIsSecondMenuOpen = useAppStore.use.setIsSecondMenuOpen();
   const headerRef = useRef<any>(null);
 
   return (
@@ -60,15 +69,6 @@ const ProjectHeader: React.FC<HeaderProps> = () => {
             </div>
           </Link>
         </Row>
-        {/* <Badge
-          effect
-          hide="s"
-          arrow={false}
-          paddingX="16"
-          paddingY="4"
-          title="DEV"
-          horizontal="center"
-        /> */}
         <Row fillWidth vertical="center" horizontal="space-between">
           <Row vertical="center" gap={"2"}>
             {/* <span className="text-[var(--neutral-alpha-strong)] text-2xl">/</span>
@@ -91,48 +91,50 @@ const ProjectHeader: React.FC<HeaderProps> = () => {
           </Row>
         </Row>
       </Row>
+    </>
+  );
+};
 
+const MobileHeader = () => {
+  const organization = useAppStore.use.organization?.();
+  const isDrawerOpen = useAppStore.use.isDrawerOpen();
+  const isSecondMenuOpen = useAppStore.use.isSecondMenuOpen();
+  const setIsDrawerOpen = useAppStore.use.setIsDrawerOpen();
+  const setIsSecondMenuOpen = useAppStore.use.setIsSecondMenuOpen();
+
+  return (
+    <>
       <Column
         show="s"
         as="header"
-        borderBottom="neutral-medium"
+        // borderBottom="neutral-medium"
         position="fixed"
         fillWidth
         zIndex={10}
-        height="80"
+        className={"h-24"}
         background="surface"
       >
-        <Row fillWidth vertical="center" height="48" paddingX="m" borderBottom="neutral-weak">
+        <Row fillWidth vertical="center" height="48" paddingX="m" borderBottom="neutral-medium">
           <Row gap="4" vertical="center">
             <Logo wordmark={false} size="l" iconSrc="/trademark/nuvix.svg" />
           </Row>
-          <Badge hide="s" effect arrow={false}>
-            DEV
-          </Badge>
           <Row fillWidth vertical="center" horizontal="end">
             <Row as="nav">
               <Row>
                 <NavIcon isActive={isDrawerOpen} onClick={() => setIsDrawerOpen(!isDrawerOpen)} />
-                {/* <Avatar.Root size={'sm'}>
-                  <Avatar.Fallback name={user?.name} />
-                  <Avatar.Image src={avatars.getInitials(user?.name, 96, 96)} />
-                </Avatar.Root> */}
               </Row>
             </Row>
           </Row>
         </Row>
 
-        <Row fillWidth vertical="center" height="32" paddingX="m">
+        <Row fillWidth vertical="center" height="48" paddingX="m">
           <Row gap="4" vertical="center">
             <NavIcon
               isActive={isSecondMenuOpen}
               onClick={() => setIsSecondMenuOpen(!isSecondMenuOpen)}
             />
-            {organization?.name}
+            <HeaderProject />
           </Row>
-          <Badge hide="s" effect arrow={false}>
-            DEV
-          </Badge>
           <Row fillWidth vertical="center" horizontal="end">
             <Row as="nav">
               <Row>
@@ -163,7 +165,7 @@ const ProjectHeader: React.FC<HeaderProps> = () => {
       >
         <DrawerBackdrop />
         <DrawerContent offset="4" rounded="md">
-          <DrawerBody>
+          <DrawerBody className="h-full">
             <SecondSidebar noBg noMarg border={false} />
           </DrawerBody>
           <DrawerCloseTrigger />
@@ -172,7 +174,3 @@ const ProjectHeader: React.FC<HeaderProps> = () => {
     </>
   );
 };
-
-ProjectHeader.displayName = "Header";
-
-export { ProjectHeader };

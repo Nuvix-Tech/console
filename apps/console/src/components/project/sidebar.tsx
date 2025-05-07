@@ -147,7 +147,7 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
         radius="l"
         zIndex={10}
         overflowY="auto"
-        className="transition-[max-width] duration-200 ease-in-out"
+        className="transition-[max-width] duration-200 ease-in-out no-scrollbar"
         background={noBg ? "transparent" : "surface"}
       >
         <Column fillWidth paddingX="xs" gap="m">
