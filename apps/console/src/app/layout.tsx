@@ -1,3 +1,4 @@
+import "@/ui/main.scss";
 import "@appwrite.io/pink-icons";
 import "@nuvix/ui/styles/index.scss";
 import "@nuvix/ui/tokens/index.scss";
@@ -13,33 +14,7 @@ import { headers } from "next/headers";
 
 import { Column, ConfirmProvider, Flex, ToastProvider } from "@nuvix/ui/components";
 import { baseURL, meta, og, schema, social, style } from "@nuvix/ui/resources/config";
-
-import { Inter } from "next/font/google";
-import { Roboto_Mono, Open_Sans } from "next/font/google";
-
-const primary = Inter({
-  variable: "--font-primary",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const code = Roboto_Mono({
-  variable: "--font-code",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-type FontConfig = {
-  variable: string;
-};
-
-const secondary: FontConfig | undefined = undefined;
-const tertiary = Open_Sans({
-  variable: "--font-tertiary",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["500", "600", "700"],
-});
+import { customFont, sourceCodePro } from "@/fonts";
 
 /*
  */
@@ -113,12 +88,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         data-surface={style.surface}
         data-transition={style.transition}
         data-scaling={style.scaling}
-        className={classNames(
-          primary.variable,
-          code.variable,
-          secondary ? secondary.variable : "",
-          tertiary ? tertiary.variable : "",
-        )}
+        className={classNames(customFont.variable, sourceCodePro.variable)}
       >
         <head>
           <script

@@ -90,10 +90,10 @@ const TableNode = ({
             <div
               className={cn(
                 "text-[8px] leading-5 relative flex flex-row justify-items-start",
-                "bg-muted neutral-on-background-medium",
+                "bg-popover neutral-on-background-medium",
                 "border-t border-[var(--neutral-alpha-medium)]",
                 "!border-t-[0.5px]",
-                "hover:bg-[var(--neutral-background-strong)] transition cursor-default",
+                "hover:bg-[var(--neutral-background-medium)] transition cursor-default",
                 itemHeight,
               )}
               key={column.id}

@@ -59,6 +59,11 @@ const config = defineConfig({
           value: "2.1875rem",
         },
       },
+      fonts: {
+        heading: { value: "var(--font-custom)" },
+        body: { value: "var(--font-custom)" },
+        code: { value: "var(--font-source-code-pro)" },
+      },
     },
     semanticTokens: {
       // colors: {

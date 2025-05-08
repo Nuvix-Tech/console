@@ -3,16 +3,16 @@ import { DiamondIcon, Fingerprint, Hash, Key } from "lucide-react";
 export const SchemaGraphLegend = () => {
   return (
     <div className="border-t flex justify-center px-1 py-2 neutral-border-medium w-full ">
-      <ul className="flex flex-wrap  items-center justify-center gap-4">
-        <li className="flex items-center text-xs font-mono gap-1">
+      <ul className="flex flex-wrap  items-center justify-center gap-4 font-[var(--font-source-code-pro)]">
+        <li className="flex items-center !text-xs gap-1">
           <Key size={15} strokeWidth={1.5} className="flex-shrink-0 text-muted-foreground" />
           Primary key
         </li>
-        <li className="flex items-center text-xs font-mono gap-1">
+        <li className="flex items-center !text-xs  gap-1">
           <Hash size={15} strokeWidth={1.5} className="flex-shrink-0 text-muted-foreground" />
           Identity
         </li>
-        <li className="flex items-center text-xs font-mono gap-1">
+        <li className="flex items-center !text-xs  gap-1">
           <Fingerprint
             size={15}
             strokeWidth={1.5}
@@ -20,7 +20,7 @@ export const SchemaGraphLegend = () => {
           />
           Unique
         </li>
-        <li className="flex items-center text-xs font-mono gap-1">
+        <li className="flex items-center !text-xs  gap-1">
           <DiamondIcon
             size={15}
             strokeWidth={1.5}
@@ -28,7 +28,7 @@ export const SchemaGraphLegend = () => {
           />
           Nullable
         </li>
-        <li className="flex items-center text-xs font-mono gap-1">
+        <li className="flex items-center !text-xs  gap-1">
           <DiamondIcon
             size={15}
             strokeWidth={1.5}
