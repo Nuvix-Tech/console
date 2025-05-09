@@ -551,6 +551,9 @@ importers:
       '@types/node':
         specifier: ^20
         version: 20.17.19
+      '@types/prismjs':
+        specifier: ^1.26.5
+        version: 1.26.5
       '@types/react':
         specifier: ^19
         version: 19.0.1
@@ -2624,6 +2627,9 @@ packages:
 
   '@types/pg@8.11.14':
     resolution: {integrity: sha512-qyD11E5R3u0eJmd1lB0WnWKXJGA7s015nyARWljfz5DcX83TKAIlY+QrmvzQTsbIe+hkiFtkyL2gHC6qwF6Fbg==}
+
+  '@types/prismjs@1.26.5':
+    resolution: {integrity: sha512-AUZTa7hQ2KY5L7AmtSiqxlhWxb4ina0yd8hNbl4TWuqnv/pFP0nDMb3YrfSBf4hJVGLh2YEIBfKaBW/9UEl6IQ==}
 
   '@types/react-beautiful-dnd@13.1.8':
     resolution: {integrity: sha512-E3TyFsro9pQuK4r8S/OL6G99eq7p8v29sX0PM7oT8Z+PJfZvSQTx4zTQbUJ+QZXioAF0e7TGBEcA1XhYhCweyQ==}
@@ -8276,6 +8282,8 @@ snapshots:
       '@types/node': 20.17.19
       pg-protocol: 1.9.5
       pg-types: 4.0.2
+
+  '@types/prismjs@1.26.5': {}
 
   '@types/react-beautiful-dnd@13.1.8':
     dependencies:
