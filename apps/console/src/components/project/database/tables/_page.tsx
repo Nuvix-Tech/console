@@ -3,7 +3,7 @@ import { useConfirm } from "@nuvix/ui/components";
 import { Models } from "@nuvix/console";
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { Button, IconButton, Input, InputGroup } from "@chakra-ui/react";
+import { Button, IconButton, Input, InputGroup, SkeletonText } from "@chakra-ui/react";
 import {
   ActionButton,
   DataActionBar,
@@ -70,6 +70,8 @@ import {
 import { Checkbox } from "@/components/cui/checkbox";
 import { formatAllEntities } from "./components/_utils";
 import { cn } from "@nuvix/sui/lib/utils";
+import { EntityTypeFilter } from "../../table-editor/components/TableEditorMenu";
+import ProtectedSchemaWarning from "@/ui/ProtectedSchemaWarning";
 // import ProtectedSchemaWarning from '../ProtectedSchemaWarning'
 
 interface TableListProps {
@@ -99,7 +101,7 @@ const TablesPage = ({
   const [visibleTypes, setVisibleTypes] = useState<string[]>(Object.values(ENTITY_TYPE));
   const canUpdateTables = true; // useCheckPermissions(PermissionAction.TENANT_SQL_ADMIN_WRITE, 'tables')
 
-  const hasQuery = !!filterString || !!visibleTypes;
+  const hasQuery = !!filterString;
 
   const {
     data: tables,
@@ -165,8 +167,8 @@ const TablesPage = ({
         return filterString.length === 0
           ? materializedViews
           : materializedViews.filter((view) =>
-              view.name.toLowerCase().includes(filterString.toLowerCase()),
-            );
+            view.name.toLowerCase().includes(filterString.toLowerCase()),
+          );
       },
     },
   );
@@ -189,8 +191,8 @@ const TablesPage = ({
         return filterString.length === 0
           ? foreignTables
           : foreignTables.filter((table) =>
-              table.name.toLowerCase().includes(filterString.toLowerCase()),
-            );
+            table.name.toLowerCase().includes(filterString.toLowerCase()),
+          );
       },
     },
   );
@@ -233,7 +235,7 @@ const TablesPage = ({
     {
       header: "Name",
       accessorKey: "name",
-      minSize: 250,
+      minSize: 180,
       cell({ row }) {
         const x = row.original;
         return (
@@ -287,7 +289,7 @@ const TablesPage = ({
     {
       header: "Description",
       accessorKey: "comment",
-      minSize: 300,
+      minSize: 200,
       cell({ getValue }) {
         const comment = getValue<string | null>();
         return comment !== null ? (
@@ -302,7 +304,7 @@ const TablesPage = ({
     {
       header: "Rows (Estimated)",
       accessorKey: "rows",
-      minSize: 100,
+      minSize: 160,
     },
     {
       header: "Size (Estimated)",
@@ -312,7 +314,7 @@ const TablesPage = ({
     {
       header: "",
       accessorKey: "columns",
-      minSize: 250,
+      minSize: 200,
       cell({ row }) {
         const x = row.original;
         return (
@@ -336,7 +338,7 @@ const TablesPage = ({
                     <MoreVertical />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent side="bottom" align="end" className="w-40">
+                <DropdownMenuContent side="bottom" align="end" className="max-w-52">
                   <DropdownMenuItem
                     className="flex items-center space-x-2"
                     onClick={() => router.push(`/project/${projectId}/editor/${x.id}`)}
@@ -354,7 +356,7 @@ const TablesPage = ({
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <DropdownMenuItem
-                            className="!pointer-events-auto gap-x-2"
+                            className="!pointer-events-auto"
                             disabled={!canUpdateTables}
                             onClick={() => {
                               if (canUpdateTables) onEditTable(x);
@@ -387,7 +389,7 @@ const TablesPage = ({
                         <TooltipTrigger asChild>
                           <DropdownMenuItem
                             disabled={!canUpdateTables || isLocked}
-                            className="!pointer-events-auto gap-x-2"
+                            className="!pointer-events-auto "
                             onClick={() => {
                               if (canUpdateTables && !isLocked) {
                                 onDeleteTable({
@@ -417,6 +419,16 @@ const TablesPage = ({
       },
     },
   ];
+
+  const handleToggleEntityType = (value: string) => {
+    setVisibleTypes((prev) =>
+      prev.includes(value) ? prev.filter((type) => type !== value) : [...prev, value],
+    );
+  };
+
+  const handleSelectOnlyEntityType = (value: string) => {
+    setVisibleTypes([value]);
+  };
 
   const onDelete = async (values: Models.Collection[]) => {
     if (
@@ -458,7 +470,7 @@ const TablesPage = ({
       hasPermission={true}
       label="Create Table"
       component={CreateTable}
-      // extraProps={{ refetch }}
+    // extraProps={{ refetch }}
     />
   );
 
@@ -467,7 +479,7 @@ const TablesPage = ({
       <PageHeading
         heading="Tables"
         description="Tables are the basic building blocks of a database. They are used to store data in a structured format, with rows and columns."
-        right={create}
+      // right={create}
       />
 
       <div className="flex flex-col lg:flex-row lg:items-center gap-2 flex-wrap">
@@ -479,59 +491,13 @@ const TablesPage = ({
             selectedSchemaName={selectedSchema}
             onSelectSchema={setSelectedSchema}
           />
-          <Popover>
-            <PopoverTrigger asChild>
-              <IconButton
-                size="xs"
-                variant={visibleTypes.length !== 5 ? "subtle" : "ghost"}
-                className="px-1"
-              >
-                <Filter />
-              </IconButton>
-            </PopoverTrigger>
-            <PopoverContent className="p-0 w-56" side="bottom" align="center">
-              <div className="px-3 pt-3 pb-2 flex flex-col gap-y-2">
-                <p className="text-xs">Show entity types</p>
-                <div className="flex flex-col">
-                  {Object.entries(ENTITY_TYPE).map(([key, value]) => (
-                    <div key={key} className="group flex items-center justify-between py-0.5">
-                      <div className="flex items-center gap-x-2">
-                        <Checkbox
-                          id={key}
-                          name={key}
-                          checked={visibleTypes.includes(value)}
-                          onCheckedChange={() => {
-                            if (visibleTypes.includes(value)) {
-                              setVisibleTypes(visibleTypes.filter((y) => y !== value));
-                            } else {
-                              setVisibleTypes(visibleTypes.concat([value]));
-                            }
-                          }}
-                        />
-                        <Label htmlFor={key} className="capitalize text-xs">
-                          {key.toLowerCase().replace("_", " ")}
-                        </Label>
-                      </div>
-                      <Button
-                        size="2xs"
-                        variant={"surface"}
-                        onClick={() => setVisibleTypes([value])}
-                        className="transition opacity-0 group-hover:opacity-100 h-auto px-1 py-0.5"
-                      >
-                        Select only
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </PopoverContent>
-          </Popover>
+          <EntityTypeFilter visibleTypes={visibleTypes} toggleType={handleToggleEntityType} selectOnlyType={handleSelectOnlyEntityType} />
         </div>
         <div className="flex flex-grow justify-between gap-2 items-center">
-          <InputGroup startElement={<Search size={12} />}>
+          <InputGroup startElement={<SearchIcon size={12} />}>
             <Input
-              size="sm"
-              className="flex-grow lg:flex-grow-0 w-52"
+              size="xs"
+              className="!flex-grow lg:!flex-grow-0 !w-52"
               placeholder="Search for a table"
               value={filterString}
               onChange={(e) => setFilterString(e.target.value)}
@@ -541,17 +507,17 @@ const TablesPage = ({
           {!isLocked && (
             <Button
               className="w-auto ml-auto"
-              size={"sm"}
+              size={"xs"}
               disabled={false}
               onClick={() => onAddTable()}
-              // tooltip={{
-              //   content: {
-              //     side: 'bottom',
-              //     text: !canUpdateTables
-              //       ? 'You need additional permissions to create tables'
-              //       : undefined,
-              //   },
-              // }}
+            // tooltip={{
+            //   content: {
+            //     side: 'bottom',
+            //     text: !canUpdateTables
+            //       ? 'You need additional permissions to create tables'
+            //       : undefined,
+            //   },
+            // }}
             >
               <Plus />
               New table
@@ -560,9 +526,9 @@ const TablesPage = ({
         </div>
       </div>
 
-      {/* {isLocked && <ProtectedSchemaWarning schema={selectedSchema} entity="tables" />}
+      {isLocked && <ProtectedSchemaWarning schema={selectedSchema} entity="tables" />}
 
-      {isLoading && <GenericSkeletonLoader />}
+      {/* {isLoading && <GenericSkeletonLoader />}
 
       {isError && <AlertError error={error} subject="Failed to retrieve tables" />} */}
 
@@ -570,16 +536,19 @@ const TablesPage = ({
         columns={columns}
         data={entities}
         loading={isFetching}
-        // showCheckbox={canDeleteCollections}
       >
+        {
+          isLoading && <SkeletonText noOfLines={4} />
+        }
+
         <EmptyState
-          show={entities.length === 0 && !isFetching && !hasQuery}
+          show={entities.length === 0 && !isFetching && !hasQuery && !isLoading}
           title="No tables found"
           description="No tables have been created yet."
           primaryComponent={create}
         />
 
-        {(isSuccess || hasQuery) && (
+        {((isSuccess && entities.length > 0) || hasQuery) && (
           <>
             <Table noResults={entities.length === 0 && hasQuery} />
             {/* <HStack justifyContent="space-between" alignItems="center">
