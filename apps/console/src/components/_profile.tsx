@@ -1,5 +1,6 @@
 import { sdkForConsole } from "@/lib/sdk";
 import { useAppStore } from "@/lib/store";
+import { ThemeSwitcher } from "@/ui/ThemeSwitcher";
 import { UserMenu, Row, Option } from "@nuvix/ui/components";
 
 export function UserProfile() {
@@ -28,6 +29,9 @@ export function UserProfile() {
               onClick={() => account.deleteSession("current").then()}
               value="3"
             />
+            <div className="px-4 py-2">
+              <ThemeSwitcher />
+            </div>
           </>
         }
         minWidth={12}

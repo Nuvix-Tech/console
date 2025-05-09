@@ -39,10 +39,11 @@ export function HeaderProject() {
         <Button
           variant="tertiary"
           role="combobox"
+          size="s"
           aria-expanded={open}
           className="max-w-42"
           justifyContent="flex-start"
-          suffixIcon={<ChevronsUpDown className="opacity-40" size={18} />}
+          suffixIcon={<ChevronsUpDown className="opacity-40" size={16} />}
         >
           {list.find((p) => p.$id === projectId)?.name || "Select project..."}
         </Button>

@@ -4,8 +4,6 @@ import { useParams, usePathname } from "next/navigation";
 import * as React from "react";
 import { useColorMode } from "../cui/color-mode";
 import { useProjectStore } from "@/lib/store";
-import { Stack } from "@chakra-ui/react";
-import { cn } from "@nuvix/sui/lib/utils";
 import { ResizablePanel } from "@nuvix/sui/components/resizable";
 
 export interface ProjectSidebarData {
@@ -132,25 +130,17 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
       <Column
         maxWidth={alwaysFull ? undefined : !showSubSidebar ? undefined : 4}
         fill
-        paddingBottom="32"
-        paddingTop="12"
-        // position={alwaysFull ? "relative" : "absolute"}
+        paddingY="12"
         vertical="space-between"
         overflowX="hidden"
-        border={"surface"}
-        style={
-          {
-            // borderWidth: 0,
-            // borderRightWidth: border ? 1 : 0,
-          }
-        }
+        border={border ? "neutral-medium" : undefined}
         radius="l"
         zIndex={10}
         overflowY="auto"
         className="transition-[max-width] duration-200 ease-in-out no-scrollbar"
         background={noBg ? "transparent" : "surface"}
       >
-        <Column fillWidth paddingX="xs" gap="m">
+        <Column fillWidth paddingX="xs" gap="xs">
           {sideNav.map((item, index) => (
             <SidebarSmallButton
               key={index}
@@ -161,7 +151,7 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
           ))}
         </Column>
 
-        <Column fillWidth paddingX="xs" gap="s">
+        <Column fillWidth paddingX="xs" gap="xs">
           <Line />
 
           <SidebarSmallButton
@@ -174,7 +164,7 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
             selected={pathname === `/project/${id}/settings`}
           />
 
-          <SidebarSmallButton
+          {/* <SidebarSmallButton
             item={{
               name: "Appearance",
               onClick: () => {
@@ -185,7 +175,7 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
               icon: <span className="icon-sun" />,
             }}
             showFullSidebar={!showSubSidebar || !!alwaysFull}
-          />
+          /> */}
         </Column>
       </Column>
     </>
@@ -211,15 +201,9 @@ export const SecondSidebar = ({ noMarg, noBg, border = true }: SecondSidebarProp
           gap="m"
           position="relative"
           background={noBg ? "transparent" : "surface"}
-          border="surface"
+          border={border ? "neutral-medium" : undefined}
           overflowX="hidden"
           overflowY="auto"
-          style={
-            {
-              // borderWidth: 0,
-              // borderRightWidth: border ? 1 : 0,
-            }
-          }
           radius="l"
         >
           <Column fill gap="s">

@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 
 // import { useBreakpoint } from 'common/hooks/useBreakpoint'
 // import { useIsTableEditorTabsEnabled } from '@/components/interfaces/App/FeaturePreview/FeaturePreviewContext'
-// import { ProtectedSchemaModal } from '@/components/interfaces/Database/ProtectedSchemaWarning'
 import InfiniteList from "@/ui/InfiniteList";
 import SchemaSelector from "@/ui/SchemaSelector";
 import { useSchemasQuery } from "@/data/database/schemas-query";
@@ -13,7 +12,6 @@ import { useEntityTypesQuery } from "@/data/entity-types/entity-types-infinite-q
 import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
 // import { useCheckPermissions } from 'hooks/misc/useCheckPermissions'
 import { PROTECTED_SCHEMAS } from "@/lib/constants/schemas";
-// import { useTableEditorStateSnapshot } from 'state/table-editor'
 import {
   AlertDescription,
   AlertTitle,
@@ -26,6 +24,9 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuCheckboxItem,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
 } from "@nuvix/sui/components";
 // import { tableEditorTabsCleanUp } from '../Tabs/Tabs.utils'
 import EntityListItem from "./EntityListItem";
@@ -38,6 +39,8 @@ import { Button, Checkbox, Feedback } from "@nuvix/ui/components";
 import EditorMenuListSkeleton from "./EditorMenuListSkeleton";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { IconButton, Input, InputGroup, Stack, Button as ChakraButton } from "@chakra-ui/react";
+import { InnerSideBarEmptyPanel } from "@/ui/InnerSideBarEmptyPanel";
+import { ProtectedSchemaModal } from "@/ui/ProtectedSchemaWarning";
 
 const TableEditorMenu = () => {
   const { id: ref, tableId: _id } = useParams();
@@ -186,7 +189,10 @@ const TableEditorMenu = () => {
               endElement={
                 <DropdownMenu>
                   <DropdownMenuTrigger className="text-4xl text-muted-foreground transition-all group-hover:text-foreground data-[state=open]:text-foreground">
-                    &middot;
+                    <Tooltip>
+                      <TooltipTrigger>&middot;</TooltipTrigger>
+                      <TooltipContent>Sort By</TooltipContent>
+                    </Tooltip>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent side="bottom" align="start" className="w-38">
                     <DropdownMenuCheckboxItem
@@ -215,53 +221,11 @@ const TableEditorMenu = () => {
                 onChange={(e) => setSearchText(e.target.value)}
               />
             </InputGroup>
-            <Popover>
-              <PopoverTrigger asChild>
-                <IconButton
-                  size={"xs"}
-                  colorPalette={"gray"}
-                  variant={visibleTypes.length !== 5 ? "surface" : "ghost"}
-                >
-                  <Filter />
-                </IconButton>
-              </PopoverTrigger>
-              <PopoverContent className="p-0 w-56" side="bottom" align="center">
-                <div className="px-3 pt-3 pb-2 flex flex-col gap-y-2">
-                  <p className="text-xs">Show entity types</p>
-                  <div className="flex flex-col w-full">
-                    {Object.entries(ENTITY_TYPE).map(([key, value]) => (
-                      <div
-                        key={key}
-                        className="group flex items-center justify-between py-0.5 w-full"
-                      >
-                        <div className="flex items-center gap-x-2 grow">
-                          <Checkbox
-                            id={key}
-                            name={key}
-                            isChecked={visibleTypes.includes(value)}
-                            onToggle={() => handleToggleEntityType(value)}
-                          />
-                          <Label
-                            htmlFor={key}
-                            className="capitalize text-xs text-nowrap line-clamp-1"
-                          >
-                            {key.toLowerCase().replace("_", " ")}
-                          </Label>
-                        </div>
-                        <ChakraButton
-                          size="2xs"
-                          variant="surface"
-                          onClick={() => handleSelectOnlyEntityType(value)}
-                          className="transition !opacity-0 group-hover:!opacity-100 !shrink"
-                        >
-                          Select only
-                        </ChakraButton>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </PopoverContent>
-            </Popover>
+            <EntityTypeFilter
+              visibleTypes={visibleTypes}
+              toggleType={handleToggleEntityType}
+              selectOnlyType={handleSelectOnlyEntityType}
+            />
           </Stack>
 
           {isLoading && <EditorMenuListSkeleton />}
@@ -283,18 +247,11 @@ const TableEditorMenu = () => {
             <>
               {searchText.length === 0 && entityTypes.length === 0 && <TableMenuEmptyState />}
               {searchText.length > 0 && entityTypes.length === 0 && (
-                <div className="mx-1">
-                  <Feedback
-                    variant="info"
-                    title="No results found"
-                    description={`Your search for "${searchText}" did not return any results`}
-                  />
-                </div>
-                // <InnerSideBarEmptyPanel
-                //   className="mx-2"
-                //   title="No results found"
-                //   description={`Your search for "${searchText}" did not return any results`}
-                // />
+                <InnerSideBarEmptyPanel
+                  className="mx-2"
+                  title="No results found"
+                  description={`Your search for "${searchText}" did not return any results`}
+                />
               )}
               {entityTypes.length > 0 && (
                 <div className="flex flex-1 flex-grow h-full min-h-24" data-testid="tables-list">
@@ -319,9 +276,63 @@ const TableEditorMenu = () => {
         </div>
       </div>
 
-      {/* <ProtectedSchemaModal visible={showModal} onClose={() => setShowModal(false)} /> */}
+      <ProtectedSchemaModal visible={showModal} onClose={() => setShowModal(false)} />
     </>
   );
 };
 
 export default TableEditorMenu;
+
+interface EntityTypeFilterProps {
+  visibleTypes: string[];
+  toggleType: (value: string) => void;
+  selectOnlyType?: (value: string) => void;
+}
+
+export const EntityTypeFilter = ({
+  visibleTypes,
+  toggleType,
+  selectOnlyType,
+}: EntityTypeFilterProps) => (
+  <Popover>
+    <PopoverTrigger asChild>
+      <IconButton
+        size={"xs"}
+        colorPalette={"gray"}
+        variant={visibleTypes.length !== 5 ? "surface" : "ghost"}
+      >
+        <Filter />
+      </IconButton>
+    </PopoverTrigger>
+    <PopoverContent className="p-0 w-56" side="bottom" align="center">
+      <div className="px-3 pt-3 pb-2 flex flex-col gap-y-2">
+        <p className="text-xs">Show entity types</p>
+        <div className="flex flex-col w-full">
+          {Object.entries(ENTITY_TYPE).map(([key, value]) => (
+            <div key={key} className="group flex items-center justify-between py-0.5 w-full">
+              <div className="flex items-center gap-x-2 grow">
+                <Checkbox
+                  id={key}
+                  name={key}
+                  isChecked={visibleTypes.includes(value)}
+                  onToggle={() => toggleType(value)}
+                />
+                <Label htmlFor={key} className="capitalize text-xs text-nowrap line-clamp-1">
+                  {key.toLowerCase().replace("_", " ")}
+                </Label>
+              </div>
+              <ChakraButton
+                size="2xs"
+                variant="surface"
+                onClick={() => selectOnlyType?.(value)}
+                className="transition !opacity-0 group-hover:!opacity-100 !shrink"
+              >
+                Select only
+              </ChakraButton>
+            </div>
+          ))}
+        </div>
+      </div>
+    </PopoverContent>
+  </Popover>
+);

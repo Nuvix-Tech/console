@@ -3,21 +3,14 @@
  */
 export const PROTECTED_SCHEMAS = [
   "auth",
-  "cron",
   "extensions",
   "information_schema",
   "net",
-  "pgsodium",
-  "pgsodium_masks",
-  "pgbouncer",
-  "pgtle",
   "realtime",
   "storage",
-  "supabase_functions",
-  "supabase_migrations",
-  "vault",
-  "graphql",
-  "graphql_public",
+  "system",
+  "functions",
+  "messaging",
 ];
 
 export const PROTECTED_SCHEMAS_WITHOUT_EXTENSIONS = PROTECTED_SCHEMAS.filter(

@@ -9,6 +9,7 @@ import {
   HiChevronLeft,
   HiChevronRight,
   HiChevronUp,
+  HiComputerDesktop,
   HiExclamationCircle,
   HiExclamationTriangle,
   HiEyeDropper,
@@ -83,6 +84,7 @@ export const iconMap = {
   archive: LucideArchive,
   code: LucideCode,
   file: LucideFile,
+  computer: HiComputerDesktop,
 } as const;
 
 export type IconName = keyof typeof iconMap;

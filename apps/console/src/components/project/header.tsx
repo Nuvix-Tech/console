@@ -46,9 +46,8 @@ const DesktopHeader = () => {
       <Row
         hide="s"
         as="header"
-        border="surface"
+        border="neutral-medium"
         fillWidth
-        // position="fixed"
         zIndex={10}
         radius="l"
         gap="12"
