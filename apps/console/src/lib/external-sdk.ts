@@ -60,7 +60,7 @@ export type { Models as _Models, Models as ModelsX };
 export class Schema {
   private client: Client;
 
-  private readonly namespace = "/databases/schemas" as const;
+  private readonly namespace = "/database/schemas" as const;
 
   private readonly ns2 = "/schemas" as const;
 
@@ -74,7 +74,7 @@ export class Schema {
   async list(): Promise<Models.SchemaList> {
     const apiPath = this.namespace;
     const payload: Payload = {};
-    const uri = new URL(this.client.config.endpoint + apiPath);
+    const uri = new URL(this.endpoint + apiPath);
 
     const apiHeaders: { [header: string]: string } = {
       "content-type": "application/json",
@@ -90,7 +90,7 @@ export class Schema {
   async get(name: string): Promise<Models.Schema> {
     const apiPath = this.namespace + "/" + name;
     const payload: Payload = {};
-    const uri = new URL(this.client.config.endpoint + apiPath);
+    const uri = new URL(this.endpoint + apiPath);
 
     const apiHeaders: { [header: string]: string } = {
       "content-type": "application/json",
@@ -111,7 +111,7 @@ export class Schema {
       name,
       description,
     };
-    const uri = new URL(this.client.config.endpoint + apiPath);
+    const uri = new URL(this.endpoint + apiPath);
 
     const apiHeaders: { [header: string]: string } = {
       "content-type": "application/json",
@@ -130,7 +130,7 @@ export class Schema {
       type,
       description,
     };
-    const uri = new URL(this.client.config.endpoint + apiPath);
+    const uri = new URL(this.endpoint + apiPath);
 
     const apiHeaders: { [header: string]: string } = {
       "content-type": "application/json",
@@ -141,7 +141,7 @@ export class Schema {
   async getTables(name: string): Promise<Models.TableList> {
     const apiPath = this.namespace + "/" + name + "/tables";
     const payload: Payload = {};
-    const uri = new URL(this.client.config.endpoint + apiPath);
+    const uri = new URL(this.endpoint + apiPath);
 
     const apiHeaders: { [header: string]: string } = {
       "content-type": "application/json",
@@ -169,7 +169,7 @@ export class Schema {
       rls: false,
       cls: false,
     };
-    const uri = new URL(this.client.config.endpoint + apiPath);
+    const uri = new URL(this.endpoint + apiPath);
 
     const apiHeaders: { [header: string]: string } = {
       "content-type": "application/json",
@@ -180,7 +180,7 @@ export class Schema {
   async getTable(name: string, schema: string): Promise<Models.Table> {
     const apiPath = this.namespace + "/" + schema + "/tables/" + name;
     const payload: Payload = {};
-    const uri = new URL(this.client.config.endpoint + apiPath);
+    const uri = new URL(this.endpoint + apiPath);
 
     const apiHeaders: { [header: string]: string } = {
       "content-type": "application/json",

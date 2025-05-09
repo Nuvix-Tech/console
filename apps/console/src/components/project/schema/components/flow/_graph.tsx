@@ -282,14 +282,14 @@ export const SchemaGraph = () => {
                   animated: true,
                   deletable: false,
                   style: {
-                    stroke: "var(--neutral-border-strong)",
-                    strokeWidth: 0.7,
+                    stroke: "var(--neutral-solid-strong)",
+                    strokeWidth: 0.6,
                   },
                 }}
                 nodeTypes={nodeTypes}
                 fitView
                 minZoom={0.8}
-                maxZoom={1.8}
+                maxZoom={1.9}
                 proOptions={{ hideAttribution: true }}
                 onNodeDragStop={() => saveNodePositions()}
               >
