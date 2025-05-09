@@ -60,7 +60,7 @@ export type { Models as _Models, Models as ModelsX };
 export class Schema {
   private client: Client;
 
-  private readonly namespace = "/database/schemas" as const;
+  private readonly namespace = "/databases/schemas" as const;
 
   private readonly ns2 = "/schemas" as const;
 
