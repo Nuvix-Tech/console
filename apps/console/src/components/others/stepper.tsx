@@ -32,10 +32,10 @@ export const StepperDrawer: React.FC<
           <Drawer.Content height="full" asChild>
             <Form {...form} className="w-full">
               <StepsRootProvider value={value} height="full">
-                <Steps.Root height="full">
-                  <Drawer.Header display="flex" flexDirection="column" gap={4} className="!w-full">
+                <Steps.Root height="full" width="full">
+                  <Drawer.Header display="flex" flexDirection="column" gap={4} className="!w-full !items-start !justify-start">
                     <Drawer.Title>{title}</Drawer.Title>
-                    <Steps.List className="justify-between">
+                    <Steps.List className="!justify-between !w-full">
                       {steps.map((step, index) => (
                         <Steps.Item key={index} index={index} title={step.title}>
                           <div className="flex gap-2 items-center">
