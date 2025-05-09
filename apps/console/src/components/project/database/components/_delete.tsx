@@ -35,7 +35,7 @@ export const DeleteDatabase = () => {
           variant: "success",
           message: "Database deleted",
         });
-        replace(`/project/${project?.$id}/d-schema`);
+        replace(`/project/${project?.$id}/schema`);
       } catch (e: any) {
         addToast({
           variant: "danger",

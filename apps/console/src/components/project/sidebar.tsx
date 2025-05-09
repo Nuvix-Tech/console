@@ -89,7 +89,7 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
     },
     {
       name: "Collections",
-      href: `/project/${id}/d-schema`,
+      href: `/project/${id}/schema`,
       icon: <span className="icon-collection" />,
     },
     {
@@ -211,7 +211,7 @@ export const SecondSidebar = ({ noMarg, noBg, border = true }: SecondSidebarProp
               <RevealFx
                 direction="column"
                 fillWidth
-                flex={"1"}
+                flex={!(sidebar.middle || sidebar.last) ? "1" : undefined}
                 gap="s"
                 horizontal="start"
                 trigger

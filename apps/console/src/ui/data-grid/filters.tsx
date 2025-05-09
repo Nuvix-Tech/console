@@ -21,9 +21,9 @@ export const ColumnSelector = (props: ButtonProps) => {
           <Button
             variant="secondary"
             {...props}
-            className="!bg-[var(--neutral-alpha-weak)] !items-center gap-4"
+            className="!bg-[var(--neutral-alpha-weak)] !items-center"
           >
-            <LuColumns3 />
+            <LuColumns3 size={18} className="mr-3" />
             Columns
           </Button>
         </PopoverTrigger>
@@ -61,7 +61,7 @@ export const Filter = (props: ButtonProps) => {
           {...props}
           className="!bg-[var(--neutral-alpha-weak)] !items-center gap-4"
         >
-          <LuFilter />
+          <LuFilter size={18} className="mr-3" />
           Filters
         </Button>
       </PopoverTrigger>

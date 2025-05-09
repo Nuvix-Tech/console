@@ -9,7 +9,7 @@ type Props = PropsWithChildren & {
 };
 
 const DatabaseSingleLayout: React.FC<Props> = ({ children, databaseId }) => {
-  const sdk = useProjectStore.use.sdk?.();
+  const { sdk } = useProjectStore((state) => state);
   const setSidebar = useProjectStore.use.setSidebar();
   const setRefreshFn = useDatabaseStore.use.setRefresh();
   const setDatabase = useDatabaseStore.use.setDatabase();

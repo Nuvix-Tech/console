@@ -1,6 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { Button, Heading, Text } from "@nuvix/ui/components";
+import { CodeBlock } from "@nuvix/ui/modules";
 import { useRouter } from "next/navigation";
 
 interface ErrorProps {
@@ -9,11 +10,6 @@ interface ErrorProps {
 }
 
 export default function Error({ error, reset }: ErrorProps) {
-  useEffect(() => {
-    // Log the error to an error reporting service
-    console.error("Error occurred:", error);
-  }, [error]);
-
   const router = useRouter();
 
   return (
@@ -29,6 +25,13 @@ export default function Error({ error, reset }: ErrorProps) {
           Go Back
         </Button>
       </div>
+      {process.env.NODE_ENV !== "production" && (
+        <CodeBlock
+          codeInstances={[{ code: JSON.stringify(error), language: "json", label: "Json" }]}
+          maxWidth="xs"
+          compact
+        />
+      )}
     </div>
   );
 }

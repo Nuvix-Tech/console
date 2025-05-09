@@ -1,39 +1,44 @@
-.xs { 
+.xs {
     font-size: var(--static-space-16);
-    & > svg:first-child {
+
+    &>svg:first-child {
+        width: var(--static-space-12);
+        height: var(--static-space-12);
+    }
+}
+
+.s {
+    font-size: var(--static-space-20);
+
+    &>svg:first-child {
         width: var(--static-space-16);
         height: var(--static-space-16);
     }
 }
 
-.s { 
-    font-size: var(--static-space-20);
-    & > svg:first-child {
+.m {
+    font-size: var(--static-space-24);
+
+    &>svg:first-child {
         width: var(--static-space-20);
         height: var(--static-space-20);
     }
 }
 
-.m { 
-    font-size: var(--static-space-24);
-    & > svg:first-child {
+.l {
+    font-size: var(--static-space-32);
+
+    &>svg:first-child {
         width: var(--static-space-24);
         height: var(--static-space-24);
     }
 }
 
-.l { 
-    font-size: var(--static-space-32);
-    & > svg:first-child {
+.xl {
+    font-size: var(--static-space-40);
+
+    &>svg:first-child {
         width: var(--static-space-32);
         height: var(--static-space-32);
-    }
-}
-
-.xl { 
-    font-size: var(--static-space-40);
-    & > svg:first-child {
-        width: var(--static-space-40);
-        height: var(--static-space-40);
     }
 }

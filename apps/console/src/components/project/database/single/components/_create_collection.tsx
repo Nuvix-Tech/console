@@ -23,7 +23,7 @@ export const CreateCollection = ({ onClose, isOpen }: CreateCollectionProps) => 
   const params = useParams();
   const { push } = useRouter();
 
-  const baseURL = `/project/${params.id}/databases/${database?.$id}/collection`;
+  const baseURL = `/project/${params.id}/schema/${database?.$id}/collection`;
 
   return (
     <FormDialog

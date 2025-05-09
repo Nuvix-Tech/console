@@ -22,7 +22,7 @@ export const CreateDatabase = ({ onClose, isOpen }: CreateDatabaseProps) => {
   const params = useParams();
   const { push } = useRouter();
 
-  const baseURL = `/project/${params.id}/d-schema`;
+  const baseURL = `/project/${params.id}/schema`;
 
   return (
     <FormDialog

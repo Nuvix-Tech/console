@@ -23,10 +23,10 @@ export const EmptyState = ({
     show && (
       <Stack
         width="full"
-        height="md"
+        height="sm"
         border="1px dashed"
         borderColor={"var(--neutral-alpha-medium)"}
-        borderRadius="l2"
+        borderRadius="l3"
         direction="column"
         justifyContent="center"
         alignItems="center"

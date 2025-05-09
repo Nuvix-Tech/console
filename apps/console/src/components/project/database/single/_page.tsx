@@ -51,7 +51,7 @@ const DatabaseSinglePage = ({ databaseId }: { databaseId: string }) => {
     queryFn: fetcher,
   });
 
-  const path = `/project/${project?.$id}/d-schema/${database?.name}/collection`;
+  const path = `/project/${project?.$id}/schema/${database?.name}/collection`;
 
   const columns: ColumnDef<Models.Collection>[] = [
     {

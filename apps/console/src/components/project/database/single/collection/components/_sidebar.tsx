@@ -18,7 +18,7 @@ const CollectionSidebar = () => {
   const path = usePathname();
 
   const resolveHref = (value?: string) =>
-    `/project/${project?.$id}/d-schema/${database?.$id}/collection/${collection?.$id}${value ? `/${value}` : ""}`;
+    `/project/${project?.$id}/schema/${database?.$id}/collection/${collection?.$id}${value ? `/${value}` : ""}`;
   const resolveIsSelected = (value?: string) => path.includes(resolveHref(value));
 
   return (
@@ -132,9 +132,7 @@ const Collections = ({
               justifyContent="flex-start"
               variant={selectedCollection?.$id === c.$id ? "secondary" : "tertiary"}
               onClick={() =>
-                router.push(
-                  `/project/${project?.$id}/d-schema/${database!.$id}/collection/${c.$id}`,
-                )
+                router.push(`/project/${project?.$id}/schema/${database!.$id}/collection/${c.$id}`)
               }
             >
               {c.name}

@@ -27,7 +27,7 @@ export const LayoutTop: React.FC<LayoutTopProps> = ({ title, id }) => {
   const path = usePathname();
   const { push } = useRouter();
 
-  const url = `/project/${project?.$id}/d-schema/${database?.$id}/collection/${collection?.$id}/document/${document?.$id}`;
+  const url = `/project/${project?.$id}/schema/${database?.$id}/collection/${collection?.$id}/document/${document?.$id}`;
 
   const value = path.split("/")[path.split("/").length - 1];
   return (

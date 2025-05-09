@@ -37,7 +37,7 @@ export const EmptyResults = () => {
           </Text>
         </Stack>
         <Stack direction="row" gap={4}>
-          <Button variant="secondary" onClick={clearFilters}>
+          <Button size="s" variant="secondary" onClick={clearFilters}>
             Clear filters
           </Button>
         </Stack>

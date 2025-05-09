@@ -60,7 +60,7 @@ const TheTable = <T,>({ interactive = true, noResults }: Props) => {
                   height={12}
                   position={stickyCheckBox ? "sticky" : "relative"}
                   left={stickyCheckBox ? "0" : "auto"}
-                  className={stickyCheckBox ? "neutral-background-strong" : ""}
+                  className={stickyCheckBox ? "neutral-background-medium" : ""}
                   borderBottom={0}
                   zIndex={3}
                 >
@@ -154,13 +154,14 @@ const TheTable = <T,>({ interactive = true, noResults }: Props) => {
                       maxWidth={checkBoxWidth}
                       position={stickyCheckBox ? "sticky" : "relative"}
                       left={stickyCheckBox ? "0" : "auto"}
-                      className={stickyCheckBox ? "neutral-background-strong" : ""}
+                      className={stickyCheckBox ? "neutral-background-medium" : ""}
                       borderWidth={0}
                       zIndex={3}
                     >
                       <Checkbox
                         aria-label="Select row"
                         data-action="checkbox"
+                        colorPalette={"fg"}
                         checked={row.getIsSelected()}
                         disabled={!row.getCanSelect()}
                         cursor="checkbox"

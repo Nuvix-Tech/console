@@ -19,7 +19,7 @@ export const DatabaseCard = ({ database }: DatabaseCardProps) => {
       href={
         database.type === "managed"
           ? `/project/${id}/database/schemas/${database.name}/tables`
-          : `/project/${id}/d-schema/${database.name}`
+          : `/project/${id}/schema/${database.name}`
       }
     >
       <Card

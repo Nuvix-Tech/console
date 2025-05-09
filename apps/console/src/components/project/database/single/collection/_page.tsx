@@ -52,7 +52,7 @@ const CollectionPage: React.FC<Props> = ({ databaseId, collectionId }: Props) =>
     queryFn: fetcher,
   });
 
-  const path = `/project/${project?.$id}/d-schema/${databaseId}/collection/${collectionId}/document`;
+  const path = `/project/${project?.$id}/schema/${databaseId}/collection/${collectionId}/document`;
 
   const columns = React.useMemo(
     () => [
