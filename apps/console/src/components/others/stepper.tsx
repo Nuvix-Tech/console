@@ -33,7 +33,12 @@ export const StepperDrawer: React.FC<
             <Form {...form} className="w-full">
               <StepsRootProvider value={value} height="full">
                 <Steps.Root height="full" width="full">
-                  <Drawer.Header display="flex" flexDirection="column" gap={4} className="!w-full !items-start !justify-start">
+                  <Drawer.Header
+                    display="flex"
+                    flexDirection="column"
+                    gap={4}
+                    className="!w-full !items-start !justify-start"
+                  >
                     <Drawer.Title>{title}</Drawer.Title>
                     <Steps.List className="!justify-between !w-full">
                       {steps.map((step, index) => (

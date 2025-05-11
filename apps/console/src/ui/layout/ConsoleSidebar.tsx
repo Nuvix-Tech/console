@@ -26,6 +26,7 @@ const ConsoleSidebar: React.FC<Props> = ({ inMobile }) => {
       background={inMobile ? "transparent" : "surface"}
       radius="l"
       // position={inMobile ? "relative" : "fixed"}
+      border="neutral-medium"
       role="navigation"
       aria-label="Console Sidebar"
       overflowY="auto"

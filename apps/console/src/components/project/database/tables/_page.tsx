@@ -167,8 +167,8 @@ const TablesPage = ({
         return filterString.length === 0
           ? materializedViews
           : materializedViews.filter((view) =>
-            view.name.toLowerCase().includes(filterString.toLowerCase()),
-          );
+              view.name.toLowerCase().includes(filterString.toLowerCase()),
+            );
       },
     },
   );
@@ -191,8 +191,8 @@ const TablesPage = ({
         return filterString.length === 0
           ? foreignTables
           : foreignTables.filter((table) =>
-            table.name.toLowerCase().includes(filterString.toLowerCase()),
-          );
+              table.name.toLowerCase().includes(filterString.toLowerCase()),
+            );
       },
     },
   );
@@ -470,7 +470,7 @@ const TablesPage = ({
       hasPermission={true}
       label="Create Table"
       component={CreateTable}
-    // extraProps={{ refetch }}
+      // extraProps={{ refetch }}
     />
   );
 
@@ -479,7 +479,7 @@ const TablesPage = ({
       <PageHeading
         heading="Tables"
         description="Tables are the basic building blocks of a database. They are used to store data in a structured format, with rows and columns."
-      // right={create}
+        // right={create}
       />
 
       <div className="flex flex-col lg:flex-row lg:items-center gap-2 flex-wrap">
@@ -491,7 +491,11 @@ const TablesPage = ({
             selectedSchemaName={selectedSchema}
             onSelectSchema={setSelectedSchema}
           />
-          <EntityTypeFilter visibleTypes={visibleTypes} toggleType={handleToggleEntityType} selectOnlyType={handleSelectOnlyEntityType} />
+          <EntityTypeFilter
+            visibleTypes={visibleTypes}
+            toggleType={handleToggleEntityType}
+            selectOnlyType={handleSelectOnlyEntityType}
+          />
         </div>
         <div className="flex flex-grow justify-between gap-2 items-center">
           <InputGroup startElement={<SearchIcon size={12} />}>
@@ -510,14 +514,14 @@ const TablesPage = ({
               size={"xs"}
               disabled={false}
               onClick={() => onAddTable()}
-            // tooltip={{
-            //   content: {
-            //     side: 'bottom',
-            //     text: !canUpdateTables
-            //       ? 'You need additional permissions to create tables'
-            //       : undefined,
-            //   },
-            // }}
+              // tooltip={{
+              //   content: {
+              //     side: 'bottom',
+              //     text: !canUpdateTables
+              //       ? 'You need additional permissions to create tables'
+              //       : undefined,
+              //   },
+              // }}
             >
               <Plus />
               New table
@@ -537,9 +541,7 @@ const TablesPage = ({
         data={entities}
         loading={isFetching}
       >
-        {
-          isLoading && <SkeletonText noOfLines={4} />
-        }
+        {isLoading && <SkeletonText noOfLines={4} />}
 
         <EmptyState
           show={entities.length === 0 && !isFetching && !hasQuery && !isLoading}

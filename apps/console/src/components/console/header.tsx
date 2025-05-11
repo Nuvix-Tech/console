@@ -38,6 +38,7 @@ const ConsoleHeader: React.FC<HeaderProps> = () => {
         height="64"
         vertical="center"
         background="surface"
+        border="neutral-medium"
         ref={headerRef}
       >
         <Stack direction="row" alignItems="center" justifyContent="space-between" width="full">

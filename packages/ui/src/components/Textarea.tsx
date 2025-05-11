@@ -22,15 +22,15 @@ interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   errorMessage?: ReactNode;
   description?: ReactNode;
   radius?:
-  | "none"
-  | "top"
-  | "right"
-  | "bottom"
-  | "left"
-  | "top-left"
-  | "top-right"
-  | "bottom-right"
-  | "bottom-left";
+    | "none"
+    | "top"
+    | "right"
+    | "bottom"
+    | "left"
+    | "top-left"
+    | "top-right"
+    | "bottom-right"
+    | "bottom-left";
   className?: string;
   hasPrefix?: ReactNode;
   hasSuffix?: ReactNode;
@@ -195,7 +195,9 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           <Flex fillWidth direction={max < 50 ? "row" : "column"} position="relative">
             <textarea
               {...props}
-              value={nullable ? (_null ? "" : props.value === null ? "" : props.value) : props.value}
+              value={
+                nullable ? (_null ? "" : props.value === null ? "" : props.value) : props.value
+              }
               ref={(node) => {
                 if (typeof ref === "function") {
                   ref(node);
