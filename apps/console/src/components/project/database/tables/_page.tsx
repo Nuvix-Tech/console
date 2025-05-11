@@ -72,6 +72,7 @@ import { formatAllEntities } from "./components/_utils";
 import { cn } from "@nuvix/sui/lib/utils";
 import { EntityTypeFilter } from "../../table-editor/components/TableEditorMenu";
 import ProtectedSchemaWarning from "@/ui/ProtectedSchemaWarning";
+import SidePanelEditor from "@/components/editor/SidePanelEditor/SidePanelEditor";
 // import ProtectedSchemaWarning from '../ProtectedSchemaWarning'
 
 interface TableListProps {
@@ -229,7 +230,7 @@ const TablesPage = ({
       ?.join(" ");
   };
 
-  const path = `/project/${projectId}/database/${projectId}/tables`;
+  const path = `/project/${projectId}/database/tables`;
 
   const columns: ColumnDef<(typeof entities)[number]>[] = [
     {
@@ -572,6 +573,10 @@ const TablesPage = ({
           />
         )} */}
       </DataGridProvider>
+      <SidePanelEditor
+        editable={true}
+        onTableCreated={(table) => router.push(`${path}/${table.id}`)}
+      />
     </PageContainer>
   );
 };
