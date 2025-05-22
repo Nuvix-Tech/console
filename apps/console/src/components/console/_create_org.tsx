@@ -42,7 +42,7 @@ export const CreateOrgPage = () => {
   const createOrg = async () => {
     setLoading(true);
     try {
-      const plan = plansList?.plans.find((p) => p.$id === selectedPlan);
+      const plan = plansList?.plans?.find((p) => p.$id === selectedPlan);
       if (!plan) {
         throw new Error("Invalid plan selected.");
       }
@@ -50,7 +50,7 @@ export const CreateOrgPage = () => {
       let org = await sdkForConsole.organizations.create(
         ID.unique(),
         orgName,
-        plan.$id as BillingPlan,
+        plan?.$id as BillingPlan,
       );
       addToast({
         variant: "success",
@@ -58,6 +58,7 @@ export const CreateOrgPage = () => {
       });
       replace(`/organization/${org.$id}`);
     } catch (err) {
+      console.error(err);
       addToast({
         variant: "danger",
         message: "Failed to create organization. Please try again.",
