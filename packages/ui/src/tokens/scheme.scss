@@ -8,35 +8,53 @@
     --static-black-medium: #0000004D;
 
     /* CUSTOM */
-    --scheme-brand-100: #1d0000;
-    --scheme-brand-200: #350000;
-    --scheme-brand-300: #860000;
-    --scheme-brand-400: #a82b00;
-    --scheme-brand-500: #ca4d00;
-    --scheme-brand-600: #f17118;
-    --scheme-brand-600-10: rgba(241, 113, 24, 0.1);
-    --scheme-brand-600-30: rgba(241, 113, 24, 0.3);
-    --scheme-brand-600-50: rgba(241, 113, 24, 0.5);
-    --scheme-brand-700: #ff9b4f;
-    --scheme-brand-800: #ffcc82;
-    --scheme-brand-900: #ffd78c;
-    --scheme-brand-1000: #ffd78c;
+    --scheme-brand-100: #1c0008;
+    --scheme-brand-200: #320219;
+    --scheme-brand-300: #632e43;
+    --scheme-brand-400: #814a5f;
+    --scheme-brand-500: #a0667c;
+    --scheme-brand-600: #c1849a;
+    --scheme-brand-600-10: rgba(193, 132, 154, 0.1);
+    --scheme-brand-600-30: rgba(193, 132, 154, 0.3);
+    --scheme-brand-600-50: rgba(193, 132, 154, 0.5);
+    --scheme-brand-700: #e2a2b9;
+    --scheme-brand-800: #ffc5dc;
+    --scheme-brand-900: #ffd6ed;
+    --scheme-brand-1000: #ffe9ff;
+    --scheme-brand-1100: #ffe9ff;
+    --scheme-brand-1200: #ffe9ff;
 
-    --scheme-accent-100: #090909;
-    --scheme-accent-200: #161616;
-    --scheme-accent-300: #404040;
-    --scheme-accent-400: #5b5b5b;
-    --scheme-accent-500: #777777;
-    --scheme-accent-600: #959595;
-    --scheme-accent-600-10: rgba(149, 149, 149, 0.1);
-    --scheme-accent-600-30: rgba(149, 149, 149, 0.3);
-    --scheme-accent-600-50: rgba(149, 149, 149, 0.5);
-    --scheme-accent-700: #b4b4b4;
-    --scheme-accent-800: #d4d4d4;
-    --scheme-accent-900: #e1e1e1;
-    --scheme-accent-1000: #eeeeee;
-    --scheme-accent-1100: #f5f5f5;
-    --scheme-accent-1200: #fcfcfc;
+    --scheme-accent-100: #1c0008;
+    --scheme-accent-200: #330119;
+    --scheme-accent-300: #673046;
+    --scheme-accent-400: #82495f;
+    --scheme-accent-500: #a2657c;
+    --scheme-accent-600: #c2839a;
+    --scheme-accent-600-10: rgba(194, 131, 154, 0.1);
+    --scheme-accent-600-30: rgba(194, 131, 154, 0.3);
+    --scheme-accent-600-50: rgba(194, 131, 154, 0.5);
+    --scheme-accent-700: #e3a1b9;
+    --scheme-accent-800: #ffc4dc;
+    --scheme-accent-900: #ffd8f0;
+    --scheme-accent-1000: #ffe8ff;
+    --scheme-accent-1100: #ffe8ff;
+    --scheme-accent-1200: #ffe8ff;
+
+    --scheme-neutral-100: #12050b;
+    --scheme-neutral-200: #23121a;
+    --scheme-neutral-300: #4f3c44;
+    --scheme-neutral-400: #68545d;
+    --scheme-neutral-500: #86707a;
+    --scheme-neutral-600: #a8919b;
+    --scheme-neutral-600-10: rgba(168, 145, 155, 0.1);
+    --scheme-neutral-600-30: rgba(168, 145, 155, 0.3);
+    --scheme-neutral-600-50: rgba(168, 145, 155, 0.5);
+    --scheme-neutral-700: #c4adb7;
+    --scheme-neutral-800: #e5cdd7;
+    --scheme-neutral-900: #f5dde7;
+    --scheme-neutral-1000: #ffeaf4;
+    --scheme-neutral-1100: #fff1fb;
+    --scheme-neutral-1200: #fff7ff;
 
     /* 
         Insert code for your custom color palette

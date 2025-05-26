@@ -16,6 +16,7 @@ type CreateProjectProps = {
 
 const schema = y.object().shape({
   name: y.string().max(56).required("Project name is required"),
+  password: y.string().min(6).max(20).required("Database password is required"),
   id: y.string().min(6).max(36).optional(),
 });
 
@@ -25,12 +26,13 @@ export const CreateProject: React.FC<CreateProjectProps> = ({ children, ...props
   const { push } = useRouter();
   const { addToast } = useToast();
 
-  async function onSubmit(name: string, resetForm: any, id?: string) {
+  async function onSubmit(name: string, resetForm: any, password: string, id?: string) {
     try {
       const project = await projects.create(
         id && id.length > 6 ? id : ID.unique(),
         name,
         organization!.$id,
+        password as any,
         "fra" as any,
       );
       addToast({
@@ -68,15 +70,17 @@ export const CreateProject: React.FC<CreateProjectProps> = ({ children, ...props
                     initialValues={{
                       name: "",
                       id: "",
+                      password: "",
                     }}
                     validationSchema={schema}
                     onSubmit={async (values, { resetForm }) => {
-                      const { id, name } = values;
-                      await onSubmit(name, resetForm, id);
+                      const { id, name, password } = values;
+                      await onSubmit(name, resetForm, password, id);
                     }}
                   >
                     <div className="space-y-4">
                       <InputField name="name" label="Project Name" />
+                      <InputField name="password" type="password" label="Database Password" />
                       <CustomID label="Project ID" name="id" />
                     </div>
 

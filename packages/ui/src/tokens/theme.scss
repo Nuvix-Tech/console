@@ -214,7 +214,7 @@
     --icon: url('/trademark/icon-light.svg');
     --type: url('/trademark/type-light.svg');
 
-    --page-background:              var(--neutral-background-weak);
+    --page-background:              var(--neutral-background-medium);
     --backdrop:                     var(--static-white-medium);
 
     --solid-border-color-brand:     var(--brand-alpha-strong);
@@ -438,7 +438,7 @@
 
 [data-surface="filled"][data-theme="light"],
 [data-surface="filled"] [data-theme="light"] {
-    --surface-background:    var(--neutral-background-weak);
+    --surface-background:    var(--neutral-background-medium);
     --surface-border:        var(--neutral-border-medium);
 }
 

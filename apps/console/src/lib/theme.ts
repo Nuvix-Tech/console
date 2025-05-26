@@ -66,73 +66,73 @@ const config = defineConfig({
       },
     },
     semanticTokens: {
-      // colors: {
-      //   bg: {
-      //     DEFAULT: { value: { base: "{colors.slate.100}", _dark: "{colors.slate.900}" } },
-      //     subtle: { value: { base: "{colors.slate.200}", _dark: "{colors.slate.800}" } },
-      //     muted: { value: { base: "{colors.slate.300}", _dark: "{colors.slate.700}" } },
-      //     emphasized: { value: { base: "{colors.slate.400}", _dark: "{colors.slate.600}" } },
-      //     panel: { value: { base: "{colors.slate.50}", _dark: "{colors.slate.950}" } },
-      //     inverted: { value: { base: "{colors.slate.900}", _dark: "{colors.slate.100}" } },
-      //   },
-      //   border: {
-      //     DEFAULT: { value: { base: "{colors.slate.300}", _dark: "{colors.slate.500}" } },
-      //     subtle: { value: { base: "{colors.slate.400}", _dark: "{colors.slate.600}" } },
-      //     muted: { value: { base: "{colors.slate.500}", _dark: "{colors.slate.800}" } },
-      //     emphasized: { value: { base: "{colors.slate.600}", _dark: "{colors.slate.400}" } },
-      //   },
-      //   text: {
-      //     DEFAULT: { value: { base: "{colors.slate.900}", _dark: "{colors.slate.100}" } },
-      //     subtle: { value: { base: "{colors.slate.700}", _dark: "{colors.slate.300}" } },
-      //     muted: { value: { base: "{colors.slate.600}", _dark: "{colors.slate.400}" } },
-      //     emphasized: { value: { base: "{colors.slate.800}", _dark: "{colors.slate.200}" } },
-      //     inverted: { value: { base: "{colors.slate.100}", _dark: "{colors.slate.900}" } },
-      //   },
-      //   slate: {
-      //     solid: {
-      //       value: {
-      //         base: "{colors.slate.900}",
-      //         _dark: "{colors.slate.100}",
-      //       },
-      //     },
-      //     contrast: {
-      //       value: {
-      //         base: "{colors.slate.50}",
-      //         _dark: "{colors.slate.900}",
-      //       },
-      //     },
-      //     fg: {
-      //       value: {
-      //         base: "{colors.slate.900}",
-      //         _dark: "{colors.slate.100}",
-      //       },
-      //     },
-      //     muted: {
-      //       value: {
-      //         base: "{colors.slate.300}",
-      //         _dark: "{colors.slate.700}",
-      //       },
-      //     },
-      //     subtle: {
-      //       value: {
-      //         base: "{colors.slate.200}",
-      //         _dark: "{colors.slate.600}",
-      //       },
-      //     },
-      //     emphasized: {
-      //       value: {
-      //         base: "{colors.slate.700}",
-      //         _dark: "{colors.slate.200}",
-      //       },
-      //     },
-      //     focusRing: {
-      //       value: {
-      //         base: "{colors.slate.400}",
-      //         _dark: "{colors.slate.500}",
-      //       },
-      //     },
-      //   },
-      // },
+      colors: {
+        bg: {
+          DEFAULT: { value: { base: "var(--page-background)" } },
+          // subtle: { value: { base: "{colors.slate.200}", _dark: "{colors.slate.800}" } },
+          // muted: { value: { base: "{colors.slate.300}", _dark: "{colors.slate.700}" } },
+          // emphasized: { value: { base: "{colors.slate.400}", _dark: "{colors.slate.600}" } },
+          // panel: { value: { base: "{colors.slate.50}", _dark: "{colors.slate.950}" } },
+          // inverted: { value: { base: "{colors.slate.900}", _dark: "{colors.slate.100}" } },
+        },
+        //   border: {
+        //     DEFAULT: { value: { base: "{colors.slate.300}", _dark: "{colors.slate.500}" } },
+        //     subtle: { value: { base: "{colors.slate.400}", _dark: "{colors.slate.600}" } },
+        //     muted: { value: { base: "{colors.slate.500}", _dark: "{colors.slate.800}" } },
+        //     emphasized: { value: { base: "{colors.slate.600}", _dark: "{colors.slate.400}" } },
+        //   },
+        //   text: {
+        //     DEFAULT: { value: { base: "{colors.slate.900}", _dark: "{colors.slate.100}" } },
+        //     subtle: { value: { base: "{colors.slate.700}", _dark: "{colors.slate.300}" } },
+        //     muted: { value: { base: "{colors.slate.600}", _dark: "{colors.slate.400}" } },
+        //     emphasized: { value: { base: "{colors.slate.800}", _dark: "{colors.slate.200}" } },
+        //     inverted: { value: { base: "{colors.slate.100}", _dark: "{colors.slate.900}" } },
+        //   },
+        //   slate: {
+        //     solid: {
+        //       value: {
+        //         base: "{colors.slate.900}",
+        //         _dark: "{colors.slate.100}",
+        //       },
+        //     },
+        //     contrast: {
+        //       value: {
+        //         base: "{colors.slate.50}",
+        //         _dark: "{colors.slate.900}",
+        //       },
+        //     },
+        //     fg: {
+        //       value: {
+        //         base: "{colors.slate.900}",
+        //         _dark: "{colors.slate.100}",
+        //       },
+        //     },
+        //     muted: {
+        //       value: {
+        //         base: "{colors.slate.300}",
+        //         _dark: "{colors.slate.700}",
+        //       },
+        //     },
+        //     subtle: {
+        //       value: {
+        //         base: "{colors.slate.200}",
+        //         _dark: "{colors.slate.600}",
+        //       },
+        //     },
+        //     emphasized: {
+        //       value: {
+        //         base: "{colors.slate.700}",
+        //         _dark: "{colors.slate.200}",
+        //       },
+        //     },
+        //     focusRing: {
+        //       value: {
+        //         base: "{colors.slate.400}",
+        //         _dark: "{colors.slate.500}",
+        //       },
+        //     },
+        //   },
+      },
     },
   },
 });
