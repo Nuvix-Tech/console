@@ -10,8 +10,8 @@ export const EmptyEditor = () => {
 
   return (
     <>
-      <div className="flex flex-1 items-center justify-center h-full bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900">
-        <div className="text-center max-w-md p-8 rounded-xl bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm shadow-xl">
+      <div className="flex flex-1 items-center justify-center h-full">
+        <div className="text-center max-w-md p-8 rounded-xl bg-muted backdrop-blur-sm shadow-xl">
           <svg
             className="mx-auto h-16 w-16 text-gray-400 dark:text-gray-500 mb-4"
             xmlns="http://www.w3.org/2000/svg"

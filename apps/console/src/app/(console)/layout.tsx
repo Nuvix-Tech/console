@@ -52,7 +52,7 @@ export default function ({ children }: { children: React.ReactNode }) {
               flexDirection={"row"}
               overflow="hidden"
               padding={{ base: 0, md: `var(--static-space-8)` }}
-              gap={{ base: 0, md: `var(--static-space-8)` }}
+              gap={{ base: 0, md: `var(--static-space-4)` }}
             >
               {children}
             </Stack>

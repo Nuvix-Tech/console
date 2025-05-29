@@ -43,7 +43,7 @@ export const gridStyles2 = {
   ["--rdg-color" as any]: "var(--neutral-on-background-medium)",
   ["--rdg-background-color" as any]: "var(--page-background)",
   ["--rdg-row-hover-background-color" as any]: "var(--neutral-background-strong)",
-  ["--rdg-border-color" as any]: "var(--neutral-alpha-medium)",
+  ["--rdg-border-color" as any]: "var(--neutral-border-medium)",
   ["--rdg-header-background-color" as any]: "var(--neutral-background-medium)",
   ["--rdg-row-selected-background-color" as any]: "var(--neutral-background-medium)",
   ["--rdg-row-selected-hover-background-color" as any]: "var(--neutral-background-strong)",
