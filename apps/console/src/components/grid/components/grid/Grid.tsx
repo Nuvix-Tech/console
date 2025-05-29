@@ -139,7 +139,7 @@ export const Grid = memo(
           {/* Render no rows fallback outside of the DataGrid */}
           {(rows ?? []).length === 0 && (
             <div
-              style={{ height: `calc(100% - 35px)` }}
+              style={{ height: `calc(100% - 45px)` }}
               className="absolute top-9 z-[2] p-2 w-full"
             >
               {isLoading && <GenericSkeletonLoader />}

@@ -18,13 +18,11 @@ export const TwoOptionToggle = <T extends string>({
   const nSize = size === "s" ? "xs" : size;
   return (
     <div className="flex items-center gap-0">
-      <ButtonGroup size={nSize} attached>
+      <ButtonGroup size={nSize} attached borderWidth={1} borderStyle={"solid"} borderRadius={"l2"}>
         <Button
           {...rest}
           onClick={() => onClickOption(options[0])}
           variant={activeOption === options[0] ? "solid" : "subtle"}
-          borderStartRadius={"l2"}
-          borderEndRadius="none"
         >
           {options[0]}
         </Button>
@@ -32,8 +30,6 @@ export const TwoOptionToggle = <T extends string>({
           {...rest}
           onClick={() => onClickOption(options[1])}
           variant={activeOption === options[1] ? "solid" : "subtle"}
-          borderStartRadius="none"
-          borderEndRadius={"l2"}
         >
           {options[1]}
         </Button>
