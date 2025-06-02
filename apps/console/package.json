@@ -2,7 +2,7 @@
   "name": "@nuvix/console-web",
   "version": "0.0.1",
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev --turbopack --port 3005",
     "export": "next export",
     "build": "next build",
     "start": "next start",

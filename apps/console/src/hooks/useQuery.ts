@@ -41,7 +41,7 @@ export const useQuery = ({ limit: _limit }: QueryParams = {}) => {
   };
   const limit = searchParams.get("limit") ? Number(searchParams.get("limit")) : (_limit ?? 12);
   const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
-  const search = searchParams.get("search");
+  const search = searchParams.get("search") ?? undefined;
 
   const hasQuery = !!searchParams.get("limit") || !!searchParams.get("page") || !!search;
 
