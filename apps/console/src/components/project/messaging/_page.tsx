@@ -11,6 +11,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { formatDate } from "@/lib/utils";
 import { Tooltip } from "@/components/cui/tooltip";
 import { useConfirm, useToast } from "@nuvix/ui/components";
+import { CreateMessageButton } from "./components";
 
 interface MessagingPageProps {}
 
@@ -106,20 +107,14 @@ const MessagingPage: React.FC<MessagingPageProps> = () => {
     }
   };
 
-  const create = (
-    <CreateButton
-      hasPermission={canCreateDatabases}
-      label="Create Message"
-      // component={CreateBucket}
-    />
-  );
+  const create = <CreateMessageButton />;
 
   return (
     <PageContainer>
-      <PageHeading heading="Messages" description="__" right={create} />
+      <PageHeading heading="Messages" description="__" />
 
       <DataGridProvider<Models.Message>
-        columns={[]}
+        columns={columns}
         data={data.messages ?? []}
         manualPagination
         rowCount={data.total}

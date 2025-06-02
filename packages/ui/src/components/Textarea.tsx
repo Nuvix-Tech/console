@@ -67,7 +67,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       style,
       nullable = false,
       isNull = false,
-      maxLength: max = 0,
+      maxLength,
       labelOptional,
       ...props
     },
@@ -82,6 +82,8 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     const textareaRef = React.useRef<HTMLTextAreaElement>(null);
     const debouncedValue = useDebounce(props.value, 1000);
     const checkBoxId = React.useId();
+    const max = maxLength;
+    const isLikeInput = !!(max && max < 50);
 
     const adjustHeight = () => {
       if (textareaRef.current) {
@@ -184,7 +186,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             styles.base,
             lines !== "auto" && styles.textareaBase,
             radius === "none" ? "radius-none" : radius ? `radius-l-${radius}` : "radius-l",
-            max < 50 && "after:!content-none",
+            isLikeInput && "after:!content-none",
           )}
         >
           {hasPrefix && (
@@ -192,7 +194,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
               {hasPrefix}
             </Flex>
           )}
-          <Flex fillWidth direction={max < 50 ? "row" : "column"} position="relative">
+          <Flex fillWidth direction={isLikeInput ? "row" : "column"} position="relative">
             <textarea
               {...props}
               value={
@@ -207,19 +209,20 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
                 textareaRef.current = node;
               }}
               id={id}
-              rows={max > 50 ? (typeof lines === "number" ? lines : 1) : 1}
+              rows={!isLikeInput ? (typeof lines === "number" ? lines : 1) : 1}
               placeholder={labelAsPlaceholder ? labelWithOptional : props.placeholder}
               onFocus={handleFocus}
               onBlur={handleBlur}
               className={textareaClassNames}
               aria-describedby={displayError ? `${id}-error` : undefined}
               aria-invalid={!!displayError}
-              maxLength={max}
+              maxLength={maxLength}
               style={{
                 ...style,
                 resize: lines === "auto" ? "none" : resize,
                 height: height ? `${height}rem` : "auto",
                 minHeight: "46px",
+                paddingTop: isLikeInput && labelAsPlaceholder ? "4px !important" : undefined,
               }}
               onChange={handleChange}
             />
@@ -238,12 +241,12 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             {children && children}
             <Flex
               horizontal="end"
-              gap={max > 50 ? "20" : "8"}
+              gap={!isLikeInput ? "20" : "8"}
               paddingY="2"
               position="absolute"
               right="4"
               bottom="2"
-              paddingRight={max > 50 ? "20" : "8"}
+              paddingRight={!isLikeInput ? "20" : "8"}
               vertical="center"
             >
               {max !== 0 && max && (props.value?.toString().length ?? 0) > 0 && (

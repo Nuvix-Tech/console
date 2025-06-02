@@ -33,8 +33,8 @@ export const EmptyState = ({
         className="neutral-background-alpha-weak"
         gap={4}
       >
-        <SmartImage src="/images/empty-dark.svg" alt="Empty state" height={15} width={20.5} />
-        <Stack gap={2} justifyContent="center" alignItems="center">
+        <SmartImage src="/images/empty-dark.svg" alt="Empty state" height={14} width={20.5} />
+        <Stack gap={1} justifyContent="center" alignItems="center">
           <Text textStyle="xl" fontWeight="bold">
             {title}
           </Text>
@@ -45,8 +45,8 @@ export const EmptyState = ({
           )}
         </Stack>
         <Stack direction="row" gap={4}>
-          {primaryComponent ? primaryComponent : primary && <Button {...primary} />}
-          {secondary && <Button variant="secondary" {...secondary} />}
+          {primaryComponent ? primaryComponent : primary && <Button size="s" {...primary} />}
+          {secondary && <Button size="s" variant="secondary" {...secondary} />}
         </Stack>
       </Stack>
     )

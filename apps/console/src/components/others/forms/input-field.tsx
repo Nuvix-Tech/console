@@ -13,6 +13,8 @@ import {
   SwitchProps,
   TagInput,
   TagInputProps,
+  Textarea,
+  TextareaProps,
 } from "@nuvix/ui/components";
 import { LuPlus } from "react-icons/lu";
 import {
@@ -29,7 +31,7 @@ interface Props extends Omit<InputProps, "onChange" | "value" | "id"> {
   name: string;
 }
 
-const Wrapper = ({ Field, ...props }: { Field: any }) => {
+const Wrapper = ({ Field, ...props }: { Field: any } & any) => {
   const { name, label, placeholder, description, ...rest } = props as Props;
   const { values, handleBlur, handleChange } = useFormikContext<Record<string, string | number>>();
 
@@ -56,7 +58,14 @@ const Wrapper = ({ Field, ...props }: { Field: any }) => {
 type InputFieldProps = Props;
 
 export const InputField = (props: InputFieldProps) => {
-  const InputComponent = props.type === "password" ? PasswordInput : Input;
+  const InputComponent = (() => {
+    switch (props.type) {
+      case "password":
+        return PasswordInput;
+      default:
+        return Input;
+    }
+  })();
 
   return <Wrapper Field={InputComponent} {...props} />;
 };
@@ -81,8 +90,22 @@ export const InputNumberField = (props: Props & NumberInputProps) => {
   );
 };
 
+export const InputTextareaField = (props: Props & TextareaProps) => {
+  const { setFieldValue, values } = useFormikContext<Record<string, string | number>>();
+  return (
+    <Wrapper
+      {...props}
+      Field={Textarea}
+      onChange={(e: any) => {
+        setFieldValue(props.name, e.target.value);
+      }}
+      value={values[props.name] ?? ""}
+    />
+  );
+};
+
 export const InputSwitchField = (props: Omit<SwitchProps, "onToggle" | "isChecked"> & Props) => {
-  const { name, label, placeholder, description, ...rest } = props;
+  const { name, label, placeholder, ...rest } = props;
   const { values, handleBlur, setFieldValue } = useFormikContext<Record<string, boolean>>();
 
   return (
@@ -96,7 +119,7 @@ export const InputSwitchField = (props: Omit<SwitchProps, "onToggle" | "isChecke
           {...rest}
         />
       </FormControl>
-      {description && <FormDescription>{description} </FormDescription>}
+      {/* {description && <FormDescription>{description} </FormDescription>} */}
       <FormMessage field={name} />
     </FormItem>
   );
