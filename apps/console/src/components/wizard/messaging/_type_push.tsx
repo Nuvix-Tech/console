@@ -1,11 +1,11 @@
 import { CustomID } from "@/components/_custom_id";
 import { CardBox } from "@/components/others/card";
-import { InputField, InputSwitchField } from "@/components/others/forms";
-import { EditorField } from "@/components/others/ui";
+import { InputField, InputTextareaField } from "@/components/others/forms";
 import { Column } from "@nuvix/ui/components";
 import { useFormikContext } from "formik";
 import React from "react";
 import * as y from "yup";
+import { FilesSelector } from "../storage";
 
 export const pushSchema = y.object().shape({
   name: y.string().max(56).required("Project name is required"),
@@ -21,18 +21,16 @@ export const CreateMessageTypePush = () => {
       <Column maxWidth={"xs"}>
         <CardBox>
           <div className="space-y-4">
-            <InputField name="subject" label="Subject" />
+            <InputField name="title" label="Title" />
             <CustomID label="Message ID" name="id" />
-            <EditorField
+            <InputTextareaField
               name="message"
+              placeholder="Enter text"
               label="Message"
-              language={values["html"] ? "html" : "markdown"}
+              lines={5}
+              maxLength={1000}
             />
-            <InputSwitchField
-              name="html"
-              label={"HTML mode"}
-              description="Enable the HTML mode if your message contains HTML tags."
-            />
+            <FilesSelector />
           </div>
         </CardBox>
       </Column>

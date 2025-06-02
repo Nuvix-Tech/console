@@ -1,9 +1,7 @@
 import { CustomID } from "@/components/_custom_id";
 import { CardBox } from "@/components/others/card";
-import { InputField, InputSwitchField, InputTextareaField } from "@/components/others/forms";
-import { EditorField } from "@/components/others/ui";
+import { InputTextareaField } from "@/components/others/forms";
 import { Column } from "@nuvix/ui/components";
-import { useFormikContext } from "formik";
 import React from "react";
 import * as y from "yup";
 
@@ -14,14 +12,18 @@ export const smsSchema = y.object().shape({
 });
 
 export const CreateMessageTypeSms = () => {
-  const { values } = useFormikContext<Record<string, string | boolean>>();
-
   return (
     <>
       <Column maxWidth={"xs"}>
         <CardBox>
           <div className="space-y-4">
-            <InputTextareaField name="message" placeholder="Enter text" label="Message" lines={5} />
+            <InputTextareaField
+              name="message"
+              placeholder="Enter text"
+              label="Message"
+              lines={5}
+              maxLength={900}
+            />
             <CustomID label="Message ID" name="id" />
           </div>
         </CardBox>

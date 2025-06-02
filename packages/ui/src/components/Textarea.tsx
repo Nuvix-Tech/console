@@ -194,7 +194,12 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
               {hasPrefix}
             </Flex>
           )}
-          <Flex fillWidth direction={isLikeInput ? "row" : "column"} position="relative">
+          <Flex
+            fillWidth
+            direction={isLikeInput ? "row" : "column"}
+            position="relative"
+            paddingTop={!isLikeInput && labelAsPlaceholder ? "4" : undefined}
+          >
             <textarea
               {...props}
               value={
@@ -222,7 +227,6 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
                 resize: lines === "auto" ? "none" : resize,
                 height: height ? `${height}rem` : "auto",
                 minHeight: "46px",
-                paddingTop: isLikeInput && labelAsPlaceholder ? "4px !important" : undefined,
               }}
               onChange={handleChange}
             />
@@ -250,7 +254,12 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
               vertical="center"
             >
               {max !== 0 && max && (props.value?.toString().length ?? 0) > 0 && (
-                <Text variant="body-default-xs" onBackground="neutral-weak" wrap="nowrap">
+                <Text
+                  variant="body-default-xs"
+                  onBackground="neutral-weak"
+                  wrap="nowrap"
+                  className="!backdrop-blur-md"
+                >
                   {props.value?.toString().length || 0} / {max}
                 </Text>
               )}

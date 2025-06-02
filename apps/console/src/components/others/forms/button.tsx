@@ -7,7 +7,7 @@ type Props = ButtonProps & B;
 export default function (props: Props) {
   const { ...rest } = props;
   const { isSubmitting, isValid, dirty, errors } = useFormikContext();
-  console.log({ isValid, errors });
+
   return (
     <Button
       {...rest}
