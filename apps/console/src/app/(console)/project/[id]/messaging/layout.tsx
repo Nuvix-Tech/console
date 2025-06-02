@@ -1,13 +1,9 @@
 import { MessagingLayout } from "@/components/project/messaging";
 
 export default function ({
-    children,
+  children,
 }: {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }) {
-    return (
-        <MessagingLayout>
-            {children}
-        </MessagingLayout>
-    );
-} 
+  return <MessagingLayout>{children}</MessagingLayout>;
+}

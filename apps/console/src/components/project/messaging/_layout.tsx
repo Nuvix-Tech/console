@@ -1,21 +1,20 @@
-'use client';
+"use client";
 import { useProjectStore } from "@/lib/store";
 import { PropsWithChildren, useEffect } from "react";
 import { MessagingSidebar } from "./components";
 
-
 export const MessagingLayout = ({ children }: PropsWithChildren) => {
-    const { setSidebar } = useProjectStore((state) => state);
+  const { setSidebar } = useProjectStore((state) => state);
 
-    const last = <MessagingSidebar />;
+  const last = <MessagingSidebar />;
 
-    useEffect(() => {
-        setSidebar({
-            first: null,
-            middle: null,
-            last
-        })
-    }, [setSidebar]);
+  useEffect(() => {
+    setSidebar({
+      first: null,
+      middle: null,
+      last,
+    });
+  }, [setSidebar]);
 
-    return children;
-}
+  return children;
+};
