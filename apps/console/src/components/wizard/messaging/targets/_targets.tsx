@@ -1,6 +1,6 @@
 import React from "react";
 import { Models, Query } from "@nuvix/console";
-import { Button, HStack, Text, VStack } from "@chakra-ui/react";
+import { Accordion, Button, HStack, Text, VStack } from "@chakra-ui/react";
 import { Checkbox } from "@/components/cui/checkbox";
 import { Avatar } from "@nuvix/ui/components";
 import { DialogTrigger } from "@/components/cui/dialog";
@@ -30,9 +30,9 @@ export const Targets = ({ add, sdk, onClose, groups }: TargetProps) => {
 
   const onSave = () => {
     for (const target of rest.selections) {
-      const [userId, targetId] = target.split(':');
-      const index = rest.data.findIndex(t => t.$id === userId)
-      add(rest.data[index].targets.find(t => t.$id === targetId)!);
+      const [userId, targetId] = target.split(":");
+      const index = rest.data.findIndex((t) => t.$id === userId);
+      add(rest.data[index].targets.find((t) => t.$id === targetId)!);
     }
     onClose?.();
   };
@@ -40,7 +40,7 @@ export const Targets = ({ add, sdk, onClose, groups }: TargetProps) => {
   return (
     <>
       <SelectDialog
-        title="Select users"
+        title="Select targets"
         description="Grant access to any authenticated or anonymous user."
         actions={
           <>
@@ -53,25 +53,39 @@ export const Targets = ({ add, sdk, onClose, groups }: TargetProps) => {
           </>
         }
       >
-        <SimpleSelector
-          placeholder="Search users by name, email, phone or ID"
-          {...rest}
-          onMap={(user, toggleSelection, selections) => {
-            const isExists = groups.has(`user:${user.$id}`);
-            return (
-              <HStack key={user.$id} alignItems="center" width="full">
-                <SelectBox1
+        <Accordion.Root collapsible defaultValue={["info"]}>
+          <SimpleSelector
+            placeholder="Search users by name, email, phone or ID"
+            {...rest}
+            onMap={(user, toggleSelection, selections) => {
+              const isExists = groups.has(`user:${user.$id}`);
+              return (
+                <HStack key={user.$id} alignItems="center" width="full">
+                  <Accordion.Item value={user.$id}>
+                    <Accordion.ItemTrigger>
+                      {/* <Icon fontSize="lg" color="fg.subtle">
+                          {item.icon}
+                        </Icon> */}
+                      {user.name}
+                    </Accordion.ItemTrigger>
+                    <Accordion.ItemContent>
+                      ii
+                      {/* <Accordion.ItemBody>{item.content}</Accordion.ItemBody> */}
+                    </Accordion.ItemContent>
+                  </Accordion.Item>
+                  {/* <SelectBox1
                   title={user.name}
                   desc={user.$id}
                   src={sdk.avatars.getInitials(user.name)}
                   checked={isExists ? true : selections.includes(user.$id)}
                   disabled={isExists}
                   onClick={() => toggleSelection(user.$id)}
-                />
-              </HStack>
-            );
-          }}
-        />
+                /> */}
+                </HStack>
+              );
+            }}
+          />
+        </Accordion.Root>
       </SelectDialog>
     </>
   );

@@ -7,10 +7,11 @@ import { CreateMessageTypeMail, emailSchema } from "./_type_mail";
 import { CreateMessageTypeSms, smsSchema } from "./_type_sms";
 import { CreateMessageTypePush, pushSchema } from "./_type_push";
 import { SelectTargets } from "./targets/_select_targets";
+import { MessagingProviderType } from "@nuvix/console";
 
 type CreateMessageProps = {
   children?: React.ReactNode;
-  type: "push" | "sms" | "email" | null;
+  type: MessagingProviderType | null;
 } & Omit<React.ComponentProps<typeof Dialog.Root>, "size" | "motionPreset" | "children">;
 
 export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ...props }) => {
@@ -39,11 +40,11 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ..
 
   const messageConfig = (() => {
     switch (type) {
-      case "email":
+      case MessagingProviderType.Email:
         return { schema: emailSchema, component: CreateMessageTypeMail };
-      case "sms":
+      case MessagingProviderType.Sms:
         return { schema: smsSchema, component: CreateMessageTypeSms };
-      case "push":
+      case MessagingProviderType.Push:
         return { schema: pushSchema, component: CreateMessageTypePush };
       default:
         return null;
@@ -77,7 +78,7 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ..
                 >
                   <Column gap="8">
                     <MessageComponent />
-                    <SelectTargets />
+                    <SelectTargets type={type} />
                   </Column>
                   <Flex justify="flex-end" mt={6}>
                     <SubmitButton>Create Message</SubmitButton>

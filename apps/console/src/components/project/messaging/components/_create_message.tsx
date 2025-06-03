@@ -1,11 +1,12 @@
 import { CreateMessage } from "@/components/wizard/messaging";
+import { MessagingProviderType } from "@nuvix/console";
 import { Popover, PopoverTrigger, PopoverContent } from "@nuvix/sui/components";
 import { Button, ToggleButton } from "@nuvix/ui/components";
 import { useState } from "react";
 
 export const CreateMessageButton = () => {
   const [open, setOpen] = useState(false);
-  const [type, setType] = useState<"push" | "sms" | "email" | null>(null);
+  const [type, setType] = useState<MessagingProviderType | null>(null);
 
   const onClick = (type: any) => {
     setType(type);
@@ -21,9 +22,9 @@ export const CreateMessageButton = () => {
         </PopoverTrigger>
         <PopoverContent className="max-w-48 space-y-1">
           {[
-            { name: "Push Notifications", key: "push" },
-            { name: "Email", key: "email" },
-            { name: "Sms", key: "sms" },
+            { name: "Push Notifications", key: MessagingProviderType.Push },
+            { name: "Email", key: MessagingProviderType.Email },
+            { name: "Sms", key: MessagingProviderType.Sms },
           ].map(({ name, key }) => (
             <ToggleButton
               key={key}

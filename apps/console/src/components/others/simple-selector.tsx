@@ -53,7 +53,7 @@ export const SimpleSelector = <T,>({
   return (
     <VStack gap={3} alignItems="flex-start" width="full">
       {setSearch && (
-        <div className="border-2 !border-l-0 !border-r-0 rounded-none px-4 flex items-center h-12 w-full">
+        <div className="border !border-l-0 !border-r-0 rounded-none px-4 flex items-center h-12 w-full">
           <SearchIcon className="size-4 opacity-80" />
           <Input
             value={search || ""}
@@ -86,7 +86,7 @@ export const SimpleSelector = <T,>({
           width="full"
           justify="space-between"
           mt={4}
-          borderY={"2px solid"}
+          borderY={"1px solid"}
           borderColor="border.muted"
           height="40px"
         >

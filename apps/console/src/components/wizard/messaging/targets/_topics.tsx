@@ -53,7 +53,7 @@ export const Topics = ({ add, sdk, onClose, groups }: TopicsProps) => {
 
   const onSave = () => {
     for (const topicId of selectedTopics) {
-      const topic = topics.find(t => t.$id === topicId);
+      const topic = topics.find((t) => t.$id === topicId);
       if (topic) {
         add(topic);
       }
@@ -111,14 +111,12 @@ export const Topics = ({ add, sdk, onClose, groups }: TopicsProps) => {
                       disabled={isExists}
                       onCheckedChange={({ checked }) => handleTopicSelection(topic.$id, !!checked)}
                     />
-                    <Avatar
-                      size="s"
-                      src={sdk.avatars.getInitials(topic.name)}
-                      about={topic.name}
-                    />
+                    <Avatar size="s" src={sdk.avatars.getInitials(topic.name)} about={topic.name} />
                     <VStack align="start" gap={0} flex={1}>
                       <Text fontWeight="medium">{topic.name}</Text>
-                      <Text fontSize="sm" color="gray.500">{topic.$id}</Text>
+                      <Text fontSize="sm" color="gray.500">
+                        {topic.$id}
+                      </Text>
                     </VStack>
                   </HStack>
                 );
@@ -126,9 +124,7 @@ export const Topics = ({ add, sdk, onClose, groups }: TopicsProps) => {
             </VStack>
           ) : (
             <Box textAlign="center" py={8}>
-              <Text color="gray.500">
-                {search ? "No topics found" : "No topics available"}
-              </Text>
+              <Text color="gray.500">{search ? "No topics found" : "No topics available"}</Text>
             </Box>
           )}
 

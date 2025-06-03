@@ -20,8 +20,8 @@ type Props = {
 export const SelectDialog = ({ title, description, children, actions }: Props) => {
   return (
     <>
-      <DialogContent className="p-0">
-        <DialogHeader className="px-4 pt-4">
+      <DialogContent className="p-0 !shadow-none border" portalled backdrop backdropBlur={"lg"}>
+        <DialogHeader className="px-4 pt-4 flex-col">
           {title && <DialogTitle>{title}</DialogTitle>}
           {description && <DialogDescription>{description} </DialogDescription>}
         </DialogHeader>

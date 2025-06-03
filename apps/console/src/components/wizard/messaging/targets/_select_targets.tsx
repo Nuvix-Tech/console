@@ -135,9 +135,7 @@ const TargetsSelector = ({ type }: { type: MessagingProviderType }) => {
             ))}
             {Object.entries(targetsById).map(([targetId, target]) => (
               <tr key={targetId} className="border-b">
-                <td className="p-3">
-                  {target.name || target.identifier}
-                </td>
+                <td className="p-3">{target.name || target.identifier}</td>
                 <td className="p-3">
                   <div className="flex justify-end">
                     <button
@@ -154,7 +152,7 @@ const TargetsSelector = ({ type }: { type: MessagingProviderType }) => {
           </tbody>
         </table>
       </div>
-      <div>
+      <div className="relative">
         <PopoverBox
           type={type}
           onAddTopics={addTopics}
@@ -181,7 +179,14 @@ export type PopoverBoxProps = {
   sdk: any;
 };
 
-const PopoverBox = ({ type, onAddTopics, onAddTargets, children, sdk, groups }: PopoverBoxProps) => {
+const PopoverBox = ({
+  type,
+  onAddTopics,
+  onAddTargets,
+  children,
+  sdk,
+  groups,
+}: PopoverBoxProps) => {
   const [open, setOpen] = useState(false);
   const [comp, setComp] = useState<React.JSX.Element>();
   const [popOpen, setPopOpen] = useState(false);
@@ -219,7 +224,12 @@ const PopoverBox = ({ type, onAddTopics, onAddTargets, children, sdk, groups }: 
 
   return (
     <>
-      <PopoverRoot portalled={true} size="xs" open={popOpen} onOpenChange={({ open }) => setPopOpen(open)}>
+      <PopoverRoot
+        portalled={true}
+        size="xs"
+        open={popOpen}
+        onOpenChange={({ open }) => setPopOpen(open)}
+      >
         <PopoverTrigger asChild>{children}</PopoverTrigger>
         <PopoverContent className="!shadow-none border max-w-48">
           <PopoverArrow />
@@ -240,7 +250,12 @@ const PopoverBox = ({ type, onAddTopics, onAddTargets, children, sdk, groups }: 
         </PopoverContent>
       </PopoverRoot>
 
-      <DialogRoot open={open} onOpenChange={({ open }) => setOpen(open)}>
+      <DialogRoot
+        open={open}
+        onOpenChange={({ open }) => setOpen(open)}
+        closeOnEscape={false}
+        closeOnInteractOutside={false}
+      >
         {comp}
       </DialogRoot>
     </>
