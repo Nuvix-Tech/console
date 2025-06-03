@@ -42,7 +42,7 @@
     "lucide-react": "^0.488.0",
     "memoize-one": "^6.0.0",
     "motion": "^12.4.7",
-    "next": "^15.3.2",
+    "next": "^15.3.3",
     "next-themes": "^0.4.4",
     "papaparse": "^5.5.2",
     "pg-minify": "^1.7.0",
@@ -105,5 +105,9 @@
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.2"
   },
-  "trustedDependencies": ["@biomejs/biome", "@parcel/watcher", "sharp"]
+  "trustedDependencies": [
+    "@biomejs/biome",
+    "@parcel/watcher",
+    "sharp"
+  ]
 }

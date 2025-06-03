@@ -4,7 +4,7 @@ import { useBucketStore, useProjectStore } from "@/lib/store";
 import { Avatar, RadioButton, Row, Text } from "@nuvix/ui/components";
 import { useEffect, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { Models } from "@nuvix/console";
+import { Models, Query } from "@nuvix/console";
 import { formatBytes } from "@/lib";
 import { formatDate } from "@/lib/utils";
 import { Tooltip } from "@/components/cui/tooltip";
@@ -14,7 +14,7 @@ import { HStack } from "@chakra-ui/react";
 import { CreateButton } from "@/components/others";
 import { UploadFile } from "@/components/project/storage/single/components";
 
-export const Files = () => {
+export const Files = ({ mimeType }: { mimeType?: string[] }) => {
   const { bucket, setLoading, file, setFile } = useBucketSelector((state) => state);
   const { sdk, permissions } = useProjectStore((state) => state);
   const { setBucket } = useBucketStore((state) => state);
@@ -22,7 +22,11 @@ export const Files = () => {
   const { canCreateFiles } = permissions();
 
   const fetcher = async () => {
-    return await sdk.storage.listFiles(bucket?.$id!, [], search);
+    const queries = [];
+    if (mimeType) {
+      queries.push(Query.equal('mimeType', mimeType))
+    }
+    return await sdk.storage.listFiles(bucket?.$id!, queries, search);
   };
 
   const { data, isSuccess, isFetching, refetch } = useQuery({

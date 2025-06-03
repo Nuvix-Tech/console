@@ -1,16 +1,19 @@
 "use client";
-import React, { Suspense } from "react";
-import { Box, CloseButton, Dialog, Portal, Text } from "@chakra-ui/react";
+import React, { Suspense, useState } from "react";
+import { Box, Dialog, Portal, Text } from "@chakra-ui/react";
 import { Button, Line } from "@nuvix/ui/components";
 import { Buckets } from "./_buckets";
 import { Files } from "./_files";
 import { useBucketSelector } from "./_store";
+import { Models } from "@nuvix/console";
 
 type SelectFilesProps = {
   children?: React.ReactNode;
+  mimeType?: string[];
+  onSelect?: (b: Models.Bucket, f: Models.File) => void;
 } & Omit<React.ComponentProps<typeof Dialog.Root>, "size" | "motionPreset" | "children">;
 
-export const SelectFiles: React.FC<SelectFilesProps> = ({ children, ...props }) => {
+export const SelectFiles: React.FC<SelectFilesProps> = ({ children, onSelect, mimeType, ...props }) => {
   const { bucket, file } = useBucketSelector();
 
   return (
@@ -34,14 +37,17 @@ export const SelectFiles: React.FC<SelectFilesProps> = ({ children, ...props }) 
                 </Box>
                 <Line vert />
                 <Box flex="1" h="full" className="w-[calc(100%-200px)]">
-                  <Files />
+                  <Files mimeType={mimeType} />
                 </Box>
               </Dialog.Body>
               <Dialog.Footer>
                 <Dialog.Trigger asChild>
                   <Button variant="tertiary">Cancle</Button>
                 </Dialog.Trigger>
-                <Button variant="secondary" disabled={!bucket || !file}>
+                <Button variant="secondary" disabled={!bucket || !file} onClick={() => {
+                  onSelect?.(bucket!, file!)
+                  props.onOpenChange?.({ open: false });
+                }}>
                   Select
                 </Button>
               </Dialog.Footer>
@@ -54,11 +60,28 @@ export const SelectFiles: React.FC<SelectFilesProps> = ({ children, ...props }) 
 };
 
 export const FilesSelector = ({ ...props }: Omit<SelectFilesProps, "children">) => {
+  const [open, setOpen] = useState(false);
+  const [file, setFile] = useState<Models.File | undefined>();
+
   return (
-    <div className="border border-neutral-medium w-full h-48 border-dashed radius-l p-4">
-      <SelectFiles {...props}>
-        <Button variant="secondary">Select Files</Button>
-      </SelectFiles>
+    <div className="border border-neutral-medium w-full h-48 border-dashed radius-l p-4 flex items-center justify-center">
+      <SelectFiles
+        {...props}
+        open={open}
+        onOpenChange={({ open }) => setOpen(open)}
+        onSelect={(b, f) => {
+          setFile(f);
+          props.onSelect?.(b, f)
+        }}
+      />
+      <Button
+        onClick={() => setOpen(true)}
+        variant="secondary"
+      >
+        Select Files
+      </Button>
+
+      {file?.$id}
     </div>
   );
 };

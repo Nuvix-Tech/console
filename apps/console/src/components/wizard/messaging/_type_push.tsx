@@ -15,7 +15,7 @@ export const pushSchema = y.object().shape({
 });
 
 export const CreateMessageTypePush = () => {
-  const { values } = useFormikContext<Record<string, string | boolean>>();
+  const { values, setFieldValue } = useFormikContext<Record<string, string | boolean>>();
 
   return (
     <>
@@ -31,7 +31,7 @@ export const CreateMessageTypePush = () => {
               lines={5}
               maxLength={1000}
             />
-            <FilesSelector />
+            <FilesSelector mimeType={['png', 'jpeg']} onSelect={(b, f) => setFieldValue('image', `${b.$id}:${f.$id}`)} />
           </div>
         </CardBox>
       </Column>
