@@ -1,6 +1,6 @@
 "use client";
-import { CreateButton, IDChip, PageContainer, PageHeading } from "@/components/others";
-import { DataGridProvider, Pagination, Search, SelectLimit, Table } from "@/ui/data-grid";
+import { IDChip, PageContainer, PageHeading } from "@/components/others";
+import { ActionButton, DataActionBar, DataGridProvider, Pagination, Search, SelectLimit, Table } from "@/ui/data-grid";
 import { Models, Query } from "@nuvix/console";
 import { EmptyState } from "@/components";
 import { HStack } from "@chakra-ui/react";
@@ -13,13 +13,13 @@ import { Tooltip } from "@/components/cui/tooltip";
 import { useConfirm, useToast } from "@nuvix/ui/components";
 import { CreateMessageButton } from "./components";
 
-interface MessagingPageProps {}
+interface MessagingPageProps { }
 
 const MessagingPage: React.FC<MessagingPageProps> = () => {
   const { sdk, project } = useProjectStore((state) => state);
   const permissions = useProjectStore.use.permissions();
   const { limit, page, search, hasQuery } = useSearchQuery();
-  const { canCreateDatabases } = permissions();
+  const { canDeleteMessages } = permissions();
   const confirm = useConfirm();
   const { addToast } = useToast();
 
@@ -74,12 +74,12 @@ const MessagingPage: React.FC<MessagingPageProps> = () => {
   ];
 
   const onDelete = async (values: Models.Message[]) => {
-    const files = values;
-    const fileCount = files.length;
+    const messages = values;
+    const messageCount = messages.length;
 
     const confirmDelete = await confirm({
-      title: "Delete Files",
-      description: `Are you sure you want to delete ${fileCount} ${fileCount === 1 ? "file" : "files"}? This action cannot be undone.`,
+      title: "Delete Messages",
+      description: `Are you sure you want to delete ${messageCount} ${messageCount === 1 ? "message" : "messages"}? This action cannot be undone.`,
       cancle: {
         text: "Cancel",
       },
@@ -92,16 +92,16 @@ const MessagingPage: React.FC<MessagingPageProps> = () => {
     if (!confirmDelete) return;
 
     try {
-      // await Promise.all(files.map((file) => sdk.storage.deleteFile(bucket?.$id!, file.$id)));
+      await Promise.all(messages.map((message) => sdk.messaging.delete(message.$id)));
 
       addToast({
-        message: `Successfully deleted ${fileCount} ${fileCount === 1 ? "file" : "files"}.`,
+        message: `Successfully deleted ${messageCount} ${messageCount === 1 ? "message" : "messages"}.`,
         variant: "success",
       });
       await refetch();
     } catch (error) {
       addToast({
-        message: `Failed to delete ${fileCount === 1 ? "file" : "files"}. Please try again.`,
+        message: `Failed to delete ${messageCount === 1 ? "message" : "messages"}. Please try again.`,
         variant: "danger",
       });
     }
@@ -111,7 +111,10 @@ const MessagingPage: React.FC<MessagingPageProps> = () => {
 
   return (
     <PageContainer>
-      <PageHeading heading="Messages" description="__" />
+      <PageHeading
+        heading="Messages"
+        description="Manage and monitor your messaging campaigns, notifications, and communications sent through your project's messaging service."
+      />
 
       <DataGridProvider<Models.Message>
         columns={columns}
@@ -122,24 +125,38 @@ const MessagingPage: React.FC<MessagingPageProps> = () => {
         state={{
           pagination: { pageIndex: page, pageSize: limit },
         }}
+        showCheckbox={canDeleteMessages}
       >
         <EmptyState
           show={data.total === 0 && !isFetching && !hasQuery}
-          title="No Messages"
-          description="No messages have been created yet."
+          title="No Messages Found"
+          description="You haven't created any messages yet. Start by creating your first message to communicate with your users."
           primaryComponent={create}
         />
 
         {(data.total > 0 || hasQuery) && (
           <>
             <HStack justifyContent="space-between" alignItems="center">
-              <Search placeholder="Search by Name" />
+              <Search placeholder="Search messages by ID, type, or status" />
+              {canDeleteMessages && create}
             </HStack>
             <Table noResults={data.total === 0 && hasQuery} />
             <HStack justifyContent="space-between" alignItems="center">
               <SelectLimit />
               <Pagination />
             </HStack>
+
+            {canDeleteMessages && (
+              <DataActionBar
+                actions={
+                  <>
+                    <ActionButton<Models.Message> variant="danger" onClick={onDelete}>
+                      Delete
+                    </ActionButton>
+                  </>
+                }
+              />
+            )}
           </>
         )}
       </DataGridProvider>

@@ -6,15 +6,14 @@ import React from "react";
 import * as y from "yup";
 
 export const smsSchema = y.object().shape({
-  name: y.string().max(56).required("Project name is required"),
-  password: y.string().min(6).max(20).required("Database password is required"),
+  message: y.string().max(900).required("Message is required"),
   id: y.string().min(6).max(36).optional(),
 });
 
 export const CreateMessageTypeSms = () => {
   return (
     <>
-      <Column maxWidth={"xs"}>
+      <Column>
         <CardBox>
           <div className="space-y-4">
             <InputTextareaField

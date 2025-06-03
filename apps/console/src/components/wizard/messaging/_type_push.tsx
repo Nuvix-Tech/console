@@ -8,9 +8,10 @@ import * as y from "yup";
 import { FilesSelector } from "../storage";
 
 export const pushSchema = y.object().shape({
-  name: y.string().max(56).required("Project name is required"),
-  password: y.string().min(6).max(20).required("Database password is required"),
+  title: y.string().required("Title is required"),
   id: y.string().min(6).max(36).optional(),
+  message: y.string().max(1000).required("Message is required"),
+  image: y.string().matches(/^[^:]{1,36}:[^:]{1,36}$/, "Image must be in format <bucketId>:<fileId>").optional(),
 });
 
 export const CreateMessageTypePush = () => {
@@ -18,7 +19,7 @@ export const CreateMessageTypePush = () => {
 
   return (
     <>
-      <Column maxWidth={"xs"}>
+      <Column>
         <CardBox>
           <div className="space-y-4">
             <InputField name="title" label="Title" />
