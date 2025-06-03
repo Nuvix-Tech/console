@@ -11,7 +11,10 @@ export const pushSchema = y.object().shape({
   title: y.string().required("Title is required"),
   id: y.string().min(6).max(36).optional(),
   message: y.string().max(1000).required("Message is required"),
-  image: y.string().matches(/^[^:]{1,36}:[^:]{1,36}$/, "Image must be in format <bucketId>:<fileId>").optional(),
+  image: y
+    .string()
+    .matches(/^[^:]{1,36}:[^:]{1,36}$/, "Image must be in format <bucketId>:<fileId>")
+    .optional(),
 });
 
 export const CreateMessageTypePush = () => {
@@ -31,7 +34,10 @@ export const CreateMessageTypePush = () => {
               lines={5}
               maxLength={1000}
             />
-            <FilesSelector mimeType={['png', 'jpeg']} onSelect={(b, f) => setFieldValue('image', `${b.$id}:${f.$id}`)} />
+            <FilesSelector
+              mimeType={["png", "jpeg"]}
+              onSelect={(b, f) => setFieldValue("image", `${b.$id}:${f.$id}`)}
+            />
           </div>
         </CardBox>
       </Column>

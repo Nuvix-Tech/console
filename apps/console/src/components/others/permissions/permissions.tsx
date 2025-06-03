@@ -11,13 +11,13 @@ import { LuPlus } from "react-icons/lu";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { CloseButton } from "@/components/cui/close-button";
 import { sdkForConsole, sdkForProject } from "@/lib/sdk";
-import { Dialog } from "@nuvix/sui/components/dialog";
 import { UserRole } from "./users";
 import { TeamRole } from "./teams";
 import { RoleHover } from "./row";
 import { LabelRole } from "./label";
 import { CustomRole } from "./custom";
 import { Button } from "@nuvix/sui/components/button";
+import { DialogRoot } from "@/components/cui/dialog";
 
 export type Permission = {
   create: boolean;
@@ -230,7 +230,7 @@ export type PopoverBoxProps = {
   groups: Map<string, Permission>;
 } & Pick<PermissionsEditorProps, "sdk">;
 
-const PopoverBox = ({ addRole, children, sdk, groups }: PopoverBoxProps) => {
+export const PopoverBox = ({ addRole, children, sdk, groups }: PopoverBoxProps) => {
   const [open, setOpen] = useState(false);
   const [comp, setComp] = useState<React.JSX.Element>();
 
@@ -293,9 +293,9 @@ const PopoverBox = ({ addRole, children, sdk, groups }: PopoverBoxProps) => {
         </PopoverContent>
       </PopoverRoot>
 
-      <Dialog open={open} onOpenChange={(o) => setOpen(o)}>
+      <DialogRoot open={open} onOpenChange={({ open }) => setOpen(open)}>
         {comp}
-      </Dialog>
+      </DialogRoot>
     </>
   );
 };

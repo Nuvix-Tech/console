@@ -1,6 +1,14 @@
 "use client";
 import { IDChip, PageContainer, PageHeading } from "@/components/others";
-import { ActionButton, DataActionBar, DataGridProvider, Pagination, Search, SelectLimit, Table } from "@/ui/data-grid";
+import {
+  ActionButton,
+  DataActionBar,
+  DataGridProvider,
+  Pagination,
+  Search,
+  SelectLimit,
+  Table,
+} from "@/ui/data-grid";
 import { Models, Query } from "@nuvix/console";
 import { EmptyState } from "@/components";
 import { HStack } from "@chakra-ui/react";
@@ -13,7 +21,7 @@ import { Tooltip } from "@/components/cui/tooltip";
 import { useConfirm, useToast } from "@nuvix/ui/components";
 import { CreateMessageButton } from "./components";
 
-interface MessagingPageProps { }
+interface MessagingPageProps {}
 
 const MessagingPage: React.FC<MessagingPageProps> = () => {
   const { sdk, project } = useProjectStore((state) => state);

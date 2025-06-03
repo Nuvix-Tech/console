@@ -24,7 +24,7 @@ export const Files = ({ mimeType }: { mimeType?: string[] }) => {
   const fetcher = async () => {
     const queries = [];
     if (mimeType) {
-      queries.push(Query.equal('mimeType', mimeType))
+      queries.push(Query.equal("mimeType", mimeType));
     }
     return await sdk.storage.listFiles(bucket?.$id!, queries, search);
   };

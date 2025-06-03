@@ -1,14 +1,14 @@
 import React from "react";
+import { CheckIcon } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@nuvix/sui/components/avatar";
+import { cn } from "@nuvix/sui/lib/utils";
 import {
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@nuvix/sui/components/dialog";
-import { CheckIcon } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@nuvix/sui/components/avatar";
-import { cn } from "@nuvix/sui/lib/utils";
+} from "../cui/dialog";
 
 type Props = {
   title: string;

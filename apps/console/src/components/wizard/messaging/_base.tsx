@@ -6,7 +6,7 @@ import { Column, useToast } from "@nuvix/ui/components";
 import { CreateMessageTypeMail, emailSchema } from "./_type_mail";
 import { CreateMessageTypeSms, smsSchema } from "./_type_sms";
 import { CreateMessageTypePush, pushSchema } from "./_type_push";
-import { SelectTargets } from "./_select_targets";
+import { SelectTargets } from "./targets/_select_targets";
 
 type CreateMessageProps = {
   children?: React.ReactNode;
@@ -29,7 +29,6 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ..
 
       resetForm();
       // TODO: Navigate to appropriate page or close dialog
-
     } catch (error: any) {
       addToast({
         variant: "danger",
@@ -65,7 +64,7 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ..
         <Dialog.Positioner>
           <Dialog.Content>
             <Dialog.Body h="full" gap={10} p={12} display="flex">
-              <Box flex="1" h="full" maxWidth={{ base: '2xl' }}>
+              <Box flex="1" h="full" maxWidth={{ base: "2xl" }}>
                 <Text fontSize="2xl" fontWeight="semibold" mb={6}>
                   Create {type} Message
                 </Text>

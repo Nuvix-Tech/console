@@ -13,7 +13,12 @@ type SelectFilesProps = {
   onSelect?: (b: Models.Bucket, f: Models.File) => void;
 } & Omit<React.ComponentProps<typeof Dialog.Root>, "size" | "motionPreset" | "children">;
 
-export const SelectFiles: React.FC<SelectFilesProps> = ({ children, onSelect, mimeType, ...props }) => {
+export const SelectFiles: React.FC<SelectFilesProps> = ({
+  children,
+  onSelect,
+  mimeType,
+  ...props
+}) => {
   const { bucket, file } = useBucketSelector();
 
   return (
@@ -44,10 +49,14 @@ export const SelectFiles: React.FC<SelectFilesProps> = ({ children, onSelect, mi
                 <Dialog.Trigger asChild>
                   <Button variant="tertiary">Cancle</Button>
                 </Dialog.Trigger>
-                <Button variant="secondary" disabled={!bucket || !file} onClick={() => {
-                  onSelect?.(bucket!, file!)
-                  props.onOpenChange?.({ open: false });
-                }}>
+                <Button
+                  variant="secondary"
+                  disabled={!bucket || !file}
+                  onClick={() => {
+                    onSelect?.(bucket!, file!);
+                    props.onOpenChange?.({ open: false });
+                  }}
+                >
                   Select
                 </Button>
               </Dialog.Footer>
@@ -71,13 +80,10 @@ export const FilesSelector = ({ ...props }: Omit<SelectFilesProps, "children">) 
         onOpenChange={({ open }) => setOpen(open)}
         onSelect={(b, f) => {
           setFile(f);
-          props.onSelect?.(b, f)
+          props.onSelect?.(b, f);
         }}
       />
-      <Button
-        onClick={() => setOpen(true)}
-        variant="secondary"
-      >
+      <Button onClick={() => setOpen(true)} variant="secondary">
         Select Files
       </Button>
 

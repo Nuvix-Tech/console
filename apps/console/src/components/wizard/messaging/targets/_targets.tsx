@@ -1,20 +1,24 @@
 import React from "react";
-import { PermissionsEditorProps } from "./permissions";
 import { Query } from "@nuvix/console";
-import { SimpleSelector, usePaginatedSelector } from "../simple-selector";
 import { Button, HStack, Text, VStack } from "@chakra-ui/react";
 import { Checkbox } from "@/components/cui/checkbox";
 import { Avatar } from "@nuvix/ui/components";
 import { DialogTrigger } from "@/components/cui/dialog";
-import { SelectBox1, SelectDialog } from "../select-dialog";
+import {
+  SelectBox1,
+  SelectDialog,
+  SimpleSelector,
+  usePaginatedSelector,
+} from "@/components/others";
+import { ProjectSdk } from "@/lib/sdk";
 
 export type UserRoleProps = {
   addRole: (role: string) => void;
   onClose: VoidFunction;
   groups: Map<string, any>;
-} & Pick<PermissionsEditorProps, "sdk">;
+} & { sdk: ProjectSdk };
 
-export const UserRole = ({ addRole, sdk, onClose, groups }: UserRoleProps) => {
+export const Targets = ({ addRole, sdk, onClose, groups }: UserRoleProps) => {
   const fetchUsers = async (search: string | undefined, limit: number, offset: number) => {
     let queris = [];
     queris.push(Query.limit(limit), Query.offset(offset));
