@@ -1,5 +1,5 @@
 import React from "react";
-import { Query } from "@nuvix/console";
+import { Models, Query } from "@nuvix/console";
 import { Button, HStack, Text, VStack } from "@chakra-ui/react";
 import { Checkbox } from "@/components/cui/checkbox";
 import { Avatar } from "@nuvix/ui/components";
@@ -12,13 +12,13 @@ import {
 } from "@/components/others";
 import { ProjectSdk } from "@/lib/sdk";
 
-export type UserRoleProps = {
-  addRole: (role: string) => void;
+export type TargetProps = {
+  add: (target: Models.Target) => void;
   onClose: VoidFunction;
-  groups: Map<string, any>;
+  groups: Map<string, string>;
 } & { sdk: ProjectSdk };
 
-export const Targets = ({ addRole, sdk, onClose, groups }: UserRoleProps) => {
+export const Targets = ({ add, sdk, onClose, groups }: TargetProps) => {
   const fetchUsers = async (search: string | undefined, limit: number, offset: number) => {
     let queris = [];
     queris.push(Query.limit(limit), Query.offset(offset));
@@ -29,8 +29,10 @@ export const Targets = ({ addRole, sdk, onClose, groups }: UserRoleProps) => {
   const { ...rest } = usePaginatedSelector({ fetchFunction: fetchUsers, limit: 10 });
 
   const onSave = () => {
-    for (const role of rest.selections) {
-      addRole(`user:${role}`);
+    for (const target of rest.selections) {
+      const [userId, targetId] = target.split(':');
+      const index = rest.data.findIndex(t => t.$id === userId)
+      add(rest.data[index].targets.find(t => t.$id === targetId)!);
     }
     onClose?.();
   };

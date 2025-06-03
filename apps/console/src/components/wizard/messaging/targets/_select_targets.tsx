@@ -17,6 +17,7 @@ import {
   PopoverBody,
 } from "@/components/cui/popover";
 import { DialogRoot } from "@/components/cui/dialog";
+import { Models } from "@nuvix/console";
 
 export const SelectTargets = () => {
   const { values, setFieldValue } = useFormikContext<Record<string, string | boolean>>();
@@ -34,6 +35,8 @@ export const SelectTargets = () => {
 
 const TargetsSelector = () => {
   const { sdk } = useProjectStore((state) => state);
+  const [topics, setTopics] = useState<string[]>([]);
+  const [targets, setTargets] = useState<string[]>([]);
 
   return (
     <>
@@ -46,7 +49,7 @@ const TargetsSelector = () => {
         direction="column"
         gap="12"
       >
-        <PopoverBox addRole={() => {}} sdk={sdk} groups={new Map()}>
+        <PopoverBox addTarget={(t) => setTopics((prev) => ([...new Set([...prev, t.$id])]))} addTopic={(t) => setTargets((prev) => ([...new Set([...prev, t.$id])]))} sdk={sdk} groups={new Map()}>
           <IconButton variant="secondary" size="m">
             <LuPlus />
           </IconButton>
@@ -60,16 +63,19 @@ const TargetsSelector = () => {
 };
 
 export type PopoverBoxProps = {
-  addRole: (role: string) => void;
+  addTopic: (topic: Models.Topic) => void;
+  addTarget: (topic: Models.Target) => void;
   children: React.ReactNode;
-  groups: Map<string, any>;
+  groups: Map<string, string>;
 } & { sdk: any };
 
-const PopoverBox = ({ addRole, children, sdk, groups }: PopoverBoxProps) => {
+const PopoverBox = ({ addTopic, addTarget, children, sdk, groups }: PopoverBoxProps) => {
   const [open, setOpen] = useState(false);
   const [comp, setComp] = useState<React.JSX.Element>();
+  const [popOpen, setPopOpen] = useState(false);
 
   const handleRoleClick = (component: React.JSX.Element) => {
+    setPopOpen(false)
     setComp(component);
     setOpen(true);
   };
@@ -78,20 +84,20 @@ const PopoverBox = ({ addRole, children, sdk, groups }: PopoverBoxProps) => {
     {
       label: "Select Topics",
       component: (
-        <Topics addRole={addRole} sdk={sdk} onClose={() => setOpen(false)} groups={groups} />
+        <Topics add={addTopic} sdk={sdk} onClose={() => setOpen(false)} groups={groups} />
       ),
     },
     {
       label: "Select Targets",
       component: (
-        <Targets addRole={addRole} sdk={sdk} onClose={() => setOpen(false)} groups={groups} />
+        <Targets add={addTarget} sdk={sdk} onClose={() => setOpen(false)} groups={groups} />
       ),
     },
   ];
 
   return (
     <>
-      <PopoverRoot portalled={true} size="xs">
+      <PopoverRoot portalled={true} size="xs" open={popOpen} onOpenChange={({ open }) => setPopOpen(open)}>
         <PopoverTrigger asChild>{children}</PopoverTrigger>
         <PopoverContent className="!shadow-none border max-w-48">
           <PopoverArrow />

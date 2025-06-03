@@ -1,5 +1,5 @@
 import React from "react";
-import { Query } from "@nuvix/console";
+import { Models, Query } from "@nuvix/console";
 import { Button, HStack, Text, VStack } from "@chakra-ui/react";
 import { Checkbox } from "@/components/cui/checkbox";
 import { Avatar } from "@nuvix/ui/components";
@@ -12,25 +12,25 @@ import {
 import { ProjectSdk } from "@/lib/sdk";
 import { DialogTrigger } from "@/components/cui/dialog";
 
-export type UserRoleProps = {
-  addRole: (role: string) => void;
+export type TopicsProps = {
+  add: (topic: Models.Topic) => void;
   onClose: VoidFunction;
-  groups: Map<string, any>;
+  groups: Map<string, string>;
 } & { sdk: ProjectSdk };
 
-export const Topics = ({ addRole, sdk, onClose, groups }: UserRoleProps) => {
+export const Topics = ({ add, sdk, onClose, groups }: TopicsProps) => {
   const fetchUsers = async (search: string | undefined, limit: number, offset: number) => {
     let queris = [];
     queris.push(Query.limit(limit), Query.offset(offset));
-    const res = await sdk.users.list(queris, search);
-    return { data: res.users, total: res.total };
+    const res = await sdk.messaging.listTopics(queris, search);
+    return { data: res.topics, total: res.total };
   };
 
   const { ...rest } = usePaginatedSelector({ fetchFunction: fetchUsers, limit: 10 });
 
   const onSave = () => {
-    for (const role of rest.selections) {
-      addRole(`user:${role}`);
+    for (const topic of rest.selections) {
+      add(rest.data.find(t => t.$id === topic)!);
     }
     onClose?.();
   };
@@ -38,8 +38,8 @@ export const Topics = ({ addRole, sdk, onClose, groups }: UserRoleProps) => {
   return (
     <>
       <SelectDialog
-        title="Select users"
-        description="Grant access to any authenticated or anonymous user."
+        title="Select topics"
+        description="__"
         actions={
           <>
             <DialogTrigger asChild>
@@ -52,19 +52,19 @@ export const Topics = ({ addRole, sdk, onClose, groups }: UserRoleProps) => {
         }
       >
         <SimpleSelector
-          placeholder="Search users by name, email, phone or ID"
+          placeholder="Search users by name"
           {...rest}
-          onMap={(user, toggleSelection, selections) => {
-            const isExists = groups.has(`user:${user.$id}`);
+          onMap={(topic, toggleSelection, selections) => {
+            const isExists = groups.has(topic.$id);
             return (
-              <HStack key={user.$id} alignItems="center" width="full">
+              <HStack key={topic.$id} alignItems="center" width="full">
                 <SelectBox1
-                  title={user.name}
-                  desc={user.$id}
-                  src={sdk.avatars.getInitials(user.name)}
-                  checked={isExists ? true : selections.includes(user.$id)}
+                  title={topic.name}
+                  desc={topic.$id}
+                  src={sdk.avatars.getInitials(topic.name)}
+                  checked={isExists ? true : selections.includes(topic.$id)}
                   disabled={isExists}
-                  onClick={() => toggleSelection(user.$id)}
+                  onClick={() => toggleSelection(topic.$id)}
                 />
               </HStack>
             );
