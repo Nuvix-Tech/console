@@ -1,5 +1,5 @@
-import React from "react";
-import { Models, Query } from "@nuvix/console";
+import React, { useState } from "react";
+import { MessagingProviderType, Models, Query } from "@nuvix/console";
 import { Accordion, Button, HStack, Text, VStack } from "@chakra-ui/react";
 import { Checkbox } from "@/components/cui/checkbox";
 import { Avatar } from "@nuvix/ui/components";
@@ -11,14 +11,17 @@ import {
   usePaginatedSelector,
 } from "@/components/others";
 import { ProjectSdk } from "@/lib/sdk";
+import { ChevronDown } from "lucide-react";
+import { cn } from "@nuvix/sui/lib/utils";
 
 export type TargetProps = {
   add: (target: Models.Target) => void;
   onClose: VoidFunction;
   groups: Map<string, string>;
+  type: MessagingProviderType;
 } & { sdk: ProjectSdk };
 
-export const Targets = ({ add, sdk, onClose, groups }: TargetProps) => {
+export const Targets = ({ add, sdk, onClose, groups, type }: TargetProps) => {
   const fetchUsers = async (search: string | undefined, limit: number, offset: number) => {
     let queris = [];
     queris.push(Query.limit(limit), Query.offset(offset));
@@ -53,26 +56,45 @@ export const Targets = ({ add, sdk, onClose, groups }: TargetProps) => {
           </>
         }
       >
-        <Accordion.Root collapsible defaultValue={["info"]}>
-          <SimpleSelector
-            placeholder="Search users by name, email, phone or ID"
-            {...rest}
-            onMap={(user, toggleSelection, selections) => {
-              const isExists = groups.has(`user:${user.$id}`);
-              return (
-                <HStack key={user.$id} alignItems="center" width="full">
-                  <Accordion.Item value={user.$id}>
-                    <Accordion.ItemTrigger>
-                      {/* <Icon fontSize="lg" color="fg.subtle">
-                          {item.icon}
-                        </Icon> */}
-                      {user.name}
-                    </Accordion.ItemTrigger>
-                    <Accordion.ItemContent>
-                      ii
-                      {/* <Accordion.ItemBody>{item.content}</Accordion.ItemBody> */}
-                    </Accordion.ItemContent>
-                  </Accordion.Item>
+        <SimpleSelector
+          placeholder="Search users by name, email, phone or ID"
+          {...rest}
+          onMap={(user, toggleSelection, selections) => {
+            const isExists = groups.has(`user:${user.$id}`);
+            const [expended, setExpended] = useState(false);
+            const targets = user.targets.filter((t) => t.providerType === type);
+            const disabled = !targets.length;
+
+            return (
+              <div key={user.$id} className={cn("w-full border-b border-neutral-medium")}>
+                <HStack
+                  color={disabled ? "fg.subtle" : "fg"}
+                  alignItems="center"
+                  width="full"
+                  justifyContent={"space-between"}
+                  mb={"2"}
+                  py={"2"}
+                  onClick={() => setExpended(!expended)}
+                >
+                  <div className="flex items-center gap-2">
+                    <Checkbox size={"sm"} disabled={disabled} />
+                    <Text>
+                      {targets[0]?.identifier ??
+                        (targets[0]?.providerType === MessagingProviderType.Email
+                          ? user.email
+                          : undefined) ??
+                        (targets[0]?.providerType === MessagingProviderType.Sms
+                          ? user.phone
+                          : undefined) ??
+                        user.name ??
+                        user.$id}
+                    </Text>
+                  </div>
+                  <ChevronDown
+                    className={cn("size-4", {
+                      "rotate-180": expended,
+                    })}
+                  />
                   {/* <SelectBox1
                   title={user.name}
                   desc={user.$id}
@@ -82,10 +104,11 @@ export const Targets = ({ add, sdk, onClose, groups }: TargetProps) => {
                   onClick={() => toggleSelection(user.$id)}
                 /> */}
                 </HStack>
-              );
-            }}
-          />
-        </Accordion.Root>
+                {expended ? <div>HELLO HOW ARE YOU</div> : ""}
+              </div>
+            );
+          }}
+        />
       </SelectDialog>
     </>
   );
