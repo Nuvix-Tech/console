@@ -1,6 +1,7 @@
 import { CardBox } from "@/components/others/card";
 import { MessagingProviderType } from "@nuvix/console";
 import { useFormikContext } from "formik";
+import { BaseMessageFormData } from "../_types";
 import { TopicsSelector } from "./_select_topics";
 import { TargetsSelector } from "./_select_targets";
 
@@ -8,13 +9,8 @@ interface SelectTargetsProps {
   type: MessagingProviderType;
 }
 
-interface FormValues {
-  topics: string[];
-  targets: string[];
-}
-
 export const SelectTopicsTargets = ({ type }: SelectTargetsProps) => {
-  const { values, setFieldValue } = useFormikContext<FormValues>();
+  const { values, setFieldValue } = useFormikContext<BaseMessageFormData>();
 
   const handleTopicsChange = (topicIds: string[]) => {
     setFieldValue("topics", topicIds);

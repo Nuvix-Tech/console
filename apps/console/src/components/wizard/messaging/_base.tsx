@@ -2,13 +2,23 @@
 import React from "react";
 import { Box, CloseButton, Dialog, Flex, Portal, Text } from "@chakra-ui/react";
 import { Form, SubmitButton } from "../../others/forms";
-import { Column, useToast } from "@nuvix/ui/components";
-import { CreateMessageTypeMail, emailSchema } from "./_type_mail";
-import { CreateMessageTypeSms, smsSchema } from "./_type_sms";
-import { CreateMessageTypePush, pushSchema } from "./_type_push";
-import { MessagingProviderType } from "@nuvix/console";
+import { Button, Column, useToast } from "@nuvix/ui/components";
+import { CreateMessageTypeMail } from "./_type_mail";
+import { CreateMessageTypeSms } from "./_type_sms";
+import { CreateMessageTypePush } from "./_type_push";
+import { MessagingProviderType, Models } from "@nuvix/console";
 import { SelectTopicsTargets } from "./targets/_selector";
 import { Schedule } from "./_schedule";
+import { emailSchema, smsSchema, pushSchema } from "./_schemas";
+import {
+  MessageFormData,
+  EmailFormData,
+  SmsFormData,
+  PushFormData,
+  getInitialValues,
+} from "./_types";
+import { useProjectStore } from "@/lib/store";
+import { useFormikContext } from "formik";
 
 type CreateMessageProps = {
   children?: React.ReactNode;
@@ -17,20 +27,46 @@ type CreateMessageProps = {
 
 export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ...props }) => {
   const { addToast } = useToast();
+  const { sdk } = useProjectStore((state) => state);
 
-  async function onSubmit(values: any, resetForm: () => void) {
+  async function onSubmit(values: MessageFormData, resetForm: () => void) {
     try {
-      // TODO: Implement message creation logic based on type
-      console.log(`Creating ${type} message with values:`, values);
+      let res: Models.Message;
+      const draft = values.draft ?? false;
+      const scheduledAt = values.schedule === "schedule" ? new Date(`${values.date}T${values.time}`) : undefined;
 
-      // Placeholder success response
+      switch (type) {
+        case MessagingProviderType.Email:
+          const { id, subject, message, html, topics, targets } = values as EmailFormData;
+          res = await sdk.messaging.createEmail(
+            id ?? 'unique()', subject, message, topics, undefined, targets,
+            undefined, undefined, undefined, draft, html, scheduledAt?.toISOString()
+          );
+          break;
+        case MessagingProviderType.Sms:
+          const { id: smsId, message: smsMessage, topics: smsTopics, targets: smsTargets } = values as SmsFormData;
+          res = await sdk.messaging.createSms(
+            smsId ?? 'unique()', smsMessage, smsTopics, undefined, smsTargets,
+            draft, scheduledAt?.toISOString()
+          );
+          break;
+        case MessagingProviderType.Push:
+          const pushValues = values as PushFormData;
+          const { id: pushId, title, message: pushMessage, image, topics: pushTopics, targets: pushTargets, data } = pushValues;
+          res = await sdk.messaging.createPush(
+            pushId ?? 'unique()', title, pushMessage, pushTopics, undefined, pushTargets,
+            data, undefined, image, undefined, undefined, undefined, undefined, undefined, draft, scheduledAt?.toISOString()
+          );
+          break;
+      }
+
       addToast({
         variant: "success",
         message: `${type} message created successfully.`,
       });
 
       resetForm();
-      // TODO: Navigate to appropriate page or close dialog
+      props.onOpenChange?.({ open: false });
     } catch (error: any) {
       addToast({
         variant: "danger",
@@ -40,15 +76,36 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ..
   }
 
   const messageConfig = (() => {
-    switch (type) {
-      case MessagingProviderType.Email:
-        return { schema: emailSchema, component: CreateMessageTypeMail };
-      case MessagingProviderType.Sms:
-        return { schema: smsSchema, component: CreateMessageTypeSms };
-      case MessagingProviderType.Push:
-        return { schema: pushSchema, component: CreateMessageTypePush };
-      default:
-        return null;
+    if (!type) return null;
+
+    try {
+      const initialValues = getInitialValues(type);
+
+      switch (type) {
+        case MessagingProviderType.Email:
+          return {
+            schema: emailSchema,
+            component: CreateMessageTypeMail,
+            initialValues
+          };
+        case MessagingProviderType.Sms:
+          return {
+            schema: smsSchema,
+            component: CreateMessageTypeSms,
+            initialValues
+          };
+        case MessagingProviderType.Push:
+          return {
+            schema: pushSchema,
+            component: CreateMessageTypePush,
+            initialValues
+          };
+        default:
+          return null;
+      }
+    } catch (error) {
+      console.error(`Failed to get config for message type ${type}:`, error);
+      return null;
     }
   })();
 
@@ -56,7 +113,7 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ..
     return null;
   }
 
-  const { schema, component: MessageComponent } = messageConfig;
+  const { schema, component: MessageComponent, initialValues } = messageConfig;
 
   return (
     <Dialog.Root size="full" motionPreset="slide-in-right" {...props}>
@@ -71,12 +128,10 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ..
                   Create {type} Message
                 </Text>
                 <Form
-                  initialValues={{
-                    schedule: "now",
-                  }}
+                  initialValues={initialValues}
                   validationSchema={schema}
                   onSubmit={async (values, { resetForm }) => {
-                    await onSubmit(values, resetForm);
+                    await onSubmit(values as MessageFormData, resetForm);
                   }}
                 >
                   <Column gap="8">
@@ -85,6 +140,7 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ..
                     <Schedule />
                   </Column>
                   <Flex justify="flex-end" mt={6}>
+                    <DraftButton />
                     <SubmitButton>Create Message</SubmitButton>
                   </Flex>
                 </Form>
@@ -100,3 +156,23 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ..
     </Dialog.Root>
   );
 };
+
+
+const DraftButton = () => {
+  const { setFieldValue, submitForm, isSubmitting } = useFormikContext();
+
+  return (
+    <Button
+      onClick={() => {
+        setFieldValue('draft', true)
+        submitForm()
+      }}
+      disabled={isSubmitting}
+      size="s"
+      variant="secondary"
+    >
+      Save draft
+    </Button>
+  )
+
+}

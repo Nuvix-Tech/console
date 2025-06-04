@@ -5,17 +5,10 @@ import { EditorField } from "@/components/others/ui";
 import { Column } from "@nuvix/ui/components";
 import { useFormikContext } from "formik";
 import React from "react";
-import * as y from "yup";
-
-export const emailSchema = y.object().shape({
-  subject: y.string().required("Subject is required"),
-  id: y.string().min(6).max(36).optional(),
-  message: y.string().required("Message is required"),
-  html: y.boolean().optional(),
-});
+import { EmailFormData } from "./_types";
 
 export const CreateMessageTypeMail = () => {
-  const { values } = useFormikContext<Record<string, string | boolean>>();
+  const { values } = useFormikContext<EmailFormData>();
 
   return (
     <>

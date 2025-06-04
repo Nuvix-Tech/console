@@ -4,21 +4,11 @@ import { InputField, InputTextareaField } from "@/components/others/forms";
 import { Column } from "@nuvix/ui/components";
 import { useFormikContext } from "formik";
 import React from "react";
-import * as y from "yup";
+import { PushFormData } from "./_types";
 import { FilesSelector } from "../storage";
 
-export const pushSchema = y.object().shape({
-  title: y.string().required("Title is required"),
-  id: y.string().min(6).max(36).optional(),
-  message: y.string().max(1000).required("Message is required"),
-  image: y
-    .string()
-    .matches(/^[^:]{1,36}:[^:]{1,36}$/, "Image must be in format <bucketId>:<fileId>")
-    .optional(),
-});
-
 export const CreateMessageTypePush = () => {
-  const { values, setFieldValue } = useFormikContext<Record<string, string | boolean>>();
+  const { values, setFieldValue } = useFormikContext<PushFormData>();
 
   return (
     <>

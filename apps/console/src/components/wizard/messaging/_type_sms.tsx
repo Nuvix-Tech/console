@@ -3,12 +3,7 @@ import { CardBox } from "@/components/others/card";
 import { InputTextareaField } from "@/components/others/forms";
 import { Column } from "@nuvix/ui/components";
 import React from "react";
-import * as y from "yup";
-
-export const smsSchema = y.object().shape({
-  message: y.string().max(900).required("Message is required"),
-  id: y.string().min(6).max(36).optional(),
-});
+import { SmsFormData } from "./_types";
 
 export const CreateMessageTypeSms = () => {
   return (
