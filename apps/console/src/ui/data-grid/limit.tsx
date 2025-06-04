@@ -19,7 +19,7 @@ export const SelectLimit = () => {
   return (
     <>
       <Row vertical="center" gap="12">
-        <Row width={6}>
+        <Row width={4}>
           <Select
             height="s"
             labelAsPlaceholder

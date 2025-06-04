@@ -1,3 +1,5 @@
+import { TopicsPage } from "@/components/project/messaging";
+
 export default function () {
-  return "This is Topics Page";
+  return <TopicsPage />;
 }

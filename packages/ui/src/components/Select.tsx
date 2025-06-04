@@ -195,7 +195,10 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
             })}
             aria-haspopup="listbox"
             aria-expanded={isDropdownOpen}
-            hasSuffix={<ChevronsUpDown size={20} />}
+            hasSuffix={<ChevronsUpDown size={rest.height === "s" ? 14 : 20} />}
+            height={rest.height}
+            // TODO: ----
+            // {...rest}
           />
         }
         dropdown={
