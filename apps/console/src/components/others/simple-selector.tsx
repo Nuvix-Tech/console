@@ -126,6 +126,7 @@ export function usePaginatedSelector<T>({
   const [total, setTotal] = useState(0);
   const [data, setData] = useState<T[]>([]);
   const [selections, setSelections] = useState<string[]>([]);
+  const [selected, setSelected] = useState<any[]>([]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -144,6 +145,13 @@ export function usePaginatedSelector<T>({
     setSelections((prev) => (prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]));
   };
 
+  const toggleSelected = (i: any) => {
+    const d = i as any;
+    setSelected((prev) =>
+      prev.includes(d) ? prev.filter((s: any) => s.$id !== d.$id) : [...prev, d],
+    );
+  };
+
   return {
     loading,
     data,
@@ -153,6 +161,8 @@ export function usePaginatedSelector<T>({
     setSearch,
     selections,
     toggleSelection,
+    toggleSelected,
+    selected,
     total,
     limit,
   };

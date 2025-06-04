@@ -1,15 +1,9 @@
 import React, { useState } from "react";
 import { MessagingProviderType, Models, Query } from "@nuvix/console";
-import { Accordion, Button, HStack, Text, VStack } from "@chakra-ui/react";
+import { Button, Code, HStack, Text } from "@chakra-ui/react";
 import { Checkbox } from "@/components/cui/checkbox";
-import { Avatar } from "@nuvix/ui/components";
 import { DialogTrigger } from "@/components/cui/dialog";
-import {
-  SelectBox1,
-  SelectDialog,
-  SimpleSelector,
-  usePaginatedSelector,
-} from "@/components/others";
+import { SelectDialog, SimpleSelector, usePaginatedSelector } from "@/components/others";
 import { ProjectSdk } from "@/lib/sdk";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@nuvix/sui/lib/utils";
@@ -17,7 +11,7 @@ import { cn } from "@nuvix/sui/lib/utils";
 export type TargetProps = {
   add: (target: Models.Target) => void;
   onClose: VoidFunction;
-  groups: Map<string, string>;
+  groups: Map<string, Models.Target>;
   type: MessagingProviderType;
 } & { sdk: ProjectSdk };
 
@@ -29,13 +23,14 @@ export const Targets = ({ add, sdk, onClose, groups, type }: TargetProps) => {
     return { data: res.users, total: res.total };
   };
 
-  const { ...rest } = usePaginatedSelector({ fetchFunction: fetchUsers, limit: 10 });
+  const { selected, toggleSelected, ...rest } = usePaginatedSelector({
+    fetchFunction: fetchUsers,
+    limit: 10,
+  });
 
   const onSave = () => {
-    for (const target of rest.selections) {
-      const [userId, targetId] = target.split(":");
-      const index = rest.data.findIndex((t) => t.$id === userId);
-      add(rest.data[index].targets.find((t) => t.$id === targetId)!);
+    for (const target of selected as Models.Target[]) {
+      add(target);
     }
     onClose?.();
   };
@@ -50,7 +45,7 @@ export const Targets = ({ add, sdk, onClose, groups, type }: TargetProps) => {
             <DialogTrigger asChild>
               <Button variant="outline">Cancel</Button>
             </DialogTrigger>
-            <Button disabled={rest.selections.length === 0} onClick={onSave}>
+            <Button disabled={selected.length === 0} onClick={onSave}>
               Add
             </Button>
           </>
@@ -60,51 +55,74 @@ export const Targets = ({ add, sdk, onClose, groups, type }: TargetProps) => {
           placeholder="Search users by name, email, phone or ID"
           {...rest}
           onMap={(user, toggleSelection, selections) => {
-            const isExists = groups.has(`user:${user.$id}`);
             const [expended, setExpended] = useState(false);
             const targets = user.targets.filter((t) => t.providerType === type);
             const disabled = !targets.length;
+            const allSelected = targets.reduce(
+              (p, c) => (groups.has(c.$id) || selected.includes(c as any) ? [...p, c] : p),
+              groups.values().toArray() as Models.Target[],
+            );
 
             return (
-              <div key={user.$id} className={cn("w-full border-b border-neutral-medium")}>
+              <div
+                key={user.$id}
+                className={cn("w-full border-b border-dotted border-neutral-medium")}
+              >
                 <HStack
                   color={disabled ? "fg.subtle" : "fg"}
                   alignItems="center"
                   width="full"
-                  justifyContent={"space-between"}
                   mb={"2"}
-                  py={"2"}
-                  onClick={() => setExpended(!expended)}
+                  pt={"2"}
                 >
-                  <div className="flex items-center gap-2">
-                    <Checkbox size={"sm"} disabled={disabled} />
+                  <Checkbox
+                    size={"sm"}
+                    disabled={disabled}
+                    checked={allSelected.length > 0}
+                    onCheckedChange={() => targets.forEach((t) => toggleSelected(t))}
+                  />
+                  <div
+                    className="flex items-center gap-3 justify-between w-full cursor-pointer"
+                    onClick={() => setExpended(!expended && !disabled)}
+                  >
                     <Text>
-                      {targets[0]?.identifier ??
+                      {user.name ??
                         (targets[0]?.providerType === MessagingProviderType.Email
                           ? user.email
                           : undefined) ??
                         (targets[0]?.providerType === MessagingProviderType.Sms
                           ? user.phone
                           : undefined) ??
-                        user.name ??
                         user.$id}
+                      <Code color={disabled ? "fg.subtle" : "fg"} variant="surface" ml={"3"}>
+                        {allSelected.length}/{targets.length} targets
+                      </Code>
                     </Text>
+                    <ChevronDown
+                      className={cn("size-4 transition-all", {
+                        "rotate-180": expended,
+                      })}
+                    />
                   </div>
-                  <ChevronDown
-                    className={cn("size-4", {
-                      "rotate-180": expended,
-                    })}
-                  />
-                  {/* <SelectBox1
-                  title={user.name}
-                  desc={user.$id}
-                  src={sdk.avatars.getInitials(user.name)}
-                  checked={isExists ? true : selections.includes(user.$id)}
-                  disabled={isExists}
-                  onClick={() => toggleSelection(user.$id)}
-                /> */}
                 </HStack>
-                {expended ? <div>HELLO HOW ARE YOU</div> : ""}
+                {expended ? (
+                  <div className="flex flex-col gap-1 ml-7 mb-2">
+                    {targets.map((t) => (
+                      <div className="flex gap-2 items-center">
+                        <Checkbox
+                          size={"sm"}
+                          disabled={disabled}
+                          checked={groups.has(t.$id) || selected.includes(t)}
+                          onCheckedChange={() => toggleSelected(t)}
+                        />
+                        <Code variant="surface">{t.providerType}</Code>
+                        <Text color={"fg.muted"}>{t.identifier}</Text>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  ""
+                )}
               </div>
             );
           }}

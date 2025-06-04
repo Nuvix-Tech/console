@@ -17,6 +17,7 @@ import {
 } from "@/components/cui/popover";
 import { DialogRoot } from "@/components/cui/dialog";
 import { Models, MessagingProviderType } from "@nuvix/console";
+import { ProjectSdk } from "@/lib/sdk";
 
 interface SelectTargetsProps {
   type: MessagingProviderType;
@@ -36,6 +37,7 @@ export const SelectTargets = ({ type }: SelectTargetsProps) => {
 
 const TargetsSelector = ({ type }: { type: MessagingProviderType }) => {
   const { sdk } = useProjectStore((state) => state);
+  const groups = new Map<string, Models.Target>();
   const [targetsById, setTargetsById] = useState<Record<string, Models.Target>>({});
 
   const hasTargets = useMemo(() => Object.keys(targetsById).length > 0, [targetsById]);
@@ -76,9 +78,12 @@ const TargetsSelector = ({ type }: { type: MessagingProviderType }) => {
         <WithDialog
           type={type}
           onAddTargets={addTargets}
-          onAddTopics={() => {}}
           sdk={sdk}
-          groups={new Map()}
+          groups={groups}
+          trigger={IconButton}
+          args={{
+            children: <LuPlus />,
+          }}
         />
         <Text variant="body-default-s" onBackground="neutral-medium">
           Select targets to get started
@@ -93,29 +98,27 @@ const TargetsSelector = ({ type }: { type: MessagingProviderType }) => {
         <table className="w-full">
           <thead>
             <tr className="border-b">
-              <th className="text-left p-3">Target</th>
-              <th className="w-10"></th>
+              <th className="text-left p-3">Targets</th>
+              <th className="w-10 pr-2">
+                <WithDialog
+                  type={type}
+                  onAddTargets={addTargets}
+                  sdk={sdk}
+                  groups={groups}
+                  trigger={Button}
+                  args={{
+                    children: (
+                      <>
+                        <LuPlus /> Add
+                      </>
+                    ),
+                    size: "sm",
+                  }}
+                />
+              </th>
             </tr>
           </thead>
           <tbody>
-            {/* {Object.entries(topicsById).map(([topicId, topic]) => (
-              <tr key={topicId} className="border-b">
-                <td className="p-3">
-                  {topic.name} ({getTotal(topic)} targets)
-                </td>
-                <td className="p-3">
-                  <div className="flex justify-end">
-                    <button
-                      type="button"
-                      onClick={() => removeTopic(topicId)}
-                      className="text-gray-500 hover:text-red-500"
-                    >
-                      <LuX size={20} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))} */}
             {Object.entries(targetsById).map(([targetId, target]) => (
               <tr key={targetId} className="border-b">
                 <td className="p-3">{target.name || target.identifier}</td>
@@ -126,7 +129,7 @@ const TargetsSelector = ({ type }: { type: MessagingProviderType }) => {
                       onClick={() => removeTarget(targetId)}
                       className="text-gray-500 hover:text-red-500"
                     >
-                      <LuX size={20} />
+                      <LuX size={18} />
                     </button>
                   </div>
                 </td>
@@ -135,17 +138,18 @@ const TargetsSelector = ({ type }: { type: MessagingProviderType }) => {
           </tbody>
         </table>
       </div>
-      <div className="relative">
-        <Button variant="secondary" className="flex items-center gap-2">
-          <LuPlus size={16} />
-          Add
-        </Button>
-      </div>
     </div>
   );
 };
 
-export const WithDialog = ({ type, onAddTargets, sdk, groups }: PopoverBoxProps) => {
+export const WithDialog = ({
+  type,
+  onAddTargets,
+  sdk,
+  groups,
+  trigger: Trigger,
+  args,
+}: DialogBoxProps) => {
   const [open, setOpen] = useState(false);
 
   const handleRoleClick = () => {
@@ -154,9 +158,7 @@ export const WithDialog = ({ type, onAddTargets, sdk, groups }: PopoverBoxProps)
 
   return (
     <div className="relative">
-      <IconButton variant="secondary" onClick={handleRoleClick} size="m">
-        <LuPlus />
-      </IconButton>
+      <Trigger variant="secondary" onClick={handleRoleClick} size="m" {...args} />
 
       <DialogRoot
         open={open}
@@ -176,94 +178,12 @@ export const WithDialog = ({ type, onAddTargets, sdk, groups }: PopoverBoxProps)
   );
 };
 
-export type PopoverBoxProps = {
+export type DialogBoxProps = {
   type: MessagingProviderType;
-  onAddTopics: (topics: Record<string, Models.Topic>) => void;
   onAddTargets: (targets: Record<string, Models.Target>) => void;
   children?: React.ReactNode;
-  groups: Map<string, string>;
-  sdk: any;
+  groups: Map<string, Models.Target>;
+  sdk: ProjectSdk;
+  trigger: React.ElementType;
+  args?: any;
 };
-
-// const PopoverBox = ({
-//   type,
-//   onAddTopics,
-//   onAddTargets,
-//   children,
-//   sdk,
-//   groups,
-// }: PopoverBoxProps) => {
-//   const [open, setOpen] = useState(false);
-//   const [comp, setComp] = useState<React.JSX.Element>();
-//   const [popOpen, setPopOpen] = useState(false);
-
-//   const handleRoleClick = (component: React.JSX.Element) => {
-//     setPopOpen(false);
-//     setComp(component);
-//     setOpen(true);
-//   };
-
-//   const roles = [
-//     {
-//       label: "Select Topics",
-//       component: (
-//         <Topics
-//           add={(topics) => onAddTopics({ [topics.$id]: topics })}
-//           sdk={sdk}
-//           onClose={() => setOpen(false)}
-//           groups={groups}
-//         />
-//       ),
-//     },
-//     {
-//       label: "Select Targets",
-//       component: (
-//         <Targets
-//           add={(targets) => onAddTargets({ [targets.$id]: targets })}
-//           sdk={sdk}
-//           onClose={() => setOpen(false)}
-//           groups={groups}
-//         />
-//       ),
-//     },
-//   ];
-
-//   return (
-//     <>
-//       <PopoverRoot
-//         portalled={true}
-//         size="xs"
-//         open={popOpen}
-//         onOpenChange={({ open }) => setPopOpen(open)}
-//       >
-//         <PopoverTrigger asChild>{children}</PopoverTrigger>
-//         <PopoverContent className="!shadow-none border max-w-48">
-//           <PopoverArrow />
-//           <PopoverBody>
-//             <VStack width="full">
-//               {roles.map(({ component, label }, index) => (
-//                 <Button
-//                   key={index}
-//                   variant="ghost"
-//                   onClick={() => handleRoleClick(component)}
-//                   className="w-full justify-start"
-//                 >
-//                   {label}
-//                 </Button>
-//               ))}
-//             </VStack>
-//           </PopoverBody>
-//         </PopoverContent>
-//       </PopoverRoot>
-
-//       <DialogRoot
-//         open={open}
-//         onOpenChange={({ open }) => setOpen(open)}
-//         closeOnEscape={false}
-//         closeOnInteractOutside={false}
-//       >
-//         {comp}
-//       </DialogRoot>
-//     </>
-//   );
-// };
