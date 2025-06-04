@@ -1,41 +1,15 @@
-import { CardBox } from "@/components/others/card";
-import { VStack } from "@chakra-ui/react";
 import { Button } from "@nuvix/sui/components";
 import { Card, IconButton, Text } from "@nuvix/ui/components";
-import { useFormikContext } from "formik";
 import React, { useState, useMemo } from "react";
-import { Topics } from "./_topics";
-import { Targets } from "./_targets";
 import { LuPlus, LuX } from "react-icons/lu";
 import { useProjectStore } from "@/lib/store";
-import {
-  PopoverRoot,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverArrow,
-  PopoverBody,
-} from "@/components/cui/popover";
 import { DialogRoot } from "@/components/cui/dialog";
 import { Models, MessagingProviderType } from "@nuvix/console";
 import { ProjectSdk } from "@/lib/sdk";
+import { Targets } from "./_targets";
 
-interface SelectTargetsProps {
-  type: MessagingProviderType;
-}
 
-export const SelectTargets = ({ type }: SelectTargetsProps) => {
-  const { values, setFieldValue } = useFormikContext<Record<string, string | boolean>>();
-
-  return (
-    <CardBox>
-      <div className="space-y-4">
-        <TargetsSelector type={type} />
-      </div>
-    </CardBox>
-  );
-};
-
-const TargetsSelector = ({ type }: { type: MessagingProviderType }) => {
+export const TargetsSelector = ({ type }: { type: MessagingProviderType, values: string[], onSave: (values: string[]) => void }) => {
   const { sdk } = useProjectStore((state) => state);
   const groups = new Map<string, Models.Target>();
   const [targetsById, setTargetsById] = useState<Record<string, Models.Target>>({});
@@ -49,19 +23,6 @@ const TargetsSelector = ({ type }: { type: MessagingProviderType }) => {
   const removeTarget = (targetId: string) => {
     const { [targetId]: _, ...rest } = targetsById;
     setTargetsById(rest);
-  };
-
-  const getTotal = (topic: Models.Topic): number => {
-    switch (type) {
-      case MessagingProviderType.Email:
-        return topic.emailTotal;
-      case MessagingProviderType.Sms:
-        return topic.smsTotal;
-      case MessagingProviderType.Push:
-        return topic.pushTotal;
-      default:
-        return 0;
-    }
   };
 
   if (!hasTargets) {

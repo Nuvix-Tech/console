@@ -6,8 +6,8 @@ import { Column, useToast } from "@nuvix/ui/components";
 import { CreateMessageTypeMail, emailSchema } from "./_type_mail";
 import { CreateMessageTypeSms, smsSchema } from "./_type_sms";
 import { CreateMessageTypePush, pushSchema } from "./_type_push";
-import { SelectTargets } from "./targets/_select_targets";
 import { MessagingProviderType } from "@nuvix/console";
+import { SelectTopicsTargets } from "./targets/_selector";
 
 type CreateMessageProps = {
   children?: React.ReactNode;
@@ -78,7 +78,7 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ..
                 >
                   <Column gap="8">
                     <MessageComponent />
-                    <SelectTargets type={type} />
+                    <SelectTopicsTargets type={type} />
                   </Column>
                   <Flex justify="flex-end" mt={6}>
                     <SubmitButton>Create Message</SubmitButton>
