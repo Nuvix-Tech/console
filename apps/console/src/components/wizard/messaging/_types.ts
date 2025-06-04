@@ -36,15 +36,15 @@ export type MessageFormData = EmailFormData | SmsFormData | PushFormData;
 
 // Type guard functions
 export const isEmailFormData = (data: MessageFormData): data is EmailFormData => {
-  return 'subject' in data && 'message' in data;
+  return "subject" in data && "message" in data;
 };
 
 export const isSmsFormData = (data: MessageFormData): data is SmsFormData => {
-  return 'message' in data && !('subject' in data) && !('title' in data);
+  return "message" in data && !("subject" in data) && !("title" in data);
 };
 
 export const isPushFormData = (data: MessageFormData): data is PushFormData => {
-  return 'title' in data && 'message' in data;
+  return "title" in data && "message" in data;
 };
 
 // Initial values factory
@@ -63,20 +63,20 @@ export const getInitialValues = (type: MessagingProviderType): MessageFormData =
         message: "",
         html: false,
       } as EmailFormData;
-    
+
     case MessagingProviderType.Sms:
       return {
         ...baseValues,
         message: "",
       } as SmsFormData;
-    
+
     case MessagingProviderType.Push:
       return {
         ...baseValues,
         title: "",
         message: "",
       } as PushFormData;
-    
+
     default:
       throw new Error(`Unsupported messaging type: ${type}`);
   }

@@ -13,7 +13,7 @@ export default function (props: Props) {
       {...rest}
       type="submit"
       disabled={!isValid || !dirty || isSubmitting}
-      loading={isSubmitting}
+      loading={isSubmitting && isValid}
     />
   );
 }

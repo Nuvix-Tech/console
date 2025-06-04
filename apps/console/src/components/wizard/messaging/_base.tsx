@@ -19,6 +19,7 @@ import {
 } from "./_types";
 import { useProjectStore } from "@/lib/store";
 import { useFormikContext } from "formik";
+import { getQueryClient } from "@/data/query-client";
 
 type CreateMessageProps = {
   children?: React.ReactNode;
@@ -30,32 +31,76 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ..
   const { sdk } = useProjectStore((state) => state);
 
   async function onSubmit(values: MessageFormData, resetForm: () => void) {
+    const client = getQueryClient();
     try {
       let res: Models.Message;
       const draft = values.draft ?? false;
-      const scheduledAt = values.schedule === "schedule" ? new Date(`${values.date}T${values.time}`) : undefined;
+      const scheduledAt =
+        values.schedule === "schedule" ? new Date(`${values.date}T${values.time}`) : undefined;
 
       switch (type) {
         case MessagingProviderType.Email:
           const { id, subject, message, html, topics, targets } = values as EmailFormData;
           res = await sdk.messaging.createEmail(
-            id ?? 'unique()', subject, message, topics, undefined, targets,
-            undefined, undefined, undefined, draft, html, scheduledAt?.toISOString()
+            id ?? "unique()",
+            subject,
+            message,
+            topics,
+            undefined,
+            targets,
+            undefined,
+            undefined,
+            undefined,
+            draft,
+            html,
+            scheduledAt?.toISOString(),
           );
           break;
         case MessagingProviderType.Sms:
-          const { id: smsId, message: smsMessage, topics: smsTopics, targets: smsTargets } = values as SmsFormData;
+          const {
+            id: smsId,
+            message: smsMessage,
+            topics: smsTopics,
+            targets: smsTargets,
+          } = values as SmsFormData;
           res = await sdk.messaging.createSms(
-            smsId ?? 'unique()', smsMessage, smsTopics, undefined, smsTargets,
-            draft, scheduledAt?.toISOString()
+            smsId ?? "unique()",
+            smsMessage,
+            smsTopics,
+            undefined,
+            smsTargets,
+            draft,
+            scheduledAt?.toISOString(),
           );
           break;
         case MessagingProviderType.Push:
           const pushValues = values as PushFormData;
-          const { id: pushId, title, message: pushMessage, image, topics: pushTopics, targets: pushTargets, data } = pushValues;
+          const {
+            id: pushId,
+            title,
+            message: pushMessage,
+            image,
+            topics: pushTopics,
+            targets: pushTargets,
+            data,
+          } = pushValues;
           res = await sdk.messaging.createPush(
-            pushId ?? 'unique()', title, pushMessage, pushTopics, undefined, pushTargets,
-            data, undefined, image, undefined, undefined, undefined, undefined, undefined, draft, scheduledAt?.toISOString()
+            pushId ?? "unique()",
+            title,
+            pushMessage,
+            pushTopics,
+            undefined,
+            pushTargets,
+            data,
+            undefined,
+            image,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            draft,
+            scheduledAt?.toISOString(),
           );
           break;
       }
@@ -66,6 +111,7 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ..
       });
 
       resetForm();
+      client.invalidateQueries({ queryKey: ["messages"] });
       props.onOpenChange?.({ open: false });
     } catch (error: any) {
       addToast({
@@ -86,19 +132,19 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ..
           return {
             schema: emailSchema,
             component: CreateMessageTypeMail,
-            initialValues
+            initialValues,
           };
         case MessagingProviderType.Sms:
           return {
             schema: smsSchema,
             component: CreateMessageTypeSms,
-            initialValues
+            initialValues,
           };
         case MessagingProviderType.Push:
           return {
             schema: pushSchema,
             component: CreateMessageTypePush,
-            initialValues
+            initialValues,
           };
         default:
           return null;
@@ -139,7 +185,10 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ..
                     <SelectTopicsTargets type={type} />
                     <Schedule />
                   </Column>
-                  <Flex justify="flex-end" mt={6}>
+                  <Flex justify="flex-end" mt={6} gap={"4"}>
+                    <Dialog.Trigger asChild>
+                      <Button variant="tertiary">Cancle</Button>
+                    </Dialog.Trigger>
                     <DraftButton />
                     <SubmitButton>Create Message</SubmitButton>
                   </Flex>
@@ -157,22 +206,21 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ..
   );
 };
 
-
 const DraftButton = () => {
-  const { setFieldValue, submitForm, isSubmitting } = useFormikContext();
+  const { setFieldValue, submitForm, isSubmitting, values } = useFormikContext<any>();
 
   return (
     <Button
       onClick={() => {
-        setFieldValue('draft', true)
-        submitForm()
+        setFieldValue("draft", true);
+        submitForm();
       }}
+      type="button"
       disabled={isSubmitting}
-      size="s"
       variant="secondary"
+      loading={isSubmitting && values["draft"]}
     >
       Save draft
     </Button>
-  )
-
-}
+  );
+};
