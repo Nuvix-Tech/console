@@ -48,7 +48,7 @@ const MessagingPage: React.FC<MessagingPageProps> = () => {
     {
       header: "Id",
       accessorKey: "$id",
-      minSize: 280,
+      minSize: 270,
       cell({ getValue }) {
         return <IDChip id={getValue<string>()} />;
       },
@@ -59,7 +59,7 @@ const MessagingPage: React.FC<MessagingPageProps> = () => {
     {
       header: "Type",
       accessorKey: "providerType",
-      minSize: 250,
+      minSize: 50,
     },
     {
       header: "Status",
@@ -68,13 +68,26 @@ const MessagingPage: React.FC<MessagingPageProps> = () => {
     },
     {
       header: "Scheduled at",
-      accessorKey: "scheduled",
+      accessorKey: "scheduledAt",
       minSize: 200,
-      cell(props) {
-        const date = formatDate(props.getValue<string>());
+      cell({ getValue }) {
+        const date = formatDate(getValue<string>());
         return (
           <Tooltip showArrow content={date}>
-            <span>{date}</span>
+            <span>{date ?? "-"}</span>
+          </Tooltip>
+        );
+      },
+    },
+    {
+      header: "Delivered at",
+      accessorKey: "deliveredAt",
+      minSize: 200,
+      cell({ getValue }) {
+        const date = formatDate(getValue<string>());
+        return (
+          <Tooltip showArrow content={date}>
+            <span>{date ?? "-"}</span>
           </Tooltip>
         );
       },
