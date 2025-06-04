@@ -8,6 +8,7 @@ import { CreateMessageTypeSms, smsSchema } from "./_type_sms";
 import { CreateMessageTypePush, pushSchema } from "./_type_push";
 import { MessagingProviderType } from "@nuvix/console";
 import { SelectTopicsTargets } from "./targets/_selector";
+import { Schedule } from "./_schedule";
 
 type CreateMessageProps = {
   children?: React.ReactNode;
@@ -70,7 +71,9 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ..
                   Create {type} Message
                 </Text>
                 <Form
-                  initialValues={{}}
+                  initialValues={{
+                    schedule: "now",
+                  }}
                   validationSchema={schema}
                   onSubmit={async (values, { resetForm }) => {
                     await onSubmit(values, resetForm);
@@ -79,6 +82,7 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ..
                   <Column gap="8">
                     <MessageComponent />
                     <SelectTopicsTargets type={type} />
+                    <Schedule />
                   </Column>
                   <Flex justify="flex-end" mt={6}>
                     <SubmitButton>Create Message</SubmitButton>

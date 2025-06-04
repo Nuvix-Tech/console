@@ -5,39 +5,31 @@ import { TopicsSelector } from "./_select_topics";
 import { TargetsSelector } from "./_select_targets";
 
 interface SelectTargetsProps {
-    type: MessagingProviderType;
+  type: MessagingProviderType;
 }
 
 interface FormValues {
-    topics: string[];
-    targets: string[];
+  topics: string[];
+  targets: string[];
 }
 
 export const SelectTopicsTargets = ({ type }: SelectTargetsProps) => {
-    const { values, setFieldValue } = useFormikContext<FormValues>();
+  const { values, setFieldValue } = useFormikContext<FormValues>();
 
-    const handleTopicsChange = (topicIds: string[]) => {
-        setFieldValue('topics', topicIds);
-    };
+  const handleTopicsChange = (topicIds: string[]) => {
+    setFieldValue("topics", topicIds);
+  };
 
-    const handleTargetsChange = (targetIds: string[]) => {
-        setFieldValue('targets', targetIds);
-    };
+  const handleTargetsChange = (targetIds: string[]) => {
+    setFieldValue("targets", targetIds);
+  };
 
-    return (
-        <CardBox>
-            <div className="space-y-4">
-                <TopicsSelector 
-                    type={type} 
-                    values={values.topics || []} 
-                    onSave={handleTopicsChange} 
-                />
-                <TargetsSelector 
-                    type={type} 
-                    values={values.targets || []} 
-                    onSave={handleTargetsChange} 
-                />
-            </div>
-        </CardBox>
-    );
+  return (
+    <CardBox>
+      <div className="space-y-4">
+        <TopicsSelector type={type} values={values.topics || []} onSave={handleTopicsChange} />
+        <TargetsSelector type={type} values={values.targets || []} onSave={handleTargetsChange} />
+      </div>
+    </CardBox>
+  );
 };

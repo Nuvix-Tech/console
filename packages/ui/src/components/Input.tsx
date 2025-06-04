@@ -247,7 +247,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             >
               {hasSuffix}
             </Flex>
-          ) : (
+          ) : !props.disabled ? (
             <Flex horizontal="end" gap={"8"} paddingY="4" paddingRight={"8"} vertical="center">
               {max && max !== 0 && (props.value?.toString().length ?? 0) > 0 && (
                 <Text variant="body-default-xs" onBackground="neutral-weak" wrap="nowrap">
@@ -291,7 +291,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                 </Checkbox>
               )}
             </Flex>
-          )}
+          ) : undefined}
         </Flex>
         {displayError && errorMessage !== false && (
           <Flex paddingX="16">

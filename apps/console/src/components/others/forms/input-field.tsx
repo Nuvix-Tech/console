@@ -454,7 +454,7 @@ export const InputSelectField = ({
     <Select
       {...props}
       labelAsPlaceholder
-      value={value == null ? "null" : value}
+      value={value == null && nullable ? "null" : (value ?? undefined)}
       options={options}
       onSelect={_onChange}
     />

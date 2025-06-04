@@ -8,8 +8,11 @@ import { Models, MessagingProviderType, Query } from "@nuvix/console";
 import { ProjectSdk } from "@/lib/sdk";
 import { Targets } from "./_targets";
 
-
-export const TargetsSelector = ({ type, values, onSave }: { type: MessagingProviderType, values: string[], onSave: (values: string[]) => void }) => {
+export const TargetsSelector = ({
+  type,
+  values,
+  onSave,
+}: { type: MessagingProviderType; values: string[]; onSave: (values: string[]) => void }) => {
   const { sdk } = useProjectStore((state) => state);
   const groups = new Map<string, Models.Target>();
   const [targetsById, setTargetsById] = useState<Map<string, Models.Target>>(new Map());
@@ -22,7 +25,7 @@ export const TargetsSelector = ({ type, values, onSave }: { type: MessagingProvi
       if (values.length === 0) return;
       try {
         const targetsMap = new Map<string, Models.Target>();
-        const target = await sdk.users.list([Query.equal('targets.$id', values)]);
+        const target = await sdk.users.list([Query.equal("targets.$id", values)]);
         if (!target.total) return;
         // for (const _target of target.targets) {
         //   targetsMap.set(_target.$id, _target);
