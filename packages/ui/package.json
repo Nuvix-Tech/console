@@ -24,6 +24,7 @@
   "devDependencies": {
     "@csstools/postcss-global-data": "^2.1.1",
     "@nuvix/eslint-config": "workspace:*",
+    "@nuvix/sui": "workspace:*",
     "@nuvix/typescript-config": "workspace:*",
     "@tailwindcss/postcss": "^4.0.8",
     "@turbo/gen": "^2.4.2",

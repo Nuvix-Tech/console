@@ -3,13 +3,11 @@
 import classNames from "classnames";
 import React from "react";
 import { forwardRef, useState } from "react";
-import { Input, Text } from ".";
+import { Checkbox_Chakra, Input, Text } from ".";
 import { Flex } from ".";
 import { IconButton } from ".";
 import styles from "./NumberInput.module.scss";
-import { Checkbox } from "@/components/cui/checkbox";
 import { LuChevronDown, LuChevronUp } from "react-icons/lu";
-import { cn } from "@nuvix/sui/lib/utils";
 
 export interface NumberInputProps
   extends Omit<React.ComponentProps<typeof Input>, "type" | "value" | "onChange"> {
@@ -94,7 +92,7 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
         hasSuffix={
           <>
             {nullable && (
-              <Checkbox
+              <Checkbox_Chakra
                 size="xs"
                 ids={{
                   root: checkBoxId,
@@ -117,7 +115,7 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
                 <Text variant="body-default-xs" onBackground="neutral-weak" wrap="nowrap">
                   NULL
                 </Text>
-              </Checkbox>
+              </Checkbox_Chakra>
             )}
             <Flex minWidth={1.25}></Flex>
             <Flex
@@ -126,7 +124,7 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
               top="0"
               direction="column"
               borderLeft="neutral-medium"
-              className={cn({
+              className={classNames({
                 "!cursor-not-allowed !bg-[var(--neutral-solid-strong)]": props.disabled,
               })}
               fillHeight
@@ -140,7 +138,7 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
                 <IconButton
                   type="button"
                   variant="ghost"
-                  className={cn({
+                  className={classNames({
                     "!cursor-not-allowed !bg-transparent": props.disabled,
                   })}
                   size="s"
@@ -158,7 +156,7 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
                 <IconButton
                   type="button"
                   variant="ghost"
-                  className={cn({
+                  className={classNames({
                     "!cursor-not-allowed !bg-transparent": props.disabled,
                   })}
                   size="s"

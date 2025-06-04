@@ -539,6 +539,9 @@ importers:
       '@nuvix/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@nuvix/sui':
+        specifier: workspace:*
+        version: link:../sui
       '@nuvix/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config

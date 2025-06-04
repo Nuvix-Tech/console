@@ -58,7 +58,7 @@ const MessagingPage: React.FC<MessagingPageProps> = () => {
     },
     {
       header: "Type",
-      accessorKey: "type",
+      accessorKey: "providerType",
       minSize: 250,
     },
     {
@@ -68,7 +68,7 @@ const MessagingPage: React.FC<MessagingPageProps> = () => {
     },
     {
       header: "Scheduled at",
-      accessorKey: "scheduledAt",
+      accessorKey: "scheduled",
       minSize: 200,
       cell(props) {
         const date = formatDate(props.getValue<string>());
