@@ -1,39 +1,54 @@
 import { Button } from "@nuvix/sui/components";
 import { Card, IconButton, Text } from "@nuvix/ui/components";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Topics } from "./_topics";
 import { LuPlus, LuX } from "react-icons/lu";
 import { useProjectStore } from "@/lib/store";
 import { DialogRoot } from "@/components/cui/dialog";
-import { Models, MessagingProviderType } from "@nuvix/console";
+import { Models, MessagingProviderType, Query } from "@nuvix/console";
 import { ProjectSdk } from "@/lib/sdk";
 
-export const TopicsSelector = ({ type }: { type: MessagingProviderType, values: string[], onSave: (values: string[]) => void }) => {
+export const TopicsSelector = ({ type, values, onSave }: { type: MessagingProviderType, values: string[], onSave: (values: string[]) => void }) => {
     const { sdk } = useProjectStore((state) => state);
-    const groups = new Map<string, Models.Topic>();
-    const [topicsById, setTopicsById] = useState<Record<string, Models.Topic>>({});
+    const [topicsById, setTopicsById] = useState<Map<string, Models.Topic>>(new Map());
 
-    const hasTopics = useMemo(() => Object.keys(topicsById).length > 0, [topicsById]);
+    const hasTopics = useMemo(() => topicsById.size > 0, [topicsById]);
 
-    const addTopics = (newTopics: Record<string, Models.Topic>) => {
+    // Fetch topics by IDs and set initial topicsById value
+    useEffect(() => {
+        const fetchTopics = async () => {
+            if (values.length === 0) return;
+            try {
+                const topicsMap = new Map<string, Models.Topic>();
+                const topic = await sdk.messaging.listTopics([Query.equal('$id', values)]);
+                if (!topic.total) return;
+                for (const _topic of topic.topics) {
+                    topicsMap.set(_topic.$id, _topic);
+                }
+                setTopicsById(topicsMap);
+            } catch (error) {
+                // TODO: Handle error appropriately
+            }
+        };
+
+        fetchTopics();
+    }, [values, sdk]);
+
+    const addTopics = (newTopics: Map<string, Models.Topic>) => {
         setTopicsById(newTopics);
+        const newValues = Array.from(newTopics.keys());
+        if (newValues.length > 0) {
+            onSave(newValues);
+        }
     };
 
     const removeTopic = (targetId: string) => {
-        const { [targetId]: _, ...rest } = topicsById;
-        setTopicsById(rest);
-    };
-
-    const getTotal = (topic: Models.Topic): number => {
-        switch (type) {
-            case MessagingProviderType.Email:
-                return topic.emailTotal;
-            case MessagingProviderType.Sms:
-                return topic.smsTotal;
-            case MessagingProviderType.Push:
-                return topic.pushTotal;
-            default:
-                return 0;
+        const newTopicsById = new Map(topicsById);
+        newTopicsById.delete(targetId);
+        setTopicsById(newTopicsById);
+        const newValues = Array.from(newTopicsById.keys());
+        if (newValues.length > 0) {
+            onSave(newValues);
         }
     };
 
@@ -52,7 +67,7 @@ export const TopicsSelector = ({ type }: { type: MessagingProviderType, values: 
                     type={type}
                     onAddTopics={addTopics}
                     sdk={sdk}
-                    groups={groups}
+                    groups={topicsById}
                     trigger={IconButton}
                     args={{
                         children: <LuPlus />,
@@ -77,7 +92,7 @@ export const TopicsSelector = ({ type }: { type: MessagingProviderType, values: 
                                     type={type}
                                     onAddTopics={addTopics}
                                     sdk={sdk}
-                                    groups={groups}
+                                    groups={topicsById}
                                     trigger={Button}
                                     args={{
                                         children: (
@@ -92,7 +107,7 @@ export const TopicsSelector = ({ type }: { type: MessagingProviderType, values: 
                         </tr>
                     </thead>
                     <tbody>
-                        {Object.entries(topicsById).map(([targetId, target]) => (
+                        {Array.from(topicsById.entries()).map(([targetId, target]) => (
                             <tr key={targetId} className="border-b">
                                 <td className="p-3">{target.name}</td>
                                 <td className="p-3">
@@ -140,7 +155,7 @@ export const WithDialog = ({
                 closeOnInteractOutside={false}
             >
                 <Topics
-                    add={(topics) => onAddTopics({ [topics.$id]: topics })}
+                    add={(topics) => onAddTopics(new Map([[topics.$id, topics]]))}
                     sdk={sdk}
                     onClose={() => setOpen(false)}
                     groups={groups}
@@ -153,7 +168,7 @@ export const WithDialog = ({
 
 export type DialogBoxProps = {
     type: MessagingProviderType;
-    onAddTopics: (topics: Record<string, Models.Topic>) => void;
+    onAddTopics: (topics: Map<string, Models.Topic>) => void;
     children?: React.ReactNode;
     groups: Map<string, Models.Topic>;
     sdk: ProjectSdk;

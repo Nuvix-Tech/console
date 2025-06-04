@@ -8,14 +8,35 @@ interface SelectTargetsProps {
     type: MessagingProviderType;
 }
 
+interface FormValues {
+    topics: string[];
+    targets: string[];
+}
+
 export const SelectTopicsTargets = ({ type }: SelectTargetsProps) => {
-    const { initialValues, setFieldValue } = useFormikContext<Record<string, string[]>>();
+    const { values, setFieldValue } = useFormikContext<FormValues>();
+
+    const handleTopicsChange = (topicIds: string[]) => {
+        setFieldValue('topics', topicIds);
+    };
+
+    const handleTargetsChange = (targetIds: string[]) => {
+        setFieldValue('targets', targetIds);
+    };
 
     return (
         <CardBox>
             <div className="space-y-4">
-                <TopicsSelector type={type} values={initialValues['topics']} onSave={(values: string[]) => setFieldValue('topics', values)} />
-                <TargetsSelector type={type} values={initialValues['targets']} onSave={(values: string[]) => setFieldValue('targets', values)} />
+                <TopicsSelector 
+                    type={type} 
+                    values={values.topics || []} 
+                    onSave={handleTopicsChange} 
+                />
+                <TargetsSelector 
+                    type={type} 
+                    values={values.targets || []} 
+                    onSave={handleTargetsChange} 
+                />
             </div>
         </CardBox>
     );
