@@ -47,7 +47,7 @@ export const SelectFiles: React.FC<SelectFilesProps> = ({
               </Dialog.Body>
               <Dialog.Footer>
                 <Dialog.Trigger asChild>
-                  <Button variant="tertiary">Cancle</Button>
+                  <Button variant="tertiary">Cancel</Button>
                 </Dialog.Trigger>
                 <Button
                   variant="secondary"

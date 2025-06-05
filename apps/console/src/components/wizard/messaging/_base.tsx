@@ -190,7 +190,7 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ..
                   </Column>
                   <Flex justify="flex-end" mt={6} gap={"4"}>
                     <Dialog.Trigger asChild>
-                      <Button variant="tertiary">Cancle</Button>
+                      <Button variant="tertiary">Cancel</Button>
                     </Dialog.Trigger>
                     <DraftButton />
                     <SubmitButton>Create Message</SubmitButton>

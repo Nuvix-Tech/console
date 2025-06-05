@@ -91,7 +91,7 @@ const TopicsPage: React.FC<TopicsPageProps> = () => {
     const confirmDelete = await confirm({
       title: "Delete Topics",
       description: `Are you sure you want to delete ${topicCount} ${topicCount === 1 ? "topic" : "topics"}? This action cannot be undone.`,
-      cancle: {
+      cancel: {
         text: "Cancel",
       },
       confirm: {

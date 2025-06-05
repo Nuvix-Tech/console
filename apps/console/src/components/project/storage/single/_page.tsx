@@ -107,7 +107,7 @@ export const StorageSinglePage: FC<Props> = ({}) => {
     const confirmDelete = await confirm({
       title: "Delete Files",
       description: `Are you sure you want to delete ${fileCount} ${fileCount === 1 ? "file" : "files"}? This action cannot be undone.`,
-      cancle: {
+      cancel: {
         text: "Cancel",
       },
       confirm: {

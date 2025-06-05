@@ -18,7 +18,7 @@ interface LogsDialogProps extends DialogRootProps {
 interface LogMessage {
   title: string;
   code: string[];
-  desciption?: React.ReactNode;
+  description?: React.ReactNode;
 }
 
 export const LogsDialog = ({ children, title, message, ...rest }: LogsDialogProps) => {
@@ -33,7 +33,7 @@ export const LogsDialog = ({ children, title, message, ...rest }: LogsDialogProp
           <DialogBody className="flex flex-col gap-2 bg-[var(--neutral-alpha-weak)]">
             <Text variant="label-strong-m">{message.title}</Text>
             <Text variant="body-default-s" onBackground="neutral-weak">
-              {message.desciption}
+              {message.description}
             </Text>
 
             <CodeBlock

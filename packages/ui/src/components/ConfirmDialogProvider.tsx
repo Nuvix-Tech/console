@@ -8,7 +8,7 @@ export interface ConfirmDialogProps {
   description?: React.ReactNode;
   element?: React.ReactNode;
   onClose?: VoidFunction;
-  cancle?: {
+  cancel?: {
     text?: string;
     variant?: "danger" | "primary" | "secondary" | "tertiary";
   };
@@ -17,7 +17,7 @@ export interface ConfirmDialogProps {
     variant?: "danger" | "primary" | "secondary" | "tertiary";
   };
   button?: {
-    cancle?: React.ComponentProps<typeof Button>;
+    cancel?: React.ComponentProps<typeof Button>;
     ok?: React.ComponentProps<typeof Button>;
   };
 }
@@ -72,8 +72,8 @@ export const ConfirmProvider: React.FC<ConfirmProviderProps> = ({ children }) =>
       description={confirmState?.description}
       handleConfirm={handleConfirm}
       node={confirmState?.element}
-      cancleText={confirmState?.cancle?.text}
-      cancleVariant={confirmState?.cancle?.variant}
+      cancelText={confirmState?.cancel?.text}
+      cancelVariant={confirmState?.cancel?.variant}
       confirmText={confirmState?.confirm?.text}
       confirmVariant={confirmState?.confirm?.variant}
     />

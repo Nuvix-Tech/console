@@ -48,7 +48,7 @@ const MessagingPage: React.FC<MessagingPageProps> = () => {
 
   const columns: ColumnDef<Models.Message>[] = [
     {
-      header: "Id",
+      header: "ID",
       accessorKey: "$id",
       minSize: 270,
       cell({ getValue }) {
@@ -92,10 +92,10 @@ const MessagingPage: React.FC<MessagingPageProps> = () => {
               <LogsDialog
                 title="Message Error"
                 message={{
-                  title: "Message failed",
+                  title: "Message Failed",
                   code: message.deliveryErrors || [],
-                  desciption:
-                    "The message has been processed with errors. Please refer to the logs below for more information.",
+                  description:
+                    "This message failed to deliver. Please review the error details below for more information.",
                 }}
               >
                 <Button data-action="errorDetails" variant="tertiary" size="s">
@@ -108,7 +108,7 @@ const MessagingPage: React.FC<MessagingPageProps> = () => {
       },
     },
     {
-      header: "Scheduled at",
+      header: "Scheduled At",
       accessorKey: "scheduledAt",
       minSize: 200,
       cell({ getValue }) {
@@ -121,7 +121,7 @@ const MessagingPage: React.FC<MessagingPageProps> = () => {
       },
     },
     {
-      header: "Delivered at",
+      header: "Delivered At",
       accessorKey: "deliveredAt",
       minSize: 200,
       cell({ getValue }) {
@@ -142,7 +142,7 @@ const MessagingPage: React.FC<MessagingPageProps> = () => {
     const confirmDelete = await confirm({
       title: "Delete Messages",
       description: `Are you sure you want to delete ${messageCount} ${messageCount === 1 ? "message" : "messages"}? This action cannot be undone.`,
-      cancle: {
+      cancel: {
         text: "Cancel",
       },
       confirm: {

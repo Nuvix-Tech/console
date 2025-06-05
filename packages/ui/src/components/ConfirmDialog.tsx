@@ -7,8 +7,8 @@ interface ConfirmProps extends Pick<ConfirmDialogProps, "button"> {
   title?: React.ReactNode;
   description?: React.ReactNode;
   node?: React.ReactNode;
-  cancleText?: string;
-  cancleVariant?: "danger" | "primary" | "secondary" | "tertiary";
+  cancelText?: string;
+  cancelVariant?: "danger" | "primary" | "secondary" | "tertiary";
   confirmText?: string;
   confirmVariant?: "danger" | "primary" | "secondary" | "tertiary";
   handleConfirm: (value: boolean) => void;
@@ -21,7 +21,7 @@ const ConfirmDialog: React.FC<ConfirmProps> = ({
   description,
   node,
   onClose,
-  cancleText,
+  cancelText,
   confirmText,
   handleConfirm,
   button,
@@ -39,10 +39,10 @@ const ConfirmDialog: React.FC<ConfirmProps> = ({
               handleConfirm(false);
             }}
             variant="secondary"
-            {...button?.cancle}
+            {...button?.cancel}
           >
             {" "}
-            {cancleText ?? "Cancle"}
+            {cancelText ?? "Cancel"}
           </Button>
           <Button
             onClick={() => {

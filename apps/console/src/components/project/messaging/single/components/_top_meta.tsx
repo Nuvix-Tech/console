@@ -18,12 +18,13 @@ export const TopMeta: React.FC = () => {
   const { message } = useMessageStore((s) => s);
   if (!message) return;
 
-  const desc2 = (() => {
+  const deliveryInfo = (() => {
     if (message.status === "sent") {
-      return `Sent At: ${formatDate(message.deliveredAt)}`;
-    } else {
-      return message.scheduledAt ? `Scheduled At: ${formatDate(message.scheduledAt)}` : "";
+      return `Delivered at: ${formatDate(message.deliveredAt)}`;
+    } else if (message.scheduledAt) {
+      return `Scheduled for: ${formatDate(message.scheduledAt)}`;
     }
+    return "";
   })();
 
   return (
@@ -33,16 +34,16 @@ export const TopMeta: React.FC = () => {
         actions={
           message.status === "failed" ? (
             <LogsDialog
-              title="Message Error"
+              title="Message Error Details"
               message={{
-                title: "Message failed",
+                title: "Message Failed to Send",
                 code: message.deliveryErrors || [],
-                desciption:
-                  "The message has been processed with errors. Please refer to the logs below for more information.",
+                description:
+                  "This message failed to deliver. Please review the error logs below for detailed information and troubleshooting steps.",
               }}
             >
               <Button variant="secondary" size="s">
-                View logs
+                View Logs
               </Button>
             </LogsDialog>
           ) : undefined
@@ -55,8 +56,8 @@ export const TopMeta: React.FC = () => {
             </CardBoxTitle>
           </CardBoxItem>
           <CardBoxItem>
-            <CardBoxDesc>Created: {formatDate(message.$createdAt)}</CardBoxDesc>
-            <CardBoxDesc>{desc2}</CardBoxDesc>
+            <CardBoxDesc>Created on: {formatDate(message.$createdAt)}</CardBoxDesc>
+            {deliveryInfo && <CardBoxDesc>{deliveryInfo}</CardBoxDesc>}
             <div className="absolute top-4 right-4">
               <Status
                 value={

@@ -23,7 +23,7 @@ export const DeleteMessage = () => {
     if (
       await confirm({
         title: "Delete Message",
-        description: "Are you sure you want to delete this file?",
+        description: "Are you sure you want to delete this message? This action cannot be undone.",
         confirm: {
           text: "Delete",
           variant: "danger",
@@ -54,7 +54,7 @@ export const DeleteMessage = () => {
   return (
     <DangerCard
       title="Delete Message"
-      description="The file will be permanently deleted. This action is irreversible."
+      description="This message will be permanently deleted. This action cannot be undone."
       actions={
         <Button
           variant={"surface"}
@@ -63,7 +63,7 @@ export const DeleteMessage = () => {
           onClick={() => deleteMessage(message?.$id)}
           loadingText={"Deleting..."}
         >
-          Delete
+          Delete Message
         </Button>
       }
     >
@@ -72,7 +72,7 @@ export const DeleteMessage = () => {
           {data["title"] ?? data["message"]?.slice(0, 30)?.concat("...") ?? message.$id}
         </Text>
         <Text textStyle={{ base: "sm", mdOnly: "xs" }} color={"fg.muted"} truncate>
-          Last Updated: {formatDate(message.$updatedAt)}
+          Last updated: {formatDate(message.$updatedAt)}
         </Text>
       </VStack>
     </DangerCard>
