@@ -1,6 +1,5 @@
 "use client";
-import { HStack, Text, VStack, Spinner } from "@chakra-ui/react";
-import { Input } from "@nuvix/sui/components/input";
+import { HStack, Text, VStack, Spinner, Input } from "@chakra-ui/react";
 import { Button } from "@nuvix/sui/components/button";
 import React, { useState, useEffect, useCallback } from "react";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
@@ -53,14 +52,16 @@ export const SimpleSelector = <T,>({
   return (
     <VStack gap={3} alignItems="flex-start" width="full">
       {setSearch && (
-        <div className="border !border-l-0 !border-r-0 rounded-none px-4 flex items-center h-12 w-full">
+        <div className="border !border-l-0 !border-r-0 border-dashed rounded-none px-4 flex items-center h-10 w-full">
           <SearchIcon className="size-4 opacity-80" />
           <Input
             value={search || ""}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={placeholder ?? "Search"}
             width="full"
-            className="border-0"
+            size={"xs"}
+            unstyled
+            className="border-none outline-none px-2"
           />
         </div>
       )}
@@ -87,6 +88,7 @@ export const SimpleSelector = <T,>({
           justify="space-between"
           mt={4}
           borderY={"1px solid"}
+          borderStyle={"dashed"}
           borderColor="border.muted"
           height="40px"
         >

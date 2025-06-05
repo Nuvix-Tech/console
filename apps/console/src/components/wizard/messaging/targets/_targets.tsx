@@ -12,10 +12,12 @@ export type TargetProps = {
   add: (target: Models.Target) => void;
   onClose: VoidFunction;
   groups: Map<string, Models.Target>;
-  type: MessagingProviderType;
+  type?: MessagingProviderType;
+  title?: string;
+  description?: string;
 } & { sdk: ProjectSdk };
 
-export const Targets = ({ add, sdk, onClose, groups, type }: TargetProps) => {
+export const Targets = ({ add, sdk, onClose, groups, type, title, description }: TargetProps) => {
   const fetchUsers = async (search: string | undefined, limit: number, offset: number) => {
     let queris = [];
     queris.push(Query.limit(limit), Query.offset(offset));
@@ -38,8 +40,8 @@ export const Targets = ({ add, sdk, onClose, groups, type }: TargetProps) => {
   return (
     <>
       <SelectDialog
-        title="Select targets"
-        description="Grant access to any authenticated or anonymous user."
+        title={title ?? "Select targets"}
+        description={description ?? "Grant access to any authenticated or anonymous user."}
         actions={
           <>
             <DialogTrigger asChild>
@@ -56,8 +58,10 @@ export const Targets = ({ add, sdk, onClose, groups, type }: TargetProps) => {
           {...rest}
           onMap={(user, toggleSelection, selections) => {
             const [expended, setExpended] = useState(false);
-            const targets = user.targets.filter((t) => t.providerType === type);
-            const disabled = !targets.length;
+            const targets = type
+              ? user.targets.filter((t) => t.providerType === type)
+              : user.targets;
+            const disabled = targets.length === 0;
             const allSelected = targets.reduce(
               (p, c) => (groups.has(c.$id) || selected.includes(c as any) ? [...p, c] : p),
               groups.values().toArray() as Models.Target[],
@@ -78,8 +82,18 @@ export const Targets = ({ add, sdk, onClose, groups, type }: TargetProps) => {
                   <Checkbox
                     size={"sm"}
                     disabled={disabled}
-                    checked={allSelected.length > 0}
-                    onCheckedChange={() => targets.forEach((t) => toggleSelected(t))}
+                    checked={
+                      allSelected.length && allSelected.length === targets.length
+                        ? true
+                        : allSelected.length > 0
+                          ? "indeterminate"
+                          : false
+                    }
+                    onCheckedChange={({ checked }) =>
+                      checked === "indeterminate"
+                        ? allSelected.forEach((t) => toggleSelected(t))
+                        : targets.forEach((t) => toggleSelected(t))
+                    }
                   />
                   <div
                     className="flex items-center gap-3 justify-between w-full cursor-pointer"

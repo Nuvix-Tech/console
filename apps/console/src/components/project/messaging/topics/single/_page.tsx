@@ -11,14 +11,13 @@ import { Tooltip } from "@/components/cui/tooltip";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useProjectStore } from "@/lib/store";
 import { useSearchQuery } from "@/hooks/useQuery";
+import { CreateSubscribers } from "./_create_subscriber";
 
 export const TopicSinglePage = ({ topicId }: { topicId: string }) => {
   const { topic } = useTopicStore((state) => state);
   const { sdk, permissions, project } = useProjectStore((state) => state);
   const { limit, page, search, hasQuery } = useSearchQuery();
   const { canCreateSubscribers, canDeleteSubscribers } = permissions();
-
-  if (!topic) return;
 
   const { data, isFetching, refetch } = useSuspenseQuery({
     queryKey: ["subscribers", topicId, search],
@@ -78,7 +77,7 @@ export const TopicSinglePage = ({ topicId }: { topicId: string }) => {
     <CreateButton
       label="Create Subscriber"
       hasPermission={canCreateSubscribers}
-      // component={CreateTopic}
+      component={CreateSubscribers}
       size="s"
       extraProps={{ refetch }}
     />
@@ -87,7 +86,7 @@ export const TopicSinglePage = ({ topicId }: { topicId: string }) => {
   return (
     <PageContainer>
       <PageHeading
-        heading={`Topic: ${topic.name}`}
+        heading={`Topic: ${topic!.name}`}
         description="Manage subscribers for this messaging topic."
       />
 
