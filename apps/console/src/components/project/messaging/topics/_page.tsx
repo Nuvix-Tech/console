@@ -90,7 +90,7 @@ const TopicsPage: React.FC<TopicsPageProps> = () => {
 
     const confirmDelete = await confirm({
       title: "Delete Topics",
-      description: `Are you sure you want to delete ${topicCount} ${topicCount === 1 ? "topic" : "topics"}? This action cannot be undone.`,
+      description: `Are you sure you want to delete ${topicCount} ${topicCount === 1 ? "topic" : "topics"}? This action is permanent and cannot be undone.`,
       cancel: {
         text: "Cancel",
       },
@@ -132,7 +132,7 @@ const TopicsPage: React.FC<TopicsPageProps> = () => {
     <PageContainer>
       <PageHeading
         heading="Topics"
-        description="Manage and organize your messaging topics to categorize and distribute notifications to specific subscriber groups."
+        description="Create and manage messaging topics to organize notifications and target specific subscriber groups."
       />
 
       <DataGridProvider<Models.Topic>
@@ -148,15 +148,15 @@ const TopicsPage: React.FC<TopicsPageProps> = () => {
       >
         <EmptyState
           show={data.total === 0 && !isFetching && !hasQuery}
-          title="No Topics Found"
-          description="You haven't created any topics yet. Start by creating your first topic to organize and distribute messages to specific subscriber groups."
+          title="No Topics Created Yet"
+          description="Create your first messaging topic to organize and distribute notifications to specific subscriber groups."
           primaryComponent={create}
         />
 
         {(data.total > 0 || hasQuery) && (
           <>
             <HStack justifyContent="space-between" alignItems="center">
-              <Search placeholder="Search topics by ID or name" height="s" />
+              <Search placeholder="Search topics by ID or name..." height="s" />
               {canDeleteTopics && create}
             </HStack>
             <Table noResults={data.total === 0 && hasQuery} />

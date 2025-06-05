@@ -11,7 +11,7 @@ import { Tooltip } from "@/components/cui/tooltip";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useProjectStore } from "@/lib/store";
 import { useSearchQuery } from "@/hooks/useQuery";
-import { CreateSubscribers } from "./_create_subscriber";
+import { CreateSubscribers } from "../components/_create_subscriber";
 
 export const TopicSinglePage = ({ topicId }: { topicId: string }) => {
   const { topic } = useTopicStore((state) => state);
@@ -75,7 +75,7 @@ export const TopicSinglePage = ({ topicId }: { topicId: string }) => {
 
   const create = (
     <CreateButton
-      label="Create Subscriber"
+      label="Create subscriber"
       hasPermission={canCreateSubscribers}
       component={CreateSubscribers}
       size="s"
@@ -103,7 +103,7 @@ export const TopicSinglePage = ({ topicId }: { topicId: string }) => {
       >
         <EmptyState
           show={data.total === 0 && !isFetching && !hasQuery}
-          title="No Subscribers Found"
+          title="No subscribers found"
           description="This topic doesn't have any subscribers yet."
           primaryComponent={create}
         />
@@ -112,7 +112,7 @@ export const TopicSinglePage = ({ topicId }: { topicId: string }) => {
           <>
             <HStack justifyContent="space-between" alignItems="center">
               <Search placeholder="Search subscribers by type or ID" height="s" />
-              {canDeleteSubscribers && create}
+              {canCreateSubscribers && create}
             </HStack>
             <Table noResults={data.total === 0 && hasQuery} />
             <HStack justifyContent="space-between" alignItems="center">

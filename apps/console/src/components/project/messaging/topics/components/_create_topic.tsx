@@ -28,7 +28,7 @@ export const CreateTopic = ({ onClose, isOpen }: CreateTopicProps) => {
     <FormDialog
       dialog={{
         title: "Create Topic",
-        description: "Create a new messaging topic for your project",
+        description: "Create a new messaging topic.",
         isOpen,
         onClose,
         footer: <SubmitButton label="Create Topic" />,
@@ -43,16 +43,16 @@ export const CreateTopic = ({ onClose, isOpen }: CreateTopicProps) => {
           try {
             let { id, name } = values;
             id = id?.trim() || "unique()";
-            const bucket = await sdk.messaging.createTopic(id, name);
+            const topic = await sdk.messaging.createTopic(id, name);
             addToast({
               message: "Topic created successfully",
               variant: "success",
             });
             onClose();
-            push(`${baseURL}/${bucket.$id}`);
+            push(`${baseURL}/${topic.$id}`);
           } catch (error: any) {
             addToast({
-              message: error.message,
+              message: error.message || "Failed to create topic",
               variant: "danger",
             });
           }
@@ -60,7 +60,7 @@ export const CreateTopic = ({ onClose, isOpen }: CreateTopicProps) => {
       }}
     >
       <Column paddingY="12" fillWidth gap="8">
-        <InputField name="name" label="Topic Name" />
+        <InputField name="name" label="Topic Name" placeholder="Enter topic name" />
         <CustomID name="id" label="Topic ID" />
       </Column>
     </FormDialog>

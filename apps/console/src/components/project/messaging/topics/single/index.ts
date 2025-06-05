@@ -1,3 +1,3 @@
 export * from "./_layout";
 export * from "./_page";
-export * from "./_create_subscriber";
+export * from "../components/_create_subscriber";
