@@ -8,8 +8,8 @@ interface MobileNotificationProps {
 
 const MobileNotification: React.FC<MobileNotificationProps> = ({
   notification = {
-    appName: "Messages",
     appIcon: "M",
+    title: "Message Title",
     senderName: "John Doe",
     message: "Hey! Are we still on for the meeting tomorrow?",
     timestamp: "now",
@@ -17,7 +17,7 @@ const MobileNotification: React.FC<MobileNotificationProps> = ({
   },
 }) => {
   return (
-    <MobileScreen statusBarStyle="light" backgroundColor="bg-gray-950">
+    <MobileScreen>
       <PushNotificationContent notification={notification} />
     </MobileScreen>
   );

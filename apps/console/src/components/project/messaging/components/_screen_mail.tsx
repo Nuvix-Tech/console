@@ -12,17 +12,7 @@ const MobileMail: React.FC<MobileMailProps> = ({
     senderName: "Sarah Martinez",
     senderEmail: "sarah.martinez@company.com",
     timestamp: "2 hours ago",
-    content: {
-      greeting: "Hi Team,",
-      body: [
-        "I'm excited to share our Q2 marketing campaign results. The numbers are outstanding!",
-      ],
-      highlights: [
-        "45% increase in website traffic",
-        "32% improvement in conversion rates",
-        "28% growth in social engagement",
-      ],
-    },
+    content: "",
     attachments: [
       {
         name: "Q2_Marketing_Report.pdf",
@@ -34,9 +24,15 @@ const MobileMail: React.FC<MobileMailProps> = ({
   },
 }) => {
   return (
-    <MobileScreen>
-      <EmailContent email={email} />
-    </MobileScreen>
+    <div className="max-w-xs space-y-3">
+      <MobileScreen>
+        <EmailContent email={email} />
+      </MobileScreen>
+
+      <p className="text-xs warning-on-background-medium text-center">
+        Some interactive features (e.g., scripts, forms) may not work in preview mode.
+      </p>
+    </div>
   );
 };
 

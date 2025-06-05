@@ -20,6 +20,9 @@ import {
 import { useProjectStore } from "@/lib/store";
 import { useFormikContext } from "formik";
 import { getQueryClient } from "@/data/query-client";
+import { MobileMail } from "@/components/project/messaging/components/_screen_mail";
+import { MobileSMS } from "@/components/project/messaging/components/_screen_sms";
+import { MobileNotification } from "@/components/project/messaging/components/_screen_push";
 
 type CreateMessageProps = {
   children?: React.ReactNode;
@@ -168,18 +171,18 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ..
         <Dialog.Backdrop />
         <Dialog.Positioner>
           <Dialog.Content>
-            <Dialog.Body h="full" gap={10} p={12} display="flex">
-              <Box flex="1" h="full" maxWidth={{ base: "2xl" }}>
-                <Text fontSize="2xl" fontWeight="semibold" mb={6}>
-                  Create {type} Message
-                </Text>
-                <Form
-                  initialValues={initialValues}
-                  validationSchema={schema}
-                  onSubmit={async (values, { resetForm }) => {
-                    await onSubmit(values as MessageFormData, resetForm);
-                  }}
-                >
+            <Form
+              initialValues={initialValues}
+              validationSchema={schema}
+              onSubmit={async (values, { resetForm }) => {
+                await onSubmit(values as MessageFormData, resetForm);
+              }}
+            >
+              <Dialog.Body h="full" gap={10} p={12} display="flex">
+                <Box flex="1" h="full" maxWidth={{ base: "2xl" }}>
+                  <Text fontSize="2xl" fontWeight="semibold" mb={6}>
+                    Create {type} Message
+                  </Text>
                   <Column gap="8">
                     <MessageComponent />
                     <SelectTopicsTargets type={type} />
@@ -192,13 +195,16 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ..
                     <DraftButton />
                     <SubmitButton>Create Message</SubmitButton>
                   </Flex>
-                </Form>
-              </Box>
+                </Box>
+                <Box className="sticky mx-auto my-20">
+                  <Preview type={type} />
+                </Box>
 
-              <Dialog.Trigger>
-                <CloseButton position="absolute" top={4} right={4} />
-              </Dialog.Trigger>
-            </Dialog.Body>
+                <Dialog.Trigger>
+                  <CloseButton position="absolute" top={4} right={4} />
+                </Dialog.Trigger>
+              </Dialog.Body>
+            </Form>
           </Dialog.Content>
         </Dialog.Positioner>
       </Portal>
@@ -223,4 +229,56 @@ const DraftButton = () => {
       Save draft
     </Button>
   );
+};
+
+const Preview = ({ type }: { type: MessagingProviderType }) => {
+  const { project } = useProjectStore((state) => state);
+  const senderName = project.name;
+  const appIcon = project.name.slice(0, 1);
+  const { values } = useFormikContext<any>();
+
+  const defaultMessage = "Enter text in left side message box to see here.";
+
+  switch (type) {
+    case MessagingProviderType.Email:
+      return (
+        <MobileMail
+          email={{
+            senderName,
+            content: values["message"] || defaultMessage,
+            subject: values["subject"] || "Subject",
+            html: values["html"],
+          }}
+        />
+      );
+    case MessagingProviderType.Sms:
+      return (
+        <MobileSMS
+          sms={{
+            contactName: senderName,
+            messages: [
+              {
+                id: "1",
+                text: values["message"] || defaultMessage,
+                isOutgoing: false,
+                timestamp: "now",
+              },
+            ],
+          }}
+        />
+      );
+    case MessagingProviderType.Push:
+      return (
+        <MobileNotification
+          notification={{
+            appIcon,
+            senderName,
+            message: values["message"] || defaultMessage,
+            title: values["title"] || "Message Title",
+          }}
+        />
+      );
+    default:
+      return null;
+  }
 };

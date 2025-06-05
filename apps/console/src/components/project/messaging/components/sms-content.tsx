@@ -9,7 +9,7 @@ interface Message {
 
 interface SMSData {
   contactName: string;
-  contactStatus: string;
+  contactStatus?: string;
   contactAvatar?: string;
   messages: Message[];
   gradientColor?: string;
@@ -25,13 +25,12 @@ const SMSContent: React.FC<SMSContentProps> = ({ sms }) => {
     contactStatus,
     contactAvatar = contactName.charAt(0),
     messages,
-    gradientColor = "from-[#aa6e7f] to-[#9a5e6f]",
+    gradientColor = "from-accent to-secondary",
   } = sms;
 
   return (
-    <div className="bg-white dark:bg-gray-900 px-6 pt-4 h-full">
-      {/* SMS header */}
-      <div className="flex items-center space-x-3 mb-6 pb-4 border-b border-gray-100 dark:border-gray-800">
+    <div className="page-background px-4 pt-4 h-full">
+      <div className="flex items-center space-x-3 pb-4 border-b neutral-border-medium">
         <div
           className={`w-8 h-8 bg-gradient-to-br ${gradientColor} rounded-full flex items-center justify-center shadow-md`}
         >
@@ -45,8 +44,7 @@ const SMSContent: React.FC<SMSContentProps> = ({ sms }) => {
         </div>
       </div>
 
-      {/* Message conversation */}
-      <div className="space-y-4 pb-20 overflow-y-auto max-h-[480px]">
+      <div className="space-y-4 pb-20 pt-5 overflow-y-auto max-h-[480px]">
         {messages.map((message) => (
           <div
             key={message.id}
@@ -57,13 +55,13 @@ const SMSContent: React.FC<SMSContentProps> = ({ sms }) => {
                 ${
                   message.isOutgoing
                     ? `bg-gradient-to-br ${gradientColor} rounded-3xl rounded-br-lg shadow-md`
-                    : "bg-gray-100 dark:bg-gray-800 rounded-3xl rounded-bl-lg shadow-sm"
+                    : "bg-[var(--neutral-alpha-medium)] rounded-3xl rounded-bl-sm shadow-sm"
                 }
-                px-4 py-3 max-w-xs transform hover:scale-105 transition-transform duration-200
+                px-4 py-3 w-[96%] transform hover:scale-105 transition-transform duration-200
               `}
             >
               <p
-                className={`text-sm leading-relaxed ${
+                className={`text-sm line-clamp-4 overflow-elipsis ${
                   message.isOutgoing ? "text-white" : "text-gray-900 dark:text-gray-100"
                 }`}
               >
@@ -81,9 +79,8 @@ const SMSContent: React.FC<SMSContentProps> = ({ sms }) => {
         ))}
       </div>
 
-      {/* Typing indicator (optional) */}
       <div className="absolute bottom-20 left-6">
-        <div className="flex items-center space-x-2 bg-gray-100 dark:bg-gray-800 rounded-2xl px-4 py-2 shadow-sm">
+        <div className="flex items-center space-x-2 bg-[var(--neutral-alpha-weak)] rounded-2xl px-4 py-2 shadow-sm">
           <div className="flex space-x-1">
             <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
             <div
