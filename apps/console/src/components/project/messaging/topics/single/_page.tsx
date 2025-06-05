@@ -1,13 +1,7 @@
 "use client";
 import { useTopicStore } from "../components/store";
 import { CreateButton, IDChip, PageContainer, PageHeading } from "@/components/others";
-import {
-  DataGridProvider,
-  Pagination,
-  Search,
-  SelectLimit,
-  Table,
-} from "@/ui/data-grid";
+import { DataGridProvider, Pagination, Search, SelectLimit, Table } from "@/ui/data-grid";
 import { Models } from "@nuvix/console";
 import { EmptyState } from "@/components";
 import { HStack } from "@chakra-ui/react";
@@ -43,7 +37,7 @@ export const TopicSinglePage = ({ topicId }: { topicId: string }) => {
       },
       meta: {
         href: (row) => `/project/${project.$id}/authentication/users/${row.userId}`,
-      }
+      },
     },
     {
       header: "Name",

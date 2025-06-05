@@ -1,13 +1,15 @@
 import { useProjectStore } from "@/lib/store";
 import { SidebarGroup } from "@/ui/layout/navigation";
 import { usePathname } from "next/navigation";
+import { useTopicStore } from "./store";
 
 export const TopicSidebar = () => {
   const project = useProjectStore.use.project?.();
+  const { topic } = useTopicStore((state) => state);
   const path = usePathname();
 
   const resolveHref = (value?: string) =>
-    `/project/${project?.$id}/messaging/topic${value ? `/${value}` : ""}`;
+    `/project/${project?.$id}/messaging/topics/${topic?.$id}${value ? `/${value}` : ""}`;
   const resolveIsSelected = (value?: string) => path.includes(resolveHref(value));
 
   return (
@@ -21,14 +23,14 @@ export const TopicSidebar = () => {
             isSelected: path === resolveHref(),
           },
           {
-            label: "Topics",
-            href: resolveHref("topics"),
-            isSelected: resolveIsSelected("topics"),
+            label: "Activity",
+            href: resolveHref("activity"),
+            isSelected: resolveIsSelected("activity"),
           },
           {
-            label: "Subscribers",
-            href: resolveHref("subscribers"),
-            isSelected: resolveIsSelected("subscribers"),
+            label: "Settings",
+            href: resolveHref("settings"),
+            isSelected: resolveIsSelected("settings"),
           },
         ]}
       />
