@@ -5,7 +5,7 @@ import { useProjectStore } from "@/lib/store";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useMessageStore } from "./components/store";
 import { useEffect } from "react";
-import { TopMeta, UpdateMessage } from "./components";
+import { DeleteMessage, TopMeta, UpdateMessage } from "./components";
 
 export const MessageSinglePage = ({ messageId }: { messageId: string }) => {
   const { sdk } = useProjectStore((state) => state);
@@ -32,6 +32,7 @@ export const MessageSinglePage = ({ messageId }: { messageId: string }) => {
       <PageContainer marginTop="8">
         <TopMeta />
         <UpdateMessage />
+        <DeleteMessage />
       </PageContainer>
     </>
   );
