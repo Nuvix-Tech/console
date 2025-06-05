@@ -9,6 +9,7 @@ import { formatDate } from "@/lib/utils";
 import React from "react";
 import { useMessageStore } from "./store";
 import { MessageTypeIcon } from "../../components";
+import { MessagingProviderType } from "@nuvix/console";
 
 export const TopMeta: React.FC = () => {
   const { message } = useMessageStore((s) => s);
@@ -19,9 +20,8 @@ export const TopMeta: React.FC = () => {
       <CardBox>
         <CardBoxBody>
           <CardBoxItem gap={"4"}>
-            <CardBoxTitle>
-              <MessageTypeIcon type={message.providerType as any} />
-              {message.providerType}
+            <CardBoxTitle className="flex gap-2 items-center">
+              <MessageTypeIcon type={message.providerType as MessagingProviderType} />
             </CardBoxTitle>
           </CardBoxItem>
           <CardBoxItem>

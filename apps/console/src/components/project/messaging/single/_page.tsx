@@ -29,7 +29,7 @@ export const MessageSinglePage = ({ messageId }: { messageId: string }) => {
 
   return (
     <>
-      <PageContainer>
+      <PageContainer marginTop="8">
         <TopMeta />
       </PageContainer>
     </>

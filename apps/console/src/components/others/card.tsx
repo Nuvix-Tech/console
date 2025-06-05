@@ -42,10 +42,10 @@ export const CardBoxItem = (props: StackProps) => {
   return <Stack maxW={{ base: "full", md: "1/2" }} width={"full"} {...props} />;
 };
 
-export const CardBoxTitle = (props: any) => {
+export const CardBoxTitle = (props: React.ComponentProps<typeof CardTitle>) => {
   return <CardTitle {...props} />;
 };
 
-export const CardBoxDesc = (props: any) => {
+export const CardBoxDesc = (props: React.ComponentProps<typeof CardDescription>) => {
   return <CardDescription {...props} />;
 };

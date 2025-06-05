@@ -1,9 +1,9 @@
 import { CreateMessage } from "@/components/wizard/messaging";
 import { MessagingProviderType } from "@nuvix/console";
 import { Popover, PopoverTrigger, PopoverContent } from "@nuvix/sui/components";
-import { Button, ToggleButton } from "@nuvix/ui/components";
+import { Button, Flex, Text, ToggleButton } from "@nuvix/ui/components";
 import { Rect } from "@xyflow/react";
-import { MailIcon, MessageCircleIcon, PhoneIcon } from "lucide-react";
+import { LucideProps, MailIcon, MessageCircleIcon, PhoneIcon } from "lucide-react";
 import React, { useState } from "react";
 
 export const CreateMessageButton = () => {
@@ -44,17 +44,44 @@ export const CreateMessageButton = () => {
   );
 };
 
-export const MessageTypeIcon = ({ type }: { type: MessagingProviderType }) => {
-  const Icon: any = () => {
-    switch (type) {
-      case MessagingProviderType.Email:
-        return MailIcon;
-      case MessagingProviderType.Push:
-        return PhoneIcon;
-      case MessagingProviderType.Sms:
-        return MessageCircleIcon;
-    }
-  };
+export const MessageTypeIcon = ({
+  type,
+  icon,
+  ...rest
+}: { type: MessagingProviderType; icon?: LucideProps } & React.ComponentProps<typeof Text>) => {
+  let IconComponent: React.ElementType<LucideProps> | null = null;
+  let label: string;
 
-  return <Icon />;
+  switch (type) {
+    case MessagingProviderType.Email:
+      IconComponent = MailIcon;
+      label = "Email";
+      break;
+    case MessagingProviderType.Push:
+      IconComponent = PhoneIcon;
+      label = "Push";
+      break;
+    case MessagingProviderType.Sms:
+      IconComponent = MessageCircleIcon;
+      label = "Sms";
+      break;
+    default:
+      console.warn(`No icon found for MessagingProviderType: ${type}`);
+      return null;
+  }
+  return IconComponent ? (
+    <Flex gap="8" vertical="center">
+      <Flex
+        background="neutral-alpha-medium"
+        radius="full"
+        vertical="center"
+        horizontal="center"
+        width={"32"}
+        height={"32"}
+      >
+        <IconComponent width="18" height="18" {...icon} />
+      </Flex>
+      <Text {...rest}>{label}</Text>
+    </Flex>
+  ) : null;
 };
