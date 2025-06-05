@@ -27,9 +27,15 @@ export const LogsDialog = ({ children, title, message, ...rest }: LogsDialogProp
       <DialogRoot {...rest}>
         {children && <DialogTrigger>{children}</DialogTrigger>}
         <DialogContent>
-          <DialogHeader>{title}</DialogHeader>
-          <DialogBody>
-            <Text>{message.title}</Text>
+          <DialogHeader>
+            <Text variant="heading-default-s"> {title}</Text>
+          </DialogHeader>
+          <DialogBody className="flex flex-col gap-2 bg-[var(--neutral-alpha-weak)]">
+            <Text variant="label-strong-m">{message.title}</Text>
+            <Text variant="body-default-s" onBackground="neutral-weak">
+              {message.desciption}
+            </Text>
+
             <CodeBlock
               codeInstances={[
                 { label: "Error", language: "markdown", code: message.code.join("\n") },
@@ -38,8 +44,8 @@ export const LogsDialog = ({ children, title, message, ...rest }: LogsDialogProp
             />
           </DialogBody>
           <DialogFooter>
-            <DialogTrigger>
-              <Button variant={"outline"} size={"sm"}>
+            <DialogTrigger asChild>
+              <Button variant={"outline"} size={"sm"} data-action="closeLogsDialog">
                 Close
               </Button>
             </DialogTrigger>

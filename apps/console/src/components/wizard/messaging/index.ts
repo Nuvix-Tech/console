@@ -1,5 +1,5 @@
 // Export main component
-export { CreateMessage } from "./_base";
+export { CreateMessage, Preview as MessagePreview } from "./_base";
 
 // Export schemas
 export { emailSchema, smsSchema, pushSchema, scheduleSchema } from "./_schemas";

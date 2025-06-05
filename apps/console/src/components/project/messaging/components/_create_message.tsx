@@ -2,8 +2,7 @@ import { CreateMessage } from "@/components/wizard/messaging";
 import { MessagingProviderType } from "@nuvix/console";
 import { Popover, PopoverTrigger, PopoverContent } from "@nuvix/sui/components";
 import { Button, Flex, Text, ToggleButton } from "@nuvix/ui/components";
-import { Rect } from "@xyflow/react";
-import { LucideProps, MailIcon, MessageCircleIcon, PhoneIcon } from "lucide-react";
+import { LucideProps, MailIcon, MessageCircleIcon, SmartphoneIcon } from "lucide-react";
 import React, { useState } from "react";
 
 export const CreateMessageButton = () => {
@@ -58,7 +57,7 @@ export const MessageTypeIcon = ({
       label = "Email";
       break;
     case MessagingProviderType.Push:
-      IconComponent = PhoneIcon;
+      IconComponent = SmartphoneIcon;
       label = "Push";
       break;
     case MessagingProviderType.Sms:

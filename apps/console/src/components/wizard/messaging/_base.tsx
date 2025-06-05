@@ -231,7 +231,7 @@ const DraftButton = () => {
   );
 };
 
-const Preview = ({ type }: { type: MessagingProviderType }) => {
+export const Preview = ({ type }: { type: MessagingProviderType }) => {
   const { project } = useProjectStore((state) => state);
   const senderName = project.name;
   const appIcon = project.name.slice(0, 1);

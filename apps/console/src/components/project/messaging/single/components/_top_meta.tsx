@@ -37,6 +37,8 @@ export const TopMeta: React.FC = () => {
               message={{
                 title: "Message failed",
                 code: message.deliveryErrors || [],
+                desciption:
+                  "The message has been processed with errors. Please refer to the logs below for more information.",
               }}
             >
               <Button variant="secondary" size="s">

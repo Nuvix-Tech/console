@@ -9,7 +9,7 @@ import {
   SelectLimit,
   Table,
 } from "@/ui/data-grid";
-import { Models, Query } from "@nuvix/console";
+import { MessagingProviderType, Models, Query } from "@nuvix/console";
 import { EmptyState } from "@/components";
 import { HStack } from "@chakra-ui/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -18,9 +18,10 @@ import { useSearchQuery } from "@/hooks/useQuery";
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDate } from "@/lib/utils";
 import { Tooltip } from "@/components/cui/tooltip";
-import { useConfirm, useToast } from "@nuvix/ui/components";
-import { CreateMessageButton } from "./components";
+import { Button, useConfirm, useToast } from "@nuvix/ui/components";
+import { CreateMessageButton, MessageTypeIcon } from "./components";
 import { Status } from "@/components/cui/status";
+import { LogsDialog } from "@/components/others/ui";
 
 interface MessagingPageProps {}
 
@@ -61,27 +62,48 @@ const MessagingPage: React.FC<MessagingPageProps> = () => {
       header: "Type",
       accessorKey: "providerType",
       minSize: 50,
+      cell({ getValue }) {
+        return <MessageTypeIcon type={getValue<MessagingProviderType>()} />;
+      },
     },
     {
       header: "Status",
       accessorKey: "status",
       minSize: 100,
-      cell({ getValue }) {
+      cell({ getValue, row }) {
         const status = getValue<string>();
+        const message = row.original;
         return (
-          <Status
-            value={
-              status === "success"
-                ? "success"
-                : status === "failed"
-                  ? "error"
-                  : status === "processing"
-                    ? "warning"
-                    : "info"
-            }
-          >
-            {status}
-          </Status>
+          <div className="flex items-center gap-3">
+            <Status
+              value={
+                status === "success"
+                  ? "success"
+                  : status === "failed"
+                    ? "error"
+                    : status === "processing"
+                      ? "warning"
+                      : "info"
+              }
+            >
+              {status}
+            </Status>
+            {status === "failed" ? (
+              <LogsDialog
+                title="Message Error"
+                message={{
+                  title: "Message failed",
+                  code: message.deliveryErrors || [],
+                  desciption:
+                    "The message has been processed with errors. Please refer to the logs below for more information.",
+                }}
+              >
+                <Button data-action="errorDetails" variant="tertiary" size="s">
+                  Details
+                </Button>
+              </LogsDialog>
+            ) : undefined}
+          </div>
         );
       },
     },
