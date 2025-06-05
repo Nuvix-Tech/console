@@ -28,10 +28,10 @@ export const CreateTopic = ({ onClose, isOpen }: CreateTopicProps) => {
     <FormDialog
       dialog={{
         title: "Create Topic",
-        description: "Add a new topic to your project",
+        description: "Create a new messaging topic for your project",
         isOpen,
         onClose,
-        footer: <SubmitButton label="Create" />,
+        footer: <SubmitButton label="Create Topic" />,
       }}
       form={{
         validationSchema: schema,
@@ -45,7 +45,7 @@ export const CreateTopic = ({ onClose, isOpen }: CreateTopicProps) => {
             id = id?.trim() || "unique()";
             const bucket = await sdk.messaging.createTopic(id, name);
             addToast({
-              message: "Topic has been successfully created",
+              message: "Topic created successfully",
               variant: "success",
             });
             onClose();
@@ -60,7 +60,7 @@ export const CreateTopic = ({ onClose, isOpen }: CreateTopicProps) => {
       }}
     >
       <Column paddingY="12" fillWidth gap="8">
-        <InputField name="name" label="Name" />
+        <InputField name="name" label="Topic Name" />
         <CustomID name="id" label="Topic ID" />
       </Column>
     </FormDialog>

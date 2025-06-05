@@ -46,7 +46,7 @@ const TopicsPage: React.FC<TopicsPageProps> = () => {
 
   const columns: ColumnDef<Models.Topic>[] = [
     {
-      header: "Id",
+      header: "ID",
       accessorKey: "$id",
       minSize: 280,
       cell({ getValue }) {
@@ -70,7 +70,7 @@ const TopicsPage: React.FC<TopicsPageProps> = () => {
       minSize: 100,
     },
     {
-      header: "Created at",
+      header: "Created At",
       accessorKey: "$createdAt",
       minSize: 200,
       cell(props) {
@@ -85,12 +85,12 @@ const TopicsPage: React.FC<TopicsPageProps> = () => {
   ];
 
   const onDelete = async (values: Models.Topic[]) => {
-    const messages = values;
-    const messageCount = messages.length;
+    const topics = values;
+    const topicCount = topics.length;
 
     const confirmDelete = await confirm({
       title: "Delete Topics",
-      description: `Are you sure you want to delete ${messageCount} ${messageCount === 1 ? "message" : "messages"}? This action cannot be undone.`,
+      description: `Are you sure you want to delete ${topicCount} ${topicCount === 1 ? "topic" : "topics"}? This action cannot be undone.`,
       cancle: {
         text: "Cancel",
       },
@@ -103,16 +103,16 @@ const TopicsPage: React.FC<TopicsPageProps> = () => {
     if (!confirmDelete) return;
 
     try {
-      await Promise.all(messages.map((message) => sdk.messaging.deleteTopic(message.$id)));
+      await Promise.all(topics.map((topic) => sdk.messaging.deleteTopic(topic.$id)));
 
       addToast({
-        message: `Successfully deleted ${messageCount} ${messageCount === 1 ? "message" : "messages"}.`,
+        message: `Successfully deleted ${topicCount} ${topicCount === 1 ? "topic" : "topics"}.`,
         variant: "success",
       });
       await refetch();
     } catch (error) {
       addToast({
-        message: `Failed to delete ${messageCount === 1 ? "message" : "messages"}. Please try again.`,
+        message: `Failed to delete ${topicCount === 1 ? "topic" : "topics"}. Please try again.`,
         variant: "danger",
       });
     }
@@ -120,7 +120,7 @@ const TopicsPage: React.FC<TopicsPageProps> = () => {
 
   const create = (
     <CreateButton
-      label="Create topic"
+      label="Create Topic"
       hasPermission={canCreateTopics}
       component={CreateTopic}
       size="s"
@@ -132,7 +132,7 @@ const TopicsPage: React.FC<TopicsPageProps> = () => {
     <PageContainer>
       <PageHeading
         heading="Topics"
-        description="Manage and monitor your messaging campaigns, notifications, and communications sent through your project's messaging service."
+        description="Manage and organize your messaging topics to categorize and distribute notifications to specific subscriber groups."
       />
 
       <DataGridProvider<Models.Topic>
@@ -149,14 +149,14 @@ const TopicsPage: React.FC<TopicsPageProps> = () => {
         <EmptyState
           show={data.total === 0 && !isFetching && !hasQuery}
           title="No Topics Found"
-          description="You haven't created any topics yet. Start by creating your first message to communicate with your users."
+          description="You haven't created any topics yet. Start by creating your first topic to organize and distribute messages to specific subscriber groups."
           primaryComponent={create}
         />
 
         {(data.total > 0 || hasQuery) && (
           <>
             <HStack justifyContent="space-between" alignItems="center">
-              <Search placeholder="Search topics by ID, name" height="s" />
+              <Search placeholder="Search topics by ID or name" height="s" />
               {canDeleteTopics && create}
             </HStack>
             <Table noResults={data.total === 0 && hasQuery} />

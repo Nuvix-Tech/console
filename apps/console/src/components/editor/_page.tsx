@@ -6,7 +6,7 @@ export const EmptyEditor = () => {
   const router = useRouter();
   const { id: projectId } = useParams<{ id: string }>();
 
-  const path = `/console/project/${projectId}/editor`;
+  const path = `/project/${projectId}/editor`;
 
   return (
     <>
