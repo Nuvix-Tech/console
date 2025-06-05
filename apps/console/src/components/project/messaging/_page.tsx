@@ -20,6 +20,7 @@ import { formatDate } from "@/lib/utils";
 import { Tooltip } from "@/components/cui/tooltip";
 import { useConfirm, useToast } from "@nuvix/ui/components";
 import { CreateMessageButton } from "./components";
+import { Status } from "@/components/cui/status";
 
 interface MessagingPageProps {}
 
@@ -65,6 +66,24 @@ const MessagingPage: React.FC<MessagingPageProps> = () => {
       header: "Status",
       accessorKey: "status",
       minSize: 100,
+      cell({ getValue }) {
+        const status = getValue<string>();
+        return (
+          <Status
+            value={
+              status === "success"
+                ? "success"
+                : status === "failed"
+                  ? "error"
+                  : status === "processing"
+                    ? "warning"
+                    : "info"
+            }
+          >
+            {status}
+          </Status>
+        );
+      },
     },
     {
       header: "Scheduled at",

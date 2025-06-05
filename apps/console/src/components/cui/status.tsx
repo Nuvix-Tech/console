@@ -12,14 +12,22 @@ const statusMap: Record<StatusValue, ColorPalette> = {
   success: "green",
   error: "red",
   warning: "orange",
-  info: "blue",
+  info: "gray",
 };
 
 export const Status = React.forwardRef<HTMLDivElement, StatusProps>(function Status(props, ref) {
   const { children, value = "info", ...rest } = props;
   const colorPalette = rest.colorPalette ?? statusMap[value];
   return (
-    <ChakraStatus.Root ref={ref} {...rest} colorPalette={colorPalette}>
+    <ChakraStatus.Root
+      ref={ref}
+      {...rest}
+      colorPalette={colorPalette}
+      background={`${colorPalette}.subtle`}
+      px={"2"}
+      py={"0.5"}
+      borderRadius={"l3"}
+    >
       <ChakraStatus.Indicator />
       {children}
     </ChakraStatus.Root>

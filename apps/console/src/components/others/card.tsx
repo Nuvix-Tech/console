@@ -9,6 +9,7 @@ import {
 } from "@nuvix/sui/components/card";
 import { Stack, StackProps } from "@chakra-ui/react";
 import { Separator } from "@nuvix/sui/components/separator";
+import { cn } from "@nuvix/sui/lib/utils";
 
 interface InfoCardProps {}
 
@@ -16,12 +17,18 @@ interface UpdateCardProps extends PropsWithChildren {
   actions?: React.ReactNode;
 }
 
-export const CardBox = (props: UpdateCardProps) => {
-  const { children, actions } = props;
+export const CardBox = (props: UpdateCardProps & React.ComponentProps<typeof Card>) => {
+  const { children, actions, className, ...rest } = props;
 
   return (
     <>
-      <Card className="neutral-background-alpha-weak neutral-border-alpha-medium shadow-none">
+      <Card
+        className={cn(
+          "neutral-background-alpha-weak neutral-border-alpha-medium shadow-none",
+          className,
+        )}
+        {...rest}
+      >
         <CardContent>{children}</CardContent>
         {actions ? (
           <>
