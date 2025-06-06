@@ -2,15 +2,16 @@ import { useProjectStore } from "@/lib/store";
 import { useMessageStore } from "./store";
 import { CardBox, CardBoxBody, CardBoxItem, CardBoxTitle } from "@/components/others/card";
 import { TargetsSelectorList, WithDialog } from "@/components/wizard/messaging/targets";
-import { Card, Text } from "@nuvix/ui/components";
-import { MessagingProviderType, Models } from "@nuvix/console";
+import { Card, Text, useToast } from "@nuvix/ui/components";
+import { MessagingProviderType } from "@nuvix/console";
 import { Form, SubmitButton } from "@/components/others/forms";
 import { useFormikContext } from "formik";
 import { useEffect } from "react";
 
 export const UpdateTargets = () => {
-  const { message } = useMessageStore((s) => s);
+  const { message, refresh } = useMessageStore((s) => s);
   const { sdk } = useProjectStore((s) => s);
+  const { addToast } = useToast();
 
   if (!message) return null;
 
@@ -22,9 +23,36 @@ export const UpdateTargets = () => {
       initialValues={{
         targets: message.targets,
       }}
-      onSubmit={async (values) => {}}
+      enableReinitialize
+      onSubmit={async (values) => {
+        if (!isDraft) return;
+        try {
+          switch (type) {
+            case MessagingProviderType.Email:
+              await sdk.messaging.updateEmail(message.$id, undefined, undefined, values.targets);
+              break;
+            case MessagingProviderType.Push:
+              await sdk.messaging.updatePush(message.$id, undefined, undefined, values.targets);
+              break;
+            case MessagingProviderType.Sms:
+              await sdk.messaging.updateSms(message.$id, undefined, undefined, values.targets);
+              break;
+          }
+
+          await refresh();
+          addToast({
+            variant: "success",
+            message: "Message targets updated.",
+          });
+        } catch (e: any) {
+          addToast({
+            variant: "danger",
+            message: e.message,
+          });
+        }
+      }}
     >
-      <CardBox actions={<SubmitButton>Update</SubmitButton>}>
+      <CardBox actions={isDraft ? <SubmitButton>Update</SubmitButton> : undefined}>
         <CardBoxBody>
           <CardBoxItem gap={"4"}>
             <CardBoxTitle className="flex gap-2 items-center">Targets</CardBoxTitle>

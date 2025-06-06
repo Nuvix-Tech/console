@@ -6,7 +6,7 @@ import {
   WithDialog,
 } from "@/components/wizard/messaging/targets/_select_topics";
 import { XIcon } from "lucide-react";
-import { Card, Text } from "@nuvix/ui/components";
+import { Card, Text, useToast } from "@nuvix/ui/components";
 import { MessagingProviderType, Models } from "@nuvix/console";
 import { Form } from "@/components/others/forms";
 import SubmitButton from "@/components/others/forms/button";
@@ -14,8 +14,9 @@ import { useEffect } from "react";
 import { useFormikContext } from "formik";
 
 export const UpdateTopics = () => {
-  const { topicsById, setTopicsById, message } = useMessageStore((s) => s);
+  const { message, refresh } = useMessageStore((s) => s);
   const { sdk } = useProjectStore((s) => s);
+  const { addToast } = useToast();
 
   if (!message) return null;
 
@@ -27,9 +28,35 @@ export const UpdateTopics = () => {
       initialValues={{
         topics: message.topics,
       }}
-      onSubmit={async (values) => {}}
+      enableReinitialize
+      onSubmit={async (values) => {
+        if (!isDraft) return;
+        try {
+          switch (type) {
+            case MessagingProviderType.Email:
+              await sdk.messaging.updateEmail(message.$id, values.topics);
+              break;
+            case MessagingProviderType.Push:
+              await sdk.messaging.updatePush(message.$id, values.topics);
+              break;
+            case MessagingProviderType.Sms:
+              await sdk.messaging.updateSms(message.$id, values.topics);
+              break;
+          }
+          await refresh();
+          addToast({
+            variant: "success",
+            message: "Message targets updated.",
+          });
+        } catch (e: any) {
+          addToast({
+            variant: "danger",
+            message: e.message,
+          });
+        }
+      }}
     >
-      <CardBox actions={<SubmitButton>Update</SubmitButton>}>
+      <CardBox actions={isDraft ? <SubmitButton>Update</SubmitButton> : undefined}>
         <CardBoxBody>
           <CardBoxItem gap={"4"}>
             <CardBoxTitle className="flex gap-2 items-center">Topics</CardBoxTitle>

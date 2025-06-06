@@ -46,7 +46,9 @@ export const TopMeta: React.FC = () => {
                 View Logs
               </Button>
             </LogsDialog>
-          ) : undefined
+          ) : (
+            message.status === "draft" && <DraftActions />
+          )
         }
       >
         <CardBoxBody>
@@ -76,6 +78,24 @@ export const TopMeta: React.FC = () => {
           </CardBoxItem>
         </CardBoxBody>
       </CardBox>
+    </>
+  );
+};
+
+const DraftActions = () => {
+  const { message } = useMessageStore((s) => s);
+  if (!message) return;
+
+  return (
+    <>
+      <div className="flex items-center gap-4">
+        <Button size="s" variant="tertiary">
+          Schedule
+        </Button>
+        <Button size="s" variant="secondary">
+          Send Message
+        </Button>
+      </div>
     </>
   );
 };

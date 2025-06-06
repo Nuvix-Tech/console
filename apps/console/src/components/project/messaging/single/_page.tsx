@@ -21,7 +21,7 @@ export const MessageSinglePage = ({ messageId }: { messageId: string }) => {
   } = useMessageStore((s) => s);
 
   // TODO: find a way to handle this better
-  const fetcher = async () => {
+  const fetcher = async (messageId: string) => {
     const message = await sdk.messaging.getMessage(messageId);
 
     const topicsById: Record<string, Models.Topic> = {};
@@ -70,7 +70,7 @@ export const MessageSinglePage = ({ messageId }: { messageId: string }) => {
 
   const { data } = useSuspenseQuery({
     queryKey: ["message", messageId],
-    queryFn: fetcher,
+    queryFn: async () => await fetcher(messageId),
   });
 
   useEffect(() => {
@@ -81,7 +81,8 @@ export const MessageSinglePage = ({ messageId }: { messageId: string }) => {
     setMessageRecipients(data.messageRecipients);
     setLoading(false);
     setRefresh(async () => {
-      const data = await fetcher();
+      const data = await fetcher(messageId);
+      console.log("Yah! got data", data);
       if (data) {
         setMessage(data.message);
         setTopicsById(data.topicsById);

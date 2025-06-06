@@ -2,13 +2,14 @@ import { CardBox, CardBoxBody, CardBoxItem } from "@/components/others/card";
 import { useMessageStore } from "./store";
 import { MessagingProviderType } from "@nuvix/console";
 import { useToast } from "@nuvix/ui/components";
-import { Form } from "@/components/others/forms";
+import { Form, SubmitButton } from "@/components/others/forms";
 import { MessagePreview } from "@/components/wizard/messaging";
 import React from "react";
 import { emailSchema, pushSchema, smsSchema } from "./update-message/_schemas";
 import { UpdateMessageTypeMail } from "./update-message/_type_mail";
 import { UpdateMessageTypeSms } from "./update-message/_type_sms";
 import { UpdateMessageTypePush } from "./update-message/_type_push";
+import { useProjectStore } from "@/lib/store";
 
 interface MessageData {
   content?: string;
@@ -36,8 +37,9 @@ const getMessageConfig = (type: MessagingProviderType) => {
 };
 
 export const UpdateMessage: React.FC = () => {
-  const { message } = useMessageStore((s) => s);
+  const { message, refresh } = useMessageStore((s) => s);
   const { addToast } = useToast();
+  const { sdk } = useProjectStore((s) => s);
 
   if (!message?.providerType) {
     return null;
@@ -56,9 +58,46 @@ export const UpdateMessage: React.FC = () => {
   const isEditable = message.status === "draft";
 
   const handleSubmit = async (values: any) => {
+    if (!isEditable) return;
     try {
-      // TODO: Implement message update logic
-      console.log("Updating message with values:", values);
+      switch (type) {
+        case MessagingProviderType.Email:
+          await sdk.messaging.updateEmail(
+            message.$id,
+            undefined,
+            undefined,
+            undefined,
+            values["subject"],
+            values["message"],
+            undefined,
+            values["html"],
+          );
+          break;
+        case MessagingProviderType.Push:
+          await sdk.messaging.updatePush(
+            message.$id,
+            undefined,
+            undefined,
+            undefined,
+            values["title"],
+            values["message"],
+            values["data"],
+            undefined,
+            values["image"],
+          );
+          break;
+        case MessagingProviderType.Sms:
+          await sdk.messaging.updateSms(
+            message.$id,
+            undefined,
+            undefined,
+            undefined,
+            values["message"],
+          );
+          break;
+      }
+
+      await refresh();
       addToast({
         variant: "success",
         message: "Message updated successfully.",
@@ -81,7 +120,10 @@ export const UpdateMessage: React.FC = () => {
       validationSchema={schema}
       onSubmit={handleSubmit}
     >
-      <CardBox className="relative">
+      <CardBox
+        className="relative"
+        actions={isEditable ? <SubmitButton>Update</SubmitButton> : undefined}
+      >
         <CardBoxBody>
           <CardBoxItem gap="4">
             <MessagePreview type={type} />
