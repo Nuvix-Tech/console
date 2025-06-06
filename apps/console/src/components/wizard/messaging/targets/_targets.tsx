@@ -63,7 +63,8 @@ export const Targets = ({ add, sdk, onClose, groups, type, title, description }:
               : user.targets;
             const disabled = targets.length === 0;
             const allSelected = targets.reduce(
-              (p, c) => (groups.hasOwnProperty(c.$id) || selected.includes(c as any) ? [...p, c] : p),
+              (p, c) =>
+                groups.hasOwnProperty(c.$id) || selected.includes(c as any) ? [...p, c] : p,
               Object.values(groups) as Models.Target[],
             );
 

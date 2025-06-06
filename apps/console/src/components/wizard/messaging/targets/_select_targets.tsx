@@ -60,7 +60,7 @@ export const TargetsSelector = ({
   if (!hasTargets) {
     return (
       <Card
-        title="Topics & Targets"
+        title="Targets"
         minHeight="160"
         radius="l-4"
         center
