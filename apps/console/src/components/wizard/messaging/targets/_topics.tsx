@@ -10,7 +10,7 @@ import { cn } from "@nuvix/sui/lib/utils";
 export type TopicsProps = {
   add: (topic: Models.Topic) => void;
   onClose: VoidFunction;
-  groups: Map<string, Models.Topic>;
+  groups: Record<string, Models.Topic>;
   type: MessagingProviderType;
 } & { sdk: ProjectSdk };
 
@@ -84,7 +84,7 @@ export const Topics = ({ add, sdk, onClose, groups, type }: TopicsProps) => {
                   <Checkbox
                     size={"sm"}
                     disabled={disabled}
-                    checked={groups.has(topic.$id) || selected.find((t) => t.$id === topic.$id)}
+                    checked={!!groups[topic.$id] || selected.find((t) => t.$id === topic.$id)}
                     onCheckedChange={() => toggleSelected(topic)}
                   />
                   <Text>

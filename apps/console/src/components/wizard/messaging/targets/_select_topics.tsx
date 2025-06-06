@@ -14,22 +14,22 @@ export const TopicsSelector = ({
   onSave,
 }: { type: MessagingProviderType; values: string[]; onSave: (values: string[]) => void }) => {
   const { sdk } = useProjectStore((state) => state);
-  const [topicsById, setTopicsById] = useState<Map<string, Models.Topic>>(new Map());
+  const [topicsById, setTopicsById] = useState<Record<string, Models.Topic>>({});
 
-  const hasTopics = useMemo(() => topicsById.size > 0, [topicsById]);
+  const hasTopics = useMemo(() => Object.keys(topicsById).length > 0, [topicsById]);
 
   // Fetch topics by IDs and set initial topicsById value
   useEffect(() => {
     const fetchTopics = async () => {
       if (values.length === 0) return;
       try {
-        const topicsMap = new Map<string, Models.Topic>();
+        const topicsRecord: Record<string, Models.Topic> = {};
         const topic = await sdk.messaging.listTopics([Query.equal("$id", values)]);
         if (!topic.total) return;
         for (const _topic of topic.topics) {
-          topicsMap.set(_topic.$id, _topic);
+          topicsRecord[_topic.$id] = _topic;
         }
-        setTopicsById(topicsMap);
+        setTopicsById(topicsRecord);
       } catch (error) {
         // TODO: Handle error appropriately
       }
@@ -38,19 +38,19 @@ export const TopicsSelector = ({
     fetchTopics();
   }, [values, sdk]);
 
-  const addTopics = (newTopics: Map<string, Models.Topic>) => {
+  const addTopics = (newTopics: Record<string, Models.Topic>) => {
     setTopicsById(newTopics);
-    const newValues = Array.from(newTopics.keys());
+    const newValues = Object.keys(newTopics);
     if (newValues.length > 0) {
       onSave(newValues);
     }
   };
 
   const removeTopic = (targetId: string) => {
-    const newTopicsById = new Map(topicsById);
-    newTopicsById.delete(targetId);
+    const newTopicsById = { ...topicsById };
+    delete newTopicsById[targetId];
     setTopicsById(newTopicsById);
-    const newValues = Array.from(newTopicsById.keys());
+    const newValues = Object.keys(newTopicsById);
     if (newValues.length > 0) {
       onSave(newValues);
     }
@@ -111,7 +111,7 @@ export const TopicsSelector = ({
             </tr>
           </thead>
           <tbody>
-            {Array.from(topicsById.entries()).map(([targetId, target]) => (
+            {Object.entries(topicsById).map(([targetId, target]) => (
               <tr key={targetId} className="border-b">
                 <td className="p-3">{target.name}</td>
                 <td className="p-3">
@@ -159,7 +159,7 @@ export const WithDialog = ({
         closeOnInteractOutside={false}
       >
         <Topics
-          add={(topics) => onAddTopics(new Map([[topics.$id, topics]]))}
+          add={(topics) => onAddTopics({ [topics.$id]: topics })}
           sdk={sdk}
           onClose={() => setOpen(false)}
           groups={groups}
@@ -172,9 +172,9 @@ export const WithDialog = ({
 
 export type DialogBoxProps = {
   type: MessagingProviderType;
-  onAddTopics: (topics: Map<string, Models.Topic>) => void;
+  onAddTopics: (topics: Record<string, Models.Topic>) => void;
   children?: React.ReactNode;
-  groups: Map<string, Models.Topic>;
+  groups: Record<string, Models.Topic>;
   sdk: ProjectSdk;
   trigger: React.ElementType;
   args?: any;
