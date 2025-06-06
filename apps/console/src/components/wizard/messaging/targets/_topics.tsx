@@ -16,9 +16,9 @@ export type TopicsProps = {
 
 export const Topics = ({ add, sdk, onClose, groups, type }: TopicsProps) => {
   const fetchTopics = async (search: string | undefined, limit: number, offset: number) => {
-    let queris = [];
-    queris.push(Query.limit(limit), Query.offset(offset));
-    const res = await sdk.messaging.listTopics(queris, search);
+    const queries = [];
+    queries.push(Query.limit(limit), Query.offset(offset));
+    const res = await sdk.messaging.listTopics(queries, search);
     return { data: res.topics, total: res.total };
   };
 
@@ -32,81 +32,80 @@ export const Topics = ({ add, sdk, onClose, groups, type }: TopicsProps) => {
 
   const onSave = () => {
     add(selected);
-    onClose?.();
+    onClose();
   };
 
   useEffect(() => {
     const values = Object.values(groups);
     if (values.length) setSelected(values);
-  }, [groups]);
+  }, [groups, setSelected]);
 
-  const getTotal = (topic: Models.Topic): number => {
+  const getTargetCount = (topic: Models.Topic): number => {
     switch (type) {
       case MessagingProviderType.Email:
-        return topic.emailTotal;
+        return topic.emailTotal || 0;
       case MessagingProviderType.Sms:
-        return topic.smsTotal;
+        return topic.smsTotal || 0;
       case MessagingProviderType.Push:
-        return topic.pushTotal;
+        return topic.pushTotal || 0;
       default:
         return 0;
     }
   };
 
   return (
-    <>
-      <SelectDialog
-        title="Select topics"
-        description="Grant access to any authenticated or anonymous user."
-        actions={
-          <>
-            <DialogTrigger asChild>
-              <Button variant="outline" type="button">
-                Cancel
-              </Button>
-            </DialogTrigger>
-            <Button disabled={selected.length === 0} onClick={onSave} type="button">
-              Add
+    <SelectDialog
+      title="Select Topics"
+      description="Choose topics to add to your messaging configuration."
+      actions={
+        <>
+          <DialogTrigger asChild>
+            <Button variant="outline" type="button">
+              Cancel
             </Button>
-          </>
-        }
-      >
-        <SimpleSelector
-          placeholder="Search by topics"
-          {...rest}
-          onMap={(topic, toggleSelection, selections) => {
-            const targets = getTotal(topic);
-            const disabled = targets > 0;
-            return (
-              <div
-                key={topic.$id}
-                className={cn("w-full border-b border-dotted border-neutral-medium")}
+          </DialogTrigger>
+          <Button disabled={selected.length === 0} onClick={onSave} type="button">
+            Add {selected.length > 0 ? `(${selected.length})` : ""}
+          </Button>
+        </>
+      }
+    >
+      <SimpleSelector
+        placeholder="Search topics..."
+        {...rest}
+        onMap={(topic) => {
+          const targetCount = getTargetCount(topic);
+          const isSelected = !!selected.find((t) => t.$id === topic.$id);
+          const hasTargets = targetCount > 0;
+
+          return (
+            <div
+              key={topic.$id}
+              className={cn("w-full border-b border-dotted border-neutral-medium")}
+            >
+              <HStack
+                color={!hasTargets ? "fg.subtle" : "fg"}
+                alignItems="center"
+                width="full"
+                mb="2"
+                pt="2"
               >
-                <HStack
-                  color={disabled ? "fg.subtle" : "fg"}
-                  alignItems="center"
-                  width="full"
-                  mb={"2"}
-                  pt={"2"}
-                >
-                  <Checkbox
-                    size={"sm"}
-                    disabled={disabled}
-                    checked={!!selected.find((t) => t.$id === topic.$id)}
-                    onCheckedChange={() => toggleSelected(topic)}
-                  />
-                  <Text>
-                    {topic.name}
-                    <Code color={disabled ? "fg.subtle" : "fg"} variant="surface" ml={"3"}>
-                      {targets} targets
-                    </Code>
-                  </Text>
-                </HStack>
-              </div>
-            );
-          }}
-        />
-      </SelectDialog>
-    </>
+                <Checkbox
+                  size="sm"
+                  checked={isSelected}
+                  onCheckedChange={() => toggleSelected(topic)}
+                />
+                <Text flex="1">
+                  {topic.name}
+                  <Code color={!hasTargets ? "fg.subtle" : "fg"} variant="surface" ml="3">
+                    {targetCount} {targetCount === 1 ? "target" : "targets"}
+                  </Code>
+                </Text>
+              </HStack>
+            </div>
+          );
+        }}
+      />
+    </SelectDialog>
   );
 };

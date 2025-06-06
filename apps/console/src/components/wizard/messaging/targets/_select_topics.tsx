@@ -17,27 +17,27 @@ export const TopicsSelector = ({
   const hasTopics = useMemo(() => Object.keys(topicsById).length > 0, [topicsById]);
 
   const addTopics = (newTopics: Record<string, Models.Topic>) => {
-    setTopicsById(newTopics);
-    const newValues = Object.keys(newTopics);
-    if (newValues.length > 0) {
-      onSave(newValues);
-    }
+    setTopicsById((prev) => ({ ...prev, ...newTopics }));
+    const allTopicIds = Object.keys({ ...topicsById, ...newTopics });
+    onSave(allTopicIds);
   };
 
-  const removeTopic = (targetId: string) => {
-    const newTopicsById = { ...topicsById };
-    delete newTopicsById[targetId];
-    setTopicsById(newTopicsById);
-    const newValues = Object.keys(newTopicsById);
-    if (newValues.length > 0) {
-      onSave(newValues);
-    }
+  const removeTopic = (topicId: string) => {
+    setTopicsById((prev) => {
+      const { [topicId]: removed, ...rest } = prev;
+      return rest;
+    });
+
+    const updatedTopicsById = { ...topicsById };
+    delete updatedTopicsById[topicId];
+    const remainingTopicIds = Object.keys(updatedTopicsById);
+    onSave(remainingTopicIds);
   };
 
   if (!hasTopics) {
     return (
       <Card
-        title="Topics & Topics"
+        title="Message Topics"
         minHeight="160"
         radius="l-4"
         center
@@ -45,9 +45,9 @@ export const TopicsSelector = ({
         direction="column"
         gap="12"
       >
-        <WithDialog type={type} onAddTopics={addTopics} sdk={sdk} groups={topicsById} />
+        <WithDialog type={type} onAddTopics={addTopics} sdk={sdk} topics={topicsById} />
         <Text variant="body-default-s" onBackground="neutral-medium">
-          Select topics to get started
+          Choose topics to target your messages
         </Text>
       </Card>
     );
@@ -59,31 +59,32 @@ export const TopicsSelector = ({
         <table className="w-full">
           <thead>
             <tr className="border-b">
-              <th className="text-left p-3">Topics</th>
+              <th className="text-left p-3">Selected Topics</th>
               <th className="w-10 pr-2">
                 <WithDialog
                   type={type}
                   onAddTopics={addTopics}
                   sdk={sdk}
-                  groups={topicsById}
+                  topics={topicsById}
                   showButton
                 />
               </th>
             </tr>
           </thead>
           <tbody>
-            {Object.entries(topicsById).map(([targetId, target]) => (
-              <tr key={targetId} className="border-b">
-                <td className="p-3">{target.name}</td>
+            {Object.entries(topicsById).map(([topicId, topic]) => (
+              <tr key={topicId} className="border-b last:border-b-0">
+                <td className="p-3">{topic.name}</td>
                 <td className="p-3">
                   <div className="flex justify-end">
-                    <button
-                      type="button"
-                      onClick={() => removeTopic(targetId)}
-                      className="text-gray-500 hover:text-red-500"
+                    <IconButton
+                      variant="ghost"
+                      size="s"
+                      onClick={() => removeTopic(topicId)}
+                      aria-label={`Remove ${topic.name}`}
                     >
-                      <XIcon size={18} />
-                    </button>
+                      <XIcon size={16} />
+                    </IconButton>
                   </div>
                 </td>
               </tr>
@@ -95,57 +96,61 @@ export const TopicsSelector = ({
   );
 };
 
-export const WithDialog = ({ type, onAddTopics, sdk, groups, showButton }: DialogBoxProps) => {
-  const Trigger = showButton ? Button : IconButton;
+export const WithDialog = ({ type, onAddTopics, sdk, topics, showButton }: DialogBoxProps) => {
   const [open, setOpen] = useState(false);
 
-  const handleRoleClick = () => {
+  const handleOpenDialog = () => {
     setOpen(true);
   };
 
-  const handleOnAdd = (topics: Models.Topic[]) => {
-    const newData: Record<string, Models.Topic> = {};
-    for (const topic of topics) {
-      newData[topic.$id] = topic;
-    }
-    onAddTopics(newData);
+  const handleAddTopics = (selectedTopics: Models.Topic[]) => {
+    const topicsMap = selectedTopics.reduce(
+      (acc, topic) => {
+        acc[topic.$id] = topic;
+        return acc;
+      },
+      {} as Record<string, Models.Topic>,
+    );
+
+    onAddTopics(topicsMap);
+    setOpen(false);
   };
 
+  const TriggerComponent = showButton ? Button : IconButton;
+  const triggerProps = showButton
+    ? { variant: "secondary" as const, children: [<PlusIcon key="icon" size={14} />, "Add Topics"] }
+    : {
+        variant: "tertiary" as const,
+        "aria-label": "Add topics",
+        children: <PlusIcon size={14} />,
+      };
+
   return (
-    <div className="relative">
-      <Trigger
-        variant="secondary"
-        onClick={handleRoleClick}
-        size="s"
-        type="button"
-        className="items-center"
-      >
-        <PlusIcon size={"14px"} /> {showButton && "Add"}
-      </Trigger>
+    <>
+      <TriggerComponent {...triggerProps} onClick={handleOpenDialog} size="s" type="button" />
 
       <DialogRoot
         open={open}
         onOpenChange={({ open }) => setOpen(open)}
-        closeOnEscape={false}
-        closeOnInteractOutside={false}
+        closeOnEscape
+        closeOnInteractOutside
       >
         <Topics
-          add={handleOnAdd}
+          add={handleAddTopics}
           sdk={sdk}
           onClose={() => setOpen(false)}
-          groups={groups}
+          groups={topics}
           type={type}
         />
       </DialogRoot>
-    </div>
+    </>
   );
 };
 
 export type DialogBoxProps = {
   type: MessagingProviderType;
   onAddTopics: (topics: Record<string, Models.Topic>) => void;
-  children?: React.ReactNode;
-  groups: Record<string, Models.Topic>;
+  topics: Record<string, Models.Topic>;
   sdk: ProjectSdk;
   showButton?: boolean;
 };

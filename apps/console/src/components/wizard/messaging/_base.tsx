@@ -33,7 +33,22 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ..
   const { addToast } = useToast();
   const { sdk } = useProjectStore((state) => state);
 
+  const getMessageTypeLabel = (messageType: MessagingProviderType) => {
+    switch (messageType) {
+      case MessagingProviderType.Email:
+        return "Email";
+      case MessagingProviderType.Sms:
+        return "SMS";
+      case MessagingProviderType.Push:
+        return "Push Notification";
+      default:
+        return "Message";
+    }
+  };
+
   async function onSubmit(values: MessageFormData, resetForm: () => void) {
+    if (!type) return;
+
     const client = getQueryClient();
     try {
       let res: Models.Message;
@@ -106,20 +121,26 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ..
             scheduledAt?.toISOString(),
           );
           break;
+        default:
+          throw new Error(`Unsupported message type: ${type}`);
       }
+
+      const actionText = draft ? "saved as draft" : "created";
+      const messageTypeLabel = getMessageTypeLabel(type);
 
       addToast({
         variant: "success",
-        message: `${type} message created successfully.`,
+        message: `${messageTypeLabel} ${actionText} successfully.`,
       });
 
       resetForm();
-      client.invalidateQueries({ queryKey: ["messages"] });
+      await client.invalidateQueries({ queryKey: ["messages"] });
       props.onOpenChange?.({ open: false });
     } catch (error: any) {
+      const messageTypeLabel = getMessageTypeLabel(type);
       addToast({
         variant: "danger",
-        message: error.message || "Failed to create message",
+        message: error.message || `Failed to create ${messageTypeLabel.toLowerCase()}`,
       });
     }
   }
@@ -153,7 +174,7 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ..
           return null;
       }
     } catch (error) {
-      console.error(`Failed to get config for message type ${type}:`, error);
+      console.error(`Failed to initialize ${getMessageTypeLabel(type)} configuration:`, error);
       return null;
     }
   })();
@@ -163,6 +184,7 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ..
   }
 
   const { schema, component: MessageComponent, initialValues } = messageConfig;
+  const messageTypeLabel = getMessageTypeLabel(type);
 
   return (
     <Dialog.Root size="full" motionPreset="slide-in-right" {...props}>
@@ -181,19 +203,19 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ..
               <Dialog.Body h="full" gap={10} p={12} display="flex">
                 <Box flex="1" h="full" maxWidth={{ base: "2xl" }}>
                   <Text fontSize="2xl" fontWeight="semibold" mb={6}>
-                    Create {type} Message
+                    Create {messageTypeLabel}
                   </Text>
                   <Column gap="8">
                     <MessageComponent />
                     <SelectTopicsTargets type={type} />
                     <Schedule />
                   </Column>
-                  <Flex justify="flex-end" mt={6} gap={"4"}>
+                  <Flex justify="flex-end" mt={6} gap="4">
                     <Dialog.Trigger asChild>
                       <Button variant="tertiary">Cancel</Button>
                     </Dialog.Trigger>
                     <DraftButton />
-                    <SubmitButton>Create Message</SubmitButton>
+                    <SubmitButton>Create {messageTypeLabel}</SubmitButton>
                   </Flex>
                 </Box>
                 <Box className="sticky mx-auto my-20">
@@ -226,18 +248,31 @@ const DraftButton = () => {
       variant="secondary"
       loading={isSubmitting && values["draft"]}
     >
-      Save draft
+      Save as Draft
     </Button>
   );
 };
 
 export const Preview = ({ type }: { type: MessagingProviderType }) => {
   const { project } = useProjectStore((state) => state);
-  const senderName = project.name;
-  const appIcon = project.name.slice(0, 1);
+  const senderName = project?.name || "Your App";
+  const appIcon = project?.name?.slice(0, 1) || "A";
   const { values } = useFormikContext<any>();
 
-  const defaultMessage = "Enter text in left side message box to see here.";
+  const getPlaceholderText = (messageType: MessagingProviderType) => {
+    switch (messageType) {
+      case MessagingProviderType.Email:
+        return "Enter your email content to see the preview";
+      case MessagingProviderType.Sms:
+        return "Enter your SMS message to see the preview";
+      case MessagingProviderType.Push:
+        return "Enter your notification message to see the preview";
+      default:
+        return "Enter message content to see the preview";
+    }
+  };
+
+  const placeholderText = getPlaceholderText(type);
 
   switch (type) {
     case MessagingProviderType.Email:
@@ -245,8 +280,8 @@ export const Preview = ({ type }: { type: MessagingProviderType }) => {
         <MobileMail
           email={{
             senderName,
-            content: values["message"] || defaultMessage,
-            subject: values["subject"] || "Subject",
+            content: values["message"] || placeholderText,
+            subject: values["subject"] || "Email Subject",
             html: values["html"],
           }}
         />
@@ -259,7 +294,7 @@ export const Preview = ({ type }: { type: MessagingProviderType }) => {
             messages: [
               {
                 id: "1",
-                text: values["message"] || defaultMessage,
+                text: values["message"] || placeholderText,
                 isOutgoing: false,
                 timestamp: "now",
               },
@@ -273,8 +308,8 @@ export const Preview = ({ type }: { type: MessagingProviderType }) => {
           notification={{
             appIcon,
             senderName,
-            message: values["message"] || defaultMessage,
-            title: values["title"] || "Message Title",
+            message: values["message"] || placeholderText,
+            title: values["title"] || "Notification Title",
           }}
         />
       );

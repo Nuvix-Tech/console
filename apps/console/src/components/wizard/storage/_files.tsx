@@ -22,17 +22,24 @@ export const Files = ({ mimeType }: { mimeType?: string[] }) => {
   const { canCreateFiles } = permissions();
 
   const fetcher = async () => {
+    if (!bucket?.$id) return { files: [], total: 0 };
+
     const queries = [];
-    if (mimeType) {
-      queries.push(Query.equal("mimeType", mimeType));
+    if (mimeType?.length) {
+      queries.push(Query.contains("mimeType", mimeType));
     }
-    return await sdk.storage.listFiles(bucket?.$id!, queries, search);
+    if (search.trim()) {
+      queries.push(Query.search("name", search.trim()));
+    }
+
+    return await sdk.storage.listFiles(bucket.$id, queries);
   };
 
-  const { data, isSuccess, isFetching, refetch } = useQuery({
-    queryKey: ["files", bucket?.$id, search],
+  const { data, isFetching, refetch, error } = useQuery({
+    queryKey: ["files", bucket?.$id, mimeType, search],
     queryFn: fetcher,
     enabled: !!bucket?.$id,
+    staleTime: 30000, // 30 seconds
   });
 
   const columns: ColumnDef<Models.File>[] = [
@@ -46,26 +53,35 @@ export const Files = ({ mimeType }: { mimeType?: string[] }) => {
           <RadioButton
             isChecked={file?.$id === row.original.$id}
             onToggle={() => setFile(row.original)}
+            aria-label={`Select ${row.original.name}`}
           />
         );
       },
     },
     {
-      header: "Filename",
+      header: "Name",
       accessorKey: "name",
       minSize: 280,
       cell(props) {
         const row = props.row.original;
+        const isImage = row.mimeType?.startsWith("image/");
+
         return (
           <Row gap="8" vertical="center">
             <Avatar
               src={
-                sdk.storage.getFilePreview(bucket?.$id!, row.$id, 64, 64).toString() + "&mode=admin"
+                isImage
+                  ? sdk.storage.getFilePreview(bucket?.$id!, row.$id, 64, 64).toString() +
+                    "&mode=admin"
+                  : undefined
               }
+              value={isImage ? undefined : row.name.charAt(0).toUpperCase()}
               className="mr-2"
               unoptimized
             />
-            <span>{row.name}</span>
+            <Tooltip showArrow content={row.name}>
+              <span className="truncate">{row.name}</span>
+            </Tooltip>
           </Row>
         );
       },
@@ -73,25 +89,30 @@ export const Files = ({ mimeType }: { mimeType?: string[] }) => {
     {
       header: "Type",
       accessorKey: "mimeType",
-      minSize: 250,
+      minSize: 150,
+      cell({ getValue }) {
+        const mimeType = getValue<string>();
+        const displayType = mimeType?.split("/")[1]?.toUpperCase() || "Unknown";
+        return <span className="text-muted-foreground">{displayType}</span>;
+      },
     },
     {
       header: "Size",
       accessorKey: "sizeOriginal",
       cell({ getValue }) {
-        return formatBytes(getValue<number>());
+        return <span className="text-muted-foreground">{formatBytes(getValue<number>())}</span>;
       },
       minSize: 100,
     },
     {
-      header: "Created At",
+      header: "Uploaded",
       accessorKey: "$createdAt",
-      minSize: 200,
+      minSize: 150,
       cell(props) {
         const date = formatDate(props.getValue<string>());
         return (
           <Tooltip showArrow content={date}>
-            <span>{date}</span>
+            <span className="text-muted-foreground">{date}</span>
           </Tooltip>
         );
       },
@@ -99,53 +120,84 @@ export const Files = ({ mimeType }: { mimeType?: string[] }) => {
   ];
 
   useEffect(() => {
-    setLoading(false);
-  }, [isSuccess]);
+    setLoading(isFetching);
+  }, [isFetching, setLoading]);
 
   useEffect(() => {
-    setBucket(bucket);
-  }, [bucket]);
+    if (bucket) {
+      setBucket(bucket);
+    }
+  }, [bucket, setBucket]);
+
+  const hasFiles = (data?.total ?? 0) > 0;
+  const showEmptyState = !hasFiles && !isFetching && !search.trim() && !error;
+  const showNoResults = !hasFiles && !isFetching && search.trim();
 
   return (
-    <>
-      <div className="w-full py-2">
-        <Text variant="label-strong-s">Files</Text>
-        <div className="space-y-4 mt-2">
-          <DataGridProvider<Models.File>
-            columns={columns}
-            data={data?.files ?? []}
-            manualPagination
-            rowCount={data?.total}
-            loading={isFetching}
-          >
-            <EmptyState
-              show={data?.total === 0 && !isFetching && !search}
-              title="No Files"
-              description="No files have been uploaded yet."
-            />
+    <div className="w-full py-2">
+      <Text variant="label-strong-s">
+        {mimeType ? `${mimeType.join(", ")} Files` : "Files"}
+        {hasFiles && <span className="ml-2 text-muted-foreground">({data?.total})</span>}
+      </Text>
 
-            {((data?.total && data?.total > 0) || search) && (
-              <>
-                <HStack justifyContent="space-between" alignItems="center">
-                  <Search
-                    height="s"
-                    placeholder="Search by file name"
-                    onSearch={(v) => setSearch(v)}
-                  />
-                  <CreateButton
-                    hasPermission={canCreateFiles}
-                    label="Upload File"
-                    component={UploadFile}
-                    size="s"
-                    extraProps={{ refetch }}
-                  />
-                </HStack>
-                <Table noResults={data?.total === 0 && !!search} interactive={false} />
-              </>
-            )}
-          </DataGridProvider>
-        </div>
+      <div className="space-y-4 mt-2">
+        <DataGridProvider<Models.File>
+          columns={columns}
+          data={data?.files ?? []}
+          manualPagination
+          rowCount={data?.total}
+          loading={isFetching}
+        >
+          <EmptyState
+            show={showEmptyState}
+            title="No files yet"
+            description={
+              mimeType
+                ? `No ${mimeType.join(" or ")} files have been uploaded to this bucket.`
+                : "Upload your first file to get started."
+            }
+          />
+
+          <EmptyState
+            show={!!showNoResults}
+            title="No matching files"
+            description={`No files found matching "${search}". Try a different search term.`}
+          />
+
+          {error && (
+            <EmptyState
+              show={true}
+              title="Failed to load files"
+              description="There was an error loading files. Please try again."
+            />
+          )}
+
+          {(hasFiles || search.trim()) && !error && (
+            <>
+              <HStack justifyContent="space-between" alignItems="center">
+                <Search
+                  height="s"
+                  placeholder={
+                    mimeType
+                      ? `Search ${mimeType.join(" or ")} files...`
+                      : "Search files by name..."
+                  }
+                  onSearch={(v) => setSearch(v)}
+                  defaultValue={search}
+                />
+                <CreateButton
+                  hasPermission={canCreateFiles}
+                  label="Upload File"
+                  component={UploadFile}
+                  size="s"
+                  extraProps={{ refetch }}
+                />
+              </HStack>
+              <Table noResults={!!showNoResults} interactive={false} />
+            </>
+          )}
+        </DataGridProvider>
       </div>
-    </>
+    </div>
   );
 };

@@ -2,7 +2,7 @@ import { Card, IconButton, Text, Button } from "@nuvix/ui/components";
 import React, { useState, useMemo, useEffect } from "react";
 import { useProjectStore } from "@/lib/store";
 import { DialogRoot } from "@/components/cui/dialog";
-import { Models, MessagingProviderType, Query } from "@nuvix/console";
+import { Models, MessagingProviderType } from "@nuvix/console";
 import { ProjectSdk } from "@/lib/sdk";
 import { Targets } from "./_targets";
 import { PlusIcon, XIcon } from "lucide-react";
@@ -17,27 +17,33 @@ export const TargetsSelector = ({
   const hasTargets = useMemo(() => Object.keys(targetsById).length > 0, [targetsById]);
 
   const addTargets = (newTargets: Record<string, Models.Target>) => {
-    setTargetsById(newTargets);
-    const newValues = Object.keys(newTargets);
-    if (newValues.length > 0) {
-      onSave(newValues);
-    }
+    setTargetsById((prev) => ({ ...prev, ...newTargets }));
+    const allTargetIds = Object.keys({ ...targetsById, ...newTargets });
+    onSave(allTargetIds);
   };
 
   const removeTarget = (targetId: string) => {
-    const newTargetsById = { ...targetsById };
-    delete newTargetsById[targetId];
-    setTargetsById(newTargetsById);
-    const newValues = Object.keys(newTargetsById);
-    if (newValues.length > 0) {
+    setTargetsById((prev) => {
+      const { [targetId]: removed, ...remaining } = prev;
+      return remaining;
+    });
+    setTargetsById((prev) => {
+      const newValues = Object.keys(prev);
       onSave(newValues);
-    }
+      return prev;
+    });
   };
+
+  // Update parent whenever targets change
+  useEffect(() => {
+    const targetIds = Object.keys(targetsById);
+    onSave(targetIds);
+  }, [targetsById, onSave]);
 
   if (!hasTargets) {
     return (
       <Card
-        title="Targets"
+        title="Message Recipients"
         minHeight="160"
         radius="l-4"
         center
@@ -47,7 +53,7 @@ export const TargetsSelector = ({
       >
         <WithDialog type={type} onAddTargets={addTargets} sdk={sdk} groups={targetsById} />
         <Text variant="body-default-s" onBackground="neutral-medium">
-          Select targets to get started
+          No recipients selected. Click the button above to add recipients for your message.
         </Text>
       </Card>
     );
@@ -55,12 +61,14 @@ export const TargetsSelector = ({
 
   return (
     <div className="space-y-4">
-      <div className="border rounded-lg">
+      <div className="border rounded-lg overflow-hidden">
         <table className="w-full">
-          <thead>
+          <thead className="bg-gray-50">
             <tr className="border-b">
-              <th className="text-left p-3">Targets</th>
-              <th className="w-10 pr-2">
+              <th className="text-left p-3 font-medium">
+                Recipients ({Object.keys(targetsById).length})
+              </th>
+              <th className="w-16 pr-3">
                 <WithDialog
                   type={type}
                   onAddTargets={addTargets}
@@ -73,16 +81,24 @@ export const TargetsSelector = ({
           </thead>
           <tbody>
             {Object.entries(targetsById).map(([targetId, target]) => (
-              <tr key={targetId} className="border-b">
-                <td className="p-3">{target.name || target.identifier}</td>
+              <tr key={targetId} className="border-b last:border-b-0 hover:bg-gray-50">
+                <td className="p-3">
+                  <div className="flex flex-col">
+                    <span className="font-medium">{target.name || target.identifier}</span>
+                    {target.name && target.identifier && target.name !== target.identifier && (
+                      <span className="text-sm text-gray-500">{target.identifier}</span>
+                    )}
+                  </div>
+                </td>
                 <td className="p-3">
                   <div className="flex justify-end">
                     <button
                       type="button"
                       onClick={() => removeTarget(targetId)}
-                      className="text-gray-500 hover:text-red-500"
+                      className="text-gray-400 hover:text-red-500 transition-colors p-1 rounded"
+                      title="Remove recipient"
                     >
-                      <XIcon size={18} />
+                      <XIcon size={16} />
                     </button>
                   </div>
                 </td>
@@ -99,45 +115,48 @@ export const WithDialog = ({ type, onAddTargets, sdk, groups, showButton }: Dial
   const Trigger = showButton ? Button : IconButton;
   const [open, setOpen] = useState(false);
 
-  const handleRoleClick = () => {
+  const handleOpenDialog = () => {
     setOpen(true);
   };
 
-  const handleOnAdd = (targets: Models.Target[]) => {
-    const newData: Record<string, Models.Target> = {};
-    for (const target of targets) {
-      newData[target.$id] = target;
-    }
-    onAddTargets(newData);
+  const handleAddTargets = (targets: Models.Target[]) => {
+    const newTargetsById: Record<string, Models.Target> = {};
+    targets.forEach((target) => {
+      newTargetsById[target.$id] = target;
+    });
+    onAddTargets(newTargetsById);
+    setOpen(false);
   };
 
   return (
-    <div className="relative">
+    <>
       <Trigger
         variant="secondary"
-        onClick={handleRoleClick}
+        onClick={handleOpenDialog}
         size="s"
         type="button"
         className="items-center"
+        title={showButton ? "Add recipients" : "Add"}
       >
-        <PlusIcon size={"14px"} /> {showButton && "Add"}
+        <PlusIcon size={14} />
+        {showButton && <span className="ml-1">Add</span>}
       </Trigger>
 
       <DialogRoot
         open={open}
         onOpenChange={({ open }) => setOpen(open)}
-        closeOnEscape={false}
-        closeOnInteractOutside={false}
+        closeOnEscape={true}
+        closeOnInteractOutside={true}
       >
         <Targets
-          add={handleOnAdd}
+          add={handleAddTargets}
           sdk={sdk}
           onClose={() => setOpen(false)}
           groups={groups}
           type={type}
         />
       </DialogRoot>
-    </div>
+    </>
   );
 };
 

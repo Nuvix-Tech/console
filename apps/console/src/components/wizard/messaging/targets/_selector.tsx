@@ -10,7 +10,7 @@ interface SelectTargetsProps {
 }
 
 export const SelectTopicsTargets = ({ type }: SelectTargetsProps) => {
-  const { values, setFieldValue } = useFormikContext<BaseMessageFormData>();
+  const { setFieldValue } = useFormikContext<BaseMessageFormData>();
 
   const handleTopicsChange = (topicIds: string[]) => {
     setFieldValue("topics", topicIds);
