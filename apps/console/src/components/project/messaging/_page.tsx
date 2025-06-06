@@ -169,7 +169,7 @@ const MessagingPage: React.FC<MessagingPageProps> = () => {
     }
   };
 
-  const create = <CreateMessageButton />;
+  const create = <CreateMessageButton refetch={refetch as any} />;
 
   return (
     <PageContainer>

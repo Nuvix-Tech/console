@@ -1,7 +1,15 @@
 "use client";
 import { useTopicStore } from "../components/store";
 import { CreateButton, IDChip, PageContainer, PageHeading } from "@/components/others";
-import { DataGridProvider, Pagination, Search, SelectLimit, Table } from "@/ui/data-grid";
+import {
+  ActionButton,
+  DataActionBar,
+  DataGridProvider,
+  Pagination,
+  Search,
+  SelectLimit,
+  Table,
+} from "@/ui/data-grid";
 import { Models } from "@nuvix/console";
 import { EmptyState } from "@/components";
 import { HStack } from "@chakra-ui/react";
@@ -12,12 +20,15 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useProjectStore } from "@/lib/store";
 import { useSearchQuery } from "@/hooks/useQuery";
 import { CreateSubscribers } from "../components/_create_subscriber";
+import { useConfirm, useToast } from "@nuvix/ui/components";
 
 export const TopicSinglePage = ({ topicId }: { topicId: string }) => {
   const { topic } = useTopicStore((state) => state);
   const { sdk, permissions, project } = useProjectStore((state) => state);
   const { limit, page, search, hasQuery } = useSearchQuery();
   const { canCreateSubscribers, canDeleteSubscribers } = permissions();
+  const confirm = useConfirm();
+  const { addToast } = useToast();
 
   const { data, isFetching, refetch } = useSuspenseQuery({
     queryKey: ["subscribers", topicId, search],
@@ -52,6 +63,9 @@ export const TopicSinglePage = ({ topicId }: { topicId: string }) => {
       header: "Target",
       accessorKey: "target",
       minSize: 150,
+      cell({ getValue }) {
+        return getValue<Models.Target>()["identifier"];
+      },
     },
     {
       header: "Type",
@@ -79,9 +93,46 @@ export const TopicSinglePage = ({ topicId }: { topicId: string }) => {
       hasPermission={canCreateSubscribers}
       component={CreateSubscribers}
       size="s"
-      extraProps={{ refetch }}
+      extraProps={{ refetch, subscribers: data.subscribers }}
     />
   );
+  const onDelete = async (values: Models.Subscriber[]) => {
+    const subscribers = values;
+    const subscribersCount = subscribers.length;
+
+    const confirmDelete = await confirm({
+      title: "Delete Subscribers",
+      description: `Are you sure you want to delete ${subscribersCount} ${subscribersCount === 1 ? "subscriber" : "subscribers"}? This action is permanent and cannot be undone.`,
+      cancel: {
+        text: "Cancel",
+      },
+      confirm: {
+        text: "Delete",
+        variant: "danger",
+      },
+    });
+
+    if (!confirmDelete) return;
+
+    try {
+      await Promise.all(
+        subscribers.map((subscriber) =>
+          sdk.messaging.deleteSubscriber(topic?.$id!, subscriber.$id),
+        ),
+      );
+
+      addToast({
+        message: `Successfully deleted ${subscribersCount} ${subscribersCount === 1 ? "subscriber" : "subscribers"}.`,
+        variant: "success",
+      });
+      await refetch();
+    } catch (error) {
+      addToast({
+        message: `Failed to delete ${subscribersCount === 1 ? "subscriber" : "subscribers"}. Please try again.`,
+        variant: "danger",
+      });
+    }
+  };
 
   return (
     <PageContainer>
@@ -120,6 +171,17 @@ export const TopicSinglePage = ({ topicId }: { topicId: string }) => {
               <Pagination />
             </HStack>
           </>
+        )}
+        {canDeleteSubscribers && (
+          <DataActionBar
+            actions={
+              <>
+                <ActionButton<Models.Subscriber> variant="danger" onClick={onDelete}>
+                  Delete
+                </ActionButton>
+              </>
+            }
+          />
         )}
       </DataGridProvider>
     </PageContainer>

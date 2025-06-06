@@ -5,7 +5,7 @@ import { Button, Flex, Text, ToggleButton } from "@nuvix/ui/components";
 import { LucideProps, MailIcon, MessageCircleIcon, SmartphoneIcon } from "lucide-react";
 import React, { useState } from "react";
 
-export const CreateMessageButton = () => {
+export const CreateMessageButton = ({ refetch }: { refetch: () => Promise<void> }) => {
   const [open, setOpen] = useState(false);
   const [type, setType] = useState<MessagingProviderType | null>(null);
 
@@ -16,7 +16,12 @@ export const CreateMessageButton = () => {
 
   return (
     <>
-      <CreateMessage open={open} onOpenChange={(o) => setOpen(o.open)} type={type} />
+      <CreateMessage
+        open={open}
+        onOpenChange={(o) => setOpen(o.open)}
+        type={type}
+        refetch={refetch}
+      />
       <Popover>
         <PopoverTrigger asChild>
           <Button size="s">Create Message</Button>

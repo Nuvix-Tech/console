@@ -27,9 +27,15 @@ import { MobileNotification } from "@/components/project/messaging/components/_s
 type CreateMessageProps = {
   children?: React.ReactNode;
   type: MessagingProviderType | null;
+  refetch: () => Promise<void>;
 } & Omit<React.ComponentProps<typeof Dialog.Root>, "size" | "motionPreset" | "children">;
 
-export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ...props }) => {
+export const CreateMessage: React.FC<CreateMessageProps> = ({
+  children,
+  type,
+  refetch,
+  ...props
+}) => {
   const { addToast } = useToast();
   const { sdk } = useProjectStore((state) => state);
 
@@ -127,7 +133,7 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({ children, type, ..
 
       const actionText = draft ? "saved as draft" : "created";
       const messageTypeLabel = getMessageTypeLabel(type);
-
+      await refetch();
       addToast({
         variant: "success",
         message: `${messageTypeLabel} ${actionText} successfully.`,
