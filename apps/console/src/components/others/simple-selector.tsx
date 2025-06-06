@@ -118,7 +118,7 @@ interface UsePaginatedSelectorProps<T> {
   limit?: number;
 }
 
-export function usePaginatedSelector<T>({
+export function usePaginatedSelector<T extends { $id: string }>({
   fetchFunction,
   limit = 10,
 }: UsePaginatedSelectorProps<T>) {
@@ -128,37 +128,57 @@ export function usePaginatedSelector<T>({
   const [total, setTotal] = useState(0);
   const [data, setData] = useState<T[]>([]);
   const [selections, setSelections] = useState<string[]>([]);
-  const [selected, setSelected] = useState<any[]>([]);
+  const [selected, setSelected] = useState<T[]>([]);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
-    const offset = (page - 1) * limit;
-    const { data: result, total } = await fetchFunction(search, limit, offset);
-    setData(result);
-    setTotal(total);
-    setLoading(false);
-  };
+    try {
+      const offset = (page - 1) * limit;
+      const { data: result, total } = await fetchFunction(search, limit, offset);
+      setData(result);
+      setTotal(total);
+    } catch (error) {
+      console.error('Failed to fetch data:', error);
+      setData([]);
+      setTotal(0);
+    } finally {
+      setLoading(false);
+    }
+  }, [search, page, limit, fetchFunction]);
 
   useEffect(() => {
     fetchData();
-  }, [search, page, limit]);
+  }, [fetchData]);
 
-  const toggleSelection = (id: string) => {
-    setSelections((prev) => (prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]));
-  };
-
-  const toggleSelected = (i: any) => {
-    const d = i as any;
-    setSelected((prev) =>
-      prev.includes(d) ? prev.filter((s: any) => s.$id !== d.$id) : [...prev, d],
+  const toggleSelection = useCallback((id: string) => {
+    setSelections((prev) => 
+      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
     );
-  };
+  }, []);
+
+  const toggleSelected = useCallback((item: T) => {
+    setSelected((prev) => {
+      const exists = prev.find(s => s.$id === item.$id);
+      return exists 
+        ? prev.filter(s => s.$id !== item.$id) 
+        : [...prev, item];
+    });
+  }, []);
+
+  const clearSelections = useCallback(() => {
+    setSelections([]);
+    setSelected([]);
+  }, []);
+
+  const resetPagination = useCallback(() => {
+    setPage(1);
+  }, []);
 
   return {
     loading,
     data,
     page,
-    setPage,
+    setPage: resetPagination,
     search,
     setSearch,
     selections,
@@ -166,7 +186,9 @@ export function usePaginatedSelector<T>({
     toggleSelected,
     selected,
     setSelected,
+    clearSelections,
     total,
     limit,
+    refetch: fetchData,
   };
 }
