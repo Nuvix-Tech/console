@@ -3,30 +3,21 @@ import { DialogRoot } from "@/components/cui/dialog";
 import { Targets } from "@/components/wizard/messaging/targets";
 import { useProjectStore } from "@/lib/store";
 import { Models } from "@nuvix/console";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useTopicStore } from "./store";
+import { useToast } from "@nuvix/ui/components";
 
 interface CreateSubscribersProps {
   onClose: () => void;
   isOpen: boolean;
+  refetch: () => Promise<void>;
 }
 
-export const CreateSubscribers = ({ onClose, isOpen }: CreateSubscribersProps) => {
-  const [targetsById, setTargetsById] = useState<Map<string, Models.Target>>(new Map());
+export const CreateSubscribers = ({ onClose, isOpen, refetch }: CreateSubscribersProps) => {
+  const [targetsById, setTargetsById] = useState<Record<string, Models.Target>>({});
   const { sdk } = useProjectStore((state) => state);
   const { topic } = useTopicStore((state) => state);
-
-  const hasTargets = useMemo(() => targetsById.size > 0, [targetsById]);
-
-  const addTargets = useCallback((newTargets: Record<string, Models.Target>) => {
-    setTargetsById((prevTargets) => {
-      const targetsMap = new Map(prevTargets);
-      Object.entries(newTargets).forEach(([id, target]) => {
-        targetsMap.set(id, target);
-      });
-      return targetsMap;
-    });
-  }, []);
+  const { addToast } = useToast();
 
   const handleClose = useCallback(() => {
     onClose();
@@ -41,6 +32,31 @@ export const CreateSubscribers = ({ onClose, isOpen }: CreateSubscribersProps) =
     [handleClose],
   );
 
+  const handleAdd = (targets: Models.Target[]) => {
+    const data: Record<string, Models.Target> = {};
+    const newData: string[] = [];
+    for (const target of targets) {
+      data[target.$id] = target;
+      if (!topic?.subscribe.includes(target.$id)) {
+        newData.push(target.$id);
+      }
+    }
+    setTargetsById(data);
+    if (newData.length === 0) {
+      addToast("0 subscribers added.");
+    } else {
+      const doo = newData.map(
+        async (id) => await sdk.messaging.createSubscriber(topic?.$id!, "unique()", id),
+      );
+      Promise.allSettled(doo)
+        .then(async () => {
+          addToast(`${newData.length} subscribers added.`);
+          await refetch();
+        })
+        .catch((e) => addToast({ message: "Something went wrong", variant: "danger" }));
+    }
+  };
+
   return (
     <DialogRoot
       open={isOpen}
@@ -49,7 +65,7 @@ export const CreateSubscribers = ({ onClose, isOpen }: CreateSubscribersProps) =
       closeOnInteractOutside={false}
     >
       <Targets
-        add={(targets) => addTargets({ [targets.$id]: targets })}
+        add={handleAdd}
         sdk={sdk}
         onClose={handleClose}
         groups={targetsById}
