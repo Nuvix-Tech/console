@@ -75,6 +75,7 @@ export const TopicsSelector = ({
           trigger={IconButton}
           args={{
             children: <LuPlus />,
+            type: "button",
           }}
         />
         <Text variant="body-default-s" onBackground="neutral-medium">
@@ -104,6 +105,7 @@ export const TopicsSelector = ({
                         <LuPlus /> Add
                       </>
                     ),
+                    type: "button",
                     size: "sm",
                   }}
                 />

@@ -194,12 +194,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
               {hasPrefix}
             </Flex>
           )}
-          <Flex
-            fillWidth
-            direction={isLikeInput ? "row" : "column"}
-            position="relative"
-            paddingTop={!isLikeInput && labelAsPlaceholder ? "4" : undefined}
-          >
+          <Flex fillWidth direction={isLikeInput ? "row" : "column"} position="relative">
             <textarea
               {...props}
               value={
@@ -218,7 +213,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
               placeholder={labelAsPlaceholder ? labelWithOptional : props.placeholder}
               onFocus={handleFocus}
               onBlur={handleBlur}
-              className={textareaClassNames}
+              className={classNames(textareaClassNames)}
               aria-describedby={displayError ? `${id}-error` : undefined}
               aria-invalid={!!displayError}
               maxLength={maxLength}

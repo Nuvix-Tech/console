@@ -50,6 +50,7 @@ export const UpdateTargets = () => {
                                   <PlusIcon /> Add
                                 </>
                               ),
+                              type: "button",
                               size: "s",
                             }}
                           />
@@ -100,6 +101,7 @@ export const UpdateTargets = () => {
                     trigger={IconButton}
                     args={{
                       children: <PlusIcon />,
+                      type: "button",
                     }}
                   />
                   <Text variant="body-default-s" onBackground="neutral-medium">
