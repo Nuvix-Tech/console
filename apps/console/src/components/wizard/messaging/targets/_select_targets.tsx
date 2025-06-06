@@ -14,23 +14,23 @@ export const TargetsSelector = ({
   onSave,
 }: { type: MessagingProviderType; values: string[]; onSave: (values: string[]) => void }) => {
   const { sdk } = useProjectStore((state) => state);
-  const groups = new Map<string, Models.Target>();
-  const [targetsById, setTargetsById] = useState<Map<string, Models.Target>>(new Map());
+  const groups: Record<string, Models.Target> = {};
+  const [targetsById, setTargetsById] = useState<Record<string, Models.Target>>({});
 
-  const hasTargets = useMemo(() => targetsById.size > 0, [targetsById]);
+  const hasTargets = useMemo(() => Object.keys(targetsById).length > 0, [targetsById]);
 
   // Fetch targets by IDs and set initial targetsById value
   useEffect(() => {
     const fetchTargets = async () => {
       if (values.length === 0) return;
       try {
-        const targetsMap = new Map<string, Models.Target>();
+        const targetsRecord: Record<string, Models.Target> = {};
         const target = await sdk.users.list([Query.equal("targets.$id", values)]);
         if (!target.total) return;
         // for (const _target of target.targets) {
-        //   targetsMap.set(_target.$id, _target);
+        //   targetsRecord[_target.$id] = _target;
         // }
-        setTargetsById(targetsMap);
+        setTargetsById(targetsRecord);
       } catch (error) {
         // TODO: Handle error appropriately
       }
@@ -40,22 +40,18 @@ export const TargetsSelector = ({
   }, [values, sdk]);
 
   const addTargets = (newTargets: Record<string, Models.Target>) => {
-    const targetsMap = new Map<string, Models.Target>();
-    Object.entries(newTargets).forEach(([id, target]) => {
-      targetsMap.set(id, target);
-    });
-    setTargetsById(targetsMap);
-    const newValues = Array.from(targetsMap.keys());
+    setTargetsById(newTargets);
+    const newValues = Object.keys(newTargets);
     if (newValues.length > 0) {
       onSave(newValues);
     }
   };
 
   const removeTarget = (targetId: string) => {
-    const newTargetsById = new Map(targetsById);
-    newTargetsById.delete(targetId);
+    const newTargetsById = { ...targetsById };
+    delete newTargetsById[targetId];
     setTargetsById(newTargetsById);
-    const newValues = Array.from(newTargetsById.keys());
+    const newValues = Object.keys(newTargetsById);
     if (newValues.length > 0) {
       onSave(newValues);
     }
@@ -116,7 +112,7 @@ export const TargetsSelector = ({
             </tr>
           </thead>
           <tbody>
-            {Array.from(targetsById.entries()).map(([targetId, target]) => (
+            {Object.entries(targetsById).map(([targetId, target]) => (
               <tr key={targetId} className="border-b">
                 <td className="p-3">{target.name || target.identifier}</td>
                 <td className="p-3">
@@ -179,7 +175,7 @@ export type DialogBoxProps = {
   type: MessagingProviderType;
   onAddTargets: (targets: Record<string, Models.Target>) => void;
   children?: React.ReactNode;
-  groups: Map<string, Models.Target>;
+  groups: Record<string, Models.Target>;
   sdk: ProjectSdk;
   trigger: React.ElementType;
   args?: any;

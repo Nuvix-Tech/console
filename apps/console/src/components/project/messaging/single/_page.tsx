@@ -5,7 +5,7 @@ import { useProjectStore } from "@/lib/store";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useMessageStore } from "./components/store";
 import { useEffect } from "react";
-import { DeleteMessage, TopMeta, UpdateMessage } from "./components";
+import { DeleteMessage, TopMeta, UpdateMessage, UpdateTargets } from "./components";
 import { Models } from "@nuvix/console";
 
 export const MessageSinglePage = ({ messageId }: { messageId: string }) => {
@@ -95,6 +95,7 @@ export const MessageSinglePage = ({ messageId }: { messageId: string }) => {
       <PageContainer marginTop="8">
         <TopMeta />
         <UpdateMessage />
+        <UpdateTargets />
         <DeleteMessage />
       </PageContainer>
     </>

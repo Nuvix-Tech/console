@@ -11,7 +11,7 @@ import { cn } from "@nuvix/sui/lib/utils";
 export type TargetProps = {
   add: (target: Models.Target) => void;
   onClose: VoidFunction;
-  groups: Map<string, Models.Target>;
+  groups: Record<string, Models.Target>;
   type?: MessagingProviderType;
   title?: string;
   description?: string;
@@ -63,8 +63,8 @@ export const Targets = ({ add, sdk, onClose, groups, type, title, description }:
               : user.targets;
             const disabled = targets.length === 0;
             const allSelected = targets.reduce(
-              (p, c) => (groups.has(c.$id) || selected.includes(c as any) ? [...p, c] : p),
-              groups.values().toArray() as Models.Target[],
+              (p, c) => (groups.hasOwnProperty(c.$id) || selected.includes(c as any) ? [...p, c] : p),
+              Object.values(groups) as Models.Target[],
             );
 
             return (
@@ -126,7 +126,7 @@ export const Targets = ({ add, sdk, onClose, groups, type, title, description }:
                         <Checkbox
                           size={"sm"}
                           disabled={disabled}
-                          checked={groups.has(t.$id) || selected.includes(t)}
+                          checked={!!groups[t.$id] || selected.includes(t)}
                           onCheckedChange={() => toggleSelected(t)}
                         />
                         <Code variant="surface">{t.providerType}</Code>
