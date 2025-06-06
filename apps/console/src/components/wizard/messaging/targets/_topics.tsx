@@ -22,7 +22,10 @@ export const Topics = ({ add, sdk, onClose, groups, type }: TopicsProps) => {
     return { data: res.topics, total: res.total };
   };
 
-  const { selected, toggleSelected, setSelected, ...rest } = usePaginatedSelector({
+  const { selected, toggleSelected, setSelected, ...rest } = usePaginatedSelector<
+    Models.Topic,
+    Models.Topic
+  >({
     fetchFunction: fetchTopics,
     limit: 10,
   });
@@ -89,7 +92,7 @@ export const Topics = ({ add, sdk, onClose, groups, type }: TopicsProps) => {
                   <Checkbox
                     size={"sm"}
                     disabled={disabled}
-                    checked={selected.find((t) => t.$id === topic.$id)}
+                    checked={!!selected.find((t) => t.$id === topic.$id)}
                     onCheckedChange={() => toggleSelected(topic)}
                   />
                   <Text>

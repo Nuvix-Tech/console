@@ -92,14 +92,26 @@ export const SimpleSelector = <T,>({
           borderColor="border.muted"
           height="40px"
         >
-          <Button disabled={!hasPrevPage} onClick={prevPage} size="sm" variant="ghost">
+          <Button
+            type="button"
+            disabled={!hasPrevPage}
+            onClick={prevPage}
+            size="sm"
+            variant="ghost"
+          >
             <LuChevronLeft />
             Prev
           </Button>
           <p className="text-primary/60">
             Page {page} / {Math.ceil(total / limit)}
           </p>
-          <Button disabled={!hasNextPage} onClick={nextPage} size="sm" variant="ghost">
+          <Button
+            type="button"
+            disabled={!hasNextPage}
+            onClick={nextPage}
+            size="sm"
+            variant="ghost"
+          >
             Next
             <LuChevronRight />
           </Button>
@@ -109,7 +121,7 @@ export const SimpleSelector = <T,>({
   );
 };
 
-interface UsePaginatedSelectorProps<T> {
+interface UsePaginatedSelectorProps<T, D> {
   fetchFunction: (
     search: string | undefined,
     limit: number,
@@ -118,19 +130,19 @@ interface UsePaginatedSelectorProps<T> {
   limit?: number;
 }
 
-export function usePaginatedSelector<T extends { $id: string }>({
+export function usePaginatedSelector<T, D extends { $id: string }>({
   fetchFunction,
   limit = 10,
-}: UsePaginatedSelectorProps<T>) {
+}: UsePaginatedSelectorProps<T, D>) {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState<string | undefined>();
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [data, setData] = useState<T[]>([]);
   const [selections, setSelections] = useState<string[]>([]);
-  const [selected, setSelected] = useState<T[]>([]);
+  const [selected, setSelected] = useState<D[]>([]);
 
-  const fetchData = useCallback(async () => {
+  const fetchData = async () => {
     setLoading(true);
     try {
       const offset = (page - 1) * limit;
@@ -138,30 +150,26 @@ export function usePaginatedSelector<T extends { $id: string }>({
       setData(result);
       setTotal(total);
     } catch (error) {
-      console.error('Failed to fetch data:', error);
+      console.error("Failed to fetch data:", error);
       setData([]);
       setTotal(0);
     } finally {
       setLoading(false);
     }
-  }, [search, page, limit, fetchFunction]);
+  };
 
   useEffect(() => {
     fetchData();
-  }, [fetchData]);
+  }, [search, page, limit]);
 
   const toggleSelection = useCallback((id: string) => {
-    setSelections((prev) => 
-      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
-    );
+    setSelections((prev) => (prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]));
   }, []);
 
-  const toggleSelected = useCallback((item: T) => {
+  const toggleSelected = useCallback((item: D) => {
     setSelected((prev) => {
-      const exists = prev.find(s => s.$id === item.$id);
-      return exists 
-        ? prev.filter(s => s.$id !== item.$id) 
-        : [...prev, item];
+      const exists = prev.find((s) => s.$id === item.$id);
+      return exists ? prev.filter((s) => s.$id !== item.$id) : [...prev, item];
     });
   }, []);
 

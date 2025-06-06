@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MessagingProviderType, Models, Query } from "@nuvix/console";
 import { Button, Code, HStack, Text } from "@chakra-ui/react";
 import { Checkbox } from "@/components/cui/checkbox";
@@ -25,7 +25,10 @@ export const Targets = ({ add, sdk, onClose, groups, type, title, description }:
     return { data: res.users, total: res.total };
   };
 
-  const { selected, toggleSelected, ...rest } = usePaginatedSelector({
+  const { selected, toggleSelected, setSelected, ...rest } = usePaginatedSelector<
+    Models.User<any>,
+    Models.Target
+  >({
     fetchFunction: fetchUsers,
     limit: 10,
   });
@@ -35,6 +38,11 @@ export const Targets = ({ add, sdk, onClose, groups, type, title, description }:
     onClose?.();
   };
 
+  useEffect(() => {
+    const values = Object.values(groups);
+    if (values.length) setSelected(values);
+  }, [groups]);
+
   return (
     <>
       <SelectDialog
@@ -43,9 +51,11 @@ export const Targets = ({ add, sdk, onClose, groups, type, title, description }:
         actions={
           <>
             <DialogTrigger asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="outline" type="button">
+                Cancel
+              </Button>
             </DialogTrigger>
-            <Button disabled={selected.length === 0} onClick={onSave}>
+            <Button disabled={selected.length === 0} onClick={onSave} type="button">
               Add
             </Button>
           </>
@@ -54,18 +64,22 @@ export const Targets = ({ add, sdk, onClose, groups, type, title, description }:
         <SimpleSelector
           placeholder="Search users by name, email, phone or ID"
           {...rest}
-          onMap={(user, toggleSelection, selections) => {
+          onMap={(user) => {
             const [expended, setExpended] = useState(false);
             const targets = type
               ? user.targets.filter((t) => t.providerType === type)
               : user.targets;
             const disabled = targets.length === 0;
-            const allSelected = targets.reduce(
-              (p, c) =>
-                groups.hasOwnProperty(c.$id) || selected.includes(c as any) ? [...p, c] : p,
-              Object.values(groups) as Models.Target[],
-            );
-
+            const allSelected = [
+              ...new Set(
+                targets.reduce(
+                  (p, c) =>
+                    selected.find((t) => t.$id === c.$id && user.$id === t.userId) ? [...p, c] : p,
+                  Object.values(groups) as Models.Target[],
+                ),
+              ),
+            ];
+            console.log(allSelected);
             return (
               <div
                 key={user.$id}
@@ -121,11 +135,11 @@ export const Targets = ({ add, sdk, onClose, groups, type, title, description }:
                 {expended ? (
                   <div className="flex flex-col gap-1 ml-7 mb-2">
                     {targets.map((t) => (
-                      <div className="flex gap-2 items-center">
+                      <div className="flex gap-2 items-center" key={t.$id}>
                         <Checkbox
                           size={"sm"}
                           disabled={disabled}
-                          checked={!!groups[t.$id] || selected.includes(t)}
+                          checked={!!selected.find((t2) => t.$id === t2.$id)}
                           onCheckedChange={() => toggleSelected(t)}
                         />
                         <Code variant="surface">{t.providerType}</Code>

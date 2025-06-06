@@ -12,7 +12,6 @@ export const TargetsSelector = ({
   onSave,
 }: { type: MessagingProviderType; onSave: (values: string[]) => void }) => {
   const { sdk } = useProjectStore((state) => state);
-  const groups: Record<string, Models.Target> = {};
   const [targetsById, setTargetsById] = useState<Record<string, Models.Target>>({});
 
   const hasTargets = useMemo(() => Object.keys(targetsById).length > 0, [targetsById]);
@@ -46,7 +45,7 @@ export const TargetsSelector = ({
         direction="column"
         gap="12"
       >
-        <WithDialog type={type} onAddTargets={addTargets} sdk={sdk} groups={groups} />
+        <WithDialog type={type} onAddTargets={addTargets} sdk={sdk} groups={targetsById} />
         <Text variant="body-default-s" onBackground="neutral-medium">
           Select targets to get started
         </Text>
@@ -66,7 +65,7 @@ export const TargetsSelector = ({
                   type={type}
                   onAddTargets={addTargets}
                   sdk={sdk}
-                  groups={groups}
+                  groups={targetsById}
                   showButton
                 />
               </th>
