@@ -38,7 +38,7 @@ export const Topics = ({ add, sdk, onClose, groups, type }: TopicsProps) => {
   useEffect(() => {
     const values = Object.values(groups);
     if (values.length) setSelected(values);
-  }, [groups, setSelected]);
+  }, [groups]);
 
   const getTargetCount = (topic: Models.Topic): number => {
     switch (type) {
@@ -76,7 +76,7 @@ export const Topics = ({ add, sdk, onClose, groups, type }: TopicsProps) => {
         onMap={(topic) => {
           const targetCount = getTargetCount(topic);
           const isSelected = !!selected.find((t) => t.$id === topic.$id);
-          const hasTargets = targetCount > 0;
+          const hasTargets = true; // targetCount > 0;
 
           return (
             <div

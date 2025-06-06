@@ -1,8 +1,7 @@
 import { useProjectStore } from "@/lib/store";
 import { useMessageStore } from "./store";
 import { CardBox, CardBoxBody, CardBoxItem, CardBoxTitle } from "@/components/others/card";
-import { WithDialog } from "@/components/wizard/messaging/targets";
-import { XIcon } from "lucide-react";
+import { TargetsSelectorList, WithDialog } from "@/components/wizard/messaging/targets";
 import { Card, Text } from "@nuvix/ui/components";
 import { MessagingProviderType, Models } from "@nuvix/console";
 import { Form, SubmitButton } from "@/components/others/forms";
@@ -63,48 +62,14 @@ const Updater = () => {
     <>
       <CardBoxItem>
         {hasTargets ? (
-          <div className="space-y-4">
-            <div className="border rounded-lg">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-left p-3">Targets</th>
-                    {isDraft && (
-                      <th className="w-10 pr-2">
-                        <WithDialog
-                          type={type}
-                          onAddTargets={setTargetsById}
-                          sdk={sdk}
-                          groups={targetsById}
-                          showButton
-                        />
-                      </th>
-                    )}
-                  </tr>
-                </thead>
-                <tbody>
-                  {Object.entries(targetsById).map(([targetId, target]) => (
-                    <tr key={targetId} className="border-b">
-                      <td className="p-3">{target.name || target.identifier}</td>
-                      {isDraft && (
-                        <td className="p-3">
-                          <div className="flex justify-end">
-                            <button
-                              type="button"
-                              onClick={() => removeTarget(targetId)}
-                              className="text-gray-500 hover:text-red-500"
-                            >
-                              <XIcon size={18} />
-                            </button>
-                          </div>
-                        </td>
-                      )}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <TargetsSelectorList
+            sdk={sdk}
+            type={type}
+            targets={targetsById}
+            addTargets={setTargetsById}
+            removeTarget={removeTarget}
+            canAdd={isDraft}
+          />
         ) : (
           <Card
             title="Targets"
@@ -114,6 +79,9 @@ const Updater = () => {
             fillWidth
             direction="column"
             gap="12"
+            vertical="center"
+            horizontal="center"
+            padding="4"
           >
             {isDraft ? (
               <>
@@ -123,8 +91,8 @@ const Updater = () => {
                   sdk={sdk}
                   groups={targetsById}
                 />
-                <Text variant="body-default-s" onBackground="neutral-medium">
-                  No targets selected yet!
+                <Text variant="body-default-s" onBackground="neutral-medium" align="center">
+                  No recipients selected. Click the button above to add recipients for your message.
                 </Text>
               </>
             ) : (

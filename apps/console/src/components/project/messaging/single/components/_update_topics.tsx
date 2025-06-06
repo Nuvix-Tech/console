@@ -1,7 +1,10 @@
 import { useProjectStore } from "@/lib/store";
 import { useMessageStore } from "./store";
 import { CardBox, CardBoxBody, CardBoxItem, CardBoxTitle } from "@/components/others/card";
-import { WithDialog } from "@/components/wizard/messaging/targets/_select_topics";
+import {
+  TopicsSelectorList,
+  WithDialog,
+} from "@/components/wizard/messaging/targets/_select_topics";
 import { XIcon } from "lucide-react";
 import { Card, Text } from "@nuvix/ui/components";
 import { MessagingProviderType, Models } from "@nuvix/console";
@@ -64,48 +67,14 @@ const Updater = () => {
     <>
       <CardBoxItem>
         {hasTopics ? (
-          <div className="space-y-4">
-            <div className="border rounded-lg">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-left p-3">Topics</th>
-                    {isDraft && (
-                      <th className="w-10 pr-2">
-                        <WithDialog
-                          type={type}
-                          onAddTopics={setTopicsById}
-                          sdk={sdk}
-                          groups={topicsById}
-                          showButton
-                        />
-                      </th>
-                    )}
-                  </tr>
-                </thead>
-                <tbody>
-                  {Object.entries(topicsById).map(([topicId, topic]) => (
-                    <tr key={topicId} className="border-b">
-                      <td className="p-3">{topic.name}</td>
-                      {isDraft && (
-                        <td className="p-3">
-                          <div className="flex justify-end">
-                            <button
-                              type="button"
-                              onClick={() => removeTopic(topicId)}
-                              className="text-gray-500 hover:text-red-500"
-                            >
-                              <XIcon size={18} />
-                            </button>
-                          </div>
-                        </td>
-                      )}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <TopicsSelectorList
+            sdk={sdk}
+            type={type}
+            topics={topicsById}
+            addTopics={setTopicsById}
+            removeTopic={removeTopic}
+            canAdd={isDraft}
+          />
         ) : (
           <Card
             title="Topics"
@@ -118,9 +87,9 @@ const Updater = () => {
           >
             {isDraft ? (
               <>
-                <WithDialog type={type} onAddTopics={setTopicsById} sdk={sdk} groups={topicsById} />
+                <WithDialog type={type} onAddTopics={setTopicsById} sdk={sdk} topics={topicsById} />
                 <Text variant="body-default-s" onBackground="neutral-medium">
-                  No topics selected yet!
+                  Choose topics to target your messages
                 </Text>
               </>
             ) : (

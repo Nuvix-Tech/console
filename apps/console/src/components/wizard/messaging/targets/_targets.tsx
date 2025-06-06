@@ -41,7 +41,7 @@ export const Targets = ({ add, sdk, onClose, groups, type, title, description }:
   useEffect(() => {
     const values = Object.values(groups);
     if (values.length) setSelected(values);
-  }, [groups, setSelected]);
+  }, [groups]);
 
   return (
     <>

@@ -38,7 +38,7 @@ export const TargetsSelector = ({
   useEffect(() => {
     const targetIds = Object.keys(targetsById);
     onSave(targetIds);
-  }, [targetsById, onSave]);
+  }, [targetsById]);
 
   if (!hasTargets) {
     return (
@@ -60,54 +60,13 @@ export const TargetsSelector = ({
   }
 
   return (
-    <div className="space-y-4">
-      <div className="border rounded-lg overflow-hidden">
-        <table className="w-full">
-          <thead className="bg-gray-50">
-            <tr className="border-b">
-              <th className="text-left p-3 font-medium">
-                Recipients ({Object.keys(targetsById).length})
-              </th>
-              <th className="w-16 pr-3">
-                <WithDialog
-                  type={type}
-                  onAddTargets={addTargets}
-                  sdk={sdk}
-                  groups={targetsById}
-                  showButton
-                />
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.entries(targetsById).map(([targetId, target]) => (
-              <tr key={targetId} className="border-b last:border-b-0 hover:bg-gray-50">
-                <td className="p-3">
-                  <div className="flex flex-col">
-                    <span className="font-medium">{target.name || target.identifier}</span>
-                    {target.name && target.identifier && target.name !== target.identifier && (
-                      <span className="text-sm text-gray-500">{target.identifier}</span>
-                    )}
-                  </div>
-                </td>
-                <td className="p-3">
-                  <div className="flex justify-end">
-                    <button
-                      type="button"
-                      onClick={() => removeTarget(targetId)}
-                      className="text-gray-400 hover:text-red-500 transition-colors p-1 rounded"
-                      title="Remove recipient"
-                    >
-                      <XIcon size={16} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <TargetsSelectorList
+      sdk={sdk}
+      type={type}
+      targets={targetsById}
+      addTargets={addTargets}
+      removeTarget={removeTarget}
+    />
   );
 };
 
@@ -159,6 +118,77 @@ export const WithDialog = ({ type, onAddTargets, sdk, groups, showButton }: Dial
     </>
   );
 };
+
+export const TargetsSelectorList = ({
+  type,
+  sdk,
+  targets,
+  addTargets,
+  removeTarget,
+  canAdd = true,
+}: TargetsSelectorList) => {
+  return (
+    <div className="space-y-4">
+      <div className="border rounded-lg overflow-hidden">
+        <table className="w-full">
+          <thead>
+            <tr className="border-b">
+              <th className="text-left p-3 font-medium">
+                Recipients ({Object.keys(targets).length})
+              </th>
+              {canAdd && (
+                <th className="w-16 pr-2">
+                  <WithDialog
+                    onAddTargets={addTargets}
+                    type={type}
+                    sdk={sdk}
+                    groups={targets}
+                    showButton
+                  />
+                </th>
+              )}
+            </tr>
+          </thead>
+          <tbody>
+            {Object.entries(targets).map(([targetId, target]) => (
+              <tr key={targetId} className="border-b last:border-b-0">
+                <td className="p-3">
+                  <div className="flex flex-col">
+                    <span className="font-medium">{target.name || target.identifier}</span>
+                    {target.name && target.identifier && target.name !== target.identifier && (
+                      <span className="text-sm text-gray-500">{target.identifier}</span>
+                    )}
+                  </div>
+                </td>
+                {canAdd && (
+                  <td className="p-3">
+                    <div className="flex justify-end">
+                      <button
+                        type="button"
+                        onClick={() => removeTarget(targetId)}
+                        className="text-gray-400 hover:text-red-500 transition-colors p-1 rounded"
+                        title="Remove recipient"
+                      >
+                        <XIcon size={16} />
+                      </button>
+                    </div>
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+type TargetsSelectorList = {
+  targets: Record<string, Models.Target>;
+  addTargets: DialogBoxProps["onAddTargets"];
+  removeTarget: (targetId: string) => void;
+  canAdd?: boolean;
+} & Pick<DialogBoxProps, "sdk" | "type">;
 
 export type DialogBoxProps = {
   type: MessagingProviderType;

@@ -108,7 +108,8 @@ const EmailContent: React.FC<EmailContentProps> = ({
                 ref={iframeRef}
                 sandbox=""
                 srcDoc={content}
-                allowTransparency={true}
+                allowTransparency
+                allowFullScreen
                 style={{
                   width: "100%",
                   height: `${iframeHeight}px`,

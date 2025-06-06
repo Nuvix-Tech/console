@@ -14,7 +14,8 @@ export const TopicsSelector = ({
   const { sdk } = useProjectStore((state) => state);
   const [topicsById, setTopicsById] = useState<Record<string, Models.Topic>>({});
 
-  const hasTopics = useMemo(() => Object.keys(topicsById).length > 0, [topicsById]);
+  const topicsLength = useMemo(() => Object.keys(topicsById).length, [topicsById]);
+  const hasTopics = topicsLength > 0;
 
   const addTopics = (newTopics: Record<string, Models.Topic>) => {
     setTopicsById((prev) => ({ ...prev, ...newTopics }));
@@ -54,45 +55,13 @@ export const TopicsSelector = ({
   }
 
   return (
-    <div className="space-y-4">
-      <div className="border rounded-lg">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b">
-              <th className="text-left p-3">Selected Topics</th>
-              <th className="w-10 pr-2">
-                <WithDialog
-                  type={type}
-                  onAddTopics={addTopics}
-                  sdk={sdk}
-                  topics={topicsById}
-                  showButton
-                />
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.entries(topicsById).map(([topicId, topic]) => (
-              <tr key={topicId} className="border-b last:border-b-0">
-                <td className="p-3">{topic.name}</td>
-                <td className="p-3">
-                  <div className="flex justify-end">
-                    <IconButton
-                      variant="ghost"
-                      size="s"
-                      onClick={() => removeTopic(topicId)}
-                      aria-label={`Remove ${topic.name}`}
-                    >
-                      <XIcon size={16} />
-                    </IconButton>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <TopicsSelectorList
+      sdk={sdk}
+      type={type}
+      topics={topicsById}
+      addTopics={addTopics}
+      removeTopic={removeTopic}
+    />
   );
 };
 
@@ -118,9 +87,17 @@ export const WithDialog = ({ type, onAddTopics, sdk, topics, showButton }: Dialo
 
   const TriggerComponent = showButton ? Button : IconButton;
   const triggerProps = showButton
-    ? { variant: "secondary" as const, children: [<PlusIcon key="icon" size={14} />, "Add Topics"] }
+    ? {
+        variant: "secondary" as const,
+        children: [
+          <PlusIcon key="icon" size={14} />,
+          <span className="ml-1" key={"__ADD__"}>
+            Add
+          </span>,
+        ],
+      }
     : {
-        variant: "tertiary" as const,
+        variant: "secondary" as const,
         "aria-label": "Add topics",
         children: <PlusIcon size={14} />,
       };
@@ -146,6 +123,68 @@ export const WithDialog = ({ type, onAddTopics, sdk, topics, showButton }: Dialo
     </>
   );
 };
+
+export const TopicsSelectorList = ({
+  type,
+  sdk,
+  topics,
+  addTopics,
+  removeTopic,
+  canAdd = true,
+}: TopicsSelectorList) => {
+  return (
+    <div className="space-y-4">
+      <div className="border rounded-lg">
+        <table className="w-full">
+          <thead>
+            <tr className="border-b">
+              <th className="text-left p-3">Selected Topics ({Object.keys(topics).length})</th>
+              {canAdd && (
+                <th className="w-10 pr-2">
+                  <WithDialog
+                    type={type}
+                    onAddTopics={addTopics}
+                    sdk={sdk}
+                    topics={topics}
+                    showButton
+                  />
+                </th>
+              )}
+            </tr>
+          </thead>
+          <tbody>
+            {Object.entries(topics).map(([topicId, topic]) => (
+              <tr key={topicId} className="border-b last:border-b-0">
+                <td className="p-3">{topic.name}</td>
+                {canAdd && (
+                  <td className="p-3">
+                    <div className="flex justify-end">
+                      <IconButton
+                        variant="ghost"
+                        size="s"
+                        onClick={() => removeTopic(topicId)}
+                        aria-label={`Remove ${topic.name}`}
+                      >
+                        <XIcon size={16} />
+                      </IconButton>
+                    </div>
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+type TopicsSelectorList = {
+  topics: Record<string, Models.Topic>;
+  addTopics: DialogBoxProps["onAddTopics"];
+  removeTopic: (topicId: string) => void;
+  canAdd?: boolean;
+} & Pick<DialogBoxProps, "sdk" | "type">;
 
 export type DialogBoxProps = {
   type: MessagingProviderType;
