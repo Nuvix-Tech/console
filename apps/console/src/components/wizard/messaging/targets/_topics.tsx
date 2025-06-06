@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { MessagingProviderType, Models, Query } from "@nuvix/console";
 import { Button, HStack, Text, Code } from "@chakra-ui/react";
 import { SelectDialog, SimpleSelector, usePaginatedSelector } from "@/components/others";
@@ -8,7 +8,7 @@ import { Checkbox } from "@/components/cui/checkbox";
 import { cn } from "@nuvix/sui/lib/utils";
 
 export type TopicsProps = {
-  add: (topic: Models.Topic) => void;
+  add: (topics: Models.Topic[]) => void;
   onClose: VoidFunction;
   groups: Record<string, Models.Topic>;
   type: MessagingProviderType;
@@ -22,17 +22,20 @@ export const Topics = ({ add, sdk, onClose, groups, type }: TopicsProps) => {
     return { data: res.topics, total: res.total };
   };
 
-  const { selected, toggleSelected, ...rest } = usePaginatedSelector({
+  const { selected, toggleSelected, setSelected, ...rest } = usePaginatedSelector({
     fetchFunction: fetchTopics,
     limit: 10,
   });
 
   const onSave = () => {
-    for (const topic of selected as Models.Topic[]) {
-      add(topic);
-    }
+    add(selected);
     onClose?.();
   };
+
+  useEffect(() => {
+    const values = Object.values(groups);
+    if (values.length) setSelected(values);
+  }, [groups]);
 
   const getTotal = (topic: Models.Topic): number => {
     switch (type) {
@@ -55,9 +58,11 @@ export const Topics = ({ add, sdk, onClose, groups, type }: TopicsProps) => {
         actions={
           <>
             <DialogTrigger asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="outline" type="button">
+                Cancel
+              </Button>
             </DialogTrigger>
-            <Button disabled={selected.length === 0} onClick={onSave}>
+            <Button disabled={selected.length === 0} onClick={onSave} type="button">
               Add
             </Button>
           </>
@@ -84,7 +89,7 @@ export const Topics = ({ add, sdk, onClose, groups, type }: TopicsProps) => {
                   <Checkbox
                     size={"sm"}
                     disabled={disabled}
-                    checked={!!groups[topic.$id] || selected.find((t) => t.$id === topic.$id)}
+                    checked={selected.find((t) => t.$id === topic.$id)}
                     onCheckedChange={() => toggleSelected(topic)}
                   />
                   <Text>

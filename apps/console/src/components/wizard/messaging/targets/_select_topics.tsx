@@ -1,42 +1,20 @@
-import { Button } from "@nuvix/sui/components";
-import { Card, IconButton, Text } from "@nuvix/ui/components";
-import React, { useState, useMemo, useEffect } from "react";
+import { Card, IconButton, Text, Button } from "@nuvix/ui/components";
+import React, { useState, useMemo } from "react";
 import { Topics } from "./_topics";
-import { LuPlus, LuX } from "react-icons/lu";
 import { useProjectStore } from "@/lib/store";
 import { DialogRoot } from "@/components/cui/dialog";
-import { Models, MessagingProviderType, Query } from "@nuvix/console";
+import { Models, MessagingProviderType } from "@nuvix/console";
 import { ProjectSdk } from "@/lib/sdk";
+import { PlusIcon, XIcon } from "lucide-react";
 
 export const TopicsSelector = ({
   type,
-  values,
   onSave,
-}: { type: MessagingProviderType; values: string[]; onSave: (values: string[]) => void }) => {
+}: { type: MessagingProviderType; onSave: (values: string[]) => void }) => {
   const { sdk } = useProjectStore((state) => state);
   const [topicsById, setTopicsById] = useState<Record<string, Models.Topic>>({});
 
   const hasTopics = useMemo(() => Object.keys(topicsById).length > 0, [topicsById]);
-
-  // Fetch topics by IDs and set initial topicsById value
-  useEffect(() => {
-    const fetchTopics = async () => {
-      if (values.length === 0) return;
-      try {
-        const topicsRecord: Record<string, Models.Topic> = {};
-        const topic = await sdk.messaging.listTopics([Query.equal("$id", values)]);
-        if (!topic.total) return;
-        for (const _topic of topic.topics) {
-          topicsRecord[_topic.$id] = _topic;
-        }
-        setTopicsById(topicsRecord);
-      } catch (error) {
-        // TODO: Handle error appropriately
-      }
-    };
-
-    fetchTopics();
-  }, [values, sdk]);
 
   const addTopics = (newTopics: Record<string, Models.Topic>) => {
     setTopicsById(newTopics);
@@ -67,17 +45,7 @@ export const TopicsSelector = ({
         direction="column"
         gap="12"
       >
-        <WithDialog
-          type={type}
-          onAddTopics={addTopics}
-          sdk={sdk}
-          groups={topicsById}
-          trigger={IconButton}
-          args={{
-            children: <LuPlus />,
-            type: "button",
-          }}
-        />
+        <WithDialog type={type} onAddTopics={addTopics} sdk={sdk} groups={topicsById} />
         <Text variant="body-default-s" onBackground="neutral-medium">
           Select topics to get started
         </Text>
@@ -98,16 +66,7 @@ export const TopicsSelector = ({
                   onAddTopics={addTopics}
                   sdk={sdk}
                   groups={topicsById}
-                  trigger={Button}
-                  args={{
-                    children: (
-                      <>
-                        <LuPlus /> Add
-                      </>
-                    ),
-                    type: "button",
-                    size: "sm",
-                  }}
+                  showButton
                 />
               </th>
             </tr>
@@ -123,7 +82,7 @@ export const TopicsSelector = ({
                       onClick={() => removeTopic(targetId)}
                       className="text-gray-500 hover:text-red-500"
                     >
-                      <LuX size={18} />
+                      <XIcon size={18} />
                     </button>
                   </div>
                 </td>
@@ -136,23 +95,33 @@ export const TopicsSelector = ({
   );
 };
 
-export const WithDialog = ({
-  type,
-  onAddTopics,
-  sdk,
-  groups,
-  trigger: Trigger,
-  args,
-}: DialogBoxProps) => {
+export const WithDialog = ({ type, onAddTopics, sdk, groups, showButton }: DialogBoxProps) => {
+  const Trigger = showButton ? Button : IconButton;
   const [open, setOpen] = useState(false);
 
   const handleRoleClick = () => {
     setOpen(true);
   };
 
+  const handleOnAdd = (topics: Models.Topic[]) => {
+    const newData: Record<string, Models.Topic> = {};
+    for (const topic of topics) {
+      newData[topic.$id] = topic;
+    }
+    onAddTopics(newData);
+  };
+
   return (
     <div className="relative">
-      <Trigger variant="secondary" onClick={handleRoleClick} size="m" {...args} />
+      <Trigger
+        variant="secondary"
+        onClick={handleRoleClick}
+        size="s"
+        type="button"
+        className="items-center"
+      >
+        <PlusIcon size={"14px"} /> {showButton && "Add"}
+      </Trigger>
 
       <DialogRoot
         open={open}
@@ -161,7 +130,7 @@ export const WithDialog = ({
         closeOnInteractOutside={false}
       >
         <Topics
-          add={(topics) => onAddTopics({ [topics.$id]: topics })}
+          add={handleOnAdd}
           sdk={sdk}
           onClose={() => setOpen(false)}
           groups={groups}
@@ -178,6 +147,5 @@ export type DialogBoxProps = {
   children?: React.ReactNode;
   groups: Record<string, Models.Topic>;
   sdk: ProjectSdk;
-  trigger: React.ElementType;
-  args?: any;
+  showButton?: boolean;
 };

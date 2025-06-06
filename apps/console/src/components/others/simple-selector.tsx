@@ -165,6 +165,7 @@ export function usePaginatedSelector<T>({
     toggleSelection,
     toggleSelected,
     selected,
+    setSelected,
     total,
     limit,
   };

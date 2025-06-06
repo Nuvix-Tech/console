@@ -68,6 +68,7 @@ export const Search: React.FC<SearchProps & React.ComponentProps<typeof Input>> 
     <>
       <Input
         className={cn("max-w-md", props.className)}
+        height="s"
         {...props}
         labelAsPlaceholder
         placeholder={placeholder}

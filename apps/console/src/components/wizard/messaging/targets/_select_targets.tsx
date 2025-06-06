@@ -1,43 +1,21 @@
-import { Button } from "@nuvix/sui/components";
-import { Card, IconButton, Text } from "@nuvix/ui/components";
+import { Card, IconButton, Text, Button } from "@nuvix/ui/components";
 import React, { useState, useMemo, useEffect } from "react";
-import { LuPlus, LuX } from "react-icons/lu";
 import { useProjectStore } from "@/lib/store";
 import { DialogRoot } from "@/components/cui/dialog";
 import { Models, MessagingProviderType, Query } from "@nuvix/console";
 import { ProjectSdk } from "@/lib/sdk";
 import { Targets } from "./_targets";
+import { PlusIcon, XIcon } from "lucide-react";
 
 export const TargetsSelector = ({
   type,
-  values,
   onSave,
-}: { type: MessagingProviderType; values: string[]; onSave: (values: string[]) => void }) => {
+}: { type: MessagingProviderType; onSave: (values: string[]) => void }) => {
   const { sdk } = useProjectStore((state) => state);
   const groups: Record<string, Models.Target> = {};
   const [targetsById, setTargetsById] = useState<Record<string, Models.Target>>({});
 
   const hasTargets = useMemo(() => Object.keys(targetsById).length > 0, [targetsById]);
-
-  // Fetch targets by IDs and set initial targetsById value
-  useEffect(() => {
-    const fetchTargets = async () => {
-      if (values.length === 0) return;
-      try {
-        const targetsRecord: Record<string, Models.Target> = {};
-        const target = await sdk.users.list([Query.equal("targets.$id", values)]);
-        if (!target.total) return;
-        // for (const _target of target.targets) {
-        //   targetsRecord[_target.$id] = _target;
-        // }
-        setTargetsById(targetsRecord);
-      } catch (error) {
-        // TODO: Handle error appropriately
-      }
-    };
-
-    fetchTargets();
-  }, [values, sdk]);
 
   const addTargets = (newTargets: Record<string, Models.Target>) => {
     setTargetsById(newTargets);
@@ -68,17 +46,7 @@ export const TargetsSelector = ({
         direction="column"
         gap="12"
       >
-        <WithDialog
-          type={type}
-          onAddTargets={addTargets}
-          sdk={sdk}
-          groups={groups}
-          trigger={IconButton}
-          args={{
-            children: <LuPlus />,
-            type: "button",
-          }}
-        />
+        <WithDialog type={type} onAddTargets={addTargets} sdk={sdk} groups={groups} />
         <Text variant="body-default-s" onBackground="neutral-medium">
           Select targets to get started
         </Text>
@@ -99,16 +67,7 @@ export const TargetsSelector = ({
                   onAddTargets={addTargets}
                   sdk={sdk}
                   groups={groups}
-                  trigger={Button}
-                  args={{
-                    children: (
-                      <>
-                        <LuPlus /> Add
-                      </>
-                    ),
-                    type: "button",
-                    size: "sm",
-                  }}
+                  showButton
                 />
               </th>
             </tr>
@@ -124,7 +83,7 @@ export const TargetsSelector = ({
                       onClick={() => removeTarget(targetId)}
                       className="text-gray-500 hover:text-red-500"
                     >
-                      <LuX size={18} />
+                      <XIcon size={18} />
                     </button>
                   </div>
                 </td>
@@ -137,23 +96,33 @@ export const TargetsSelector = ({
   );
 };
 
-export const WithDialog = ({
-  type,
-  onAddTargets,
-  sdk,
-  groups,
-  trigger: Trigger,
-  args,
-}: DialogBoxProps) => {
+export const WithDialog = ({ type, onAddTargets, sdk, groups, showButton }: DialogBoxProps) => {
+  const Trigger = showButton ? Button : IconButton;
   const [open, setOpen] = useState(false);
 
   const handleRoleClick = () => {
     setOpen(true);
   };
 
+  const handleOnAdd = (targets: Models.Target[]) => {
+    const newData: Record<string, Models.Target> = {};
+    for (const target of targets) {
+      newData[target.$id] = target;
+    }
+    onAddTargets(newData);
+  };
+
   return (
     <div className="relative">
-      <Trigger variant="secondary" onClick={handleRoleClick} size="m" {...args} />
+      <Trigger
+        variant="secondary"
+        onClick={handleRoleClick}
+        size="s"
+        type="button"
+        className="items-center"
+      >
+        <PlusIcon size={"14px"} /> {showButton && "Add"}
+      </Trigger>
 
       <DialogRoot
         open={open}
@@ -162,7 +131,7 @@ export const WithDialog = ({
         closeOnInteractOutside={false}
       >
         <Targets
-          add={(targets) => onAddTargets({ [targets.$id]: targets })}
+          add={handleOnAdd}
           sdk={sdk}
           onClose={() => setOpen(false)}
           groups={groups}
@@ -179,6 +148,5 @@ export type DialogBoxProps = {
   children?: React.ReactNode;
   groups: Record<string, Models.Target>;
   sdk: ProjectSdk;
-  trigger: React.ElementType;
-  args?: any;
+  showButton?: boolean;
 };

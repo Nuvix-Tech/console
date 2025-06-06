@@ -23,8 +23,8 @@ export const SelectTopicsTargets = ({ type }: SelectTargetsProps) => {
   return (
     <CardBox>
       <div className="space-y-4">
-        <TopicsSelector type={type} values={values.topics || []} onSave={handleTopicsChange} />
-        <TargetsSelector type={type} values={values.targets || []} onSave={handleTargetsChange} />
+        <TopicsSelector type={type} onSave={handleTopicsChange} />
+        <TargetsSelector type={type} onSave={handleTargetsChange} />
       </div>
     </CardBox>
   );

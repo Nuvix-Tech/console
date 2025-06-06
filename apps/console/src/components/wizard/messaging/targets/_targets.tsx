@@ -9,7 +9,7 @@ import { ChevronDown } from "lucide-react";
 import { cn } from "@nuvix/sui/lib/utils";
 
 export type TargetProps = {
-  add: (target: Models.Target) => void;
+  add: (targets: Models.Target[]) => void;
   onClose: VoidFunction;
   groups: Record<string, Models.Target>;
   type?: MessagingProviderType;
@@ -31,9 +31,7 @@ export const Targets = ({ add, sdk, onClose, groups, type, title, description }:
   });
 
   const onSave = () => {
-    for (const target of selected as Models.Target[]) {
-      add(target);
-    }
+    add(selected);
     onClose?.();
   };
 
