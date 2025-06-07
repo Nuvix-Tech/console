@@ -1,20 +1,23 @@
 import Editor, { Monaco, OnMount } from '@monaco-editor/react'
 import { debounce } from 'lodash'
-import { useRouter } from 'next/router'
+import { useParams, useRouter } from 'next/navigation'
 import { MutableRefObject, useEffect, useRef } from 'react'
 
-import { LOCAL_STORAGE_KEYS, useParams } from 'common'
-import { useLocalStorageQuery } from 'hooks/misc/useLocalStorage'
-import { useSelectedProject } from 'hooks/misc/useSelectedProject'
-import { useProfile } from 'lib/profile'
-import { useAiAssistantStateSnapshot } from 'state/ai-assistant-state'
-import { useSqlEditorV2StateSnapshot } from 'state/sql-editor-v2'
-import { useTabsStateSnapshot } from 'state/tabs'
-import { cn } from 'ui'
-import { Admonition } from 'ui-patterns'
+// import { LOCAL_STORAGE_KEYS, useParams } from 'common'
+// import { useLocalStorageQuery } from 'hooks/misc/useLocalStorage'
+// import { useSelectedProject } from 'hooks/misc/useSelectedProject'
+import { useProfile } from '@/lib/profile'
+import { useAiAssistantStateSnapshot } from '@/lib/store/ai-assistant-state'
+import { useSqlEditorV2StateSnapshot } from '@/lib/store/sql-editor-v2'
+import { useTabsStateSnapshot } from '@/lib/store/tabs'
+// import { cn } from 'ui'
+// import { Admonition } from 'ui-patterns'
 import { untitledSnippetTitle } from './SQLEditor.constants'
 import type { IStandaloneCodeEditor } from './SQLEditor.types'
 import { createSqlSnippetSkeletonV2 } from './SQLEditor.utils'
+import { useLocalStorageQuery } from '@/hooks/useLocalStorage'
+import { LOCAL_STORAGE_KEYS } from '@/lib/constants'
+import { useProjectStore } from '@/lib/store'
 
 export type MonacoEditorProps = {
   id: string
@@ -47,8 +50,8 @@ const MonacoEditor = ({
 }: MonacoEditorProps) => {
   const router = useRouter()
   const { profile } = useProfile()
-  const { ref, content } = useParams()
-  const project = useSelectedProject()
+  const { id: ref, content } = useParams()
+  const { project } = useProjectStore((s) => s)
   const snapV2 = useSqlEditorV2StateSnapshot()
   const tabsSnap = useTabsStateSnapshot()
 
@@ -167,7 +170,7 @@ const MonacoEditor = ({
             name: untitledSnippetTitle,
             sql: value,
             owner_id: profile?.id,
-            project_id: project?.id,
+            project_id: project?.$id,
           })
           snapV2.addSnippet({ projectRef: ref, snippet })
           snapV2.addNeedsSaving(snippet.id)
