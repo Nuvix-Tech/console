@@ -20,13 +20,14 @@ export const UpdateMessageTypePush = ({ disabled }: Props) => {
       />
       <FilesSelector
         mimeType={["png", "jpeg"]}
+        disabled={disabled}
         onSelect={(b, f) => {
           if (b && f) {
             setFieldValue("image", `${b.$id}:${f.$id}`);
           } else setFieldValue("image", undefined);
         }}
       />
-      <InputObjectField name="data" />
+      <InputObjectField name="data" disabled={disabled} />
     </div>
   );
 };

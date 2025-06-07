@@ -13,6 +13,7 @@ type SelectFilesProps = {
   maxSize?: number; // in bytes
   onSelect?: (b?: Models.Bucket, f?: Models.File) => void;
   onError?: (error: string) => void;
+  disabled?: boolean;
 } & Omit<React.ComponentProps<typeof Dialog.Root>, "size" | "motionPreset" | "children">;
 
 export const SelectFiles: React.FC<SelectFilesProps> = ({
@@ -150,10 +151,12 @@ export const FilesSelector = ({
   maxSize,
   mimeType,
   onSelect,
+  disabled,
+  file,
   ...props
-}: Omit<SelectFilesProps, "children">) => {
+}: Omit<SelectFilesProps, "children"> & { file?: Models.File }) => {
   const [open, setOpen] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<Models.File | undefined>();
+  const [selectedFile, setSelectedFile] = useState<Models.File | undefined>(file);
   const [error, setError] = useState<string | undefined>();
 
   const formatFileSize = (bytes: number) => {
@@ -180,6 +183,7 @@ export const FilesSelector = ({
 
   return (
     <VStack align="stretch" gap={2}>
+      <p className="font-semibold">Media</p>
       <div className="border border-neutral-medium w-full min-h-48 border-dashed radius-l p-4 flex flex-col items-center justify-center gap-3">
         <SelectFiles
           {...props}
@@ -211,14 +215,16 @@ export const FilesSelector = ({
                 <Text>{selectedFile.mimeType}</Text>
               </HStack>
             </VStack>
-            <HStack gap={2}>
-              <Button onClick={() => setOpen(true)} variant="tertiary" size="s" type="button">
-                Change File
-              </Button>
-              <Button onClick={handleClear} variant="tertiary" size="s" type="button">
-                Remove File
-              </Button>
-            </HStack>
+            {!disabled ? (
+              <HStack gap={2}>
+                <Button onClick={() => setOpen(true)} variant="tertiary" size="s" type="button">
+                  Change File
+                </Button>
+                <Button onClick={handleClear} variant="tertiary" size="s" type="button">
+                  Remove File
+                </Button>
+              </HStack>
+            ) : null}
           </VStack>
         ) : (
           <VStack gap={2} align="center">
@@ -226,9 +232,11 @@ export const FilesSelector = ({
             <Text color="fg.muted" textAlign="center">
               No file selected
             </Text>
-            <Button onClick={() => setOpen(true)} variant="secondary">
-              Choose File
-            </Button>
+            {!disabled ? (
+              <Button onClick={() => setOpen(true)} variant="secondary">
+                Choose File
+              </Button>
+            ) : null}
           </VStack>
         )}
       </div>

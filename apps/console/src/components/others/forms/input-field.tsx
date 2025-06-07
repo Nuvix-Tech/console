@@ -188,6 +188,7 @@ interface InputObjectFieldProps {
   label?: string;
   helperText?: string;
   optionalText?: string;
+  disabled?: boolean;
 }
 
 type Values = { key: string; value: string | any }[];
@@ -197,6 +198,7 @@ export const InputObjectField: React.FC<InputObjectFieldProps> = ({
   helperText,
   optionalText,
   name,
+  disabled,
   ...rest
 }) => {
   const [_values, setValues] = useState<Values>([]);
@@ -257,6 +259,7 @@ export const InputObjectField: React.FC<InputObjectFieldProps> = ({
                     height="s"
                     labelAsPlaceholder
                     value={key}
+                    disabled={disabled}
                     onChange={(e) => handleFieldChange("key", e.target.value, i)}
                   />
 
@@ -265,13 +268,14 @@ export const InputObjectField: React.FC<InputObjectFieldProps> = ({
                     height="s"
                     labelAsPlaceholder
                     value={value}
+                    disabled={disabled}
                     onChange={(e) => handleFieldChange("value", e.target.value, i)}
                   />
 
                   <CloseButton
                     type="button"
                     onClick={() => handleDeleteField(i)}
-                    // disabled={_values.length === 1}
+                    disabled={disabled}
                   />
                 </div>
               </Fragment>
@@ -284,7 +288,7 @@ export const InputObjectField: React.FC<InputObjectFieldProps> = ({
             className="text-sm items-center"
             onClick={handleAddField}
             justifyContent="center"
-            disabled={canNotAdd}
+            disabled={canNotAdd || disabled}
           >
             <span className="flex items-center gap-1">
               <PlusIcon size={18} />

@@ -1,13 +1,14 @@
 import { CreateMessage } from "@/components/wizard/messaging";
 import { MessagingProviderType } from "@nuvix/console";
 import { Popover, PopoverTrigger, PopoverContent } from "@nuvix/sui/components";
-import { Button, Flex, Text, ToggleButton } from "@nuvix/ui/components";
+import { Button, Flex, Text, ToggleButton, useConfirm } from "@nuvix/ui/components";
 import { LucideProps, MailIcon, MessageCircleIcon, SmartphoneIcon } from "lucide-react";
 import React, { useState } from "react";
 
 export const CreateMessageButton = ({ refetch }: { refetch: () => Promise<void> }) => {
   const [open, setOpen] = useState(false);
   const [type, setType] = useState<MessagingProviderType | null>(null);
+  const confirm = useConfirm();
 
   const onClick = (type: any) => {
     setType(type);
@@ -18,7 +19,20 @@ export const CreateMessageButton = ({ refetch }: { refetch: () => Promise<void> 
     <>
       <CreateMessage
         open={open}
-        onOpenChange={(o) => setOpen(o.open)}
+        onOpenChange={(o) => {
+          if (!o.open) {
+            confirm({
+              title: "Exit process",
+              description:
+                "Are you sure you want to exit from this process? All data will be deleted. This action is irreversible.",
+              confirm: {
+                text: "Exit",
+              },
+            }).then((v) => v && setOpen(o.open));
+          } else {
+            setOpen(o.open);
+          }
+        }}
         type={type}
         refetch={refetch}
       />
