@@ -1,6 +1,7 @@
 "use client";
 import type React from "react";
-import { Button, ConfirmDialogProps, Dialog } from ".";
+import { Button, ConfirmDialogProps } from ".";
+import { Dialog, Portal } from "@chakra-ui/react";
 
 interface ConfirmProps extends Pick<ConfirmDialogProps, "button"> {
   isOpen: boolean;
@@ -12,7 +13,8 @@ interface ConfirmProps extends Pick<ConfirmDialogProps, "button"> {
   confirmText?: string;
   confirmVariant?: "danger" | "primary" | "secondary" | "tertiary";
   handleConfirm: (value: boolean) => void;
-  onClose: () => void;
+  onClose: ({ open }: { open: boolean }) => void;
+  portalled?: boolean;
 }
 
 const ConfirmDialog: React.FC<ConfirmProps> = ({
@@ -22,42 +24,56 @@ const ConfirmDialog: React.FC<ConfirmProps> = ({
   node,
   onClose,
   cancelText,
+  portalled = true,
   confirmText,
   handleConfirm,
   button,
 }) => {
   return (
-    <Dialog
-      isOpen={isOpen}
-      onClose={onClose}
-      title={title}
-      description={description}
-      footer={
-        <>
-          <Button
-            onClick={() => {
-              handleConfirm(false);
-            }}
-            variant="secondary"
-            {...button?.cancel}
-          >
-            {" "}
-            {cancelText ?? "Cancel"}
-          </Button>
-          <Button
-            onClick={() => {
-              handleConfirm(true);
-            }}
-            {...button?.ok}
-          >
-            {" "}
-            {confirmText ?? "Continue"}
-          </Button>
-        </>
-      }
+    <Dialog.Root
+      open={isOpen}
+      onOpenChange={onClose}
+      closeOnEscape
+      closeOnInteractOutside
+      unmountOnExit
+      modal
     >
-      {node}
-    </Dialog>
+      <Portal disabled={!portalled}>
+        <Dialog.Backdrop />
+        <Dialog.Positioner className="bg-[var(--backdrop)]" zIndex={10000}>
+          <Dialog.Content asChild={false}>
+            <Dialog.Header>
+              <Dialog.Title>{title}</Dialog.Title>
+              {description && <Dialog.Description>{description}</Dialog.Description>}
+            </Dialog.Header>
+            <Dialog.Body>
+              {node}
+            </Dialog.Body>
+            <Dialog.Footer>
+              <Button
+                onClick={() => {
+                  handleConfirm(false);
+                }}
+                variant="secondary"
+                {...button?.cancel}
+              >
+                {" "}
+                {cancelText ?? "Cancel"}
+              </Button>
+              <Button
+                onClick={() => {
+                  handleConfirm(true);
+                }}
+                {...button?.ok}
+              >
+                {" "}
+                {confirmText ?? "Continue"}
+              </Button>
+            </Dialog.Footer>
+          </Dialog.Content>
+        </Dialog.Positioner>
+      </Portal>
+    </Dialog.Root>
   );
 };
 
