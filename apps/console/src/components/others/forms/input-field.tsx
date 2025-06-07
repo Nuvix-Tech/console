@@ -26,6 +26,7 @@ import {
 } from "@nuvix/sui/components/form";
 import { Input } from "@nuvix/ui/components";
 import { RadioGroup } from "@nuvix/sui/components/radio-group";
+import { PlusIcon } from "lucide-react";
 
 interface Props extends Omit<InputProps, "onChange" | "value" | "id"> {
   name: string;
@@ -235,6 +236,9 @@ export const InputObjectField: React.FC<InputObjectFieldProps> = ({
     }
   };
 
+  const canNotAdd =
+    _values.length === 1 && !!_values.find(({ key, value }) => !(key.trim() && value.trim()));
+
   return (
     <FormItem name={name} {...rest}>
       {label && <FormLabel>{label}</FormLabel>}
@@ -277,11 +281,15 @@ export const InputObjectField: React.FC<InputObjectFieldProps> = ({
             type="button"
             variant="tertiary"
             size="s"
-            className="text-sm"
+            className="text-sm items-center"
             onClick={handleAddField}
+            justifyContent="center"
+            disabled={canNotAdd}
           >
-            <LuPlus size={18} />
-            Add Field
+            <span className="flex items-center gap-1">
+              <PlusIcon size={18} />
+              Add Field
+            </span>
           </Button>
         </div>
       </FormControl>

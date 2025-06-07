@@ -1,6 +1,6 @@
 import { CustomID } from "@/components/_custom_id";
-import { CardBox } from "@/components/others/card";
-import { InputField, InputTextareaField } from "@/components/others/forms";
+import { CardBox, CardBoxDesc, CardBoxTitle } from "@/components/others/card";
+import { InputField, InputObjectField, InputTextareaField } from "@/components/others/forms";
 import { Column } from "@nuvix/ui/components";
 import { useFormikContext } from "formik";
 import React from "react";
@@ -12,7 +12,7 @@ export const CreateMessageTypePush = () => {
 
   return (
     <>
-      <Column>
+      <Column gap="8">
         <CardBox>
           <div className="space-y-4">
             <InputField name="title" label="Title" />
@@ -34,6 +34,14 @@ export const CreateMessageTypePush = () => {
               maxSize={1024 * 1024}
             />
           </div>
+        </CardBox>
+        <CardBox>
+          <CardBoxTitle>Custom data</CardBoxTitle>
+          <CardBoxDesc className="mb-3 mt-1">
+            A key/value payload of additional metadata that's hidden from users. Use this to include
+            information to support logic such as redirection and routing.
+          </CardBoxDesc>
+          <InputObjectField name="data" />
         </CardBox>
       </Column>
     </>

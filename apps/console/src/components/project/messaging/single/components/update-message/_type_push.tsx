@@ -1,4 +1,4 @@
-import { InputField, InputTextareaField } from "@/components/others/forms";
+import { InputField, InputObjectField, InputTextareaField } from "@/components/others/forms";
 import { useFormikContext } from "formik";
 import React from "react";
 import { PushFormData, Props } from "./_types";
@@ -20,8 +20,13 @@ export const UpdateMessageTypePush = ({ disabled }: Props) => {
       />
       <FilesSelector
         mimeType={["png", "jpeg"]}
-        onSelect={(b, f) => setFieldValue("image", `${b.$id}:${f.$id}`)}
+        onSelect={(b, f) => {
+          if (b && f) {
+            setFieldValue("image", `${b.$id}:${f.$id}`);
+          } else setFieldValue("image", undefined);
+        }}
       />
+      <InputObjectField name="data" />
     </div>
   );
 };
