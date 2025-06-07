@@ -1,25 +1,25 @@
-import { ChartConfig } from '@/components/SQLEditor/UtilityPanel/ChartConfig'
+import { ChartConfig } from "@/components/SQLEditor/UtilityPanel/ChartConfig";
 
 export interface UserContent<
   T = Dashboards.Content | SqlSnippets.Content | LogSqlSnippets.Content,
 > {
-  id?: string
-  name: string
-  description?: string
-  type: 'sql' | 'report' | 'log_sql'
-  visibility: 'user' | 'project' | 'org' | 'public'
-  content: T
-  owner_id?: number // user id
-  last_updated_by?: number // user id
-  inserted_at?: string // '2021-08-26T08:24:52.040695+00:00'
-  owner?: Owner
-  project_id?: number
-  updated_at?: string // '2021-08-26T08:24:52.040695+00:00'
-  updated_by?: Owner
+  id?: string;
+  name: string;
+  description?: string;
+  type: "sql" | "report" | "log_sql";
+  visibility: "user" | "project" | "org" | "public";
+  content: T;
+  owner_id?: number; // user id
+  last_updated_by?: number; // user id
+  inserted_at?: string; // '2021-08-26T08:24:52.040695+00:00'
+  owner?: Owner;
+  project_id?: number;
+  updated_at?: string; // '2021-08-26T08:24:52.040695+00:00'
+  updated_by?: Owner;
 }
 
 export interface UserContentMap {
-  [key: string]: UserContent
+  [key: string]: UserContent;
 }
 
 export namespace SqlSnippets {
@@ -30,32 +30,32 @@ export namespace SqlSnippets {
    */
   export interface Content {
     // unique id of the sql snippet, possibly to used so snippets can support versioning
-    content_id: string
+    content_id: string;
 
     // A full SQL query - this will be hashed on the /content endpoint
-    sql: string
+    sql: string;
 
     // we can add some versioning to this schema in case we need to change the format.
-    schema_version: string
+    schema_version: string;
 
     // show sql snippet as a favorite.
     // this could be problematic if sql snippets have visibility that is != 'user'
-    favorite: boolean
+    favorite: boolean;
 
     chart?: {
-      type: 'bar' | 'line'
-      cumulative: boolean
-      xKey: string
-      yKey: string
-      showLabels?: boolean
-      showGrid?: boolean
-    }
+      type: "bar" | "line";
+      cumulative: boolean;
+      xKey: string;
+      yKey: string;
+      showLabels?: boolean;
+      showGrid?: boolean;
+    };
   }
 }
 
 export interface Owner {
-  id: number
-  username: string
+  id: number;
+  username: string;
 }
 
 /**
@@ -68,31 +68,31 @@ export namespace Dashboards {
    * an interval ("1w" = 1 week ago) or an exact date.
    */
   export interface Content {
-    schema_version: 1 // we can add some versioning to this schema in case we need to change the format.
+    schema_version: 1; // we can add some versioning to this schema in case we need to change the format.
     period_start: {
-      time_period?: string // "0m", "1m", "5m", "1h", "1d", "1w", "1M", "1y"
-      date?: string // "2017-01-01T00:00:00.000Z"
-    }
+      time_period?: string; // "0m", "1m", "5m", "1h", "1d", "1w", "1M", "1y"
+      date?: string; // "2017-01-01T00:00:00.000Z"
+    };
     period_end: {
-      time_period?: string // "0m", "1m", "5m", "1h", "1d", "1w", "1M", "1y"
-      date?: string // "2017-01-01T00:00:00.000Z"
-    }
-    interval: '1m' | '5m' | '1h' | '1d' | '1w' | '1M' | '1y' // this is the data interval
-    layout: Chart[]
-    favorite?: boolean // not used yet
+      time_period?: string; // "0m", "1m", "5m", "1h", "1d", "1w", "1M", "1y"
+      date?: string; // "2017-01-01T00:00:00.000Z"
+    };
+    interval: "1m" | "5m" | "1h" | "1d" | "1w" | "1M" | "1y"; // this is the data interval
+    layout: Chart[];
+    favorite?: boolean; // not used yet
   }
 
   /**
    * Predefined charts
    */
   export type ChartType =
-    | 'total_get_requests'
-    | 'total_auth_patch_requests'
-    | 'total_auth_requests'
-    | 'total_egress'
-    | 'total_delete_requests'
-    | 'total_auth_requests'
-    | 'combined_bar'
+    | "total_get_requests"
+    | "total_auth_patch_requests"
+    | "total_auth_requests"
+    | "total_egress"
+    | "total_delete_requests"
+    | "total_auth_requests"
+    | "combined_bar";
   // | 'bar'- should we include simple types as well?
   // | 'line'
 
@@ -100,16 +100,16 @@ export namespace Dashboards {
    * An individual instance of a chart, with title and position
    */
   export interface Chart {
-    id: string // uuid
-    x: number
-    y: number
-    w: number
-    h: number
-    label: string
-    attribute: ChartType
-    provider: 'daily-stats' | 'infra-monitoring'
-    chart_type: 'bar' | 'line'
-    chartConfig?: Partial<ChartConfig>
+    id: string; // uuid
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+    label: string;
+    attribute: ChartType;
+    provider: "daily-stats" | "infra-monitoring";
+    chart_type: "bar" | "line";
+    chartConfig?: Partial<ChartConfig>;
   }
 }
 
@@ -121,17 +121,17 @@ export namespace SqlSnippets {
    */
   export interface Content {
     // unique id of the sql snippet, possibly to used so snippets can support versioning
-    content_id: string
+    content_id: string;
 
     // A full SQL query - this will be hashed on the /content endpoint
-    sql: string
+    sql: string;
 
     // we can add some versioning to this schema in case we need to change the format.
-    schema_version: string
+    schema_version: string;
 
     // show sql snippet as a favorite.
     // this could be problematic if sql snippets have visibility that is != 'user'
-    favorite: boolean
+    favorite: boolean;
   }
 }
 
@@ -143,16 +143,16 @@ export namespace LogSqlSnippets {
    */
   export interface Content {
     // unique id of the sql snippet, possibly to used so snippets can support versioning
-    content_id: string
+    content_id: string;
 
     // A full SQL query - this will be hashed on the /content endpoint
-    sql: string
+    sql: string;
 
     // we can add some versioning to this schema in case we need to change the format.
-    schema_version: string
+    schema_version: string;
 
     // show sql snippet as a favorite.
     // this could be problematic if sql snippets have visibility that is != 'user'
-    favorite: boolean
+    favorite: boolean;
   }
 }

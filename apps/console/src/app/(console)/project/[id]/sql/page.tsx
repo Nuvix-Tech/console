@@ -1,9 +1,3 @@
-
 export default async function () {
-
-    return (
-        <>
-            HELLO From Sql Page
-        </>
-    )
+  return <>HELLO From Sql Page</>;
 }
