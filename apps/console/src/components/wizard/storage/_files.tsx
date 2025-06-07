@@ -29,7 +29,7 @@ export const Files = ({ mimeType }: { mimeType?: string[] }) => {
       queries.push(Query.contains("mimeType", mimeType));
     }
     if (search.trim()) {
-      queries.push(Query.search("name", search.trim()));
+      queries.push(Query.search("search", search.trim()));
     }
 
     return await sdk.storage.listFiles(bucket.$id, queries);
@@ -93,7 +93,7 @@ export const Files = ({ mimeType }: { mimeType?: string[] }) => {
       cell({ getValue }) {
         const mimeType = getValue<string>();
         const displayType = mimeType?.split("/")[1]?.toUpperCase() || "Unknown";
-        return <span className="text-muted-foreground">{displayType}</span>;
+        return <span className="text-muted-foreground">{mimeType}</span>;
       },
     },
     {
@@ -132,7 +132,15 @@ export const Files = ({ mimeType }: { mimeType?: string[] }) => {
   const hasFiles = (data?.total ?? 0) > 0;
   const showEmptyState = !hasFiles && !isFetching && !search.trim() && !error;
   const showNoResults = !hasFiles && !isFetching && search.trim();
-
+  const create = (
+    <CreateButton
+      hasPermission={canCreateFiles}
+      label="Upload File"
+      component={UploadFile}
+      size="s"
+      extraProps={{ refetch, portalled: false }}
+    />
+  );
   return (
     <div className="w-full py-2">
       <Text variant="label-strong-s">
@@ -156,12 +164,7 @@ export const Files = ({ mimeType }: { mimeType?: string[] }) => {
                 ? `No ${mimeType.join(" or ")} files have been uploaded to this bucket.`
                 : "Upload your first file to get started."
             }
-          />
-
-          <EmptyState
-            show={!!showNoResults}
-            title="No matching files"
-            description={`No files found matching "${search}". Try a different search term.`}
+            primaryComponent={create}
           />
 
           {error && (
@@ -182,16 +185,10 @@ export const Files = ({ mimeType }: { mimeType?: string[] }) => {
                       ? `Search ${mimeType.join(" or ")} files...`
                       : "Search files by name..."
                   }
-                  onSearch={(v) => setSearch(v)}
-                  defaultValue={search}
+                  onSearch={(v) => setSearch(v ?? "")}
+                  value={search}
                 />
-                <CreateButton
-                  hasPermission={canCreateFiles}
-                  label="Upload File"
-                  component={UploadFile}
-                  size="s"
-                  extraProps={{ refetch }}
-                />
+                {create}
               </HStack>
               <Table noResults={!!showNoResults} interactive={false} />
             </>

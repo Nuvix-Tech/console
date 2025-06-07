@@ -10,7 +10,7 @@ import { CreateButton as Create } from "@/components/others";
 
 interface SearchAndCreateProps {
   placeholder?: string;
-  onSearch?: (value: string) => void;
+  onSearch?: (value?: string) => void;
   onClear?: () => void;
   onCreate?: () => void;
   button?: {
@@ -27,7 +27,7 @@ const SearchAndCreate: React.FC<SearchAndCreateProps> = ({ onCreate, button, ...
 
 interface SearchAndCreateProps {
   placeholder?: string;
-  onSearch?: (value: string) => void;
+  onSearch?: (value?: string) => void;
   onClear?: () => void;
   onCreate?: () => void;
   button?: {
@@ -40,13 +40,16 @@ interface SearchAndCreateProps {
 
 interface SearchProps {
   placeholder?: string;
-  onSearch?: (value: string) => void;
+  value?: string;
+  onSearch?: (value?: string) => void;
   onClear?: () => void;
 }
 
 export const Search: React.FC<SearchProps & React.ComponentProps<typeof Input>> = ({
   placeholder,
   onClear,
+  value,
+  onSearch,
   ...props
 }) => {
   const [searchValue, setSearchValue] = React.useState("");
@@ -55,13 +58,19 @@ export const Search: React.FC<SearchProps & React.ComponentProps<typeof Input>> 
   const { push } = useRouter();
 
   useEffect(() => {
-    setSearchValue(searchParmas.get("search") ?? "");
-  }, [searchParmas.get("search")]);
+    if (value) {
+      setSearchValue(value);
+    } else setSearchValue(searchParmas.get("search") ?? "");
+  }, [searchParmas.get("search"), value]);
 
-  const onSearch = (value?: string) => {
-    const params = new URLSearchParams(searchParmas);
-    value ? params.set("search", value) : params.delete("search");
-    push(path + `?${params.toString()}`);
+  const handleSearch = (value?: string) => {
+    if (onSearch) {
+      onSearch(value);
+    } else {
+      const params = new URLSearchParams(searchParmas);
+      value ? params.set("search", value) : params.delete("search");
+      push(path + `?${params.toString()}`);
+    }
   };
 
   return (
@@ -75,10 +84,10 @@ export const Search: React.FC<SearchProps & React.ComponentProps<typeof Input>> 
         value={searchValue}
         onChange={(e) => {
           setSearchValue(e.target.value);
-          onSearch(e.target.value);
+          handleSearch(e.target.value);
         }}
         hasPrefix={<LuSearch />}
-        hasSuffix={!!searchValue.length && <CloseButton onClick={() => onSearch()} />}
+        hasSuffix={!!searchValue.length && <CloseButton onClick={() => handleSearch()} />}
       />
     </>
   );

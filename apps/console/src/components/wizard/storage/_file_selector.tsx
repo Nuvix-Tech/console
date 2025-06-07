@@ -11,7 +11,7 @@ type SelectFilesProps = {
   children?: React.ReactNode;
   mimeType?: string[];
   maxSize?: number; // in bytes
-  onSelect?: (b: Models.Bucket, f: Models.File) => void;
+  onSelect?: (b?: Models.Bucket, f?: Models.File) => void;
   onError?: (error: string) => void;
 } & Omit<React.ComponentProps<typeof Dialog.Root>, "size" | "motionPreset" | "children">;
 
@@ -44,6 +44,7 @@ export const SelectFiles: React.FC<SelectFilesProps> = ({
     const error = validateFile(file);
     if (error) {
       onError?.(error);
+      props.onOpenChange?.({ open: false });
       return;
     }
 
@@ -61,13 +62,17 @@ export const SelectFiles: React.FC<SelectFilesProps> = ({
 
   return (
     <Dialog.Root size="cover" motionPreset="slide-in-bottom" {...props} closeOnEscape={false}>
-      {children && <Dialog.Trigger asChild>{children}</Dialog.Trigger>}
+      {children && (
+        <Dialog.Trigger asChild type="button">
+          {children}
+        </Dialog.Trigger>
+      )}
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
           <Dialog.Content gap={0}>
-            <Dialog.Header>
-              <VStack align="flex-start" gap={1}>
+            <Dialog.Header py={"2"}>
+              <VStack align="flex-start" gap={0.5}>
                 <Text fontSize="xl" fontWeight="bold">
                   Select a File
                 </Text>
@@ -81,14 +86,22 @@ export const SelectFiles: React.FC<SelectFilesProps> = ({
               </VStack>
             </Dialog.Header>
 
-            <Dialog.Body h="full" gap={2} px={4} py={0} display="flex" borderBlockWidth={1}>
-              <Box flex="0" h="full" minW={{ base: "48", lg: "52" }}>
+            <Dialog.Body
+              gap={2}
+              px={4}
+              py={0}
+              display="flex"
+              borderBlockWidth={1}
+              pos={"relative"}
+              height={"calc(100% - 200px)"}
+            >
+              <Box flex="0" h="full" minW={{ base: "48", lg: "52" }} className="overflow-y-auto">
                 <Suspense fallback={<Text>Loading buckets...</Text>}>
                   <Buckets />
                 </Suspense>
               </Box>
               <Line vert />
-              <Box flex="1" h="full" className="w-[calc(100%-200px)]">
+              <Box flex="1" className="w-[calc(100%-200px)] overflow-y-auto">
                 <Suspense fallback={<Text>Loading files...</Text>}>
                   <Files mimeType={mimeType} />
                 </Suspense>
@@ -96,15 +109,15 @@ export const SelectFiles: React.FC<SelectFilesProps> = ({
             </Dialog.Body>
 
             {file && (
-              <Box px={4} py={2} bg="gray.50" borderTopWidth={1}>
+              <Box px={4} py={2} bg="bg.muted" borderTopWidth={1}>
                 <Text fontSize="sm" fontWeight="medium">
                   Selected:
                 </Text>
                 <HStack justify="space-between">
-                  <Text fontSize="sm" color="gray.700" truncate>
+                  <Text fontSize="sm" color="fg.subtle" truncate>
                     {file.name}
                   </Text>
-                  <Text fontSize="xs" color="gray.500">
+                  <Text fontSize="xs" color="fg.muted">
                     {formatFileSize(file.sizeOriginal)}
                   </Text>
                 </HStack>
@@ -113,9 +126,16 @@ export const SelectFiles: React.FC<SelectFilesProps> = ({
 
             <Dialog.Footer>
               <Dialog.Trigger asChild>
-                <Button variant="tertiary">Cancel</Button>
+                <Button variant="tertiary" type="button">
+                  Cancel
+                </Button>
               </Dialog.Trigger>
-              <Button variant="primary" disabled={!bucket || !file} onClick={handleSelect}>
+              <Button
+                variant="primary"
+                disabled={!bucket || !file}
+                onClick={handleSelect}
+                type="button"
+              >
                 Select File
               </Button>
             </Dialog.Footer>
@@ -129,6 +149,7 @@ export const SelectFiles: React.FC<SelectFilesProps> = ({
 export const FilesSelector = ({
   maxSize,
   mimeType,
+  onSelect,
   ...props
 }: Omit<SelectFilesProps, "children">) => {
   const [open, setOpen] = useState(false);
@@ -151,6 +172,12 @@ export const FilesSelector = ({
     return "📁";
   };
 
+  const handleClear = () => {
+    setSelectedFile(undefined);
+    setError(undefined);
+    onSelect?.();
+  };
+
   return (
     <VStack align="stretch" gap={2}>
       <div className="border border-neutral-medium w-full min-h-48 border-dashed radius-l p-4 flex flex-col items-center justify-center gap-3">
@@ -166,7 +193,7 @@ export const FilesSelector = ({
           onSelect={(b, f) => {
             setSelectedFile(f);
             setError(undefined);
-            props.onSelect?.(b, f);
+            onSelect?.(b, f);
           }}
           onError={(err) => setError(err)}
         />
@@ -178,20 +205,25 @@ export const FilesSelector = ({
               <Text fontWeight="medium" textAlign="center" lineClamp={2}>
                 {selectedFile.name}
               </Text>
-              <HStack gap={2} color="gray.600" fontSize="sm">
+              <HStack gap={2} color="fg.subtle" fontSize="sm">
                 <Text>{formatFileSize(selectedFile.sizeOriginal)}</Text>
                 <Text>•</Text>
                 <Text>{selectedFile.mimeType}</Text>
               </HStack>
             </VStack>
-            <Button onClick={() => setOpen(true)} variant="tertiary" size="s">
-              Change File
-            </Button>
+            <HStack gap={2}>
+              <Button onClick={() => setOpen(true)} variant="tertiary" size="s" type="button">
+                Change File
+              </Button>
+              <Button onClick={handleClear} variant="tertiary" size="s" type="button">
+                Remove File
+              </Button>
+            </HStack>
           </VStack>
         ) : (
           <VStack gap={2} align="center">
             <Text fontSize="2xl">📁</Text>
-            <Text color="gray.600" textAlign="center">
+            <Text color="fg.muted" textAlign="center">
               No file selected
             </Text>
             <Button onClick={() => setOpen(true)} variant="secondary">
@@ -208,7 +240,7 @@ export const FilesSelector = ({
       )}
 
       {(mimeType || maxSize) && !selectedFile && (
-        <Text fontSize="xs" color="gray.500" textAlign="center">
+        <Text fontSize="xs" color="fg.muted" textAlign="center">
           {mimeType && `Supported: ${mimeType.join(", ")}`}
           {mimeType && maxSize && " • "}
           {maxSize && `Max size: ${formatFileSize(maxSize)}`}

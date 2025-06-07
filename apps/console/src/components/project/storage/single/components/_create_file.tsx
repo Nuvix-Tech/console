@@ -18,9 +18,10 @@ interface UploadFileProps {
   isOpen: boolean;
   onClose: () => void;
   refetch: () => Promise<void>;
+  portalled?: boolean;
 }
 
-export const UploadFile: React.FC<UploadFileProps> = ({ isOpen, onClose, refetch }) => {
+export const UploadFile: React.FC<UploadFileProps> = ({ isOpen, onClose, refetch, portalled }) => {
   const bucket = useBucketStore.use.bucket?.();
   const { addToast } = useToast();
   const { uploadFile } = useFileUpload(refetch);
@@ -89,6 +90,7 @@ export const UploadFile: React.FC<UploadFileProps> = ({ isOpen, onClose, refetch
       steps={steps}
       title="Upload File"
       open={isOpen}
+      portalled={portalled}
       onOpenChange={handleClose}
     />
   );

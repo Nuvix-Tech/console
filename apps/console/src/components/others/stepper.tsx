@@ -18,15 +18,16 @@ export interface StepperProps {
   title: string;
   form: Omit<React.ComponentProps<typeof Form>, "children">;
   lastStep?: React.ReactNode;
+  portalled?: boolean;
 }
 
 export const StepperDrawer: React.FC<
   StepperProps & Omit<React.ComponentProps<typeof Drawer.Root>, "children">
-> = ({ steps, trigger, title, value, form, lastStep, ...props }) => {
+> = ({ steps, trigger, title, value, form, lastStep, portalled = true, ...props }) => {
   return (
     <Drawer.Root {...props}>
       {trigger && <Drawer.Trigger asChild> {trigger} </Drawer.Trigger>}
-      <Portal>
+      <Portal disabled={!portalled}>
         <Drawer.Backdrop />
         <Drawer.Positioner>
           <Drawer.Content height="full" asChild>

@@ -159,7 +159,7 @@ const Uploader: React.FC<UploaderProps> = ({
   const getPositionStyle = () => {
     const styles: React.CSSProperties = {
       position: "fixed",
-      zIndex: 1000,
+      zIndex: 10000,
     };
 
     switch (position) {

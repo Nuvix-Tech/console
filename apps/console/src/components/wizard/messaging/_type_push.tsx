@@ -8,7 +8,7 @@ import { PushFormData } from "./_types";
 import { FilesSelector } from "../storage";
 
 export const CreateMessageTypePush = () => {
-  const { values, setFieldValue } = useFormikContext<PushFormData>();
+  const { setFieldValue } = useFormikContext<PushFormData>();
 
   return (
     <>
@@ -25,8 +25,13 @@ export const CreateMessageTypePush = () => {
               maxLength={1000}
             />
             <FilesSelector
-              mimeType={["png", "jpeg"]}
-              onSelect={(b, f) => setFieldValue("image", `${b.$id}:${f.$id}`)}
+              mimeType={["image/png", "image/jpeg"]}
+              onSelect={(b, f) => {
+                if (b && f) {
+                  setFieldValue("image", `${b.$id}:${f.$id}`);
+                } else setFieldValue("image", undefined);
+              }}
+              maxSize={1024 * 1024}
             />
           </div>
         </CardBox>
