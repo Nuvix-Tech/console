@@ -84,9 +84,7 @@ export const ProvidersPage = () => {
       cell({ getValue }) {
         const enabled = getValue<boolean>();
         return (
-          <Status value={enabled ? "success" : "error"}>
-            {enabled ? "Enabled" : "Disabled"}
-          </Status>
+          <Status value={enabled ? "success" : "error"}>{enabled ? "Enabled" : "Disabled"}</Status>
         );
       },
     },
@@ -126,7 +124,7 @@ export const ProvidersPage = () => {
     }
   };
 
-  const create = <CreateProviderButton refetch={refetch} />
+  const create = <CreateProviderButton refetch={refetch} />;
 
   return (
     <PageContainer>

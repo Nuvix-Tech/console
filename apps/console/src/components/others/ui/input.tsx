@@ -209,9 +209,9 @@ export const EditorField = ({
 
   return (
     <EditorArea
+      defaultValue={initialValues[name]}
       {...rest}
       value={values[name]}
-      defaultValue={initialValues[name]}
       onChange={(value) => setFieldValue(name, value)}
       errorText={errors[name]?.toString()}
     />

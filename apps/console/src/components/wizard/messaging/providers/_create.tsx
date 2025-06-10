@@ -131,7 +131,7 @@ export const CreateProvider: React.FC<CreateProviderProps> = ({
     //     text: "Exit",
     //   },
     // }).then((v) => v && onOpenChange?.({ open }));
-    onOpenChange?.({ open })
+    onOpenChange?.({ open });
   }
 
   const providerConfig = (() => {
@@ -197,7 +197,7 @@ export const CreateProvider: React.FC<CreateProviderProps> = ({
               }}
             >
               <Dialog.Body h="full" gap={10} p={12} display="flex">
-                <Box flex="1" h="full" maxWidth={{ base: "2xl" }} mx={'auto'}>
+                <Box flex="1" h="full" maxWidth={{ base: "2xl" }} mx={"auto"}>
                   <Text fontSize="2xl" fontWeight="semibold" mb={6}>
                     Create {providerTypeLabel}
                   </Text>
