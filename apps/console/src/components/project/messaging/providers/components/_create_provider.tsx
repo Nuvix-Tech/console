@@ -1,8 +1,7 @@
 import { CreateProvider } from "@/components/wizard/messaging/providers";
 import { MessagingProviderType } from "@nuvix/console";
 import { Popover, PopoverTrigger, PopoverContent } from "@nuvix/sui/components";
-import { Button, Flex, Text, ToggleButton, useConfirm } from "@nuvix/ui/components";
-import { LucideProps, MailIcon, MessageCircleIcon, SmartphoneIcon } from "lucide-react";
+import { Button, ToggleButton } from "@nuvix/ui/components";
 import React, { useState } from "react";
 
 export const CreateProviderButton = ({ refetch }: { refetch: () => Promise<any>  }) => {
@@ -48,46 +47,4 @@ export const CreateProviderButton = ({ refetch }: { refetch: () => Promise<any> 
       </Popover>
     </>
   );
-};
-
-export const MessageTypeIcon = ({
-  type,
-  icon,
-  ...rest
-}: { type: MessagingProviderType; icon?: LucideProps } & React.ComponentProps<typeof Text>) => {
-  let IconComponent: React.ElementType<LucideProps> | null = null;
-  let label: string;
-
-  switch (type) {
-    case MessagingProviderType.Email:
-      IconComponent = MailIcon;
-      label = "Email";
-      break;
-    case MessagingProviderType.Push:
-      IconComponent = SmartphoneIcon;
-      label = "Push";
-      break;
-    case MessagingProviderType.Sms:
-      IconComponent = MessageCircleIcon;
-      label = "Sms";
-      break;
-    default:
-      console.warn(`No icon found for MessagingProviderType: ${type}`);
-      return null;
-  }
-  return IconComponent ? (
-    <Flex gap="8" vertical="center">
-      <Flex
-        background="neutral-alpha-medium"
-        radius="full"
-        vertical="center"
-        horizontal="center"
-        width={"32"}
-        height={"32"}
-      >
-        <IconComponent width="18" height="18" {...icon} />
-      </Flex>
-      <Text {...rest}>{label}</Text>
-    </Flex>
-  ) : null;
 };

@@ -123,14 +123,15 @@ export const CreateProvider: React.FC<CreateProviderProps> = ({
   }
 
   function handleClose({ open = false }: { open?: boolean }) {
-    confirm({
-      title: "Exit process",
-      description:
-        "Are you sure you want to exit from this process? All data will be deleted. This action is irreversible.",
-      confirm: {
-        text: "Exit",
-      },
-    }).then((v) => v && onOpenChange?.({ open }));
+    // confirm({
+    //   title: "Exit process",
+    //   description:
+    //     "Are you sure you want to exit from this process? All data will be deleted. This action is irreversible.",
+    //   confirm: {
+    //     text: "Exit",
+    //   },
+    // }).then((v) => v && onOpenChange?.({ open }));
+    onOpenChange?.({ open })
   }
 
   const providerConfig = (() => {
@@ -196,7 +197,7 @@ export const CreateProvider: React.FC<CreateProviderProps> = ({
               }}
             >
               <Dialog.Body h="full" gap={10} p={12} display="flex">
-                <Box flex="1" h="full" maxWidth={{ base: "2xl" }}>
+                <Box flex="1" h="full" maxWidth={{ base: "2xl" }} mx={'auto'}>
                   <Text fontSize="2xl" fontWeight="semibold" mb={6}>
                     Create {providerTypeLabel}
                   </Text>
