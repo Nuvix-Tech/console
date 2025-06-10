@@ -2,42 +2,40 @@
 import React from "react";
 import { Box, CloseButton, Dialog, Flex, Portal, Text } from "@chakra-ui/react";
 import { Form, SubmitButton } from "../../../others/forms";
-import { Button, Column, useConfirm, useToast } from "@nuvix/ui/components";
-import { MessagingProviderType, Models } from "@nuvix/console";
+import { Button, Column, useToast } from "@nuvix/ui/components";
+import { MessagingProviderType, Models, SmtpEncryption } from "@nuvix/console";
 import { CreateProviderTypeEmail } from "./_type_email";
 import { CreateProviderTypeSms } from "./_type_sms";
 import { CreateProviderTypePush } from "./_type_push";
 import { getProviderSchema } from "./_schemas";
 import {
   ProviderFormData,
-  EmailProviderFormData,
-  SmsProviderFormData,
-  PushProviderFormData,
   getInitialValues,
   isEmailProviderFormData,
   isSmsProviderFormData,
   isPushProviderFormData,
 } from "./_types";
 import { useProjectStore } from "@/lib/store";
-import { useFormikContext } from "formik";
 import { getQueryClient } from "@/data/query-client";
+import { useParams, useRouter } from "next/navigation";
 
 type CreateProviderProps = {
   children?: React.ReactNode;
   type: MessagingProviderType | null;
-  refetch: () => Promise<void>;
 } & Omit<React.ComponentProps<typeof Dialog.Root>, "size" | "motionPreset" | "children">;
 
 export const CreateProvider: React.FC<CreateProviderProps> = ({
   children,
   type,
-  refetch,
   onOpenChange,
   ...props
 }) => {
   const { addToast } = useToast();
   const { sdk } = useProjectStore((state) => state);
-  const confirm = useConfirm();
+  const router = useRouter();
+  const { id: projectId } = useParams<{ id: string }>();
+
+  const path = `/project/${projectId}/messaging/providers`;
 
   const getProviderTypeLabel = (providerType: MessagingProviderType) => {
     switch (providerType) {
@@ -57,46 +55,95 @@ export const CreateProvider: React.FC<CreateProviderProps> = ({
 
     const client = getQueryClient();
     try {
-      let res: any; // TODO: Replace with proper Provider model when available
-
+      let res: Models.Provider = {} as Models.Provider;
+      const providerId = values.providerId ? values.providerId : 'unique()';
       switch (type) {
         case MessagingProviderType.Email:
           if (isEmailProviderFormData(values)) {
-            // TODO: Replace with actual SDK call when provider creation API is available
-            // res = await sdk.messaging.createEmailProvider(
-            //   values.providerId ?? "unique()",
-            //   values.name,
-            //   values.providerType,
-            //   values.enabled,
-            //   // ... other provider-specific fields
-            // );
-            console.log("Creating Email Provider:", values);
+            switch (values.providerType) {
+              case "mailgun":
+                res = await sdk.messaging.createMailgunProvider(
+                  providerId, values.name, values.apiKey, values.domain,
+                  values.euRegion, values.fromName, values.fromEmail,
+                  values.replyToName, values.replyToEmail, values.enabled
+                )
+                break;
+              case "sendgrid":
+                res = await sdk.messaging.createSendgridProvider(
+                  providerId, values.name, values.apiKey, values.fromName,
+                  values.fromEmail, values.replyToName, values.replyToEmail,
+                  values.enabled
+                );
+                break;
+              case "smtp":
+                res = await sdk.messaging.createSmtpProvider(
+                  providerId, values.name, values.smtpHost!, values.smtpPort,
+                  values.smtpUsername, values.smtpPassword, values.smtpEncryption as SmtpEncryption, values.autoTLS, values.xMailer, values.fromName,
+                  values.fromEmail, values.replyToName, values.replyToEmail,
+                  values.enabled
+                );
+                break;
+              default:
+                throw new Error(`Unsupported email provider type: ${values["providerType"]}`);
+            }
           }
           break;
         case MessagingProviderType.Sms:
           if (isSmsProviderFormData(values)) {
-            // TODO: Replace with actual SDK call when provider creation API is available
-            // res = await sdk.messaging.createSmsProvider(
-            //   values.providerId ?? "unique()",
-            //   values.name,
-            //   values.providerType,
-            //   values.enabled,
-            //   // ... other provider-specific fields
-            // );
-            console.log("Creating SMS Provider:", values);
+            switch (values.providerType) {
+              case "twilio":
+                res = await sdk.messaging.createTwilioProvider(
+                  providerId, values.name, values.from, values.accountSid, values.authToken,
+                  values.enabled
+                );
+                break;
+              case "msg91":
+                res = await sdk.messaging.createMsg91Provider(
+                  providerId, values.name, values.msg91TemplateId, values.msg91SenderId, values.msg91AuthKey,
+                  values.enabled
+                );
+                break;
+              case "telesign":
+                res = await sdk.messaging.createTelesignProvider(
+                  providerId, values.name, values.telesignFrom, values.telesignCustomerId, values.telesignApiKey,
+                  values.enabled
+                );
+                break;
+              case "textmagic":
+                res = await sdk.messaging.createTextmagicProvider(
+                  providerId, values.name, values.textmagicFrom, values.textmagicUsername, values.textmagicApiKey,
+                  values.enabled
+                );
+                break;
+              case "vonage":
+                res = await sdk.messaging.createVonageProvider(
+                  providerId, values.name, values.vonageFrom, values.vonageApiKey,
+                  values.vonageApiSecret, values.enabled
+                );
+                break;
+              default:
+                throw new Error(`Unsupported SMS provider type: ${values["providerType"]}`);
+            }
           }
           break;
         case MessagingProviderType.Push:
           if (isPushProviderFormData(values)) {
-            // TODO: Replace with actual SDK call when provider creation API is available
-            // res = await sdk.messaging.createPushProvider(
-            //   values.providerId ?? "unique()",
-            //   values.name,
-            //   values.providerType,
-            //   values.enabled,
-            //   // ... other provider-specific fields
-            // );
-            console.log("Creating Push Provider:", values);
+            switch (values.providerType) {
+              case "fcm":
+                res = await sdk.messaging.createFcmProvider(
+                  providerId, values.name, values.serviceAccountJSON,
+                  values.enabled
+                );
+                break;
+              case "apns":
+                res = await sdk.messaging.createApnsProvider(
+                  providerId, values.name, values.apnsKey, values.apnsKeyId,
+                  values.apnsTeamId, values.apnsBundleId, !values.apnsProduction, values.enabled
+                );
+                break;
+              default:
+                throw new Error(`Unsupported push provider type: ${values["providerType"]}`);
+            }
           }
           break;
         default:
@@ -104,7 +151,6 @@ export const CreateProvider: React.FC<CreateProviderProps> = ({
       }
 
       const providerTypeLabel = getProviderTypeLabel(type);
-      await refetch();
       addToast({
         variant: "success",
         message: `${providerTypeLabel} created successfully.`,
@@ -112,6 +158,7 @@ export const CreateProvider: React.FC<CreateProviderProps> = ({
 
       resetForm();
       await client.invalidateQueries({ queryKey: ["providers"] });
+      router.push(`${path}/${res.$id}`);
       onOpenChange?.({ open: false });
     } catch (error: any) {
       const providerTypeLabel = getProviderTypeLabel(type);
