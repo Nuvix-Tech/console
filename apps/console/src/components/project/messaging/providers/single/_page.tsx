@@ -5,7 +5,7 @@ import { useProvider } from "./components/store";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { PageContainer } from "@/components/others";
-import { TopMeta, UpdateName } from "./components";
+import { DeleteProvider, TopMeta, UpdateName, UpdateSettings } from "./components";
 
 export const ProvidersSinglePage = ({ providerId }: { providerId: string }) => {
   const { sdk } = useProjectStore((state) => state);
@@ -35,6 +35,8 @@ export const ProvidersSinglePage = ({ providerId }: { providerId: string }) => {
     <PageContainer>
       <TopMeta />
       <UpdateName />
+      <UpdateSettings />
+      <DeleteProvider />
     </PageContainer>
   );
 };

@@ -94,31 +94,31 @@ const apnsSchema = y.object().shape({
 });
 
 // Dynamic schema based on provider type
-export const getProviderSchema = (providerType: string) => {
+export const getProviderSchema = (providerType: string, providerSchema: y.AnyObject = baseProviderSchema) => {
   switch (providerType) {
     // Email providers
     case "mailgun":
-      return baseProviderSchema.concat(mailgunSchema);
+      return providerSchema.concat(mailgunSchema);
     case "sendgrid":
-      return baseProviderSchema.concat(sendgridSchema);
+      return providerSchema.concat(sendgridSchema);
     case "smtp":
-      return baseProviderSchema.concat(smtpSchema);
+      return providerSchema.concat(smtpSchema);
     // SMS providers
     case "twilio":
-      return baseProviderSchema.concat(twilioSchema);
+      return providerSchema.concat(twilioSchema);
     case "msg91":
-      return baseProviderSchema.concat(msg91Schema);
+      return providerSchema.concat(msg91Schema);
     case "telesign":
-      return baseProviderSchema.concat(telesignSchema);
+      return providerSchema.concat(telesignSchema);
     case "textmagic":
-      return baseProviderSchema.concat(textmagicSchema);
+      return providerSchema.concat(textmagicSchema);
     case "vonage":
-      return baseProviderSchema.concat(vonageSchema);
+      return providerSchema.concat(vonageSchema);
     // Push providers
     case "fcm":
-      return baseProviderSchema.concat(fcmSchema);
+      return providerSchema.concat(fcmSchema);
     case "apns":
-      return baseProviderSchema.concat(apnsSchema);
+      return providerSchema.concat(apnsSchema);
     default:
       return baseProviderSchema;
   }
