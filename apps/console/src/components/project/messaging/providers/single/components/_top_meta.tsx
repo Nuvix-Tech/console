@@ -12,6 +12,7 @@ import { useToast } from "@nuvix/ui/components";
 import React from "react";
 import * as y from "yup";
 import { useProvider } from "./store";
+import { MessagingProviderType } from "@nuvix/console";
 
 const schema = y.object({
   is: y.boolean().required(),
@@ -23,7 +24,131 @@ export const TopMeta: React.FC = () => {
   const { addToast } = useToast();
 
   if (!provider || !sdk) return;
-  const type = provider.provider;
+
+  async function onSubmit(values: { is: boolean }) {
+    if (!provider || !sdk) return;
+
+    try {
+      let res: any = {} as any;
+      switch (provider.type) {
+        case MessagingProviderType.Email:
+          switch (provider.provider) {
+            case "mailgun":
+              res = await sdk.messaging.updateMailgunProvider(
+                provider.$id,
+                undefined, // name
+                undefined, // apiKey
+                undefined, // domain
+                undefined, // euRegion
+                values.is, // enabled
+              );
+              break;
+            case "sendgrid":
+              res = await sdk.messaging.updateSendgridProvider(
+                provider.$id,
+                undefined, // name
+                values.is, // enabled
+              );
+              break;
+            case "smtp":
+              res = await sdk.messaging.updateSmtpProvider(
+                provider.$id,
+                undefined, // name
+                undefined, // smtpHost
+                undefined, // smtpPort
+                undefined, // smtpUsername
+                undefined, // smtpPassword
+                undefined, // smtpEncryption
+                undefined, // autoTLS
+                undefined, // xMailer
+                undefined, // fromName
+                undefined, // fromEmail
+                undefined, // replyToName
+                undefined, // replyToEmail
+                values.is, // enabled
+              );
+              break;
+            default:
+              throw new Error(`Unsupported email provider: ${provider.provider}`);
+          }
+          break;
+        case "sms":
+          switch (provider.provider) {
+            case "twilio":
+              res = await sdk.messaging.updateTwilioProvider(
+                provider.$id,
+                undefined, // name
+                values.is, // enabled
+              );
+              break;
+            case "msg91":
+              res = await sdk.messaging.updateMsg91Provider(
+                provider.$id,
+                undefined, // name
+                values.is, // enabled
+              );
+              break;
+            case "telesign":
+              res = await sdk.messaging.updateTelesignProvider(
+                provider.$id,
+                undefined, // name
+                values.is, // enabled
+              );
+              break;
+            case "textmagic":
+              res = await sdk.messaging.updateTextmagicProvider(
+                provider.$id,
+                undefined, // name
+                values.is, // enabled
+              );
+              break;
+            case "vonage":
+              res = await sdk.messaging.updateVonageProvider(
+                provider.$id,
+                undefined, // name
+                values.is, // enabled
+              );
+              break;
+            default:
+              throw new Error(`Unsupported SMS provider: ${provider.provider}`);
+          }
+          break;
+        case "push":
+          switch (provider.provider) {
+            case "fcm":
+              res = await sdk.messaging.updateFcmProvider(
+                provider.$id,
+                undefined, // name
+                values.is, // enabled
+              );
+              break;
+            case "apns":
+              res = await sdk.messaging.updateApnsProvider(
+                provider.$id,
+                undefined, // name
+                values.is, // enabled
+              );
+              break;
+            default:
+              throw new Error(`Unsupported push provider: ${provider.provider}`);
+          }
+          break;
+        default:
+          throw new Error(`Unsupported provider type: ${provider.type}`);
+      }
+
+      addToast({
+        variant: "success",
+        message: "Provider updated successfully",
+      });
+      await refresh();
+    } catch (e: any) {
+      addToast({
+        variant: "danger",
+        message: e.message,
+      });
+    }
+  }
 
   return (
     <>
@@ -33,21 +158,7 @@ export const TopMeta: React.FC = () => {
         }}
         enableReinitialize
         validationSchema={schema}
-        onSubmit={async (values) => {
-          try {
-            // await sdk.messaging.update
-            addToast({
-              variant: "success",
-              message: "Bucket updated successfully",
-            });
-            await refresh();
-          } catch (e: any) {
-            addToast({
-              variant: "danger",
-              message: e.message,
-            });
-          }
-        }}
+        onSubmit={onSubmit}
       >
         <CardBox
           actions={
