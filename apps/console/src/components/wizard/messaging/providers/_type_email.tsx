@@ -80,12 +80,7 @@ export const renderEmailProviderFields = (providerType: string) => {
     case "smtp":
       return (
         <>
-          <InputField
-            name="smtpHost"
-            label="Server host"
-            placeholder="smtp.server.com"
-            required
-          />
+          <InputField name="smtpHost" label="Server host" placeholder="smtp.server.com" required />
           <InputField name="smtpPort" label="Server port" type="number" placeholder="587" />
           <InputField name="smtpUsername" label="Username" placeholder="Enter username" />
           <InputField
@@ -135,7 +130,6 @@ export const renderEmailProviderFields = (providerType: string) => {
 export const CreateProviderTypeEmail = () => {
   const { values } = useFormikContext<EmailProviderFormData>();
   const providerType = values.providerType as ProviderName[MessagingProviderType.Email];
-
 
   return (
     <Column gap="8">

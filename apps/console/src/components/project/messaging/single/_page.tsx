@@ -9,7 +9,7 @@ import { DeleteMessage, TopMeta, UpdateMessage, UpdateTargets, UpdateTopics } fr
 import { Models } from "@nuvix/console";
 
 export const MessageSinglePage = ({ messageId }: { messageId: string }) => {
-  const { sdk } = useProjectStore((state) => state);
+  const { sdk, setSidebarNull } = useProjectStore((state) => state);
   const {
     setMessage,
     setLoading,
@@ -91,6 +91,10 @@ export const MessageSinglePage = ({ messageId }: { messageId: string }) => {
       }
     });
   }, [data]);
+
+  useEffect(() => {
+    setSidebarNull("first", "middle");
+  }, []);
 
   return (
     <>

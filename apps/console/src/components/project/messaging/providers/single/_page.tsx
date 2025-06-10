@@ -8,7 +8,7 @@ import { PageContainer } from "@/components/others";
 import { DeleteProvider, TopMeta, UpdateName, UpdateSettings } from "./components";
 
 export const ProvidersSinglePage = ({ providerId }: { providerId: string }) => {
-  const { sdk } = useProjectStore((state) => state);
+  const { sdk, setSidebarNull } = useProjectStore((state) => state);
   const { setProvider, setLoading, setRefresh } = useProvider((s) => s);
 
   const fetcher = async (providerId: string) => {
@@ -30,6 +30,10 @@ export const ProvidersSinglePage = ({ providerId }: { providerId: string }) => {
       }
     });
   }, [data]);
+
+  useEffect(() => {
+    setSidebarNull("first", "middle");
+  }, []);
 
   return (
     <PageContainer>

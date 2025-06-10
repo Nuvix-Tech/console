@@ -19,9 +19,10 @@ import {
   Table,
 } from "@/ui/data-grid";
 import { CreateProviderButton } from "./components";
+import { useEffect } from "react";
 
 export const ProvidersPage = () => {
-  const { sdk, project } = useProjectStore((state) => state);
+  const { sdk, project, setSidebarNull } = useProjectStore((state) => state);
   const permissions = useProjectStore.use.permissions();
   const { limit, page, search, hasQuery } = useSearchQuery();
   const { canDeleteProviders } = permissions();
@@ -33,6 +34,10 @@ export const ProvidersPage = () => {
     queries.push(Query.limit(limit), Query.offset((page - 1) * limit));
     return await sdk.messaging.listProviders(queries, search);
   };
+
+  useEffect(() => {
+    setSidebarNull("first", "middle");
+  }, []);
 
   const { data, isFetching, refetch } = useSuspenseQuery({
     queryKey: ["providers", page, limit, search],

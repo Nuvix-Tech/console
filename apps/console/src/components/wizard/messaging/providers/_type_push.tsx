@@ -60,7 +60,6 @@ export const CreateProviderTypePush = () => {
   const { values } = useFormikContext<PushProviderFormData>();
   const providerType = values.providerType as ProviderName[MessagingProviderType.Push];
 
-
   return (
     <Column gap="8">
       <CardBox>

@@ -113,12 +113,7 @@ export const renderSmsProviderFields = (providerType: string) => {
             placeholder="Enter API secret"
             required
           />
-          <InputField
-            name="vonageFrom"
-            label="Sender Number"
-            placeholder="+1234567890"
-            required
-          />
+          <InputField name="vonageFrom" label="Sender Number" placeholder="+1234567890" required />
         </>
       );
 
@@ -130,7 +125,6 @@ export const renderSmsProviderFields = (providerType: string) => {
 export const CreateProviderTypeSms = () => {
   const { values } = useFormikContext<SmsProviderFormData>();
   const providerType = values.providerType as ProviderName[MessagingProviderType.Sms];
-
 
   return (
     <Column gap="8">

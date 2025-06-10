@@ -1,4 +1,10 @@
-import { CardBox, CardBoxBody, CardBoxDesc, CardBoxItem, CardBoxTitle } from "@/components/others/card";
+import {
+  CardBox,
+  CardBoxBody,
+  CardBoxDesc,
+  CardBoxItem,
+  CardBoxTitle,
+} from "@/components/others/card";
 import { Form, SubmitButton } from "@/components/others/forms";
 import { useProjectStore } from "@/lib/store";
 import { useToast } from "@nuvix/ui/components";
@@ -25,7 +31,10 @@ export const UpdateSettings: React.FC = () => {
     if (!type) return null;
 
     try {
-      const initialValues = transformDataToSchema(provider.credentials, providerType);
+      const initialValues = transformDataToSchema(
+        { ...provider.credentials, ...provider.options },
+        providerType,
+      );
       const schema = getProviderSchema(providerType, y.object());
 
       switch (type) {
@@ -233,9 +242,7 @@ export const UpdateSettings: React.FC = () => {
           <CardBoxBody>
             <CardBoxItem gap={"4"}>
               <CardBoxTitle>Settings</CardBoxTitle>
-              <CardBoxDesc>
-
-              </CardBoxDesc>
+              <CardBoxDesc></CardBoxDesc>
             </CardBoxItem>
             <CardBoxItem className="space-y-4">
               {providerConfig.component(providerType)}

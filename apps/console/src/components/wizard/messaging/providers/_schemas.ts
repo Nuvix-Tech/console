@@ -94,7 +94,10 @@ const apnsSchema = y.object().shape({
 });
 
 // Dynamic schema based on provider type
-export const getProviderSchema = (providerType: string, providerSchema: y.AnyObject = baseProviderSchema) => {
+export const getProviderSchema = (
+  providerType: string,
+  providerSchema: y.AnyObject = baseProviderSchema,
+) => {
   switch (providerType) {
     // Email providers
     case "mailgun":
