@@ -1,11 +1,12 @@
 import { CustomID } from "@/components/_custom_id";
-import { CardBox } from "@/components/others/card";
+import { CardBox, CardBoxDesc, CardBoxTitle } from "@/components/others/card";
 import { InputField, InputSwitchField, InputSelectField, InputTextareaField } from "@/components/others/forms";
 import { Column } from "@nuvix/ui/components";
 import { useFormikContext } from "formik";
 import React from "react";
 import { PushProviderFormData, ProviderName } from "./_types";
 import { MessagingProviderType } from "@nuvix/console";
+import { EditorField } from "@/components/others/ui";
 
 const pushProviderOptions = [
     { value: "fcm", label: "Firebase Cloud Messaging (FCM)" },
@@ -13,27 +14,27 @@ const pushProviderOptions = [
 ];
 
 export const CreateProviderTypePush = () => {
-    const { values, setFieldValue } = useFormikContext<PushProviderFormData>();
+    const { values } = useFormikContext<PushProviderFormData>();
+    const providerType = values.providerType as ProviderName[MessagingProviderType.Push];
 
     const renderProviderFields = () => {
-        const providerType = values.providerType as ProviderName[MessagingProviderType.Push];
 
         switch (providerType) {
             case "fcm":
                 return (
                     <>
-                        <InputField name="fcmServerKey" label="Server Key" type="password" required />
-                        <InputField name="fcmSenderId" label="Sender ID" required />
-                        <InputField name="fcmProjectId" label="Project ID" required />
+                        <EditorField
+                            name="serviceAccountJSON"
+                        />
                     </>
                 );
 
             case "apns":
                 return (
                     <>
-                        <InputField name="apnsKeyId" label="Key ID" required />
-                        <InputField name="apnsTeamId" label="Team ID" required />
-                        <InputField name="apnsBundleId" label="Bundle ID" placeholder="com.example.app" required />
+                        <InputField name="apnsTeamId" label="Team ID" placeholder="Enter team ID" required />
+                        <InputField name="apnsBundleId" label="Bundle ID" placeholder="Enter bundle ID" required />
+                        <InputField name="apnsKeyId" label="Authentication key ID" required />
                         <InputTextareaField
                             name="apnsKey"
                             label="Private Key"
@@ -55,7 +56,7 @@ export const CreateProviderTypePush = () => {
     };
 
     return (
-        <Column>
+        <Column gap="8">
             <CardBox>
                 <div className="space-y-4">
                     <InputField name="name" label="Provider Name" placeholder="My Push Provider" required />
@@ -76,6 +77,17 @@ export const CreateProviderTypePush = () => {
                         label="Enable Provider"
                         description="Enable this provider for sending push notifications"
                     />
+                </div>
+            </CardBox>
+            <CardBox>
+                <CardBoxTitle>
+                    Settings
+                </CardBoxTitle>
+                <CardBoxDesc>
+                    Set up the {providerType} credentials below.
+                </CardBoxDesc>
+                <div className="space-y-4 mt-5">
+                    {renderProviderFields()}
                 </div>
             </CardBox>
         </Column>
