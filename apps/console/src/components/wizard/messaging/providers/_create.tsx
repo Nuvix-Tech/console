@@ -56,31 +56,53 @@ export const CreateProvider: React.FC<CreateProviderProps> = ({
     const client = getQueryClient();
     try {
       let res: Models.Provider = {} as Models.Provider;
-      const providerId = values.providerId ? values.providerId : 'unique()';
+      const providerId = values.providerId ? values.providerId : "unique()";
       switch (type) {
         case MessagingProviderType.Email:
           if (isEmailProviderFormData(values)) {
             switch (values.providerType) {
               case "mailgun":
                 res = await sdk.messaging.createMailgunProvider(
-                  providerId, values.name, values.apiKey, values.domain,
-                  values.euRegion, values.fromName, values.fromEmail,
-                  values.replyToName, values.replyToEmail, values.enabled
-                )
+                  providerId,
+                  values.name,
+                  values.apiKey,
+                  values.domain,
+                  values.euRegion,
+                  values.fromName,
+                  values.fromEmail,
+                  values.replyToName,
+                  values.replyToEmail,
+                  values.enabled,
+                );
                 break;
               case "sendgrid":
                 res = await sdk.messaging.createSendgridProvider(
-                  providerId, values.name, values.apiKey, values.fromName,
-                  values.fromEmail, values.replyToName, values.replyToEmail,
-                  values.enabled
+                  providerId,
+                  values.name,
+                  values.apiKey,
+                  values.fromName,
+                  values.fromEmail,
+                  values.replyToName,
+                  values.replyToEmail,
+                  values.enabled,
                 );
                 break;
               case "smtp":
                 res = await sdk.messaging.createSmtpProvider(
-                  providerId, values.name, values.smtpHost!, values.smtpPort,
-                  values.smtpUsername, values.smtpPassword, values.smtpEncryption as SmtpEncryption, values.autoTLS, values.xMailer, values.fromName,
-                  values.fromEmail, values.replyToName, values.replyToEmail,
-                  values.enabled
+                  providerId,
+                  values.name,
+                  values.smtpHost!,
+                  values.smtpPort,
+                  values.smtpUsername,
+                  values.smtpPassword,
+                  values.smtpEncryption as SmtpEncryption,
+                  values.autoTLS,
+                  values.xMailer,
+                  values.fromName,
+                  values.fromEmail,
+                  values.replyToName,
+                  values.replyToEmail,
+                  values.enabled,
                 );
                 break;
               default:
@@ -93,32 +115,52 @@ export const CreateProvider: React.FC<CreateProviderProps> = ({
             switch (values.providerType) {
               case "twilio":
                 res = await sdk.messaging.createTwilioProvider(
-                  providerId, values.name, values.from, values.accountSid, values.authToken,
-                  values.enabled
+                  providerId,
+                  values.name,
+                  values.from,
+                  values.accountSid,
+                  values.authToken,
+                  values.enabled,
                 );
                 break;
               case "msg91":
                 res = await sdk.messaging.createMsg91Provider(
-                  providerId, values.name, values.msg91TemplateId, values.msg91SenderId, values.msg91AuthKey,
-                  values.enabled
+                  providerId,
+                  values.name,
+                  values.msg91TemplateId,
+                  values.msg91SenderId,
+                  values.msg91AuthKey,
+                  values.enabled,
                 );
                 break;
               case "telesign":
                 res = await sdk.messaging.createTelesignProvider(
-                  providerId, values.name, values.telesignFrom, values.telesignCustomerId, values.telesignApiKey,
-                  values.enabled
+                  providerId,
+                  values.name,
+                  values.telesignFrom,
+                  values.telesignCustomerId,
+                  values.telesignApiKey,
+                  values.enabled,
                 );
                 break;
               case "textmagic":
                 res = await sdk.messaging.createTextmagicProvider(
-                  providerId, values.name, values.textmagicFrom, values.textmagicUsername, values.textmagicApiKey,
-                  values.enabled
+                  providerId,
+                  values.name,
+                  values.textmagicFrom,
+                  values.textmagicUsername,
+                  values.textmagicApiKey,
+                  values.enabled,
                 );
                 break;
               case "vonage":
                 res = await sdk.messaging.createVonageProvider(
-                  providerId, values.name, values.vonageFrom, values.vonageApiKey,
-                  values.vonageApiSecret, values.enabled
+                  providerId,
+                  values.name,
+                  values.vonageFrom,
+                  values.vonageApiKey,
+                  values.vonageApiSecret,
+                  values.enabled,
                 );
                 break;
               default:
@@ -131,14 +173,22 @@ export const CreateProvider: React.FC<CreateProviderProps> = ({
             switch (values.providerType) {
               case "fcm":
                 res = await sdk.messaging.createFcmProvider(
-                  providerId, values.name, values.serviceAccountJSON,
-                  values.enabled
+                  providerId,
+                  values.name,
+                  values.serviceAccountJSON,
+                  values.enabled,
                 );
                 break;
               case "apns":
                 res = await sdk.messaging.createApnsProvider(
-                  providerId, values.name, values.apnsKey, values.apnsKeyId,
-                  values.apnsTeamId, values.apnsBundleId, !values.apnsProduction, values.enabled
+                  providerId,
+                  values.name,
+                  values.apnsKey,
+                  values.apnsKeyId,
+                  values.apnsTeamId,
+                  values.apnsBundleId,
+                  !values.apnsProduction,
+                  values.enabled,
                 );
                 break;
               default:

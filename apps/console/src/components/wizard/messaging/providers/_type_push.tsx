@@ -1,10 +1,6 @@
 import { CustomID } from "@/components/_custom_id";
 import { CardBox, CardBoxDesc, CardBoxTitle } from "@/components/others/card";
-import {
-  InputField,
-  InputSwitchField,
-  InputSelectField,
-} from "@/components/others/forms";
+import { InputField, InputSwitchField, InputSelectField } from "@/components/others/forms";
 import { Column } from "@nuvix/ui/components";
 import { useFormikContext } from "formik";
 import React from "react";

@@ -5,38 +5,36 @@ import { useProvider } from "./components/store";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { PageContainer } from "@/components/others";
+import { TopMeta, UpdateName } from "./components";
 
 export const ProvidersSinglePage = ({ providerId }: { providerId: string }) => {
-    const { sdk } = useProjectStore((state) => state);
-    const {
-        setProvider,
-        setLoading,
-        setRefresh,
-    } = useProvider((s) => s);
+  const { sdk } = useProjectStore((state) => state);
+  const { setProvider, setLoading, setRefresh } = useProvider((s) => s);
 
-    const fetcher = async (providerId: string) => {
-        return await sdk.messaging.getProvider(providerId)
-    };
+  const fetcher = async (providerId: string) => {
+    return await sdk.messaging.getProvider(providerId);
+  };
 
-    const { data } = useSuspenseQuery({
-        queryKey: ["provider", providerId],
-        queryFn: async () => await fetcher(providerId),
-    });
+  const { data } = useSuspenseQuery({
+    queryKey: ["provider", providerId],
+    queryFn: async () => await fetcher(providerId),
+  });
 
-    useEffect(() => {
+  useEffect(() => {
+    setProvider(data);
+    setLoading(false);
+    setRefresh(async () => {
+      const data = await fetcher(providerId);
+      if (data) {
         setProvider(data);
-        setLoading(false);
-        setRefresh(async () => {
-            const data = await fetcher(providerId);
-            if (data) {
-                setProvider(data)
-            }
-        });
-    }, [data]);
+      }
+    });
+  }, [data]);
 
-    return (
-        <PageContainer>
-//
-        </PageContainer>
-    )
-}
+  return (
+    <PageContainer>
+      <TopMeta />
+      <UpdateName />
+    </PageContainer>
+  );
+};
