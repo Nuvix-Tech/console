@@ -5,7 +5,7 @@ import { Button, Flex, Text, ToggleButton, useConfirm } from "@nuvix/ui/componen
 import { LucideProps, MailIcon, MessageCircleIcon, SmartphoneIcon } from "lucide-react";
 import React, { useState } from "react";
 
-export const CreateProviderButton = ({ refetch }: { refetch: () => Promise<void> }) => {
+export const CreateProviderButton = ({ refetch }: { refetch: () => Promise<any>  }) => {
   const [open, setOpen] = useState(false);
   const [type, setType] = useState<MessagingProviderType | null>(null);
 
@@ -26,7 +26,7 @@ export const CreateProviderButton = ({ refetch }: { refetch: () => Promise<void>
       />
       <Popover>
         <PopoverTrigger asChild>
-          <Button size="s">Create Message</Button>
+          <Button size="s">New Provider</Button>
         </PopoverTrigger>
         <PopoverContent className="max-w-48 space-y-1">
           {[
