@@ -82,7 +82,6 @@ export const MessageSinglePage = ({ messageId }: { messageId: string }) => {
     setLoading(false);
     setRefresh(async () => {
       const data = await fetcher(messageId);
-      console.log("Yah! got data", data);
       if (data) {
         setMessage(data.message);
         setTopicsById(data.topicsById);
