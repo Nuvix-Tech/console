@@ -1,14 +1,13 @@
-import { CreateMessage } from "@/components/wizard/messaging";
+import { CreateProvider } from "@/components/wizard/messaging/providers";
 import { MessagingProviderType } from "@nuvix/console";
 import { Popover, PopoverTrigger, PopoverContent } from "@nuvix/sui/components";
 import { Button, Flex, Text, ToggleButton, useConfirm } from "@nuvix/ui/components";
 import { LucideProps, MailIcon, MessageCircleIcon, SmartphoneIcon } from "lucide-react";
 import React, { useState } from "react";
 
-export const CreateMessageButton = ({ refetch }: { refetch: () => Promise<void> }) => {
+export const CreateProviderButton = ({ refetch }: { refetch: () => Promise<void> }) => {
   const [open, setOpen] = useState(false);
   const [type, setType] = useState<MessagingProviderType | null>(null);
-  const confirm = useConfirm();
 
   const onClick = (type: any) => {
     setType(type);
@@ -17,7 +16,7 @@ export const CreateMessageButton = ({ refetch }: { refetch: () => Promise<void> 
 
   return (
     <>
-      <CreateMessage
+      <CreateProvider
         open={open}
         onOpenChange={(o) => {
           setOpen(o.open);

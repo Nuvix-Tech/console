@@ -1,22 +1,10 @@
 "use client";
 import React from "react";
 import { Box, CloseButton, Dialog, Flex, Portal, Text } from "@chakra-ui/react";
-import { Form, SubmitButton } from "../../others/forms";
+import { Form, SubmitButton } from "../../../others/forms";
 import { Button, Column, useConfirm, useToast } from "@nuvix/ui/components";
-import { CreateMessageTypeMail } from "./_type_mail";
-import { CreateMessageTypeSms } from "./_type_sms";
-import { CreateMessageTypePush } from "./_type_push";
 import { MessagingProviderType, Models } from "@nuvix/console";
-import { SelectTopicsTargets } from "./targets/_selector";
-import { Schedule } from "./_schedule";
-import { emailSchema, smsSchema, pushSchema } from "./_schemas";
-import {
-  MessageFormData,
-  EmailFormData,
-  SmsFormData,
-  PushFormData,
-  getInitialValues,
-} from "./_types";
+
 import { useProjectStore } from "@/lib/store";
 import { useFormikContext } from "formik";
 import { getQueryClient } from "@/data/query-client";
@@ -24,13 +12,13 @@ import { MobileMail } from "@/components/project/messaging/components/_screen_ma
 import { MobileSMS } from "@/components/project/messaging/components/_screen_sms";
 import { MobileNotification } from "@/components/project/messaging/components/_screen_push";
 
-type CreateMessageProps = {
+type CreateProviderProps = {
   children?: React.ReactNode;
   type: MessagingProviderType | null;
   refetch: () => Promise<void>;
 } & Omit<React.ComponentProps<typeof Dialog.Root>, "size" | "motionPreset" | "children">;
 
-export const CreateMessage: React.FC<CreateMessageProps> = ({
+export const CreateProvider: React.FC<CreateProviderProps> = ({
   children,
   type,
   refetch,
@@ -174,19 +162,19 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({
         case MessagingProviderType.Email:
           return {
             schema: emailSchema,
-            component: CreateMessageTypeMail,
+            component: CreateProviderTypeMail,
             initialValues,
           };
         case MessagingProviderType.Sms:
           return {
             schema: smsSchema,
-            component: CreateMessageTypeSms,
+            component: CreateProviderTypeSms,
             initialValues,
           };
         case MessagingProviderType.Push:
           return {
             schema: pushSchema,
-            component: CreateMessageTypePush,
+            component: CreateProviderTypePush,
             initialValues,
           };
         default:
@@ -239,13 +227,10 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({
                     <Button variant="tertiary" onClick={() => handleClose({ open: false })}>
                       Cancel
                     </Button>
-                    <DraftButton />
                     <SubmitButton>Create {messageTypeLabel}</SubmitButton>
                   </Flex>
                 </Box>
-                <Box className="sticky mx-auto my-20">
-                  <Preview type={type} />
-                </Box>
+
                 <CloseButton
                   position="absolute"
                   top={4}
@@ -259,88 +244,4 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({
       </Portal>
     </Dialog.Root>
   );
-};
-
-const DraftButton = () => {
-  const { setFieldValue, submitForm, isSubmitting, values } = useFormikContext<any>();
-
-  return (
-    <Button
-      onClick={() => {
-        setFieldValue("draft", true);
-        submitForm();
-      }}
-      type="button"
-      disabled={isSubmitting}
-      variant="secondary"
-      loading={isSubmitting && values["draft"]}
-    >
-      Save as Draft
-    </Button>
-  );
-};
-
-export const Preview = ({ type }: { type: MessagingProviderType }) => {
-  const { project } = useProjectStore((state) => state);
-  const senderName = project?.name || "Your App";
-  const appIcon = project?.name?.slice(0, 1) || "A";
-  const { values } = useFormikContext<any>();
-
-  const getPlaceholderText = (messageType: MessagingProviderType) => {
-    switch (messageType) {
-      case MessagingProviderType.Email:
-        return "Enter your email content to see the preview";
-      case MessagingProviderType.Sms:
-        return "Enter your SMS message to see the preview";
-      case MessagingProviderType.Push:
-        return "Enter your notification message to see the preview";
-      default:
-        return "Enter message content to see the preview";
-    }
-  };
-
-  const placeholderText = getPlaceholderText(type);
-
-  switch (type) {
-    case MessagingProviderType.Email:
-      return (
-        <MobileMail
-          email={{
-            senderName,
-            content: values["message"] || placeholderText,
-            subject: values["subject"] || "Email Subject",
-            html: values["html"],
-          }}
-        />
-      );
-    case MessagingProviderType.Sms:
-      return (
-        <MobileSMS
-          sms={{
-            contactName: senderName,
-            messages: [
-              {
-                id: "1",
-                text: values["message"] || placeholderText,
-                isOutgoing: false,
-                timestamp: "now",
-              },
-            ],
-          }}
-        />
-      );
-    case MessagingProviderType.Push:
-      return (
-        <MobileNotification
-          notification={{
-            appIcon,
-            senderName,
-            message: values["message"] || placeholderText,
-            title: values["title"] || "Notification Title",
-          }}
-        />
-      );
-    default:
-      return null;
-  }
 };

@@ -1,3 +1,5 @@
+import { ProvidersPage } from "@/components/project/messaging/providers";
+
 export default function () {
-  return "This is Subs Page";
+  return <ProvidersPage />;
 }
