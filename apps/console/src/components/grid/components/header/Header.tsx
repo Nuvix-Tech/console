@@ -1,8 +1,8 @@
 // import { PermissionAction } from "@supabase/shared-types/out/constants";
-// import saveAs from "file-saver";
+import saveAs from "file-saver";
 import { ArrowUp, ChevronDown, FileText, Trash } from "lucide-react";
 import Link from "next/link";
-// import Papa from "papaparse";
+import Papa from "papaparse";
 import { ReactNode, useCallback, useState } from "react";
 
 import {
@@ -11,16 +11,14 @@ import {
   sortsToUrlParams,
 } from "../../NuvixGrid.utils";
 // import GridHeaderActions from "components/interfaces/TableGridEditor/GridHeaderActions";
-// import { ButtonTooltip } from "components/ui/ButtonTooltip";
 // import { useSendEventMutation } from "data/telemetry/send-event-mutation";
 // import { useCheckPermissions } from "hooks/misc/useCheckPermissions";
-// import { useSelectedOrganization } from "hooks/misc/useSelectedOrganization";
-// import { useTableEditorFiltersSort } from "hooks/misc/useTableEditorFiltersSort";
 // import { RoleImpersonationState } from "lib/role-impersonation";
 // import {
 //   useRoleImpersonationStateSnapshot,
 //   useSubscribeToImpersonatedRole,
 // } from "state/role-impersonation-state";
+import { SonnerProgress } from "@nuvix/sui/components/sooner-progress";
 import { useTableEditorStore } from "@/lib/store/table-editor";
 import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 
@@ -367,8 +365,7 @@ const RowHeader = ({ sorts, filters }: RowHeaderProps) => {
     snap.allRowsSelected
       ? toast(
           <>
-            SONNER PROGRESS
-            {/* <SonnerProgress progress={0} message={`Exporting all rows from ${snap.table.name}`} />, */}
+            <SonnerProgress progress={0} message={`Exporting all rows from ${snap.table.name}`} />,
           </>,
           {
             closeButton: false,
@@ -389,13 +386,10 @@ const RowHeader = ({ sorts, filters }: RowHeaderProps) => {
           progressCallback: (value: number) => {
             const progress = Math.min((value / totalRows) * 100, 100);
             toast(
-              <>
-                SONNER PROGRESS
-                {/* <SonnerProgress
+              <SonnerProgress
                 progress={progress}
                 message={`Exporting all rows from ${snap.table.name}`}
-              /> */}
-              </>,
+              />,
               {
                 id: toastId,
                 closeButton: false,
@@ -419,16 +413,16 @@ const RowHeader = ({ sorts, filters }: RowHeaderProps) => {
       });
       return formattedRow;
     });
-    // const csv = Papa.unparse(formattedRows, {
-    //   columns: snap.table!.columns.map((column) => column.name),
-    // });
-    // const csvData = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const csv = Papa.unparse(formattedRows, {
+      columns: snap.table!.columns.map((column) => column.name),
+    });
+    const csvData = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     toast.success(`Downloaded ${rows.length} rows to CSV`, {
       id: toastId,
       closeButton: true,
       duration: 4000,
     });
-    // saveAs(csvData, `${snap.table!.name}_rows.csv`);
+    saveAs(csvData, `${snap.table!.name}_rows.csv`);
     setIsExporting(false);
   }
 
@@ -450,10 +444,7 @@ const RowHeader = ({ sorts, filters }: RowHeaderProps) => {
     }
     const toastId = snap.allRowsSelected
       ? toast(
-          <>
-            SONNER PROGRESS
-            {/* <SonnerProgress progress={0} message={`Exporting all rows from ${snap.table.name}`} />, */}
-          </>,
+          <SonnerProgress progress={0} message={`Exporting all rows from ${snap.table.name}`} />,
           {
             closeButton: false,
             duration: Infinity,
@@ -473,13 +464,10 @@ const RowHeader = ({ sorts, filters }: RowHeaderProps) => {
           progressCallback: (value: number) => {
             const progress = Math.min((value / totalRows) * 100, 100);
             toast(
-              <>
-                SONNER PROGRESS
-                {/* <SonnerProgress
-              progress={progress}
-              message={`Exporting all rows from ${snap.table.name}`}
-            /> */}
-              </>,
+              <SonnerProgress
+                progress={progress}
+                message={`Exporting all rows from ${snap.table.name}`}
+              />,
               {
                 id: toastId,
                 closeButton: false,

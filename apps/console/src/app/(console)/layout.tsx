@@ -2,7 +2,6 @@ import ConsoleWrapper from "@/components/console/wrapper";
 import { Background, Row } from "@nuvix/ui/components";
 import { Stack } from "@chakra-ui/react";
 import type React from "react";
-import { Toaster } from "sonner";
 import { PanelGroup } from "@nuvix/sui/components/resizable";
 
 export default function ({ children }: { children: React.ReactNode }) {
@@ -58,7 +57,6 @@ export default function ({ children }: { children: React.ReactNode }) {
             </Stack>
           </PanelGroup>
         </Row>
-        <Toaster richColors position="top-right" />
       </ConsoleWrapper>
     </>
   );

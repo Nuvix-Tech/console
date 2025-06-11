@@ -92,14 +92,14 @@ const config = defineConfig({
           emphasized: { value: "var(--neutral-on-background-strong)" },
         },
         gray: {
-          subtle: { value: "var(--neutral-background-medium)" },
-          contrast: { value: "var(--brand-on-solid-medium)" },
-          muted: { value: "var(--neutral-alpha-weak)" },
-          emphasized: { value: "var(--neutral-background-strong)" },
-          solid: { value: "var(--brand-solid-medium)" },
-          inverted: {
-            value: { _light: "var(--neutral-solid-weak)", _dark: "var(--neutral-solid-strong)" },
-          },
+          // subtle: { value: "var(--neutral-background-medium)" },
+          // contrast: { value: "var(--brand-on-solid-medium)" },
+          // muted: { value: "var(--neutral-alpha-weak)" },
+          // emphasized: { value: "var(--neutral-background-strong)" },
+          // solid: { value: "var(--brand-solid-medium)" },
+          // inverted: {
+          //   value: { _light: "var(--neutral-solid-weak)", _dark: "var(--neutral-solid-strong)" },
+          // },
         },
       },
     },

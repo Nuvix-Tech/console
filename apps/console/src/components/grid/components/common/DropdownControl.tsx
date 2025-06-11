@@ -29,7 +29,7 @@ export const DropdownControl = ({
     <DropdownMenu>
       <DropdownMenuTrigger>{children}</DropdownMenuTrigger>
       <DropdownMenuContent side={side} align={align}>
-        <div className="dropdown-control" style={{ maxHeight: "30vh" }}>
+        <div className="dropdown-control overflow-y-auto" style={{ maxHeight: "30vh" }}>
           {options.length === 0 && <p className="dropdown-control__empty-text">No more items</p>}
           {options.map((x, id) => {
             return (

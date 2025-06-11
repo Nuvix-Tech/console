@@ -16,20 +16,25 @@ export const TwoOptionToggle = <T extends string>({
   ...rest
 }: TwoOptionToggleProps<T>) => {
   const nSize = size === "s" ? "xs" : size;
+  const fistActive = activeOption === options[0];
+  const secondActive = activeOption === options[1];
+
   return (
     <div className="flex items-center gap-0">
       <ButtonGroup size={nSize} attached borderWidth={1} borderStyle={"solid"} borderRadius={"l2"}>
         <Button
           {...rest}
           onClick={() => onClickOption(options[0])}
-          variant={activeOption === options[0] ? "solid" : "subtle"}
+          variant={fistActive ? "solid" : "ghost"}
+          borderColor={fistActive ? "border.inverted" : undefined}
         >
           {options[0]}
         </Button>
         <Button
           {...rest}
           onClick={() => onClickOption(options[1])}
-          variant={activeOption === options[1] ? "solid" : "subtle"}
+          variant={secondActive ? "solid" : "ghost"}
+          borderColor={secondActive ? "border.inverted" : undefined}
         >
           {options[1]}
         </Button>
