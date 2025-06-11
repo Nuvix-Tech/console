@@ -1,13 +1,13 @@
 import { RefObject, useMemo } from "react";
 import type { DataGridHandle } from "react-data-grid";
 
-import { SupaRow } from "../../types";
+import { NuvixRow } from "../../types";
 import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { useKeyboardShortcuts } from "./Hooks";
 
 type ShortcutsProps = {
   gridRef: RefObject<DataGridHandle>;
-  rows: SupaRow[];
+  rows: NuvixRow[];
 };
 
 export function Shortcuts({ gridRef, rows }: ShortcutsProps) {

@@ -4,7 +4,7 @@ import type { RenderCellProps } from "react-data-grid";
 
 import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
 import { useTablesQuery } from "@/data/tables/tables-query";
-import type { SupaRow } from "../../types";
+import type { NuvixRow } from "../../types";
 import { NullValue } from "../common/NullValue";
 import { ReferenceRecordPeek } from "./ReferenceRecordPeek";
 import { useProjectStore } from "@/lib/store";
@@ -13,7 +13,7 @@ import { IconButton } from "@nuvix/ui/components";
 import { isTableLike } from "@/data/table-editor/table-editor-types";
 import { convertByteaToHex } from "@/components/editor/SidePanelEditor/RowEditor/RowEditor.utils";
 
-interface Props extends PropsWithChildren<RenderCellProps<SupaRow, unknown>> {
+interface Props extends PropsWithChildren<RenderCellProps<NuvixRow, unknown>> {
   tableId: string;
 }
 

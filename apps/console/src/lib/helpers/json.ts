@@ -59,7 +59,7 @@ export const getURL = () => {
       : process?.env?.NEXT_PUBLIC_VERCEL_BRANCH_URL &&
           process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL !== ""
         ? process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL
-        : "https://supabase.com/dashboard";
+        : "https://nuvix.in/dashboard";
   return url.includes("http") ? url : `https://${url}`;
 };
 

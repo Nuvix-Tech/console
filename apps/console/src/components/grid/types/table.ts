@@ -1,8 +1,8 @@
 import { GridForeignKey } from "./base";
 import { Dictionary } from "./query";
 
-// export type { Columns as SupaColumn } from "@/types/grid";
-export interface SupaColumn {
+// export type { Columns as NuvixColumn } from "@/types/grid";
+export interface NuvixColumn {
   readonly dataType: string;
   readonly format: string;
   readonly name: string;
@@ -19,15 +19,15 @@ export interface SupaColumn {
   position: number;
 }
 
-export interface SupaTable {
+export interface NuvixTable {
   readonly id: number;
-  readonly columns: SupaColumn[];
+  readonly columns: NuvixColumn[];
   readonly name: string;
   readonly schema?: string | null;
   readonly comment?: string | null;
   readonly estimateRowCount: number;
 }
 
-export interface SupaRow extends Dictionary<any> {
+export interface NuvixRow extends Dictionary<any> {
   readonly idx: number;
 }

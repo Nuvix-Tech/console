@@ -1,7 +1,7 @@
 import { Query } from "@nuvix/pg-meta/src/query";
 import { QueryClient, useQuery, useQueryClient, type UseQueryOptions } from "@tanstack/react-query";
-import { parseSupaTable } from "@/components/grid/NuvixGrid.utils";
-import type { Filter, SupaTable } from "@/components/grid/types";
+import { parseNuvixTable } from "@/components/grid/NuvixGrid.utils";
+import type { Filter, NuvixTable } from "@/components/grid/types";
 import { prefetchTableEditor } from "@/data/table-editor/table-editor-query";
 import { RoleImpersonationState, wrapWithRoleImpersonation } from "@/lib/role-impersonation";
 // import { isRoleImpersonationEnabled } from "state/role-impersonation-state";
@@ -12,7 +12,7 @@ import { QueryOptions } from "@/types";
 import { ProjectSdk } from "@/lib/sdk";
 
 type GetTableRowsCountArgs = {
-  table?: SupaTable;
+  table?: NuvixTable;
   filters?: Filter[];
   enforceExactCount?: boolean;
 };
@@ -128,7 +128,7 @@ export async function getTableRowsCount(
     throw new Error("Table not found");
   }
 
-  const table = parseSupaTable(entity);
+  const table = parseNuvixTable(entity);
 
   const sql = wrapWithRoleImpersonation(
     getTableRowsCountSql({ table, filters, enforceExactCount }),

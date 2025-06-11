@@ -331,7 +331,7 @@ const TableEditor = ({
             <DocsButton
               abbrev={false}
               className="mt-2"
-              href="https://supabase.com/docs/guides/auth/row-level-security"
+              href="https://nuvix.in/docs/guides/auth/row-level-security"
             />
           </Feedback>
         ) : (
@@ -350,7 +350,7 @@ const TableEditor = ({
             <DocsButton
               abbrev={false}
               className="mt-2"
-              href="https://supabase.com/docs/guides/auth/row-level-security"
+              href="https://nuvix.in/docs/guides/auth/row-level-security"
             />
           </Feedback>
         )}

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 
 import { useTableFilter } from "@/components/grid/hooks/useTableFilter";
-import type { SupaRow } from "@/components/grid/types";
+import type { NuvixRow } from "@/components/grid/types";
 import { useDatabaseColumnDeleteMutation } from "@/data/database-columns/database-column-delete-mutation";
 import { Table, PartitionedTable } from "@/data/table-editor/table-editor-types";
 import { useTableRowDeleteAllMutation } from "@/data/table-rows/table-row-delete-all-mutation";
@@ -193,7 +193,7 @@ const DeleteConfirmationDialogs = ({
         projectRef: project.$id,
         sdk,
         table: selectedTable,
-        rows: selectedRowsToDelete as SupaRow[],
+        rows: selectedRowsToDelete as NuvixRow[],
         roleImpersonationState: getImpersonatedRoleState(),
       });
     }

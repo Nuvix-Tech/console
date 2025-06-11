@@ -16,7 +16,7 @@ import { JsonFormatter } from "../components/formatter/JsonFormatter";
 import { AddColumn } from "../components/grid/AddColumn";
 import { ColumnHeader } from "../components/grid/ColumnHeader";
 import { SelectColumn } from "../components/grid/SelectColumn";
-import type { ColumnType, SupaColumn, SupaRow, SupaTable } from "../types";
+import type { ColumnType, NuvixColumn, NuvixRow, NuvixTable } from "../types";
 import {
   isArrayColumn,
   isBinaryColumn,
@@ -35,14 +35,14 @@ import {
 export const ESTIMATED_CHARACTER_PIXEL_WIDTH = 9;
 
 export function getGridColumns(
-  table: SupaTable,
+  table: NuvixTable,
   options?: {
     tableId?: number;
     editable?: boolean;
     defaultWidth?: string | number;
     onAddColumn?: () => void;
-    onExpandJSONEditor: (column: string, row: SupaRow) => void;
-    onExpandTextEditor: (column: string, row: SupaRow) => void;
+    onExpandJSONEditor: (column: string, row: NuvixRow) => void;
+    onExpandTextEditor: (column: string, row: NuvixRow) => void;
   },
 ): any[] {
   const columns = table.columns.map((x, idx) => {
@@ -56,7 +56,7 @@ export function getGridColumns(
         ? columnWidthBasedOnName
         : columnDefaultWidth;
 
-    const columnDefinition: CalculatedColumn<SupaRow> = {
+    const columnDefinition: CalculatedColumn<NuvixRow> = {
       key: x.name,
       name: x.name,
       idx: idx + 1,
@@ -108,7 +108,7 @@ export function getGridColumns(
 }
 
 function getCellEditor(
-  columnDefinition: SupaColumn,
+  columnDefinition: NuvixColumn,
   columnType: ColumnType,
   isEditable: boolean,
   onExpandJSONEditor: (column: string, row: any) => void,
@@ -185,7 +185,7 @@ function getCellEditor(
 }
 
 function getCellRenderer(
-  columnDef: SupaColumn,
+  columnDef: NuvixColumn,
   columnType: ColumnType,
   metadata: { tableId?: number },
 ) {
@@ -213,7 +213,7 @@ function getCellRenderer(
   }
 }
 
-function getColumnType(columnDef: SupaColumn): ColumnType {
+function getColumnType(columnDef: NuvixColumn): ColumnType {
   if (isForeignKeyColumn(columnDef)) {
     return "foreign_key";
   } else if (isNumericalColumn(columnDef.dataType)) {
@@ -241,7 +241,7 @@ function getColumnType(columnDef: SupaColumn): ColumnType {
   } else return "unknown";
 }
 
-export function getColumnDefaultWidth(columnDef: SupaColumn): number {
+export function getColumnDefaultWidth(columnDef: NuvixColumn): number {
   if (isNumericalColumn(columnDef.dataType)) {
     return 120;
   } else if (

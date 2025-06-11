@@ -1,11 +1,11 @@
 import { PropsWithChildren } from "react";
 import type { RenderCellProps } from "react-data-grid";
 
-import type { SupaRow } from "../../types";
+import type { NuvixRow } from "../../types";
 import { EmptyValue } from "../common/EmptyValue";
 import { NullValue } from "../common/NullValue";
 
-export const JsonFormatter = (p: PropsWithChildren<RenderCellProps<SupaRow, unknown>>) => {
+export const JsonFormatter = (p: PropsWithChildren<RenderCellProps<NuvixRow, unknown>>) => {
   let value = p.row[p.column.key];
 
   if (value === null) return <NullValue />;

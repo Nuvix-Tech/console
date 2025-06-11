@@ -8,7 +8,7 @@ import type { Filter, SavedState } from "@/components/grid/types";
 // import { copyToClipboard } from "ui";
 import { FilterOperatorOptions } from "./components/header/filter/Filter.constants";
 import { STORAGE_KEY_PREFIX } from "./constants";
-import type { Sort, SupaColumn, SupaTable } from "./types";
+import type { Sort, NuvixColumn, NuvixTable } from "./types";
 import { formatClipboardValue } from "./utils/common";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Entity, isTableLike } from "@/data/table-editor/table-editor-types";
@@ -62,12 +62,12 @@ export function filtersToUrlParams(filters: Filter[]) {
   });
 }
 
-export function parseSupaTable(table: Entity): SupaTable {
+export function parseNuvixTable(table: Entity): NuvixTable {
   const columns = table.columns;
   const primaryKeys = isTableLike(table) ? table.primary_keys : [];
   const relationships = isTableLike(table) ? table.relationships : [];
 
-  const supaColumns: SupaColumn[] = columns.map((column) => {
+  const nuvixColumns: NuvixColumn[] = columns.map((column) => {
     const temp = {
       position: column.ordinal_position,
       name: column.name,
@@ -114,7 +114,7 @@ export function parseSupaTable(table: Entity): SupaTable {
     name: table.name,
     comment: table.comment,
     schema: table.schema,
-    columns: supaColumns,
+    columns: nuvixColumns,
     estimateRowCount: isTableLike(table) ? table.live_rows_estimate : 0,
   };
 }

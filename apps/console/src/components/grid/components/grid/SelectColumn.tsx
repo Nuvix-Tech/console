@@ -12,7 +12,7 @@ import {
 import { useTableEditorStore } from "@/lib/store/table-editor";
 import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { SELECT_COLUMN_KEY } from "../../constants";
-import type { SupaRow } from "../../types";
+import type { NuvixRow } from "../../types";
 import { IconButton } from "@nuvix/ui/components";
 import { Checkbox } from "@/components/cui/checkbox";
 
@@ -40,7 +40,7 @@ export const SelectColumn: CalculatedColumn<any, any> = {
       />
     );
   },
-  renderCell: (props: RenderCellProps<SupaRow>) => {
+  renderCell: (props: RenderCellProps<NuvixRow>) => {
     // [Alaister] formatter is actually a valid React component, so we can use hooks here
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const { isRowSelected, onRowSelectionChange } = useRowSelection();
@@ -58,7 +58,7 @@ export const SelectColumn: CalculatedColumn<any, any> = {
       />
     );
   },
-  renderGroupCell: (props: RenderGroupCellProps<SupaRow>) => {
+  renderGroupCell: (props: RenderGroupCellProps<NuvixRow>) => {
     // [Alaister] groupFormatter is actually a valid React component, so we can use hooks here
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const { isRowSelected, onRowSelectionChange } = useRowSelection();
@@ -98,7 +98,7 @@ type SharedInputProps = Pick<
 
 interface SelectCellFormatterProps extends SharedInputProps {
   value: boolean;
-  row?: SupaRow;
+  row?: NuvixRow;
   onChange: (value: boolean, isShiftClick: boolean) => void;
 }
 

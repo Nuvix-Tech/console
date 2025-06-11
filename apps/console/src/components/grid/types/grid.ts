@@ -1,4 +1,4 @@
-import { SupaRow } from "./table";
+import { NuvixRow } from "./table";
 
 export interface GridProps {
   width?: string | number;
@@ -6,5 +6,5 @@ export interface GridProps {
   defaultColumnWidth?: string | number;
   containerClass?: string;
   gridClass?: string;
-  rowClass?: ((row: SupaRow) => string | undefined) | undefined;
+  rowClass?: ((row: NuvixRow) => string | undefined) | undefined;
 }

@@ -479,7 +479,7 @@ export const ForeignKeySelector = ({
                 value={fk.deletionAction}
                 onValueChange={(value: string) => updateCascadeAction("deletionAction", value)}
                 optionalText={
-                  <DocsButton href="https://supabase.com/docs/guides/database/postgres/cascade-deletes" />
+                  <DocsButton href="https://nuvix.in/docs/guides/database/postgres/cascade-deletes" />
                 }
                 helperText={
                   <p>

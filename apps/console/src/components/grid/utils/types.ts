@@ -1,4 +1,4 @@
-import type { SupaColumn } from "../types";
+import type { NuvixColumn } from "../types";
 
 const NUMERICAL_TYPES = [
   "smallint",
@@ -74,7 +74,7 @@ export function isBinaryColumn(type: string) {
   return BINARY_TYPES.indexOf(type.toLowerCase()) > -1;
 }
 
-export function isForeignKeyColumn(columnDef: SupaColumn) {
+export function isForeignKeyColumn(columnDef: NuvixColumn) {
   const { targetTableSchema, targetTableName, targetColumnName } = columnDef?.foreignKey ?? {};
   return !!targetTableSchema && !!targetTableName && !!targetColumnName;
 }

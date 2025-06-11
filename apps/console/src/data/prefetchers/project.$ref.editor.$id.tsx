@@ -6,7 +6,7 @@ import {
   formatFilterURLParams,
   formatSortURLParams,
   loadTableEditorStateFromLocalStorage,
-  parseSupaTable,
+  parseNuvixTable,
 } from "@/components/grid/NuvixGrid.utils";
 import { Filter, Sort } from "@/components/grid/types";
 import { prefetchTableEditor } from "@/data/table-editor/table-editor-query";
@@ -43,7 +43,7 @@ export function prefetchEditorTablePage({
     id,
   }).then((entity) => {
     if (entity) {
-      const supaTable = parseSupaTable(entity);
+      const nuvixTable = parseNuvixTable(entity);
 
       const { sorts: localSorts = [], filters: localFilters = [] } =
         loadTableEditorStateFromLocalStorage(projectRef, entity.name, entity.schema) ?? {};
@@ -52,7 +52,7 @@ export function prefetchEditorTablePage({
         projectRef,
         sdk,
         tableId: id,
-        sorts: sorts ?? formatSortURLParams(supaTable.name, localSorts),
+        sorts: sorts ?? formatSortURLParams(nuvixTable.name, localSorts),
         filters: filters ?? formatFilterURLParams(localFilters),
         page: 1,
         limit: TABLE_EDITOR_DEFAULT_ROWS_PER_PAGE,

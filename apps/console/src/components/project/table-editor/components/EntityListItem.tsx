@@ -11,10 +11,9 @@ import {
   MAX_EXPORT_ROW_COUNT,
   MAX_EXPORT_ROW_COUNT_MESSAGE,
 } from "@/components/grid/components/header/Header";
-import { parseSupaTable } from "@/components/grid/NuvixGrid.utils";
+import { parseNuvixTable } from "@/components/grid/NuvixGrid.utils";
 // import { useIsTableEditorTabsEnabled } from '@/components/interfaces/App/FeaturePreview/FeaturePreviewContext'
 // import {
-//   formatTableRowsToSQL,
 //   getEntityLintDetails,
 // } from '@/components/interfaces/TableGridEditor/TableEntity.utils'
 import { EntityTypeIcon } from "@/ui/EntityTypeIcon";
@@ -45,6 +44,7 @@ import { useProjectStore } from "@/lib/store";
 import { useTableEditorStateSnapshot } from "@/lib/store/table-editor";
 import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
 import { cn } from "@nuvix/sui/lib/utils";
+import { formatTableRowsToSQL } from "@/components/editor/TableEntity.utils";
 
 export const TreeViewItemVariant = cva(
   // [Unkown Temp]: aria-selected:text-foreground not working as aria-selected property not rendered in DOM,
@@ -155,16 +155,16 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
         );
       }
 
-      const supaTable = table && parseSupaTable(table);
+      const nuvixTable = table && parseNuvixTable(table);
 
-      if (!supaTable) {
+      if (!nuvixTable) {
         return toast.error(`Failed to export table: ${entity.name}`, { id: toastId });
       }
 
       const rows = await fetchAllTableRows({
         projectRef,
         sdk,
-        table: supaTable,
+        table: nuvixTable,
       });
       const formattedRows = rows.map((row) => {
         const formattedRow = row;
@@ -177,7 +177,7 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
 
       if (formattedRows.length > 0) {
         const csv = Papa.unparse(formattedRows, {
-          columns: supaTable.columns.map((column) => column.name),
+          columns: nuvixTable.columns.map((column) => column.name),
         });
         const csvData = new Blob([csv], { type: "text/csv;charset=utf-8;" });
         saveAs(csvData, `${entity!.name}_rows.csv`);
@@ -209,16 +209,16 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
         );
       }
 
-      const supaTable = table && parseSupaTable(table);
+      const nuvixTable = table && parseNuvixTable(table);
 
-      if (!supaTable) {
+      if (!nuvixTable) {
         return toast.error(`Failed to export table: ${entity.name}`, { id: toastId });
       }
 
       const rows = await fetchAllTableRows({
         projectRef,
         sdk,
-        table: supaTable,
+        table: nuvixTable,
       });
       const formattedRows = rows.map((row) => {
         const formattedRow = row;
@@ -230,9 +230,9 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
       });
 
       if (formattedRows.length > 0) {
-        // const sqlStatements = formatTableRowsToSQl(supaTable, formattedRows)
-        // const sqlData = new Blob([sqlStatements], { type: 'text/sql;charset=utf-8;' })
-        // saveAs(sqlData, `${entity!.name}_rows.sql`)
+        const sqlStatements = formatTableRowsToSQL(nuvixTable, formattedRows);
+        const sqlData = new Blob([sqlStatements], { type: "text/sql;charset=utf-8;" });
+        saveAs(sqlData, `${entity!.name}_rows.sql`);
       }
 
       toast.success(`Successfully exported ${entity.name} as SQL`, { id: toastId });

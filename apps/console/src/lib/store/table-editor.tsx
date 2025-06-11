@@ -2,7 +2,7 @@ import type { PostgresColumn } from "@nuvix/pg-meta";
 import { PropsWithChildren, createContext, useContext, useRef } from "react";
 import { proxy, useSnapshot } from "valtio";
 
-import type { SupaRow } from "@/components/grid/types";
+import type { NuvixRow } from "@/components/grid/types";
 import { ForeignKey } from "@/components/editor/SidePanelEditor/ForeignKeySelector/ForeignKeySelector.types";
 import { Dictionary } from "@nuvix/pg-meta/src/query";
 import { EditValue } from "@/components/editor/SidePanelEditor/RowEditor/RowEditor.types";
@@ -36,7 +36,7 @@ export type ConfirmationDialog =
   // Once we deprecate react tracked and move things to valtio, we can remove this.
   | {
       type: "row";
-      rows: SupaRow[];
+      rows: NuvixRow[];
       numRows?: number;
       allRowsSelected?: boolean;
       callback?: () => void;
@@ -148,7 +148,7 @@ export const createTableEditorState = () => {
       };
     },
     onDeleteRows: (
-      rows: SupaRow[],
+      rows: NuvixRow[],
       meta: { numRows?: number; allRowsSelected: boolean; callback?: () => void } = {
         numRows: 0,
         allRowsSelected: false,

@@ -2,14 +2,14 @@ import { Clipboard, Edit, Trash } from "lucide-react";
 import { useCallback } from "react";
 import { Item, ItemParams, Menu } from "react-contexify";
 
-import type { SupaRow } from "../../types";
+import type { NuvixRow } from "../../types";
 import { useTableEditorStore } from "@/lib/store/table-editor";
 import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { ROW_CONTEXT_MENU_ID } from ".";
 import { copyToClipboard, formatClipboardValue } from "../../utils/common";
 
 export type RowContextMenuProps = {
-  rows: SupaRow[];
+  rows: NuvixRow[];
 };
 
 const RowContextMenu = ({ rows }: RowContextMenuProps) => {

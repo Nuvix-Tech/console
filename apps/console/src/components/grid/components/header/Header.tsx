@@ -30,7 +30,7 @@ import {
 } from "@nuvix/sui/components/dropdown-menu";
 import FilterPopover from "./filter/FilterPopover";
 import { SortPopover } from "./sort";
-import { Filter, Sort, SupaRow } from "../../types";
+import { Filter, Sort, NuvixRow } from "../../types";
 import { useAppStore, useProjectStore } from "@/lib/store";
 import { useParams } from "next/navigation";
 import { Button, useToast } from "@nuvix/ui/components";
@@ -40,6 +40,7 @@ import { useTableEditorFiltersSort } from "@/hooks/useTableEditorFilterSort";
 import { fetchAllTableRows, useTableRowsQuery } from "@/data/table-rows/table-rows-query";
 import { useTableRowsCountQuery } from "@/data/table-rows/table-rows-count-query";
 import { toast } from "sonner";
+import { formatTableRowsToSQL } from "@/components/editor/TableEntity.utils";
 // [Unkown] CSV exports require this guard as a fail-safe if the table is
 // just too large for a browser to keep all the rows in memory before
 // exporting. Either that or export as multiple CSV sheets with max n rows each
@@ -48,7 +49,7 @@ export const MAX_EXPORT_ROW_COUNT_MESSAGE = (
   <>
     Sorry! We're unable to support exporting row counts larger than $
     {MAX_EXPORT_ROW_COUNT.toLocaleString()} at the moment. Alternatively, you may consider using
-    <Link href="https://supabase.com/docs/reference/cli/supabase-db-dump" target="_blank">
+    <Link href="https://nuvix.in/docs/reference/cli/supabase-db-dump" target="_blank">
       pg_dump
     </Link>{" "}
     via our CLI instead.
@@ -322,7 +323,7 @@ const RowHeader = ({ sorts, filters }: RowHeaderProps) => {
     // { keepPreviousData: true },
   );
 
-  const allRows: SupaRow[] = data?.rows ?? [];
+  const allRows: NuvixRow[] = data?.rows ?? [];
   const totalRows = countData?.count ?? 0;
 
   const onSelectAllRows = () => {
@@ -482,14 +483,14 @@ const RowHeader = ({ sorts, filters }: RowHeaderProps) => {
       setIsExporting(false);
       return;
     }
-    // const sqlStatements = formatTableRowsToSQL(snap.table, rows);
-    // const sqlData = new Blob([sqlStatements], { type: "text/sql;charset=utf-8;" });
+    const sqlStatements = formatTableRowsToSQL(snap.table, rows);
+    const sqlData = new Blob([sqlStatements], { type: "text/sql;charset=utf-8;" });
     toast.success(`Downloading ${rows.length} rows to SQL`, {
       id: toastId,
       closeButton: true,
       duration: 4000,
     });
-    // saveAs(sqlData, `${snap.table!.name}_rows.sql`);
+    saveAs(sqlData, `${snap.table!.name}_rows.sql`);
     setIsExporting(false);
   }
 

@@ -2,7 +2,7 @@ import { useMutation, UseMutationOptions, useQueryClient } from "@tanstack/react
 import { toast } from "sonner";
 
 import { Query } from "@nuvix/pg-meta/src/query";
-import type { Filter, SupaTable } from "@/components/grid/types";
+import type { Filter, NuvixTable } from "@/components/grid/types";
 import { executeSql } from "@/data/sql/execute-sql-query";
 import { RoleImpersonationState, wrapWithRoleImpersonation } from "@/lib/role-impersonation";
 // import { isRoleImpersonationEnabled } from "state/role-impersonation-state";
@@ -14,7 +14,7 @@ import { ProjectSdk } from "@/lib/sdk";
 export type TableRowDeleteAllVariables = {
   projectRef: string;
   sdk: ProjectSdk;
-  table: SupaTable;
+  table: NuvixTable;
   filters: Filter[];
   roleImpersonationState?: RoleImpersonationState;
 };

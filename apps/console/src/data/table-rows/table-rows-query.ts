@@ -8,8 +8,8 @@ import {
 import { Query } from "@nuvix/pg-meta/src/query";
 import { getTableRowsSql } from "@nuvix/pg-meta/src/query/table-row-query";
 // import { IS_PLATFORM } from "common";
-import { parseSupaTable } from "@/components/grid/NuvixGrid.utils";
-import { Filter, Sort, SupaRow, SupaTable } from "@/components/grid/types";
+import { parseNuvixTable } from "@/components/grid/NuvixGrid.utils";
+import { Filter, Sort, NuvixRow, NuvixTable } from "@/components/grid/types";
 import { prefetchTableEditor } from "@/data/table-editor/table-editor-query";
 import {
   ROLE_IMPERSONATION_NO_RESULTS,
@@ -25,7 +25,7 @@ import { ProjectSdk } from "@/lib/sdk";
 import { QueryOptions } from "@/types";
 
 export interface GetTableRowsArgs {
-  table?: SupaTable;
+  table?: NuvixTable;
   filters?: Filter[];
   sorts?: Sort[];
   limit?: number;
@@ -34,7 +34,7 @@ export interface GetTableRowsArgs {
 }
 
 // return the primary key columns if exists, otherwise return the first column to use as a default sort
-const getDefaultOrderByColumns = (table: SupaTable) => {
+const getDefaultOrderByColumns = (table: NuvixTable) => {
   const primaryKeyColumns = table.columns.filter((col) => col?.isPrimaryKey).map((col) => col.name);
   if (primaryKeyColumns.length === 0) {
     return [table.columns[0]?.name];
@@ -85,7 +85,7 @@ export const fetchAllTableRows = async ({
 }: {
   projectRef: string;
   sdk: ProjectSdk;
-  table: SupaTable;
+  table: NuvixTable;
   filters?: Filter[];
   sorts?: Sort[];
   roleImpersonationState?: RoleImpersonationState;
@@ -163,7 +163,7 @@ export const fetchAllTableRows = async ({
   return rows.filter((row) => row[ROLE_IMPERSONATION_NO_RESULTS] !== 1);
 };
 
-export type TableRows = { rows: SupaRow[] };
+export type TableRows = { rows: NuvixRow[] };
 
 export type TableRowsVariables = Omit<GetTableRowsArgs, "table"> & {
   queryClient: QueryClient;
@@ -198,7 +198,7 @@ export async function getTableRows(
     throw new Error("Table not found");
   }
 
-  const table = parseSupaTable(entity);
+  const table = parseNuvixTable(entity);
 
   const sql = wrapWithRoleImpersonation(
     getTableRowsSql({ table: entity, filters, sorts, limit, page }),
@@ -217,7 +217,7 @@ export async function getTableRows(
 
   const rows = result.map((x: any, index: number) => {
     return { idx: index, ...x };
-  }) as SupaRow[];
+  }) as NuvixRow[];
 
   return {
     rows,

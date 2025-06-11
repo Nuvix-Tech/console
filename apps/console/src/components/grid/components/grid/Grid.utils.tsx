@@ -2,7 +2,7 @@ import { QueryKey, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { RowsChangeData } from "react-data-grid";
 
-import { SupaRow } from "@/components/grid/types";
+import { NuvixRow } from "@/components/grid/types";
 // import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
 // import { DocsButton } from "components/ui/DocsButton";
 import { isTableLike } from "@/data/table-editor/table-editor-types";
@@ -17,7 +17,7 @@ import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { toast } from "sonner";
 import { convertByteaToHex } from "@/components/editor/SidePanelEditor/RowEditor/RowEditor.utils";
 
-export function useOnRowsChange(rows: SupaRow[]) {
+export function useOnRowsChange(rows: NuvixRow[]) {
   const { project, sdk } = useProjectStore();
 
   const snap = useTableEditorTableStateSnapshot();
@@ -84,7 +84,7 @@ export function useOnRowsChange(rows: SupaRow[]) {
   });
 
   return useCallback(
-    (_rows: SupaRow[], data: RowsChangeData<SupaRow, unknown>) => {
+    (_rows: NuvixRow[], data: RowsChangeData<NuvixRow, unknown>) => {
       if (!project) return;
 
       const rowData = _rows[data.indexes[0]];
@@ -123,7 +123,7 @@ export function useOnRowsChange(rows: SupaRow[]) {
                 each row before updating or deleting the row.
               </p>
               <div className="mt-3">
-                {/* <DocsButton href="https://supabase.com/docs/guides/database/tables#primary-keys" /> */}
+                {/* <DocsButton href="https://nuvix.in/docs/guides/database/tables#primary-keys" /> */}
               </div>
             </div>
           ),

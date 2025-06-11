@@ -3,7 +3,7 @@ import { DataGrid, Column } from "react-data-grid";
 
 import { NullValue } from "@/components/grid/components/common/NullValue";
 import { COLUMN_MIN_WIDTH } from "@/components/grid/constants";
-import type { SupaRow } from "@/components/grid/types";
+import type { NuvixRow } from "@/components/grid/types";
 import {
   ESTIMATED_CHARACTER_PIXEL_WIDTH,
   getColumnDefaultWidth,
@@ -15,8 +15,8 @@ import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { gridStyles2 } from "@/components/grid/components/grid/Grid";
 
 export interface SelectorGridProps {
-  rows: SupaRow[];
-  onRowSelect: (row: SupaRow) => void;
+  rows: NuvixRow[];
+  onRowSelect: (row: NuvixRow) => void;
 }
 
 const columnRender = (name: string, isPrimaryKey = false) => {
@@ -39,7 +39,7 @@ const columnRender = (name: string, isPrimaryKey = false) => {
 };
 
 // TODO: move this formatter out to a common component
-const formatter = ({ column, format, row }: { column: string; format: string; row: SupaRow }) => {
+const formatter = ({ column, format, row }: { column: string; format: string; row: NuvixRow }) => {
   const formattedValue =
     format === "bytea"
       ? convertByteaToHex(row[column])
@@ -63,14 +63,14 @@ const formatter = ({ column, format, row }: { column: string; format: string; ro
 const SelectorGrid = ({ rows, onRowSelect }: SelectorGridProps) => {
   const snap = useTableEditorTableStateSnapshot();
 
-  const columns: Column<SupaRow>[] = snap.table.columns.map((column) => {
+  const columns: Column<NuvixRow>[] = snap.table.columns.map((column) => {
     const columnDefaultWidth = getColumnDefaultWidth(column);
     const columnWidthBasedOnName =
       (column.name.length + column.format.length) * ESTIMATED_CHARACTER_PIXEL_WIDTH;
     const columnWidth =
       columnDefaultWidth < columnWidthBasedOnName ? columnWidthBasedOnName : columnDefaultWidth;
 
-    const result: Column<SupaRow> = {
+    const result: Column<NuvixRow> = {
       key: column.name,
       name: column.name,
       renderCell: (props) =>

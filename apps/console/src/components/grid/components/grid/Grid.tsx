@@ -4,7 +4,7 @@ import { DataGrid, CalculatedColumn, DataGridHandle } from "react-data-grid";
 import { handleCopyCell } from "@/components/grid/NuvixGrid.utils";
 import { useForeignKeyConstraintsQuery } from "@/data/database/foreign-key-constraints-query";
 // import { useSendEventMutation } from "data/telemetry/send-event-mutation";
-import type { Filter, GridProps, SupaRow } from "../../types";
+import type { Filter, GridProps, NuvixRow } from "../../types";
 import { useOnRowsChange } from "./Grid.utils";
 import RowRenderer from "./RowRenderer";
 import { useTableEditorStore } from "@/lib/store/table-editor";
@@ -16,7 +16,7 @@ import { formatForeignKeys } from "@/components/editor/SidePanelEditor/ForeignKe
 import { GenericSkeletonLoader } from "@/components/editor/components/GenericSkeleton";
 import { Alert, AlertDescription, AlertTitle } from "@nuvix/sui/components";
 
-const rowKeyGetter = (row: SupaRow) => {
+const rowKeyGetter = (row: NuvixRow) => {
   return row?.idx ?? -1;
 };
 

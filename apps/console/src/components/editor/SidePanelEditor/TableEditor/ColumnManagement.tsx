@@ -146,7 +146,7 @@ const ColumnManagement = ({
               variant="secondary"
               type="button"
               prefixIcon={<ExternalLink size={12} strokeWidth={2} />}
-              href="https://supabase.com/docs/guides/database/tables#data-types"
+              href="https://nuvix.in/docs/guides/database/tables#data-types"
               target="_blank"
               rel="noreferrer"
             >

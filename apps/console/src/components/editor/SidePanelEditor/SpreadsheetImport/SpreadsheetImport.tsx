@@ -90,7 +90,7 @@ const SpreadsheetImport = ({
           <p>For bulk data loading, we recommend doing so directly through the database.</p>
           <Button asChild type="default" prefixIcon={<ExternalLink />} className="!mt-2">
             <Link
-              href="https://supabase.com/docs/guides/database/tables#bulk-data-loading"
+              href="https://nuvix.in/docs/guides/database/tables#bulk-data-loading"
               target="_blank"
               rel="noreferrer"
             >

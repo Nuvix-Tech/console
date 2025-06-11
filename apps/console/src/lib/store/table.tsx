@@ -5,10 +5,10 @@ import { proxySet } from "valtio/utils";
 
 import {
   loadTableEditorStateFromLocalStorage,
-  parseSupaTable,
+  parseNuvixTable,
   saveTableEditorStateToLocalStorageDebounced,
 } from "@/components/grid/NuvixGrid.utils";
-import { SupaRow } from "@/components/grid/types";
+import { NuvixRow } from "@/components/grid/types";
 import { getInitialGridColumns } from "@/components/grid/utils/column";
 import { getGridColumns } from "@/components/grid/utils/gridColumns";
 import { Entity } from "@/data/table-editor/table-editor-types";
@@ -27,10 +27,10 @@ export const createTableEditorTableState = ({
   /** If set to true, render an additional "+" column to support adding a new column in the grid editor */
   editable?: boolean;
   onAddColumn: () => void;
-  onExpandJSONEditor: (column: string, row: SupaRow) => void;
-  onExpandTextEditor: (column: string, row: SupaRow) => void;
+  onExpandJSONEditor: (column: string, row: NuvixRow) => void;
+  onExpandTextEditor: (column: string, row: NuvixRow) => void;
 }) => {
-  const table = parseSupaTable(originalTable);
+  const table = parseNuvixTable(originalTable);
 
   const savedState = loadTableEditorStateFromLocalStorage(projectRef, table.name, table.schema);
   const gridColumns = getInitialGridColumns(
@@ -56,10 +56,10 @@ export const createTableEditorTableState = ({
     _originalTableRef: ref(originalTable),
 
     updateTable: (table: Entity) => {
-      const supaTable = parseSupaTable(table);
+      const nuvixTable = parseNuvixTable(table);
 
       const gridColumns = getInitialGridColumns(
-        getGridColumns(supaTable, {
+        getGridColumns(nuvixTable, {
           tableId: table.id,
           editable,
           onAddColumn: editable ? onAddColumn : undefined,
@@ -69,7 +69,7 @@ export const createTableEditorTableState = ({
         { gridColumns: state.gridColumns },
       );
 
-      state.table = supaTable;
+      state.table = nuvixTable;
       state.gridColumns = gridColumns;
       state.originalTable = table;
       state._originalTableRef = ref(table);
@@ -168,14 +168,14 @@ export const TableEditorTableStateContextProvider = ({
       projectRef,
       table,
       onAddColumn: tableEditorSnap.onAddColumn,
-      onExpandJSONEditor: (column: string, row: SupaRow) => {
+      onExpandJSONEditor: (column: string, row: NuvixRow) => {
         tableEditorSnap.onExpandJSONEditor({
           column,
           row,
           value: JSON.stringify(row[column]) || "",
         });
       },
-      onExpandTextEditor: (column: string, row: SupaRow) => {
+      onExpandTextEditor: (column: string, row: NuvixRow) => {
         tableEditorSnap.onExpandTextEditor(column, row);
       },
     }),
