@@ -129,7 +129,7 @@ export const ProvidersPage = () => {
     }
   };
 
-  const create = <CreateProviderButton refetch={refetch} />;
+  const create = <CreateProviderButton />;
 
   return (
     <PageContainer>

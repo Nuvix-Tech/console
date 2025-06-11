@@ -23,23 +23,27 @@ import { getQueryClient } from "@/data/query-client";
 import { MobileMail } from "@/components/project/messaging/components/_screen_mail";
 import { MobileSMS } from "@/components/project/messaging/components/_screen_sms";
 import { MobileNotification } from "@/components/project/messaging/components/_screen_push";
+import { useParams } from "next/navigation";
+import { useRouter } from "@bprogress/next";
 
 type CreateMessageProps = {
   children?: React.ReactNode;
   type: MessagingProviderType | null;
-  refetch: () => Promise<void>;
 } & Omit<React.ComponentProps<typeof Dialog.Root>, "size" | "motionPreset" | "children">;
 
 export const CreateMessage: React.FC<CreateMessageProps> = ({
   children,
   type,
-  refetch,
   onOpenChange,
   ...props
 }) => {
   const { addToast } = useToast();
   const { sdk } = useProjectStore((state) => state);
   const confirm = useConfirm();
+  const router = useRouter();
+  const { id: projectId } = useParams<{ id: string }>();
+
+  const path = `/project/${projectId}/messaging/messages`;
 
   const getMessageTypeLabel = (messageType: MessagingProviderType) => {
     switch (messageType) {
@@ -135,7 +139,6 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({
 
       const actionText = draft ? "saved as draft" : "created";
       const messageTypeLabel = getMessageTypeLabel(type);
-      await refetch();
       addToast({
         variant: "success",
         message: `${messageTypeLabel} ${actionText} successfully.`,
@@ -144,6 +147,7 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({
       resetForm();
       await client.invalidateQueries({ queryKey: ["messages"] });
       onOpenChange?.({ open: false });
+      router.push(`${path}/${res.$id}`);
     } catch (error: any) {
       const messageTypeLabel = getMessageTypeLabel(type);
       addToast({

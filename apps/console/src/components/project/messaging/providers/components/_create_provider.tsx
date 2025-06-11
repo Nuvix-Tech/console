@@ -4,7 +4,7 @@ import { Popover, PopoverTrigger, PopoverContent } from "@nuvix/sui/components";
 import { Button, ToggleButton } from "@nuvix/ui/components";
 import React, { useState } from "react";
 
-export const CreateProviderButton = ({ refetch }: { refetch: () => Promise<any> }) => {
+export const CreateProviderButton = () => {
   const [open, setOpen] = useState(false);
   const [type, setType] = useState<MessagingProviderType | null>(null);
 
@@ -21,7 +21,6 @@ export const CreateProviderButton = ({ refetch }: { refetch: () => Promise<any> 
           setOpen(o.open);
         }}
         type={type}
-        refetch={refetch}
       />
       <Popover>
         <PopoverTrigger asChild>

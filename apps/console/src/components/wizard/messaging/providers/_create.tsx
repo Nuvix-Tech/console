@@ -17,7 +17,8 @@ import {
 } from "./_types";
 import { useProjectStore } from "@/lib/store";
 import { getQueryClient } from "@/data/query-client";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
+import { useRouter } from "@bprogress/next";
 
 type CreateProviderProps = {
   children?: React.ReactNode;
