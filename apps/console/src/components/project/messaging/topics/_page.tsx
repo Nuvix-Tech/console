@@ -20,11 +20,12 @@ import { formatDate } from "@/lib/utils";
 import { Tooltip } from "@/components/cui/tooltip";
 import { useConfirm, useToast } from "@nuvix/ui/components";
 import { CreateTopic } from "../components";
+import { useEffect } from "react";
 
 interface TopicsPageProps {}
 
 const TopicsPage: React.FC<TopicsPageProps> = () => {
-  const { sdk, project } = useProjectStore((state) => state);
+  const { sdk, project, setSidebarNull } = useProjectStore((state) => state);
   const permissions = useProjectStore.use.permissions();
   const { limit, page, search, hasQuery } = useSearchQuery();
   const { canDeleteTopics, canCreateTopics } = permissions();
@@ -41,6 +42,10 @@ const TopicsPage: React.FC<TopicsPageProps> = () => {
     queryKey: ["topics", page, limit, search],
     queryFn: fetcher,
   });
+
+  useEffect(() => {
+    setSidebarNull("first", "middle");
+  }, []);
 
   const path = `/project/${project?.$id}/messaging/topics`;
 

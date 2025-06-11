@@ -2,7 +2,7 @@
 import React from "react";
 import { Box, CloseButton, Dialog, Flex, Portal, Text } from "@chakra-ui/react";
 import { Form, SubmitButton } from "../../others/forms";
-import { Button, Column, useToast } from "@nuvix/ui/components";
+import { Button, Column, useConfirm, useToast } from "@nuvix/ui/components";
 import { CreateMessageTypeMail } from "./_type_mail";
 import { CreateMessageTypeSms } from "./_type_sms";
 import { CreateMessageTypePush } from "./_type_push";
@@ -23,21 +23,27 @@ import { getQueryClient } from "@/data/query-client";
 import { MobileMail } from "@/components/project/messaging/components/_screen_mail";
 import { MobileSMS } from "@/components/project/messaging/components/_screen_sms";
 import { MobileNotification } from "@/components/project/messaging/components/_screen_push";
+import { useParams } from "next/navigation";
+import { useRouter } from "@bprogress/next";
 
 type CreateMessageProps = {
   children?: React.ReactNode;
   type: MessagingProviderType | null;
-  refetch: () => Promise<void>;
 } & Omit<React.ComponentProps<typeof Dialog.Root>, "size" | "motionPreset" | "children">;
 
 export const CreateMessage: React.FC<CreateMessageProps> = ({
   children,
   type,
-  refetch,
+  onOpenChange,
   ...props
 }) => {
   const { addToast } = useToast();
   const { sdk } = useProjectStore((state) => state);
+  const confirm = useConfirm();
+  const router = useRouter();
+  const { id: projectId } = useParams<{ id: string }>();
+
+  const path = `/project/${projectId}/messaging/messages`;
 
   const getMessageTypeLabel = (messageType: MessagingProviderType) => {
     switch (messageType) {
@@ -133,7 +139,6 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({
 
       const actionText = draft ? "saved as draft" : "created";
       const messageTypeLabel = getMessageTypeLabel(type);
-      await refetch();
       addToast({
         variant: "success",
         message: `${messageTypeLabel} ${actionText} successfully.`,
@@ -141,7 +146,8 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({
 
       resetForm();
       await client.invalidateQueries({ queryKey: ["messages"] });
-      props.onOpenChange?.({ open: false });
+      onOpenChange?.({ open: false });
+      router.push(`${path}/${res.$id}`);
     } catch (error: any) {
       const messageTypeLabel = getMessageTypeLabel(type);
       addToast({
@@ -149,6 +155,17 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({
         message: error.message || `Failed to create ${messageTypeLabel.toLowerCase()}`,
       });
     }
+  }
+
+  function handleClose({ open = false }: { open?: boolean }) {
+    confirm({
+      title: "Exit process",
+      description:
+        "Are you sure you want to exit from this process? All data will be deleted. This action is irreversible.",
+      confirm: {
+        text: "Exit",
+      },
+    }).then((v) => v && onOpenChange?.({ open }));
   }
 
   const messageConfig = (() => {
@@ -193,7 +210,13 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({
   const messageTypeLabel = getMessageTypeLabel(type);
 
   return (
-    <Dialog.Root size="full" motionPreset="slide-in-right" {...props}>
+    <Dialog.Root
+      size="full"
+      motionPreset="slide-in-right"
+      onOpenChange={onOpenChange}
+      onEscapeKeyDown={(e) => handleClose({ open: false })}
+      {...props}
+    >
       {children && <Dialog.Trigger asChild>{children}</Dialog.Trigger>}
       <Portal>
         <Dialog.Backdrop />
@@ -217,9 +240,9 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({
                     <Schedule />
                   </Column>
                   <Flex justify="flex-end" mt={6} gap="4">
-                    <Dialog.Trigger asChild>
-                      <Button variant="tertiary">Cancel</Button>
-                    </Dialog.Trigger>
+                    <Button variant="tertiary" onClick={() => handleClose({ open: false })}>
+                      Cancel
+                    </Button>
                     <DraftButton />
                     <SubmitButton>Create {messageTypeLabel}</SubmitButton>
                   </Flex>
@@ -227,10 +250,12 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({
                 <Box className="sticky mx-auto my-20">
                   <Preview type={type} />
                 </Box>
-
-                <Dialog.Trigger>
-                  <CloseButton position="absolute" top={4} right={4} />
-                </Dialog.Trigger>
+                <CloseButton
+                  position="absolute"
+                  top={4}
+                  right={4}
+                  onClick={() => handleClose({ open: false })}
+                />
               </Dialog.Body>
             </Form>
           </Dialog.Content>
