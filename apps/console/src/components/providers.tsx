@@ -2,6 +2,7 @@
 
 import { Provider } from "./cui/provider";
 import { AppProgressProvider as ProgressProvider } from "@bprogress/next";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -12,7 +13,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         options={{ showSpinner: false }}
         shallowRouting
       >
-        <Provider attribute={["class", "data-theme"]}>{children}</Provider>
+        <NuqsAdapter>
+          <Provider attribute={["class", "data-theme"]}>{children}</Provider>
+        </NuqsAdapter>
       </ProgressProvider>
     </>
   );

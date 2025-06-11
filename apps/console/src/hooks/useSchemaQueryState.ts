@@ -1,4 +1,4 @@
-import { parseAsString, useQueryState } from 'nuqs'
+import { parseAsString, useQueryState } from "nuqs";
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { LOCAL_STORAGE_KEYS } from "../lib/constants";
@@ -8,13 +8,13 @@ import { LOCAL_STORAGE_KEYS } from "../lib/constants";
  * the playwright tests. I've localized the issue to "NODE_ENV='test'" in the playwright tests.
  */
 const useIsomorphicUseQueryState = (defaultSchema: string) => {
-  if (typeof window === 'undefined') {
-    return [defaultSchema, () => {}] as const
+  if (typeof window === "undefined") {
+    return [defaultSchema, () => {}] as const;
   } else {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useQueryState('schema', parseAsString.withDefault(defaultSchema))
+    return useQueryState("schema", parseAsString.withDefault(defaultSchema));
   }
-}
+};
 
 export const useQuerySchemaState = () => {
   const { id: ref } = useParams<{ id: string }>();
@@ -27,7 +27,7 @@ export const useQuerySchemaState = () => {
   // cache the original default schema so that it's not changed by another tab and cause issues in the app (saving a
   // table on the wrong schema)
   const originalDefaultSchema = useMemo(() => defaultSchema, [ref]);
-  const [schema, setSelectedSchema] = useIsomorphicUseQueryState(originalDefaultSchema)
+  const [schema, setSelectedSchema] = useIsomorphicUseQueryState(originalDefaultSchema);
 
   useEffect(() => {
     // Update the schema in local storage on every change
