@@ -1,7 +1,5 @@
-"use client";
-
-import { SqlEditor } from "@/components/sql-editor";
+import { SqlPage } from "@/components/project/sql";
 
 export default async function () {
-  return <SqlEditor />;
+  return <SqlPage />;
 }

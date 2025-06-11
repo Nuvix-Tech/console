@@ -109,7 +109,7 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
     },
     {
       name: "SQL Editor",
-      href: `/project/${id}/sql`,
+      href: `/project/${id}/sql/new`,
       icon: <span className="icon-terminal" />,
     },
     {
