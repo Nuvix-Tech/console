@@ -243,6 +243,19 @@ const FunctionsList = ({
   if (isLoading) return <SkeletonText noOfLines={4} />;
   if (isError) return <AlertError error={error} subject="Failed to retrieve database functions" />;
 
+  const create = (
+    <CreateButton
+      hasPermission={canCreateFunctions && !isLocked}
+      onClick={() => createFunction()}
+      size="s"
+      tooltip={
+        !canCreateFunctions ? "You need additional permissions to create functions" : undefined
+      }
+    >
+      Create a new function
+    </CreateButton>
+  );
+
   return (
     <div className="w-full space-y-4">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2 flex-wrap">
@@ -270,18 +283,7 @@ const FunctionsList = ({
         <div className="flex items-center gap-x-2">
           {!isLocked && (
             <>
-              <Button
-                disabled={!canCreateFunctions}
-                onClick={() => createFunction()}
-                className="flex-grow"
-                tooltip={
-                  !canCreateFunctions
-                    ? "You need additional permissions to create functions"
-                    : undefined
-                }
-              >
-                Create a new function
-              </Button>
+              {create}
               {/* <Button
                                         type="default"
                                         disabled={!canCreateFunctions}
@@ -319,31 +321,19 @@ const FunctionsList = ({
           show={_functions.length === 0 && !isFetching && !hasQuery && !isLoading}
           title="No functions created yet"
           description={`There are no functions found in the schema "${selectedSchema}"`}
-          primaryComponent={
-            <CreateButton
-              hasPermission={canCreateFunctions}
-              onClick={() => createFunction()}
-              className="w-full"
-              tooltip={
-                !canCreateFunctions
-                  ? "You need additional permissions to create functions"
-                  : undefined
-              }
-            >
-              Create a new function
-            </CreateButton>
-          }
+          primaryComponent={create}
         >
-          <p className="text-sm text-muted-foreground">
+          {/* <p className="text-sm text-muted-foreground">
             Functions are a powerful way to encapsulate logic and can be used to create reusable
             database operations.
           </p>
           <p className="text-sm text-muted-foreground">
             It's stored on the database server and can be invoked using the SQL interface.
-          </p>
+          </p> */}
         </EmptyState>
 
-        <Table noResults={_functions.length === 0 && hasQuery} />
+        {_functions.length > 0 ||
+          (hasQuery && <Table noResults={_functions.length === 0 && hasQuery} />)}
       </DataGridProvider>
     </div>
   );
