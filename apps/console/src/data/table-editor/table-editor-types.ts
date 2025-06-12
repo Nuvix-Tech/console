@@ -83,16 +83,16 @@ export function isViewLike(entity?: Entity): entity is View | MaterializedView {
 export function postgresTableToEntity(table: PostgresTable): Entity | undefined {
   if (table.columns === undefined || table.relationships === undefined) {
     console.error(
-      'Unable to convert PostgresTable to Entity type: columns and relationships must not be undefined.'
-    )
-    return undefined
+      "Unable to convert PostgresTable to Entity type: columns and relationships must not be undefined.",
+    );
+    return undefined;
   }
 
   const tableRelationships: TableRelationship[] = table.relationships.map((rel) => ({
-    deletion_action: 'a',
-    update_action: 'a',
+    deletion_action: "a",
+    update_action: "a",
     ...rel,
-  }))
+  }));
 
   return {
     id: table.id,
@@ -110,5 +110,5 @@ export function postgresTableToEntity(table: PostgresTable): Entity | undefined 
     relationships: tableRelationships,
     primary_keys: table.primary_keys,
     entity_type: ENTITY_TYPE.TABLE,
-  }
+  };
 }

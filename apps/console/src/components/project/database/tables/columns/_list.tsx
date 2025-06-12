@@ -1,22 +1,19 @@
 "use client";
 // import { PermissionAction } from '@supabase/shared-types/out/constants'
-import { noop } from 'lodash'
-import { ChevronLeft, Edit, MoreVertical, Plus, SearchIcon, Trash } from 'lucide-react'
-import Link from 'next/link'
-import { useState } from 'react'
-import { ColumnDef } from "@tanstack/react-table"
-import { Button, Code, Input, InputGroup, SkeletonText } from "@chakra-ui/react"
+import { noop } from "lodash";
+import { ChevronLeft, Edit, MoreVertical, Plus, SearchIcon, Trash } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import { ColumnDef } from "@tanstack/react-table";
+import { Button, Code, Input, InputGroup, SkeletonText } from "@chakra-ui/react";
 
-import { CreateButton } from "@/components/others"
-import { EmptyState } from "@/components/_empty_state"
-import {
-  DataGridProvider,
-  Table,
-} from "@/ui/data-grid"
-import { useTableEditorQuery } from '@/data/table-editor/table-editor-query'
-import { isTableLike } from '@/data/table-editor/table-editor-types'
+import { CreateButton } from "@/components/others";
+import { EmptyState } from "@/components/_empty_state";
+import { DataGridProvider, Table } from "@/ui/data-grid";
+import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
+import { isTableLike } from "@/data/table-editor/table-editor-types";
 // import { useCheckPermissions } from 'hooks/misc/useCheckPermissions'
-import { PROTECTED_SCHEMAS } from '@/lib/constants/schemas'
+import { PROTECTED_SCHEMAS } from "@/lib/constants/schemas";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,16 +22,16 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from '@nuvix/sui/components'
-import { useParams } from 'next/navigation';
-import { useProjectStore } from '@/lib/store';
-import ProtectedSchemaWarning from '@/ui/ProtectedSchemaWarning';
+} from "@nuvix/sui/components";
+import { useParams } from "next/navigation";
+import { useProjectStore } from "@/lib/store";
+import ProtectedSchemaWarning from "@/ui/ProtectedSchemaWarning";
 // import ProtectedSchemaWarning from '../ProtectedSchemaWarning'
 
 interface ColumnListProps {
-  onAddColumn: () => void
-  onEditColumn: (column: any) => void
-  onDeleteColumn: (column: any) => void
+  onAddColumn: () => void;
+  onEditColumn: (column: any) => void;
+  onDeleteColumn: (column: any) => void;
 }
 
 const ColumnList = ({
@@ -42,8 +39,8 @@ const ColumnList = ({
   onEditColumn = noop,
   onDeleteColumn = noop,
 }: ColumnListProps) => {
-  const { tableId, id: projectId } = useParams<{ tableId: string, id: string }>()
-  const id = tableId ? Number(tableId) : undefined
+  const { tableId, id: projectId } = useParams<{ tableId: string; id: string }>();
+  const id = tableId ? Number(tableId) : undefined;
 
   const { project, sdk } = useProjectStore((s) => s);
   const {
@@ -57,28 +54,28 @@ const ColumnList = ({
     projectRef: projectId,
     sdk,
     id,
-  })
+  });
 
-  const [filterString, setFilterString] = useState<string>('')
-  const isTableEntity = isTableLike(selectedTable)
+  const [filterString, setFilterString] = useState<string>("");
+  const isTableEntity = isTableLike(selectedTable);
 
   const columns =
     (filterString.length === 0
-      ? selectedTable?.columns ?? []
-      : selectedTable?.columns?.filter((column) => column.name.includes(filterString))) ?? []
+      ? (selectedTable?.columns ?? [])
+      : selectedTable?.columns?.filter((column) => column.name.includes(filterString))) ?? [];
 
-  const isLocked = PROTECTED_SCHEMAS.includes(selectedTable?.schema ?? '')
-  const canUpdateColumns = true // useCheckPermissions(PermissionAction.TENANT_SQL_ADMIN_WRITE, 'columns')
+  const isLocked = PROTECTED_SCHEMAS.includes(selectedTable?.schema ?? "");
+  const canUpdateColumns = true; // useCheckPermissions(PermissionAction.TENANT_SQL_ADMIN_WRITE, 'columns')
 
-  const hasQuery = !!filterString
+  const hasQuery = !!filterString;
 
-  const tableColumns: ColumnDef<typeof columns[number]>[] = [
+  const tableColumns: ColumnDef<(typeof columns)[number]>[] = [
     {
       header: "Name",
       accessorKey: "name",
       minSize: 180,
       cell({ getValue }) {
-        return <p>{getValue<string>()}</p>
+        return <p>{getValue<string>()}</p>;
       },
     },
     {
@@ -86,12 +83,14 @@ const ColumnList = ({
       accessorKey: "comment",
       minSize: 200,
       cell({ getValue }) {
-        const comment = getValue<string | null>()
+        const comment = getValue<string | null>();
         return comment !== null ? (
-          <p title={comment}>{comment}</p>
+          <span className="text-sm tex-semibold" title={comment}>
+            {comment}
+          </span>
         ) : (
-          <p className="text-border-stronger">No description</p>
-        )
+          <p className="text-sm tex-semibold">No description</p>
+        );
       },
     },
     {
@@ -99,7 +98,11 @@ const ColumnList = ({
       accessorKey: "data_type",
       minSize: 120,
       cell({ getValue }) {
-        return <Code className="text-xs">{getValue<string>()}</Code>
+        return (
+          <Code title={getValue<string>()} className="text-xs text-elipsis line-clamp-1">
+            {getValue<string>()}
+          </Code>
+        );
       },
     },
     {
@@ -107,7 +110,7 @@ const ColumnList = ({
       accessorKey: "format",
       minSize: 120,
       cell({ getValue }) {
-        return <Code className="text-xs">{getValue<string>()}</Code>
+        return <Code className="text-xs">{getValue<string>()}</Code>;
       },
     },
     {
@@ -115,7 +118,7 @@ const ColumnList = ({
       accessorKey: "actions",
       minSize: 60,
       cell({ row }) {
-        const column = row.original
+        const column = row.original;
         return (
           <div className="flex justify-end">
             {!isLocked && isTableEntity && (
@@ -125,7 +128,7 @@ const ColumnList = ({
                     <MoreVertical />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent side="bottom" align="end" className="w-32">
+                <DropdownMenuContent side="bottom" align="end" className="w-40">
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <DropdownMenuItem
@@ -165,18 +168,14 @@ const ColumnList = ({
               </DropdownMenu>
             )}
           </div>
-        )
+        );
       },
     },
-  ]
+  ];
 
   const create = (
-    <CreateButton
-      hasPermission={canUpdateColumns}
-      label="Add Column"
-      onClick={onAddColumn}
-    />
-  )
+    <CreateButton hasPermission={canUpdateColumns} label="Add Column" onClick={onAddColumn} />
+  );
 
   return (
     <div className="space-y-4">
@@ -198,20 +197,16 @@ const ColumnList = ({
           </InputGroup>
         </div>
         {!isLocked && isTableEntity && (
-          <Button
-            size="xs"
-            disabled={!canUpdateColumns}
-            onClick={() => onAddColumn()}
-          >
+          <Button size="xs" disabled={!canUpdateColumns} onClick={() => onAddColumn()}>
             <Plus />
             New column
           </Button>
         )}
       </div>
 
-      {isLocked && <ProtectedSchemaWarning schema={selectedTable?.schema ?? ''} entity="columns" />}
+      {isLocked && <ProtectedSchemaWarning schema={selectedTable?.schema ?? ""} entity="columns" />}
 
-      <DataGridProvider<typeof columns[number]>
+      <DataGridProvider<(typeof columns)[number]>
         columns={tableColumns}
         data={columns}
         loading={isFetching}
@@ -230,7 +225,7 @@ const ColumnList = ({
         )}
       </DataGridProvider>
     </div>
-  )
-}
+  );
+};
 
 export { ColumnList };

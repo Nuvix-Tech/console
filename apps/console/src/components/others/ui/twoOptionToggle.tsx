@@ -26,7 +26,7 @@ export const TwoOptionToggle = <T extends string>({
           {...rest}
           onClick={() => onClickOption(options[0])}
           variant={fistActive ? "solid" : "ghost"}
-          borderColor={fistActive ? "border.inverted" : undefined}
+          borderColor={fistActive ? "border.muted" : undefined}
         >
           {options[0]}
         </Button>
@@ -34,7 +34,7 @@ export const TwoOptionToggle = <T extends string>({
           {...rest}
           onClick={() => onClickOption(options[1])}
           variant={secondActive ? "solid" : "ghost"}
-          borderColor={secondActive ? "border.inverted" : undefined}
+          borderColor={secondActive ? "border.muted" : undefined}
         >
           {options[1]}
         </Button>

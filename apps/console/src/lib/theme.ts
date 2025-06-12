@@ -84,6 +84,9 @@ const config = defineConfig({
           subtle: { value: "var(--neutral-border-weak)" },
           muted: { value: "var(--neutral-alpha-medium)" },
           emphasized: { value: "var(--neutral-border-strong)" },
+          inverted: {
+            value: { _light: "var(--neutral-solid-weak)", _dark: "var(--neutral-solid-strong)" },
+          },
         },
         text: {
           DEFAULT: { value: "var(--neutral-on-background-weak)" },
@@ -92,14 +95,21 @@ const config = defineConfig({
           emphasized: { value: "var(--neutral-on-background-strong)" },
         },
         gray: {
-          // subtle: { value: "var(--neutral-background-medium)" },
-          // contrast: { value: "var(--brand-on-solid-medium)" },
-          // muted: { value: "var(--neutral-alpha-weak)" },
-          // emphasized: { value: "var(--neutral-background-strong)" },
-          // solid: { value: "var(--brand-solid-medium)" },
-          // inverted: {
-          //   value: { _light: "var(--neutral-solid-weak)", _dark: "var(--neutral-solid-strong)" },
-          // },
+          subtle: { value: "var(--neutral-background-medium)" },
+          contrast: {
+            value: {
+              _light: "var(--brand-on-solid-strong)",
+              _dark: "var(--brand-on-background-strong)",
+            },
+          },
+          muted: { value: "var(--neutral-alpha-weak)" },
+          emphasized: { value: "var(--neutral-background-strong)" },
+          solid: {
+            value: { _light: "var(--brand-solid-strong)", _dark: "var(--brand-background-strong)" },
+          },
+          inverted: {
+            value: { _light: "var(--neutral-solid-weak)", _dark: "var(--neutral-solid-strong)" },
+          },
         },
       },
     },

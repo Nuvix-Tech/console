@@ -1,6 +1,6 @@
 "use client";
-import { PageContainer, PageHeading } from "@/components/others"
-import { TablesList } from "./components"
+import { PageContainer, PageHeading } from "@/components/others";
+import { TablesList } from "./components";
 import { useTableEditorStateSnapshot } from "@/lib/store/table-editor";
 import { useState } from "react";
 import { Entity, isTableLike, postgresTableToEntity } from "@/data/table-editor/table-editor-types";
@@ -12,8 +12,8 @@ import { PostgresTable } from "@nuvix/pg-meta";
 
 export const TablesPage = () => {
   const { id: projectId } = useParams<{ id: string }>();
-  const snap = useTableEditorStateSnapshot()
-  const [selectedTableToEdit, setSelectedTableToEdit] = useState<Entity>()
+  const snap = useTableEditorStateSnapshot();
+  const [selectedTableToEdit, setSelectedTableToEdit] = useState<Entity>();
 
   return (
     <>
@@ -25,16 +25,16 @@ export const TablesPage = () => {
         <TablesList
           onAddTable={snap.onAddTable}
           onEditTable={(table) => {
-            setSelectedTableToEdit(postgresTableToEntity(table))
-            snap.onEditTable()
+            setSelectedTableToEdit(postgresTableToEntity(table));
+            snap.onEditTable();
           }}
           onDeleteTable={(table) => {
-            setSelectedTableToEdit(postgresTableToEntity(table))
-            snap.onDeleteTable()
+            setSelectedTableToEdit(postgresTableToEntity(table));
+            snap.onDeleteTable();
           }}
           onDuplicateTable={(table) => {
-            setSelectedTableToEdit(postgresTableToEntity(table))
-            snap.onDuplicateTable()
+            setSelectedTableToEdit(postgresTableToEntity(table));
+            snap.onDuplicateTable();
           }}
         />
       </PageContainer>
@@ -52,5 +52,5 @@ export const TablesPage = () => {
 
       <SidePanelEditor includeColumns selectedTable={selectedTableToEdit as PostgresTable} />
     </>
-  )
-}
+  );
+};
