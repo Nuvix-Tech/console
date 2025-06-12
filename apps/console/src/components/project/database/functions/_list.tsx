@@ -93,7 +93,13 @@ const FunctionsList = ({
       cell({ getValue, row }) {
         const name = getValue<string>();
         return (
-          <Button variant="tertiary" size="s" onClick={() => editFunction(row.original)}>
+          <Button
+            tooltip={name}
+            variant="tertiary"
+            size="s"
+            onClick={() => editFunction(row.original)}
+            className="text-elipsis"
+          >
             {name}
           </Button>
         );
@@ -332,8 +338,9 @@ const FunctionsList = ({
           </p> */}
         </EmptyState>
 
-        {_functions.length > 0 ||
-          (hasQuery && <Table noResults={_functions.length === 0 && hasQuery} />)}
+        {(_functions.length > 0 || hasQuery) && (
+          <Table noResults={_functions.length === 0 && hasQuery} interactive={false} />
+        )}
       </DataGridProvider>
     </div>
   );
