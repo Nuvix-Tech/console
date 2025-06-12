@@ -9,6 +9,8 @@ const DatabaseLayout: React.FC<PropsWithChildren> = ({ children }) => {
   useEffect(() => {
     setSidebar({
       first: <DatbaseSidebar />,
+      middle: null,
+      last: null,
     });
   }, []);
 

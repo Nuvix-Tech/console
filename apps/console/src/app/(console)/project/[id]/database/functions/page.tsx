@@ -1,5 +1,6 @@
 import React from "react";
 import { PropsWithParams } from "@/types";
+import { FunctionsPage } from "@/components/project/database/functions";
 
 export const metadata = {
   title: "Database Functions",
@@ -7,5 +8,5 @@ export const metadata = {
 };
 
 export default function DatabaseFunctions() {
-  return <div>Database Functions Content</div>;
+  return <FunctionsPage />;
 }

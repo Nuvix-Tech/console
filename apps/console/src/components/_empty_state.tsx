@@ -9,6 +9,7 @@ type EmptyStateProps = {
   primaryComponent?: React.JSX.Element;
   primary?: ButtonProps;
   secondary?: ButtonProps;
+  children?: React.ReactNode;
 };
 
 export const EmptyState = ({
@@ -18,6 +19,7 @@ export const EmptyState = ({
   primary,
   secondary,
   primaryComponent,
+  children,
 }: EmptyStateProps) => {
   return (
     show && (
@@ -44,6 +46,7 @@ export const EmptyState = ({
             </Text>
           )}
         </Stack>
+        {children}
         <Stack direction="row" gap={4}>
           {primaryComponent ? primaryComponent : primary && <Button size="s" {...primary} />}
           {secondary && <Button size="s" variant="secondary" {...secondary} />}

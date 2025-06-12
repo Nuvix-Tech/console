@@ -3,7 +3,6 @@ import React from "react";
 
 type CreateButtonProps = {
   hasPermission: boolean;
-  label: string;
   component?: React.ElementType;
   extraProps?: any;
 } & ButtonProps;

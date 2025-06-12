@@ -43,7 +43,7 @@ interface CodeEditorProps {
   }>;
   editorRef?: RefObject<editor.IStandaloneCodeEditor | undefined>;
   onInputChange?: (value?: string) => void;
-};
+}
 
 const CodeEditor = ({
   id,
