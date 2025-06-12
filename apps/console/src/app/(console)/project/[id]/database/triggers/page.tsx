@@ -1,5 +1,5 @@
 import React from "react";
-import { PropsWithParams } from "@/types";
+import { TriggersPage } from "@/components/project/database/triggers";
 
 export const metadata = {
   title: "Database Triggers",
@@ -7,5 +7,5 @@ export const metadata = {
 };
 
 export default function DatabaseTriggers() {
-  return <div>Database Triggers Content</div>;
+  return <TriggersPage />;
 }
