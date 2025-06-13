@@ -15,7 +15,7 @@ const alertVariants = cva(
         neutral: "bg-neutral text-neutral-foreground",
         default: "bg-background text-foreground",
         destructive:
-          "text-destructive-foreground [&>svg]:text-current *:data-[slot=alert-description]:text-destructive-foreground/80",
+          "danger-on-background-weak [&>svg]:text-current *:data-[slot=alert-description]:text-destructive-foreground/80",
 
         custom: "bg-custom text-custom-foreground",
       },

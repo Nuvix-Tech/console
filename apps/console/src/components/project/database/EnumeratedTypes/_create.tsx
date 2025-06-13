@@ -31,7 +31,7 @@ const FormSchema = y.object({
       (value) => !NATIVE_POSTGRES_TYPES.includes(value),
     ),
   description: y.string().optional(),
-  values: y
+  _values: y
     .array()
     .of(
       y.object({
@@ -48,7 +48,7 @@ const CreateEnumeratedTypeSidePanel = ({
   onClose,
   schema,
 }: CreateEnumeratedTypeSidePanelProps) => {
-  const initialValues = { name: "", description: "", values: [{ value: "" }] };
+  const initialValues = { name: "", description: "", _values: [{ value: "" }] };
   const submitRef = useRef<HTMLButtonElement>(null);
   const { project, sdk } = useProjectStore((s) => s);
   const { mutate: createEnumeratedType, isPending: isCreating } = useEnumeratedTypeCreateMutation({
@@ -67,7 +67,7 @@ const CreateEnumeratedTypeSidePanel = ({
       schema,
       name: data.name,
       description: data.description?.replaceAll("'", "''"),
-      values: data.values.filter((x) => x.value.length > 0).map((x) => x.value.trim()),
+      values: data._values.filter((x) => x.value.length > 0).map((x) => x.value.trim()),
     });
   };
 
@@ -92,90 +92,93 @@ const CreateEnumeratedTypeSidePanel = ({
       visible={visible}
       onCancel={closePanel}
       header="Create a new enumerated type"
-      confirmText="Create type"
-      onConfirm={() => {
-        if (submitRef.current) submitRef.current.click();
-      }}
+      customConfirm={
+        <SubmitButton ref={submitRef} size={"s"}>
+          Create Type
+        </SubmitButton>
+      }
+      form={form as any}
     >
-      <SidePanel.Content className="py-4">
-        <Form {...form} className="space-y-4">
-          <InputField name="name" label="Name" required />
-          <InputField name="description" label="Description" labelOptional="Optional" />
-          <FieldArray
-            name="values"
-            render={({ move, push, remove, form }) => {
-              const fields = (form.values.values || []) as { value: string }[];
+      <SidePanel.Content className="py-4 space-y-4">
+        <InputField name="name" label="Name" required />
+        <InputField name="description" label="Description" labelOptional="Optional" />
+        <FieldArray
+          name="_values"
+          render={({ move, push, remove, form }) => {
+            const fields = (form.values._values || []) as { value: string }[];
 
-              const updateOrder = (result: any) => {
-                // Dropped outside of the list
-                if (!result.destination) return;
-                if (result.source.index === result.destination.index) return;
-                move(result.source.index, result.destination.index);
-              };
+            const updateOrder = (result: any) => {
+              // Dropped outside of the list
+              if (!result.destination) return;
+              move(result.source.index, result.destination.index);
+            };
 
-              return (
-                <>
-                  <Label>Values</Label>
-                  <Alert>
-                    <AlertCircle strokeWidth={1.5} />
-                    <AlertTitle>After creation, values cannot be deleted or sorted</AlertTitle>
-                    <AlertDescription>
-                      <p className="!leading-normal track">
-                        You will need to delete and recreate the enumerated type with the updated
-                        values instead.
-                      </p>
-                      <Button
-                        asChild
-                        type="button"
-                        size="s"
-                        prefixIcon={<ExternalLink strokeWidth={1.5} />}
-                        className="mt-2"
-                        href="https://www.postgresql.org/message-id/21012.1459434338%40sss.pgh.pa.us"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Learn more
-                      </Button>
-                    </AlertDescription>
-                  </Alert>
-                  <Form {...form}>
-                    <DragDropContext onDragEnd={(result: any) => updateOrder(result)}>
-                      <Droppable droppableId="enum_type_values_droppable">
-                        {(droppableProvided: DroppableProvided) => (
-                          <div ref={droppableProvided.innerRef}>
-                            {fields.map((field, index) => (
-                              <EnumeratedTypeValueRow
-                                index={index}
-                                id={index.toString()}
-                                field={`values.${index}.value`}
-                                isDisabled={fields.length < 2}
-                                onRemoveValue={() => remove(index)}
-                              />
-                            ))}
-                            {droppableProvided.placeholder}
-                          </div>
-                        )}
-                      </Droppable>
-                    </DragDropContext>
-
+            return (
+              <>
+                <Label>Values</Label>
+                <Alert>
+                  <AlertCircle strokeWidth={1.5} />
+                  <AlertTitle>After creation, values cannot be deleted or sorted</AlertTitle>
+                  <AlertDescription>
+                    <p className="!leading-normal track">
+                      You will need to delete and recreate the enumerated type with the updated
+                      values instead.
+                    </p>
                     <Button
+                      asChild
                       type="button"
                       size="s"
-                      variant="secondary"
-                      prefixIcon={<Plus strokeWidth={1.5} />}
-                      onClick={() => push({ value: "" })}
+                      prefixIcon={<ExternalLink strokeWidth={1.5} />}
+                      className="mt-2"
+                      href="https://www.postgresql.org/message-id/21012.1459434338%40sss.pgh.pa.us"
+                      target="_blank"
+                      rel="noreferrer"
                     >
-                      Add value
+                      Learn more
                     </Button>
-                  </Form>
-                </>
-              );
-            }}
-          />
-          <SubmitButton ref={submitRef} size={"s"} className="!hidden">
-            Update
-          </SubmitButton>
-        </Form>
+                  </AlertDescription>
+                </Alert>
+                <Form {...form}>
+                  <DragDropContext onDragEnd={(result: any) => updateOrder(result)}>
+                    <Droppable
+                      droppableId="enum_type_values_droppable"
+                      isDropDisabled={false}
+                      isCombineEnabled={false}
+                      ignoreContainerClipping={false}
+                      direction="vertical"
+                    >
+                      {(droppableProvided: DroppableProvided) => (
+                        <div ref={droppableProvided.innerRef}>
+                          {fields.map((field, index) => (
+                            <EnumeratedTypeValueRow
+                              key={index}
+                              index={index}
+                              id={index.toString()}
+                              field={`_values.${index}.value`}
+                              isDisabled={fields.length < 2}
+                              onRemoveValue={() => remove(index)}
+                            />
+                          ))}
+                          {droppableProvided.placeholder}
+                        </div>
+                      )}
+                    </Droppable>
+                  </DragDropContext>
+
+                  <Button
+                    type="button"
+                    size="s"
+                    variant="secondary"
+                    prefixIcon={<Plus strokeWidth={1.5} />}
+                    onClick={() => push({ value: "" })}
+                  >
+                    Add value
+                  </Button>
+                </Form>
+              </>
+            );
+          }}
+        />
       </SidePanel.Content>
     </SidePanel>
   );

@@ -87,7 +87,7 @@ const ConfirmationModal = forwardRef<
           {alert && (
             <Alert
               variant={variant as "default" | "destructive"}
-              className="border-r-0 border-l-0 rounded-none -mt-px [&_svg]:ml-0.5 mb-0"
+              className="-mt-px [&_svg]:ml-0.5 mb-0"
               {...alert?.base}
             >
               <AlertTitle>{alert.title}</AlertTitle>

@@ -13,6 +13,8 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/t
 import { Button } from "@nuvix/ui/components";
 import styles from "./SidePanel.module.css";
 import classNames from "classnames";
+import { Form } from "@/components/others/forms";
+import { FormikValues } from "formik";
 
 export type SidePanelProps = RadixProps & CustomProps;
 
@@ -27,7 +29,7 @@ interface RadixProps
       | "onInteractOutside"
     > {}
 
-interface CustomProps {
+interface CustomProps<T extends FormikValues = any> {
   id?: String | undefined;
   disabled?: boolean;
   className?: string;
@@ -43,8 +45,10 @@ interface CustomProps {
   cancelText?: String;
   onConfirm?: () => void;
   confirmText?: String;
+  customConfirm?: React.ReactNode;
   triggerElement?: React.ReactNode;
   tooltip?: string;
+  form?: Omit<React.ComponentProps<typeof Form<T>>, "children">;
 }
 
 const SidePanel = ({
@@ -66,7 +70,9 @@ const SidePanel = ({
   cancelText = "Cancel",
   triggerElement,
   defaultOpen,
+  customConfirm,
   tooltip,
+  form,
   ...props
 }: SidePanelProps) => {
   const footerContent = (
@@ -74,15 +80,16 @@ const SidePanel = ({
       {customFooter ? (
         <div className="w-full relative">{customFooter}</div>
       ) : (
-        <>
+        <div className="flex items-center justify-end py-2 px-4 gap-4">
           <Button
             disabled={loading}
+            size="s"
             variant="secondary"
             onClick={() => (onCancel ? onCancel() : null)}
           >
             {cancelText}
           </Button>
-          {onConfirm !== undefined && (
+          {onConfirm !== undefined && !customConfirm && (
             <Tooltip>
               <TooltipTrigger asChild>
                 <span className="inline-block">
@@ -90,6 +97,7 @@ const SidePanel = ({
                     variant="primary"
                     disabled={disabled || loading}
                     loading={loading}
+                    size="s"
                     onClick={() => (onConfirm ? onConfirm() : null)}
                   >
                     {confirmText}
@@ -99,7 +107,8 @@ const SidePanel = ({
               {tooltip !== undefined && <TooltipContent side="bottom">{tooltip}</TooltipContent>}
             </Tooltip>
           )}
-        </>
+          {customConfirm}
+        </div>
       )}
     </SheetFooter>
   );
@@ -136,9 +145,11 @@ const SidePanel = ({
           if (props.onInteractOutside) props.onInteractOutside(event);
         }}
       >
-        {header && <SheetHeader className="flex-row border-b w-full block">{header}</SheetHeader>}
-        <div className="h-full overflow-y-auto">{children}</div>
-        {!hideFooter && footerContent}
+        <Wrrapper form={form}>
+          {header && <SheetHeader className="flex-row border-b w-full block">{header}</SheetHeader>}
+          <div className="h-full overflow-y-auto">{children}</div>
+          {!hideFooter && footerContent}
+        </Wrrapper>
       </SheetContent>
     </Sheet>
   );
@@ -166,6 +177,16 @@ const getSize = (size: CustomProps["size"]) => {
       return "w-full";
   }
 };
+
+function Wrrapper({ form, children }: { form?: any; children: any }) {
+  return form ? (
+    <Form {...form} className="h-[calc(100vh-100px)]">
+      {children}
+    </Form>
+  ) : (
+    children
+  );
+}
 
 export function Content({
   children,

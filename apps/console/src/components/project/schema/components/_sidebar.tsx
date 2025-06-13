@@ -51,8 +51,8 @@ const DatbaseSidebar = () => {
           },
           {
             label: "Enumerated Types",
-            href: resolveHref("enum-types"),
-            isSelected: resolveIsSelected("enum-types"),
+            href: resolveHref("types"),
+            isSelected: resolveIsSelected("types"),
           },
           {
             label: "Extensions",

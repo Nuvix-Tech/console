@@ -1,5 +1,5 @@
-import { InputField } from "@/components/others/forms";
-import { IconButton } from "@nuvix/ui/components";
+import { IconButton, Input } from "@nuvix/ui/components";
+import { Field } from "formik";
 import { GripVertical, Trash } from "lucide-react";
 import { Draggable, DraggableProvided } from "react-beautiful-dnd";
 
@@ -19,7 +19,7 @@ const EnumeratedTypeValueRow = ({
   onRemoveValue,
 }: EnumeratedTypeValueRowProps) => {
   return (
-    <Draggable draggableId={id} index={index} isDragDisabled={isDisabled}>
+    <Draggable draggableId={id} index={index} isDragDisabled={!!isDisabled}>
       {(draggableProvided: DraggableProvided) => (
         <div
           ref={draggableProvided.innerRef}
@@ -34,10 +34,11 @@ const EnumeratedTypeValueRow = ({
           >
             <GripVertical size={16} strokeWidth={1.5} />
           </div>
-          <InputField name={field} className="w-full" />
+          <Field name={field} as={Input} labelAsPlaceholder height="s" />
           <IconButton
             type="button"
             size="s"
+            variant="ghost"
             disabled={isDisabled}
             icon={<Trash strokeWidth={1.5} size={16} />}
             onClick={() => onRemoveValue()}

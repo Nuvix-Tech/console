@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@nuvix/sui/components";
 import { useProjectStore } from "@/lib/store";
-import { Button } from "@nuvix/ui/components";
+import { Button, IconButton } from "@nuvix/ui/components";
 import { Input } from "@chakra-ui/react";
 import { SkeletonText } from "@/components/cui/skeleton";
 import { EmptyState } from "@/components/_empty_state";
@@ -113,11 +113,11 @@ const EnumeratedTypes = ({ createType, editType, deleteType }: EnumeratedTypesPr
             {!isLocked && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="secondary" size="s" className="px-1">
-                    <MoreVertical />
-                  </Button>
+                  <IconButton variant="tertiary" size="s" className="px-1">
+                    <MoreVertical size={20} />
+                  </IconButton>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent side="bottom" align="end" className="w-32">
+                <DropdownMenuContent side="bottom" align="end" className="w-40">
                   <DropdownMenuItem
                     className="space-x-2"
                     onClick={() => {

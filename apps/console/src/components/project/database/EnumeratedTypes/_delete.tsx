@@ -56,7 +56,7 @@ const DeleteEnumeratedTypeModal = ({
       }}
     >
       <p className="text-sm">Before deleting this enumerated type, consider:</p>
-      <ul className="space-y-2 mt-2 text-sm text-foreground-light">
+      <ul className="space-y-2 mt-2 text-sm text-muted-foreground">
         <li className="list-disc ml-6">
           This enumerated type is no longer in use in any tables or functions
         </li>

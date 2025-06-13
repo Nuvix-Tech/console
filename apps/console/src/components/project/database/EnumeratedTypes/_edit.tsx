@@ -24,12 +24,12 @@ interface EditEnumeratedTypeSidePanelProps {
 const FormSchema = y.object({
   name: y.string().required("Please provide a name for your enumerated type").default(""),
   description: y.string().optional(),
-  values: y
+  _values: y
     .array()
     .of(
       y.object({
         isNew: y.boolean().required(),
-        originalValue: y.string().required(),
+        originalValue: y.string(),
         updatedValue: y.string().required("Please provide a value"),
       }),
     )
@@ -65,10 +65,10 @@ const EditEnumeratedTypeSidePanel = ({
     } = {
       schema: selectedEnumeratedType.schema,
       name: { original: selectedEnumeratedType.name, updated: data.name },
-      values: data.values
+      values: data._values
         .filter((x) => x.updatedValue.length !== 0)
         .map((x) => ({
-          original: x.originalValue,
+          original: x.originalValue ?? x.updatedValue.trim(),
           updated: x.updatedValue.trim(),
           isNew: x.isNew,
         })),
@@ -87,7 +87,8 @@ const EditEnumeratedTypeSidePanel = ({
   const form = useFormik<FormSchemaType>({
     onSubmit,
     validationSchema: FormSchema,
-    initialValues: { name: "", description: "", values: [] },
+    initialValues: { name: "", description: "", _values: [] },
+    enableReinitialize: true,
   });
 
   const originalEnumeratedTypes = (selectedEnumeratedType?.enums ?? []).map((x: any) => ({
@@ -98,17 +99,17 @@ const EditEnumeratedTypeSidePanel = ({
 
   useEffect(() => {
     if (selectedEnumeratedType !== undefined) {
-      form.resetForm({
+      form.setValues({
         name: selectedEnumeratedType.name,
         description: selectedEnumeratedType.comment ?? "",
-        values: originalEnumeratedTypes,
-      } as any);
+        _values: originalEnumeratedTypes,
+      });
     }
 
     if (selectedEnumeratedType == undefined) {
       form.resetForm({
-        values: originalEnumeratedTypes,
-      });
+        _values: originalEnumeratedTypes,
+      } as any);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedEnumeratedType]);
@@ -119,91 +120,95 @@ const EditEnumeratedTypeSidePanel = ({
       visible={visible}
       onCancel={onClose}
       header={`Update type "${selectedEnumeratedType?.name}"`}
-      confirmText="Update type"
-      onConfirm={() => {
-        if (submitRef.current) submitRef.current.click();
-      }}
+      customConfirm={
+        <SubmitButton ref={submitRef} size={"s"}>
+          Update
+        </SubmitButton>
+      }
+      form={form as any}
     >
-      <SidePanel.Content className="py-4">
-        <Form {...form} className="space-y-4">
-          <InputField name="name" label="Name" required />
-          <InputField name="description" label="Description" labelOptional="Optional" />
+      <SidePanel.Content className="py-4 space-y-4">
+        <InputField name="name" label="Name" required />
+        <InputField name="description" label="Description" labelOptional="Optional" />
 
-          <FieldArray
-            name="values"
-            render={({ move, push, remove, form }) => {
-              const fields = (form.values.values || []) as FormSchemaType["values"];
+        <FieldArray
+          name="_values"
+          render={({ move, push, remove, form }) => {
+            const fields = (form.values._values || []) as FormSchemaType["_values"];
 
-              const updateOrder = (result: any) => {
-                // Dropped outside of the list
-                if (!result.destination) return;
-                if (result.source.index === result.destination.index) return;
-                move(result.source.index, result.destination.index);
-              };
+            const updateOrder = (result: any) => {
+              // Dropped outside of the list
+              if (!result.destination) return;
+              if (result.source.index === result.destination.index) return;
+              move(result.source.index, result.destination.index);
+            };
 
-              return (
-                <>
-                  <Label>Values</Label>
-                  <Alert>
-                    <AlertCircle strokeWidth={1.5} />
-                    <AlertTitle>Existing values cannot be deleted or sorted</AlertTitle>
-                    <AlertDescription>
-                      <p className="!leading-normal track">
-                        You will need to delete and recreate the enumerated type with the updated
-                        values instead.
-                      </p>
-                      <Button
-                        asChild
-                        type="button"
-                        size="s"
-                        prefixIcon={<ExternalLink strokeWidth={1.5} />}
-                        className="mt-2"
-                        href="https://www.postgresql.org/message-id/21012.1459434338%40sss.pgh.pa.us"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Learn more
-                      </Button>
-                    </AlertDescription>
-                  </Alert>
-                  <Form {...form}>
-                    <DragDropContext onDragEnd={(result: any) => updateOrder(result)}>
-                      <Droppable droppableId="enum_type_values_droppable">
-                        {(droppableProvided: DroppableProvided) => (
-                          <div ref={droppableProvided.innerRef}>
-                            {fields.map((field, index) => (
-                              <EnumeratedTypeValueRow
-                                index={index}
-                                id={index.toString()}
-                                field={`values.${index}.updatedValue`}
-                                isDisabled={!field.isNew}
-                                onRemoveValue={() => remove(index)}
-                              />
-                            ))}
-                            {droppableProvided.placeholder}
-                          </div>
-                        )}
-                      </Droppable>
-                    </DragDropContext>
-
+            return (
+              <>
+                <Label>Values</Label>
+                <Alert>
+                  <AlertCircle strokeWidth={1.5} />
+                  <AlertTitle>Existing values cannot be deleted or sorted</AlertTitle>
+                  <AlertDescription>
+                    <p className="!leading-normal track">
+                      You will need to delete and recreate the enumerated type with the updated
+                      values instead.
+                    </p>
                     <Button
+                      asChild
                       type="button"
                       size="s"
-                      variant="secondary"
-                      prefixIcon={<Plus strokeWidth={1.5} />}
-                      onClick={() => push({ isNew: true, originalValue: "", updatedValue: "" })}
+                      prefixIcon={<ExternalLink strokeWidth={1.5} />}
+                      className="mt-2"
+                      href="https://www.postgresql.org/message-id/21012.1459434338%40sss.pgh.pa.us"
+                      target="_blank"
+                      rel="noreferrer"
                     >
-                      Add value
+                      Learn more
                     </Button>
-                  </Form>
-                </>
-              );
-            }}
-          />
-          <SubmitButton ref={submitRef} size={"s"} className="!hidden">
-            Update
-          </SubmitButton>
-        </Form>
+                  </AlertDescription>
+                </Alert>
+                <Form {...form}>
+                  <DragDropContext onDragEnd={(result: any) => updateOrder(result)}>
+                    <Droppable
+                      droppableId="enum_type_values_droppable"
+                      isDropDisabled={false}
+                      isCombineEnabled={false}
+                      ignoreContainerClipping={false}
+                      direction="vertical"
+                    >
+                      {(droppableProvided: DroppableProvided) => (
+                        <div ref={droppableProvided.innerRef}>
+                          {fields.map((field, index) => (
+                            <EnumeratedTypeValueRow
+                              key={index}
+                              index={index}
+                              id={index.toString()}
+                              field={`_values.${index}.updatedValue`}
+                              isDisabled={!field.isNew}
+                              onRemoveValue={() => remove(index)}
+                            />
+                          ))}
+                          {droppableProvided.placeholder}
+                        </div>
+                      )}
+                    </Droppable>
+                  </DragDropContext>
+
+                  <Button
+                    type="button"
+                    size="s"
+                    variant="secondary"
+                    prefixIcon={<Plus strokeWidth={1.5} />}
+                    onClick={() => push({ isNew: true, originalValue: "", updatedValue: "" })}
+                  >
+                    Add value
+                  </Button>
+                </Form>
+              </>
+            );
+          }}
+        />
       </SidePanel.Content>
     </SidePanel>
   );
