@@ -1,24 +1,42 @@
 import React from "react";
-import { Formik, FormikConfig, FormikValues } from "formik";
+import { Formik, FormikConfig, FormikValues, useFormik, FormikContext, FormikFormProps, Form as FormikForm } from "formik";
 
 type Form = {
   children: React.ReactNode;
   className?: string;
 };
 
+type FormikConfigs<T, V> = FormikConfig<T> & V;
+type FormikProps<T extends FormikValues> = ReturnType<typeof useFormik<T>>;
+
 function Form<Values extends FormikValues = FormikValues, ExtraProps = {}>(
-  props: FormikConfig<Values> & ExtraProps & Form,
+  props: (FormikConfigs<Values, ExtraProps> | FormikProps<Values> | FormikFormProps) & Form,
 ): React.JSX.Element {
   const { children, className, ...rest } = props;
-  return (
-    <Formik {...rest}>
+
+  if ('handleSubmit' in rest) {
+    return <FormikContext.Provider value={rest}>
+      <form
+        className={className}
+        onSubmit={rest.handleSubmit}
+        onReset={rest.handleReset}
+      >
+        {children}
+      </form>
+    </FormikContext.Provider>
+  } else if ('onSubmit' in rest) {
+    return <Formik {...rest}>
       {(props: any) => (
         <form className={className} onSubmit={props.handleSubmit}>
           {children}
         </form>
       )}
-    </Formik>
-  );
+    </Formik>;
+  } else {
+    return <FormikForm className={className} {...rest}>
+      {children}
+    </FormikForm>;
+  }
 }
 
 export { Form };

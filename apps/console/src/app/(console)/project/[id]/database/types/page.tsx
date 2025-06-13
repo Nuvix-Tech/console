@@ -1,5 +1,5 @@
 import React from "react";
-import { PropsWithParams } from "@/types";
+import { EnumeratedTypesPage } from "@/components/project/database/EnumeratedTypes";
 
 export const metadata = {
   title: "Database Types",
@@ -7,5 +7,5 @@ export const metadata = {
 };
 
 export default function DatabaseTypes() {
-  return <div>Database Types Content</div>;
+  return <EnumeratedTypesPage />
 }
