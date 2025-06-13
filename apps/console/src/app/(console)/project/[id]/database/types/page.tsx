@@ -7,5 +7,5 @@ export const metadata = {
 };
 
 export default function DatabaseTypes() {
-  return <EnumeratedTypesPage />
+  return <EnumeratedTypesPage />;
 }

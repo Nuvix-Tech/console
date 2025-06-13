@@ -1,1 +1,1 @@
-export {EnumeratedTypesPage} from "./_page";
+export { EnumeratedTypesPage } from "./_page";

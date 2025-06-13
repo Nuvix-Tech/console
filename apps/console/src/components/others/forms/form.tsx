@@ -1,5 +1,13 @@
 import React from "react";
-import { Formik, FormikConfig, FormikValues, useFormik, FormikContext, FormikFormProps, Form as FormikForm } from "formik";
+import {
+  Formik,
+  FormikConfig,
+  FormikValues,
+  useFormik,
+  FormikContext,
+  FormikFormProps,
+  Form as FormikForm,
+} from "formik";
 
 type Form = {
   children: React.ReactNode;
@@ -14,28 +22,30 @@ function Form<Values extends FormikValues = FormikValues, ExtraProps = {}>(
 ): React.JSX.Element {
   const { children, className, ...rest } = props;
 
-  if ('handleSubmit' in rest) {
-    return <FormikContext.Provider value={rest}>
-      <form
-        className={className}
-        onSubmit={rest.handleSubmit}
-        onReset={rest.handleReset}
-      >
-        {children}
-      </form>
-    </FormikContext.Provider>
-  } else if ('onSubmit' in rest) {
-    return <Formik {...rest}>
-      {(props: any) => (
-        <form className={className} onSubmit={props.handleSubmit}>
+  if ("handleSubmit" in rest) {
+    return (
+      <FormikContext.Provider value={rest}>
+        <form className={className} onSubmit={rest.handleSubmit} onReset={rest.handleReset}>
           {children}
         </form>
-      )}
-    </Formik>;
+      </FormikContext.Provider>
+    );
+  } else if ("onSubmit" in rest) {
+    return (
+      <Formik {...rest}>
+        {(props: any) => (
+          <form className={className} onSubmit={props.handleSubmit}>
+            {children}
+          </form>
+        )}
+      </Formik>
+    );
   } else {
-    return <FormikForm className={className} {...rest}>
-      {children}
-    </FormikForm>;
+    return (
+      <FormikForm className={className} {...rest}>
+        {children}
+      </FormikForm>
+    );
   }
 }
 

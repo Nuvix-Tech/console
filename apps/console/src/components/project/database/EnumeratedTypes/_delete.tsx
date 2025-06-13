@@ -1,12 +1,12 @@
-import ConfirmationModal from '@/components/editor/components/_confim_dialog'
-import { useEnumeratedTypeDeleteMutation } from '@/data/enumerated-types/enumerated-type-delete-mutation'
-import { useProjectStore } from '@/lib/store'
-import { toast } from 'sonner'
+import ConfirmationModal from "@/components/editor/components/_confim_dialog";
+import { useEnumeratedTypeDeleteMutation } from "@/data/enumerated-types/enumerated-type-delete-mutation";
+import { useProjectStore } from "@/lib/store";
+import { toast } from "sonner";
 
 interface DeleteEnumeratedTypeModalProps {
-  visible: boolean
-  selectedEnumeratedType?: any
-  onClose: () => void
+  visible: boolean;
+  selectedEnumeratedType?: any;
+  onClose: () => void;
 }
 
 const DeleteEnumeratedTypeModal = ({
@@ -14,34 +14,34 @@ const DeleteEnumeratedTypeModal = ({
   selectedEnumeratedType,
   onClose,
 }: DeleteEnumeratedTypeModalProps) => {
-  const { project, sdk } = useProjectStore((s) => s)
+  const { project, sdk } = useProjectStore((s) => s);
   const { mutate: deleteEnumeratedType, isPending: isDeleting } = useEnumeratedTypeDeleteMutation({
     onSuccess: () => {
-      toast.success(`Successfully deleted "${selectedEnumeratedType.name}"`)
-      onClose()
+      toast.success(`Successfully deleted "${selectedEnumeratedType.name}"`);
+      onClose();
     },
-  })
+  });
 
   const onConfirmDeleteType = () => {
-    if (selectedEnumeratedType === undefined) return console.error('No enumerated type selected')
-    if (project?.$id === undefined) return console.error('Project ref required')
+    if (selectedEnumeratedType === undefined) return console.error("No enumerated type selected");
+    if (project?.$id === undefined) return console.error("Project ref required");
 
     deleteEnumeratedType({
       projectRef: project?.$id,
       sdk,
       name: selectedEnumeratedType.name,
       schema: selectedEnumeratedType.schema,
-    })
-  }
+    });
+  };
 
   return (
     <ConfirmationModal
-      variant={'destructive'}
+      variant={"destructive"}
       loading={isDeleting}
       visible={visible}
       title={
         <>
-          Confirm to delete enumerated type{' '}
+          Confirm to delete enumerated type{" "}
           <code className="text-sm">{selectedEnumeratedType?.name}</code>
         </>
       }
@@ -50,9 +50,9 @@ const DeleteEnumeratedTypeModal = ({
       onCancel={onClose}
       onConfirm={() => onConfirmDeleteType()}
       alert={{
-        title: 'This action cannot be undone',
+        title: "This action cannot be undone",
         description:
-          'You will need to re-create the enumerated type if you want to revert the deletion.',
+          "You will need to re-create the enumerated type if you want to revert the deletion.",
       }}
     >
       <p className="text-sm">Before deleting this enumerated type, consider:</p>
@@ -62,7 +62,7 @@ const DeleteEnumeratedTypeModal = ({
         </li>
       </ul>
     </ConfirmationModal>
-  )
-}
+  );
+};
 
-export default DeleteEnumeratedTypeModal
+export default DeleteEnumeratedTypeModal;
