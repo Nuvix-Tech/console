@@ -246,7 +246,7 @@ const MultiSelectorTrigger = React.forwardRef<HTMLButtonElement, MultiSelectorTr
           "ring-offset-background placeholder:text-muted-foreground",
           "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
           "disabled:cursor-not-allowed disabled:opacity-50",
-          "hover:border-primary transition-colors duration-200",
+          "hover:border-accent transition-colors duration-200",
           className,
         )}
         {...props}
@@ -392,7 +392,7 @@ const MultiSelectorInput = React.forwardRef<
       //   wrapperClassName={wrapperClassName}
       className={cn(
         MultiSelectorInputVariants({ size }),
-        "text-sm bg-transparent h-full flex-grow border-none outline-none placeholder:text-foreground-muted flex-1",
+        "text-sm bg-transparent h-full flex-grow border-none outline-none placeholder:text-muted-foreground flex-1 ",
         activeIndex !== -1 && "caret-transparent",
         className,
       )}
@@ -412,7 +412,7 @@ const MultiSelectorContent = React.forwardRef<HTMLDivElement, React.HTMLAttribut
       <div
         ref={ref}
         className={cn(
-          "absolute w-full bg-overlay shadow-md z-10 border border-overlay top-[calc(100%+0.25rem)] rounded-md transition-all -translate-y-3",
+          "absolute w-full bg-popover shadow-md z-10 border border-border top-[calc(100%+0.25rem)] rounded-md transition-all -translate-y-3",
           open
             ? "opacity-100 translate-y-0 visible duration-150 ease-[.76,0,.23,1]"
             : "opacity-0 -translate-y-3 invisible duration-0",
@@ -471,12 +471,12 @@ const MultiSelectorList = React.forwardRef<
           Create "{inputValue}"
         </CommandItem>
       ) : creatable && options.length === 0 ? (
-        <div className="p-2 py-1.5 text-xs text-foreground-lighter font-italic">
+        <div className="p-2 py-1.5 text-xs text-secondary-foreground font-italic">
           Type to add a value
         </div>
       ) : (
         <CommandEmpty>
-          <span className="text-foreground-muted">No results found</span>
+          <span className="text-secondary-foreground">No results found</span>
         </CommandEmpty>
       )}
     </CommandList>
@@ -508,7 +508,7 @@ const MultiSelectorItem = React.forwardRef<
       <div
         className={cn(
           "flex items-center justify-center",
-          "peer h-4 w-4 shrink-0 rounded border border-control bg-control/25 ring-offset-background",
+          "peer h-4 w-4 shrink-0 rounded border border-accent bg-control/25 ring-offset-background",
           "transition-colors duration-150 ease-in-out",
           "hover:border-strong",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",

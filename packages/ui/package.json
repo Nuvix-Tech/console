@@ -7,7 +7,7 @@
     "lint": "eslint . --max-warnings 0"
   },
   "dependencies": {
-    "@chakra-ui/react": "^3.8.0",
+    "@chakra-ui/react": "^3.21.0",
     "@floating-ui/react-dom": "^2.1.1",
     "@tanstack/react-table": "^8.20.6",
     "classnames": "^2.5.1",

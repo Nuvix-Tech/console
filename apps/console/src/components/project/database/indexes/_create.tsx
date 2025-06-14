@@ -43,6 +43,7 @@ import {
   MultiSelectorList,
   MultiSelectorTrigger,
 } from "@/ui/MultiSelect";
+import { Skeleton } from "@chakra-ui/react";
 
 interface CreateIndexSidePanelProps {
   visible: boolean;
@@ -171,6 +172,9 @@ CREATE INDEX ON "${selectedSchema}"."${selectedEntity}" USING ${selectedIndexTyp
                 <Button
                   type="button"
                   size={"m"}
+                  variant="secondary"
+                  justifyContent="space-between"
+                  fillWidth
                   className={`w-full [&>span]:w-full text-left`}
                   suffixIcon={
                     <ChevronsUpDown className="text-muted-foreground" strokeWidth={2} size={14} />
@@ -212,7 +216,7 @@ CREATE INDEX ON "${selectedSchema}"."${selectedEntity}" USING ${selectedIndexTyp
                           >
                             <span>{schema.name}</span>
                             {selectedEntity === schema.name && (
-                              <Check className="text-brand" strokeWidth={2} size={16} />
+                              <Check className="text-primary" strokeWidth={2} size={16} />
                             )}
                           </CommandItem>
                         ))}
@@ -239,12 +243,15 @@ CREATE INDEX ON "${selectedSchema}"."${selectedEntity}" USING ${selectedIndexTyp
                 <Button
                   type="button"
                   size="m"
+                  variant="secondary"
+                  justifyContent="space-between"
+                  fillWidth
                   className={cn(
                     "w-full [&>span]:w-full text-left",
-                    selectedEntity === "" && "text-foreground-lighter",
+                    selectedEntity === "" && "text-muted-foreground",
                   )}
                   suffixIcon={
-                    <ChevronsUpDown className="text-foreground-muted" strokeWidth={2} size={14} />
+                    <ChevronsUpDown className="text-muted-foreground" strokeWidth={2} size={14} />
                   }
                 >
                   {selectedEntity !== undefined && selectedEntity !== ""
@@ -310,9 +317,13 @@ CREATE INDEX ON "${selectedSchema}"."${selectedEntity}" USING ${selectedIndexTyp
 
           {selectedEntity && (
             <FormItemLayout label="Select up to 32 columns" isReactForm={false}>
-              {isLoadingTableColumns && <SkeletonText noOfLines={1} className="py-4" />}
+              {isLoadingTableColumns && <Skeleton className="py-5" />}
               {isSuccessTableColumns && (
-                <MultiSelector values={selectedColumns} onValuesChange={setSelectedColumns}>
+                <MultiSelector
+                  values={selectedColumns}
+                  onValuesChange={setSelectedColumns}
+                  mode="inline-combobox"
+                >
                   <MultiSelectorTrigger>
                     <MultiSelectorInput placeholder="Choose which columns to create an index on" />
                   </MultiSelectorTrigger>
@@ -332,7 +343,6 @@ CREATE INDEX ON "${selectedSchema}"."${selectedEntity}" USING ${selectedIndexTyp
         </SidePanel.Content>
         {selectedColumns.length > 0 && (
           <>
-            <SidePanel.Separator />
             <SidePanel.Content className="space-y-6">
               <FormItemLayout
                 label="Select an index type"
@@ -348,7 +358,7 @@ CREATE INDEX ON "${selectedSchema}"."${selectedEntity}" USING ${selectedIndexTyp
                   <SelectTrigger>
                     <SelectValue className="font-mono">{selectedIndexType}</SelectValue>
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="max-h-72">
                     {INDEX_TYPES.map((index, i) => (
                       <Fragment key={index.name}>
                         <SelectItem value={index.value}>
@@ -356,7 +366,7 @@ CREATE INDEX ON "${selectedSchema}"."${selectedEntity}" USING ${selectedIndexTyp
                             <span>{index.name}</span>
                             {index.description.split("\n").map((x, idx) => (
                               <span
-                                className="text-foreground-lighter group-focus:text-foreground-light group-data-[state=checked]:text-foreground-light"
+                                className="text-muted-foreground group-focus:text-secondary-foreground group-data-[state=checked]:text-foreground"
                                 key={`${index.value}-description-${idx}`}
                               >
                                 {x}
@@ -386,17 +396,15 @@ CREATE INDEX ON "${selectedSchema}"."${selectedEntity}" USING ${selectedIndexTyp
             <SidePanel.Content>
               <div className="flex items-center justify-between">
                 <p className="text-sm">Preview of SQL statement</p>
-                <Button asChild>
-                  <Link
-                    href={
-                      project !== undefined
-                        ? `/project/${project.$id}/sql/new?content=${generatedSQL}`
-                        : "/"
-                    }
-                  >
-                    Open in SQL Editor
-                  </Link>
-                </Button>
+                {/* <Button asChild variant="secondary" size="s"
+                  href={
+                    project !== undefined
+                      ? `/project/${project.$id}/sql/new?content=${generatedSQL}`
+                      : "/"
+                  }
+                >
+                  Open in SQL Editor
+                </Button> */}
               </div>
             </SidePanel.Content>
             <div className="h-[200px] !mt-2">

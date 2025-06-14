@@ -1,20 +1,21 @@
 import { Dialog, Flex } from "@nuvix/ui/components";
 import React from "react";
-import { Form } from "./form";
+import { Form, FormikProps, FormikConfigs } from "./form";
+import { FormikValues } from "formik";
 
-interface FormDialogProps {
+interface FormDialogProps<Values extends FormikValues = FormikValues, V = {}> {
   dialog: Omit<React.ComponentProps<typeof Dialog>, "children">;
-  form: Omit<React.ComponentProps<typeof Form>, "children">;
+  form: FormikProps<Values> | FormikConfigs<Values, V>;
   children: React.ReactNode;
   ref: any;
 }
 
-const FormDialogComponent = ({
+const FormDialogComponent = <T extends FormikValues, V>({
   dialog: { footer, ...restDialog },
   form: { ...restForm },
   children,
   ref,
-}: FormDialogProps) => {
+}: FormDialogProps<T, V>) => {
   return (
     <Dialog ref={ref} {...restDialog}>
       <Form {...restForm}>

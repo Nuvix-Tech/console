@@ -20,6 +20,8 @@ export const IndexesPage = () => {
                 href="https://supabase.com/docs/guides/database/query-optimization"
               />
               <Button
+                size="s"
+                variant="secondary"
                 prefixIcon={<ExternalLink size={20} strokeWidth={1.5} />}
                 rel="noreferrer"
                 href="https://supabase.com/docs/guides/database/extensions/index_advisor"

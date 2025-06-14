@@ -196,8 +196,9 @@ const Indexes = () => {
             primaryComponent={create}
           />
 
-          {indexes.length > 0 ||
-            (search.length > 0 && <Table noResults={indexes.length === 0 && search.length > 0} />)}
+          {(indexes.length > 0 || search.length > 0) && (
+            <Table noResults={indexes.length === 0 && search.length > 0} />
+          )}
         </DataGridProvider>
       </div>
 
@@ -209,9 +210,9 @@ const Indexes = () => {
           }
         }}
       >
-        <SheetContent>
-          <SheetHeader>
-            Index: <Code className="text-sm ml-2">{selectedIndex?.name}</Code>
+        <SheetContent className="gap-0">
+          <SheetHeader className="flex flex-row items-center gap-2 !py-5">
+            <span>Index:</span> <Code className="text-sm w-auto">{selectedIndex?.name}</Code>
           </SheetHeader>
           <SheetClose />
           <div className="h-full">

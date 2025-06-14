@@ -14,8 +14,8 @@ type Form = {
   className?: string;
 };
 
-type FormikConfigs<T, V> = FormikConfig<T> & V;
-type FormikProps<T extends FormikValues> = ReturnType<typeof useFormik<T>>;
+export type FormikConfigs<T, V> = FormikConfig<T> & V;
+export type FormikProps<T extends FormikValues> = ReturnType<typeof useFormik<T>>;
 
 function Form<Values extends FormikValues = FormikValues, ExtraProps = {}>(
   props: (FormikConfigs<Values, ExtraProps> | FormikProps<Values> | FormikFormProps) & Form,

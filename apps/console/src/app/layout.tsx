@@ -109,11 +109,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             padding="0"
             background="page"
           >
-            <Providers>
-              <ConfirmProvider>{children}</ConfirmProvider>
-            </Providers>
+            <Providers>{children}</Providers>
+            <Toaster />
           </Column>
-          <Toaster />
         </ToastProvider>
       </Flex>
     </>
