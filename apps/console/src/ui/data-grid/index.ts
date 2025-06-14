@@ -1,6 +1,6 @@
 export { default as SearchAndCreate } from "./header";
 export * from "./header";
-export * from "./skelton";
+export * from "./skeleton";
 export * from "./provider";
 export * from "./data-grid";
 export * from "./limit";

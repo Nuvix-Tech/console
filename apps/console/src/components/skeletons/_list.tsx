@@ -1,6 +1,6 @@
 import { Column, Row, Skeleton } from "@nuvix/ui/components";
 
-export function ListPageSkelton() {
+export function ListPageSkeleton() {
   return (
     <>
       <Column gap="20" fillWidth paddingY="16">

@@ -2,7 +2,7 @@
 import { SkeletonCircle, SkeletonText } from "@/components/cui/skeleton";
 import { HStack, Skeleton, Stack } from "@chakra-ui/react";
 
-export const DataGridSkelton = ({
+export const DataGridSkeleton = ({
   loading = true,
   variant = "pulse",
 }: { loading?: boolean; variant?: "pulse" | "shine" }) => {

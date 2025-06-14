@@ -1,6 +1,6 @@
 "use client";
 import { ProjectCard } from "@/components/project/card";
-import { GridSkelton } from "@/components/skelton";
+import { GridSkeleton } from "@/components/skeleton";
 import { sdkForConsole } from "@/lib/sdk";
 import { Button, Column, Grid, Row } from "@nuvix/ui/components";
 import { Heading } from "@chakra-ui/react";
@@ -88,7 +88,7 @@ export const OrganizationPage = ({ id, searchParams }: Props) => {
         >
           <Grid gap="l" marginTop="l" columns={2}>
             {loading ? (
-              <GridSkelton limit={2} />
+              <GridSkeleton limit={2} />
             ) : (
               projectList.projects.map((project) => (
                 <ProjectCard key={project.$id} project={project} />
