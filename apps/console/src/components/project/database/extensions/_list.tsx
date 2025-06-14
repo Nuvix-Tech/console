@@ -16,8 +16,8 @@ import { Skeleton } from "@/components/cui/skeleton";
 import { EmptyResults } from "@/ui/data-grid/empty-results";
 
 const Extensions = () => {
-  const { get } = useSearchParams();
-  const filter = get("filter");
+  const params = useSearchParams();
+  const filter = params.get("filter");
   const { project, sdk } = useProjectStore((s) => s);
   const [filterString, setFilterString] = useState<string>("");
 
@@ -27,7 +27,7 @@ const Extensions = () => {
   });
 
   const extensions =
-    filterString.length === 0
+    filterString?.length === 0
       ? (data ?? [])
       : (data ?? []).filter((ext: any) => {
           const nameMatchesSearch = ext.name.toLowerCase().includes(filterString.toLowerCase());
@@ -51,7 +51,7 @@ const Extensions = () => {
   const isPermissionsLoaded = true; // usePermissionsLoaded()
 
   useEffect(() => {
-    if (filter !== undefined) setFilterString(filter as string);
+    if (filter !== undefined) setFilterString(filter as string ?? "");
   }, [filter]);
 
   return (
@@ -99,7 +99,7 @@ const Extensions = () => {
             />
           )}
 
-          <div className="my-8 w-full space-y-12">
+          <div className="my-2 w-full space-y-12">
             {enabledExtensions.length > 0 && (
               <div className="space-y-4">
                 <h4 className="text-lg">Enabled extensions</h4>

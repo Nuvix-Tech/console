@@ -63,7 +63,7 @@ const ExtensionCard = ({ extension }: ExtensionCardProps) => {
 
   return (
     <>
-      <div className="bg-surface-100 border border-overlay flex flex-col overflow-hidden rounded shadow-sm">
+      <div className="bg-muted border border-muted flex flex-col overflow-hidden rounded shadow-sm">
         <div className={cn("border-b border-overlay flex justify-between w-full py-3", X_PADDING)}>
           <div className="max-w-[85%] flex items-center space-x-3 truncate">
             <h3
@@ -105,18 +105,19 @@ const ExtensionCard = ({ extension }: ExtensionCardProps) => {
 
         {isOn && (
           <div className={cn("border-b border-overlay py-2", X_PADDING)}>
-            <p className="text-foreground-light text-sm">
+            <p className="text-muted-foreground text-sm">
               Installed in <span className="text-foreground">{extension.schema}</span> schema
             </p>
           </div>
         )}
 
         <div className={cn("flex h-full flex-col gap-y-3 py-3", X_PADDING)}>
-          <p className="text-sm text-foreground-light capitalize-sentence">{extension.comment}</p>
+          <p className="text-sm text-muted-foreground capitalize-sentence">{extension.comment}</p>
           <div className="flex items-center gap-x-2">
             {extensionMeta?.github_url && (
               <Button
                 variant="tertiary"
+                size="s"
                 prefixIcon={<FaGithub />}
                 className="rounded-full font-mono tracking-tighter"
                 target="_blank"
@@ -128,7 +129,8 @@ const ExtensionCard = ({ extension }: ExtensionCardProps) => {
             )}
             {docsUrl !== undefined && (
               <Button
-                type="default"
+                variant="secondary"
+                size="s"
                 prefixIcon={<Book />}
                 className="rounded-full font-mono tracking-tighter"
                 target="_blank"
@@ -138,26 +140,27 @@ const ExtensionCard = ({ extension }: ExtensionCardProps) => {
                 Docs
               </Button>
             )}
-            {extensionMeta?.deprecated && extensionMeta?.deprecated.length > 0 && (
-              <ChakraButton
-                className="rounded-full"
-                colorPalette={"yellow"}
-                title={`The extension is deprecated and will be removed in ${extensionMeta.deprecated.join(", ")}.`}
-              >
-                <AlertTriangle />
-                Deprecated
-              </ChakraButton>
-            )}
           </div>
+          {extensionMeta?.deprecated && extensionMeta?.deprecated.length > 0 && (
+            <ChakraButton
+              size={'2xs'}
+              className="rounded-full"
+              colorPalette={"yellow"}
+              title={`The extension is deprecated and will be removed in ${extensionMeta.deprecated.join(", ")}.`}
+            >
+              <AlertTriangle />
+              Deprecated
+            </ChakraButton>
+          )}
         </div>
 
         {extensionMeta?.product && (
           <div className={cn("border-t border-overlay py-3 flex items-center gap-x-3", X_PADDING)}>
-            <div className="min-w-5 w-5 h-5 border border-brand/50 rounded flex items-center justify-center">
-              <Settings className="text-brand" size={12} />
+            <div className="min-w-5 w-5 h-5 border border-primary/50 rounded flex items-center justify-center">
+              <Settings className="text-primary" size={12} />
             </div>
             <div>
-              <p className="text-foreground-light text-xs">
+              <p className="text-muted-foreground text-xs">
                 <span className="text-foreground">{extension.name}</span> is used by{" "}
                 {extensionMeta.product_url ? (
                   <Link
@@ -171,7 +174,7 @@ const ExtensionCard = ({ extension }: ExtensionCardProps) => {
                 )}
               </p>
               {!isOn && (
-                <p className="text-foreground-lighter text-xs">
+                <p className="text-muted-foreground text-xs">
                   Install extension to use {extensionMeta.product}
                 </p>
               )}
