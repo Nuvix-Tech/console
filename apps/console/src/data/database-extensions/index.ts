@@ -1,1 +1,1 @@
-export { default as extensions } from './extensions.json';
+export { default as extensions } from "./extensions.json";
