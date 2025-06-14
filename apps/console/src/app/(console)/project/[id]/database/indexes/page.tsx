@@ -1,5 +1,6 @@
 import React from "react";
 import { PropsWithParams } from "@/types";
+import { IndexesPage } from "@/components/project/database/indexes";
 
 export const metadata = {
   title: "Database Indexes",
@@ -7,5 +8,5 @@ export const metadata = {
 };
 
 export default function DatabaseIndexes() {
-  return <div>Database Indexes Content</div>;
+  return <IndexesPage />;
 }
