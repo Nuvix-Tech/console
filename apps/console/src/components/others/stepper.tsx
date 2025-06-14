@@ -9,21 +9,29 @@ import {
   useStepsContext,
 } from "@chakra-ui/react";
 import React from "react";
-import { Form } from "./forms";
+import { Form, FormikProps, FormikConfigs } from "./forms";
+import { FormikValues } from "formik";
 
-export interface StepperProps {
+export interface StepperProps<Values extends FormikValues, Extra = {}> {
   steps: { title: string; node: React.ReactNode }[];
   value: UseStepsReturn;
   trigger?: React.ReactNode;
   title: string;
-  form: Omit<React.ComponentProps<typeof Form>, "children">;
+  form: FormikConfigs<Values, Extra> | FormikProps<Values>;
   lastStep?: React.ReactNode;
   portalled?: boolean;
 }
 
-export const StepperDrawer: React.FC<
-  StepperProps & Omit<React.ComponentProps<typeof Drawer.Root>, "children">
-> = ({ steps, trigger, title, value, form, lastStep, portalled = true, ...props }) => {
+export const StepperDrawer = <T extends FormikValues, V>({
+  steps,
+  trigger,
+  title,
+  value,
+  form,
+  lastStep,
+  portalled = true,
+  ...props
+}: StepperProps<T, V> & Omit<React.ComponentProps<typeof Drawer.Root>, "children">) => {
   return (
     <Drawer.Root {...props}>
       {trigger && <Drawer.Trigger asChild> {trigger} </Drawer.Trigger>}
