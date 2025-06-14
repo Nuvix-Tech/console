@@ -1,5 +1,5 @@
+import { ExtensionsPage } from "@/components/project/database/extensions";
 import React from "react";
-import { PropsWithParams } from "@/types";
 
 export const metadata = {
   title: "Database Extensions",
@@ -7,5 +7,5 @@ export const metadata = {
 };
 
 export default function DatabaseExtensions() {
-  return <div>Database Extensions Content</div>;
+  return <ExtensionsPage />;
 }

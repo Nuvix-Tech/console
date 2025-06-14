@@ -13,7 +13,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/t
 import { Button } from "@nuvix/ui/components";
 import styles from "./SidePanel.module.css";
 import classNames from "classnames";
-import { Form } from "@/components/others/forms";
+import { Form, FormikConfigs, FormikProps } from "@/components/others/forms";
 import { FormikValues } from "formik";
 
 export type SidePanelProps = RadixProps & CustomProps;
@@ -48,7 +48,7 @@ interface CustomProps<T extends FormikValues = any> {
   customConfirm?: React.ReactNode;
   triggerElement?: React.ReactNode;
   tooltip?: string;
-  form?: Omit<React.ComponentProps<typeof Form<T>>, "children">;
+  form?: FormikConfigs<T, {}> | FormikProps<T>;
 }
 
 const SidePanel = ({

@@ -1,0 +1,1 @@
+export { default as extensions } from './extensions.json';
