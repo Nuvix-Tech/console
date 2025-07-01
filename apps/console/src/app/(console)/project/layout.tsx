@@ -22,7 +22,7 @@ export default function ({ children }: { children: React.ReactNode }) {
             overflowY="auto"
             position={"relative"}
             direction="column"
-            bg={{ _dark: 'bg.muted', _light: 'bg' }}
+            bg={'var(--color-main-background)'}
             asChild
           >
             <Column radius="l">

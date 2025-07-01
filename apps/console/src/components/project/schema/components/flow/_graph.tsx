@@ -183,8 +183,6 @@ export const SchemaGraph = () => {
   return (
     <Column
       fillHeight
-      background="neutral-medium"
-      border="neutral-medium"
       radius="l"
       overflow="hidden"
     >
@@ -215,11 +213,11 @@ export const SchemaGraph = () => {
                     disabled={isDownloading}
                     icon={<Download size={14} />}
                     tooltip={"Download current view"}
-                    tooltipPosition="bottom"
+                    tooltipPosition="left"
                     variant="secondary"
                   />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-32">
+                <DropdownMenuContent className="w-42">
                   <DropdownMenuItem onClick={() => downloadImage("png")}>
                     Download as PNG
                   </DropdownMenuItem>
@@ -231,7 +229,7 @@ export const SchemaGraph = () => {
               <Button
                 onClick={resetLayout}
                 tooltip={"Automatically arrange the layout of all nodes"}
-                tooltipPosition="bottom"
+                tooltipPosition="left"
                 size="s"
                 variant="secondary"
               >
@@ -273,7 +271,7 @@ export const SchemaGraph = () => {
               </p>
             </div>
           ) : (
-            <div className="w-full h-full page-background">
+            <div className="w-full h-full">
               <ReactFlow
                 defaultNodes={[]}
                 defaultEdges={[]}

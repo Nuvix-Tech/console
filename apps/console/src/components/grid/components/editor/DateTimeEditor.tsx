@@ -77,7 +77,7 @@ function BaseEditor<TRow, TSummaryRow = unknown>({
           {value === null ? "NULL" : value}
         </div>
       </PopoverTrigger>
-      <PopoverContent align="start" className="p-0 rounded-none w-64">
+      <PopoverContent align="start" className="p-0 w-64">
         <BlockKeys
           ignoreOutsideClicks
           value={inputValue}
@@ -90,7 +90,7 @@ function BaseEditor<TRow, TSummaryRow = unknown>({
             placeholder={format}
             variant={"subtle"}
             onChange={(e) => setInputValue(e.target.value)}
-            className="!border-0 !rounded-none !bg-[var(--neutral-alpha-weak)] !outline-none !ring-0 !ring-offset-0"
+            className="!border-0 !rounded-b-none !bg-[var(--neutral-alpha-weak)] !outline-none !ring-0 !ring-offset-0"
           />
         </BlockKeys>
         <div className="px-3 py-1 flex flex-col gap-y-0.5">

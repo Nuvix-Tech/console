@@ -32,31 +32,33 @@ const config = defineConfig({
       // },
       radii: {
         "2xs": {
-          value: "0.15625rem",
+          value: "0.25rem", // Very small rounding, good for tiny elements
         },
         xs: {
-          value: "0.25rem",
+          value: "0.5rem", // Standard, clearly rounded for buttons/inputs
         },
         sm: {
-          value: "0.375rem",
+          value: "1.175rem", // More pronounced rounded corners for small elements
         },
         md: {
-          value: "0.5rem",
+          value: "1.5rem", // Very rounded for most buttons and input fields, almost pill-like for smaller ones
         },
+
+        // --- For larger elements (Cards, Modals, Sections) ---
         lg: {
-          value: "0.6875rem",
+          value: "1.25rem", // Subtle but noticeable rounding for cards/larger boxes
         },
         xl: {
-          value: "0.9375rem",
+          value: "1.5rem", // More defined rounding for medium to large containers
         },
         "2xl": {
-          value: "1.1875rem",
+          value: "2rem", // Pronounced rounding for larger sections, but still elegant
         },
         "3xl": {
-          value: "1.6875rem",
+          value: "2.5rem", // For significant sections or hero elements that need a soft edge
         },
         "4xl": {
-          value: "2.1875rem",
+          value: "3rem", // The largest, for very prominent sections with controlled soft edges
         },
       },
       fonts: {

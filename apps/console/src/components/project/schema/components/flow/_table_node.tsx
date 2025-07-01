@@ -41,7 +41,7 @@ const TableNode = ({
   return (
     <>
       {data.isForeign ? (
-        <header className="px-2 py-1 border-[0.5px] border-[var(--neutral-alpha-medium)] rounded-[4px] neutral-background-medium neutral-on-background-strong flex gap-1 items-center">
+        <header className="px-2 py-1 border-[0.5px] border-[var(--neutral-alpha-medium)] rounded-sm neutral-background-medium neutral-on-background-strong flex gap-1 items-center">
           <Text
             onBackground="neutral-medium"
             variant="body-strong-xs"
@@ -60,12 +60,12 @@ const TableNode = ({
         </header>
       ) : (
         <div
-          className="border-[0.5px] overflow-hidden rounded-[4px] border-[var(--neutral-alpha-medium)]"
+          className="border-[0.5px] overflow-hidden rounded-sm border-[var(--neutral-alpha-medium)]"
           style={{ width: TABLE_NODE_WIDTH / 2 }}
         >
           <header
             className={cn(
-              "pl-2 neutral-background-medium neutral-on-background-strong border flex items-center justify-between",
+              "pl-2 pr-1 bg-[var(--neutral-background-strong)]/60 neutral-on-background-strong flex items-center justify-between",
               itemHeight,
             )}
           >
@@ -80,7 +80,7 @@ const TableNode = ({
             {data.id && !placeholder && (
               <IconButton asChild size={"2xs"} variant="plain">
                 <Link href={`/project/${data.ref}/editor/${data.id}`}>
-                  <ExternalLink className="text-muted-foreground" />
+                  <ExternalLink className="text-muted-foreground !size-3" />
                 </Link>
               </IconButton>
             )}
@@ -90,7 +90,7 @@ const TableNode = ({
             <div
               className={cn(
                 "text-[8px] leading-5 relative flex flex-row justify-items-start",
-                "bg-popover neutral-on-background-medium",
+                "bg-[var(--color-main-background)] neutral-on-background-medium",
                 "border-t border-[var(--neutral-alpha-medium)]",
                 "!border-t-[0.5px]",
                 "hover:bg-[var(--neutral-background-medium)] transition cursor-default",

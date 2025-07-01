@@ -41,7 +41,7 @@ export const gridStyles = {
 
 export const gridStyles2 = {
   ["--rdg-color" as any]: "var(--neutral-on-background-medium)",
-  ["--rdg-background-color" as any]: "transparent",
+  ["--rdg-background-color" as any]: "var(--color-main-background)",
   ["--rdg-row-hover-background-color" as any]: "var(--neutral-background-medium)",
   ["--rdg-border-color" as any]: "var(--neutral-border-strong)",
   ["--rdg-header-background-color" as any]: "var(--surface-background)",
@@ -204,7 +204,7 @@ export const Grid = memo(
             ref={ref}
             className={`${gridClass} flex-grow !border-r-0 !border-l-0`}
             rowClass={rowClass}
-            headerRowClass="!bg-popover/40"
+            headerRowClass="nx-grid-header"
             columns={snap.gridColumns as CalculatedColumn<any, any>[]}
             rows={rows ?? []}
             renderers={{ renderRow: RowRenderer }}

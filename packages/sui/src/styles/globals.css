@@ -44,6 +44,8 @@
 
   --xy-controls-button-background-color: var(--neutral-background-medium) !important;
   --xy-controls-button-border-color: var(--neutral-border-medium) !important;
+
+  --main-background: var(--page-background);
 }
 
 .dark {
@@ -78,6 +80,8 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.552 0.016 285.938);
+
+  --main-background: color-mix(in srgb, var(--function-neutral-100) 92%, white);
 }
 
 @theme inline {
@@ -152,6 +156,8 @@
   --color-sidebar-border: var(--sidebar-border);
 
   --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-main-background: var(--main-background);
 }
 
 @layer base {

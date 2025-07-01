@@ -185,6 +185,6 @@ header/sort/SortRow
     @apply flex cursor-move;
 }
 
-.rdg-cell-frozen {
-    @apply backdrop-blur-md;
+.nx-grid-header {
+    background-color: color-mix(in srgb, var(--color-main-background) 60%, var(--neutral-background-weak));
 }

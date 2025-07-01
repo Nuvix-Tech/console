@@ -117,18 +117,18 @@ export const TimestampInfo = ({
           }, 1000);
         }}
         className={cn(
-          "relative cursor-pointer flex gap-y-2 gap-x-0.5 hover:bg-muted text-muted-foreground px-2 py-1 group",
+          "relative cursor-pointer rounded-md flex gap-y-2 gap-x-0.5 hover:bg-muted text-muted-foreground px-2 py-1 group",
           { "bg-muted text-muted-foreground": copied },
         )}
       >
         <div className="flex items-center gap-x-2 text-left truncate">
           <p>{label}</p>
-          <div className="border-t w-full border-dashed" />
+          <div className="border-t w-full border-dashed border-muted" />
         </div>
         <div className="relative flex items-center gap-x-2 flex-grow">
-          <div className="border-t w-full border-dashed z-10" />
+          <div className="border-t w-full border-dashed z-10 border-muted" />
           {copied && (
-            <span className="flex items-center justify-end w-full absolute inset-0 items-right text-brand-600 bg-muted">
+            <span className="flex items-center justify-end w-full absolute inset-0 items-right text-brand-600 bg-secondary rounded-md">
               Copied!
             </span>
           )}
