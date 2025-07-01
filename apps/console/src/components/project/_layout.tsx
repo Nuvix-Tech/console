@@ -19,7 +19,7 @@ export const ProjectLayout = ({ children }: PropsWithChildren) => {
       position="relative"
       asChild
     >
-      <Flex paddingX="8" paddingBottom="8" as={'main'}>
+      <Flex paddingX="8" paddingBottom="8" as={"main"}>
         {children}
       </Flex>
     </Stack>

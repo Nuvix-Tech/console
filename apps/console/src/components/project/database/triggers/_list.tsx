@@ -8,9 +8,7 @@ import { DataGridProvider, Table } from "@/ui/data-grid";
 import { useDatabaseTriggersQuery } from "@/data/database-triggers/database-triggers-query";
 import { useSchemasQuery } from "@/data/database/schemas-query";
 import { useTablesQuery } from "@/data/tables/tables-query";
-import {
-  Badge,
-} from "@nuvix/sui/components/badge";
+import { Badge } from "@nuvix/sui/components/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,11 +16,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@nuvix/sui/components/dropdown-menu";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@nuvix/sui/components/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import { useProjectStore } from "@/lib/store";
 import { Button } from "@nuvix/ui/components";
 import { Input } from "@chakra-ui/react";

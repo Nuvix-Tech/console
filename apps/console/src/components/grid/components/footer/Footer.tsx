@@ -14,11 +14,7 @@ export interface FooterProps {
 }
 
 const GridFooter = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <div className="flex items-center justify-between px-4 py-2 min-h-10">
-      {children}
-    </div>
-  );
+  return <div className="flex items-center justify-between px-4 py-2 min-h-10">{children}</div>;
 };
 
 const Footer = ({ isRefetching }: FooterProps) => {

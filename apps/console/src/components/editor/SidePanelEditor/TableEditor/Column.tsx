@@ -7,11 +7,7 @@ import {
   Command,
 } from "@nuvix/sui/components/command";
 
-import {
-  PopoverContent,
-  PopoverTrigger,
-  Popover,
-} from "@nuvix/sui/components/popover";
+import { PopoverContent, PopoverTrigger, Popover } from "@nuvix/sui/components/popover";
 
 import { useForeignKeyConstraintsQuery } from "@/data/database/foreign-key-constraints-query";
 import type { EnumeratedType } from "@/data/enumerated-types/enumerated-types-query";

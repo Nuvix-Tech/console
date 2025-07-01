@@ -69,7 +69,7 @@ const EnableExtensionModal = ({ visible, extension, onCancel }: EnableExtensionM
             sql: `select * from pg_available_extension_versions where name = '${extension.name}'`,
           });
           if (!cancel) setDefaultSchema(res.result[0].schema);
-        } catch (error) { }
+        } catch (error) {}
 
         setFetchingSchemaInfo(false);
       };

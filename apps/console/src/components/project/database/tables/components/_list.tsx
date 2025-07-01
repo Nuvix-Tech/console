@@ -44,11 +44,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@nuvix/sui/components/dropdown-menu";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@nuvix/sui/components/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import { formatAllEntities } from "./_utils";
 import { cn } from "@nuvix/sui/lib/utils";
 import ProtectedSchemaWarning from "@/ui/ProtectedSchemaWarning";
@@ -147,8 +143,8 @@ const TablesList = ({
         return filterString.length === 0
           ? materializedViews
           : materializedViews.filter((view) =>
-            view.name.toLowerCase().includes(filterString.toLowerCase()),
-          );
+              view.name.toLowerCase().includes(filterString.toLowerCase()),
+            );
       },
     },
   );
@@ -171,8 +167,8 @@ const TablesList = ({
         return filterString.length === 0
           ? foreignTables
           : foreignTables.filter((table) =>
-            table.name.toLowerCase().includes(filterString.toLowerCase()),
-          );
+              table.name.toLowerCase().includes(filterString.toLowerCase()),
+            );
       },
     },
   );
@@ -446,14 +442,14 @@ const TablesList = ({
               size={"xs"}
               disabled={false}
               onClick={() => onAddTable()}
-            // tooltip={{
-            //   content: {
-            //     side: 'bottom',
-            //     text: !canUpdateTables
-            //       ? 'You need additional permissions to create tables'
-            //       : undefined,
-            //   },
-            // }}
+              // tooltip={{
+              //   content: {
+              //     side: 'bottom',
+              //     text: !canUpdateTables
+              //       ? 'You need additional permissions to create tables'
+              //       : undefined,
+              //   },
+              // }}
             >
               <Plus />
               New table

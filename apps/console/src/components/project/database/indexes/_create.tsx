@@ -15,14 +15,8 @@ import {
   CommandList,
   Command,
 } from "@nuvix/sui/components/command";
-import {
-  PopoverContent,
-  PopoverTrigger,
-  Popover,
-} from "@nuvix/sui/components/popover";
-import {
-  ScrollArea,
-} from "@nuvix/sui/components/scroll-area";
+import { PopoverContent, PopoverTrigger, Popover } from "@nuvix/sui/components/popover";
+import { ScrollArea } from "@nuvix/sui/components/scroll-area";
 import {
   SelectContent,
   SelectItem,
@@ -31,9 +25,7 @@ import {
   SelectValue,
   Select,
 } from "@nuvix/sui/components/select";
-import {
-  Label,
-} from "@nuvix/sui/components/label";
+import { Label } from "@nuvix/sui/components/label";
 import { INDEX_TYPES } from "./_constants";
 import { useProjectStore } from "@/lib/store";
 import { SidePanel } from "@/ui/SidePanel";
@@ -120,8 +112,8 @@ const CreateIndexSidePanel = ({ visible, onClose }: CreateIndexSidePanelProps) =
 
   const generatedSQL = `
 CREATE INDEX ON "${selectedSchema}"."${selectedEntity}" USING ${selectedIndexType} (${selectedColumns
-      .map((column) => `"${column}"`)
-      .join(", ")});
+    .map((column) => `"${column}"`)
+    .join(", ")});
 `.trim();
 
   const onSaveIndex = () => {
@@ -197,7 +189,7 @@ CREATE INDEX ON "${selectedSchema}"."${selectedEntity}" USING ${selectedIndexTyp
                 className="p-0"
                 side="bottom"
                 align="start"
-              // sameWidthAsTrigger
+                // sameWidthAsTrigger
               >
                 <Command>
                   <CommandInput
@@ -273,7 +265,7 @@ CREATE INDEX ON "${selectedSchema}"."${selectedEntity}" USING ${selectedIndexTyp
                 className="p-0"
                 side="bottom"
                 align="start"
-              // sameWidthAsTrigger
+                // sameWidthAsTrigger
               >
                 {/* [Terry] shouldFilter context:
                 https://github.com/pacocoursey/cmdk/issues/267#issuecomment-2252717107 */}

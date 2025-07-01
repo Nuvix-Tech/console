@@ -182,7 +182,7 @@ function SelectCellHeader({
     <div className="nx-grid-select-cell__header">
       <Checkbox
         size={"sm"}
-        borderColor={'fg.success'}
+        borderColor={"fg.success"}
         checked={isIndeterminate ? "indeterminate" : value}
         disabled={disabled}
         onClick={onClick as any}

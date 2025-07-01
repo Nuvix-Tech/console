@@ -20,11 +20,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@nuvix/sui/components/dropdown-menu";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@nuvix/sui/components/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import { useParams } from "next/navigation";
 import { useProjectStore } from "@/lib/store";
 import ProtectedSchemaWarning from "@/ui/ProtectedSchemaWarning";

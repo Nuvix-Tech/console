@@ -65,7 +65,7 @@ const TableNode = ({
         >
           <header
             className={cn(
-              "pl-2 pr-1 bg-[var(--neutral-background-strong)]/60 neutral-on-background-strong flex items-center justify-between",
+              "pl-2 pr-1 bg-[var(--neutral-background-strong)]/60 rounded-t-sm backdrop-blur neutral-on-background-strong flex items-center justify-between",
               itemHeight,
             )}
           >

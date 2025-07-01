@@ -181,9 +181,9 @@ function renderColumnIcon(
             <div className="font-normal">
               <p className="text-xs text-muted-foreground">Foreign key relation:</p>
               <div className="flex items-center space-x-1">
-                <Code size={'xs'}>{name}</Code>
+                <Code size={"xs"}>{name}</Code>
                 <ArrowRight size={14} strokeWidth={1.5} className="!text-accent" />
-                <Code size={'xs'}>
+                <Code size={"xs"}>
                   {foreignKey?.targetTableSchema}.{foreignKey?.targetTableName}.
                   {foreignKey?.targetColumnName}
                 </Code>

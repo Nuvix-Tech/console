@@ -12,16 +12,8 @@ import {
 import InformationBox from "@/ui/InformationBox";
 import type { EnumeratedType } from "@/data/enumerated-types/enumerated-types-query";
 // import { useSendEventMutation } from "@/data/telemetry/send-event-mutation";
-import {
-  AlertDescription,
-  AlertTitle,
-  Alert,
-} from "@nuvix/sui/components/alert";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@nuvix/sui/components/tooltip";
+import { AlertDescription, AlertTitle, Alert } from "@nuvix/sui/components/alert";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 
 import { generateColumnField } from "../ColumnEditor/ColumnEditor.utils";
 import { ForeignKeySelector } from "../ForeignKeySelector/ForeignKeySelector";
@@ -281,8 +273,9 @@ const ColumnManagement = ({
                 {(droppableProvided: DroppableProvided) => (
                   <div
                     ref={droppableProvided.innerRef}
-                    className={`space-y-2 rounded-md bg-[var(--neutral-alpha-weak)] px-3 py-2 ${isNewRecord ? "" : "-mx-3"
-                      }`}
+                    className={`space-y-2 rounded-md bg-[var(--neutral-alpha-weak)] px-3 py-2 ${
+                      isNewRecord ? "" : "-mx-3"
+                    }`}
                   >
                     {primaryKeyColumns.map((column: ColumnField, index: number) => (
                       <Draggable key={column.id} draggableId={column.id} index={index}>

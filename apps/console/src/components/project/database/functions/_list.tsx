@@ -15,11 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@nuvix/sui/components/dropdown-menu";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@nuvix/sui/components/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import { useProjectStore } from "@/lib/store";
 import { Button } from "@nuvix/ui/components";
 import { Code, Input } from "@chakra-ui/react";

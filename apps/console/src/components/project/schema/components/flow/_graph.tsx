@@ -43,8 +43,8 @@ export const SchemaGraph = () => {
 
   const [isDownloading, setIsDownloading] = useState(false);
 
-  const miniMapNodeColor = "var(--neutral-on-solid-medium)";
-  const miniMapMaskColor = "var(--neutral-solid-medium)";
+  const miniMapNodeColor = "var(--accent-solid-medium)";
+  const miniMapMaskColor = "var(--neutral-alpha-strong)";
 
   const reactFlowInstance = useReactFlow<Node<TableNodeData>>();
   const nodeTypes = useMemo(
@@ -181,11 +181,7 @@ export const SchemaGraph = () => {
   }, [isSuccessTables, isSuccessSchemas, tables]);
 
   return (
-    <Column
-      fillHeight
-      radius="l"
-      overflow="hidden"
-    >
+    <Column fillHeight radius="l" overflow="hidden">
       <div className="flex items-center justify-between py-2 px-4 border-b border-b-neutral-border-medium">
         {isLoadingSchemas && <Skeleton className="h-[34px] w-[260px]" />}
 
@@ -303,7 +299,7 @@ export const SchemaGraph = () => {
                   zoomable
                   nodeColor={miniMapNodeColor}
                   maskColor={miniMapMaskColor}
-                  nodeBorderRadius={10}
+                  nodeBorderRadius={20}
                   className="border border-[var(--neutral-solid-strong)] !rounded-md overflow-hidden"
                 />
               </ReactFlow>
