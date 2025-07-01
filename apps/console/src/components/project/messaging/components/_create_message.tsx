@@ -1,6 +1,6 @@
 import { CreateMessage } from "@/components/wizard/messaging";
 import { MessagingProviderType } from "@nuvix/console";
-import { Popover, PopoverTrigger, PopoverContent } from "@nuvix/sui/components";
+import { Popover, PopoverTrigger, PopoverContent } from "@nuvix/sui/components/popover";
 import { Button, Flex, Text, ToggleButton, useConfirm } from "@nuvix/ui/components";
 import { LucideProps, MailIcon, MessageCircleIcon, SmartphoneIcon } from "lucide-react";
 import React, { useState } from "react";

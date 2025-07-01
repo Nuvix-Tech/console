@@ -11,6 +11,7 @@ import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import { getForeignKeyCascadeAction } from "@/components/editor/SidePanelEditor/ColumnEditor/ColumnEditor.utils";
 import { Text } from "@nuvix/ui/components";
+import { Code } from "@chakra-ui/react";
 
 export function ColumnHeader<R>({
   column,
@@ -178,22 +179,22 @@ function renderColumnIcon(
           </TooltipTrigger>
           <TooltipContent side="bottom">
             <div className="font-normal">
-              <p className="text-xs text-foreground-light">Foreign key relation:</p>
+              <p className="text-xs text-muted-foreground">Foreign key relation:</p>
               <div className="flex items-center space-x-1">
-                <p className="text-xs !text-background">{name}</p>
-                <ArrowRight size={14} strokeWidth={1.5} className="!text-muted" />
-                <p className="text-xs !text-background">
+                <Code size={'xs'}>{name}</Code>
+                <ArrowRight size={14} strokeWidth={1.5} className="!text-accent" />
+                <Code size={'xs'}>
                   {foreignKey?.targetTableSchema}.{foreignKey?.targetTableName}.
                   {foreignKey?.targetColumnName}
-                </p>
+                </Code>
               </div>
               {foreignKey?.updateAction !== FOREIGN_KEY_CASCADE_ACTION.NO_ACTION && (
-                <p className="text-xs !text-background mt-1">
+                <p className="text-xs !text-secondary-foreground mt-1">
                   On update: {getForeignKeyCascadeAction(foreignKey?.updateAction)}
                 </p>
               )}
               {foreignKey?.deletionAction !== FOREIGN_KEY_CASCADE_ACTION.NO_ACTION && (
-                <p className="text-xs !text-background mt-1">
+                <p className="text-xs !text-secondary-foreground mt-1">
                   On delete: {getForeignKeyCascadeAction(foreignKey?.deletionAction)}
                 </p>
               )}

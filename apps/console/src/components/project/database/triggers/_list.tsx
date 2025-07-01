@@ -10,15 +10,19 @@ import { useSchemasQuery } from "@/data/database/schemas-query";
 import { useTablesQuery } from "@/data/tables/tables-query";
 import {
   Badge,
+} from "@nuvix/sui/components/badge";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+} from "@nuvix/sui/components/dropdown-menu";
+import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@nuvix/sui/components";
+} from "@nuvix/sui/components/tooltip";
 import { useProjectStore } from "@/lib/store";
 import { Button } from "@nuvix/ui/components";
 import { Input } from "@chakra-ui/react";

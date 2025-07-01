@@ -13,7 +13,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@nuvix/sui/components";
+} from "@nuvix/sui/components/dropdown-menu";
 import { useProjectStore } from "@/lib/store";
 import { Button, IconButton } from "@nuvix/ui/components";
 import { Input } from "@chakra-ui/react";

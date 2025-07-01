@@ -6,7 +6,8 @@ import { toast } from "sonner";
 import { useDatabaseExtensionEnableMutation } from "@/data/database-extensions/database-extension-enable-mutation";
 import { useSchemasQuery } from "@/data/database/schemas-query";
 import { executeSql } from "@/data/sql/execute-sql-query";
-import { AlertDescription, AlertTitle, Alert, Button } from "@nuvix/sui/components";
+import { AlertDescription, AlertTitle, Alert } from "@nuvix/sui/components/alert";
+import { Button } from "@nuvix/sui/components/button";
 import { useProjectStore } from "@/lib/store";
 import { SidePanel } from "@/ui/SidePanel";
 import { Admonition } from "@/ui/admonition";
@@ -68,7 +69,7 @@ const EnableExtensionModal = ({ visible, extension, onCancel }: EnableExtensionM
             sql: `select * from pg_available_extension_versions where name = '${extension.name}'`,
           });
           if (!cancel) setDefaultSchema(res.result[0].schema);
-        } catch (error) {}
+        } catch (error) { }
 
         setFetchingSchemaInfo(false);
       };

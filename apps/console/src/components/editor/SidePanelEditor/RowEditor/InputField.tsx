@@ -6,7 +6,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@nuvix/sui/components";
+} from "@nuvix/sui/components/dropdown-menu";
 import { Button, IconButton } from "@nuvix/ui/components";
 import { DATETIME_TYPES, JSON_TYPES, TEXT_TYPES } from "../SidePanelEditor.constants";
 import { DateTimeInput } from "./DateTimeInput";

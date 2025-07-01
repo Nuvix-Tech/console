@@ -14,7 +14,7 @@ import { cn } from "@nuvix/sui/lib/utils";
 import { Button } from "@nuvix/ui/components";
 import { formatForeignKeys } from "@/components/editor/SidePanelEditor/ForeignKeySelector/ForeignKeySelector.utils";
 import { GenericSkeletonLoader } from "@/components/editor/components/GenericSkeleton";
-import { Alert, AlertDescription, AlertTitle } from "@nuvix/sui/components";
+import { Alert, AlertDescription, AlertTitle } from "@nuvix/sui/components/alert";
 
 const rowKeyGetter = (row: NuvixRow) => {
   return row?.idx ?? -1;
@@ -41,12 +41,12 @@ export const gridStyles = {
 
 export const gridStyles2 = {
   ["--rdg-color" as any]: "var(--neutral-on-background-medium)",
-  ["--rdg-background-color" as any]: "var(--page-background)",
-  ["--rdg-row-hover-background-color" as any]: "var(--neutral-background-strong)",
-  ["--rdg-border-color" as any]: "var(--neutral-border-medium)",
-  ["--rdg-header-background-color" as any]: "var(--neutral-background-medium)",
+  ["--rdg-background-color" as any]: "transparent",
+  ["--rdg-row-hover-background-color" as any]: "var(--neutral-background-medium)",
+  ["--rdg-border-color" as any]: "var(--neutral-border-strong)",
+  ["--rdg-header-background-color" as any]: "var(--surface-background)",
   ["--rdg-row-selected-background-color" as any]: "var(--neutral-background-medium)",
-  ["--rdg-row-selected-hover-background-color" as any]: "var(--neutral-background-strong)",
+  ["--rdg-row-selected-hover-background-color" as any]: "var(--neutral-background-weak)",
 };
 
 // Just for visibility this is causing some hook errors in the browser
@@ -204,6 +204,7 @@ export const Grid = memo(
             ref={ref}
             className={`${gridClass} flex-grow !border-r-0 !border-l-0`}
             rowClass={rowClass}
+            headerRowClass="!bg-popover/40"
             columns={snap.gridColumns as CalculatedColumn<any, any>[]}
             rows={rows ?? []}
             renderers={{ renderRow: RowRenderer }}

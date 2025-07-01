@@ -8,7 +8,7 @@ import { DatabaseExtension } from "@/data/database-extensions/database-extension
 // import { useCheckPermissions } from 'hooks/misc/useCheckPermissions'
 // import { useIsOrioleDb } from 'hooks/misc/useSelectedProject'
 import { extensions } from "@/data/database-extensions";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import EnableExtensionModal from "./_modal";
 import { EXTENSION_DISABLE_WARNINGS } from "./_constants";
 import { useProjectStore } from "@/lib/store";

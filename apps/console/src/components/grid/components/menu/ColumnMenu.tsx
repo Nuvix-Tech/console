@@ -81,7 +81,7 @@ const ColumnMenu = ({ column, isEncrypted }: ColumnMenuProps) => {
         </DropdownMenuItem>
         {snap.editable && (
           <>
-            <Separator />
+            <Separator className="my-0.5" />
             <DropdownMenuItem className="space-x-2" onClick={onDeleteColumn}>
               <Trash size={14} stroke="red" />
               <p>Delete column</p>

@@ -16,18 +16,26 @@ import {
   AlertDescription,
   AlertTitle,
   Alert,
+} from "@nuvix/sui/components/alert";
+import {
   Label,
+} from "@nuvix/sui/components/label";
+import {
   PopoverContent,
   PopoverTrigger,
   Popover,
+} from "@nuvix/sui/components/popover";
+import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuCheckboxItem,
+} from "@nuvix/sui/components/dropdown-menu";
+import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
-} from "@nuvix/sui/components";
+} from "@nuvix/sui/components/tooltip";
 // import { tableEditorTabsCleanUp } from '../Tabs/Tabs.utils'
 import EntityListItem from "./EntityListItem";
 import { TableMenuEmptyState } from "./TableMenuEmptyState";

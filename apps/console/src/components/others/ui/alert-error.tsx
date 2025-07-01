@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { PropsWithChildren } from "react";
 
-import { AlertDescription, AlertTitle, Alert, Button } from "@nuvix/sui/components";
+import { AlertDescription, AlertTitle, Alert } from "@nuvix/sui/components/alert";
+import { Button } from "@nuvix/sui/components/button";
 import { TriangleAlertIcon } from "lucide-react";
 
 export interface AlertErrorProps {

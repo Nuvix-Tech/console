@@ -22,7 +22,7 @@ import { CreateButton } from "@/components/others";
 import CreateIndexSidePanel from "./_create";
 import { CodeEditor } from "@/ui/CodeEditor";
 import ConfirmationModal from "@/components/editor/components/_confim_dialog";
-import { Sheet, SheetClose, SheetContent, SheetHeader } from "@nuvix/sui/components";
+import { Sheet, SheetClose, SheetContent, SheetHeader } from "@nuvix/sui/components/sheet";
 
 type DatabaseIndex = any;
 

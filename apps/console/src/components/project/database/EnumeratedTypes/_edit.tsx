@@ -13,7 +13,7 @@ import { FieldArray, useFormik } from "formik";
 import { SidePanel } from "@/ui/SidePanel";
 import { Form, InputField, SubmitButton } from "@/components/others/forms";
 import { Button } from "@nuvix/ui/components";
-import { Label } from "@nuvix/sui/components";
+import { Label } from "@nuvix/sui/components/label";
 
 interface EditEnumeratedTypeSidePanelProps {
   visible: boolean;

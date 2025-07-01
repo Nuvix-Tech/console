@@ -31,7 +31,7 @@ import { useParams } from "next/navigation";
 import { useProjectStore } from "@/lib/store";
 import { LOCAL_STORAGE_KEYS } from "@/lib/constants";
 import { Button, Column, IconButton } from "@nuvix/ui/components";
-import { Skeleton } from "@nuvix/sui/components";
+import { Skeleton } from "@nuvix/sui/components/skeleton";
 import { Node } from "@xyflow/react";
 
 // [Joshen] Persisting logic: Only save positions to local storage WHEN a node is moved OR when explicitly clicked to reset layout

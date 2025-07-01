@@ -1,10 +1,11 @@
 "use client";
-import { Column, Line, RevealFx, Row, ToggleButton } from "@nuvix/ui/components";
+import { Column, Line, Logo, RevealFx, Row, ToggleButton } from "@nuvix/ui/components";
 import { useParams, usePathname } from "next/navigation";
 import * as React from "react";
 import { useColorMode } from "@nuvix/cui/color-mode";
 import { useProjectStore } from "@/lib/store";
 import { ResizablePanel } from "@nuvix/sui/components/resizable";
+import Link from "next/link";
 
 export interface ProjectSidebarData {
   name: string;
@@ -138,8 +139,6 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
         paddingY="12"
         vertical="space-between"
         overflowX="hidden"
-        border={border ? "neutral-medium" : undefined}
-        radius="l"
         zIndex={10}
         overflowY="auto"
         className="transition-[max-width] duration-200 ease-in-out no-scrollbar"
@@ -193,7 +192,7 @@ interface SecondSidebarProps {
   border?: boolean;
 }
 
-export const SecondSidebar = ({ noMarg, noBg, border = true }: SecondSidebarProps) => {
+export const SecondSidebar = ({ noMarg, noBg = true, border = true }: SecondSidebarProps) => {
   const sidebar = useProjectStore.use.sidebar();
 
   return (
@@ -206,11 +205,17 @@ export const SecondSidebar = ({ noMarg, noBg, border = true }: SecondSidebarProp
           gap="m"
           position="relative"
           background={noBg ? "transparent" : "surface"}
-          border={border ? "neutral-medium" : undefined}
           overflowX="hidden"
           overflowY="auto"
-          radius="l"
         >
+          {/* <Link href="/">
+            <div className="is-only-dark">
+              <Logo icon={false} size="s" wordmarkSrc="/trademark/nuvix-logo-dark.svg" />
+            </div>
+            <div className="is-only-light">
+              <Logo icon={false} size="s" wordmarkSrc="/trademark/nuvix-logo-light.svg" />
+            </div>
+          </Link> */}
           <Column fill gap="s">
             {sidebar.first && (
               <RevealFx

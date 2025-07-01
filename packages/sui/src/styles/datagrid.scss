@@ -184,3 +184,7 @@ header/sort/SortRow
 .nx-grid-sort-row__item__move {
     @apply flex cursor-move;
 }
+
+.rdg-cell-frozen {
+    @apply backdrop-blur-md;
+}

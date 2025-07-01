@@ -13,7 +13,7 @@ import { Form, InputField, SubmitButton } from "@/components/others/forms";
 import { FieldArray, useFormik, Field } from "formik";
 import { useProjectStore } from "@/lib/store";
 import { Button } from "@nuvix/ui/components";
-import { Label } from "@nuvix/sui/components";
+import { Label } from "@nuvix/sui/components/label";
 
 interface CreateEnumeratedTypeSidePanelProps {
   visible: boolean;

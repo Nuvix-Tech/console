@@ -8,49 +8,47 @@ export default function ({ children }: { children: React.ReactNode }) {
   return (
     <>
       <ConsoleWrapper>
-        <Row fill position="relative">
+        <Row fill position="relative" background="neutral-alpha-weak">
           {/* <Background
             position="absolute" 
-            // gradient={{
-            //   colorEnd: "neutral-background-weak",
-            //   colorStart: "brand-alpha-medium",
-            //   display: true,
-            //   height: 180,
-            //   opacity: 40,
-            //   tilt: -31,
-            //   width: 150,
-            //   x: 0,
-            //   y: 0,
-            // }}
-            // dots={{
-            //   color: "accent-background-strong",
-            //   display: true,
-            //   opacity: 100,
-            //   size: "64",
-            // }}
-            // grid={{
-            //   color: "neutral-alpha-weak",
-            //   display: true,
-            //   height: "var(--static-space-32)",
-            //   opacity: 100,
-            //   width: "var(--static-space-32)",
-            // }}
-            // lines={{
-            //   display: true,
-            //   opacity: 20,
-            //   size: "24",
-            //   color: "accent-solid-weak",
-            // }}
-          />
-          */}
+            gradient={{
+              colorEnd: "neutral-background-weak",
+              colorStart: "brand-alpha-medium",
+              display: true,
+              height: 180,
+              opacity: 40,
+              tilt: -31,
+              width: 150,
+              x: 0,
+              y: 0,
+            }}
+            dots={{
+              color: "accent-background-strong",
+              display: true,
+              opacity: 100,
+              size: "64",
+            }}
+            grid={{
+              color: "neutral-alpha-weak",
+              display: true,
+              height: "var(--static-space-32)",
+              opacity: 100,
+              width: "var(--static-space-32)",
+            }}
+            lines={{
+              display: true,
+              opacity: 20,
+              size: "24",
+              color: "accent-solid-weak",
+            }}
+          /> */}
+
           <PanelGroup direction="horizontal">
             <Stack
               width="full"
               height="full"
-              className="backdrop-blur-xl"
               flexDirection={"row"}
               overflow="hidden"
-              padding={{ base: 0, md: `var(--static-space-8)` }}
               gap={{ base: 0, md: `var(--static-space-4)` }}
             >
               {children}

@@ -122,7 +122,6 @@ export const NuvixGrid = ({
   return (
     <DndProvider backend={HTML5Backend} context={window}>
       <Column
-        border="neutral-medium"
         fill
         radius="l"
         overflow="hidden"

@@ -1,5 +1,5 @@
 {
-  "name": "@nuvix/console-web",
+  "name": "console",
   "version": "0.0.1",
   "scripts": {
     "dev": "next dev --turbopack --port 3005",

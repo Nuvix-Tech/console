@@ -3,6 +3,7 @@ import { useProjectStore } from "@/lib/store";
 import { cn } from "@nuvix/sui/lib/utils";
 import { Stack } from "@chakra-ui/react";
 import { PropsWithChildren } from "react";
+import { Flex } from "@nuvix/ui/components";
 
 export const ProjectLayout = ({ children }: PropsWithChildren) => {
   const sidebar = useProjectStore.use.sidebar();
@@ -16,9 +17,11 @@ export const ProjectLayout = ({ children }: PropsWithChildren) => {
       })}
       height="full"
       position="relative"
-      as={"main"}
+      asChild
     >
-      {children}
+      <Flex paddingX="8" paddingBottom="8" as={'main'}>
+        {children}
+      </Flex>
     </Stack>
   );
 };

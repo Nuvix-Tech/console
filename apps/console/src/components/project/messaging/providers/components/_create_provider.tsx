@@ -1,6 +1,6 @@
 import { CreateProvider } from "@/components/wizard/messaging/providers";
 import { MessagingProviderType } from "@nuvix/console";
-import { Popover, PopoverTrigger, PopoverContent } from "@nuvix/sui/components";
+import { Popover, PopoverTrigger, PopoverContent } from "@nuvix/sui/components/popover";
 import { Button, ToggleButton } from "@nuvix/ui/components";
 import React, { useState } from "react";
 

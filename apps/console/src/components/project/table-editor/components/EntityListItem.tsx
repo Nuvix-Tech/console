@@ -36,10 +36,12 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
+} from "@nuvix/sui/components/dropdown-menu";
+import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@nuvix/sui/components";
+} from "@nuvix/sui/components/tooltip";
 import { useProjectStore } from "@/lib/store";
 import { useTableEditorStateSnapshot } from "@/lib/store/table-editor";
 import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
@@ -260,11 +262,11 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
           "bg-[var(--neutral-alpha-weak)]": isActive && !isPreview,
         },
       )}
-      // onDoubleClick={(e) => {
-      //   e.preventDefault()
-      //   const tabId = createTabId(entity.type, { id: entity.id })
-      //   makeTabPermanent(projectRef, tabId)
-      // }}
+    // onDoubleClick={(e) => {
+    //   e.preventDefault()
+    //   const tabId = createTabId(entity.type, { id: entity.id })
+    //   makeTabPermanent(projectRef, tabId)
+    // }}
     >
       <>
         {isActive && <div className="absolute left-0 h-full w-0.5 bg-foreground" />}

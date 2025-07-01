@@ -8,6 +8,8 @@ import {
   AlertDescription,
   AlertTitle,
   Alert,
+} from "@nuvix/sui/components/alert";
+import {
   CommandEmpty,
   CommandGroup,
   CommandInput,
@@ -15,12 +17,18 @@ import {
   CommandList,
   CommandSeparator,
   Command,
+} from "@nuvix/sui/components/command";
+import {
   PopoverContent,
   PopoverTrigger,
   Popover,
+} from "@nuvix/sui/components/popover";
+import {
   ScrollArea,
+} from "@nuvix/sui/components/scroll-area";
+import {
   Skeleton,
-} from "@nuvix/sui/components";
+} from "@nuvix/sui/components/skeleton";
 import { useProjectStore } from "@/lib/store";
 import { Button } from "@nuvix/ui/components";
 
@@ -127,8 +135,8 @@ const SchemaSelector = ({
             className="p-0 min-w-[200px] pointer-events-auto"
             side="bottom"
             align="start"
-            // portal={true}
-            // sameWidthAsTrigger
+          // portal={true}
+          // sameWidthAsTrigger
           >
             <Command>
               <CommandInput placeholder="Find schema..." />

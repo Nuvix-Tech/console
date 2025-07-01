@@ -5,6 +5,7 @@ import React, { Suspense } from "react";
 import { ProjectLayout } from "@/components/project";
 import { SkeletonProject } from "@/components/skeletons";
 import { ResizablePanel, ResizableHandle } from "@nuvix/sui/components/resizable";
+import { Column } from "@nuvix/ui/components";
 
 export default function ({ children }: { children: React.ReactNode }) {
   return (
@@ -21,8 +22,12 @@ export default function ({ children }: { children: React.ReactNode }) {
             overflowY="auto"
             position={"relative"}
             direction="column"
+            bg={{ _dark: 'bg.muted', _light: 'bg' }}
+            asChild
           >
-            <Suspense fallback={<SkeletonProject />}>{children}</Suspense>
+            <Column radius="l">
+              <Suspense fallback={<SkeletonProject />}>{children}</Suspense>
+            </Column>
           </Stack>
         </ProjectLayout>
       </ResizablePanel>
