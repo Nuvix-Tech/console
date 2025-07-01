@@ -10,7 +10,7 @@ import React, { useState } from "react";
 import { useMessageStore } from "./store";
 import { MessageTypeIcon } from "../../components";
 import { MessagingProviderType } from "@nuvix/console";
-import { Status } from "@/components/cui/status";
+import { Status } from "@nuvix/cui/status";
 import { LogsDialog } from "@/components/others/ui";
 import { Button, Dialog, useConfirm, useToast } from "@nuvix/ui/components";
 import { FormDialog, InputField, SubmitButton } from "@/components/others/forms";

@@ -3,7 +3,7 @@ import React from "react";
 import { DeleteTeam, UpdateName, UpdatePrefs } from "./components";
 import { IDChip, PageContainer, TopCard } from "@/components/others";
 import { HStack, Stack, Text, VStack } from "@chakra-ui/react";
-import { Avatar } from "@/components/cui/avatar";
+import { Avatar } from "@nuvix/cui/avatar";
 import { formatDate } from "@/lib/utils";
 import { useProjectStore, useTeamStore } from "@/lib/store";
 

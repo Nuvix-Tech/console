@@ -4,7 +4,7 @@ import {
   DialogHeader,
   DialogRoot,
   DialogTrigger,
-} from "@/components/cui/dialog";
+} from "@nuvix/cui/dialog";
 import { Button, DialogFooter, DialogRootProps } from "@chakra-ui/react";
 import { Text } from "@nuvix/ui/components";
 import { CodeBlock } from "@nuvix/ui/modules";

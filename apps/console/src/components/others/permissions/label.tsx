@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Input } from "@chakra-ui/react";
-import { Field } from "@/components/cui/field";
+import { Field } from "@nuvix/cui/field";
 import { SelectDialog } from "../select-dialog";
 
 export type LabelProps = {

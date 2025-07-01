@@ -1,4 +1,4 @@
-import { FieldProps } from "@/components/cui/field";
+import { FieldProps } from "@nuvix/cui/field";
 
 export type RootFieldProps = Pick<
   FieldProps,

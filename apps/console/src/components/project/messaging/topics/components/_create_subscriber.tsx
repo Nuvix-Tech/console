@@ -1,5 +1,5 @@
 "use client";
-import { DialogRoot } from "@/components/cui/dialog";
+import { DialogRoot } from "@nuvix/cui/dialog";
 import { Targets } from "@/components/wizard/messaging/targets";
 import { useProjectStore } from "@/lib/store";
 import { ID, Models } from "@nuvix/console";

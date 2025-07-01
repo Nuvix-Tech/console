@@ -9,10 +9,10 @@ import { HIDDEN_EXTENSIONS, SEARCH_TERMS } from "./_constants";
 import { useSearchParams } from "next/navigation";
 import { useProjectStore } from "@/lib/store";
 import { Input } from "@chakra-ui/react";
-import { InputGroup } from "@/components/cui/input-group";
+import { InputGroup } from "@nuvix/cui/input-group";
 import { DocsButton } from "@/ui/DocsButton";
 import InformationBox from "@/ui/InformationBox";
-import { Skeleton } from "@/components/cui/skeleton";
+import { Skeleton } from "@nuvix/cui/skeleton";
 import { EmptyResults } from "@/ui/data-grid/empty-results";
 
 const Extensions = () => {
@@ -51,7 +51,7 @@ const Extensions = () => {
   const isPermissionsLoaded = true; // usePermissionsLoaded()
 
   useEffect(() => {
-    if (filter !== undefined) setFilterString(filter as string ?? "");
+    if (filter !== undefined) setFilterString((filter as string) ?? "");
   }, [filter]);
 
   return (

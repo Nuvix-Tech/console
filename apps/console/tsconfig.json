@@ -7,7 +7,8 @@
       "@nuvix/sui/*": ["../../packages/sui/src/*"],
       "@nuvix/sui": ["../../packages/sui/src"],
       "@nuvix/ui/*": ["../../packages/ui/src/*"],
-      "@nuvix/ui": ["../../packages/ui/src"]
+      "@nuvix/ui": ["../../packages/ui/src"],
+      "@nuvix/cui/*": ["../../packages/cui/src/components/*"]
     },
     "plugins": [
       {

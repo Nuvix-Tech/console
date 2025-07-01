@@ -26,6 +26,7 @@
       "core-js-pure",
       "esbuild",
       "sharp"
-    ]
+    ],
+    "ignoredBuiltDependencies": ["unrs-resolver"]
   }
 }

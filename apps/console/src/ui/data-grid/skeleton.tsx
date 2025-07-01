@@ -1,5 +1,5 @@
 "use client";
-import { SkeletonCircle, SkeletonText } from "@/components/cui/skeleton";
+import { SkeletonCircle, SkeletonText } from "@nuvix/cui/skeleton";
 import { HStack, Skeleton, Stack } from "@chakra-ui/react";
 
 export const DataGridSkeleton = ({

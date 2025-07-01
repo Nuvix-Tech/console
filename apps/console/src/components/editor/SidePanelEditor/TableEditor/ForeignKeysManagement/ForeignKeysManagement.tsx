@@ -11,7 +11,7 @@ import { checkIfRelationChanged } from "./ForeignKeysManagement.utils";
 import { useProjectStore } from "@/lib/store";
 import { Alert, AlertDescription, AlertTitle } from "@nuvix/sui/components/alert";
 import { Button } from "@nuvix/ui/components";
-import { SkeletonText } from "@/components/cui/skeleton";
+import { SkeletonText } from "@nuvix/cui/skeleton";
 
 interface ForeignKeysManagementProps {
   table: TableField;

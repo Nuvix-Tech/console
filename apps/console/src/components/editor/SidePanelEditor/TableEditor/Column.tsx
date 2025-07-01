@@ -23,7 +23,7 @@ import { checkIfRelationChanged } from "./ForeignKeysManagement/ForeignKeysManag
 import { useProjectStore } from "@/lib/store";
 import { Button, IconButton, Tag, Checkbox as Checkbox_UI } from "@nuvix/ui/components";
 import { cn } from "@nuvix/sui/lib/utils";
-import { Checkbox } from "@/components/cui/checkbox";
+import { Checkbox } from "@nuvix/cui/checkbox";
 import { Input } from "@/components/others/ui";
 import { Code } from "@chakra-ui/react";
 

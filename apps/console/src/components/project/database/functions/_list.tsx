@@ -21,11 +21,11 @@ import {
 import { useProjectStore } from "@/lib/store";
 import { Button } from "@nuvix/ui/components";
 import { Code, Input } from "@chakra-ui/react";
-import { SkeletonText } from "@/components/cui/skeleton";
+import { SkeletonText } from "@nuvix/cui/skeleton";
 import { EmptyState } from "@/components/_empty_state";
 import { PROTECTED_SCHEMAS } from "@/lib/constants/schemas";
 import SchemaSelector from "@/ui/SchemaSelector";
-import { InputGroup } from "@/components/cui/input-group";
+import { InputGroup } from "@nuvix/cui/input-group";
 import ProtectedSchemaWarning from "@/ui/ProtectedSchemaWarning";
 import AlertError from "@/components/others/ui/alert-error";
 import { CreateButton } from "@/components/others";

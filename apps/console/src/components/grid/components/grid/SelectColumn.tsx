@@ -14,7 +14,7 @@ import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { SELECT_COLUMN_KEY } from "../../constants";
 import type { NuvixRow } from "../../types";
 import { IconButton } from "@nuvix/ui/components";
-import { Checkbox } from "@/components/cui/checkbox";
+import { Checkbox } from "@nuvix/cui/checkbox";
 
 export const SelectColumn: CalculatedColumn<any, any> = {
   key: SELECT_COLUMN_KEY,

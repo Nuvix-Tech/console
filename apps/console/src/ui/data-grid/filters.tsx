@@ -6,8 +6,8 @@ import {
   PopoverContent,
   PopoverRoot,
   PopoverTrigger,
-} from "@/components/cui/popover";
-import { Checkbox } from "@/components/cui/checkbox";
+} from "@nuvix/cui/popover";
+import { Checkbox } from "@nuvix/cui/checkbox";
 import { LuColumns3, LuFilter } from "react-icons/lu";
 import { Button, ButtonProps } from "@nuvix/ui/components";
 

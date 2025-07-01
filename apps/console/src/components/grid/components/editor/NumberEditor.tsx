@@ -1,4 +1,4 @@
-import { NumberInputField, NumberInputRoot } from "@/components/cui/number-input";
+import { NumberInputField, NumberInputRoot } from "@nuvix/cui/number-input";
 import { NumberInputValueChangeDetails } from "@chakra-ui/react";
 import type { RenderEditCellProps } from "react-data-grid";
 

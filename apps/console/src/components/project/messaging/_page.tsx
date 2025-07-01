@@ -17,10 +17,10 @@ import { useProjectStore } from "@/lib/store";
 import { useSearchQuery } from "@/hooks/useQuery";
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDate } from "@/lib/utils";
-import { Tooltip } from "@/components/cui/tooltip";
+import { Tooltip } from "@nuvix/cui/tooltip";
 import { Button, useConfirm, useToast } from "@nuvix/ui/components";
 import { CreateMessageButton, MessageTypeIcon } from "./components";
-import { Status } from "@/components/cui/status";
+import { Status } from "@nuvix/cui/status";
 import { LogsDialog } from "@/components/others/ui";
 
 interface MessagingPageProps {}

@@ -3,8 +3,8 @@ import { MessagingProviderType, Models, Query } from "@nuvix/console";
 import { Button, HStack, Text, Code } from "@chakra-ui/react";
 import { SelectDialog, SimpleSelector, usePaginatedSelector } from "@/components/others";
 import { ProjectSdk } from "@/lib/sdk";
-import { DialogTrigger } from "@/components/cui/dialog";
-import { Checkbox } from "@/components/cui/checkbox";
+import { DialogTrigger } from "@nuvix/cui/dialog";
+import { Checkbox } from "@nuvix/cui/checkbox";
 import { cn } from "@nuvix/sui/lib/utils";
 
 export type TopicsProps = {

@@ -4,7 +4,7 @@ import { Models, Query } from "@nuvix/console";
 import React, { useEffect } from "react";
 import { Row } from "@nuvix/ui/components";
 import { ColumnDef } from "@tanstack/react-table";
-import { Tooltip } from "@/components/cui/tooltip";
+import { Tooltip } from "@nuvix/cui/tooltip";
 import { Badge, HStack, Text } from "@chakra-ui/react";
 import { formatDate } from "@/lib/utils";
 import { DataGridProvider, Pagination, Search, SelectLimit, Table } from "@/ui/data-grid";

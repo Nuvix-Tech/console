@@ -6,7 +6,7 @@ import {
   PopoverContent,
   PopoverRoot,
   PopoverTrigger,
-} from "../cui/popover";
+} from "@nuvix/cui/popover";
 
 interface DropdownMenuProps {
   children: React.ReactNode;

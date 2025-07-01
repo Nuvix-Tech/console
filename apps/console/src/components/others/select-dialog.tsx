@@ -8,7 +8,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "../cui/dialog";
+} from "@nuvix/cui/dialog";
 
 type Props = {
   title: string;

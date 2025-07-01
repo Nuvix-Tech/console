@@ -11,7 +11,7 @@ import { useProjectStore } from "@/lib/store";
 import { SidePanel } from "@/ui/SidePanel";
 import { Admonition } from "@/ui/admonition";
 import { DocsButton } from "@/ui/DocsButton";
-import { SkeletonText } from "@/components/cui/skeleton";
+import { SkeletonText } from "@nuvix/cui/skeleton";
 import { Input } from "@nuvix/ui/components";
 import { useFormik } from "formik";
 import { InputField, SubmitButton } from "@/components/others/forms";

@@ -14,7 +14,7 @@ import { useFormikContext } from "formik";
 import { useEffect } from "react";
 import { DynamicField, SelectField } from "../document/components";
 import { useQuery } from "@tanstack/react-query";
-import { RadioCardItem, RadioCardRoot } from "@/components/cui/radio-card";
+import { RadioCardItem, RadioCardRoot } from "@nuvix/cui/radio-card";
 import { MoveHorizontal, MoveRight } from "lucide-react";
 
 interface BaseProps {

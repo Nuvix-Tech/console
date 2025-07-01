@@ -2,7 +2,7 @@
 import { Column, Line, RevealFx, Row, ToggleButton } from "@nuvix/ui/components";
 import { useParams, usePathname } from "next/navigation";
 import * as React from "react";
-import { useColorMode } from "../cui/color-mode";
+import { useColorMode } from "@nuvix/cui/color-mode";
 import { useProjectStore } from "@/lib/store";
 import { ResizablePanel } from "@nuvix/sui/components/resizable";
 

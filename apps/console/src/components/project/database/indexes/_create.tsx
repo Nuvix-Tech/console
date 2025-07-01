@@ -34,7 +34,7 @@ import { DocsButton } from "@/ui/DocsButton";
 import { Admonition } from "@/ui/admonition";
 import { Button } from "@nuvix/ui/components";
 import { cn } from "@nuvix/sui/lib/utils";
-import { SkeletonText } from "@/components/cui/skeleton";
+import { SkeletonText } from "@nuvix/cui/skeleton";
 import {
   MultiSelector,
   MultiSelectorContent,

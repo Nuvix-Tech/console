@@ -10,7 +10,7 @@ import { cn } from "@nuvix/sui/lib/utils";
 import { PostgresTable } from "@nuvix/pg-meta";
 import { useTableRowsQuery } from "@/data/table-rows/table-rows-query";
 import { gridStyles } from "../grid/Grid";
-import { SkeletonText } from "@/components/cui/skeleton";
+import { SkeletonText } from "@nuvix/cui/skeleton";
 import { EditorTablePageLink } from "@/data/prefetchers/project.$ref.editor.$id";
 import { Button } from "@chakra-ui/react";
 import { useParams } from "next/navigation";

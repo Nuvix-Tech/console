@@ -2,7 +2,7 @@ import { cn } from "@nuvix/sui/lib/utils";
 import Link from "next/link";
 import ReactMarkdown, { Options } from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Prose } from "../cui/prose";
+import { Prose } from "@nuvix/cui/prose";
 
 interface Props extends Omit<Options, "children" | "node"> {
   className?: string;

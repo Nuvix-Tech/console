@@ -1,6 +1,6 @@
 "use client";
 import { IDChip, PageContainer, TopCard, UserStatus } from "@/components/others";
-import { Avatar } from "@/components/cui/avatar";
+import { Avatar } from "@nuvix/cui/avatar";
 import { formatDate } from "@/lib/utils";
 import { Column, Row, useToast } from "@nuvix/ui/components";
 import { Button, ButtonProps, HStack, Skeleton, Stack, Text, VStack } from "@chakra-ui/react";
@@ -11,7 +11,7 @@ import {
   PopoverContent,
   PopoverRoot,
   PopoverTrigger,
-} from "@/components/cui/popover";
+} from "@nuvix/cui/popover";
 import { getStatus } from "@/components/others/user";
 import {
   DeleteUser,

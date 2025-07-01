@@ -10,8 +10,8 @@ import {
   ClipboardInput,
   ClipboardLabel,
   ClipboardRoot,
-} from "@/components/cui/clipboard";
-import { InputGroup } from "@/components/cui/input-group";
+} from "@nuvix/cui/clipboard";
+import { InputGroup } from "@nuvix/cui/input-group";
 import { API_ENDPOINT } from "@/lib/constants";
 import { Button } from "@chakra-ui/react";
 import { useRouter } from "@bprogress/next";

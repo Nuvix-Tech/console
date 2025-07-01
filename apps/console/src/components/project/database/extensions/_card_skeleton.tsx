@@ -1,5 +1,5 @@
-import { Skeleton } from "@/components/cui/skeleton";
-import { Toggle } from "@/components/cui/toggle";
+import { Skeleton } from "@nuvix/cui/skeleton";
+import { Toggle } from "@nuvix/cui/toggle";
 
 export interface ExtensionCardSkeletonProps {
   index?: number;

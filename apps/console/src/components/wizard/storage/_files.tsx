@@ -7,7 +7,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Models, Query } from "@nuvix/console";
 import { formatBytes } from "@/lib";
 import { formatDate } from "@/lib/utils";
-import { Tooltip } from "@/components/cui/tooltip";
+import { Tooltip } from "@nuvix/cui/tooltip";
 import { DataGridProvider, Search, Table } from "@/ui/data-grid";
 import { EmptyState } from "@/components/_empty_state";
 import { HStack } from "@chakra-ui/react";

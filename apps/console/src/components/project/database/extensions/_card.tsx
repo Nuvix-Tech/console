@@ -143,7 +143,7 @@ const ExtensionCard = ({ extension }: ExtensionCardProps) => {
           </div>
           {extensionMeta?.deprecated && extensionMeta?.deprecated.length > 0 && (
             <ChakraButton
-              size={'2xs'}
+              size={"2xs"}
               className="rounded-full"
               colorPalette={"yellow"}
               title={`The extension is deprecated and will be removed in ${extensionMeta.deprecated.join(", ")}.`}

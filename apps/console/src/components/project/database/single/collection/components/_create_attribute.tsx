@@ -6,7 +6,7 @@ import {
   PopoverContent,
   PopoverArrow,
   PopoverBody,
-} from "@/components/cui/popover";
+} from "@nuvix/cui/popover";
 import React from "react";
 import {
   BooleanAttributeForm,

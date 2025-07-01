@@ -15,7 +15,7 @@ import { EmptyState } from "@/components";
 import { HStack } from "@chakra-ui/react";
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDate } from "@/lib/utils";
-import { Tooltip } from "@/components/cui/tooltip";
+import { Tooltip } from "@nuvix/cui/tooltip";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useProjectStore } from "@/lib/store";
 import { useSearchQuery } from "@/hooks/useQuery";

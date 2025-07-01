@@ -1,6 +1,6 @@
 "use client";
-import { Avatar } from "@/components/cui/avatar";
-import { SkeletonText } from "@/components/cui/skeleton";
+import { Avatar } from "@nuvix/cui/avatar";
+import { SkeletonText } from "@nuvix/cui/skeleton";
 import { useProjectStore, useUserStore } from "@/lib/store";
 import { Line, Row } from "@nuvix/ui/components";
 import { SidebarGroup } from "@/ui/layout/navigation";

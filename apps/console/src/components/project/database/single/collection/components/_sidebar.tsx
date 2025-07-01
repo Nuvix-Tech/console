@@ -1,4 +1,4 @@
-import { Tooltip } from "@/components/cui/tooltip";
+import { Tooltip } from "@nuvix/cui/tooltip";
 import { useCollectionStore, useDatabaseStore, useProjectStore } from "@/lib/store";
 import { Button, IconButton, Line, Row, Skeleton } from "@nuvix/ui/components";
 import { SidebarGroup } from "@/ui/layout/navigation";

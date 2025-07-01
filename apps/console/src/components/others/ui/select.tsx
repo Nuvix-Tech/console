@@ -12,7 +12,7 @@ import {
   SelectRoot,
   SelectTrigger,
   SelectValueText,
-} from "@/components/cui/select";
+} from "@nuvix/cui/select";
 
 type Option = {
   label: React.ReactNode;

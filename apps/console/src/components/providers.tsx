@@ -1,6 +1,6 @@
 "use client";
 
-import { Provider } from "./cui/provider";
+import { Provider } from "@nuvix/cui/provider";
 import { AppProgressProvider as ProgressProvider } from "@bprogress/next";
 import { ConfirmProvider } from "@nuvix/ui/components";
 import { NuqsAdapter } from "nuqs/adapters/next/app";

@@ -1,5 +1,5 @@
 "use client";
-import { CloseButton } from "@/components/cui/close-button";
+import { CloseButton } from "@nuvix/cui/close-button";
 import { cn } from "@nuvix/sui/lib/utils";
 import { Input, Row } from "@nuvix/ui/components";
 import { Button, ButtonProps } from "@chakra-ui/react";

@@ -3,9 +3,9 @@ import { PermissionsEditorProps } from "./permissions";
 import { Query } from "@nuvix/console";
 import { SimpleSelector, usePaginatedSelector } from "../simple-selector";
 import { Button, HStack, Text, VStack } from "@chakra-ui/react";
-import { Checkbox } from "@/components/cui/checkbox";
+import { Checkbox } from "@nuvix/cui/checkbox";
 import { Avatar } from "@nuvix/ui/components";
-import { DialogTrigger } from "@/components/cui/dialog";
+import { DialogTrigger } from "@nuvix/cui/dialog";
 import { SelectBox1, SelectDialog } from "../select-dialog";
 
 export type UserRoleProps = {

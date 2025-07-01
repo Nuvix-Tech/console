@@ -9,7 +9,7 @@ import {
   DrawerCloseTrigger,
   DrawerContent,
   DrawerRoot,
-} from "@/components/cui/drawer";
+} from "@nuvix/cui/drawer";
 import { FirstSidebar, SecondSidebar } from "./sidebar";
 import { HeaderOrganization, HeaderProject } from "./components";
 import Link from "next/link";

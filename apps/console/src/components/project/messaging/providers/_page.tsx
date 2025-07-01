@@ -8,7 +8,7 @@ import { useProjectStore } from "@/lib/store";
 import { useSearchQuery } from "@/hooks/useQuery";
 import { ColumnDef } from "@tanstack/react-table";
 import { useConfirm, useToast } from "@nuvix/ui/components";
-import { Status } from "@/components/cui/status";
+import { Status } from "@nuvix/cui/status";
 import {
   ActionButton,
   DataActionBar,

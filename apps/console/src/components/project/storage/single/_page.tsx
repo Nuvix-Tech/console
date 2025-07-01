@@ -7,7 +7,7 @@ import { Avatar, Row, useConfirm, useToast } from "@nuvix/ui/components";
 import { Models, Query } from "@nuvix/console";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
-import { Tooltip } from "@/components/cui/tooltip";
+import { Tooltip } from "@nuvix/cui/tooltip";
 import { formatDate } from "@/lib/utils";
 import { CreateButton, PageContainer, PageHeading } from "@/components/others";
 import {

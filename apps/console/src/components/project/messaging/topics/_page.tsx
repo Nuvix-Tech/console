@@ -17,7 +17,7 @@ import { useProjectStore } from "@/lib/store";
 import { useSearchQuery } from "@/hooks/useQuery";
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDate } from "@/lib/utils";
-import { Tooltip } from "@/components/cui/tooltip";
+import { Tooltip } from "@nuvix/cui/tooltip";
 import { useConfirm, useToast } from "@nuvix/ui/components";
 import { CreateTopic } from "../components";
 import { useEffect } from "react";

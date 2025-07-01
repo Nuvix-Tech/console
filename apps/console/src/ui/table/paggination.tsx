@@ -4,7 +4,7 @@ import {
   SelectRoot,
   SelectTrigger,
   SelectValueText,
-} from "@/components/cui/select";
+} from "@nuvix/cui/select";
 import { Row } from "@nuvix/ui/components";
 import { createListCollection } from "@chakra-ui/react";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -14,7 +14,7 @@ import {
   PaginationNextTrigger,
   PaginationPrevTrigger,
   PaginationRoot,
-} from "@/components/cui/pagination";
+} from "@nuvix/cui/pagination";
 
 export type PaginationProps = {
   /**

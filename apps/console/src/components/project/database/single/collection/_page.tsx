@@ -3,7 +3,7 @@ import React from "react";
 import { useConfirm, useToast } from "@nuvix/ui/components";
 import { Models, Query } from "@nuvix/console";
 import { ColumnDef } from "@tanstack/react-table";
-import { Tooltip } from "@/components/cui/tooltip";
+import { Tooltip } from "@nuvix/cui/tooltip";
 import { HStack } from "@chakra-ui/react";
 import { formatDate } from "@/lib/utils";
 import {

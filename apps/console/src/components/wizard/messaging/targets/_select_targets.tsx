@@ -1,7 +1,7 @@
 import { Card, IconButton, Text, Button } from "@nuvix/ui/components";
 import React, { useState, useMemo, useEffect } from "react";
 import { useProjectStore } from "@/lib/store";
-import { DialogRoot } from "@/components/cui/dialog";
+import { DialogRoot } from "@nuvix/cui/dialog";
 import { Models, MessagingProviderType } from "@nuvix/console";
 import { ProjectSdk } from "@/lib/sdk";
 import { Targets } from "./_targets";

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { MessagingProviderType, Models, Query } from "@nuvix/console";
 import { Button, Code, HStack, Text } from "@chakra-ui/react";
-import { Checkbox } from "@/components/cui/checkbox";
-import { DialogTrigger } from "@/components/cui/dialog";
+import { Checkbox } from "@nuvix/cui/checkbox";
+import { DialogTrigger } from "@nuvix/cui/dialog";
 import { SelectDialog, SimpleSelector, usePaginatedSelector } from "@/components/others";
 import { ProjectSdk } from "@/lib/sdk";
 import { ChevronDown } from "lucide-react";

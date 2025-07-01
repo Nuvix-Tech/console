@@ -2,7 +2,7 @@ import { Card, IconButton, Text, Button } from "@nuvix/ui/components";
 import React, { useState, useMemo } from "react";
 import { Topics } from "./_topics";
 import { useProjectStore } from "@/lib/store";
-import { DialogRoot } from "@/components/cui/dialog";
+import { DialogRoot } from "@nuvix/cui/dialog";
 import { Models, MessagingProviderType } from "@nuvix/console";
 import { ProjectSdk } from "@/lib/sdk";
 import { PlusIcon, XIcon } from "lucide-react";

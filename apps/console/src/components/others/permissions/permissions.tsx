@@ -4,12 +4,12 @@ import {
   PopoverContent,
   PopoverArrow,
   PopoverBody,
-} from "@/components/cui/popover";
+} from "@nuvix/cui/popover";
 import { Card, Checkbox, IconButton } from "@nuvix/ui/components";
 import { Table, Text, VStack } from "@chakra-ui/react";
 import { LuPlus } from "react-icons/lu";
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { CloseButton } from "@/components/cui/close-button";
+import { CloseButton } from "@nuvix/cui/close-button";
 import { sdkForConsole, sdkForProject } from "@/lib/sdk";
 import { UserRole } from "./users";
 import { TeamRole } from "./teams";
@@ -17,7 +17,7 @@ import { RoleHover } from "./row";
 import { LabelRole } from "./label";
 import { CustomRole } from "./custom";
 import { Button } from "@nuvix/sui/components/button";
-import { DialogRoot } from "@/components/cui/dialog";
+import { DialogRoot } from "@nuvix/cui/dialog";
 
 export type Permission = {
   create: boolean;
