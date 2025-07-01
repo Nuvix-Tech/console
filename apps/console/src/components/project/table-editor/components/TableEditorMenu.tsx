@@ -1,5 +1,5 @@
 import { partition } from "lodash";
-import { Filter, Plus } from "lucide-react";
+import { ArrowDownAZIcon, Filter, Plus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 // import { useBreakpoint } from 'common/hooks/useBreakpoint'
@@ -126,10 +126,9 @@ const TableEditorMenu = () => {
 
   return (
     <>
-      <div className="flex flex-col flex-grow gap-3 pt-5 h-full">
+      <div className="flex flex-col flex-grow gap-3 pt-5 h-full px-2">
         <div className="flex flex-col gap-y-1.5">
           <SchemaSelector
-            className="mx-2"
             selectedSchemaName={selectedSchema}
             onSelectSchema={(name: string) => {
               setSearchText("");
@@ -138,7 +137,7 @@ const TableEditorMenu = () => {
             onSelectCreateSchema={() => snap.onAddSchema()}
           />
 
-          <div className="grid gap-3 mx-2">
+          <div className="grid gap-3">
             {!isLocked ? (
               <Button
                 fillWidth
@@ -172,19 +171,15 @@ const TableEditorMenu = () => {
           </div>
         </div>
         <div className="flex flex-auto flex-col gap-2 pb-4">
-          <Stack
-            flexDir={"row"}
-            gap={"2"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-            className="mx-2"
-          >
+          <Stack flexDir={"row"} gap={"2"} justifyContent={"space-between"} alignItems={"center"}>
             <InputGroup
               endElement={
                 <DropdownMenu>
                   <DropdownMenuTrigger className="text-4xl text-muted-foreground transition-all group-hover:text-foreground data-[state=open]:text-foreground">
                     <Tooltip>
-                      <TooltipTrigger>&middot;</TooltipTrigger>
+                      <TooltipTrigger asChild>
+                        <ArrowDownAZIcon size={14} />
+                      </TooltipTrigger>
                       <TooltipContent>Sort By</TooltipContent>
                     </Tooltip>
                   </DropdownMenuTrigger>
@@ -225,7 +220,7 @@ const TableEditorMenu = () => {
           {isLoading && <EditorMenuListSkeleton />}
 
           {isError && (
-            <div className="mx-1 p-2 rounded-lg bg-red-50 dark:bg-muted border">
+            <div className="p-2 rounded-lg bg-red-50 dark:bg-muted border">
               <div className="flex flex-col gap-1">
                 <h4 className="text-sm font-semibold text-destructive">
                   Failed to retrieve tables
@@ -242,7 +237,7 @@ const TableEditorMenu = () => {
               {searchText.length === 0 && entityTypes.length === 0 && <TableMenuEmptyState />}
               {searchText.length > 0 && entityTypes.length === 0 && (
                 <InnerSideBarEmptyPanel
-                  className="mx-2"
+                  className="h-auto"
                   title="No results found"
                   description={`Your search for "${searchText}" did not return any results`}
                 />

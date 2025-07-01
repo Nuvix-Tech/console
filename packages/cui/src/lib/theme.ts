@@ -82,7 +82,12 @@ const config = defineConfig({
           },
         },
         border: {
-          DEFAULT: { value: "var(--neutral-border-medium)" },
+          DEFAULT: {
+            value: {
+              _light: "var(--neutral-border-strong)",
+              _dark: "var(--neutral-border-medium)",
+            },
+          },
           subtle: { value: "var(--neutral-border-weak)" },
           muted: { value: "var(--neutral-alpha-medium)" },
           emphasized: { value: "var(--neutral-border-strong)" },

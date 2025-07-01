@@ -255,7 +255,7 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
         }),
         "!px-4 flex items-center justify-between !mx-0",
         {
-          "bg-[var(--neutral-alpha-weak)]": isActive && !isPreview,
+          "bg-[var(--neutral-alpha-weak)] border-x border-accent": isActive && !isPreview,
         },
       )}
       // onDoubleClick={(e) => {
@@ -265,7 +265,7 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
       // }}
     >
       <>
-        {isActive && <div className="absolute left-0 h-full w-0.5 bg-foreground" />}
+        {/* {isActive && <div className="absolute left-0 h-full w-0.5 bg-foreground" />} */}
         <Tooltip disableHoverableContent={true}>
           <TooltipTrigger className="min-w-4">
             <EntityTypeIcon type={entity.type} isActive={isActive} />
