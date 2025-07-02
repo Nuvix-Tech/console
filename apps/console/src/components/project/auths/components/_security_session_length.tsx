@@ -5,15 +5,16 @@ import {
   CardBoxItem,
   CardBoxTitle,
 } from "@/components/others/card";
-import { Form, SubmitButton } from "@/components/others/forms";
+import { Form, InputNumberField, SubmitButton } from "@/components/others/forms";
 import { sdkForConsole } from "@/lib/sdk";
-import { NumberInput, Select, useToast } from "@nuvix/ui/components";
+import { Column, NumberInput, Select, useToast } from "@nuvix/ui/components";
 import { Group } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 import React, { useCallback, useEffect, useState } from "react";
 import * as y from "yup";
 import { useProjectStore } from "@/lib/store";
 import { useTimeUnitPair } from "@/lib/helpers/unit";
+import { Label } from "@nuvix/sui/components/label";
 
 const schema = y.object({
   length: y.number().min(0).optional(),
@@ -75,29 +76,44 @@ export const SessionDuration: React.FC = () => {
 };
 
 export const SessionInput = () => {
-  const { values, setFieldValue } = useFormikContext<Record<string, number>>();
-  const { units, value, unit, baseValue, setUnit, setValue } = useTimeUnitPair(values.length);
+  const { values, setFieldValue } = useFormikContext<{ length: number }>();
+  const { value, unit, units, setUnit, setValue, baseValue } = useTimeUnitPair(values.length);
 
-  const handleValueChange = useCallback(
-    (v: number) => {
-      setValue(v);
-    },
-    [setValue, setFieldValue],
-  );
+  console.log({ value, unit, units, setUnit, setValue, baseValue });
 
   useEffect(() => {
-    setFieldValue("length", value);
-  }, [baseValue]);
+    const currentUnit = units.find((u) => u.name === unit);
+    if (currentUnit) {
+      const newBaseValue = value * currentUnit.value;
+      if (values.length !== newBaseValue) {
+        setFieldValue("length", newBaseValue);
+      }
+    }
+  }, [value, unit]);
 
   return (
     <Group gap={6}>
-      <NumberInput label="Length" min={0} value={value} onChange={handleValueChange} />
-      <Select
-        label="Time Period"
-        value={unit}
-        onSelect={(v) => setUnit(v)}
-        options={units.map((u) => ({ label: u.name, value: u.name }))}
-      />
+      <Column gap="4" fillWidth>
+        <Label className="ml-1">Length</Label>
+        <NumberInput
+          label="Length"
+          min={0}
+          value={value}
+          labelAsPlaceholder
+          externalyUpdate
+          onChange={setValue}
+        />
+      </Column>
+      <Column gap="4" fillWidth>
+        <Label className="ml-1">Time Period</Label>
+        <Select
+          label="Time Period"
+          labelAsPlaceholder
+          value={unit}
+          onSelect={setUnit}
+          options={units.map((u) => ({ label: u.name, value: u.name }))}
+        />
+      </Column>
     </Group>
   );
 };

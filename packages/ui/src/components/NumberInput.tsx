@@ -1,7 +1,7 @@
 "use client";
 
 import classNames from "classnames";
-import React from "react";
+import React, { useEffect } from "react";
 import { forwardRef, useState } from "react";
 import { Checkbox_Chakra, Input, Text } from ".";
 import { Flex } from ".";
@@ -17,11 +17,23 @@ export interface NumberInputProps
   max?: number;
   step?: number;
   padStart?: number;
+  externalyUpdate?: boolean;
 }
 
 const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
   (
-    { value, onChange, min, max, step = 1, nullable = false, isNull = false, padStart, ...props },
+    {
+      value,
+      onChange,
+      min,
+      max,
+      step = 1,
+      nullable = false,
+      isNull = false,
+      padStart,
+      externalyUpdate = false,
+      ...props
+    },
     ref,
   ) => {
     const [localValue, setLocalValue] = useState<string>(
@@ -32,6 +44,16 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
     const [prev, setPrev] = useState<any>();
     const [_null, setNull] = useState(isNull || value === null);
     const checkBoxId = React.useId();
+
+    useEffect(() => {
+      if (_null || !externalyUpdate) return;
+
+      setLocalValue(
+        padStart && value !== undefined
+          ? value.toString().padStart(padStart, "0")
+          : (value?.toString() ?? ""),
+      );
+    }, [value, padStart, _null, externalyUpdate]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (_null) {
@@ -125,7 +147,7 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
               direction="column"
               borderLeft="neutral-medium"
               className={classNames({
-                "!cursor-not-allowed !bg-[var(--neutral-solid-strong)]": props.disabled,
+                "!cursor-not-allowed neutral-solid-strong": props.disabled,
               })}
               fillHeight
             >
@@ -134,9 +156,11 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
                 borderBottom="neutral-medium"
                 paddingX="4"
                 className={classNames(styles.stepper, "transition-micro-medium")}
+                vertical="center"
               >
                 <IconButton
                   type="button"
+                  disabled={props.disabled}
                   variant="ghost"
                   className={classNames({
                     "!cursor-not-allowed !bg-transparent": props.disabled,
@@ -152,9 +176,11 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
                 fillHeight
                 paddingX="4"
                 className={classNames(styles.stepper, "transition-micro-medium")}
+                vertical="center"
               >
                 <IconButton
                   type="button"
+                  disabled={props.disabled}
                   variant="ghost"
                   className={classNames({
                     "!cursor-not-allowed !bg-transparent": props.disabled,

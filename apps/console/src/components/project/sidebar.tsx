@@ -196,7 +196,17 @@ export const SecondSidebar = ({ noMarg, noBg = true, border = true }: SecondSide
   const sidebar = useProjectStore.use.sidebar();
 
   return (
-    <>
+    <Column fillWidth>
+      <Column minHeight="48" vertical="center">
+        <Link href="/">
+          <div className="is-only-dark">
+            <Logo icon={false} size="m" wordmarkSrc="/trademark/nuvix-logo-dark.svg" />
+          </div>
+          <div className="is-only-light">
+            <Logo icon={false} size="m" wordmarkSrc="/trademark/nuvix-logo-light.svg" />
+          </div>
+        </Link>
+      </Column>
       {sidebar.first || sidebar.middle || sidebar.last ? (
         <Column
           fillWidth
@@ -208,14 +218,6 @@ export const SecondSidebar = ({ noMarg, noBg = true, border = true }: SecondSide
           overflowX="hidden"
           overflowY="auto"
         >
-          {/* <Link href="/">
-            <div className="is-only-dark">
-              <Logo icon={false} size="s" wordmarkSrc="/trademark/nuvix-logo-dark.svg" />
-            </div>
-            <div className="is-only-light">
-              <Logo icon={false} size="s" wordmarkSrc="/trademark/nuvix-logo-light.svg" />
-            </div>
-          </Link> */}
           <Column fill gap="s">
             {sidebar.first && (
               <RevealFx
@@ -257,7 +259,7 @@ export const SecondSidebar = ({ noMarg, noBg = true, border = true }: SecondSide
           </Column>
         </Column>
       ) : null}
-    </>
+    </Column>
   );
 };
 

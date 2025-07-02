@@ -35,7 +35,7 @@ export const CreateButton: React.FC<CreateButtonProps> = ({
           <Component onClose={() => setIsOpen(false)} isOpen={isOpen} {...extraProps} />
         )}
       </div>
-      <Button {...props} onClick={handleClick}>
+      <Button size="s" {...props} onClick={handleClick}>
         {label || children}
       </Button>
     </>

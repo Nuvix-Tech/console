@@ -46,16 +46,13 @@ const DesktopHeader = () => {
       <Row
         hide="s"
         as="header"
-        // border="neutral-medium"
         fillWidth
         zIndex={10}
-        // radius="l"
         gap="12"
         paddingX="m"
-        height="64"
-        minHeight="64"
+        height="48"
+        minHeight="48"
         vertical="center"
-        // background="surface"
         ref={headerRef}
       >
         {/* <Row>

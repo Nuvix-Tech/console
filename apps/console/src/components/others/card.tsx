@@ -22,13 +22,7 @@ export const CardBox = (props: UpdateCardProps & React.ComponentProps<typeof Car
 
   return (
     <>
-      <Card
-        className={cn(
-          "neutral-background-alpha-weak neutral-border-alpha-medium shadow-none",
-          className,
-        )}
-        {...rest}
-      >
+      <Card className={cn("surface-background border-0 shadow-none", className)} {...rest}>
         <CardContent>{children}</CardContent>
         {actions ? (
           <>

@@ -135,7 +135,7 @@ const TopUserInfo = () => {
 
   return (
     <TopCard>
-      <Row fill background="neutral-alpha-weak" radius="l" padding="20" horizontal="space-between">
+      <Row fill background="overlay" radius="l" padding="20" horizontal="space-between">
         <Stack
           direction={{ base: "column", md: "row" }}
           gap={"2.5"}
@@ -217,7 +217,7 @@ const TopUserInfo = () => {
                       <PopoverBody>
                         <VStack width={"full"}>
                           <UpdaterButton
-                            variant={"subtle"}
+                            variant={"surface"}
                             width={"full"}
                             callBackFn={async () => {
                               user?.emailVerification
@@ -228,7 +228,7 @@ const TopUserInfo = () => {
                             {user?.emailVerification ? "Unverify Email" : "Verify Email"}
                           </UpdaterButton>
                           <UpdaterButton
-                            variant={"subtle"}
+                            variant={"surface"}
                             width={"full"}
                             callBackFn={async () => {
                               user?.phoneVerification

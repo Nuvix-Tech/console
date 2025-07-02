@@ -8,7 +8,7 @@ export const PageContainer = ({
   ...rest
 }: { children: React.ReactNode } & React.ComponentProps<typeof Column>) => {
   return (
-    <Column paddingX="16" fillWidth gap="20" className={cn("pt-2 md:pt-0", className)} {...rest}>
+    <Column paddingX="12" paddingY="12" fillWidth gap="20" className={cn(className)} {...rest}>
       {children}
     </Column>
   );
