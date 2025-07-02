@@ -135,7 +135,7 @@ const TopUserInfo = () => {
 
   return (
     <TopCard>
-      <Row fill background="overlay" radius="l" padding="20" horizontal="space-between">
+      <Row fill background="neutral-alpha-weak" radius="l" padding="20" horizontal="space-between">
         <Stack
           direction={{ base: "column", md: "row" }}
           gap={"2.5"}

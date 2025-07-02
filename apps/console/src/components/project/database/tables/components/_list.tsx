@@ -479,7 +479,7 @@ const TablesList = ({
         />
 
         {((isSuccess && entities.length > 0) || hasQuery) && (
-          <Table noResults={entities.length === 0 && hasQuery} />
+          <Table noResults={entities.length === 0 && hasQuery} interactive={false} />
         )}
       </DataGridProvider>
     </>

@@ -43,17 +43,9 @@ export default function ({ children }: { children: React.ReactNode }) {
             }}
           /> */}
 
-          <PanelGroup direction="horizontal">
-            <Stack
-              width="full"
-              height="full"
-              flexDirection={"row"}
-              overflow="hidden"
-              gap={{ base: 0, md: `var(--static-space-4)` }}
-            >
-              {children}
-            </Stack>
-          </PanelGroup>
+          <Stack width="full" height="full" overflow="hidden" gap={0}>
+            {children}
+          </Stack>
         </Row>
       </ConsoleWrapper>
     </>

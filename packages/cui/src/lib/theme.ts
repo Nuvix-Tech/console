@@ -112,7 +112,7 @@ const config = defineConfig({
           muted: { value: "var(--neutral-alpha-weak)" },
           emphasized: { value: "var(--neutral-background-strong)" },
           solid: {
-            value: { _light: "var(--brand-solid-strong)", _dark: "var(--brand-background-strong)" },
+            value: { _light: "var(--brand-solid-medium)", _dark: "var(--brand-solid-medium)" },
           },
           inverted: {
             value: { _light: "var(--neutral-solid-weak)", _dark: "var(--neutral-solid-strong)" },

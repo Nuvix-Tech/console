@@ -31,7 +31,7 @@ export const Pagination = () => {
         pageSize={table.getState().pagination.pageSize}
         onPageChange={(details) => onPageChange(details.page)}
         defaultPage={1}
-        variant="subtle"
+        variant="outline"
       >
         <HStack>
           <PaginationPrevTrigger

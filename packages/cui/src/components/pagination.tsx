@@ -85,7 +85,11 @@ export const PaginationItem = React.forwardRef<HTMLButtonElement, ChakraPaginati
 
     return (
       <ChakraPagination.Item ref={ref} {...props} asChild>
-        <Button variant={variant} size={size}>
+        <Button
+          variant={variant}
+          size={size}
+          bg={current ? "var(--neutral-alpha-weak)" : undefined}
+        >
           {props.value}
         </Button>
       </ChakraPagination.Item>

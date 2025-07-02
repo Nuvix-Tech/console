@@ -12,7 +12,7 @@ import classNames from "classnames";
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 
-import { Column, ConfirmProvider, Flex, ToastProvider } from "@nuvix/ui/components";
+import { Column, Flex, ToastProvider } from "@nuvix/ui/components";
 import { Toaster } from "@nuvix/sui/components/sonner";
 import { baseURL, meta, og, schema, social, style } from "@nuvix/ui/resources/config";
 import { customFont, sourceCodePro } from "@nuvix/ui/fonts";

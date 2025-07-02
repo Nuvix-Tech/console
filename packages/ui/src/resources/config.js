@@ -5,10 +5,10 @@ const baseURL = "https://nuvix.in";
 // default customization applied to the HTML in the main layout.tsx
 const style = {
   theme: "dark", // dark | light
-  neutral: "sand", // sand | gray | slate
+  neutral: "slate", // sand | gray | slate
   brand: "custom", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan
   accent: "custom", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan
-  solid: "contrast", // color | contrast | inverse
+  solid: "color", // color | contrast | inverse
   solidStyle: "plastic", // flat | plastic
   border: "rounded", // rounded | playful | conservative
   surface: "translucent", // filled | translucent

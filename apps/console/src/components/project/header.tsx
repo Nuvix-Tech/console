@@ -47,24 +47,27 @@ const DesktopHeader = () => {
         hide="s"
         as="header"
         fillWidth
-        zIndex={10}
+        zIndex={1}
         gap="12"
-        paddingX="m"
-        height="48"
-        minHeight="48"
+        padding="8"
+        height="64"
+        minHeight="64"
         vertical="center"
         ref={headerRef}
+        position="relative"
       >
-        {/* <Row>
+        <Row
+          className="absolute left-0 -z-1"
+          background="surface"
+          width={4}
+          height={"64"}
+          as={"span"}
+        />
+        <Row marginLeft="8" marginRight="16">
           <Link href="/">
-            <div className="is-only-dark">
-              <Logo icon={false} size="s" wordmarkSrc="/trademark/nuvix-logo-dark.svg" />
-            </div>
-            <div className="is-only-light">
-              <Logo icon={false} size="s" wordmarkSrc="/trademark/nuvix-logo-light.svg" />
-            </div>
+            <Logo icon wordmark={false} size="m" iconSrc="/trademark/nuvix.svg" />
           </Link>
-        </Row> */}
+        </Row>
         <Row fillWidth vertical="center" horizontal="space-between">
           <Row vertical="center" gap={"2"}>
             {/* <span className="text-[var(--neutral-alpha-strong)] text-2xl">/</span>

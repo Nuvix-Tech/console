@@ -219,7 +219,7 @@ const ColumnList = ({
         />
 
         {((isSuccess && columns.length > 0) || hasQuery) && (
-          <Table noResults={columns.length === 0 && hasQuery} />
+          <Table noResults={columns.length === 0 && hasQuery} interactive={false} />
         )}
       </DataGridProvider>
     </div>

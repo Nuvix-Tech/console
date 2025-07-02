@@ -48,15 +48,9 @@ const ProjectSidebar: React.FC = () => {
         })}
         height="full"
       > */}
-      <ResizablePanel
-        minSize={showSubSidebar ? 23 : 18}
-        maxSize={showSubSidebar ? 35 : 20}
-        className="hidden md:flex"
-      >
-        <Row gap="4" fill position="relative">
-          <FirstSidebar />
-          <SecondSidebar />
-        </Row>
+      <FirstSidebar />
+      <ResizablePanel minSize={16} maxSize={25} className="hidden md:flex">
+        <SecondSidebar />
       </ResizablePanel>
       {/* </Stack> */}
     </>
@@ -136,10 +130,10 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
       <Column
         maxWidth={alwaysFull ? undefined : !showSubSidebar ? undefined : 4}
         fill
-        paddingY="12"
+        paddingBottom="12"
         vertical="space-between"
         overflowX="hidden"
-        zIndex={10}
+        position="relative"
         overflowY="auto"
         className="transition-[max-width] duration-200 ease-in-out no-scrollbar"
         background={noBg ? "transparent" : "surface"}
@@ -197,20 +191,8 @@ export const SecondSidebar = ({ noMarg, noBg = true, border = true }: SecondSide
 
   return (
     <Column fillWidth>
-      <Column minHeight="48" vertical="center">
-        <Link href="/">
-          <div className="is-only-dark">
-            <Logo icon={false} size="m" wordmarkSrc="/trademark/nuvix-logo-dark.svg" />
-          </div>
-          <div className="is-only-light">
-            <Logo icon={false} size="m" wordmarkSrc="/trademark/nuvix-logo-light.svg" />
-          </div>
-        </Link>
-      </Column>
       {sidebar.first || sidebar.middle || sidebar.last ? (
         <Column
-          fillWidth
-          paddingY="12"
           // marginLeft={noMarg ? "0" : "64"}
           gap="m"
           position="relative"
