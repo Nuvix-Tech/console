@@ -186,7 +186,9 @@ function SelectCellHeader({
         checked={isIndeterminate ? "indeterminate" : value}
         disabled={disabled}
         onClick={onClick as any}
-        onCheckedChange={(e) => onChange(!!e.checked, false)}
+        onCheckedChange={({ checked }) =>
+          onChange(checked === "indeterminate" ? false : checked, false)
+        }
         onChange={handleChange as any}
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledBy}

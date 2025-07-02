@@ -63,16 +63,16 @@ const ExtensionCard = ({ extension }: ExtensionCardProps) => {
 
   return (
     <>
-      <div className="bg-muted border border-muted flex flex-col overflow-hidden rounded shadow-sm">
-        <div className={cn("border-b border-overlay flex justify-between w-full py-3", X_PADDING)}>
-          <div className="max-w-[85%] flex items-center space-x-3 truncate">
+      <div className="neutral-background-alpha-weak flex flex-col overflow-hidden rounded-md shadow-sm">
+        <div className={cn("border-b border-muted flex justify-between w-full py-3", X_PADDING)}>
+          <div className="max-w-[85%] flex items-center gap-2 truncate">
             <h3
               title={extension.name}
               className="h-5 m-0 text-sm truncate cursor-pointer text-foreground"
             >
               {extension.name}
             </h3>
-            <p className="text-sm text-foreground-light font-mono tracking-tighter">
+            <p className="text-sm text-muted-foreground font-mono tracking-tighter">
               {extension?.installed_version ?? extension.default_version}
             </p>
           </div>
@@ -104,7 +104,7 @@ const ExtensionCard = ({ extension }: ExtensionCardProps) => {
         </div>
 
         {isOn && (
-          <div className={cn("border-b border-overlay py-2", X_PADDING)}>
+          <div className={cn("border-b border-muted py-2", X_PADDING)}>
             <p className="text-muted-foreground text-sm">
               Installed in <span className="text-foreground">{extension.schema}</span> schema
             </p>
@@ -113,13 +113,13 @@ const ExtensionCard = ({ extension }: ExtensionCardProps) => {
 
         <div className={cn("flex h-full flex-col gap-y-3 py-3", X_PADDING)}>
           <p className="text-sm text-muted-foreground capitalize-sentence">{extension.comment}</p>
-          <div className="flex items-center gap-x-2">
+          <div className="flex items-center gap-x-2 mt-auto">
             {extensionMeta?.github_url && (
               <Button
                 variant="tertiary"
                 size="s"
                 prefixIcon={<FaGithub />}
-                className="rounded-full font-mono tracking-tighter"
+                className="rounded-full font-mono tracking-tighter !border !border-secondary"
                 target="_blank"
                 rel="noreferrer"
                 href={extensionMeta.github_url}
@@ -155,7 +155,7 @@ const ExtensionCard = ({ extension }: ExtensionCardProps) => {
         </div>
 
         {extensionMeta?.product && (
-          <div className={cn("border-t border-overlay py-3 flex items-center gap-x-3", X_PADDING)}>
+          <div className={cn("border-t border-muted py-3 flex items-center gap-x-3", X_PADDING)}>
             <div className="min-w-5 w-5 h-5 border border-primary/50 rounded flex items-center justify-center">
               <Settings className="text-primary" size={12} />
             </div>

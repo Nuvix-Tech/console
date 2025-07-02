@@ -84,7 +84,7 @@ const config = defineConfig({
         border: {
           DEFAULT: {
             value: {
-              _light: "var(--neutral-border-strong)",
+              _light: "var(--neutral-border-medium)",
               _dark: "var(--neutral-border-medium)",
             },
           },

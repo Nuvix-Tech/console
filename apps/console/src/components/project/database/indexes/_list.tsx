@@ -125,8 +125,8 @@ const Indexes = () => {
             </Button>
             {!isLocked && (
               <IconButton
-                icon={<Trash />}
-                variant="ghost"
+                icon={<Trash size={14} />}
+                variant="tertiary"
                 size="s"
                 className="px-1"
                 onClick={() => setSelectedIndexToDelete(index)}
@@ -197,7 +197,7 @@ const Indexes = () => {
           />
 
           {(indexes.length > 0 || search.length > 0) && (
-            <Table noResults={indexes.length === 0 && search.length > 0} />
+            <Table noResults={indexes.length === 0 && search.length > 0} interactive={false} />
           )}
         </DataGridProvider>
       </div>

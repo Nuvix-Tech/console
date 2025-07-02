@@ -21,10 +21,10 @@ const TheTable = <T,>({ interactive = true, noResults }: Props) => {
 
   return (
     <Table.ScrollArea
-      borderWidth="1px"
+      // borderWidth="1px"
       borderRadius={"md"}
       width="full"
-      className="neutral-background-alpha-weak neutral-border-alpha-medium"
+      bg={"bg.muted"}
     >
       <Table.Root
         size="lg"
@@ -44,8 +44,8 @@ const TheTable = <T,>({ interactive = true, noResults }: Props) => {
               alignItems={"center"}
               position={"relative"}
               width="full"
-              className="!bg-transparent neutral-border-alpha-medium"
-              borderColor={"var(--neutral-alpha-medium) !important"}
+              className="!bg-transparent"
+              borderColor={"var(--neutral-alpha-weak) !important"}
               borderBottom={0.5}
               borderStyle={"solid"}
             >
@@ -60,9 +60,10 @@ const TheTable = <T,>({ interactive = true, noResults }: Props) => {
                   height={12}
                   position={stickyCheckBox ? "sticky" : "relative"}
                   left={stickyCheckBox ? "0" : "auto"}
-                  className={stickyCheckBox ? "neutral-background-medium" : ""}
+                  borderTopLeftRadius={"md"}
+                  className={stickyCheckBox ? "backdrop-blur-xl" : ""}
                   borderBottom={0}
-                  zIndex={3}
+                  zIndex={1}
                 >
                   <Checkbox
                     aria-label="Select all rows"
@@ -105,7 +106,7 @@ const TheTable = <T,>({ interactive = true, noResults }: Props) => {
         </Table.Header>
         {!noResults ? (
           <Table.Body>
-            {table.getRowModel().rows.map((row) => {
+            {table.getRowModel().rows.map((row, i) => {
               const caller = row.getAllCells()?.[0].column.columnDef.meta?.href;
               return (
                 <Table.Row
@@ -116,9 +117,9 @@ const TheTable = <T,>({ interactive = true, noResults }: Props) => {
                   borderRadius={0}
                   gap={0}
                   borderBottom={"1px solid"}
-                  className="neutral-border-alpha-medium last:!border-0"
+                  className="last:!border-0"
                   bg="transparent"
-                  borderColor={"var(--neutral-alpha-medium) !important"}
+                  borderColor={"var(--neutral-alpha-weak) !important"}
                   {...(interactive && {
                     _hover: {
                       cursor: "pointer",
@@ -154,9 +155,14 @@ const TheTable = <T,>({ interactive = true, noResults }: Props) => {
                       maxWidth={checkBoxWidth}
                       position={stickyCheckBox ? "sticky" : "relative"}
                       left={stickyCheckBox ? "0" : "auto"}
-                      className={stickyCheckBox ? "neutral-background-medium" : ""}
+                      className={stickyCheckBox ? "backdrop-blur-xl" : ""}
+                      borderBottomLeftRadius={
+                        stickyCheckBox && table.getRowModel().rows.length - 1 === i
+                          ? "md"
+                          : undefined
+                      }
                       borderWidth={0}
-                      zIndex={3}
+                      zIndex={1}
                     >
                       <Checkbox
                         aria-label="Select row"
