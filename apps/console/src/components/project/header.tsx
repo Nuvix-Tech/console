@@ -1,5 +1,5 @@
 "use client";
-import { Badge, Column, Logo, NavIcon, Row } from "@nuvix/ui/components";
+import { Badge, Column, Logo, NavIcon, Row, Button } from "@nuvix/ui/components";
 import { usePathname } from "next/navigation";
 import type React from "react";
 import { useRef } from "react";
@@ -13,7 +13,6 @@ import {
 import { FirstSidebar, SecondSidebar } from "./sidebar";
 import { HeaderOrganization, HeaderProject } from "./components";
 import Link from "next/link";
-import { Button } from "@nuvix/sui/components/button";
 import { UserProfile } from "../_profile";
 import { useAppStore } from "@/lib/store";
 
@@ -70,20 +69,20 @@ const DesktopHeader = () => {
         </Row>
         <Row fillWidth vertical="center" horizontal="space-between">
           <Row vertical="center" gap={"2"}>
-            {/* <span className="text-[var(--neutral-alpha-strong)] text-2xl">/</span>
-            <HeaderOrganization /> */}
-            {/* <span className="text-[var(--neutral-alpha-medium)] text-2xl">/</span> */}
+            {/* <span className="text-[var(--neutral-alpha-strong)] text-2xl">/</span> */}
+            <HeaderOrganization />
+            <span className="text-[var(--neutral-alpha-medium)] text-2xl">/</span>
             <HeaderProject />
           </Row>
           <Row fillWidth vertical="center" horizontal="end" gap="12">
             <div className="flex items-center gap-3">
               {organization?.billingPlan === "tier-0" ? <Button>Upgrade</Button> : null}
-              <Button variant="outline" className="bg-transparent">
+              <Button variant="secondary" className="bg-transparent">
                 Feedback
               </Button>
               <div className="flex items-center gap-0.5">
-                <Button variant="link">Help</Button>
-                <Button variant="link">Docs</Button>
+                <Button variant="tertiary">Help</Button>
+                <Button variant="tertiary">Docs</Button>
               </div>
             </div>
             <UserProfile />

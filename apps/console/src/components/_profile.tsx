@@ -10,8 +10,8 @@ export function UserProfile() {
   return (
     <Row position="relative" vertical="center">
       <UserMenu
-        name={user?.name}
-        subline={useAppStore.use.organization?.()?.name}
+        // name={user?.name}
+        // subline={useAppStore.use.organization?.()?.name}
         avatarProps={{
           empty: !user,
           src: avatars.getInitials(user.name, 100, 100),
@@ -29,7 +29,7 @@ export function UserProfile() {
               onClick={() => account.deleteSession("current").then()}
               value="3"
             />
-            <div className="px-4 py-2">
+            <div className="px-4 py-2 mx-auto">
               <ThemeSwitcher />
             </div>
           </>

@@ -169,6 +169,7 @@ interface AppStore {
   // Boolean states
   isDrawerOpen: boolean;
   isSecondMenuOpen: boolean;
+  rightSidebarOpen: boolean;
 
   // Data
   scopes: Models.Roles;
@@ -182,6 +183,7 @@ interface AppStore {
   setScopes: (scopes: Models.Roles) => void;
   setOrganization: (organization: Models.Organization<any>) => void;
   setUser: (user: Models.User<any>) => void;
+  setRightSidebarOpen: (value: boolean) => void;
 }
 
 const useApp = create<AppStore>((set, get) => ({
@@ -190,12 +192,14 @@ const useApp = create<AppStore>((set, get) => ({
   scopes: { roles: ["any"], scopes: [] },
   organization: null as any,
   user: null as unknown as Models.User<any>,
+  rightSidebarOpen: true,
 
   setIsDrawerOpen: (value: boolean) => set(() => ({ isDrawerOpen: value })),
   setIsSecondMenuOpen: (value: boolean) => set(() => ({ isSecondMenuOpen: value })),
   setScopes: (scopes: Models.Roles) => set(() => ({ scopes })),
   setOrganization: (organization: Models.Organization<any>) => set(() => ({ organization })),
   setUser: (user: Models.User<any>) => set(() => ({ user })),
+  setRightSidebarOpen: (value: boolean) => set(() => ({ rightSidebarOpen: value })),
 
   permissions: () => {
     const { scopes } = get();

@@ -39,7 +39,6 @@ export function HeaderProject() {
         <Button
           variant="tertiary"
           role="combobox"
-          size="s"
           aria-expanded={open}
           className="max-w-42"
           justifyContent="flex-start"

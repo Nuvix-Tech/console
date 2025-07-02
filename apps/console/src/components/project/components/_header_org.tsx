@@ -2,9 +2,8 @@
 
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { Row, Skeleton } from "@nuvix/ui/components";
+import { Row, Skeleton, Button } from "@nuvix/ui/components";
 import { cn } from "@nuvix/sui/lib/utils";
-import { Button } from "@nuvix/sui/components/button";
 import {
   Command,
   CommandEmpty,
@@ -38,15 +37,16 @@ export function HeaderOrganization() {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="ghost"
+          variant="tertiary"
           role="combobox"
           aria-expanded={open}
-          className="justify-between gap-3 max-w-42"
+          className="max-w-42"
+          justifyContent="flex-start"
+          suffixIcon={<ChevronsUpDown className="opacity-40" size={16} />}
         >
           {organization
             ? orgs.find((org) => org.$id === organization.$id)?.name
             : "Select organization..."}
-          <ChevronsUpDown className="opacity-40" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">

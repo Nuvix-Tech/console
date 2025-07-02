@@ -49,9 +49,13 @@ const ProjectSidebar: React.FC = () => {
         height="full"
       > */}
       <FirstSidebar />
-      <ResizablePanel minSize={16} maxSize={25} className="hidden md:flex">
-        <SecondSidebar />
-      </ResizablePanel>
+      {showSubSidebar ? (
+        <ResizablePanel minSize={16} maxSize={25} className="hidden md:flex">
+          <SecondSidebar />
+        </ResizablePanel>
+      ) : (
+        <span className="w-4" />
+      )}
       {/* </Stack> */}
     </>
   );
@@ -123,12 +127,12 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
     setColorMode(theme);
   };
 
-  const showSubSidebar = sidebar.first || sidebar.middle || sidebar.last;
+  const showSubSidebar = true; // sidebar.first || sidebar.middle || sidebar.last;
 
   return (
     <>
       <Column
-        maxWidth={alwaysFull ? undefined : !showSubSidebar ? undefined : 4}
+        maxWidth={alwaysFull ? undefined : 4}
         fill
         paddingBottom="12"
         vertical="space-between"
@@ -189,60 +193,44 @@ interface SecondSidebarProps {
 export const SecondSidebar = ({ noMarg, noBg = true, border = true }: SecondSidebarProps) => {
   const sidebar = useProjectStore.use.sidebar();
 
-  return (
+  return sidebar.first || sidebar.middle || sidebar.last ? (
     <Column fillWidth>
-      {sidebar.first || sidebar.middle || sidebar.last ? (
-        <Column
-          // marginLeft={noMarg ? "0" : "64"}
-          gap="m"
-          position="relative"
-          background={noBg ? "transparent" : "surface"}
-          overflowX="hidden"
-          overflowY="auto"
-        >
-          <Column fill gap="s">
-            {sidebar.first && (
-              <RevealFx
-                direction="column"
-                fillWidth
-                flex={!(sidebar.middle || sidebar.last) ? "1" : undefined}
-                gap="s"
-                horizontal="start"
-                trigger
-                speed="fast"
-              >
-                {sidebar.first}
-              </RevealFx>
-            )}
-            {sidebar.middle && (
-              <RevealFx
-                direction="column"
-                fillWidth
-                gap="s"
-                horizontal="start"
-                trigger
-                speed="fast"
-              >
-                {sidebar.middle}
-              </RevealFx>
-            )}
-            {sidebar.last && (
-              <RevealFx
-                direction="column"
-                fillWidth
-                gap="s"
-                horizontal="start"
-                trigger
-                speed="fast"
-              >
-                {sidebar.last}
-              </RevealFx>
-            )}
-          </Column>
+      <Column
+        // marginLeft={noMarg ? "0" : "64"}
+        gap="m"
+        position="relative"
+        background={noBg ? "transparent" : "surface"}
+        overflowX="hidden"
+        overflowY="auto"
+      >
+        <Column fill gap="s">
+          {sidebar.first && (
+            <RevealFx
+              direction="column"
+              fillWidth
+              flex={!(sidebar.middle || sidebar.last) ? "1" : undefined}
+              gap="s"
+              horizontal="start"
+              trigger
+              speed="fast"
+            >
+              {sidebar.first}
+            </RevealFx>
+          )}
+          {sidebar.middle && (
+            <RevealFx direction="column" fillWidth gap="s" horizontal="start" trigger speed="fast">
+              {sidebar.middle}
+            </RevealFx>
+          )}
+          {sidebar.last && (
+            <RevealFx direction="column" fillWidth gap="s" horizontal="start" trigger speed="fast">
+              {sidebar.last}
+            </RevealFx>
+          )}
         </Column>
-      ) : null}
+      </Column>
     </Column>
-  );
+  ) : null;
 };
 
 const SidebarSmallButton = ({
