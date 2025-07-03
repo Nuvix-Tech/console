@@ -1,16 +1,26 @@
 "use client";
-import { Column, Line, RevealFx, Row, Text, ToggleButton } from "@nuvix/ui/components";
+import {
+  Column,
+  Icon,
+  IconProps,
+  Line,
+  RevealFx,
+  Row,
+  Text,
+  ToggleButton,
+} from "@nuvix/ui/components";
 import { useParams, usePathname } from "next/navigation";
 import * as React from "react";
-import { useColorMode } from "@nuvix/cui/color-mode";
 import { useProjectStore } from "@/lib/store";
 import { ResizablePanel } from "@nuvix/sui/components/resizable";
+import { useSidebarHref } from "@/hooks/useSidebarHref";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 
 export interface ProjectSidebarData {
   name: string;
   href?: string;
   onClick?: () => void;
-  icon?: React.ReactNode;
+  icon?: IconProps["name"];
   active?: boolean;
   disabled?: boolean;
   children?: ProjectSidebarData[];
@@ -21,7 +31,7 @@ export interface SidebarItem {
   active?: boolean;
   disabled?: boolean;
   href?: string;
-  icon?: React.ReactNode;
+  icon?: IconProps["name"];
   endIcon?: React.ReactNode;
   onClick?: () => void;
   badge?: React.ReactNode;
@@ -68,63 +78,64 @@ interface FirstSidebarProps {
 
 export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarProps) => {
   const pathname = usePathname() ?? "";
-  const sidebar = useProjectStore.use.sidebar();
-  const { setColorMode } = useColorMode();
   const { id } = useParams();
+
+  const { href, isEqual, isIncludes } = useSidebarHref();
 
   const sideNav: SidebarItem[] = [
     {
       name: "Overview",
-      href: `/project/${id}`,
-      icon: <span className="icon-chart-bar" />,
-      active: pathname === `/project/${id}`,
+      href: href(),
+      icon: "house",
+      active: isEqual(),
     },
     {
       name: "Authentication",
-      href: `/project/${id}/authentication/users`,
-      active: pathname.includes(`/project/${id}/authentication`),
-      icon: <span className="icon-users" />,
+      href: href(`authentication/users`),
+      active: isIncludes("authentication"),
+      icon: "authentication",
     },
     {
       name: "Collections",
-      href: `/project/${id}/schema`,
-      icon: <span className="icon-collection" />,
+      href: href(`schema`),
+      icon: "refresh",
     },
     {
       name: "Database",
-      href: `/project/${id}/database/schemas`,
-      icon: <span className="icon-database" />,
+      href: href(`database/schemas`),
+      icon: "database",
+      active: isIncludes("database"),
     },
     {
       name: "Storage",
-      href: `/project/${id}/buckets`,
-      icon: <span className="icon-folder" />,
+      href: href(`buckets`),
+      icon: "storage",
+      active: isIncludes("buckets"),
     },
     {
       name: "Table Editor",
-      href: `/project/${id}/editor`,
-      icon: <span className="icon-table" />,
+      href: href(`editor`),
+      icon: "tableEditor",
+      active: isIncludes("editor"),
     },
     {
       name: "SQL Editor",
-      href: `/project/${id}/sql/new`,
-      icon: <span className="icon-terminal" />,
+      href: href(`sql/new`),
+      icon: "runner",
     },
     {
       name: "Functions",
-      href: `/project/${id}/functions`,
-      icon: <span className="icon-sparkles" />,
+      href: href(`functions`),
+      icon: "sparkle",
+      active: isIncludes("functions"),
     },
     {
       name: "Messaging",
-      href: `/project/${id}/messaging`,
-      icon: <span className="icon-chat-alt-2" />,
+      href: href(`messaging`),
+      icon: "messaging",
+      active: isIncludes("messaging"),
     },
   ];
-
-  const onThemeChange = (theme: "light" | "dark") => {
-    setColorMode(theme);
-  };
 
   const showSubSidebar = true; // sidebar.first || sidebar.middle || sidebar.last;
 
@@ -164,19 +175,6 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
             showFullSidebar={!showSubSidebar || !!alwaysFull}
             selected={pathname === `/project/${id}/settings`}
           />
-
-          {/* <SidebarSmallButton
-            item={{
-              name: "Appearance",
-              onClick: () => {
-                const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
-                const newTheme = currentTheme === "light" ? "dark" : "light";
-                onThemeChange(newTheme);
-              },
-              icon: <span className="icon-sun" />,
-            }}
-            showFullSidebar={!showSubSidebar || !!alwaysFull}
-          /> */}
         </Column>
       </Column>
     </>
@@ -248,20 +246,22 @@ const SidebarSmallButton = ({
   selected,
 }: { item: ProjectSidebarData; showFullSidebar: boolean; selected?: boolean }) => {
   return (
-    <ToggleButton
-      size="l"
-      fillWidth
-      href={item.href}
-      justifyContent={showFullSidebar ? "flex-start" : "center"}
-      selected={selected ?? false}
-      onClick={item.onClick}
-      disabled={item.disabled}
-    >
-      <Row padding="4" vertical="center" gap="12" textVariant="label-default-l">
-        {item.icon}
-        {showFullSidebar && <span>{item.name}</span>}
-      </Row>
-    </ToggleButton>
+    <Tooltip>
+      <TooltipTrigger>
+        <ToggleButton
+          size="l"
+          fillWidth
+          href={item.href}
+          justifyContent={showFullSidebar ? "flex-start" : "center"}
+          selected={selected ?? false}
+          onClick={item.onClick}
+          disabled={item.disabled}
+        >
+          <Icon name={item.icon} />
+        </ToggleButton>
+      </TooltipTrigger>
+      <TooltipContent side="right">{item.name}</TooltipContent>
+    </Tooltip>
   );
 };
 

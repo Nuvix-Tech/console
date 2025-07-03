@@ -41,7 +41,7 @@ export function HeaderOrganization() {
           variant="secondary"
           role="combobox"
           aria-expanded={open}
-          className="!border-0"
+          className="dark:!border-border/30"
           justifyContent="flex-start"
           weight="default"
           suffixIcon={<ChevronsUpDown className="opacity-40" size={16} />}

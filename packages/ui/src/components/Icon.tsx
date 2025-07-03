@@ -9,18 +9,28 @@ import { iconLibrary, IconName } from "../icons";
 import type { ColorScheme, ColorWeight } from "../types";
 import styles from "./Icon.module.scss";
 import iconStyles from "./IconButton.module.scss";
+import { LucideIcon } from "lucide-react";
 
 export interface IconProps extends React.ComponentProps<typeof Flex> {
-  /**
-   * The name of the icon to be rendered. It can be a string representing the icon name or a JSX Element from `react-icons` or ReactNode
-   */
-  name: IconName | Exclude<ReactNode, string> | IconType;
+  name: IconName | Exclude<ReactNode, string> | IconType | LucideIcon;
   onBackground?: `${ColorScheme}-${ColorWeight}`;
   onSolid?: `${ColorScheme}-${ColorWeight}`;
   size?: "xs" | "s" | "m" | "l" | "xl";
   decorative?: boolean;
   tooltip?: ReactNode;
   tooltipPosition?: "top" | "bottom" | "left" | "right";
+  iconWidth?: number;
+  iconHeight?: number;
+}
+
+function isValidReactComponent(component: any): component is React.ComponentType<any> {
+  return (
+    typeof component === "function" ||
+    (typeof component === "object" &&
+      component !== null &&
+      "$$typeof" in component &&
+      typeof component.render === "function")
+  );
 }
 
 const Icon = forwardRef<HTMLDivElement, IconProps>(
@@ -33,11 +43,13 @@ const Icon = forwardRef<HTMLDivElement, IconProps>(
       decorative = true,
       tooltip,
       tooltipPosition = "top",
+      iconWidth,
+      iconHeight,
       ...rest
     },
     ref,
   ) => {
-    const IconComponent: IconType | undefined | any =
+    const IconComponent: IconType | LucideIcon | ReactNode | undefined =
       typeof name === "string" ? iconLibrary[name as IconName] : name;
 
     if (!IconComponent) {
@@ -92,7 +104,11 @@ const Icon = forwardRef<HTMLDivElement, IconProps>(
         onMouseLeave={() => setIsHover(false)}
         {...rest}
       >
-        {typeof IconComponent === "function" ? <IconComponent /> : IconComponent}
+        {isValidReactComponent(IconComponent) ? (
+          <IconComponent width={iconWidth} height={iconHeight} />
+        ) : (
+          (IconComponent as ReactNode) // fallback if already a valid ReactNode
+        )}
         {tooltip && isTooltipVisible && (
           <Flex position="absolute" zIndex={1} className={iconStyles[tooltipPosition]}>
             <Tooltip label={tooltip} />
