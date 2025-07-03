@@ -8,6 +8,7 @@ export const TableEditorLayout = ({ children }: { children: React.ReactNode }) =
 
   useEffect(() => {
     setSidebar({
+      title: "Table Editor",
       first: <Sidebar />,
       middle: null,
       last: null,

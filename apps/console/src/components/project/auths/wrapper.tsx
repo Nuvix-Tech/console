@@ -67,7 +67,7 @@ function Wrapper({
   );
 
   useEffect(() => {
-    setSidebar({ middle });
+    setSidebar({ middle, title: "Authentication" });
   }, [middle, setSidebar]);
 
   return <>{children}</>;

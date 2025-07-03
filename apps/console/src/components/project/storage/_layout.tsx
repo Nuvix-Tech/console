@@ -7,10 +7,15 @@ export function StorageLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const setSideBarNull = useProjectStore.use.setSidebarNull();
+  const setSideBar = useProjectStore.use.setSidebar();
 
   useEffect(() => {
-    setSideBarNull();
+    setSideBar({
+      title: "Storage",
+      first: null,
+      middle: null,
+      last: null,
+    });
   }, []);
 
   return children;

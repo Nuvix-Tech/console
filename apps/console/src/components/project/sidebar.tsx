@@ -1,11 +1,10 @@
 "use client";
-import { Column, Line, Logo, RevealFx, Row, ToggleButton } from "@nuvix/ui/components";
+import { Column, Line, RevealFx, Row, Text, ToggleButton } from "@nuvix/ui/components";
 import { useParams, usePathname } from "next/navigation";
 import * as React from "react";
 import { useColorMode } from "@nuvix/cui/color-mode";
 import { useProjectStore } from "@/lib/store";
 import { ResizablePanel } from "@nuvix/sui/components/resizable";
-import Link from "next/link";
 
 export interface ProjectSidebarData {
   name: string;
@@ -195,8 +194,12 @@ export const SecondSidebar = ({ noMarg, noBg = true, border = true }: SecondSide
 
   return sidebar.first || sidebar.middle || sidebar.last ? (
     <Column fillWidth>
+      {sidebar.title && (
+        <Row paddingY="8" paddingX="12" marginY="4" fillWidth borderBottom="neutral-alpha-medium">
+          <Text variant="label-strong-m">{sidebar.title}</Text>
+        </Row>
+      )}
       <Column
-        // marginLeft={noMarg ? "0" : "64"}
         gap="m"
         position="relative"
         background={noBg ? "transparent" : "surface"}

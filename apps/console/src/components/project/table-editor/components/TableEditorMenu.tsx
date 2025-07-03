@@ -126,7 +126,7 @@ const TableEditorMenu = () => {
 
   return (
     <>
-      <div className="flex flex-col flex-grow gap-3 pt-5 h-full px-2">
+      <div className="flex flex-col flex-grow gap-3 h-full px-2">
         <div className="flex flex-col gap-y-1.5">
           <SchemaSelector
             selectedSchemaName={selectedSchema}

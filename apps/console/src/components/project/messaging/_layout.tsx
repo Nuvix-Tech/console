@@ -10,6 +10,7 @@ export const MessagingLayout = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     setSidebar({
+      title: "Messaging",
       first: null,
       middle: null,
       last,

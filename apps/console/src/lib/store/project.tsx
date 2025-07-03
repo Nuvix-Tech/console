@@ -32,6 +32,7 @@ export const ProjectContext = React.createContext<{
 });
 
 interface Sidebar {
+  title?: string;
   first?: React.ReactNode;
   middle?: React.ReactNode;
   last?: React.ReactNode;
@@ -49,7 +50,7 @@ interface ProjectStore {
   permissions: () => AppPermission;
   update: () => Promise<void>;
   setSidebar: (data: Sidebar) => void;
-  setSidebarNull: (...keys: (keyof Sidebar)[]) => void;
+  setSidebarNull: (...keys: (keyof Omit<Sidebar, "title">)[]) => void;
   setShowSidebar: (show: boolean) => void;
   setProject: (project: Models.Project) => void;
   setSdk: (sdk: typeof sdkForProject) => void;
