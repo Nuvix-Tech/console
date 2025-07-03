@@ -1,35 +1,27 @@
-import { useProjectStore } from "@/lib/store";
-import { Line } from "@nuvix/ui/components";
 import { SidebarGroup } from "@/ui/layout/navigation";
-import { usePathname } from "next/navigation";
+import { useSidebarHref } from "@/hooks/useSidebarHref";
 
 const MessagingSidebar = () => {
-  const project = useProjectStore.use.project?.();
-  const path = usePathname();
-
-  const resolveHref = (value?: string) =>
-    `/project/${project?.$id}/messaging${value ? `/${value}` : ""}`;
-  const resolveIsSelected = (value?: string) => path.includes(resolveHref(value));
+  const { href, isEqual, isIncludes } = useSidebarHref({ prefix: "messaging" });
 
   return (
     <>
       <SidebarGroup
-        title="Messaging"
         items={[
           {
             label: "Messages",
-            href: resolveHref(),
-            isSelected: path === resolveHref(),
+            href: href(),
+            isSelected: isEqual() || isIncludes("messages"),
           },
           {
             label: "Topics",
-            href: resolveHref("topics"),
-            isSelected: resolveIsSelected("topics"),
+            href: href("topics"),
+            isSelected: isEqual("topics"),
           },
           {
             label: "Providers",
-            href: resolveHref("providers"),
-            isSelected: resolveIsSelected("providers"),
+            href: href("providers"),
+            isSelected: isIncludes("providers"),
           },
         ]}
       />

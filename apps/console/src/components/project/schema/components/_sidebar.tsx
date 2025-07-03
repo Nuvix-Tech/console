@@ -1,35 +1,28 @@
-import { useProjectStore } from "@/lib/store";
 import { Line } from "@nuvix/ui/components";
 import { SidebarGroup } from "@/ui/layout/navigation";
-import { usePathname } from "next/navigation";
+import { useSidebarHref } from "@/hooks/useSidebarHref";
 
 const DatbaseSidebar = () => {
-  const project = useProjectStore.use.project?.();
-  const path = usePathname();
-
-  const resolveHref = (value?: string) =>
-    `/project/${project?.$id}/database/${value ? `${value}` : ""}`;
-  const resolveIsSelected = (value?: string) => path.includes(resolveHref(value));
+  const { href, isEqual, isIncludes } = useSidebarHref({ prefix: "database" });
 
   return (
     <>
       <SidebarGroup
-        title="Database"
         items={[
           {
             label: "Schemas",
-            href: resolveHref("schemas"),
-            isSelected: path === resolveHref("schemas"),
+            href: href("schemas"),
+            isSelected: isEqual("schemas"),
           },
           {
             label: "Schema Visualizer",
-            href: resolveHref("visualizer"),
-            isSelected: resolveIsSelected("visualizer"),
+            href: href("visualizer"),
+            isSelected: isEqual("visualizer"),
           },
           {
             label: "Tables",
-            href: resolveHref("tables"),
-            isSelected: resolveIsSelected("tables"),
+            href: href("tables"),
+            isSelected: isIncludes("tables"),
           },
         ]}
       />
@@ -41,33 +34,33 @@ const DatbaseSidebar = () => {
         items={[
           {
             label: "Functions",
-            href: resolveHref("functions"),
-            isSelected: resolveIsSelected("functions"),
+            href: href("functions"),
+            isSelected: isIncludes("functions"),
           },
           {
             label: "Triggers",
-            href: resolveHref("triggers"),
-            isSelected: resolveIsSelected("triggers"),
+            href: href("triggers"),
+            isSelected: isIncludes("triggers"),
           },
           {
             label: "Enumerated Types",
-            href: resolveHref("types"),
-            isSelected: resolveIsSelected("types"),
+            href: href("types"),
+            isSelected: isIncludes("types"),
           },
           {
             label: "Extensions",
-            href: resolveHref("extensions"),
-            isSelected: resolveIsSelected("extensions"),
+            href: href("extensions"),
+            isSelected: isIncludes("extensions"),
           },
           {
             label: "Indexes",
-            href: resolveHref("indexes"),
-            isSelected: resolveIsSelected("indexes"),
+            href: href("indexes"),
+            isSelected: isIncludes("indexes"),
           },
           {
             label: "Publications",
-            href: resolveHref("publications"),
-            isSelected: resolveIsSelected("publications"),
+            href: href("publications"),
+            isSelected: isIncludes("publications"),
           },
         ]}
       />
@@ -79,46 +72,18 @@ const DatbaseSidebar = () => {
         items={[
           {
             label: "Access Control",
-            href: resolveHref("access-control"),
-            isSelected: resolveIsSelected("access-control"),
+            href: href("access-control"),
+            isSelected: isIncludes("access-control"),
           },
           {
             label: "Roles",
-            href: resolveHref("roles"),
-            isSelected: resolveIsSelected("roles"),
+            href: href("roles"),
+            isSelected: isIncludes("roles"),
           },
           {
             label: "Policies",
-            href: resolveHref("policies"),
-            isSelected: resolveIsSelected("policies"),
-          },
-        ]}
-      />
-
-      <Line fillWidth />
-
-      <SidebarGroup
-        title="Platform"
-        items={[
-          {
-            label: "Backups",
-            href: resolveHref("backups"),
-            isSelected: resolveIsSelected("backups"),
-          },
-          {
-            label: "Migrations",
-            href: resolveHref("migrations"),
-            isSelected: resolveIsSelected("migrations"),
-          },
-          {
-            label: "Wrappers",
-            href: resolveHref("wrappers"),
-            isSelected: resolveIsSelected("wrappers"),
-          },
-          {
-            label: "Webhooks",
-            href: resolveHref("webhooks"),
-            isSelected: resolveIsSelected("webhooks"),
+            href: href("policies"),
+            isSelected: isIncludes("policies"),
           },
         ]}
       />
@@ -130,28 +95,28 @@ const DatbaseSidebar = () => {
         items={[
           {
             label: "Security Advisor",
-            href: resolveHref("security-advisor"),
-            isSelected: resolveIsSelected("security-advisor"),
+            href: href("security-advisor"),
+            isSelected: isIncludes("security-advisor"),
           },
           {
             label: "Performance Advisor",
-            href: resolveHref("performance-advisor"),
-            isSelected: resolveIsSelected("performance-advisor"),
+            href: href("performance-advisor"),
+            isSelected: isIncludes("performance-advisor"),
           },
           {
             label: "Query Performance",
-            href: resolveHref("query-performance"),
-            isSelected: resolveIsSelected("query-performance"),
+            href: href("query-performance"),
+            isSelected: isIncludes("query-performance"),
           },
           {
             label: "Settings",
-            href: resolveHref("settings"),
-            isSelected: resolveIsSelected("settings"),
+            href: href("settings"),
+            isSelected: isIncludes("settings"),
           },
           {
             label: "Usage",
-            href: resolveHref("usage"),
-            isSelected: resolveIsSelected("usage"),
+            href: href("usage"),
+            isSelected: isIncludes("usage"),
           },
         ]}
       />

@@ -1,15 +1,11 @@
-import { useDatabaseStore, useProjectStore } from "@/lib/store";
+import { useSidebarHref } from "@/hooks/useSidebarHref";
+import { useDatabaseStore } from "@/lib/store";
 import { SidebarGroup } from "@/ui/layout/navigation";
-import { usePathname } from "next/navigation";
 
 const DatbaseSidebar = () => {
-  const project = useProjectStore.use.project?.();
   const database = useDatabaseStore.use.database?.();
-  const path = usePathname();
 
-  const resolveHref = (value?: string) =>
-    `/project/${project?.$id}/schema/${database?.$id}${value ? `/${value}` : ""}`;
-  const resolveIsSelected = (value?: string) => path.includes(resolveHref(value));
+  const { href, isEqual } = useSidebarHref({ prefix: `schema/${database?.$id}` });
 
   return (
     <>
@@ -18,18 +14,18 @@ const DatbaseSidebar = () => {
         items={[
           {
             label: "Collections",
-            href: resolveHref(),
-            isSelected: path === resolveHref(),
+            href: href(),
+            isSelected: isEqual(),
           },
           {
             label: "Usage",
-            href: resolveHref("usage"),
-            isSelected: resolveIsSelected("usage"),
+            href: href("usage"),
+            isSelected: isEqual("usage"),
           },
           {
             label: "Settings",
-            href: resolveHref("settings"),
-            isSelected: resolveIsSelected("settings"),
+            href: href("settings"),
+            isSelected: isEqual("settings"),
           },
         ]}
       />

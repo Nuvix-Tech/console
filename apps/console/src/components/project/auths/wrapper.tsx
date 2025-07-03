@@ -1,22 +1,17 @@
 "use client";
-import { useParams, usePathname } from "next/navigation";
 import { Line } from "@nuvix/ui/components";
 import { SidebarGroup } from "@/ui/layout/navigation";
 import { useEffect } from "react";
 import { useProjectStore } from "@/lib/store";
+import { useSidebarHref } from "@/hooks/useSidebarHref";
 
 function Wrapper({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { id } = useParams();
   const setSidebar = useProjectStore.use.setSidebar?.();
-  const pathname = usePathname();
-
-  const basePath = `/project/${id}/authentication/`;
-  const resolveHref = (path: string) => `${basePath}${path}`;
-  const resolveIsSelected = (path: string) => pathname.includes(resolveHref(path));
+  const { href, isEqual } = useSidebarHref({ prefix: "authentication" });
 
   const middle = (
     <>
@@ -25,13 +20,13 @@ function Wrapper({
         items={[
           {
             label: "Users",
-            href: resolveHref("users"),
-            isSelected: resolveIsSelected("users"),
+            href: href("users"),
+            isSelected: isEqual("users"),
           },
           {
             label: "Teams",
-            href: resolveHref("teams"),
-            isSelected: resolveIsSelected("teams"),
+            href: href("teams"),
+            isSelected: isEqual("teams"),
           },
         ]}
       />
@@ -43,23 +38,23 @@ function Wrapper({
         items={[
           {
             label: "Security",
-            href: resolveHref("security"),
-            isSelected: resolveIsSelected("security"),
+            href: href("security"),
+            isSelected: isEqual("security"),
           },
           {
             label: "Templates",
-            href: resolveHref("templates"),
-            isSelected: resolveIsSelected("templates"),
+            href: href("templates"),
+            isSelected: isEqual("templates"),
           },
           {
             label: "Usage",
-            href: resolveHref("usage"),
-            isSelected: resolveIsSelected("usage"),
+            href: href("usage"),
+            isSelected: isEqual("usage"),
           },
           {
             label: "Settings",
-            href: resolveHref("settings"),
-            isSelected: resolveIsSelected("settings"),
+            href: href("settings"),
+            isSelected: isEqual("settings"),
           },
         ]}
       />

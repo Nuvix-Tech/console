@@ -195,7 +195,13 @@ export const SecondSidebar = ({ noMarg, noBg = true, border = true }: SecondSide
   return sidebar.first || sidebar.middle || sidebar.last ? (
     <Column fillWidth>
       {sidebar.title && (
-        <Row paddingY="8" paddingX="12" marginY="4" fillWidth borderBottom="neutral-alpha-medium">
+        <Row
+          paddingY="8"
+          paddingX="12"
+          margin="8"
+          radius="l"
+          className="bg-[var(--main-background)]"
+        >
           <Text variant="label-strong-m">{sidebar.title}</Text>
         </Row>
       )}

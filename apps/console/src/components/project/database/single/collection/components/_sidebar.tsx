@@ -6,20 +6,17 @@ import { useRouter } from "@bprogress/next";
 import { VStack } from "@chakra-ui/react";
 import { Models } from "@nuvix/console";
 import { useQuery } from "@tanstack/react-query";
-import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { CreateCollection } from "../../components";
+import { useSidebarHref } from "@/hooks/useSidebarHref";
 
 const CollectionSidebar = () => {
-  const project = useProjectStore.use.project?.();
   const collection = useCollectionStore.use.collection?.();
   const database = useDatabaseStore.use.database?.();
 
-  const path = usePathname();
-
-  const resolveHref = (value?: string) =>
-    `/project/${project?.$id}/schema/${database?.$id}/collection/${collection?.$id}${value ? `/${value}` : ""}`;
-  const resolveIsSelected = (value?: string) => path.includes(resolveHref(value));
+  const { href, isEqual, isIncludes } = useSidebarHref({
+    prefix: `schema/${database?.$id}/collection/${collection?.$id}`,
+  });
 
   return (
     <>
@@ -28,33 +25,33 @@ const CollectionSidebar = () => {
         items={[
           {
             label: "Documents",
-            href: resolveHref(),
-            isSelected: path === resolveHref(),
+            href: href(),
+            isSelected: isEqual() || isIncludes("document"),
           },
           {
             label: "Attributes",
-            href: resolveHref("attributes"),
-            isSelected: resolveIsSelected("attributes"),
+            href: href("attributes"),
+            isSelected: isEqual("attributes"),
           },
           {
             label: "Indexes",
-            href: resolveHref("indexes"),
-            isSelected: resolveIsSelected("indexes"),
+            href: href("indexes"),
+            isSelected: isEqual("indexes"),
           },
           {
             label: "Activity",
-            href: resolveHref("activity"),
-            isSelected: resolveIsSelected("logs"),
+            href: href("activity"),
+            isSelected: isEqual("logs"),
           },
           {
             label: "Usage",
-            href: resolveHref("usage"),
-            isSelected: resolveIsSelected("usage"),
+            href: href("usage"),
+            isSelected: isEqual("usage"),
           },
           {
             label: "Settings",
-            href: resolveHref("settings"),
-            isSelected: resolveIsSelected("settings"),
+            href: href("settings"),
+            isSelected: isEqual("settings"),
           },
         ]}
       />

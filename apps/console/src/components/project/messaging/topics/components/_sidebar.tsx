@@ -15,7 +15,8 @@ export const TopicSidebar = () => {
   return (
     <>
       <SidebarGroup
-        title="Topic"
+        title={`Topic`}
+        bottomLine
         items={[
           {
             label: "Subscribers",
