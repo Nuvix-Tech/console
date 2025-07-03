@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, PlusIcon } from "lucide-react";
 import { Row, Skeleton, Button } from "@nuvix/ui/components";
 import { cn } from "@nuvix/sui/lib/utils";
 import {
@@ -11,6 +11,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+  CommandSeparator,
 } from "@nuvix/sui/components/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/popover";
 import { sdkForConsole } from "@/lib/sdk";
@@ -37,16 +38,22 @@ export function HeaderOrganization() {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="tertiary"
+          variant="secondary"
           role="combobox"
           aria-expanded={open}
-          className="max-w-42"
+          className="!border-0"
           justifyContent="flex-start"
+          weight="default"
           suffixIcon={<ChevronsUpDown className="opacity-40" size={16} />}
         >
-          {organization
-            ? orgs.find((org) => org.$id === organization.$id)?.name
-            : "Select organization..."}
+          <span className="max-w-42 text-ellipsis overflow-hidden">
+            {organization
+              ? orgs.find((org) => org.$id === organization.$id)?.name
+              : "Select organization..."}
+          </span>
+          <span className="ml-2 bg-[var(--neutral-alpha-weak)] text-sm font-medium px-2 py-1 rounded-md">
+            Free
+          </span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
@@ -74,13 +81,28 @@ export function HeaderOrganization() {
                 </CommandItem>
               ))}
             </CommandGroup>
+            <CommandSeparator />
+            <CommandGroup>
+              <CommandItem
+                className="cursor-pointer flex items-center gap-x-2 w-full"
+                onSelect={() => {
+                  setOpen(false);
+                }}
+                onClick={() => {
+                  setOpen(false);
+                }}
+              >
+                <PlusIcon size={12} />
+                Create Organization
+              </CommandItem>
+            </CommandGroup>
           </CommandList>
         </Command>
       </PopoverContent>
     </Popover>
   ) : (
-    <Row width="128">
-      <Skeleton shape="line" fillWidth height="xl" />
+    <Row width="128" height={"40"}>
+      <Skeleton shape="block" fillWidth radius="l" />
     </Row>
   );
 }

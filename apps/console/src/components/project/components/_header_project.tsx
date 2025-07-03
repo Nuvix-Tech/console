@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, PlusIcon } from "lucide-react";
 import { Button, Row, Skeleton } from "@nuvix/ui/components";
 import { cn } from "@nuvix/sui/lib/utils";
 import {
@@ -11,6 +11,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+  CommandSeparator,
 } from "@nuvix/sui/components/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/popover";
 import { sdkForConsole } from "@/lib/sdk";
@@ -37,14 +38,17 @@ export function HeaderProject() {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="tertiary"
+          variant="secondary"
           role="combobox"
           aria-expanded={open}
-          className="max-w-42"
+          className="!border-0"
+          weight="default"
           justifyContent="flex-start"
           suffixIcon={<ChevronsUpDown className="opacity-40" size={16} />}
         >
-          {list.find((p) => p.$id === projectId)?.name || "Select project..."}
+          <span className="max-w-42 text-ellipsis overflow-hidden">
+            {list.find((p) => p.$id === projectId)?.name || "Select project..."}
+          </span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0 bg-transparent border-[var(--neutral-border-medium)]">
@@ -83,13 +87,28 @@ export function HeaderProject() {
                 </CommandItem>
               ))}
             </CommandGroup>
+            <CommandSeparator />
+            <CommandGroup>
+              <CommandItem
+                className="cursor-pointer flex items-center gap-x-2 w-full"
+                onSelect={() => {
+                  setOpen(false);
+                }}
+                onClick={() => {
+                  setOpen(false);
+                }}
+              >
+                <PlusIcon size={12} />
+                Create Project
+              </CommandItem>
+            </CommandGroup>
           </CommandList>
         </Command>
       </PopoverContent>
     </Popover>
   ) : (
-    <Row width="128">
-      <Skeleton shape="line" fillWidth height="xl" />
+    <Row width="128" height={"40"}>
+      <Skeleton shape="block" fillWidth radius="l" />
     </Row>
   );
 }

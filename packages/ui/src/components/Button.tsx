@@ -135,6 +135,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps | AnchorProps>(
             textSize={size}
             className="font-label"
             align="center"
+            vertical="center"
           >
             {label || children}
           </Flex>

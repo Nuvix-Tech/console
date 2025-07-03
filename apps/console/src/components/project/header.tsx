@@ -68,11 +68,10 @@ const DesktopHeader = () => {
           </Link>
         </Row>
         <Row fillWidth vertical="center" horizontal="space-between">
-          <Row vertical="center" gap={"2"}>
-            {/* <span className="text-[var(--neutral-alpha-strong)] text-2xl">/</span> */}
+          <Row vertical="center" gap={"8"}>
             <HeaderOrganization />
-            <span className="text-[var(--neutral-alpha-medium)] text-2xl">/</span>
             <HeaderProject />
+            <Button variant="secondary">Connect</Button>
           </Row>
           <Row fillWidth vertical="center" horizontal="end" gap="12">
             <div className="flex items-center gap-3">
