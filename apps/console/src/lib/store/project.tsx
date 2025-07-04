@@ -52,6 +52,7 @@ interface ProjectStore {
   setSidebar: (data: Sidebar) => void;
   setSidebarNull: (...keys: (keyof Omit<Sidebar, "title">)[]) => void;
   setShowSidebar: (show: boolean) => void;
+  setShowSubSidebar: (show: boolean) => void;
   setProject: (project: Models.Project) => void;
   setSdk: (sdk: typeof sdkForProject) => void;
   setScopes: (scopes: Models.Roles) => void;
@@ -61,8 +62,8 @@ interface ProjectStore {
 const useProject = create<ProjectStore>((set, get) => ({
   initialFetching: true,
   scopes: { roles: ["any"], scopes: [] },
-  showSidebar: false,
-  showSubSidebar: false,
+  showSidebar: true,
+  showSubSidebar: true,
   sidebarItems: [],
   sidebar: {
     first: null,
@@ -82,6 +83,7 @@ const useProject = create<ProjectStore>((set, get) => ({
   },
   setScopes: (scopes) => set({ scopes }),
   setShowSidebar: (show) => set({ showSidebar: show }),
+  setShowSubSidebar: (show) => set({ showSubSidebar: show }),
   setSidebar(data) {
     set((prev) => ({ sidebar: { ...prev.sidebar, ...data } }));
   },

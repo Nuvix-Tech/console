@@ -2,6 +2,7 @@
 
 import { GripVertical } from "lucide-react";
 import * as ResizablePrimitive from "react-resizable-panels";
+export * from "react-resizable-panels";
 
 import { cn } from "@nuvix/sui/lib/utils";
 

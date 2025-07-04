@@ -12,9 +12,14 @@ import {
 import { useParams, usePathname } from "next/navigation";
 import * as React from "react";
 import { useProjectStore } from "@/lib/store";
-import { ResizablePanel } from "@nuvix/sui/components/resizable";
+import {
+  ImperativePanelHandle,
+  ResizablePanel,
+  usePanelGroupContext,
+} from "@nuvix/sui/components/resizable";
 import { useSidebarHref } from "@/hooks/useSidebarHref";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
+import { SidebarExpandTrigger } from "./components/sidebar_expand_trigger";
 
 export interface ProjectSidebarData {
   name: string;
@@ -42,30 +47,42 @@ export interface SidebarItemGroup {
   items: SidebarItem[];
 }
 
-const ProjectSidebar: React.FC = () => {
+const ProjectSidebar: React.FC<{ defaultSize: number }> = ({ defaultSize }) => {
   const sidebar = useProjectStore.use.sidebar();
+  const { showSubSidebar: show, setShowSubSidebar: setShowSidebar } = useProjectStore((s) => s);
   const showSubSidebar = sidebar.first || sidebar.middle || sidebar.last;
+  const ref = React.useRef<ImperativePanelHandle | null>(null);
+
+  function handleExpandTrigger() {
+    if (ref.current) {
+      ref.current.expand();
+    }
+    setShowSidebar(true);
+  }
 
   return (
     <>
-      {/* <Stack
-        position="relative"
-        as={"aside"}
-        className={cn("lg:flex hidden", {
-          // "lg:w-[17.5rem]": showSubSidebar,
-          // "lg:w-[15.5rem]": !showSubSidebar,
-        })}
-        height="full"
-      > */}
       <FirstSidebar />
+      {!show && <SidebarExpandTrigger onClick={handleExpandTrigger} />}
       {showSubSidebar ? (
-        <ResizablePanel minSize={16} maxSize={25} className="hidden md:flex">
-          <SecondSidebar />
+        <ResizablePanel
+          id="sidebar"
+          order={1}
+          collapsible
+          ref={ref}
+          collapsedSize={1}
+          onCollapse={() => setShowSidebar(false)}
+          onExpand={() => setShowSidebar(true)}
+          defaultSize={defaultSize}
+          minSize={18}
+          maxSize={25}
+          className="hidden md:flex"
+        >
+          {show ? <SecondSidebar /> : null}
         </ResizablePanel>
       ) : (
         <span className="w-4" />
       )}
-      {/* </Stack> */}
     </>
   );
 };
@@ -146,7 +163,6 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
         fill
         paddingBottom="12"
         vertical="space-between"
-        overflowX="hidden"
         position="relative"
         overflowY="auto"
         className="transition-[max-width] duration-200 ease-in-out no-scrollbar"
