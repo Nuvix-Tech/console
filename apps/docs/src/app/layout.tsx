@@ -7,11 +7,13 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import Providers from "@/components/providers";
 
-import { Column, Flex, ToastProvider } from "@nuvix/ui/components";
+import { Column, Flex, Row, ToastProvider } from "@nuvix/ui/components";
 import { Toaster } from "@nuvix/sui/components/sonner";
 import { baseURL, meta, og, schema, social, style } from "@nuvix/ui/resources/config";
 import { customFont, sourceCodePro } from "@nuvix/ui/fonts";
 import { cn } from "@nuvix/sui/lib/utils";
+import { Header } from "@/components/header";
+import { Sidebar } from "@/components/sidebar";
 
 /*
  */
@@ -103,9 +105,17 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             fillWidth
             margin="0"
             padding="0"
-            background="page"
+            background="neutral-alpha-weak"
           >
-            <Providers>{children}</Providers>
+            <Providers>
+              <Header />
+              <Row fill>
+                <Sidebar />
+                <div className=" bg-(--color-main-background) flex-1 p-4 mx-3 rounded-md mb-3">
+                  {children}
+                </div>
+              </Row>
+            </Providers>
             <Toaster />
           </Column>
         </ToastProvider>
