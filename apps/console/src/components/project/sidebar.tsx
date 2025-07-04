@@ -126,7 +126,7 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
     {
       name: "Functions",
       href: href(`functions`),
-      icon: "sparkle",
+      icon: "functions",
       active: isIncludes("functions"),
     },
     {
@@ -196,7 +196,9 @@ export const SecondSidebar = ({ noMarg, noBg = true, border = true }: SecondSide
         <Row
           paddingY="8"
           paddingX="12"
-          margin="8"
+          marginX="8"
+          marginBottom="8"
+          marginTop="0"
           radius="l"
           className="bg-[var(--main-background)]"
         >

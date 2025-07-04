@@ -52,6 +52,7 @@ import {
   TbMessage,
   TbTerminal,
   TbTableSpark,
+  TbLambda,
 } from "react-icons/tb";
 
 export const iconMap = {
@@ -93,6 +94,7 @@ export const iconMap = {
   messaging: TbMessage,
   runner: TbTerminal,
   authentication: TbUsersGroup,
+  functions: TbLambda,
   // File type icons
   image: LucideImage,
   document: LucideFileText,
