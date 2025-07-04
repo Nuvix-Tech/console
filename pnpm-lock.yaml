@@ -26,9 +26,6 @@ importers:
 
   apps/console:
     dependencies:
-      '@appwrite.io/pink-icons':
-        specifier: ^1.0.0
-        version: 1.0.0
       '@bprogress/next':
         specifier: ^3.0.2
         version: 3.2.12(next@15.3.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.87.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -695,9 +692,6 @@ packages:
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
-
-  '@appwrite.io/pink-icons@1.0.0':
-    resolution: {integrity: sha512-+zpksP07MvOYwhx9AZDFW0pxXQNC2juKwyOQVRAwAOkN1ACSQKPlyytkI1u2ci6CQPWjJe20CzbvBBuRNXOKjA==}
 
   '@ark-ui/react@5.14.0':
     resolution: {integrity: sha512-7WWlCM3SowtF01e9NouuO4T6SYuKTM1dovR+2NZuuWTlqTBlvZ+1vPHS6BeqzXriwMLU7QUU+Y0i/TcI6/s/Sg==}
@@ -6758,8 +6752,6 @@ snapshots:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.8
       '@jridgewell/trace-mapping': 0.3.25
-
-  '@appwrite.io/pink-icons@1.0.0': {}
 
   '@ark-ui/react@5.14.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
