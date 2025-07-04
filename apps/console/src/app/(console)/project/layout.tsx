@@ -4,8 +4,8 @@ import { ProjectSidebar } from "@/components/project/sidebar";
 import React, { Suspense } from "react";
 import { SkeletonProject } from "@/components/skeletons";
 import { ResizablePanel, ResizableHandle, PanelGroup } from "@nuvix/sui/components/resizable";
-import { Column, Row } from "@nuvix/ui/components";
-import { RightSidebar } from "@/components/project";
+import { Row } from "@nuvix/ui/components";
+import { MainArea, RightSidebar } from "@/components/project";
 
 export default function ({ children }: { children: React.ReactNode }) {
   return (
@@ -24,23 +24,14 @@ export default function ({ children }: { children: React.ReactNode }) {
           <Row fillWidth>
             <ProjectSidebar />
             <ResizableHandle withHandle className="opacity-5 hover:opacity-100 bg-border/40" />
-            <ResizablePanel
-              minSize={50}
-              maxSize={90}
-              style={{ paddingBottom: "var(--static-space-12)" }}
-            >
-              <Stack
-                height={"full"}
-                overflowY="auto"
-                position={"relative"}
-                bg={"var(--color-main-background)"}
-                asChild
-              >
-                <Column radius="l" as={"main"} marginBottom="16">
-                  <Suspense fallback={<SkeletonProject />}>{children}</Suspense>
-                </Column>
-              </Stack>
+            <ResizablePanel minSize={70} maxSize={90}>
+              <MainArea>
+                <Suspense fallback={<SkeletonProject />}>{children}</Suspense>
+              </MainArea>
             </ResizablePanel>
+            {/* TODO: -------- */}
+            {/* <MainArea ml={'2.5'} width={'xs'} padding={'8'}>
+            </MainArea> */}
             <RightSidebar />
           </Row>
         </Stack>
