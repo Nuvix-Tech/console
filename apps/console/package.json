@@ -10,7 +10,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@appwrite.io/pink-icons": "^1.0.0",
     "@bprogress/next": "^3.0.2",
     "@chakra-ui/react": "^3.21.0",
     "@dagrejs/dagre": "^1.1.4",

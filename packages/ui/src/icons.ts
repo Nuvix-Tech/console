@@ -42,17 +42,17 @@ import {
   LuArchive as LucideArchive,
   LuCode as LucideCode,
   LuFile as LucideFile,
-  LuUsersRound,
 } from "react-icons/lu";
 
 import {
-  FolderOpenDot,
-  HouseIcon,
-  LucideDatabase,
-  LucideSheet,
-  MessagesSquare,
-  TerminalIcon,
-} from "lucide-react";
+  TbHome,
+  TbUsersGroup,
+  TbDatabase,
+  TbFolder,
+  TbMessage,
+  TbTerminal,
+  TbTableSpark,
+} from "react-icons/tb";
 
 export const iconMap = {
   chevronUp: HiChevronUp,
@@ -86,13 +86,13 @@ export const iconMap = {
   visa: RiVisaLine,
   security: HiOutlineShieldCheck,
   sparkle: HiOutlineSparkles,
-  house: HouseIcon,
-  tableEditor: LucideSheet,
-  storage: FolderOpenDot,
-  database: LucideDatabase,
-  messaging: MessagesSquare,
-  runner: TerminalIcon,
-  authentication: LuUsersRound,
+  house: TbHome,
+  tableEditor: TbTableSpark,
+  storage: TbFolder,
+  database: TbDatabase,
+  messaging: TbMessage,
+  runner: TbTerminal,
+  authentication: TbUsersGroup,
   // File type icons
   image: LucideImage,
   document: LucideFileText,
