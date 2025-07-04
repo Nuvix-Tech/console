@@ -1,11 +1,13 @@
 import "@nuvix/ui/styles/index.scss";
 import "@nuvix/ui/tokens/index.scss";
 import "@nuvix/sui/globals.css";
+import "@/styles/main.scss";
 
 import type { Metadata } from "next";
 import { headers } from "next/headers";
+import Providers from "@/components/providers";
 
-import { Column, ConfirmProvider, Flex, ToastProvider } from "@nuvix/ui/components";
+import { Column, Flex, ToastProvider } from "@nuvix/ui/components";
 import { Toaster } from "@nuvix/sui/components/sonner";
 import { baseURL, meta, og, schema, social, style } from "@nuvix/ui/resources/config";
 import { customFont, sourceCodePro } from "@nuvix/ui/fonts";
@@ -103,7 +105,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             padding="0"
             background="page"
           >
-            {children}
+            <Providers>{children}</Providers>
             <Toaster />
           </Column>
         </ToastProvider>
