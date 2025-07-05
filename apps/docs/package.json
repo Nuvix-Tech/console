@@ -23,6 +23,7 @@
     "@nuvix/cui": "workspace:*",
     "@nuvix/sui": "workspace:*",
     "@nuvix/ui": "workspace:*",
+    "@nuvix/eslint-config": "workspace:*",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
