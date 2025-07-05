@@ -110,7 +110,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <Providers>
               <Header />
               <Sidebar />
-              <Column position="relative" className="ml-[256px]" marginTop="64" padding="4">
+              <Column position="relative" className="ml-[256px]" marginTop="64" padding="16">
                 {children}
               </Column>
             </Providers>
