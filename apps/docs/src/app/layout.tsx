@@ -78,7 +78,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         lang="en"
         fillHeight
         background="page"
-        data-neutral={style.neutral}
+        data-neutral={"gray"}
         data-brand={style.brand}
         data-accent={style.accent}
         data-border={style.border}
@@ -110,9 +110,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <Providers>
               <Header />
               <Sidebar />
-              <Row position="relative" className="ml-[256px]" marginTop="64" padding="4">
+              <Column position="relative" className="ml-[256px]" marginTop="64" padding="4">
                 {children}
-              </Row>
+              </Column>
             </Providers>
             <Toaster />
           </Column>

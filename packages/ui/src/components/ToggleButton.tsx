@@ -3,7 +3,7 @@
 import classNames from "classnames";
 import type React from "react";
 import { type ReactNode, forwardRef } from "react";
-import { Flex, Icon } from ".";
+import { Flex, Icon, IconProps } from ".";
 import { ElementType } from "./ElementType";
 import styles from "./ToggleButton.module.scss";
 
@@ -26,8 +26,8 @@ interface CommonProps {
   fillWidth?: boolean;
   weight?: "default" | "strong";
   truncate?: boolean;
-  prefixIcon?: string;
-  suffixIcon?: string;
+  prefixIcon?: IconProps["name"];
+  suffixIcon?: IconProps["name"];
   className?: string;
   style?: React.CSSProperties;
   children?: ReactNode;
@@ -96,7 +96,9 @@ const ToggleButton = forwardRef<HTMLElement, ToggleButtonProps>(
             {label || children}
           </Flex>
         )}
-        {suffixIcon && <Icon name={suffixIcon} size={size === "l" ? "m" : "s"} />}
+        {suffixIcon && (
+          <Icon name={suffixIcon} size={size === "l" ? "m" : "s"} className="ml-auto" />
+        )}
       </ElementType>
     );
   },

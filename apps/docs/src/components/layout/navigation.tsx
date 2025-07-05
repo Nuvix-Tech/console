@@ -1,10 +1,20 @@
-import { Column, Row, SmartLink, Text, ToggleButton, Line } from "@nuvix/ui/components";
+import {
+  Column,
+  Row,
+  SmartLink,
+  Text,
+  ToggleButton,
+  Line,
+  IconProps,
+  Icon,
+} from "@nuvix/ui/components";
 import React from "react";
 
 interface SidebarGroupItem {
   label: string;
   href?: string;
-  icon?: React.ReactNode;
+  icon?: IconProps["name"];
+  endIcon?: IconProps["name"];
   onClick?: () => void;
   disabled?: boolean;
   isSelected?: boolean;
@@ -56,17 +66,19 @@ const SidebarGroup = ({
             key={_}
             fillWidth
             href={item.href}
-            justifyContent="flex-start"
+            justifyContent={"flex-start"}
             selected={!!item.isSelected}
             onClick={item.onClick}
             disabled={item.disabled}
             prefixIcon={item.icon}
+            suffixIcon={item.endIcon}
+            size="m"
           >
             <Row
               paddingX={title ? "4" : "0"}
               vertical="center"
-              textVariant={"label-default-s"}
-              opacity={item.disabled ? 60 : 100}
+              gap="12"
+              textVariant="label-default-s"
             >
               {item.label}
             </Row>
