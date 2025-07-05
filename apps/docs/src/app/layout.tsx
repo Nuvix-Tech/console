@@ -7,7 +7,7 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import Providers from "@/components/providers";
 
-import { Column, Flex, Row, ToastProvider } from "@nuvix/ui/components";
+import { Column, Flex, Row, ToastProvider, Background } from "@nuvix/ui/components";
 import { Toaster } from "@nuvix/sui/components/sonner";
 import { baseURL, meta, og, schema, social, style } from "@nuvix/ui/resources/config";
 import { customFont, sourceCodePro } from "@nuvix/ui/fonts";
@@ -104,16 +104,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             as="body"
             fillWidth
             margin="0"
+            position="relative"
             padding="0"
-            background="neutral-alpha-weak"
           >
             <Providers>
               <Header />
-              <Row fill>
-                <Sidebar />
-                <div className=" bg-(--color-main-background) flex-1 p-4 mx-3 rounded-md mb-3">
-                  {children}
-                </div>
+              <Sidebar />
+              <Row position="relative" className="ml-[256px]" marginTop="64" padding="4">
+                {children}
               </Row>
             </Providers>
             <Toaster />

@@ -6,16 +6,16 @@ export const Header = () => {
   return (
     <Row
       height={"64"}
-      // background="surface"
       padding="12"
       horizontal="start"
-      // borderBottom="surface"
-      position="relative"
-      top="0"
+      borderBottom="surface"
+      position="fixed"
       left="0"
+      top="0"
+      zIndex={1}
       fillWidth
+      className="backdrop-blur"
     >
-      <span className="bg-(--surface-background) w-[256px] fixed left-0 top-0 h-[64px]" />
       <Link href="/" className="h-10 flex items-center w-[256px]">
         <Logo
           icon={false}

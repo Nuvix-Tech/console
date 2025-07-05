@@ -1,4 +1,3 @@
-
 export default function Home() {
-  return <div className="">HELLEOEOEO</div>;
+  return <div className="flex">Final Layout</div>;
 }
