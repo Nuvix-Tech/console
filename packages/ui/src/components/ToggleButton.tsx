@@ -9,7 +9,7 @@ import styles from "./ToggleButton.module.scss";
 
 interface CommonProps {
   label?: ReactNode;
-  selected: boolean;
+  selected?: boolean;
   variant?: "ghost" | "outline";
   size?: "s" | "m" | "l";
   radius?:
@@ -23,6 +23,7 @@ interface CommonProps {
     | "bottom-right"
     | "bottom-left";
   justifyContent?: "flex-start" | "center" | "flex-end" | "space-between";
+  horizontal?: "start" | "center" | "end" | "space-between";
   fillWidth?: boolean;
   weight?: "default" | "strong";
   truncate?: boolean;
@@ -40,10 +41,11 @@ const ToggleButton = forwardRef<HTMLElement, ToggleButtonProps>(
   (
     {
       label,
-      selected,
+      selected = false,
       variant = "ghost",
       size = "m",
       radius,
+      horizontal,
       justifyContent = "center",
       fillWidth = false,
       weight = "default",
@@ -78,7 +80,7 @@ const ToggleButton = forwardRef<HTMLElement, ToggleButtonProps>(
           {
             ["fill-width"]: fillWidth,
             ["fit-width"]: !fillWidth,
-            ["justify-" + justifyContent]: justifyContent,
+            ["justify-" + horizontal || justifyContent]: horizontal || justifyContent,
           },
           className,
         )}

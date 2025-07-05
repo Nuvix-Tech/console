@@ -107,4 +107,5 @@ export const iconMap = {
 } as const;
 
 export type IconName = keyof typeof iconMap;
-export const iconLibrary: Record<IconName, IconType> = iconMap;
+export type IconLibrary = Record<IconName, IconType>;
+export const iconLibrary: IconLibrary = iconMap;

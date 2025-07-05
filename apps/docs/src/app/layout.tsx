@@ -7,7 +7,8 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import Providers from "@/components/providers";
 
-import { Column, Flex, Row, ToastProvider, Background } from "@nuvix/ui/components";
+import { Column, Flex, Row, ToastProvider, Particle } from "@nuvix/ui/components";
+import { HeadingNav } from "@nuvix/ui/modules";
 import { Toaster } from "@nuvix/sui/components/sonner";
 import { baseURL, meta, og, schema, social, style } from "@nuvix/ui/resources/config";
 import { customFont, sourceCodePro } from "@nuvix/ui/fonts";
@@ -110,9 +111,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <Providers>
               <Header />
               <Sidebar />
-              <Column position="relative" className="ml-[256px]" marginTop="64" padding="16">
-                {children}
-              </Column>
+              <Particle fill interactive speed={3} interactionRadius={100} height={24} />
+              <Row position="relative" className="ml-[256px]" marginTop="64" padding="16">
+                <Column className="flex-1">{children}</Column>
+                <Column width={16} minWidth={16} position="relative">
+                  <HeadingNav width={16} position="sticky" top="64" fitHeight />
+                </Column>
+              </Row>
             </Providers>
             <Toaster />
           </Column>

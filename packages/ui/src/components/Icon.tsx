@@ -5,11 +5,12 @@ import type React from "react";
 import { type ReactNode, forwardRef, useEffect, useState } from "react";
 import type { IconType } from "react-icons";
 import { Flex, Tooltip } from ".";
-import { iconLibrary, IconName } from "../icons";
+import { IconName } from "../icons";
 import type { ColorScheme, ColorWeight } from "../types";
 import styles from "./Icon.module.scss";
 import iconStyles from "./IconButton.module.scss";
 import { LucideIcon } from "lucide-react";
+import { useIcons } from "../contexts";
 
 export interface IconProps extends React.ComponentProps<typeof Flex> {
   name: IconName | Exclude<ReactNode, string> | IconType | LucideIcon;
@@ -49,8 +50,9 @@ const Icon = forwardRef<HTMLDivElement, IconProps>(
     },
     ref,
   ) => {
+    const { icons } = useIcons();
     const IconComponent: IconType | LucideIcon | ReactNode | undefined =
-      typeof name === "string" ? iconLibrary[name as IconName] : name;
+      typeof name === "string" ? icons[name as IconName] : name;
 
     if (!IconComponent) {
       console.warn(`Icon "${name}" does not exist in the library.`);

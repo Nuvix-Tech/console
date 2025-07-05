@@ -14,16 +14,16 @@
     "@mdx-js/react": "^3.1.0",
     "@next/mdx": "^15.3.5",
     "@types/mdx": "^2.0.13",
-    "next": "15.3.4",
+    "next": "15.3.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@nuvix/cui": "workspace:*",
+    "@nuvix/eslint-config": "workspace:*",
     "@nuvix/sui": "workspace:*",
     "@nuvix/ui": "workspace:*",
-    "@nuvix/eslint-config": "workspace:*",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

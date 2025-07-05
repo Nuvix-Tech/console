@@ -1,3 +1,4 @@
+"use client";
 import { Flex, Icon, SmartImage, Spinner, Text } from "@nuvix/ui/components";
 import Compressor from "compressorjs";
 import type React from "react";

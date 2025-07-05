@@ -1,10 +1,8 @@
-"use client";
-
+import React, { ElementType, ComponentPropsWithoutRef } from "react";
 import classNames from "classnames";
-import React, { type ElementType, type ComponentPropsWithoutRef } from "react";
 
-import type { CommonProps, SpacingProps, TextProps } from "../interfaces";
-import type { ColorScheme, ColorWeight, SpacingToken, TextVariant } from "../types";
+import { TextProps, CommonProps, SpacingProps } from "../interfaces";
+import { ColorScheme, ColorWeight, TextVariant, SpacingToken } from "../types";
 
 type TypeProps<T extends ElementType> = TextProps<T> &
   CommonProps &
@@ -37,6 +35,7 @@ const Text = <T extends ElementType = "span">({
   children,
   style,
   className,
+  truncate,
   ...props
 }: TypeProps<T>) => {
   const Component = as || "span";
@@ -71,7 +70,7 @@ const Text = <T extends ElementType = "span">({
   }
 
   const generateClassName = (prefix: string, token: SpacingToken | undefined) => {
-    return token ? `${prefix}-${token}` : undefined;
+    return token ? `r${prefix}-${token}` : undefined;
   };
 
   const combinedClasses = classNames(
@@ -92,6 +91,7 @@ const Text = <T extends ElementType = "span">({
     generateClassName("mb", marginBottom),
     generateClassName("mx", marginX),
     generateClassName("my", marginY),
+    truncate && "truncate",
   );
 
   return (

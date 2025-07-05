@@ -1,144 +1,43 @@
----
-layout: article
-title: REST
-description: Discover the Appwrite REST API for building robust and scalable applications. Access detailed documentation on REST endpoints, authentication, and data management.
+
+# Getting Started
+
+Welcome to **Nuvix** — a high-performance backend-as-a-service built for speed and scalability.
+
+This guide walks you through creating your first project, configuring resources, and calling the API — all in just a few minutes.
+
 ---
 
-Appwrite supports multiple protocols for accessing the server, including [REST](/docs/apis/rest), [GraphQL](/docs/apis/graphql), and [Realtime](/docs/apis/realtime). The REST API allows you to access your Appwrite server through HTTP requests without the needing an SDK. Each endpoint in the API represents a specific operation on a specific resource.
+## Why Nuvix?
 
-# Headers
+Nuvix lets you focus on building while we handle the backend infrastructure. Whether you're building a web app, mobile experience, or edge-deployed function — Nuvix provides:
 
+- 🔐 Built-in Authentication
+- 📦 Flexible Database & Table Editor
+- ☁️ Cloud Functions
+- 📁 Secure File Storage
+- 🔄 Real-Time APIs
+- ⚙️ First-class SDKs (TS, JS, Flutter, etc.)
 
-Appwrite's REST APIs expect certain headers to be included with each request:
+> ✅ You don’t need to set up databases, auth servers, or queues — it’s all ready out of the box.
 
-- Header
-- 
-- Description
 ---
-- X-Appwrite-Project: [PROJECT-ID]
-- required
-- The ID of your Appwrite project
----
-- Content-Type: application/json
-- required
-- Content type of the HTTP request. Would usually be `application/json`.
----
-- X-Appwrite-Key: [API-KEY]
-- optional
-- API key used for server authentication. Your API key is a secret, **do not** use it in client applications.
----
-- X-Appwrite-JWT: [TOKEN]
-- optional
-- Token used for JWT authentication, tokens can be generated using the [Create JWT](/docs/products/auth/jwt) method.
----
-- X-Appwrite-Response-Format: [VERSION-NUMBER]
-- optional
-- Version number used for backward compatibility. The response will be formatted to be compatible with the provided version number. This helps Appwrite SDKs keep backward compatibility with Appwrite server API version.
----
-- X-Fallback-Cookies: [FALLBACK-COOKIES]
-- optional
-- Fallback cookies used in scenarios where browsers do not allow third-party cookies. Often used when there is no Custom Domain set for your Appwrite API.
 
-## Query string format 
+## 1. Create a Project
 
-Appwrite Queries are escaped JSON strings, which look like this.
+Head to the [Nuvix Console](https://console.nuvix.dev) and create a new project.
 
-```json
-"{\"method\":\"equal\",\"attribute\":\"name\",\"values\":[\"John\"]}"
+You’ll be asked to name your project and optionally select a region.
+
+> 💡 You can manage multiple projects under a single organization.
+
+---
+
+## 2. Install the SDK
+
+To start integrating Nuvix in your frontend, install the Nuvix SDK.
+
+### Using npm
+
+```bash
+npm install @nuvix/client
 ```
-
-Query strings are passed to Appwrite using the `queries` parameter. 
-You can attach multiple query strings by including the array parameter multiple times in the query string: `queries[]="..."&queries[]="..."`
-
-For example, the unescaped query string might look like this.
-```text
-?queries[0]={"method":"equal","attribute":"name","values":["John"]}&queries[1]={"method":"limit","values":[6]}
-```
-
-The JSON has a general format like this.
-
-```json
-{
-  "method": "<QUERY_METHOD>",
-  "attribute": "<ATTRIBUTE>",
-  "values": [
-    <VALUE1>,
-    <VALUE2>,
-    ...
-  ]
-}
-```
-
-
-
-For example, to query for all documents with the name "John" or "Jane", the query string would look like this.
-
-```json
-{
-  "method": "equal",
-  "attribute": "name",
-  "values": [
-    "John",
-    "Jane"
-  ]
-}
-```
-
-Here are some more examples of the JSON query format. 
-When in doubt, you can use the Appwrite SDKs to generate the query strings for you.
-
-```json
-{
-  "method": "isNull",
-  "attribute": "name"
-}
-{
-  "method": "select",
-  "values": ["name", "age", "email"]
-}
-{
-  "method": "between",
-  "attribute": "age",
-  "values": [18, 30]
-}
-{
-  "method": "cursorAfter",
-  "values": ["documentId"]
-}
-```
-
-## Query nesting 
-Some Appwrite query methods, like `and` and `or`, allow you to nest queries. 
-When using Appwrite without an SDK, you can template your own JSON strings.
-
-In these cases, `attribute` is empty and `values` is an array of queries.
-
-```json
-{
-  "method": "and",
-  "values": [
-    {
-      "method": "equal",
-      "attribute": "name",
-      "values": ["John"]
-    },
-    {
-      "method": "between",
-      "attribute": "age",
-      "values": [20, 30]
-    }
-  ]
-}
-```
-
-# Rate limits
-
-Appwrite's REST APIs are protected by the same rate limit policies, just like when using an SDK. Each API has a different rate limit, which is documented in the References section of each service in the Appwrite documentation.
-
-[Learn more about Rate Limits](/docs/advanced/platform/rate-limits).
-
-# Specifications
-
-Appwrite provides a full REST API specification in the OpenAPI 3 and Swagger 2 formats every release. These can be accessed through Appwrite's GitHub repository and rendered using a variety of parsers and tools.
-
-[Find the REST API specification for your Appwrite version](https://github.com/appwrite/appwrite/tree/master/app/config/specs).
