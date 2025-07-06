@@ -1,7 +1,11 @@
 import { defineConfig, defineDocs } from "fumadocs-mdx/config";
 
 export default defineConfig({
-  mdxOptions: {},
+  mdxOptions: {
+    rehypeCodeOptions: {
+      addLanguageClass: true,
+    } as any,
+  },
 });
 
 export const docs = defineDocs({

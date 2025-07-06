@@ -3,6 +3,7 @@
 import React, { useCallback } from "react";
 import { Heading, Flex, IconButton, useToast } from "../../components";
 import styles from "./HeadingLink.module.scss";
+import classNames from "classnames";
 
 interface HeadingLinkProps extends React.ComponentProps<typeof Flex> {
   id: string;
@@ -20,7 +21,14 @@ const variantMap = {
   h6: "heading-strong-xs",
 } as const;
 
-export const HeadingLink: React.FC<HeadingLinkProps> = ({ id, as, children, style, ...flex }) => {
+export const HeadingLink: React.FC<HeadingLinkProps> = ({
+  id,
+  as,
+  children,
+  style,
+  className,
+  ...flex
+}) => {
   const { addToast } = useToast();
 
   const copyURL = useCallback(
@@ -54,7 +62,7 @@ export const HeadingLink: React.FC<HeadingLinkProps> = ({ id, as, children, styl
     <Flex
       style={style}
       onClick={() => copyURL(id)}
-      className={styles.control}
+      className={classNames(styles.control, className)}
       vertical="center"
       gap="8"
       {...flex}
@@ -68,7 +76,7 @@ export const HeadingLink: React.FC<HeadingLinkProps> = ({ id, as, children, styl
         icon="openLink"
         variant="secondary"
         tooltip="Copy"
-        tooltipPosition="right"
+        tooltipPosition="top"
       />
     </Flex>
   );

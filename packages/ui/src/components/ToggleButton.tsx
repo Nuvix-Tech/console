@@ -80,7 +80,7 @@ const ToggleButton = forwardRef<HTMLElement, ToggleButtonProps>(
           {
             ["fill-width"]: fillWidth,
             ["fit-width"]: !fillWidth,
-            ["justify-" + horizontal || justifyContent]: horizontal || justifyContent,
+            ["justify-" + (horizontal ?? justifyContent)]: horizontal ?? justifyContent,
           },
           className,
         )}

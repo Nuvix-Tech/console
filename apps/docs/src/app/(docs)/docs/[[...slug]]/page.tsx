@@ -1,7 +1,7 @@
 import { source } from "@/lib/source";
 import { notFound } from "next/navigation";
 import { mdxComponents } from "@/mdx-components";
-import { Text } from "@nuvix/ui/components";
+import { DocsBody, DocsDescription, DocsPage, DocsTitle } from "fumadocs-ui/page";
 
 export default async function Page(props: {
   params: Promise<{ slug?: string[] }>;
@@ -14,15 +14,13 @@ export default async function Page(props: {
 
   return (
     <>
-      {/* <DocsPage toc={page.data.toc} full={page.data.full}> */}
-      <Text as="h1" className="text-4xl font-bold">
-        {page.data.title}
-      </Text>
-      {/* <DocsDescription>{page.data.description}</DocsDescription> */}
-      {/* <DocsBody> */}
-      <MDX components={mdxComponents} />
-      {/* </DocsBody>
-         </DocsPage> */}
+      <DocsPage toc={page.data.toc} full={page.data.full} tableOfContentPopover={{ enabled: true }}>
+        <DocsTitle>{page.data.title}</DocsTitle>
+        <DocsDescription>{page.data.description}</DocsDescription>
+        <DocsBody>
+          <MDX components={mdxComponents()} />
+        </DocsBody>
+      </DocsPage>
     </>
   );
 }
