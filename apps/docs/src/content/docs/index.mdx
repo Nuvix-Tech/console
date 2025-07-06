@@ -1,29 +1,131 @@
 ---
-title: Hello
-description: Powered by amazing open source projects.
+title: Getting Started
+description: Learn how to get started with Nuvix — set up your project and make your first API call in minutes.
 ---
 
-## Do you Know?
+# Getting Started
 
-[ui.shadcn.com](https://ui.shadcn.com) is a project by [shadcn](https://shadcn.com).
+Welcome to **Nuvix** — a high-performance backend-as-a-service built for speed and scalability.
 
-## Credits
+This guide walks you through creating your first project, configuring resources, and calling the API — all in just a few minutes.
 
-- [Radix UI](https://radix-ui.com) - For the primitives.
-- [Vercel](https://vercel.com) - Where I host all my projects.
-- [Shu Ding](https://shud.in) - The typography style is adapted from his work on Nextra.
-- [Cal](https://cal.com) - Where I copied the styles for the first component: the `Button`.
-- [cmdk](https://cmdk.paco.me) - For the `<Command />` component.
+---
 
-## License
+## Why Nuvix?
 
-MIT © <Link href="https://shadcn.com">shadcn</Link>
+Nuvix lets you focus on building while we handle the backend infrastructure. Whether you're building a web app, mobile experience, or edge-deployed function — Nuvix provides:
 
+- 🔐 Built-in Authentication
+- 📦 Flexible Database & Table Editor
+- ☁️ Cloud Functions
+- 📁 Secure File Storage
+- 🔄 Real-Time APIs
+- ⚙️ First-class SDKs (TS, JS, Flutter, etc.)
+
+> ✅ You don’t need to set up databases, auth servers, or queues — it’s all ready out of the box.
+
+---
+
+## 1. Create a Project
+
+Head to the [Nuvix Console](https://console.nuvix.dev) and create a new project.
+
+You’ll be asked to name your project and optionally select a region.
+
+> 💡 You can manage multiple projects under a single organization.
+
+---
+
+## 2. Install the SDK
+
+To start integrating Nuvix in your frontend, install the Nuvix SDK.
+
+### Using npm
+
+```bash
+npm install @nuvix/client
+```
+We recommend using our SDK for authentication, database queries, file uploads, and real-time events.
+
+3. Initialize the Client
+Create a new instance of the SDK using your project’s API endpoint and key.
 
 ```ts
-function greeting(name): string {
-  return `Hello, ${name}!`;
-}
+import { createClient } from '@nuvix/client';
 
-console.log(greeting('World'));
+const nuvix = createClient({
+  endpoint: 'https://api.nuvix.dev/v1',
+  projectId: 'your-project-id',
+  apiKey: 'your-secret-key',
+});
 ```
+🛡️ Never expose your secret key in public or frontend code. Use anonymous or scoped keys for client usage.
+
+4. Create Your First Table
+From the Console, navigate to Database → Tables and click Create Table.
+
+Give it a name like posts, and define a few columns:
+
+title: Text
+
+content: Text (Long)
+
+author_id: UUID
+
+5. Insert Your First Record
+Use the SDK or API to insert a document into your table.
+
+```ts
+await nuvix.database.insert('posts', {
+  title: 'Hello Nuvix',
+  content: 'Nuvix is fast, flexible, and scalable.',
+  author_id: 'user_abc123',
+});
+```
+
+6. Query Your Data
+```ts
+const posts = await nuvix.database.select('posts').where({ author_id: 'user_abc123' });
+```
+
+Next Steps
+You're up and running with Nuvix!
+
+Here’s what to explore next:
+
+🔐 Authentication
+
+🧮 Database Filtering (NuvQL)
+
+🪝 Serverless Functions
+
+📁 Chunked File Uploads
+
+Happy building with Nuvix 💡
+
+---
+
+### ✅ Features Included
+
+- `---` **frontmatter** for SEO and TOC
+- Clear **sections**, each actionable
+- Uses markdown headings for TOC parsing
+- Embeds code blocks with syntax highlighting
+- A `<Callout />` block (if mapped)
+- Links to other guides (assuming you have those routes)
+
+---
+
+Would you like variations for:
+- `self-hosted` getting started?
+- `CLI tool onboarding`?
+- `Framework-specific setup (e.g., Next.js, Flutter)`?
+
+Let me know and I’ll tailor more pages accordingly.
+
+<Callout type="info" title="Need help?"> 
+Let me know and I’ll tailor more pages accordingly.
+Let me know and I’ll tailor more pages accordingly.
+Let me know and I’ll tailor more pages accordingly.
+
+</Callout>

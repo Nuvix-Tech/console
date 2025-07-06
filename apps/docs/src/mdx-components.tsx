@@ -6,15 +6,26 @@ import { Alert, AlertDescription, AlertTitle } from "@nuvix/sui/components/alert
 import { Button } from "@nuvix/sui/components/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@nuvix/sui/components/tabs";
 import { cn } from "@nuvix/sui/lib/utils";
-import { Line, SmartLink, Text } from "@nuvix/ui/components";
+import { InlineCode, Line, SmartLink, Text } from "@nuvix/ui/components";
 import { HeadingLink } from "@nuvix/ui/modules";
 import { MDXComponents } from "mdx/types";
 import defaultMdxComponents from "fumadocs-ui/mdx";
+import { CodeBlock, Pre } from "fumadocs-ui/components/codeblock";
+
+const Callout = defaultMdxComponents.Callout;
 
 export function mdxComponents(components?: MDXComponents): MDXComponents {
   return {
     ...defaultMdxComponents,
     ...components,
+    Callout: ({ className, ...props }) => {
+      return (
+        <Callout
+          className={cn("[&>*:first-child]:w-1 [&>*:first-child]:-ml-1 overflow-hidden", className)}
+          {...props}
+        />
+      );
+    },
     h1: ({ className, ...props }: React.ComponentProps<typeof Text>) => (
       <Text
         className={cn("font-heading mt-2 scroll-m-28 text-3xl font-bold tracking-tight", className)}
@@ -75,36 +86,21 @@ export function mdxComponents(components?: MDXComponents): MDXComponents {
     //   <Text variant="body-default-s" className={cn("[&:not(:first-child)]:mt-6", className)} {...props} />
     // ),
     hr: ({ ...props }) => <Line className="my-4 md:my-8" {...props} />,
-    // pre: ({ className, children, ...props }: React.ComponentProps<"pre">) => {
-    //   return (
-    //     <pre
-    //       className={cn(
-    //         "no-scrollbar min-w-0 overflow-x-auto px-4 py-3.5 outline-none has-[[data-highlighted-line]]:px-0 has-[[data-line-numbers]]:px-0 has-[[data-slot=tabs]]:p-0",
-    //         className,
-    //       )}
-    //       {...props}
-    //     >
-    //       {children}
-    //     </pre>
-    //   );
-    // },
-    // code: ({
-    //   className,
-    //   ...props
-    // }) => {
-    //   const languageMatch = className?.match(/language-(\w+)/);
-    //   const language = languageMatch ? languageMatch[1] : undefined;
-    //   // Inline Code.
-    //   if (typeof props.children === 'string' && !language) {
-    //     return (
-    //       <InlineCode language={language} {...props} />
-    //     );
-    //   }
+    pre: ({ ref: _ref, ...props }) => (
+      <CodeBlock {...props}>
+        <Pre>{props.children}</Pre>
+      </CodeBlock>
+    ),
+    code: ({ className, ...props }) => {
+      const languageMatch = className?.match(/language-(\w+)/);
+      const language = languageMatch ? languageMatch[1] : undefined;
+      // Inline Code.
+      if (typeof props.children === "string" && !language) {
+        return <InlineCode {...props} />;
+      }
 
-    //   return (
-    //     <code className={className}  {...props}/>
-    //   );
-    // },
+      return <code className={className} {...props} />;
+    },
     Step: ({ className, ...props }: React.ComponentProps<"h3">) => (
       <h3
         className={cn(

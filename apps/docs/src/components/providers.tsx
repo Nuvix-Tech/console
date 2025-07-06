@@ -7,7 +7,7 @@ import { RootProvider } from "fumadocs-ui/provider";
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <RootProvider>
+      <RootProvider theme={{ attribute: ["class", "data-theme"] }}>
         <Provider attribute={["class", "data-theme"]}>
           <ConfirmProvider>{children}</ConfirmProvider>
         </Provider>

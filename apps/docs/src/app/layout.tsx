@@ -1,6 +1,5 @@
 import "@nuvix/ui/styles/index.scss";
 import "@nuvix/ui/tokens/index.scss";
-import "@nuvix/sui/globals.css";
 import "@/styles/main.scss";
 
 import type { Metadata } from "next";
