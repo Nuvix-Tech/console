@@ -1,5 +1,5 @@
 import type { NextConfig } from "next";
-import createMDX from "@next/mdx";
+import { createMDX } from "fumadocs-mdx/next";
 
 const nextConfig: NextConfig = {
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],

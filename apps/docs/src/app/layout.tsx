@@ -7,14 +7,11 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import Providers from "@/components/providers";
 
-import { Column, Flex, Row, ToastProvider, Particle } from "@nuvix/ui/components";
-import { HeadingNav } from "@nuvix/ui/modules";
+import { Column, Flex, ToastProvider } from "@nuvix/ui/components";
 import { Toaster } from "@nuvix/sui/components/sonner";
 import { baseURL, meta, og, schema, social, style } from "@nuvix/ui/resources/config";
 import { customFont, sourceCodePro } from "@nuvix/ui/fonts";
 import { cn } from "@nuvix/sui/lib/utils";
-import { Header } from "@/components/header";
-import { Sidebar } from "@/components/sidebar";
 
 /*
  */
@@ -90,15 +87,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         data-scaling={style.scaling}
         className={cn(customFont.variable, sourceCodePro.variable)}
       >
-        <head>
-          <script
-            suppressHydrationWarning
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify(schemaData),
-            }}
-          />
-        </head>
         <ToastProvider>
           <Column
             suppressHydrationWarning
@@ -108,17 +96,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             position="relative"
             padding="0"
           >
-            <Providers>
-              <Header />
-              <Sidebar />
-              <Particle fill interactive speed={3} interactionRadius={100} height={24} />
-              <Row position="relative" className="ml-[256px]" marginTop="64" padding="16">
-                <Column className="flex-1">{children}</Column>
-                <Column width={16} minWidth={16} position="relative">
-                  <HeadingNav width={16} position="sticky" top="64" fitHeight />
-                </Column>
-              </Row>
-            </Providers>
+            <Providers>{children}</Providers>
             <Toaster />
           </Column>
         </ToastProvider>

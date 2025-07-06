@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack --port 3005",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "fumadocs-mdx"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.21.0",
@@ -14,6 +15,8 @@
     "@mdx-js/react": "^3.1.0",
     "@next/mdx": "^15.3.5",
     "@types/mdx": "^2.0.13",
+    "fumadocs-core": "^15.6.1",
+    "fumadocs-mdx": "^11.6.10",
     "next": "15.3.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

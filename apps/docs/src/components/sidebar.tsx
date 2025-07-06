@@ -19,7 +19,7 @@ export const Sidebar = () => {
       <SidebarGroup
         items={[
           { label: "Home", icon: "house" },
-          { label: "Quick start", icon: "audio" },
+          { label: "Quick start", icon: "audio", href: "test" },
           { label: "Tutorials", icon: "document" },
           { label: "SDKs", icon: "security" },
           { label: "API references", icon: "code", endIcon: "chevronRight" },
