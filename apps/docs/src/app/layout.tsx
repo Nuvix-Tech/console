@@ -76,7 +76,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         lang="en"
         fillHeight
         background="page"
-        data-neutral={"gray"}
+        data-neutral={style.neutral}
         data-brand={style.brand}
         data-accent={style.accent}
         data-border={style.border}

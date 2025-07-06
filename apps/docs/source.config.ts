@@ -1,4 +1,4 @@
-import { defineConfig, defineDocs, frontmatterSchema } from "fumadocs-mdx/config";
+import { defineConfig, defineDocs } from "fumadocs-mdx/config";
 
 export default defineConfig({
   mdxOptions: {},
