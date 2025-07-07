@@ -2,14 +2,14 @@
 import { ProjectCard } from "@/components/project/card";
 import { GridSkeleton } from "@/components/skeleton";
 import { sdkForConsole } from "@/lib/sdk";
-import { Button, Column, Grid, Row } from "@nuvix/ui/components";
-import { Heading } from "@chakra-ui/react";
+import { Button, Grid, Row } from "@nuvix/ui/components";
 import { Query, type Models } from "@nuvix/console";
 import { useRouter } from "@bprogress/next";
 import { useEffect, useState } from "react";
 import { EmptyState } from "@/components";
 import { DataGridProvider, Pagination, SelectLimit } from "@/ui/data-grid";
 import { CreateProject } from "@/components/wizard";
+import { PageContainer, PageHeading } from "@/components/others";
 
 type Props = {
   id: string;
@@ -49,64 +49,60 @@ export const OrganizationPage = ({ id, searchParams }: Props) => {
   }, [id, limit, page]);
 
   return (
-    <Row fillWidth center>
-      <Column maxWidth={"l"} fillWidth fillHeight gap="12">
-        <Row horizontal="space-between" vertical="center">
-          <Heading size="xl">Projects</Heading>
+    <PageContainer>
+      <PageHeading
+        heading="Projects"
+        right={
           <Button prefixIcon="plus" size="s" onClick={() => setShowCreateProject(true)}>
             Create project
           </Button>
+        }
+      />
+      {!loading && !projectList.projects.length ? (
+        <>
+          <EmptyState
+            show
+            title="No Projects Available"
+            description="Create a project to start managing resources."
+            primary={{
+              label: "Create Project",
+              onClick: () => setShowCreateProject(true),
+            }}
+            secondary={{
+              label: "Learn more",
+              onClick: () => {
+                /* TODO: Add learn more link */
+              },
+            }}
+          />
+        </>
+      ) : null}
+
+      <DataGridProvider
+        columns={[]}
+        data={projectList.projects}
+        manualPagination
+        rowCount={projectList.total}
+        loading={loading}
+        state={{ pagination: { pageIndex: page, pageSize: limit } }}
+      >
+        <Grid gap="l" marginTop="l" columns={3}>
+          {loading ? (
+            <GridSkeleton limit={2} />
+          ) : (
+            projectList.projects.map((project) => (
+              <ProjectCard key={project.$id} project={project} />
+            ))
+          )}
+        </Grid>
+
+        <Row horizontal="space-between" vertical="center">
+          <SelectLimit />
+          <Pagination />
         </Row>
+      </DataGridProvider>
 
-        {!loading && !projectList.projects.length ? (
-          <>
-            <EmptyState
-              show
-              title="No Projects Available"
-              description="Create a project to start managing resources."
-              primary={{
-                label: "Create Project",
-                onClick: () => setShowCreateProject(true),
-              }}
-              secondary={{
-                label: "Learn more",
-                onClick: () => {
-                  /* TODO: Add learn more link */
-                },
-              }}
-            />
-          </>
-        ) : null}
-
-        <DataGridProvider
-          columns={[]}
-          data={projectList.projects}
-          manualPagination
-          rowCount={projectList.total}
-          loading={loading}
-          state={{ pagination: { pageIndex: page, pageSize: limit } }}
-        >
-          <Grid gap="l" marginTop="l" columns={3}>
-            {loading ? (
-              <GridSkeleton limit={2} />
-            ) : (
-              projectList.projects.map((project) => (
-                <ProjectCard key={project.$id} project={project} />
-              ))
-            )}
-          </Grid>
-
-          <Row horizontal="space-between" vertical="center">
-            <SelectLimit />
-            <Pagination />
-          </Row>
-        </DataGridProvider>
-
-        <CreateProject
-          open={showCreateProject}
-          onOpenChange={(d) => setShowCreateProject(d.open)}
-        />
-      </Column>
-    </Row>
+      <CreateProject open={showCreateProject} onOpenChange={(d) => setShowCreateProject(d.open)} />
+    </PageContainer>
   );
 };

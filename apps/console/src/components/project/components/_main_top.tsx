@@ -18,37 +18,12 @@ export const TopInfo = () => {
   const { push } = useRouter();
 
   return (
-    <Column
-      zIndex={1}
-      maxWidth={"m"}
-      fill
-      horizontal="start"
-      vertical="start"
-      gap="16"
-      padding="24"
-    >
+    <Column zIndex={1} fill horizontal="start" vertical="start" gap="16" padding="24">
       <Row vertical="center" horizontal="start" fillWidth gap="8">
-        <Heading variant="heading-strong-xl">{project?.name}</Heading>
+        <Heading variant="heading-strong-l">{project?.name}</Heading>
         <IDChip id={project?.$id} />
       </Row>
       <Row vertical="center" horizontal="start" fillWidth gap="8">
-        {/* {(project?.platforms.length ?? 0) > 0 ? (
-          <>
-            <Chip
-              height={2.3}
-              paddingX="12"
-              selected={false}
-              prefixIcon={<span className="icon-view-grid" aria-hidden="true"></span>}
-              label={`${project?.platforms.length ?? 0} ${project?.platforms.length === 1 ? "platform" : "platforms"}`}
-              iconButtonProps={{
-                tooltip: "More info",
-                tooltipPosition: "top",
-              }}
-            />
-
-            <Line vert height={1.5} marginX="24" background="neutral-alpha-strong" />
-          </>
-        ) : null} */}
         {project?.platforms &&
           project?.platforms.slice(0, 3).map((platform) => (
             <Chip
@@ -104,7 +79,7 @@ export const TopInfo = () => {
                         selected={false}
                         prefixIcon={config.icon}
                         label={config.label}
-                        className="bg-[var(--accent-background-strong)] hover:bg-[var(--accent-background-medium)]"
+                        className="bg-[var(--neutral-background-strong)] hover:bg-[var(--accent-background-strong)]"
                       />
                     </CreatePlatform>
                   );
@@ -114,9 +89,9 @@ export const TopInfo = () => {
           )}
         </AnimatePresence>
       </Row>
-      <div className="absolute bottom-3 right-3 z-[2]">
+      <div className="absolute bottom-3 right-3">
         <Chip
-          height={2.3}
+          height={2}
           paddingX="12"
           selected={false}
           prefixIcon={showPlatformOptions ? "close" : "plus"}

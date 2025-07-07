@@ -64,13 +64,15 @@ export const MainMetrics = () => {
     <div className="space-y-6">
       <div className="grid gap-6 md:grid-cols-2">
         {/* Requests Chart */}
-        <CardBox>
+        <CardBox className="!bg-muted/20">
           <CardHeader className="px-0">
             <CardTitle>Request Analytics</CardTitle>
           </CardHeader>
           <CardContent className="px-0">
             <ChartContainer config={requestsConfig} className="h-[250px] aspect-auto w-full">
               <BarChart
+                barSize={4}
+                maxBarSize={4}
                 data={requestsData}
                 accessibilityLayer
                 margin={{
@@ -109,14 +111,14 @@ export const MainMetrics = () => {
                   }
                 />
                 <Bar dataKey="total" fill="var(--color-total)" radius={4} />
-                {/* <Bar dataKey="failed" fill="var(--color-failed)" radius={4} /> */}
+                <Bar dataKey="failed" fill="var(--color-failed)" radius={4} />
               </BarChart>
             </ChartContainer>
           </CardContent>
         </CardBox>
 
         {/* Bandwidth Chart */}
-        <CardBox>
+        <CardBox className="!bg-muted/20">
           <CardHeader className="px-0">
             <CardTitle>Bandwidth Usage</CardTitle>
           </CardHeader>

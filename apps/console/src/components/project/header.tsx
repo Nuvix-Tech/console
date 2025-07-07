@@ -47,7 +47,7 @@ const DesktopHeader = ({ isProjectDash }: { isProjectDash: boolean }) => {
         hide="s"
         as="header"
         fillWidth
-        zIndex={1}
+        zIndex={8}
         gap="12"
         padding="8"
         height="64"
