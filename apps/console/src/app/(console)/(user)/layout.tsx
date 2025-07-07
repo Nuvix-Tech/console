@@ -9,7 +9,7 @@ export default function ({ children }: { children: React.ReactNode }) {
     <>
       <Header isProjectDash={false} />
       <Stack direction={"row"} height={"calc(100% - 64px)"} position="relative" as={"main"} gap={0}>
-        <Stack position="relative" as={"aside"} className="w-[256px]">
+        <Stack position="relative" as={"aside"} className="w-[216px] mb-3">
           <ConsoleSidebar />
         </Stack>
         <Stack direction="column" className="flex-1 px-4">

@@ -1,19 +1,8 @@
 "use client";
 
 import { useAppStore } from "@/lib/store";
-import {
-  Column,
-  Icon,
-  IconButton,
-  IconProps,
-  Line,
-  Row,
-  Tag,
-  Text,
-  ToggleButton,
-} from "@nuvix/ui/components";
-import { usePathname } from "next/navigation";
-import { SidebarGroup } from "./navigation";
+import { Column, IconProps, Tag, ToggleButton } from "@nuvix/ui/components";
+import { useParams, usePathname } from "next/navigation";
 
 type Props = {
   inMobile?: boolean;
@@ -21,7 +10,11 @@ type Props = {
 
 const ConsoleSidebar: React.FC<Props> = ({ inMobile }) => {
   const pathname = usePathname() ?? "";
-  const organization = useAppStore.use.organization?.();
+  const { id } = useParams<{ id: string }>();
+
+  const _path = `/organization/${id}`;
+  const href = (path?: string) => _path + (path ? `/${path}` : "");
+  const isSelected = (path?: string) => pathname === href(path);
 
   return (
     <Column
@@ -33,14 +26,35 @@ const ConsoleSidebar: React.FC<Props> = ({ inMobile }) => {
       role="navigation"
       aria-label="Console Sidebar"
       overflowY="auto"
+      rightRadius="l"
     >
       <Column fill gap="4" paddingBottom="40" paddingX="8">
-        <SidebarItem label="Projects" icon="image" selected />
-        <SidebarItem label="Members" icon="person" />
-        <SidebarItem label="Usage" icon="calendar" />
+        <SidebarItem label="Projects" icon="projects" selected={isSelected()} href={href()} />
+        <SidebarItem
+          label="Members"
+          icon="members"
+          selected={isSelected("members")}
+          href={href("members")}
+        />
+        <SidebarItem
+          label="Usage"
+          icon="usage"
+          selected={isSelected("usage")}
+          href={href("usage")}
+        />
 
-        <SidebarItem label="Billing" icon="eyeDropper" />
-        <SidebarItem label="Settings" icon="security" />
+        <SidebarItem
+          label="Billing"
+          icon="billing"
+          selected={isSelected("billing")}
+          href={href("billing")}
+        />
+        <SidebarItem
+          label="Settings"
+          icon="settings"
+          selected={isSelected("settings")}
+          href={href("settings")}
+        />
       </Column>
     </Column>
   );
@@ -52,11 +66,13 @@ type SidebarItemProps = {
   icon?: IconProps["name"];
   selected?: boolean;
   tag?: string;
+  href?: string;
 };
 
-const SidebarItem = ({ label, selected, icon, tag }: SidebarItemProps) => {
+const SidebarItem = ({ label, selected, icon, tag, href }: SidebarItemProps) => {
   return (
     <ToggleButton
+      size="l"
       fillWidth
       justifyContent="flex-start"
       selected={selected}
@@ -64,6 +80,7 @@ const SidebarItem = ({ label, selected, icon, tag }: SidebarItemProps) => {
       aria-label={label}
       prefixIcon={icon}
       className="!px-2"
+      href={href}
     >
       {label}
       {tag && (
@@ -72,54 +89,6 @@ const SidebarItem = ({ label, selected, icon, tag }: SidebarItemProps) => {
         </Tag>
       )}
     </ToggleButton>
-  );
-};
-
-// Reusable Section Header Component
-type SectionHeaderProps = {
-  label: string;
-};
-
-const SectionHeader = ({ label }: SectionHeaderProps) => {
-  return (
-    <Text
-      variant="body-default-s"
-      onBackground="neutral-weak"
-      marginBottom="8"
-      marginLeft="8"
-      aria-label={label}
-    >
-      {label}
-    </Text>
-  );
-};
-
-// Reusable Sidebar Title Component
-type SidebarTitleProps = {
-  title: string;
-  button?: {
-    icon?: string;
-    tooltip?: string;
-    onClick?: () => void;
-  };
-};
-
-const SidebarTitle = ({ title, button }: SidebarTitleProps) => {
-  return (
-    <Row fillWidth horizontal="space-between" vertical="center" paddingBottom="8" marginLeft="8">
-      <Text variant="body-default-s" onBackground="neutral-weak">
-        {title}
-      </Text>
-      {button && (
-        <IconButton
-          tooltip={button.tooltip}
-          variant="secondary"
-          icon={button.icon}
-          size="s"
-          aria-label={button.tooltip}
-        />
-      )}
-    </Row>
   );
 };
 

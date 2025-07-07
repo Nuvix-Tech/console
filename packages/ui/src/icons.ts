@@ -53,6 +53,11 @@ import {
   TbTerminal,
   TbTableSpark,
   TbLambda,
+  TbLayoutDashboard,
+  TbUsers,
+  TbGraph,
+  TbReceiptDollar,
+  TbSettings,
 } from "react-icons/tb";
 
 export const iconMap = {
@@ -104,6 +109,14 @@ export const iconMap = {
   code: LucideCode,
   file: LucideFile,
   computer: HiComputerDesktop,
+
+  // Org Page
+  projects: TbLayoutDashboard,
+  members: TbUsers,
+  usage: TbGraph,
+  billing: TbReceiptDollar,
+
+  settings: TbSettings,
 } as const;
 
 export type IconName = keyof typeof iconMap;

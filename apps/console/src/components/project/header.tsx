@@ -59,7 +59,7 @@ const DesktopHeader = ({ isProjectDash }: { isProjectDash: boolean }) => {
         <Row
           className="absolute left-0 -z-1"
           background="surface"
-          width={isProjectDash ? 4 : 16}
+          width={isProjectDash ? 4 : 0}
           height={"64"}
           as={"span"}
         />
