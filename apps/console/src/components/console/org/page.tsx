@@ -53,7 +53,7 @@ export const OrganizationPage = ({ id, searchParams }: Props) => {
       <Column maxWidth={"l"} fillWidth fillHeight gap="12">
         <Row horizontal="space-between" vertical="center">
           <Heading size="xl">Projects</Heading>
-          <Button prefixIcon="plus" onClick={() => setShowCreateProject(true)}>
+          <Button prefixIcon="plus" size="s" onClick={() => setShowCreateProject(true)}>
             Create project
           </Button>
         </Row>
@@ -86,7 +86,7 @@ export const OrganizationPage = ({ id, searchParams }: Props) => {
           loading={loading}
           state={{ pagination: { pageIndex: page, pageSize: limit } }}
         >
-          <Grid gap="l" marginTop="l" columns={2}>
+          <Grid gap="l" marginTop="l" columns={3}>
             {loading ? (
               <GridSkeleton limit={2} />
             ) : (

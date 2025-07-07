@@ -211,12 +211,12 @@ export const SecondSidebar = ({ noMarg, noBg = true, border = true }: SecondSide
       {sidebar.title && (
         <Row
           paddingY="8"
-          paddingX="12"
+          paddingX="8"
           marginX="8"
           marginBottom="8"
           marginTop="0"
           radius="l"
-          className="bg-[var(--main-background)]"
+          className="bg-[var(--main-background)]/50"
         >
           <Text variant="label-strong-m">{sidebar.title}</Text>
         </Row>

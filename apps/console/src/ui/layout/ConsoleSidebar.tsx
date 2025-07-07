@@ -1,10 +1,19 @@
 "use client";
 
 import { useAppStore } from "@/lib/store";
-import { Column, Icon, IconButton, Line, Row, Tag, Text, ToggleButton } from "@nuvix/ui/components";
+import {
+  Column,
+  Icon,
+  IconButton,
+  IconProps,
+  Line,
+  Row,
+  Tag,
+  Text,
+  ToggleButton,
+} from "@nuvix/ui/components";
 import { usePathname } from "next/navigation";
-import { GoArrowUpRight } from "react-icons/go";
-import { IoLogOutOutline } from "react-icons/io5";
+import { SidebarGroup } from "./navigation";
 
 type Props = {
   inMobile?: boolean;
@@ -16,72 +25,22 @@ const ConsoleSidebar: React.FC<Props> = ({ inMobile }) => {
 
   return (
     <Column
-      // maxWidth={inMobile ? undefined : 16}
       fillWidth
       fillHeight
-      paddingX={inMobile ? "16" : "0"}
       paddingY="20"
       gap="xs"
-      hide={inMobile ? undefined : "s"}
-      background={inMobile ? "transparent" : "surface"}
-      radius="l"
-      // position={inMobile ? "relative" : "fixed"}
-      border="neutral-medium"
+      background="surface"
       role="navigation"
       aria-label="Console Sidebar"
       overflowY="auto"
     >
-      <Column fill gap="m" paddingBottom="40">
-        {/* Projects Section */}
-        <Column gap="4" className="mx-4">
-          <SidebarTitle title="Projects" />
-          <SidebarItem
-            label="All Projects"
-            selected={pathname.split("/")[-1] === organization?.$id}
-          />
-          <SidebarItem label="New Project" selected={pathname.split("/")[1] === "new-project"} />
-        </Column>
+      <Column fill gap="4" paddingBottom="40" paddingX="8">
+        <SidebarItem label="Projects" icon="image" selected />
+        <SidebarItem label="Members" icon="person" />
+        <SidebarItem label="Usage" icon="calendar" />
 
-        <Line background="neutral-alpha-weak" />
-
-        {/* Account Section */}
-        <Column gap="4" className="mx-4">
-          <SectionHeader label={organization?.name ?? "Organization"} />
-          <SidebarItem label="Members" selected={false} />
-          <SidebarItem label="Billing" selected={pathname === "analytics"} />
-          <SidebarItem label="Settings" selected={pathname === "reports"} />
-        </Column>
-
-        <Line background="neutral-alpha-weak" />
-
-        {/* Account Section */}
-        <Column gap="4" className="mx-4">
-          <SectionHeader label="Account" />
-          <SidebarItem label="Preferences" selected={false} />
-          <SidebarItem label="Audit Logs" selected={pathname === "analytics"} />
-          {/* Uncomment if needed */}
-          {/* <SidebarItem
-            label="Reports"
-            icon="PiNotebookDuotone"
-            selected={pathname === "reports"}
-            tag="New"
-          /> */}
-        </Column>
-
-        <Line background="neutral-alpha-weak" />
-
-        {/* Documentation Section */}
-        <Column gap="4" className="mx-4">
-          <SectionHeader label="Documentation" />
-          <SidebarItem label="Guides" icon={GoArrowUpRight} selected={false} />
-          <SidebarItem
-            label="API Reference"
-            icon={GoArrowUpRight}
-            selected={pathname === "analytics"}
-          />
-        </Column>
-
-        <Line background="neutral-alpha-weak" />
+        <SidebarItem label="Billing" icon="eyeDropper" />
+        <SidebarItem label="Settings" icon="security" />
       </Column>
     </Column>
   );
@@ -90,38 +49,28 @@ const ConsoleSidebar: React.FC<Props> = ({ inMobile }) => {
 // Reusable Sidebar Item Component
 type SidebarItemProps = {
   label: string;
-  icon?: string | React.ElementType;
-  selected: boolean;
+  icon?: IconProps["name"];
+  selected?: boolean;
   tag?: string;
 };
 
-const SidebarItem = ({ label, selected, icon: IICON, tag }: SidebarItemProps) => {
+const SidebarItem = ({ label, selected, icon, tag }: SidebarItemProps) => {
   return (
     <ToggleButton
-      size="l"
       fillWidth
       justifyContent="flex-start"
       selected={selected}
       role="menuitem"
       aria-label={label}
+      prefixIcon={icon}
+      className="!px-2"
     >
-      <Row padding="4" vertical="center" gap="12" textVariant="label-default-m">
-        {IICON && (
-          <Icon
-            name={<IICON size={18} />}
-            onBackground="neutral-weak"
-            size="s"
-            aria-hidden="true"
-            className="-ml-2"
-          />
-        )}
-        {label}
-        {tag && (
-          <Tag variant="neutral" size="s" position="absolute" right="8">
-            {tag}
-          </Tag>
-        )}
-      </Row>
+      {label}
+      {tag && (
+        <Tag variant="neutral" size="s" position="absolute" right="8">
+          {tag}
+        </Tag>
+      )}
     </ToggleButton>
   );
 };

@@ -21,22 +21,23 @@ interface HeaderProps {
   avatar?: string;
   name?: string;
   subline?: string;
+  isProjectDash: boolean;
 }
 
-const ProjectHeader: React.FC<HeaderProps> = () => {
+const Header: React.FC<HeaderProps> = ({ isProjectDash }) => {
   return (
     <>
-      <DesktopHeader />
+      <DesktopHeader isProjectDash={isProjectDash} />
       <MobileHeader />
     </>
   );
 };
 
-ProjectHeader.displayName = "Header";
+Header.displayName = "Header";
 
-export { ProjectHeader };
+export { Header };
 
-const DesktopHeader = () => {
+const DesktopHeader = ({ isProjectDash }: { isProjectDash: boolean }) => {
   const organization = useAppStore.use.organization?.();
   const headerRef = useRef<any>(null);
 
@@ -58,20 +59,22 @@ const DesktopHeader = () => {
         <Row
           className="absolute left-0 -z-1"
           background="surface"
-          width={4}
+          width={isProjectDash ? 4 : 16}
           height={"64"}
           as={"span"}
         />
         <Row marginLeft="8" marginRight="16">
-          <Link href="/">
-            <Logo icon wordmark={false} size="m" iconSrc="/trademark/nuvix.svg" />
-          </Link>
+          <Logo icon wordmark={false} size="m" iconSrc="/trademark/nuvix.svg" />
         </Row>
         <Row fillWidth vertical="center" horizontal="space-between">
           <Row vertical="center" gap={"8"}>
             <HeaderOrganization />
-            <HeaderProject />
-            <Button variant="secondary">Connect</Button>
+            {isProjectDash && (
+              <>
+                <HeaderProject />
+                <Button variant="secondary">Connect</Button>
+              </>
+            )}
           </Row>
           <Row fillWidth vertical="center" horizontal="end" gap="12">
             <div className="flex items-center gap-3">

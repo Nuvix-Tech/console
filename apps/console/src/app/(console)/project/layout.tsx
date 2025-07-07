@@ -1,4 +1,4 @@
-import { ProjectHeader } from "@/components/project/header";
+import { Header } from "@/components/project/header";
 import { Stack } from "@chakra-ui/react";
 import { ProjectSidebar } from "@/components/project/sidebar";
 import React, { Suspense } from "react";
@@ -20,7 +20,7 @@ export default async function ({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <ProjectHeader />
+      <Header isProjectDash={true} />
       <ProjectLayout>
         <Stack
           minHeight={"calc(100% - 64px)"}
