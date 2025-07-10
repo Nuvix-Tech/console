@@ -75,7 +75,7 @@ const ProjectSidebar: React.FC<{ defaultSize: number }> = ({ defaultSize }) => {
           onExpand={() => setShowSidebar(true)}
           defaultSize={defaultSize}
           minSize={18}
-          maxSize={25}
+          maxSize={23}
           className="hidden md:flex"
         >
           {show ? <SecondSidebar /> : null}
@@ -186,7 +186,7 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
             item={{
               name: "Settings",
               href: `/project/${id}/s/general`,
-              icon: <span className="icon-cog" />,
+              icon: "settings",
             }}
             showFullSidebar={!showSubSidebar || !!alwaysFull}
             selected={pathname === `/project/${id}/settings`}

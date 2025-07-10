@@ -13,9 +13,11 @@ export default async function ({ children }: { children: React.ReactNode }) {
   const value = cookieStore.get("nx-panels:project")?.value;
   let values: number[] = [];
   if (value) {
-    values = JSON.parse(value);
+    const _values = JSON.parse(value);
+    values[0] = (_values[0] > 23 || _values[0] < 18) ? 19 : _values[0];
+    values[1] = _values[1];
   } else {
-    values = [20, 80];
+    values = [19, 80];
   }
 
   return (
