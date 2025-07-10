@@ -12,7 +12,7 @@ const ConsoleSidebar: React.FC<Props> = ({ inMobile }) => {
   const pathname = usePathname() ?? "";
   const { id } = useParams<{ id: string }>();
 
-  const _path = `/organization/${id}`;
+  const _path = `/organizations/${id}`;
   const href = (path?: string) => _path + (path ? `/${path}` : "");
   const isSelected = (path?: string) => pathname === href(path);
 
@@ -20,13 +20,12 @@ const ConsoleSidebar: React.FC<Props> = ({ inMobile }) => {
     <Column
       fillWidth
       fillHeight
-      paddingY="20"
+      paddingY="8"
       gap="xs"
       background="surface"
       role="navigation"
       aria-label="Console Sidebar"
       overflowY="auto"
-      rightRadius="l"
     >
       <Column fill gap="4" paddingBottom="40" paddingX="8">
         <SidebarItem label="Projects" icon="projects" selected={isSelected()} href={href()} />
@@ -79,7 +78,7 @@ const SidebarItem = ({ label, selected, icon, tag, href }: SidebarItemProps) => 
       role="menuitem"
       aria-label={label}
       prefixIcon={icon}
-      className="!px-2"
+      // className="!px-2"
       href={href}
     >
       {label}

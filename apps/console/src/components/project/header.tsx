@@ -59,14 +59,15 @@ const DesktopHeader = ({ isProjectDash }: { isProjectDash: boolean }) => {
         <Row
           className="absolute left-0 -z-1"
           background="surface"
-          width={isProjectDash ? 4 : 0}
+          width={isProjectDash ? 4 : 14}
           height={"64"}
           as={"span"}
         />
         <Row marginLeft="8" marginRight="16">
-          <Logo icon wordmark={false} size="m" iconSrc="/trademark/nuvix.svg" />
+          <Logo icon={false} size="l" className="is-only-dark" wordmarkSrc="/trademark/nuvix-logo-dark.svg" />
+          <Logo icon={false} size="l" className="is-only-light" wordmarkSrc="/trademark/nuvix-logo-light.svg" />
         </Row>
-        <Row fillWidth vertical="center" horizontal="space-between">
+        <Row fillWidth vertical="center" horizontal="space-between" marginLeft={isProjectDash ? undefined : '80'}>
           <Row vertical="center" gap={"8"}>
             <HeaderOrganization />
             {isProjectDash && (
