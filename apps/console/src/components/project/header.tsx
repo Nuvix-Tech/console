@@ -64,10 +64,31 @@ const DesktopHeader = ({ isProjectDash }: { isProjectDash: boolean }) => {
           as={"span"}
         />
         <Row marginLeft="8" marginRight="16">
-          <Logo icon={false} size="l" className="is-only-dark" wordmarkSrc="/trademark/nuvix-logo-dark.svg" />
-          <Logo icon={false} size="l" className="is-only-light" wordmarkSrc="/trademark/nuvix-logo-light.svg" />
+          {isProjectDash ? (
+            <Logo wordmark={false} size="m" iconSrc="/trademark/nuvix.svg" />
+          ) : (
+            <>
+              <Logo
+                icon={false}
+                size="l"
+                className="is-only-dark"
+                wordmarkSrc="/trademark/nuvix-logo-dark.svg"
+              />
+              <Logo
+                icon={false}
+                size="l"
+                className="is-only-light"
+                wordmarkSrc="/trademark/nuvix-logo-light.svg"
+              />
+            </>
+          )}
         </Row>
-        <Row fillWidth vertical="center" horizontal="space-between" marginLeft={isProjectDash ? undefined : '80'}>
+        <Row
+          fillWidth
+          vertical="center"
+          horizontal="space-between"
+          marginLeft={isProjectDash ? undefined : "80"}
+        >
           <Row vertical="center" gap={"8"}>
             <HeaderOrganization />
             {isProjectDash && (

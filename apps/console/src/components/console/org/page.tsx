@@ -7,9 +7,10 @@ import { Query, type Models } from "@nuvix/console";
 import { useRouter } from "@bprogress/next";
 import { useEffect, useState } from "react";
 import { EmptyState } from "@/components";
-import { DataGridProvider, Pagination, SelectLimit } from "@/ui/data-grid";
+import { DataGridProvider, Pagination, Search, SelectLimit } from "@/ui/data-grid";
 import { CreateProject } from "@/components/wizard";
 import { PageContainer, PageHeading } from "@/components/others";
+import { useSearchQuery } from "@/hooks/useQuery";
 
 type Props = {
   id: string;
@@ -23,30 +24,28 @@ export const OrganizationPage = ({ id, searchParams }: Props) => {
   });
   const [loading, setLoading] = useState(true);
   const [showCreateProject, setShowCreateProject] = useState(false);
+  const { limit, page, search, hasQuery } = useSearchQuery({ limit: 6 });
   const { projects: projectApi } = sdkForConsole;
-  const { push } = useRouter();
-  const limit = searchParams.limit ? Number(searchParams.limit) : 6;
-  const page = searchParams.page ? Number(searchParams.page) : 1;
 
   useEffect(() => {
     const fetchProjects = async () => {
       setLoading(true);
       try {
-        const projects = await projectApi.list([
-          Query.limit(limit),
-          Query.equal("teamId", id),
-          Query.offset((page - 1) * limit),
-        ]);
+        const projects = await projectApi.list(
+          [Query.limit(limit), Query.equal("teamId", id), Query.offset((page - 1) * limit)],
+          search,
+        );
         setProjectList(projects);
       } catch (error: any) {
         console.error("Error fetching projects:", error.message);
+        alert("Something went wrong, please reload the page."); // TODO: handle errors
       } finally {
         setLoading(false);
       }
     };
 
     fetchProjects();
-  }, [id, limit, page]);
+  }, [id, limit, page, search]);
 
   return (
     <PageContainer>
@@ -58,25 +57,6 @@ export const OrganizationPage = ({ id, searchParams }: Props) => {
           </Button>
         }
       />
-      {!loading && !projectList.projects.length ? (
-        <>
-          <EmptyState
-            show
-            title="No Projects Available"
-            description="Create a project to start managing resources."
-            primary={{
-              label: "Create Project",
-              onClick: () => setShowCreateProject(true),
-            }}
-            secondary={{
-              label: "Learn more",
-              onClick: () => {
-                /* TODO: Add learn more link */
-              },
-            }}
-          />
-        </>
-      ) : null}
 
       <DataGridProvider
         columns={[]}
@@ -86,9 +66,39 @@ export const OrganizationPage = ({ id, searchParams }: Props) => {
         loading={loading}
         state={{ pagination: { pageIndex: page, pageSize: limit } }}
       >
+        <Search placeholder="Search for a project" />
+
+        <EmptyState
+          show={!loading && !projectList.projects.length}
+          title={hasQuery ? "No Matching Projects" : "No Projects Available"}
+          description={
+            hasQuery
+              ? "Try adjusting your search criteria or clearing your filters to see more projects."
+              : "Create a project to start managing resources."
+          }
+          primary={
+            hasQuery
+              ? undefined
+              : {
+                  label: "Create Project",
+                  onClick: () => setShowCreateProject(true),
+                }
+          }
+          secondary={
+            hasQuery
+              ? undefined
+              : {
+                  label: "Learn more",
+                  onClick: () => {
+                    /* TODO: Add learn more link */
+                  },
+                }
+          }
+        />
+
         <Grid gap="l" marginTop="l" columns={3}>
           {loading ? (
-            <GridSkeleton limit={2} />
+            <GridSkeleton limit={3} />
           ) : (
             projectList.projects.map((project) => (
               <ProjectCard key={project.$id} project={project} />

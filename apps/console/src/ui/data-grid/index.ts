@@ -8,3 +8,4 @@ export * from "./paggination";
 export { TheTable as Table } from "./table";
 export * from "./action";
 export * from "./filters";
+export * from "./card";

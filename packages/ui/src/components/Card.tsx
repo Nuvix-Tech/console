@@ -4,6 +4,7 @@ import type React from "react";
 import { forwardRef } from "react";
 import { Flex } from ".";
 import styles from "./Card.module.scss";
+import classNames from "classnames";
 
 interface CardProps extends React.ComponentProps<typeof Flex> {
   children?: React.ReactNode;
@@ -18,7 +19,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
         transition="macro-medium"
         border="neutral-medium"
         cursor="interactive"
-        className={styles.card}
+        className={classNames(styles.card, className)}
         {...rest}
       >
         {children}

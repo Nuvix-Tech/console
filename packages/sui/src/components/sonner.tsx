@@ -18,7 +18,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
         } as React.CSSProperties
       }
       toastOptions={{
-        className: 'backdrop-blur-md'
+        className: "backdrop-blur-md",
       }}
       {...props}
     />
