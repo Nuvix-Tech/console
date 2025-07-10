@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Box, CloseButton, Dialog, Flex, Image, Portal, Text } from "@chakra-ui/react";
 import { Form, InputField, SubmitButton } from "../others/forms";
 import { CustomID } from "../_custom_id";

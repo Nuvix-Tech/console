@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import LoadingUI from "../loading";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useApp } from "@/lib/store";
+import { WizardProvider } from "../wizard/provider";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -38,7 +39,7 @@ const ConsoleWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) =
 
   return (
     <QueryClientProvider client={queryClient}>
-      {isLoading ? <LoadingUI /> : children}
+      <WizardProvider>{isLoading ? <LoadingUI /> : children}</WizardProvider>
     </QueryClientProvider>
   );
 };

@@ -4,28 +4,28 @@ import { GridSkeleton } from "@/components/skeleton";
 import { sdkForConsole } from "@/lib/sdk";
 import { Button, Grid, Row } from "@nuvix/ui/components";
 import { Query, type Models } from "@nuvix/console";
-import { useRouter } from "@bprogress/next";
 import { useEffect, useState } from "react";
 import { EmptyState } from "@/components";
 import { DataGridProvider, Pagination, Search, SelectLimit } from "@/ui/data-grid";
-import { CreateProject } from "@/components/wizard";
 import { PageContainer, PageHeading } from "@/components/others";
 import { useSearchQuery } from "@/hooks/useQuery";
+import { useWizard } from "@/hooks/useWizard";
 
 type Props = {
   id: string;
   searchParams: { [key: string]: string | string[] | undefined };
 };
 
-export const OrganizationPage = ({ id, searchParams }: Props) => {
+export const OrganizationPage = ({ id }: Props) => {
   const [projectList, setProjectList] = useState<Models.ProjectList>({
     projects: [],
     total: 0,
   });
   const [loading, setLoading] = useState(true);
-  const [showCreateProject, setShowCreateProject] = useState(false);
   const { limit, page, search, hasQuery } = useSearchQuery({ limit: 6 });
   const { projects: projectApi } = sdkForConsole;
+
+  const { createProject } = useWizard();
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -52,8 +52,8 @@ export const OrganizationPage = ({ id, searchParams }: Props) => {
       <PageHeading
         heading="Projects"
         right={
-          <Button prefixIcon="plus" size="s" onClick={() => setShowCreateProject(true)}>
-            Create project
+          <Button prefixIcon="plus" size="s" onClick={createProject}>
+            New project
           </Button>
         }
       />
@@ -81,7 +81,7 @@ export const OrganizationPage = ({ id, searchParams }: Props) => {
               ? undefined
               : {
                   label: "Create Project",
-                  onClick: () => setShowCreateProject(true),
+                  onClick: createProject,
                 }
           }
           secondary={
@@ -111,8 +111,6 @@ export const OrganizationPage = ({ id, searchParams }: Props) => {
           <Pagination />
         </Row>
       </DataGridProvider>
-
-      <CreateProject open={showCreateProject} onOpenChange={(d) => setShowCreateProject(d.open)} />
     </PageContainer>
   );
 };

@@ -1,6 +1,5 @@
 "use client";
 
-import { useAppStore } from "@/lib/store";
 import { Column, IconProps, Tag, ToggleButton } from "@nuvix/ui/components";
 import { useParams, usePathname } from "next/navigation";
 
@@ -12,7 +11,7 @@ const ConsoleSidebar: React.FC<Props> = ({ inMobile }) => {
   const pathname = usePathname() ?? "";
   const { id } = useParams<{ id: string }>();
 
-  const _path = `/organizations/${id}`;
+  const _path = `/organization/${id}`;
   const href = (path?: string) => _path + (path ? `/${path}` : "");
   const isSelected = (path?: string) => pathname === href(path);
 

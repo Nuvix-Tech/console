@@ -18,6 +18,7 @@ import { sdkForConsole } from "@/lib/sdk";
 import { useRouter } from "@bprogress/next";
 import { Models } from "@nuvix/console";
 import { useParams } from "next/navigation";
+import { useWizard } from "@/hooks/useWizard";
 
 export function HeaderProject() {
   const { id: projectId } = useParams();
@@ -25,6 +26,8 @@ export function HeaderProject() {
   const [list, setList] = React.useState<Models.Project[]>();
   const { push } = useRouter();
   const [open, setOpen] = React.useState(false);
+
+  const { createProject } = useWizard();
 
   React.useEffect(() => {
     async function getAll() {
@@ -92,9 +95,11 @@ export function HeaderProject() {
               <CommandItem
                 className="cursor-pointer flex items-center gap-x-2 w-full"
                 onSelect={() => {
+                  createProject();
                   setOpen(false);
                 }}
                 onClick={() => {
+                  createProject();
                   setOpen(false);
                 }}
               >
