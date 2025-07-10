@@ -447,6 +447,8 @@ export const RadioField = (props: RadioFieldProps) => {
 export const InputSelectField = ({
   options,
   name,
+  label,
+  description,
   nullable = false,
   ...props
 }: Omit<React.ComponentProps<typeof Select>, "onChange" | "value" | "id"> & {
@@ -463,12 +465,19 @@ export const InputSelectField = ({
     }
   };
   return (
-    <Select
-      {...props}
-      labelAsPlaceholder
-      value={value == null && nullable ? "null" : (value ?? undefined)}
-      options={options}
-      onSelect={_onChange}
-    />
+    <FormItem {...(props as Props)}>
+      {label && <FormLabel>{label}</FormLabel>}
+      <FormControl>
+        <Select
+          {...props}
+          labelAsPlaceholder
+          value={value == null && nullable ? "null" : (value ?? undefined)}
+          options={options}
+          onSelect={_onChange}
+        />
+      </FormControl>
+      {description && <FormDescription>{description} </FormDescription>}
+      <FormMessage field={name} />
+    </FormItem>
   );
 };

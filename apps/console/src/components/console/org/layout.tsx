@@ -2,17 +2,26 @@
 
 import { sdkForConsole } from "@/lib/sdk";
 import { useAppStore } from "@/lib/store";
-import { useEffect } from "react";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import React, { useEffect } from "react";
 
 export default function OrgLayout({ children, id }: { children: React.ReactNode; id: string }) {
   const { organizations } = sdkForConsole;
   const setOrganization = useAppStore.use.setOrganization();
 
-  useEffect(() => {
-    organizations.get(id).then((org) => {
-      setOrganization(org);
-    });
-  }, [id]);
+  async function fetcher() {
+    return await organizations.get(id);
+  }
 
-  return <>{children}</>;
+  const { data } = useSuspenseQuery({
+    queryKey: ["org", id],
+    queryFn: fetcher,
+  });
+
+  useEffect(() => {
+    if (!data) return;
+    setOrganization(data);
+  }, [data]);
+
+  return children;
 }

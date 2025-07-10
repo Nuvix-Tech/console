@@ -1,4 +1,6 @@
 import OrgLayout from "@/components/console/org/layout";
+import { ListPageSkeleton } from "@/components/skeletons";
+import { Suspense } from "react";
 
 export default async function ({
   params,
@@ -8,5 +10,9 @@ export default async function ({
   children: React.ReactNode;
 }) {
   const { id } = await params;
-  return <OrgLayout id={id}>{children}</OrgLayout>;
+  return (
+    <Suspense fallback={<ListPageSkeleton />}>
+      <OrgLayout id={id}>{children}</OrgLayout>
+    </Suspense>
+  );
 }
