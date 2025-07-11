@@ -1,12 +1,11 @@
 "use client";
-import { Button, ButtonProps } from "@nuvix/ui/components";
+import { ButtonProps, Icon } from "@nuvix/ui/components";
 import {
-  PopoverArrow,
-  PopoverBody,
-  PopoverContent,
-  PopoverRoot,
-  PopoverTrigger,
-} from "@nuvix/cui/popover";
+  DropdownMenuContent,
+  DropdownMenu as _DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuItem as _DropdownMenuItem,
+} from "@nuvix/sui/components/dropdown-menu";
 
 interface DropdownMenuProps {
   children: React.ReactNode;
@@ -15,17 +14,12 @@ interface DropdownMenuProps {
 
 export const DropdownMenu = ({ trigger, children }: DropdownMenuProps) => {
   return (
-    <PopoverRoot size="xs" autoFocus={false}>
-      <PopoverTrigger asChild>{trigger}</PopoverTrigger>
-      <PopoverContent
-        maxWidth="48"
-        portalled={true}
-        css={{ "--popover-bg": "var(--neutral-background-weak)" }}
-      >
-        <PopoverArrow />
-        <PopoverBody overflowY="auto">{children}</PopoverBody>
-      </PopoverContent>
-    </PopoverRoot>
+    <_DropdownMenu>
+      <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
+      <DropdownMenuContent className="min-w-40" side="left">
+        {children}
+      </DropdownMenuContent>
+    </_DropdownMenu>
   );
 };
 
@@ -41,19 +35,13 @@ export const DropdownMenuItem = ({
   label,
   icon,
   onClick,
+  prefixIcon,
   ...rest
 }: DropdownMenuItemProps & ButtonProps) => {
   return (
-    <Button
-      onClick={onClick}
-      prefixIcon={icon}
-      label={label}
-      variant="tertiary"
-      fillWidth
-      justifyContent="flex-start"
-      {...rest}
-    >
+    <_DropdownMenuItem onClick={onClick}>
+      {icon ?? <Icon size="s" name={prefixIcon} />}
       {children}
-    </Button>
+    </_DropdownMenuItem>
   );
 };

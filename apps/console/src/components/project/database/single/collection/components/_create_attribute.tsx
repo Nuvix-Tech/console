@@ -78,6 +78,7 @@ export const CreateAttribute = ({ refetch }: { refetch: () => Promise<void> }) =
                   fillWidth
                   justifyContent="flex-start"
                   size="s"
+                  className="!px-0"
                   onClick={() => {
                     setSelectedType(type);
                     setOpen(false);
