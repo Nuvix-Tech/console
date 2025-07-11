@@ -13,7 +13,7 @@ export const Apple = ({ provider }: { provider: Models.AuthProvider }) => {
   return (
     <>
       <InputSwitchField name="enabled" label={"Enabled/Disabled"} reverse />
-      <InputField name="servicesID" label="Services ID" placeholder="com.company.appname" />
+      <InputField name="appId" label="Services ID" placeholder="com.company.appname" />
       <InputField name="keyID" label="Key ID" placeholder="SHAB13ROFN" />
       <InputField name="teamID" label="Team ID" placeholder="ELA2CD3AED" />
       <InputTextareaField name="p8" label="P8 File" placeholder="" />

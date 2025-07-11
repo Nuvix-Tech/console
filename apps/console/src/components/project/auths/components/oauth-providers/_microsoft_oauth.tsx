@@ -13,12 +13,17 @@ export const Microsoft = ({ provider }: { provider: Models.AuthProvider }) => {
   return (
     <>
       <InputSwitchField name="enabled" label={"Enabled/Disabled"} reverse />
-      <InputField name="appId" label="App ID" placeholder="Enter ID" />
+      <InputField name="appId" label="Application (client) ID" placeholder="Enter ID" />
       <InputField
-        name="appSecret"
+        name="secret"
+        label="Client Secret"
+        placeholder="Enter Client Secret"
         type="password"
-        label="App Secret"
-        placeholder="Enter App Secret"
+      />
+      <InputField
+        name="tenant"
+        label="Target Tenant"
+        placeholder="'common','organizations','consumers' or your TenantID"
       />
       <Alert svgAsSpan>
         <Icon name="helpCircle" />

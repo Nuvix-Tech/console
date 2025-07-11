@@ -13,12 +13,32 @@ export const Oidc = ({ provider }: { provider: Models.AuthProvider }) => {
   return (
     <>
       <InputSwitchField name="enabled" label={"Enabled/Disabled"} reverse />
-      <InputField name="appId" label="App ID" placeholder="Enter ID" />
+      <InputField name="appId" label="Application (client) ID" placeholder="Enter ID" />
       <InputField
-        name="appSecret"
+        name="secret"
+        label="Client Secret"
+        placeholder="Enter Client Secret"
         type="password"
-        label="App Secret"
-        placeholder="Enter App Secret"
+      />
+      <InputField
+        name="well-known-endpoint"
+        label="Well-Known Endpoint"
+        placeholder="https://example.com/.well-known/openid-configuration"
+      />
+      <InputField
+        name="authorization-endpoint"
+        label="Authorization Endpoint"
+        placeholder="https://example.com/authorize"
+      />
+      <InputField
+        name="token-endpoint"
+        label="Token Endpoint"
+        placeholder="https://example.com/token"
+      />
+      <InputField
+        name="userinfo-endpoint"
+        label="User Info Endpoint"
+        placeholder="https://example.com/userinfo"
       />
       <Alert svgAsSpan>
         <Icon name="helpCircle" />
@@ -28,7 +48,7 @@ export const Oidc = ({ provider }: { provider: Models.AuthProvider }) => {
         </AlertDescription>
       </Alert>
       <ClipboardRoot
-        value={`${apiEndpoint()}/account/sessions/oauth2/callback/${provider.key}/${id}`}
+        value={`${apiEndpoint()}/account/sessions/oauth2/callback/${provider?.key}/${id}`}
       >
         <ClipboardInput />
       </ClipboardRoot>

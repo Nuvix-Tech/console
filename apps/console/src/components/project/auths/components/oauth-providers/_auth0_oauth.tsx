@@ -13,13 +13,14 @@ export const Auth0 = ({ provider }: { provider: Models.AuthProvider }) => {
   return (
     <>
       <InputSwitchField name="enabled" label={"Enabled/Disabled"} reverse />
-      <InputField name="appId" label="App ID" placeholder="Enter ID" />
+      <InputField name="appId" label="Client ID" placeholder="Enter ID" />
       <InputField
-        name="appSecret"
+        name="secret"
         type="password"
-        label="App Secret"
-        placeholder="Enter App Secret"
+        label="Client Secret"
+        placeholder="Enter Client Secret"
       />
+      <InputField name="domain" label="Auth0 Domain" placeholder="Enter Auth0 Domain" />
       <Alert svgAsSpan>
         <Icon name="helpCircle" />
         <AlertDescription>

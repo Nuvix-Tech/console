@@ -23,8 +23,8 @@ export const Google = ({ provider }: { provider: Models.AuthProvider }) => {
       <Alert svgAsSpan>
         <Icon name="helpCircle" />
         <AlertDescription>
-          To complete set up, add this OAuth2 redirect URI to your {provider.name} app
-          configuration.
+          To complete the setup, create an OAuth2 client ID with "Web application" as the
+          application type, then add this redirect URI to your {provider.name} configuration.
         </AlertDescription>
       </Alert>
       <ClipboardRoot

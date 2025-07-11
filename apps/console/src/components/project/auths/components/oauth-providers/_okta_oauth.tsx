@@ -15,11 +15,13 @@ export const Okta = ({ provider }: { provider: Models.AuthProvider }) => {
       <InputSwitchField name="enabled" label={"Enabled/Disabled"} reverse />
       <InputField name="appId" label="App ID" placeholder="Enter ID" />
       <InputField
-        name="appSecret"
+        name="secret"
+        label="Client Secret"
+        placeholder="Enter Client Secret"
         type="password"
-        label="App Secret"
-        placeholder="Enter App Secret"
       />
+      <InputField name="domain" label="Okta Domain" placeholder="dev-1337.okta.com" />
+      <InputField name="serverID" label="Authorization Server ID" placeholder="default" />
       <Alert svgAsSpan>
         <Icon name="helpCircle" />
         <AlertDescription>

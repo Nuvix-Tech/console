@@ -25,6 +25,7 @@ export const AuthProviders = () => {
             return (
               <ProviderCard
                 key={key}
+                _key={key}
                 provider={provider}
                 project={project}
                 theme={resolvedTheme ?? "dark"}
@@ -38,22 +39,21 @@ export const AuthProviders = () => {
 };
 
 const ProviderCard = ({
+  _key,
   provider,
   project,
   theme,
-}: { provider: Provider; project: Models.Project; theme: string }) => {
+}: { provider: Provider; project: Models.Project; theme: string; _key: string }) => {
   const [open, setOpen] = useState(false);
 
   const Component = provider.component;
-  const _provider = project.oAuthProviders.find(
-    (p) => p.name.toLowerCase() === provider.name.toLowerCase(),
-  );
+  const _provider = project.oAuthProviders.find((p) => p.key === _key);
   const is = _provider?.enabled;
 
   const title = (
     <Row gap="8" vertical="center">
       <Avatar src={`/icons/${theme}/color/${provider.icon}.svg`} className="size-10" />
-      <Text variant="body-strong-s">{provider.name}</Text>
+      <Text variant="body-strong-s">{_provider?.name}</Text>
     </Row>
   );
 
@@ -80,7 +80,7 @@ const ProviderCard = ({
           title,
           description: (
             <span>
-              To use {provider.name} authentication in your application, first fill in this form.{" "}
+              To use {_provider?.name} authentication in your application, first fill in this form.{" "}
               <br /> For more info you can{" "}
               <SmartLink selected href={provider.docs}>
                 visit the docs.
