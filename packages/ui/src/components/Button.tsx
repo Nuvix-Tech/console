@@ -5,7 +5,7 @@ import type React from "react";
 import { type ReactNode, forwardRef, useEffect, useState } from "react";
 import { ElementType } from "./ElementType";
 
-import { Arrow, Flex, Icon, IconButtonProps, Spinner, Tooltip } from ".";
+import { Arrow, Flex, Icon, IconButtonProps, Spinner, Tooltip, IconProps } from ".";
 import styles from "./Button.module.scss";
 import iconStyles from "./IconButton.module.scss";
 
@@ -24,8 +24,8 @@ interface CommonProps {
     | "bottom-left";
   label?: string;
   weight?: "default" | "strong";
-  prefixIcon?: React.ReactNode;
-  suffixIcon?: React.ReactNode;
+  prefixIcon?: IconProps["name"];
+  suffixIcon?: IconProps["name"];
   loading?: boolean;
   fillWidth?: boolean;
   justifyContent?: "flex-start" | "center" | "flex-end" | "space-between";

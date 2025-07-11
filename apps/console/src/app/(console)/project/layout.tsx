@@ -6,20 +6,8 @@ import { SkeletonProject } from "@/components/skeletons";
 import { ResizablePanel, ResizableHandle } from "@nuvix/sui/components/resizable";
 import { Row } from "@nuvix/ui/components";
 import { MainArea, ProjectLayout, RightSidebar } from "@/components/project";
-import { cookies } from "next/headers";
 
 export default async function ({ children }: { children: React.ReactNode }) {
-  const cookieStore = await cookies();
-  const value = cookieStore.get("nx-panels:project")?.value;
-  let values: number[] = [];
-  if (value) {
-    const _values = JSON.parse(value);
-    values[0] = (_values[0] > 23 || _values[0] < 18) ? 19 : _values[0];
-    values[1] = _values[1];
-  } else {
-    values = [19, 80];
-  }
-
   return (
     <>
       <Header isProjectDash={true} />
@@ -34,15 +22,9 @@ export default async function ({ children }: { children: React.ReactNode }) {
           gap={0}
         >
           <Row fillWidth>
-            <ProjectSidebar defaultSize={values[0]} />
+            <ProjectSidebar defaultSize={20} />
             <ResizableHandle withHandle className="opacity-5 hover:opacity-100 bg-transparent" />
-            <ResizablePanel
-              minSize={70}
-              maxSize={100}
-              id="main-area"
-              order={2}
-              defaultSize={values[1]}
-            >
+            <ResizablePanel minSize={70} maxSize={100} id="main-area" order={2} defaultSize={80}>
               <MainArea>
                 <Suspense fallback={<SkeletonProject />}>{children}</Suspense>
               </MainArea>

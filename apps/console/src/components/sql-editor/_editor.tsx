@@ -5,10 +5,13 @@ import {
   ResizablePanelGroup,
 } from "@nuvix/sui/components/resizable";
 import { useTheme } from "next-themes";
+import { BottomPanel } from "./components";
+import { useSqlEditorStateSnapshot } from "@/lib/store/sql-runner";
 
 export const SqlEditor = () => {
   const { resolvedTheme } = useTheme();
   const intellisenseEnabled = true;
+  const { sql, setSql } = useSqlEditorStateSnapshot();
 
   return (
     <>
@@ -17,6 +20,8 @@ export const SqlEditor = () => {
           <Editor
             language="pgsql"
             theme={resolvedTheme === "dark" ? "vs-dark" : "vs"}
+            value={sql}
+            onChange={(value) => setSql(value)}
             options={{
               tabSize: 2,
               fontSize: 13,
@@ -57,8 +62,13 @@ export const SqlEditor = () => {
             }}
           />
         </ResizablePanel>
-        <ResizableHandle withHandle />
-        <ResizablePanel maxSize={70}></ResizablePanel>
+        <ResizableHandle
+          withHandle
+          className="opacity-5 hover:opacity-60 transition-opacity hover:bg-accent"
+        />
+        <ResizablePanel maxSize={70}>
+          <BottomPanel />
+        </ResizablePanel>
       </ResizablePanelGroup>
     </>
   );
