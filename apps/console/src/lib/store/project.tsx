@@ -6,6 +6,7 @@ import { ProjectSidebarData, SidebarItem, SidebarItemGroup } from "@/components/
 import { create } from "zustand";
 import { AppPermission } from "./app";
 import { createSelectors } from "../utils";
+import { StatHelpText } from "@chakra-ui/react";
 
 export interface ProjectContextData {
   project: Models.Project;
@@ -57,6 +58,13 @@ interface ProjectStore {
   setSdk: (sdk: typeof sdkForProject) => void;
   setScopes: (scopes: Models.Roles) => void;
   setUpdateFn: (fn: () => Promise<void>) => void;
+  panel?: {
+    id: string;
+    node: React.ReactNode;
+    open: boolean;
+  };
+  setPanel: (panel: ProjectStore["panel"]) => void;
+  hidePanel: (id?: string) => void;
 }
 
 const useProject = create<ProjectStore>((set, get) => ({
@@ -102,6 +110,14 @@ const useProject = create<ProjectStore>((set, get) => ({
       }
       return { sidebar };
     });
+  },
+  setPanel: (panel) => set({ panel }),
+  hidePanel: (id) => {
+    const panel = get().panel;
+    if (panel) {
+      panel.open = false;
+      set({ panel });
+    }
   },
   permissions: () => {
     const { scopes } = get();

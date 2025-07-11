@@ -8,7 +8,8 @@ export const createTableEditorState = () => {
     },
     loading: false,
     setLoading: (v: boolean) => (state.loading = v),
-    results: undefined,
+    result: undefined as any,
+    addResult: (v: any) => (state.result = v),
   });
 
   return state;
