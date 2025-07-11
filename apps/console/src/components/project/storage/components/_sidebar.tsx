@@ -15,8 +15,6 @@ const StorageSidebar = () => {
 
   return (
     <>
-      <SidebarGroup title="Storage" items={[]} />
-
       <BucketsList />
 
       <Line />

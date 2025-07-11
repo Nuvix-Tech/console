@@ -28,7 +28,7 @@ export const UpdateName: React.FC = () => {
         validationSchema={schema}
         onSubmit={async (values) => {
           try {
-            await sdk.storage.updateBucket(bucket.$id, values.name);
+            await sdk.storage.updateBucket(bucket.$id, values.name, undefined, bucket.enabled);
             addToast({
               variant: "success",
               message: "Bucket name updated.",

@@ -1,14 +1,13 @@
 "use client";
 import { FunctionComponent } from "react";
 import { CreateButton, PageContainer, PageHeading } from "@/components/others";
-import { DataGridProvider, Pagination, SelectLimit } from "@/ui/data-grid";
+import { DataGridProvider, GridWrapper, Pagination, SelectLimit, Search } from "@/ui/data-grid";
 import { Models, Query } from "@nuvix/console";
 import { EmptyState } from "@/components";
 import { HStack } from "@chakra-ui/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useProjectStore } from "@/lib/store";
 import { useSearchQuery } from "@/hooks/useQuery";
-import { Grid } from "@nuvix/ui/components";
 import { StorageCard } from "./components";
 import { CreateBucket } from "./components/_create_bucket";
 
@@ -21,7 +20,7 @@ export const StoragePage: FunctionComponent = () => {
   const fetcher = async () => {
     const queries: string[] = [];
     queries.push(Query.limit(limit), Query.offset((page - 1) * limit));
-    return await sdk.storage.listBuckets();
+    return await sdk.storage.listBuckets(queries, search);
   };
 
   const { data, isFetching } = useSuspenseQuery({
@@ -64,11 +63,12 @@ export const StoragePage: FunctionComponent = () => {
 
         {(data.total > 0 || hasQuery) && (
           <>
-            <Grid gap="l" marginTop="l" columns={2} fillWidth>
+            <Search placeholder="Search by ID" />
+            <GridWrapper>
               {data.buckets.map((bucket) => (
                 <StorageCard bucket={bucket} key={bucket.name} />
               ))}
-            </Grid>
+            </GridWrapper>
             <HStack justifyContent="space-between" alignItems="center">
               <SelectLimit />
               <Pagination />

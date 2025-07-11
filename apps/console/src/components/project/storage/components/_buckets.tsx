@@ -44,7 +44,7 @@ export const BucketsList = () => {
               fillWidth
               selected={bucket.$id === bucketId}
               href={`${path}/${bucket.$id}`}
-              size="s"
+              size="m"
               justifyContent="flex-start"
             >
               {bucket.name}

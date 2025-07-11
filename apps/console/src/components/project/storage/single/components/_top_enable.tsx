@@ -39,7 +39,7 @@ export const MetaEnable: React.FC = () => {
               bucket.$id,
               bucket.name,
               undefined,
-              undefined,
+              bucket.enabled,
               values.is,
             );
             addToast({

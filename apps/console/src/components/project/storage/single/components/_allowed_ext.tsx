@@ -38,7 +38,7 @@ export const UpdateAllowedExt: React.FC = () => {
               bucket.$id,
               bucket.name,
               undefined,
-              undefined,
+              bucket.enabled,
               undefined,
               undefined,
               values.allowedExtensions,

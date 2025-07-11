@@ -696,10 +696,10 @@ export const RelationshipAttributeForm = ({ onClose, isOpen, refetch }: BaseProp
 
   const schema = y.object({
     key: keyValidation,
-    relatedCollection: y.string().required(),
+    relatedCollection: y.string().optional(),
     relationType: y.string().oneOf(["oneToOne", "oneToMany", "manyToOne", "manyToMany"]).required(),
     twoWay: y.boolean().default(false),
-    twoWayKey: y.string().when("twoWay", (twoWay, schema) => {
+    twoWayKey: y.string().when(["twoWay"], ([twoWay], schema) => {
       return twoWay ? schema.required("Two-way key is required when two-way is enabled") : schema;
     }),
     onDelete: y.string().oneOf(["cascade", "restrict", "setNull"]).default("setNull"),
@@ -732,7 +732,7 @@ export const RelationshipAttributeForm = ({ onClose, isOpen, refetch }: BaseProp
           relationType,
           twoWay,
           key,
-          twoWayKey,
+          twoWay ? twoWayKey : undefined,
           onDelete,
         );
       }}
@@ -741,7 +741,7 @@ export const RelationshipAttributeForm = ({ onClose, isOpen, refetch }: BaseProp
 };
 
 const RelationshipAttributeFormFields = () => {
-  const { values, setFieldValue } = useFormikContext<{
+  const { values, setFieldValue, errors } = useFormikContext<{
     key: string;
     relatedCollection: string;
     relationType: "oneToOne" | "oneToMany" | "manyToOne" | "manyToMany";

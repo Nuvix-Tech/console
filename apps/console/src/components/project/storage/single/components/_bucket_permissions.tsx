@@ -35,7 +35,12 @@ export const UpdateBucketPermissions: React.FC = () => {
         validationSchema={schema}
         onSubmit={async (values) => {
           try {
-            await sdk.storage.updateBucket(bucket.$id, bucket.name, values.permissions);
+            await sdk.storage.updateBucket(
+              bucket.$id,
+              bucket.name,
+              values.permissions,
+              bucket.enabled,
+            );
             addToast({
               variant: "success",
               message: "Bucket updated successfully",
