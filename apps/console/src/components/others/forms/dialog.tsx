@@ -19,15 +19,20 @@ const FormDialogComponent = <T extends FormikValues, V>({
   return (
     <Dialog ref={ref} {...restDialog}>
       <Form {...restForm}>
-        {children}
+        <Flex gap="8" paddingBottom="48">
+          {children}
+        </Flex>
         <Flex
           borderTop="neutral-medium"
           as="footer"
           horizontal="end"
           padding="12"
           gap="8"
-          className="mx-[-1.5rem] mb-[-1.5rem]"
+          fillWidth
+          background="neutral-weak"
+          className="mx-[-1.5rem] fixed bottom-px"
           marginTop="24"
+          bottomRadius="l"
         >
           {footer}
         </Flex>

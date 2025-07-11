@@ -6,3 +6,4 @@ export * from "./_security_password_dictionary";
 export * from "./_security_session_alerts";
 export * from "./_security_personal_data";
 export * from "./_settings_auth_methods";
+export * from "./_settings_oauth_providers";

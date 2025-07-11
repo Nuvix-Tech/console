@@ -61,10 +61,7 @@ export const AuthMethods: React.FC = () => {
         <CardBoxBody>
           <CardBoxItem gap={"4"}>
             <CardBoxTitle>Auth methods</CardBoxTitle>
-            <CardBoxDesc>
-              Enabling this option prevents users from setting insecure passwords by comparing the
-              user's password with the 10k most commonly used passwords.
-            </CardBoxDesc>
+            <CardBoxDesc>Enable the authentication methods you wish to use.</CardBoxDesc>
           </CardBoxItem>
           <CardBoxItem direction="column" gap="2">
             {renderSwitch("Email/Password", AuthMethod.Emailpassword, project?.authEmailPassword)}

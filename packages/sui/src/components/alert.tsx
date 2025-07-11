@@ -26,16 +26,20 @@ const alertVariants = cva(
   },
 );
 
+const spanAsSvg =
+  "has-[>span]:grid-cols-[calc(var(--spacing)*4)_1fr] has-[>span]:gap-x-3 [&>span]:size-4 [&>span]:translate-y-0.5 [&>span]:text-current";
+
 function Alert({
   className,
   variant,
+  svgAsSpan,
   ...props
-}: React.ComponentProps<"div"> & VariantProps<typeof alertVariants>) {
+}: React.ComponentProps<"div"> & VariantProps<typeof alertVariants> & { svgAsSpan?: boolean }) {
   return (
     <div
       data-slot="alert"
       role="alert"
-      className={cn(alertVariants({ variant }), className)}
+      className={cn(alertVariants({ variant }), { [spanAsSvg]: svgAsSpan }, className)}
       {...props}
     />
   );

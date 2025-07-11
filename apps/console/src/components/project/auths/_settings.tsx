@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import { AuthMethods } from "./components";
+import { AuthMethods, AuthProviders } from "./components";
 import { useProjectStore } from "@/lib/store";
 import { PageContainer, PageHeading } from "@/components/others";
 
@@ -17,6 +17,7 @@ const SettingsPage: React.FC = () => {
       />
 
       <AuthMethods />
+      <AuthProviders />
     </PageContainer>
   );
 };

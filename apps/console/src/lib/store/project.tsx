@@ -58,6 +58,7 @@ interface ProjectStore {
   setSdk: (sdk: typeof sdkForProject) => void;
   setScopes: (scopes: Models.Roles) => void;
   setUpdateFn: (fn: () => Promise<void>) => void;
+  apiEndpoint: () => string;
   panel?: {
     id: string;
     node: React.ReactNode;
@@ -82,6 +83,7 @@ const useProject = create<ProjectStore>((set, get) => ({
   project: null as any,
   update: async () => {},
   setSdk: (sdk) => set({ sdk }),
+  apiEndpoint: () => get().sdk?.client?.config?.endpoint,
   setProject: (project) => {
     set({
       project: project,

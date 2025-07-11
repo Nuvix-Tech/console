@@ -53,7 +53,7 @@ const SmartLink = forwardRef<HTMLAnchorElement, SmartLinkProps>(
       className: classNames(className, "align-items-center display-inline-flex g-8 radius-s", {
         "fill-width": fillWidth,
         "fit-width": !fillWidth,
-        "rpx-4 rmx-4": !unstyled,
+        // "rpx-4 rmx-4": !unstyled,
       }),
       style: !unstyled
         ? {

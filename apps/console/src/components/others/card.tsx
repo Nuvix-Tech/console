@@ -10,6 +10,7 @@ import {
 import { Stack, StackProps } from "@chakra-ui/react";
 import { Separator } from "@nuvix/sui/components/separator";
 import { cn } from "@nuvix/sui/lib/utils";
+import { Text } from "@nuvix/ui/components";
 
 interface InfoCardProps {}
 
@@ -49,8 +50,8 @@ export const CardBoxItem = (props: StackProps) => {
   return <Stack maxW={{ base: "full", md: "1/2" }} width={"full"} {...props} />;
 };
 
-export const CardBoxTitle = (props: React.ComponentProps<typeof CardTitle>) => {
-  return <CardTitle {...props} />;
+export const CardBoxTitle = (props: React.ComponentProps<typeof Text & typeof CardTitle>) => {
+  return <Text variant="label-strong-l" {...(props as any)} />;
 };
 
 export const CardBoxDesc = (props: React.ComponentProps<typeof CardDescription>) => {
