@@ -1,4 +1,6 @@
+import { SimpleGrid } from "@chakra-ui/react";
 import { Card, SmartLink } from "@nuvix/ui/components";
+import React from "react";
 
 export const GridCard = ({
   href,
@@ -17,5 +19,13 @@ export const GridCard = ({
         {...props}
       />
     </SmartLink>
+  );
+};
+
+export const GridWrapper = ({ children, ...props }: React.ComponentProps<typeof SimpleGrid>) => {
+  return (
+    <SimpleGrid width="full" gap="8" columns={{ base: 1, mdToLg: 2, lgTo2xl: 3 }} {...props}>
+      {children}
+    </SimpleGrid>
   );
 };

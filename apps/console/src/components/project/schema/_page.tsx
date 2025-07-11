@@ -1,8 +1,7 @@
 "use client";
 import { Query } from "@nuvix/console";
-import React, { useEffect } from "react";
-import { Grid } from "@nuvix/ui/components";
-import { DataGridProvider, Pagination, SelectLimit } from "@/ui/data-grid";
+import React from "react";
+import { DataGridProvider, GridWrapper, Pagination, Search, SelectLimit } from "@/ui/data-grid";
 import { CreateButton, PageContainer, PageHeading } from "@/components/others";
 import { useProjectStore } from "@/lib/store";
 import { useSearchQuery } from "@/hooks/useQuery";
@@ -14,14 +13,7 @@ import { _Models } from "@/lib/external-sdk";
 import { CreateSchema } from "./components";
 
 const DatabasePage = () => {
-  // const setSidebarNull = useProjectStore.use.setSidebarNull();
-
-  // useEffect(() => {
-  //   setSidebarNull();
-  // }, []);
-
   const sdk = useProjectStore.use.sdk?.();
-  const project = useProjectStore.use.project?.();
   const permissions = useProjectStore.use.permissions();
   const { limit, page, search, hasQuery } = useSearchQuery();
   const { canCreateDatabases } = permissions();
@@ -72,11 +64,12 @@ const DatabasePage = () => {
 
         {(data.total > 0 || hasQuery) && (
           <>
-            <Grid gap="l" marginTop="l" columns={2} fillWidth>
+            <Search placeholder="Search schemas by name" />
+            <GridWrapper>
               {data.schemas.map((schema) => (
                 <DatabaseCard database={schema} key={schema.name} />
               ))}
-            </Grid>
+            </GridWrapper>
             <HStack justifyContent="space-between" alignItems="center">
               <SelectLimit />
               <Pagination />

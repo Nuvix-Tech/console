@@ -48,8 +48,8 @@ importers:
         specifier: ^4.7.0
         version: 4.7.0(monaco-editor@0.52.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@nuvix/console':
-        specifier: ^0.0.5-alpha.2
-        version: 0.0.5-alpha.2
+        specifier: 0.0.5-alpha.4
+        version: 0.0.5-alpha.4
       '@radix-ui/react-popover':
         specifier: ^1.1.6
         version: 1.1.11(@types/react-dom@19.0.2(@types/react@19.0.1))(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -1960,8 +1960,8 @@ packages:
     resolution: {integrity: sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==}
     engines: {node: '>=12.4.0'}
 
-  '@nuvix/console@0.0.5-alpha.2':
-    resolution: {integrity: sha512-L1JtSkkLh3Msmu9GunA6Sve8kJlFMfSE0ydjs+dD74NOom340GD+0FiUv3LWxi+E8k8rkZhqnHMWTGP+W0CTwQ==}
+  '@nuvix/console@0.0.5-alpha.4':
+    resolution: {integrity: sha512-tgXuyIua1mI4pB7I9otHuIrC5K2I5zaNWxVNPFyPYsk7KwqbXIzVreq4ImpwJCVTW4Qmw2CWRTPPDmVZpqDooA==}
 
   '@orama/orama@3.1.10':
     resolution: {integrity: sha512-YNou2xlCIgPhMDe1TBEmp1wsAPFCL7Fd11rct7YfXYYiNAVBNL2rWoEydJRDJFVmqgt0l6mzSg35sDQ3i8yfKQ==}
@@ -8637,7 +8637,7 @@ snapshots:
 
   '@nolyfill/is-core-module@1.0.39': {}
 
-  '@nuvix/console@0.0.5-alpha.2':
+  '@nuvix/console@0.0.5-alpha.4':
     dependencies:
       socket.io-client: 4.8.1
     transitivePeerDependencies:

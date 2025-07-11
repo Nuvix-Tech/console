@@ -6,7 +6,7 @@ import { Button, Grid, Row } from "@nuvix/ui/components";
 import { Query, type Models } from "@nuvix/console";
 import { useEffect, useState } from "react";
 import { EmptyState } from "@/components";
-import { DataGridProvider, Pagination, Search, SelectLimit } from "@/ui/data-grid";
+import { DataGridProvider, GridWrapper, Pagination, Search, SelectLimit } from "@/ui/data-grid";
 import { PageContainer, PageHeading } from "@/components/others";
 import { useSearchQuery } from "@/hooks/useQuery";
 import { useWizard } from "@/hooks/useWizard";
@@ -96,7 +96,7 @@ export const OrganizationPage = ({ id }: Props) => {
           }
         />
 
-        <Grid gap="l" marginTop="l" columns={3}>
+        <GridWrapper>
           {loading ? (
             <GridSkeleton limit={3} />
           ) : (
@@ -104,7 +104,7 @@ export const OrganizationPage = ({ id }: Props) => {
               <ProjectCard key={project.$id} project={project} />
             ))
           )}
-        </Grid>
+        </GridWrapper>
 
         <Row horizontal="space-between" vertical="center">
           <SelectLimit />
