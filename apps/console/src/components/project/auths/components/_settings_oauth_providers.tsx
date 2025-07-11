@@ -1,15 +1,14 @@
 import { useProjectStore } from "@/lib/store";
-import { oAuthProviders, Provider } from "./oauth-providers";
+import { formatValues, oAuthProviders, Provider } from "./oauth-providers";
 import { FormDialog, SubmitButton } from "@/components/others/forms";
 import { useState } from "react";
-import { Avatar, Column, Icon, Row, SmartImage, SmartLink, Text } from "@nuvix/ui/components";
-import { Models } from "@nuvix/console";
+import { Avatar, Column, Icon, Row, SmartLink, Text, useToast } from "@nuvix/ui/components";
 import { useTheme } from "next-themes";
 import { Status } from "@nuvix/cui/status";
 import { CardBox, CardBoxTitle, CardBoxDesc } from "@/components/others/card";
+import { sdkForConsole } from "@/lib/sdk";
 
 export const AuthProviders = () => {
-  const { sdk, project } = useProjectStore((s) => s);
   const { resolvedTheme } = useTheme();
 
   return (
@@ -27,7 +26,6 @@ export const AuthProviders = () => {
                 key={key}
                 _key={key}
                 provider={provider}
-                project={project}
                 theme={resolvedTheme ?? "dark"}
               />
             );
@@ -41,10 +39,11 @@ export const AuthProviders = () => {
 const ProviderCard = ({
   _key,
   provider,
-  project,
   theme,
-}: { provider: Provider; project: Models.Project; theme: string; _key: string }) => {
+}: { provider: Provider; theme: string; _key: string }) => {
+  const { project, setProject } = useProjectStore((s) => s);
   const [open, setOpen] = useState(false);
+  const { addToast } = useToast();
 
   const Component = provider.component;
   const _provider = project.oAuthProviders.find((p) => p.key === _key);
@@ -75,51 +74,56 @@ const ProviderCard = ({
         </Row>
       </Row>
 
-      <FormDialog
-        dialog={{
-          title,
-          description: (
-            <span>
-              To use {_provider?.name} authentication in your application, first fill in this form.{" "}
-              <br /> For more info you can{" "}
-              <SmartLink selected href={provider.docs}>
-                visit the docs.
-              </SmartLink>
-            </span>
-          ),
-          isOpen: open,
-          onClose: () => setOpen(false),
-          footer: <SubmitButton label="Update" />,
-        }}
-        form={{
-          // validationSchema: schema,
-          initialValues: {
-            ..._provider,
-          },
-          onSubmit: async (values) => {
-            // try {
-            //     let { id, email, phone, name, password } = values;
-            //     id = id?.trim() || "unique()";
-            //     const user = await sdk.users.create(id, email, phone, password, name);
-            //     addToast({
-            //         message: "User has been successfully created",
-            //         variant: "success",
-            //     });
-            //     onClose();
-            //     push(`${baseURL}/${user.$id}`);
-            // } catch (error: any) {
-            //     addToast({
-            //         message: error.message,
-            //         variant: "danger",
-            //     });
-            // }
-          },
-        }}
-      >
-        <Column paddingY="12" fillWidth gap="16">
-          <Component provider={_provider!} />
-        </Column>
-      </FormDialog>
+      {_provider && (
+        <FormDialog
+          dialog={{
+            title,
+            description: (
+              <span>
+                To use {_provider?.name} authentication in your application, first fill in this
+                form. <br /> For more info you can{" "}
+                <SmartLink selected href={provider.docs}>
+                  visit the docs.
+                </SmartLink>
+              </span>
+            ),
+            isOpen: open,
+            onClose: () => setOpen(false),
+            footer: <SubmitButton label="Update" />,
+          }}
+          form={{
+            ...formatValues(_provider!),
+            onSubmit: async (_values) => {
+              const values = formatValues(_provider).format(_values);
+              try {
+                let { enabled, appId, secret } = values;
+                const res = await sdkForConsole.projects.updateOAuth2(
+                  project.$id,
+                  _provider.key as any,
+                  appId,
+                  secret,
+                  enabled,
+                );
+                addToast({
+                  message: `Settings for ${_provider.name} have been updated successfully.`,
+                  variant: "success",
+                });
+                setProject(res);
+                setOpen(false);
+              } catch (error: any) {
+                addToast({
+                  message: error.message,
+                  variant: "danger",
+                });
+              }
+            },
+          }}
+        >
+          <Column paddingY="12" fillWidth gap="16">
+            <Component provider={_provider!} />
+          </Column>
+        </FormDialog>
+      )}
     </>
   );
 };

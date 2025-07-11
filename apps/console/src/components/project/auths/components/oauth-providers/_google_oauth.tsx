@@ -14,12 +14,7 @@ export const Google = ({ provider }: { provider: Models.AuthProvider }) => {
     <>
       <InputSwitchField name="enabled" label={"Enabled/Disabled"} reverse />
       <InputField name="appId" label="App ID" placeholder="Enter ID" />
-      <InputField
-        name="appSecret"
-        type="password"
-        label="App Secret"
-        placeholder="Enter App Secret"
-      />
+      <InputField name="secret" type="password" label="App Secret" placeholder="Enter App Secret" />
       <Alert svgAsSpan>
         <Icon name="helpCircle" />
         <AlertDescription>
