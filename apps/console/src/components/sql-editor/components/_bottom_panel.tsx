@@ -45,9 +45,27 @@ export const BottomPanel = () => {
           </Button>
         </Row>
         <div className="flex-1 h-full max-h-[calc(100%_-_80px)] overflow-y-auto">
-          <Results rows={Array.isArray(result) ? result : []} panel={false} />
+          <Results rows={Array.isArray(result) ? result : []} panel />
         </div>
-        <Row fillWidth height={"40"} borderTop="neutral-alpha-weak"></Row>
+        {result !== undefined && !isExecuting && (
+          <Row
+            fillWidth
+            height={"40"}
+            vertical="center"
+            borderTop="neutral-alpha-weak"
+            paddingX="16"
+          >
+            <p className="text-xs">
+              <span className="text-foreground">
+                {result?.length} row{result?.length > 1 ? "s" : ""}
+              </span>
+              {/* <span className="text-foreground-lighter ml-1">
+                        {results.autoLimit !== undefined &&
+                          ` (Limited to only ${results.autoLimit} rows)`}
+                      </span> */}
+            </p>
+          </Row>
+        )}
       </Column>
     </>
   );

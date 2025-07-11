@@ -7,6 +7,7 @@ import { TwoOptionToggle } from "@/components/others/ui";
 import { Markdown } from "@/components/others/markdown";
 import { Code } from "@chakra-ui/react";
 import { CloseButton } from "@nuvix/ui/components";
+import { useProjectStore } from "@/lib/store";
 
 interface CellDetailPanelProps {
   column: string;
@@ -75,6 +76,7 @@ export const CellDetailPanel = ({ column, value, visible, onClose }: CellDetailP
 
 export const CellDetailBox = ({ column, value, visible, onClose }: CellDetailPanelProps) => {
   const [view, setView] = useState<"view" | "md">("view");
+  const { panel } = useProjectStore();
 
   const formattedValue =
     value === null
@@ -85,13 +87,13 @@ export const CellDetailBox = ({ column, value, visible, onClose }: CellDetailPan
   const showMarkdownToggle = typeof value === "string";
 
   useEffect(() => {
-    if (visible) setView("view");
-  }, [visible]);
+    if (panel?.open) setView("view");
+  }, [panel]);
 
   return (
-    <div className="flex flex-col gap-0">
-      <div className="py-2.5">
-        <div className="flex items-center justify-between pr-7">
+    <div className="flex flex-col size-full">
+      <div className="py-2 px-2 sticky ">
+        <div className="flex items-center justify-between my-auto">
           <p className="truncate">
             Viewing cell details on column: <Code className="text-sm">{column}</Code>
           </p>
@@ -100,7 +102,7 @@ export const CellDetailBox = ({ column, value, visible, onClose }: CellDetailPan
               options={["md", "view"]}
               activeOption={view}
               onClickOption={setView}
-              size={"s"}
+              size={"xs"}
             />
           )}
           <CloseButton onClick={onClose} />

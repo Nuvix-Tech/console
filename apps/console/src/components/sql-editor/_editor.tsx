@@ -7,11 +7,16 @@ import {
 import { useTheme } from "next-themes";
 import { BottomPanel } from "./components";
 import { useSqlEditorStateSnapshot } from "@/lib/store/sql-runner";
+import { useProjectStore } from "@/lib/store";
+import { useEffect } from "react";
 
 export const SqlEditor = () => {
   const { resolvedTheme } = useTheme();
   const intellisenseEnabled = true;
   const { sql, setSql } = useSqlEditorStateSnapshot();
+  const { setSidebarNull } = useProjectStore((s) => s);
+
+  useEffect(setSidebarNull, []);
 
   return (
     <>

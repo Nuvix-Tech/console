@@ -6,6 +6,7 @@ import { SkeletonProject } from "@/components/skeletons";
 import { ResizablePanel, ResizableHandle } from "@nuvix/sui/components/resizable";
 import { Row } from "@nuvix/ui/components";
 import { MainArea, ProjectLayout, RightSidebar } from "@/components/project";
+import { RightPanel } from "@/components/project/_right_panel";
 
 export default async function ({ children }: { children: React.ReactNode }) {
   return (
@@ -29,9 +30,7 @@ export default async function ({ children }: { children: React.ReactNode }) {
                 <Suspense fallback={<SkeletonProject />}>{children}</Suspense>
               </MainArea>
             </ResizablePanel>
-            {/* TODO: -------- */}
-            {/* <MainArea ml={'2.5'} width={'xs'} padding={'8'}>
-            </MainArea> */}
+            <RightPanel />
             <RightSidebar />
           </Row>
         </Stack>
