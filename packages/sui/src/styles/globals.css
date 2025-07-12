@@ -160,6 +160,10 @@
   --color-main-background: var(--main-background);
 }
 
+@theme {
+  --breakpoint-ml: 56rem;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

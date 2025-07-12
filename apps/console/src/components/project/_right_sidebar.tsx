@@ -16,7 +16,7 @@ export const RightSidebar = () => {
       fillHeight
       horizontal="center"
       gap="12"
-      className="transition-width duration-300"
+      className="transition-width duration-300 !hidden ml:!flex"
     >
       <div
         className={cn(

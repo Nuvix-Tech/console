@@ -12,7 +12,7 @@ import {
 import { FirstSidebar, SecondSidebar } from "./sidebar";
 import { HeaderOrganization, HeaderProject } from "./components";
 import { UserProfile } from "../_profile";
-import { useAppStore } from "@/lib/store";
+import { useAppStore, useProjectStore } from "@/lib/store";
 
 interface HeaderProps {
   authenticated?: boolean;
@@ -41,7 +41,7 @@ const DesktopHeader = () => {
   return (
     <>
       <Row
-        hide="s"
+        className="!hidden ml:!flex"
         as="header"
         fillWidth
         zIndex={8}
@@ -89,25 +89,24 @@ const DesktopHeader = () => {
 };
 
 const MobileHeader = () => {
-  const organization = useAppStore.use.organization?.();
   const isDrawerOpen = useAppStore.use.isDrawerOpen();
   const isSecondMenuOpen = useAppStore.use.isSecondMenuOpen();
   const setIsDrawerOpen = useAppStore.use.setIsDrawerOpen();
   const setIsSecondMenuOpen = useAppStore.use.setIsSecondMenuOpen();
+  const { sidebar } = useProjectStore((s) => s);
+
+  const showSidebar = !!(sidebar.first || sidebar.middle || sidebar.last);
 
   return (
     <>
       <Column
-        show="s"
         as="header"
-        // borderBottom="neutral-medium"
         position="fixed"
         fillWidth
         zIndex={10}
-        className={"h-24"}
-        background="surface"
+        className="!bg-secondary h-24 dark:!bg-(--neutral-background-weak) flex ml:!hidden"
       >
-        <Row fillWidth vertical="center" height="48" paddingX="m" borderBottom="neutral-medium">
+        <Row fillWidth vertical="center" height="56" paddingX="8" borderBottom="neutral-medium">
           <Row gap="4" vertical="center">
             <Logo wordmark={false} size="l" iconSrc="/trademark/nuvix.svg" />
           </Row>
@@ -120,23 +119,18 @@ const MobileHeader = () => {
           </Row>
         </Row>
 
-        <Row fillWidth vertical="center" height="48" paddingX="m">
-          <Row gap="4" vertical="center">
+        <Row fillWidth vertical="center" height="48" paddingX="8">
+          <Row gap="4" vertical="center" fillHeight>
             <NavIcon
+              hidden={!showSidebar}
               isActive={isSecondMenuOpen}
               onClick={() => setIsSecondMenuOpen(!isSecondMenuOpen)}
             />
-            <HeaderProject />
+            <HeaderOrganization size="s" />
+            <HeaderProject size="s" />
           </Row>
-          <Row fillWidth vertical="center" horizontal="end">
-            <Row as="nav">
-              <Row>
-                {/* <Avatar.Root size={'sm'}>
-                  <Avatar.Fallback name={user?.name} />
-                  <Avatar.Image src={avatars.getInitials(user?.name, 96, 96)} />
-                </Avatar.Root> */}
-              </Row>
-            </Row>
+          <Row fillWidth vertical="center" horizontal="end" fillHeight>
+            <UserProfile avatarProps={{ size: "s" }} />
           </Row>
         </Row>
       </Column>
@@ -144,8 +138,8 @@ const MobileHeader = () => {
       <DrawerRoot open={isDrawerOpen} onOpenChange={(e) => setIsDrawerOpen(e.open)}>
         <DrawerBackdrop />
         <DrawerContent>
-          <DrawerBody>
-            <FirstSidebar alwaysFull noBg border={false} />
+          <DrawerBody className="!p-0">
+            <FirstSidebar inMobile onClose={() => setIsDrawerOpen(false)} />
           </DrawerBody>
           <DrawerCloseTrigger top={1} right={1} />
         </DrawerContent>
@@ -159,7 +153,7 @@ const MobileHeader = () => {
         <DrawerBackdrop />
         <DrawerContent offset="4" rounded="md">
           <DrawerBody className="h-full">
-            <SecondSidebar noBg noMarg border={false} />
+            <SecondSidebar inMobile onClose={() => setIsSecondMenuOpen(false)} />
           </DrawerBody>
           <DrawerCloseTrigger />
         </DrawerContent>

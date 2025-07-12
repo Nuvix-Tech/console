@@ -20,7 +20,7 @@ import { Models } from "@nuvix/console";
 import { useParams } from "next/navigation";
 import { useWizard } from "@/hooks/useWizard";
 
-export function HeaderProject() {
+export function HeaderProject(props: React.ComponentProps<typeof Button>) {
   const { id: projectId } = useParams();
   const { projects } = sdkForConsole;
   const [list, setList] = React.useState<Models.Project[]>();
@@ -48,6 +48,7 @@ export function HeaderProject() {
           weight="default"
           justifyContent="flex-start"
           suffixIcon={<ChevronsUpDown className="opacity-40" size={16} />}
+          {...props}
         >
           <span className="max-w-42 text-ellipsis overflow-hidden">
             {list.find((p) => p.$id === projectId)?.name || "Select project..."}

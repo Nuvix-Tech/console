@@ -9,7 +9,7 @@ import {
   DrawerContent,
   DrawerRoot,
 } from "@nuvix/cui/drawer";
-import { HeaderOrganization, HeaderProject } from "../project/components";
+import { HeaderOrganization } from "../project/components";
 import { UserProfile } from "../_profile";
 import { useAppStore } from "@/lib/store";
 import { ConsoleSidebar } from "@/ui/layout/ConsoleSidebar";
@@ -91,11 +91,8 @@ const DesktopHeader = () => {
 };
 
 const MobileHeader = () => {
-  const organization = useAppStore.use.organization?.();
   const isDrawerOpen = useAppStore.use.isDrawerOpen();
-  const isSecondMenuOpen = useAppStore.use.isSecondMenuOpen();
   const setIsDrawerOpen = useAppStore.use.setIsDrawerOpen();
-  const setIsSecondMenuOpen = useAppStore.use.setIsSecondMenuOpen();
 
   return (
     <>

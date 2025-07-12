@@ -14,8 +14,7 @@ export default async function ({ children }: { children: React.ReactNode }) {
       <Header />
       <ProjectLayout>
         <Stack
-          minHeight={"calc(100% - 64px)"}
-          top={{ base: "64px", md: 0 }}
+          className="top-[96px] ml:top-0 h-[calc(100%_-_96px)] ml:h-[calc(100%_-_64px)]"
           height={"full"}
           direction={"row"}
           position={"relative"}
@@ -26,7 +25,7 @@ export default async function ({ children }: { children: React.ReactNode }) {
             <ProjectSidebar defaultSize={20} />
             <ResizableHandle withHandle className="opacity-5 hover:opacity-100 bg-transparent" />
             <ResizablePanel minSize={70} maxSize={100} id="main-area" order={2} defaultSize={80}>
-              <MainArea>
+              <MainArea mlRounded>
                 <Suspense fallback={<SkeletonProject />}>{children}</Suspense>
               </MainArea>
             </ResizablePanel>

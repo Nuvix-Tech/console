@@ -20,6 +20,7 @@ import {
 import { useSidebarHref } from "@/hooks/useSidebarHref";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import { SidebarExpandTrigger } from "./components/sidebar_expand_trigger";
+import { cn } from "@nuvix/sui/lib/utils";
 
 export interface ProjectSidebarData {
   name: string;
@@ -76,24 +77,23 @@ const ProjectSidebar: React.FC<{ defaultSize: number }> = ({ defaultSize }) => {
           defaultSize={defaultSize}
           minSize={18}
           maxSize={23}
-          className="hidden md:flex"
+          className="hidden ml:flex"
         >
           {show ? <SecondSidebar /> : null}
         </ResizablePanel>
       ) : (
-        <span className="w-4" />
+        <span className="w-0 ml:w-4" />
       )}
     </>
   );
 };
 
 interface FirstSidebarProps {
-  alwaysFull?: boolean;
-  noBg?: boolean;
-  border?: boolean;
+  inMobile?: boolean;
+  onClose?: () => void;
 }
 
-export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarProps) => {
+export const FirstSidebar = ({ inMobile, onClose }: FirstSidebarProps) => {
   const pathname = usePathname() ?? "";
   const { id } = useParams();
 
@@ -154,26 +154,28 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
     },
   ];
 
-  const showSubSidebar = true; // sidebar.first || sidebar.middle || sidebar.last;
-
   return (
     <>
       <Column
-        maxWidth={alwaysFull ? undefined : 4}
+        maxWidth={inMobile ? undefined : 4}
         fill
         paddingBottom="12"
+        paddingTop={inMobile ? "32" : undefined}
         vertical="space-between"
         position="relative"
         overflowY="auto"
-        className="transition-[max-width] duration-200 ease-in-out no-scrollbar"
-        background={noBg ? "transparent" : "surface"}
+        className={cn("transition-[max-width] duration-200 ease-in-out no-scrollbar", {
+          "!hidden ml:!flex": !inMobile,
+        })}
+        background={inMobile ? "transparent" : "surface"}
       >
         <Column fillWidth paddingX="xs" gap="xs">
           {sideNav.map((item, index) => (
             <SidebarSmallButton
               key={index}
               item={item}
-              showFullSidebar={!showSubSidebar || !!alwaysFull}
+              showFullSidebar={!!inMobile}
+              onClose={onClose}
               selected={item.active ?? pathname.includes(item.href ?? "")}
             />
           ))}
@@ -188,7 +190,8 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
               href: `/project/${id}/s/general`,
               icon: "settings",
             }}
-            showFullSidebar={!showSubSidebar || !!alwaysFull}
+            showFullSidebar={!!inMobile}
+            onClose={onClose}
             selected={pathname === `/project/${id}/settings`}
           />
         </Column>
@@ -198,12 +201,11 @@ export const FirstSidebar = ({ alwaysFull, noBg, border = true }: FirstSidebarPr
 };
 
 interface SecondSidebarProps {
-  noMarg?: boolean;
-  noBg?: boolean;
-  border?: boolean;
+  inMobile?: boolean;
+  onClose?: () => void;
 }
 
-export const SecondSidebar = ({ noMarg, noBg = true, border = true }: SecondSidebarProps) => {
+export const SecondSidebar = ({ inMobile, onClose }: SecondSidebarProps) => {
   const sidebar = useProjectStore.use.sidebar();
 
   return sidebar.first || sidebar.middle || sidebar.last ? (
@@ -221,13 +223,7 @@ export const SecondSidebar = ({ noMarg, noBg = true, border = true }: SecondSide
           <Text variant="label-strong-m">{sidebar.title}</Text>
         </Row>
       )}
-      <Column
-        gap="m"
-        position="relative"
-        background={noBg ? "transparent" : "surface"}
-        overflowX="hidden"
-        overflowY="auto"
-      >
+      <Column gap="m" position="relative" overflowX="hidden" overflowY="auto">
         <Column fill gap="s">
           {sidebar.first && (
             <RevealFx
@@ -262,7 +258,13 @@ const SidebarSmallButton = ({
   item,
   showFullSidebar,
   selected,
-}: { item: ProjectSidebarData; showFullSidebar: boolean; selected?: boolean }) => {
+  onClose,
+}: {
+  item: ProjectSidebarData;
+  showFullSidebar: boolean;
+  selected?: boolean;
+  onClose?: () => void;
+}) => {
   return (
     <Tooltip>
       <TooltipTrigger>
@@ -272,10 +274,13 @@ const SidebarSmallButton = ({
           href={item.href}
           justifyContent={showFullSidebar ? "flex-start" : "center"}
           selected={selected ?? false}
-          onClick={item.onClick}
+          onClick={onClose ?? item.onClick}
           disabled={item.disabled}
+          prefixIcon={showFullSidebar ? item.icon : undefined}
+          label={showFullSidebar && item.name}
+          className={cn({ " ": !showFullSidebar })}
         >
-          <Icon name={item.icon} />
+          {!showFullSidebar && <Icon name={item.icon} />}
         </ToggleButton>
       </TooltipTrigger>
       <TooltipContent side="right">{item.name}</TooltipContent>
