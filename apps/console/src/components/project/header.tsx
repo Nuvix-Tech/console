@@ -108,13 +108,23 @@ const MobileHeader = () => {
       >
         <Row fillWidth vertical="center" height="56" paddingX="8" borderBottom="neutral-medium">
           <Row gap="4" vertical="center">
-            <Logo wordmark={false} size="l" iconSrc="/trademark/nuvix.svg" />
+            <Logo
+              icon={false}
+              size="l"
+              className="is-only-dark"
+              wordmarkSrc="/trademark/nuvix-logo-dark.svg"
+            />
+            <Logo
+              icon={false}
+              size="l"
+              className="is-only-light"
+              wordmarkSrc="/trademark/nuvix-logo-light.svg"
+            />{" "}
           </Row>
           <Row fillWidth vertical="center" horizontal="end">
             <Row as="nav">
-              <Row>
-                <NavIcon isActive={isDrawerOpen} onClick={() => setIsDrawerOpen(!isDrawerOpen)} />
-              </Row>
+              <UserProfile avatarProps={{ size: "s" }} />
+              <NavIcon isActive={isDrawerOpen} onClick={() => setIsDrawerOpen(!isDrawerOpen)} />
             </Row>
           </Row>
         </Row>
@@ -128,9 +138,6 @@ const MobileHeader = () => {
             />
             <HeaderOrganization size="s" />
             <HeaderProject size="s" />
-          </Row>
-          <Row fillWidth vertical="center" horizontal="end" fillHeight>
-            <UserProfile avatarProps={{ size: "s" }} />
           </Row>
         </Row>
       </Column>

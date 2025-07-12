@@ -14,7 +14,7 @@ export default async function ({ children }: { children: React.ReactNode }) {
       <Header />
       <ProjectLayout>
         <Stack
-          className="top-[96px] ml:top-0 h-[calc(100%_-_96px)] ml:h-[calc(100%_-_64px)]"
+          className="top-[96px] ml:top-0 !h-[calc(100%_-_96px)] ml:!h-[calc(100%_-_64px)]"
           height={"full"}
           direction={"row"}
           position={"relative"}
