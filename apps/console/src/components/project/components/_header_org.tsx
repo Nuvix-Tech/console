@@ -19,7 +19,7 @@ import { useRouter } from "@bprogress/next";
 import { Models } from "@nuvix/console";
 import { useAppStore } from "@/lib/store";
 
-export function HeaderOrganization() {
+export function HeaderOrganization(props: React.ComponentProps<typeof Button>) {
   const organization = useAppStore.use.organization?.();
   const { organizations: orgApi } = sdkForConsole;
   const [orgs, setOrgs] = React.useState<Models.Organization<any>[]>();
@@ -45,6 +45,7 @@ export function HeaderOrganization() {
           justifyContent="flex-start"
           weight="default"
           suffixIcon={<ChevronsUpDown className="opacity-40" size={16} />}
+          {...props}
         >
           <span className="max-w-42 text-ellipsis overflow-hidden">
             {organization

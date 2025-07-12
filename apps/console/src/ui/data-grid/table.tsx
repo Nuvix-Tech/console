@@ -23,7 +23,7 @@ const TheTable = <T,>({ interactive = true, noResults }: Props) => {
     <Table.ScrollArea
       // borderWidth="1px"
       borderRadius={"md"}
-      width="full"
+      // width="full"
       bg={"bg.muted"}
     >
       <Table.Root

@@ -17,7 +17,7 @@ export const MainArea = ({
       asChild
       {...props}
     >
-      <Column radius="l" as={as} marginBottom="12">
+      <Column className="rounded-none md:rounded-(--radius-l)" as={as} marginBottom="12">
         <Column fill overflowY="auto">
           {children}
         </Column>

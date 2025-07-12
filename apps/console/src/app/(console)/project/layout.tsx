@@ -11,7 +11,7 @@ import { RightPanel } from "@/components/project/_right_panel";
 export default async function ({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <Header isProjectDash={true} />
+      <Header />
       <ProjectLayout>
         <Stack
           minHeight={"calc(100% - 64px)"}

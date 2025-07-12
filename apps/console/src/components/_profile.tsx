@@ -2,17 +2,19 @@ import { sdkForConsole } from "@/lib/sdk";
 import { useAppStore } from "@/lib/store";
 import { ThemeSwitcher } from "@/ui/ThemeSwitcher";
 import { UserMenu, Row, Option } from "@nuvix/ui/components";
+import React from "react";
 
-export function UserProfile() {
+export function UserProfile(props: Partial<React.ComponentProps<typeof UserMenu>>) {
   const user = useAppStore.use.user();
   const { avatars, account } = sdkForConsole;
 
   return (
     <Row position="relative" vertical="center">
       <UserMenu
-        // name={user?.name}
-        // subline={useAppStore.use.organization?.()?.name}
+        minWidth={12}
+        {...props}
         avatarProps={{
+          ...props.avatarProps,
           empty: !user,
           src: avatars.getInitials(user.name, 100, 100),
         }}
@@ -34,7 +36,6 @@ export function UserProfile() {
             </div>
           </>
         }
-        minWidth={12}
       />
     </Row>
   );

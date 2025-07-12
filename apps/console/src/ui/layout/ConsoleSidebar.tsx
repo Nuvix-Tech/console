@@ -5,9 +5,10 @@ import { useParams, usePathname } from "next/navigation";
 
 type Props = {
   inMobile?: boolean;
+  onClose?: () => void;
 };
 
-const ConsoleSidebar: React.FC<Props> = ({ inMobile }) => {
+const ConsoleSidebar: React.FC<Props> = ({ inMobile, onClose }) => {
   const pathname = usePathname() ?? "";
   const { id } = useParams<{ id: string }>();
 
@@ -20,6 +21,7 @@ const ConsoleSidebar: React.FC<Props> = ({ inMobile }) => {
       fillWidth
       fillHeight
       paddingY="8"
+      paddingTop={inMobile ? "40" : undefined}
       gap="xs"
       background="surface"
       role="navigation"
@@ -27,18 +29,26 @@ const ConsoleSidebar: React.FC<Props> = ({ inMobile }) => {
       overflowY="auto"
     >
       <Column fill gap="4" paddingBottom="40" paddingX="8">
-        <SidebarItem label="Projects" icon="projects" selected={isSelected()} href={href()} />
+        <SidebarItem
+          label="Projects"
+          icon="projects"
+          selected={isSelected()}
+          href={href()}
+          onClose={onClose}
+        />
         <SidebarItem
           label="Members"
           icon="members"
           selected={isSelected("members")}
           href={href("members")}
+          onClose={onClose}
         />
         <SidebarItem
           label="Usage"
           icon="usage"
           selected={isSelected("usage")}
           href={href("usage")}
+          onClose={onClose}
         />
 
         <SidebarItem
@@ -46,12 +56,14 @@ const ConsoleSidebar: React.FC<Props> = ({ inMobile }) => {
           icon="billing"
           selected={isSelected("billing")}
           href={href("billing")}
+          onClose={onClose}
         />
         <SidebarItem
           label="Settings"
           icon="settings"
           selected={isSelected("settings")}
           href={href("settings")}
+          onClose={onClose}
         />
       </Column>
     </Column>
@@ -65,9 +77,10 @@ type SidebarItemProps = {
   selected?: boolean;
   tag?: string;
   href?: string;
+  onClose: Props["onClose"];
 };
 
-const SidebarItem = ({ label, selected, icon, tag, href }: SidebarItemProps) => {
+const SidebarItem = ({ label, selected, icon, tag, href, onClose }: SidebarItemProps) => {
   return (
     <ToggleButton
       size="l"
@@ -78,6 +91,7 @@ const SidebarItem = ({ label, selected, icon, tag, href }: SidebarItemProps) => 
       aria-label={label}
       prefixIcon={icon}
       // className="!px-2"
+      onClick={onClose}
       href={href}
     >
       {label}

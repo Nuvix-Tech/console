@@ -9,19 +9,12 @@ import {
   DrawerContent,
   DrawerRoot,
 } from "@nuvix/cui/drawer";
-import { FirstSidebar, SecondSidebar } from "./sidebar";
-import { HeaderOrganization, HeaderProject } from "./components";
+import { HeaderOrganization, HeaderProject } from "../project/components";
 import { UserProfile } from "../_profile";
 import { useAppStore } from "@/lib/store";
+import { ConsoleSidebar } from "@/ui/layout/ConsoleSidebar";
 
-interface HeaderProps {
-  authenticated?: boolean;
-  avatar?: string;
-  name?: string;
-  subline?: string;
-}
-
-const Header: React.FC<HeaderProps> = () => {
+const ConsoleHeader: React.FC = () => {
   return (
     <>
       <DesktopHeader />
@@ -30,9 +23,9 @@ const Header: React.FC<HeaderProps> = () => {
   );
 };
 
-Header.displayName = "Header";
+ConsoleHeader.displayName = "Header";
 
-export { Header };
+export { ConsoleHeader };
 
 const DesktopHeader = () => {
   const organization = useAppStore.use.organization?.();
@@ -54,20 +47,29 @@ const DesktopHeader = () => {
         position="relative"
       >
         <Row
-          className="absolute left-0 -z-1"
+          className="absolute left-0 -z-1 hidden md:block"
           background="surface"
-          width={4}
+          width={14}
           height={"64"}
           as={"span"}
         />
         <Row marginLeft="8" marginRight="16">
-          <Logo wordmark={false} size="m" iconSrc="/trademark/nuvix.svg" />
+          <Logo
+            icon={false}
+            size="l"
+            className="is-only-dark"
+            wordmarkSrc="/trademark/nuvix-logo-dark.svg"
+          />
+          <Logo
+            icon={false}
+            size="l"
+            className="is-only-light"
+            wordmarkSrc="/trademark/nuvix-logo-light.svg"
+          />
         </Row>
-        <Row fillWidth vertical="center" horizontal="space-between">
+        <Row fillWidth vertical="center" horizontal="space-between" marginLeft={"80"}>
           <Row vertical="center" gap={"8"}>
             <HeaderOrganization />
-            <HeaderProject />
-            <Button variant="secondary">Connect</Button>
           </Row>
           <Row fillWidth vertical="center" horizontal="end" gap="12">
             <div className="flex items-center gap-3">
@@ -100,16 +102,25 @@ const MobileHeader = () => {
       <Column
         show="s"
         as="header"
-        // borderBottom="neutral-medium"
         position="fixed"
         fillWidth
         zIndex={10}
-        className={"h-24"}
-        background="surface"
+        className="!bg-secondary h-24 dark:!bg-(--neutral-background-weak)"
       >
-        <Row fillWidth vertical="center" height="48" paddingX="m" borderBottom="neutral-medium">
+        <Row fillWidth vertical="center" height="56" paddingX="8" borderBottom="neutral-medium">
           <Row gap="4" vertical="center">
-            <Logo wordmark={false} size="l" iconSrc="/trademark/nuvix.svg" />
+            <Logo
+              icon={false}
+              size="l"
+              className="is-only-dark"
+              wordmarkSrc="/trademark/nuvix-logo-dark.svg"
+            />
+            <Logo
+              icon={false}
+              size="l"
+              className="is-only-light"
+              wordmarkSrc="/trademark/nuvix-logo-light.svg"
+            />{" "}
           </Row>
           <Row fillWidth vertical="center" horizontal="end">
             <Row as="nav">
@@ -120,23 +131,12 @@ const MobileHeader = () => {
           </Row>
         </Row>
 
-        <Row fillWidth vertical="center" height="48" paddingX="m">
-          <Row gap="4" vertical="center">
-            <NavIcon
-              isActive={isSecondMenuOpen}
-              onClick={() => setIsSecondMenuOpen(!isSecondMenuOpen)}
-            />
-            <HeaderProject />
+        <Row fillWidth vertical="center" height="48" paddingX="8">
+          <Row gap="4" vertical="center" fillHeight>
+            <HeaderOrganization size="s" />
           </Row>
-          <Row fillWidth vertical="center" horizontal="end">
-            <Row as="nav">
-              <Row>
-                {/* <Avatar.Root size={'sm'}>
-                  <Avatar.Fallback name={user?.name} />
-                  <Avatar.Image src={avatars.getInitials(user?.name, 96, 96)} />
-                </Avatar.Root> */}
-              </Row>
-            </Row>
+          <Row fillWidth vertical="center" horizontal="end" fillHeight>
+            <UserProfile avatarProps={{ size: "s" }} />
           </Row>
         </Row>
       </Column>
@@ -144,24 +144,10 @@ const MobileHeader = () => {
       <DrawerRoot open={isDrawerOpen} onOpenChange={(e) => setIsDrawerOpen(e.open)}>
         <DrawerBackdrop />
         <DrawerContent>
-          <DrawerBody>
-            <FirstSidebar alwaysFull noBg border={false} />
+          <DrawerBody className="!p-0">
+            <ConsoleSidebar inMobile onClose={() => setIsDrawerOpen(false)} />
           </DrawerBody>
           <DrawerCloseTrigger top={1} right={1} />
-        </DrawerContent>
-      </DrawerRoot>
-
-      <DrawerRoot
-        open={isSecondMenuOpen}
-        onOpenChange={(e) => setIsSecondMenuOpen(e.open)}
-        placement="bottom"
-      >
-        <DrawerBackdrop />
-        <DrawerContent offset="4" rounded="md">
-          <DrawerBody className="h-full">
-            <SecondSidebar noBg noMarg border={false} />
-          </DrawerBody>
-          <DrawerCloseTrigger />
         </DrawerContent>
       </DrawerRoot>
     </>
