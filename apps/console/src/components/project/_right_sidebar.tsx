@@ -1,12 +1,14 @@
 "use client";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useAppStore } from "@/lib/store";
 import { Avatar } from "@nuvix/cui/avatar";
 import { cn } from "@nuvix/sui/lib/utils";
 import { Column, Icon, IconButton } from "@nuvix/ui/components";
 
 export const RightSidebar = () => {
-  const open = useAppStore.use.rightSidebarOpen();
-  const setOpen = useAppStore.use.setRightSidebarOpen();
+  const [open, setOpen] = useLocalStorage("right-sidebar", false);
+  // const open = useAppStore.use.rightSidebarOpen();
+  // const setOpen = useAppStore.use.setRightSidebarOpen();
 
   return (
     <Column
