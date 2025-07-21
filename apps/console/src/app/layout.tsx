@@ -9,12 +9,13 @@ import "@nuvix/sui/styles/datagrid.scss";
 import Providers from "@/components/providers";
 import classNames from "classnames";
 import type { Metadata } from "next";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 
 import { Column, Flex, ToastProvider } from "@nuvix/ui/components";
 import { Toaster } from "@nuvix/sui/components/sonner";
 import { baseURL, meta, og, schema, social, style } from "@nuvix/ui/resources/config";
 import { customFont, sourceCodePro } from "@nuvix/ui/fonts";
+import { COOKIES_KEYS } from "../lib/constants";
 
 /*
  */
@@ -70,7 +71,19 @@ const schemaData = {
   sameAs: Object.values(social).filter(Boolean),
 };
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({ children }: { children: React.ReactNode }) {
+  const _style = style;
+  const cookieStore = await cookies();
+
+  if (cookieStore.has(COOKIES_KEYS.PREFERENCE)) {
+    const cookie = cookieStore.get(COOKIES_KEYS.PREFERENCE)!;
+    try {
+      const cookieData = JSON.parse(cookie.value);
+      // TODO: validate data
+      _style.neutral = cookieData.neutral ?? style.neutral;
+    } catch {}
+  }
+
   return (
     <>
       <Flex
@@ -79,9 +92,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         lang="en"
         fillHeight
         background="page"
-        data-neutral={style.neutral}
+        data-neutral={_style.neutral}
         data-brand={style.brand}
-        data-accent={style.accent}
+        data-accent={_style.accent}
         data-border={style.border}
         data-solid={style.solid}
         data-solid-style={style.solidStyle}

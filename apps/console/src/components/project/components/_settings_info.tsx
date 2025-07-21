@@ -5,19 +5,14 @@ import {
   CardBoxItem,
   CardBoxTitle,
 } from "@/components/others/card";
-import {
-  ClipboardIconButton,
-  ClipboardInput,
-  ClipboardLabel,
-  ClipboardRoot,
-} from "@nuvix/cui/clipboard";
-import { InputGroup } from "@nuvix/cui/input-group";
+import { ClipboardInput, ClipboardLabel, ClipboardRoot } from "@nuvix/cui/clipboard";
 import { API_ENDPOINT } from "@/lib/constants";
 import { Button } from "@chakra-ui/react";
 import { useRouter } from "@bprogress/next";
 import React from "react";
 import { LuExternalLink } from "react-icons/lu";
 import { useProjectStore } from "@/lib/store";
+import { usePreference } from "@/hooks/usePreference";
 
 export const ProjectInfo: React.FC = () => {
   const project = useProjectStore.use.project?.();
@@ -45,16 +40,12 @@ export const ProjectInfo: React.FC = () => {
           <CardBoxItem direction="column" gap="8">
             <ClipboardRoot value={project?.$id}>
               <ClipboardLabel>Project ID</ClipboardLabel>
-              <InputGroup width="full" endElement={<ClipboardIconButton me="-2" />}>
-                <ClipboardInput />
-              </InputGroup>
+              <ClipboardInput />
             </ClipboardRoot>
 
             <ClipboardRoot value={API_ENDPOINT}>
               <ClipboardLabel>API Endpoint</ClipboardLabel>
-              <InputGroup width="full" endElement={<ClipboardIconButton me="-2" />}>
-                <ClipboardInput />
-              </InputGroup>
+              <ClipboardInput />
             </ClipboardRoot>
           </CardBoxItem>
         </CardBoxBody>
