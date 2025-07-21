@@ -57,7 +57,7 @@ const sdkForProject = {
   vcs: new Vcs(clientProject),
   proxy: new Proxy(clientProject),
   migrations: new Migrations(clientProject),
-  schema: new Schema(clientServerProject, SERVER_URL),
+  schema: new Schema(clientProject),
 };
 
 const projects = new Projects(clientServer);
