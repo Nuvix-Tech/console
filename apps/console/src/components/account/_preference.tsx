@@ -1,7 +1,12 @@
 "use client";
 
 import { PageContainer } from "../others";
+import { ThemeColor } from "./components";
 
 export const AccountPrefPage = () => {
-  return <PageContainer>kk</PageContainer>;
+  return (
+    <PageContainer>
+      <ThemeColor />
+    </PageContainer>
+  );
 };

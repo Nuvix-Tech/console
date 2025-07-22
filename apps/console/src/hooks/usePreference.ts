@@ -8,6 +8,21 @@ function updateHtmlAttribute(value: string) {
   }
 }
 
+function getPreferenceFromCookie() {
+  try {
+    const cookieValue = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("PREF_COOKIE="))
+      ?.split("=")[1];
+    if (cookieValue) {
+      return JSON.parse(decodeURIComponent(cookieValue));
+    }
+  } catch (e) {
+    console.error("Failed to parse preference cookie", e);
+  }
+  return {};
+}
+
 export function usePreference() {
   const setPref = ({ neutral }: { neutral: string }) => {
     const data = JSON.stringify({ neutral });
@@ -19,5 +34,5 @@ export function usePreference() {
     updateHtmlAttribute(neutral);
   };
 
-  return { setPref };
+  return { setPref, getPref: getPreferenceFromCookie };
 }
