@@ -59,14 +59,18 @@ export type { Models as _Models, Models as ModelsX };
 
 export class Schema {
   private client: Client;
+  private client2: Client
 
   private readonly namespace = "/databases/schemas" as const;
 
   private endpoint: string;
+  private endpoint2: string;
 
-  constructor(client: Client) {
+  constructor(client: Client, client2: Client) {
     this.client = client;
     this.endpoint = client.config.endpoint;
+    this.client2 = client2;
+    this.endpoint2 = client2.config.endpoint;
   }
 
   async list(): Promise<Models.SchemaList> {
@@ -149,7 +153,7 @@ export class Schema {
     headers?: Record<string, string>;
     payload?: any;
   }) {
-    const uri = new URL(this.endpoint + "/database" + path);
+    const uri = new URL(this.endpoint2 + "/database" + path);
     if (query) {
       for (const [key, value] of Object.entries(query)) {
         value && uri.searchParams.set(key, value.toString());
@@ -159,6 +163,6 @@ export class Schema {
       "content-type": "application/json",
       ...headers,
     };
-    return await this.client.call(method.toLowerCase(), uri, apiHeaders, payload);
+    return await this.client2.call(method.toLowerCase(), uri, apiHeaders, payload);
   }
 }
