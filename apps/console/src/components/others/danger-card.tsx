@@ -40,7 +40,7 @@ export function DangerCard(props: DangerCardProps) {
         </CardContent>
         {actions ? (
           <>
-            <CardFooter>{actions}</CardFooter>
+            <CardFooter className="justify-end">{actions}</CardFooter>
           </>
         ) : null}
       </Card>

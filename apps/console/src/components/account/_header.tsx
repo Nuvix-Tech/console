@@ -14,9 +14,10 @@ const AccountHeader: React.FC = () => {
         padding="8"
         height="64"
         minHeight="64"
-        background="surface"
+        background="neutral-medium"
         vertical="center"
         position="fixed"
+        borderBottom="neutral-alpha-medium"
         top="0"
       >
         <Row marginLeft="8" marginRight="16">

@@ -1,7 +1,7 @@
 "use client";
 
 import { PageContainer } from "../others";
-import { UpdateName, UpdateEmail, UpdatePassword, UpdateMfa } from "./components";
+import { UpdateName, UpdateEmail, UpdatePassword, UpdateMfa, DeleteAccount } from "./components";
 
 export const AccountPage = () => {
   return (
@@ -10,6 +10,7 @@ export const AccountPage = () => {
       <UpdateEmail />
       <UpdatePassword />
       <UpdateMfa />
+      <DeleteAccount />
     </PageContainer>
   );
 };
