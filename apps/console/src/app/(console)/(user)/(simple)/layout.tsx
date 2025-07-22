@@ -6,7 +6,14 @@ export default function ({ children }: { children: React.ReactNode }) {
   return (
     <>
       <AccountHeader />
-      <Stack direction={"column"} position="relative" as={"main"} gap={0} className="mt-16">
+      <Stack
+        direction={"column"}
+        position="relative"
+        as={"main"}
+        gap={0}
+        className="mt-16"
+        overflowY={"auto"}
+      >
         {children}
       </Stack>
     </>

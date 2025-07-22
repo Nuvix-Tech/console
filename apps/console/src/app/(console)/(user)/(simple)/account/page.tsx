@@ -1,3 +1,5 @@
+import { AccountPage } from "@/components/account";
+
 export default async function () {
-  return <>Something Beyond the world.</>;
+  return <AccountPage />;
 }
