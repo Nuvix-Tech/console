@@ -11,7 +11,7 @@ export default function ({ children }: { children: React.ReactNode }) {
         position="relative"
         as={"main"}
         gap={0}
-        className="mt-16 page-background"
+        className="mt-16 page-background h-full"
         overflowY={"auto"}
       >
         {children}

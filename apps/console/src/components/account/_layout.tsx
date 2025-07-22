@@ -2,9 +2,19 @@
 import { useAppStore } from "@/lib/store";
 import { Column, Row, Text, Button, SegmentedControl } from "@nuvix/ui/components";
 import { BodyWrapper } from "./_wrapper";
+import { usePathname } from "next/navigation";
 
 export const AccountLayout = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAppStore((s) => s);
+  const path = usePathname();
+  const selected = path?.split("/"); // /account/__path__
+
+  const routes = [
+    { value: "account", label: "Overview", href: "" },
+    { value: "preference", label: "Preference" },
+    { value: "sessions", label: "Sessions" },
+    { value: "organizations", label: "Organizations" },
+  ];
 
   return (
     <>
@@ -29,12 +39,12 @@ export const AccountLayout = ({ children }: { children: React.ReactNode }) => {
           </Row>
           <SegmentedControl
             fillWidth={false}
-            defaultSelected="overview"
-            buttons={[
-              { value: "overview", label: "Overview" },
-              { value: "sessions", label: "Sessions" },
-              { value: "organizations", label: "Organizations" },
-            ]}
+            defaultSelected={selected.length && selected[2] ? selected[2] : "account"}
+            buttons={routes.map((r) => ({
+              value: r.value,
+              label: r.label,
+              href: `/account/${r.href ?? r.value}`,
+            }))}
             onToggle={(value) => console.log(value)}
           />
         </BodyWrapper>
