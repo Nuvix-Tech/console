@@ -59,7 +59,7 @@ export type { Models as _Models, Models as ModelsX };
 
 export class Schema {
   private client: Client;
-  private client2: Client
+  private client2: Client;
 
   private readonly namespace = "/databases/schemas" as const;
 
