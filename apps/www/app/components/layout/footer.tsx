@@ -47,7 +47,7 @@ export const Footer = () => {
   ];
 
   return (
-    <footer className="bg-neutral-950 border-t border-neutral-800">
+    <footer className="neutral-background-alpha-weak border-t border-neutral-800">
       <div className="container mx-auto py-12 px-4">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
           {/* Logo and Description */}
