@@ -55,11 +55,9 @@ export const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="mt-4 text-base sm:text-lg text-neutral-300 max-w-3xl mx-auto text-center"
+            className="mt-4 text-base sm:text-lg text-neutral-200 max-w-2xl mx-auto text-center leading-relaxed"
           >
-            Nuvix combines databases, auth, storage, real-time messaging, and functions into one
-            unified API—engineered for speed, hardened for scale. Launch your backend in minutes
-            with enterprise-grade performance and security built-in.
+            Nuvix is a high-performance backend with Postgres at its core, offering ultimate data flexibility for any data shape. Get powerful auth, storage, messaging, and APIs to launch and scale effortlessly.
           </motion.p>
 
           {/* CTA Buttons */}
@@ -78,7 +76,7 @@ export const HeroSection = () => {
                        shadow-[0_0_20px_rgba(246,173,85,0.3)] hover:shadow-[0_0_25px_rgba(246,173,85,0.5)]
                        transition-all duration-300 hover:scale-105 text-white"
             >
-              Start Free
+              Join Waitlist
             </button>
 
             {/* <HoverBorderGradient containerClassName="rounded-xl" className="px-8 py-2.5 rounded-xl">
