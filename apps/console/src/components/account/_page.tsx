@@ -9,7 +9,7 @@ export const AccountPage = () => {
       <UpdateName />
       <UpdateEmail />
       <UpdatePassword />
-      <UpdateMfa />
+      {/* <UpdateMfa /> */}
       <DeleteAccount />
     </PageContainer>
   );
