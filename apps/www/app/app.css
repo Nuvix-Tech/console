@@ -1,4 +1,3 @@
-/* src/styles/fonts.css */
 @font-face {
   font-family: "CustomFont";
   src: url("/fonts/custom/CustomFont-Book.woff2") format("woff2");
@@ -56,6 +55,6 @@
 }
 
 :root {
-  --font-custom: "CustomFont", "Circular", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --custom-font: "CustomFont", "Circular", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-source-code-pro: "Source Code Pro", "Office Code Pro", Menlo, monospace;
 }

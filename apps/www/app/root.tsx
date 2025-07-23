@@ -32,7 +32,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       lang="en"
       className="dark"
       data-theme="dark"
-      data-neutral="gray"
+      data-neutral="custom"
       data-brand={"custom"}
       data-accent={"custom"}
       data-border={"rounded"}

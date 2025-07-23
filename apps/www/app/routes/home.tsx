@@ -3,8 +3,12 @@ import { Welcome } from "../welcome/welcome";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "Nuvix - Backend as a Service for Modern Applications" },
+    {
+      name: "description",
+      content:
+        "Nuvix is a powerful Backend as a Service (BaaS) platform that helps developers build scalable applications without managing infrastructure. Get started for free.",
+    },
   ];
 }
 
