@@ -87,37 +87,6 @@ export function NavMenu() {
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="bg-transparent">Services</NavigationMenuTrigger>
-          <NavigationMenuContent className="neutral-background-medium">
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-              {products.map((product) => (
-                <ListItem key={product.title} title={product.title} href={product.href}>
-                  {product.description}
-                </ListItem>
-              ))}
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger className="bg-transparent">Developers</NavigationMenuTrigger>
-          <NavigationMenuContent className="neutral-background-medium">
-            <ul className="grid gap-3 p-4 w-[400px]">
-              <ListItem title="Documentation" href="/docs">
-                Comprehensive guides and API references
-              </ListItem>
-              <ListItem title="Quickstart" href="/docs/quickstart">
-                Get up and running in 5 minutes
-              </ListItem>
-              <ListItem title="Examples" href="/examples">
-                Sample projects and code templates
-              </ListItem>
-              <ListItem title="SDK" href="/docs/sdk">
-                Client libraries for all major languages
-              </ListItem>
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
           <Link to="/pricing">
             <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "bg-transparent")}>
               Pricing
@@ -125,9 +94,9 @@ export function NavMenu() {
           </Link>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link to="/blog">
+          <Link to="/docs">
             <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "bg-transparent")}>
-              Blog
+              Docs
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>

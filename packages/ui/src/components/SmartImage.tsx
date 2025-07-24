@@ -1,10 +1,17 @@
 "use client";
 
-import Image from "next/image";
 import type React from "react";
 import { type CSSProperties, useEffect, useRef, useState } from "react";
 
 import { Flex, Skeleton } from "@nuvix/ui/components";
+
+let Image: any;
+
+try {
+  Image = (await import("next/image")).default;
+} catch {
+  Image = "img";
+}
 
 export interface SmartImageProps extends React.ComponentProps<typeof Flex> {
   aspectRatio?: string;

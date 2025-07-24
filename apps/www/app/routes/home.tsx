@@ -16,8 +16,8 @@ export default function Home() {
   return (
     <>
       <HeroSection />
-      <FeaturesSection />
       <FeaturedSection />
+      <FeaturesSection />
     </>
   );
 }

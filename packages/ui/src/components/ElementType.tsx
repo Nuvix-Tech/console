@@ -1,6 +1,6 @@
-import Link from "next/link";
 import type React from "react";
 import { type ReactNode, forwardRef } from "react";
+import { Link } from "../resources/link";
 
 interface ElementTypeProps {
   href?: string;
@@ -34,6 +34,7 @@ const ElementType = forwardRef<HTMLElement, ElementTypeProps>(
       return (
         <Link
           href={href}
+          to={href}
           ref={ref as React.Ref<HTMLAnchorElement>}
           className={className}
           style={style}

@@ -1,7 +1,7 @@
 "use client";
 
 import classNames from "classnames";
-import Link from "next/link";
+import { Link } from "../resources/link";
 import type React from "react";
 import { useEffect } from "react";
 import { Flex } from ".";

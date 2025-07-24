@@ -11,6 +11,7 @@ import {
   Code,
   Activity,
 } from "lucide-react";
+import { Text } from "@nuvix/ui/components";
 
 export function FeaturesSection() {
   // Animation variants
@@ -90,12 +91,12 @@ export function FeaturesSection() {
   return (
     <div className="py-24 container mx-auto">
       <div className="text-center mb-16">
-        <h2 className="text-4xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-orange-300">
+        <Text as="h2" variant="heading-default-xl">
           Powerful Backend Features
-        </h2>
-        <p className="max-w-2xl mx-auto text-lg text-neutral-300">
+        </Text>
+        <Text as="p" variant="body-default-s">
           Everything you need to build modern applications without managing infrastructure
-        </p>
+        </Text>
       </div>
 
       <motion.div
