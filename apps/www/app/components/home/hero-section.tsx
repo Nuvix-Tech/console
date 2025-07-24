@@ -1,15 +1,7 @@
-// import { HoverBorderGradient } from "components/ui/hover-border-gradient";
-// import { BackgroundGradient } from "components/ui/background-gradient";
-// import { TypewriterEffect } from "components/ui/typewriter-effect";
 import { motion } from "motion/react";
 import { Spotlight } from "~/ui/spotlight-new";
 
 export const HeroSection = () => {
-  const words = [
-    { text: "Built", className: "dark:text-orange-400" },
-    { text: "for", className: "dark:text-blue-300" },
-    { text: "Speed.", className: "dark:text-orange-500" },
-  ];
 
   return (
     <div className="h-[40rem] w-full rounded-md flex flex-col items-center justify-center antialiased bg-grid relative overflow-hidden px-4">
@@ -42,7 +34,6 @@ export const HeroSection = () => {
             transition={{ duration: 0.7, delay: 0.2 }}
             className="text-center"
           >
-            {/* <TypewriterEffect words={words} /> */}
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-medium bg-clip-text text-transparent bg-gradient-to-b from-foreground to-orange-500 py-4">
               You build the product.
               <br className="hidden sm:block" />
@@ -68,7 +59,7 @@ export const HeroSection = () => {
             className="mt-6 flex flex-col sm:flex-row gap-4 sm:gap-8 justify-center items-center"
           >
             <button
-              className="relative overflow-hidden rounded-xl px-8 py-2.5 font-medium 
+              className="relative overflow-hidden cursor-pointer rounded-xl px-8 py-2.5 font-medium 
                        bg-gradient-to-r from-orange-500 to-amber-600 
                        before:absolute before:inset-0 before:bg-gradient-to-r 
                        before:from-amber-500 before:to-orange-600 before:opacity-0
