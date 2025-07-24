@@ -11,6 +11,9 @@ import { Toaster } from "@nuvix/sui/components/sonner";
 import { baseURL, meta, og, schema, social, style } from "@nuvix/ui/resources/config";
 import { customFont, sourceCodePro } from "@nuvix/ui/fonts";
 import { cn } from "@nuvix/sui/lib/utils";
+import { MetaProvider } from "@nuvix/ui/contexts";
+import Link from "next/link";
+import Image from "next/image";
 
 /*
  */
@@ -86,19 +89,21 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         data-scaling={style.scaling}
         className={cn(customFont.variable, sourceCodePro.variable)}
       >
-        <ToastProvider>
-          <Column
-            suppressHydrationWarning
-            as="body"
-            fillWidth
-            margin="0"
-            position="relative"
-            padding="0"
-          >
-            <Providers>{children}</Providers>
-            <Toaster />
-          </Column>
-        </ToastProvider>
+        <MetaProvider link={Link} img={Image}>
+          <ToastProvider>
+            <Column
+              suppressHydrationWarning
+              as="body"
+              fillWidth
+              margin="0"
+              position="relative"
+              padding="0"
+            >
+              <Providers>{children}</Providers>
+              <Toaster />
+            </Column>
+          </ToastProvider>
+        </MetaProvider>
       </Flex>
     </>
   );

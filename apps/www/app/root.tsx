@@ -12,6 +12,8 @@ import "./app.css";
 import "@nuvix/ui/styles/index.scss";
 import "@nuvix/ui/tokens/index.scss";
 import "@nuvix/sui/globals.css";
+import { MetaProvider } from "@nuvix/ui/contexts";
+import { Link } from "react-router";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -48,11 +50,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body className="page-background">
-        {children}
-        <ScrollRestoration />
-        <Scripts />
-      </body>
+      <MetaProvider link={Link} img="img">
+        <body className="page-background">
+          {children}
+          <ScrollRestoration />
+          <Scripts />
+        </body>
+      </MetaProvider>
     </html>
   );
 }

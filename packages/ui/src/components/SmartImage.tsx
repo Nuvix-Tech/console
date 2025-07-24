@@ -4,14 +4,7 @@ import type React from "react";
 import { type CSSProperties, useEffect, useRef, useState } from "react";
 
 import { Flex, Skeleton } from "@nuvix/ui/components";
-
-let Image: any;
-
-try {
-  Image = (await import("next/image")).default;
-} catch {
-  Image = "img";
-}
+import { useMeta } from "../contexts";
 
 export interface SmartImageProps extends React.ComponentProps<typeof Flex> {
   aspectRatio?: string;
@@ -39,6 +32,7 @@ const SmartImage: React.FC<SmartImageProps> = ({
   sizes = "100vw",
   ...rest
 }) => {
+  const { img: Image } = useMeta();
   const [isEnlarged, setIsEnlarged] = useState(false);
   const imageRef = useRef<HTMLDivElement>(null);
 

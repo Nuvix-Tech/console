@@ -1,6 +1,6 @@
 import type React from "react";
 import { type ReactNode, forwardRef } from "react";
-import { Link } from "../resources/link";
+import { useMeta } from "../contexts";
 
 interface ElementTypeProps {
   href?: string;
@@ -14,6 +14,7 @@ const isExternalLink = (url: string) => /^https?:\/\//.test(url);
 
 const ElementType = forwardRef<HTMLElement, ElementTypeProps>(
   ({ href, children, className, style, ...props }, ref) => {
+    const { link: Link } = useMeta();
     if (href) {
       const isExternal = isExternalLink(href);
       if (isExternal) {

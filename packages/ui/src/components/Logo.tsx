@@ -1,12 +1,12 @@
 "use client";
 
 import classNames from "classnames";
-import { Link } from "../resources/link";
 import type React from "react";
 import { useEffect } from "react";
 import { Flex } from ".";
 import type { SpacingToken } from "../types";
 import styles from "./Logo.module.scss";
+import { useMeta } from "../contexts";
 
 const sizeMap: Record<string, SpacingToken> = {
   xs: "20",
@@ -38,6 +38,8 @@ const Logo: React.FC<LogoProps> = ({
   style,
   ...props
 }) => {
+  const { link: Link } = useMeta();
+
   useEffect(() => {
     if (!icon && !wordmark) {
       console.warn(

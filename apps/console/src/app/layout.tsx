@@ -16,6 +16,9 @@ import { Toaster } from "@nuvix/sui/components/sonner";
 import { baseURL, meta, og, schema, social, style } from "@nuvix/ui/resources/config";
 import { customFont, sourceCodePro } from "@nuvix/ui/fonts";
 import { COOKIES_KEYS } from "../lib/constants";
+import { MetaProvider } from "@nuvix/ui/contexts";
+import Link from "next/link";
+import Image from "next/image";
 
 /*
  */
@@ -112,21 +115,23 @@ export default async function Layout({ children }: { children: React.ReactNode }
             }}
           />
         </head>
-        <ToastProvider>
-          <Column
-            suppressHydrationWarning
-            as="body"
-            fillWidth
-            margin="0"
-            padding="0"
-            background="page"
-          >
-            <Providers>
-              {children}
-              <Toaster />
-            </Providers>
-          </Column>
-        </ToastProvider>
+        <MetaProvider link={Link} img={Image}>
+          <ToastProvider>
+            <Column
+              suppressHydrationWarning
+              as="body"
+              fillWidth
+              margin="0"
+              padding="0"
+              background="page"
+            >
+              <Providers>
+                {children}
+                <Toaster />
+              </Providers>
+            </Column>
+          </ToastProvider>
+        </MetaProvider>
       </Flex>
     </>
   );
