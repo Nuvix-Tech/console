@@ -1,5 +1,5 @@
-import { motion } from "framer-motion";
-import { TypewriterEffect } from "components/ui/typewriter-effect";
+import { motion } from "motion/react";
+// import { TypewriterEffect } from "components/ui/typewriter-effect";
 
 export const CtaSection = () => {
   const words = [
@@ -41,7 +41,7 @@ export const CtaSection = () => {
             transition={{ duration: 0.6 }}
             className="mb-6 mx-auto"
           >
-            <TypewriterEffect words={words} className="text-4xl md:text-5xl font-bold" />
+            {/* <TypewriterEffect words={words} className="text-4xl md:text-5xl font-bold" /> */}
           </motion.div>
 
           <motion.p

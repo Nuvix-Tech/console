@@ -1,6 +1,6 @@
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { Check, HelpCircle } from "lucide-react";
-import { Tooltip } from "~/components/ui/tooltip-wrapper";
+import { Tooltip } from "@nuvix/sui/components/tooltip";
 
 export const PricingSection = () => {
   // Animation variants
@@ -144,11 +144,11 @@ export const PricingSection = () => {
                 <li key={i} className="flex items-start">
                   <Check className="min-w-4 h-4 text-green-500 mr-2 mt-1" />
                   <span className="text-neutral-300">{feature}</span>
-                  {feature.includes("SLA") && (
+                  {/* {feature.includes("SLA") && (
                     <Tooltip content="Service Level Agreement guaranteeing uptime">
                       <HelpCircle className="w-4 h-4 text-neutral-400 ml-1 cursor-help" />
                     </Tooltip>
-                  )}
+                  )} */}
                 </li>
               ))}
             </ul>

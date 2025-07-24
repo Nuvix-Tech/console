@@ -1,5 +1,5 @@
-import { GlowingEffect } from "components/ui/glowing-effect";
-import { motion } from "framer-motion";
+import { GlowingEffect } from "~/ui/glowing-effect";
+import { motion } from "motion/react";
 
 export const FeaturedSection = () => {
   return (
@@ -23,7 +23,11 @@ export const FeaturedSection = () => {
               inactiveZone={0.01}
             />
             <div className="rounded md:rounded-[12px] overflow-hidden">
-              <img src="/assets/dashboard.png" alt="Nuvix Dashboard" className="w-full" />
+              <img
+                src="/images/dashboard/hero_default.png"
+                alt="Nuvix Dashboard"
+                className="w-full"
+              />
             </div>
           </div>
         </div>
