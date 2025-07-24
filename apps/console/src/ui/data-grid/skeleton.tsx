@@ -5,7 +5,10 @@ import { HStack, Skeleton, Stack } from "@chakra-ui/react";
 export const DataGridSkeleton = ({
   loading = true,
   variant = "pulse",
-}: { loading?: boolean; variant?: "pulse" | "shine" }) => {
+}: {
+  loading?: boolean;
+  variant?: "pulse" | "shine";
+}) => {
   return (
     loading && (
       <Stack gap="8">

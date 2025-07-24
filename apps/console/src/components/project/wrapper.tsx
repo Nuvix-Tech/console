@@ -8,7 +8,10 @@ import { UploadProvider } from "@/ui/uploader";
 export default function ProjectWrapper({
   children,
   id,
-}: { children: React.ReactNode; id: string }) {
+}: {
+  children: React.ReactNode;
+  id: string;
+}) {
   const { projects, organizations } = sdkForConsole;
 
   const setOrganization = useAppStore.use.setOrganization();

@@ -40,7 +40,11 @@ const ProviderCard = ({
   _key,
   provider,
   theme,
-}: { provider: Provider; theme: string; _key: string }) => {
+}: {
+  provider: Provider;
+  theme: string;
+  _key: string;
+}) => {
   const { project, setProject } = useProjectStore((s) => s);
   const [open, setOpen] = useState(false);
   const { addToast } = useToast();

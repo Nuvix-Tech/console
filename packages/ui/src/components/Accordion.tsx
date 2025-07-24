@@ -49,19 +49,15 @@ const Accordion = forwardRef<AccordionHandle, AccordionProps>(
       setIsOpen((prev) => !prev);
     }, []);
 
-    useImperativeHandle(
-      ref,
-      () => {
-        const methods = {
-          toggle: toggleAccordion,
-          open: () => setIsOpen(true),
-          close: () => setIsOpen(false),
-        };
+    useImperativeHandle(ref, () => {
+      const methods = {
+        toggle: toggleAccordion,
+        open: () => setIsOpen(true),
+        close: () => setIsOpen(false),
+      };
 
-        return Object.assign(document.createElement("div"), methods) as unknown as AccordionHandle;
-      },
-      [toggleAccordion],
-    );
+      return Object.assign(document.createElement("div"), methods) as unknown as AccordionHandle;
+    }, [toggleAccordion]);
 
     return (
       <Column fillWidth>

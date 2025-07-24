@@ -24,13 +24,7 @@ const pgPublicationOptionalZod = z.optional(pgPublicationZod);
 
 export type PGPublication = z.infer<typeof pgPublicationZod>;
 
-function list({
-  limit,
-  offset,
-}: {
-  limit?: number;
-  offset?: number;
-} = {}): {
+function list({ limit, offset }: { limit?: number; offset?: number } = {}): {
   sql: string;
   zod: typeof pgPublicationArrayZod;
 } {

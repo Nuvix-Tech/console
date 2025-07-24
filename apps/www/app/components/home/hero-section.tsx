@@ -2,7 +2,6 @@ import { motion } from "motion/react";
 import { Spotlight } from "~/ui/spotlight-new";
 
 export const HeroSection = () => {
-
   return (
     <div className="h-[40rem] w-full rounded-md flex flex-col items-center justify-center antialiased bg-grid relative overflow-hidden px-4">
       <Spotlight
@@ -48,7 +47,9 @@ export const HeroSection = () => {
             transition={{ duration: 0.5, delay: 0.4 }}
             className="mt-4 text-base sm:text-lg text-neutral-200 max-w-2xl mx-auto text-center leading-relaxed"
           >
-            Nuvix is a high-performance backend with Postgres at its core, offering ultimate data flexibility for any data shape. Get powerful auth, storage, messaging, and APIs to launch and scale effortlessly.
+            Nuvix is a high-performance backend with Postgres at its core, offering ultimate data
+            flexibility for any data shape. Get powerful auth, storage, messaging, and APIs to
+            launch and scale effortlessly.
           </motion.p>
 
           {/* CTA Buttons */}

@@ -10,7 +10,10 @@ import { PlusIcon, XIcon } from "lucide-react";
 export const TopicsSelector = ({
   type,
   onSave,
-}: { type: MessagingProviderType; onSave: (values: string[]) => void }) => {
+}: {
+  type: MessagingProviderType;
+  onSave: (values: string[]) => void;
+}) => {
   const { sdk } = useProjectStore((state) => state);
   const [topicsById, setTopicsById] = useState<Record<string, Models.Topic>>({});
 

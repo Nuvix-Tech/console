@@ -5,11 +5,7 @@ import { useEffect } from "react";
 import { useProjectStore } from "@/lib/store";
 import { useSidebarHref } from "@/hooks/useSidebarHref";
 
-function Wrapper({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function Wrapper({ children }: { children: React.ReactNode }) {
   const setSidebar = useProjectStore.use.setSidebar?.();
   const { href, isEqual } = useSidebarHref({ prefix: "authentication" });
 

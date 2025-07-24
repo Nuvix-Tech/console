@@ -122,15 +122,7 @@ export const TopMeta = () => {
   );
 };
 
-const PreviewFile = ({
-  url,
-  name,
-  link,
-}: {
-  url: string;
-  name: string;
-  link: string;
-}) => {
+const PreviewFile = ({ url, name, link }: { url: string; name: string; link: string }) => {
   return (
     <Stack
       justifyContent={"center"}

@@ -177,11 +177,7 @@ export const saveTableEditorStateToLocalStorageDebounced = AwesomeDebouncePromis
   500,
 );
 
-function useUrlState({
-  arrayKeys,
-}: {
-  arrayKeys: string[];
-}): {
+function useUrlState({ arrayKeys }: { arrayKeys: string[] }): {
   setParams: (params: Record<string, any>) => void;
 } {
   const params = useSearchParams();

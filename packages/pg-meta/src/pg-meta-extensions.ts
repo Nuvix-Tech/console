@@ -15,13 +15,7 @@ const pgExtensionOptionalZod = z.optional(pgExtensionZod);
 
 export type PGExtension = z.infer<typeof pgExtensionZod>;
 
-function list({
-  limit,
-  offset,
-}: {
-  limit?: number;
-  offset?: number;
-} = {}): {
+function list({ limit, offset }: { limit?: number; offset?: number } = {}): {
   sql: string;
   zod: typeof pgExtensionArrayZod;
 } {

@@ -5,13 +5,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { DeleteFile, TopMeta, UpdatePermissions } from "./components";
 
-export const FilePage = ({
-  bucketId,
-  fileId,
-}: {
-  bucketId: string;
-  fileId: string;
-}) => {
+export const FilePage = ({ bucketId, fileId }: { bucketId: string; fileId: string }) => {
   const sdk = useProjectStore.use.sdk();
   const setFile = useFileStore.use.setFile();
   const setRefresh = useFileStore.use.setRefresh();

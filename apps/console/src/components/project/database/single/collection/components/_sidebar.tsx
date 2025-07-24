@@ -107,7 +107,10 @@ const CollectionsSiderbar = () => {
 const Collections = ({
   collections,
   isPending,
-}: { collections?: Models.Collection[]; isPending: boolean }) => {
+}: {
+  collections?: Models.Collection[];
+  isPending: boolean;
+}) => {
   const selectedCollection = useCollectionStore.use.collection?.();
   const database = useDatabaseStore.use.database?.();
   const project = useProjectStore.use.project?.();

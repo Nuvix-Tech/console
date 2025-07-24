@@ -2,11 +2,7 @@
 import { useProjectStore } from "@/lib/store";
 import { useEffect } from "react";
 
-export function StorageLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function StorageLayout({ children }: { children: React.ReactNode }) {
   const setSideBar = useProjectStore.use.setSidebar();
 
   useEffect(() => {

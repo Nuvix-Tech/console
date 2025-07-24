@@ -7,7 +7,10 @@ import { Footer } from "@/components/footer";
 export default async function ({
   children,
   params,
-}: { children: React.ReactNode; params: Promise<{ id: string }> }) {
+}: {
+  children: React.ReactNode;
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
 
   return (

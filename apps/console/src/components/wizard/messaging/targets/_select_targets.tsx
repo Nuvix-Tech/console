@@ -10,7 +10,10 @@ import { PlusIcon, XIcon } from "lucide-react";
 export const TargetsSelector = ({
   type,
   onSave,
-}: { type: MessagingProviderType; onSave: (values: string[]) => void }) => {
+}: {
+  type: MessagingProviderType;
+  onSave: (values: string[]) => void;
+}) => {
   const { sdk } = useProjectStore((state) => state);
   const [targetsById, setTargetsById] = useState<Record<string, Models.Target>>({});
 

@@ -25,13 +25,7 @@ const pgConfigZod = z.object({
 
 const pgConfigArrayZod = z.array(pgConfigZod);
 
-function list({
-  limit,
-  offset,
-}: {
-  limit?: number;
-  offset?: number;
-} = {}): {
+function list({ limit, offset }: { limit?: number; offset?: number } = {}): {
   sql: string;
   zod: typeof pgConfigArrayZod;
 } {

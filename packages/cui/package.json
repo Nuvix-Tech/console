@@ -21,7 +21,7 @@
     "@types/react-dom": "^19",
     "tailwindcss": "^4.0.8",
     "typescript": "^5.7.3",
-    "react": "^19.1.0"
+    "react": "^19.0.0"
   },
   "exports": {
     "./*": "./src/components/**/*.tsx"
