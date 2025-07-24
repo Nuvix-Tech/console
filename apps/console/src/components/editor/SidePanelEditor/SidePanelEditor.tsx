@@ -54,6 +54,7 @@ import { useTableEditorFiltersSort } from "@/hooks/useTableEditorFilterSort";
 import ConfirmationModal from "../components/_confim_dialog";
 import { useParams } from "next/navigation";
 import { PostgresTable } from "@nuvix/pg-meta";
+import { SonnerProgress } from "@nuvix/sui/components/sooner-progress";
 
 export interface SidePanelEditorProps {
   editable?: boolean;
@@ -547,11 +548,10 @@ const SidePanelEditor = ({
         (progress: number) => {
           toast.loading(
             <>
-              SONNER PROGRESS {progress}
-              {/* <SonnerProgress
-              progress={progress}
-              message={`Adding ${rowCount.toLocaleString()} rows to ${selectedTable.name}`}
-            /> */}
+              <SonnerProgress
+                progress={progress}
+                message={`Adding ${rowCount.toLocaleString()} rows to ${selectedTable.name}`}
+              />
             </>,
             { id: toastId },
           );
@@ -572,12 +572,12 @@ const SidePanelEditor = ({
         (progress: number) => {
           toast.loading(
             <>
-              SoNNER PROGRESS {progress}
-              {/* <SonnerProgress
-              progress={progress}
-              message={`Adding ${importContent.rows.length.toLocaleString()} rows to ${selectedTable.name
+              <SonnerProgress
+                progress={progress}
+                message={`Adding ${importContent.rows.length.toLocaleString()} rows to ${
+                  selectedTable.name
                 }`}
-            /> */}
+              />
             </>,
             { id: toastId },
           );
