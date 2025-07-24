@@ -1,4 +1,4 @@
-import { Column, Row, Skeleton } from "@nuvix/ui/components";
+import { Column } from "@nuvix/ui/components";
 import { LoaderIcon } from "lucide-react";
 
 export function ListPageSkeleton() {

@@ -121,8 +121,10 @@ export default async function Layout({ children }: { children: React.ReactNode }
             padding="0"
             background="page"
           >
-            <Providers>{children}</Providers>
-            <Toaster />
+            <Providers>
+              {children}
+              <Toaster />
+            </Providers>
           </Column>
         </ToastProvider>
       </Flex>
