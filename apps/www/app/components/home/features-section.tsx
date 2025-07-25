@@ -1,12 +1,11 @@
 "use client";
-import {
-  Route,
-} from "lucide-react";
+import { Route } from "lucide-react";
 import { Column, GlitchFx, Icon, Row, Text, type IconProps } from "@nuvix/ui/components";
 import { GlowingEffect } from "~/ui/glowing-effect";
 import { cn } from "@nuvix/sui/lib/utils";
 import { Authentication } from "./features/auth";
 import { Storage } from "./features/storage";
+import { Messaging } from "./features/messaging";
 
 export function FeaturesSection() {
   return (
@@ -55,6 +54,7 @@ export function FeaturesSection() {
           icon="messaging"
           title="Messaging"
           description="Set up a full-functioning messaging service that covers multiple channels under one unified platform"
+          extra={<Messaging />}
         />
         <GridItem
           area="col-span-1 md:col-span-3 md:row-start-2 md:row-end-4"
@@ -83,11 +83,11 @@ export function FeaturesSection() {
 
 interface GridItemProps {
   area: string;
-  icon: IconProps['name'];
+  icon: IconProps["name"];
   title: string;
   description: React.ReactNode;
   wide?: boolean;
-  extra?: React.ReactNode
+  extra?: React.ReactNode;
 }
 
 const GridItem = ({ area, icon, title, description, wide, extra }: GridItemProps) => {
@@ -102,17 +102,17 @@ const GridItem = ({ area, icon, title, description, wide, extra }: GridItemProps
           inactiveZone={0.01}
         />
         <div className="border-0.75 relative flex h-full flex-col justify-between gap-6 overflow-hidden rounded-lg p-6 md:p-6 neutral-background-alpha-weak">
-          <div className={cn("relative flex flex-1 flex-col gap-3", {
-            "flex-row": wide
-          })}>
+          <div
+            className={cn("relative flex flex-1 flex-col gap-3", {
+              "flex-row": wide,
+            })}
+          >
             <Column gap="16">
               <Row gap="8" vertical="center">
                 <Icon name={icon} border="brand-alpha-weak" radius="l" className="p-2" />
-                <Text variant="label-strong-m" >
-                  {title}
-                </Text>
+                <Text variant="label-strong-m">{title}</Text>
               </Row>
-              <Text variant="body-default-m" onBackground="neutral-weak" >
+              <Text variant="body-default-m" onBackground="neutral-weak">
                 {description}
               </Text>
             </Column>
