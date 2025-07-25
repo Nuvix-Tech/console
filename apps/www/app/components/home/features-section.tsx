@@ -1,11 +1,12 @@
 "use client";
-import { motion } from "motion/react";
 import {
   Route,
 } from "lucide-react";
-import { Button, Column, Icon, Input, PasswordInput, Row, Text, type IconProps } from "@nuvix/ui/components";
+import { Column, GlitchFx, Icon, Row, Text, type IconProps } from "@nuvix/ui/components";
 import { GlowingEffect } from "~/ui/glowing-effect";
 import { cn } from "@nuvix/sui/lib/utils";
+import { Authentication } from "./features/auth";
+import { Storage } from "./features/storage";
 
 export function FeaturesSection() {
   return (
@@ -27,14 +28,18 @@ export function FeaturesSection() {
           title="Postgres Database"
           description="Every project comes with a fully managed Postgres database."
           wide
-          extra={<img className="object-fit size-78" src="/images/services/postgre.svg" />}
+          extra={
+            <GlitchFx speed="slow">
+              <img className="object-fit size-78" src="/images/services/postgre.svg" />
+            </GlitchFx>
+          }
         />
         <GridItem
           area="col-span-1 md:col-span-4 md:row-span-1"
           icon="authentication"
           title="Authentication"
           description="Secure user authentication with social logins, multi-factor auth, and custom auth flows."
-          extra={<AuthenticationImage />}
+          extra={<Authentication />}
         />
 
         {/* Second row: three columns, third is tall */}
@@ -43,6 +48,7 @@ export function FeaturesSection() {
           icon="storage"
           title="Storage"
           description="Store and serve files with automatic CDN distribution and access control."
+          extra={<Storage />}
         />
         <GridItem
           area="col-span-1 md:col-span-4 md:row-start-2 md:row-span-1"
@@ -117,39 +123,3 @@ const GridItem = ({ area, icon, title, description, wide, extra }: GridItemProps
     </li>
   );
 };
-
-
-const AuthenticationImage = () => (
-  <motion.div className="mx-auto w-78">
-    <Column radius="l" borderWidth={2} border="accent-alpha-weak" className="h-48 p-2 gap-2 overflow-hidden -ml-5 mr-5" background="neutral-alpha-weak">
-      <Input height="s" readOnly label="user@example.com" labelAsPlaceholder />
-      <PasswordInput height="s" readOnly label="********" labelAsPlaceholder />
-      <Button
-        variant="primary"
-        size="s"
-        fillWidth
-        className="mt-2"
-      >
-        Sign In
-      </Button>
-      <Row gap="4" vertical="center" className="text-xs">
-        <Text onBackground="neutral-weak" className="mx-auto" variant="label-default-xs">OR</Text>
-      </Row>
-      <Button
-        variant="secondary"
-        size="s"
-        className="mt-2 !absolute bottom-0 right-0 !bg-transparent backdrop-blur-md"
-        prefixIcon="google"
-        weight="default"
-      >
-        Sign in with google
-      </Button>
-    </Column>
-  </motion.div>
-);
-
-const StorageImage = () => (
-  <motion.div>
-
-  </motion.div>
-)
