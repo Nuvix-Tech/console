@@ -62,6 +62,7 @@ import {
   TbMail,
   TbMessages,
   TbNotification,
+  TbLayersDifference,
 } from "react-icons/tb";
 
 export const iconMap = {
@@ -105,6 +106,7 @@ export const iconMap = {
   runner: TbTerminal,
   authentication: TbUsersGroup,
   functions: TbLambda,
+  nuvixSchemas: TbLayersDifference,
   // File type icons
   image: LucideImage,
   document: LucideFileText,

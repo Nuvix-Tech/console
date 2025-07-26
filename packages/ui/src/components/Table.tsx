@@ -51,7 +51,7 @@ function Table({ data, onRowClick, ...flex }: TableProps) {
   const headers = data.headers.map((header, index) => (
     <th
       style={{ textAlign: "left", borderBottom: "1px solid var(--neutral-alpha-medium)" }}
-      className="px-16 py-12 font-label font-default font-s"
+      className="rpx-16 rpy-12 font-label font-default font-s"
       key={index}
     >
       <Row gap="8" vertical="center">
@@ -88,7 +88,7 @@ function Table({ data, onRowClick, ...flex }: TableProps) {
       style={onRowClick ? { transition: "background-color 0.2s ease" } : undefined}
     >
       {row.map((cell, cellIndex) => (
-        <td className="px-16 py-12 font-body font-default font-s" key={cellIndex}>
+        <td className="rpx-16 rpy-12 font-body font-default font-s" key={cellIndex}>
           {cell}
         </td>
       ))}
@@ -118,7 +118,7 @@ function Table({ data, onRowClick, ...flex }: TableProps) {
             rows
           ) : (
             <tr>
-              <td colSpan={headers.length} className="px-24 py-12 font-body font-default font-s">
+              <td colSpan={headers.length} className="rpx-24 rpy-12 font-body font-default font-s">
                 No data available
               </td>
             </tr>

@@ -89,8 +89,7 @@ export function Messaging({ className }: { className?: string }) {
         gradientStopColor="var(--brand-on-background-weak)"
         fromRef={div6Ref}
         toRef={div7Ref}
-        duration={9}
-        delay={1}
+        duration={3}
       />
     </div>
   );

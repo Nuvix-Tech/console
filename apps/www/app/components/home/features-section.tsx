@@ -8,19 +8,11 @@ import { Storage } from "./features/storage";
 import { Messaging } from "./features/messaging";
 import { DataAPIs } from "./features/apis";
 import { Vector } from "./features/vector";
+import { Schemas } from "./features/schemas";
 
 export function FeaturesSection() {
   return (
-    <div className="py-24 container mx-auto">
-      <div className="text-center mb-16">
-        <Text as="h2" variant="display-default-m">
-          All the products you need, <br /> in one platform
-        </Text>
-        <Text as="p" variant="body-default-m" onBackground="neutral-weak" className="mt-4">
-          Everything you need to build modern applications without managing infrastructure
-        </Text>
-      </div>
-
+    <div className="pb-24 container mx-auto">
       <ul className="grid grid-cols-1 gap-4 md:grid-cols-10 md:grid-rows-3">
         {/* First row: two columns, first 60%, second 40% */}
         <GridItem
@@ -60,9 +52,10 @@ export function FeaturesSection() {
         />
         <GridItem
           area="col-span-1 md:col-span-3 md:row-start-2 md:row-end-4"
-          icon="code"
-          title="Three Type Schemas"
-          description="I'm writing the code as I record this, no shit."
+          icon="nuvixSchemas"
+          title="Flexible Schema Engine"
+          description={<>Choose between <Text onBackground="neutral-strong">Document</Text>, <Text onBackground="neutral-strong">Managed</Text>, and <Text onBackground="neutral-strong">Unmanaged</Text> schemas - designed for full control, flexibility, and native PostgreSQL performance.</>}
+          extra={<Schemas />}
         />
 
         {/* Third row: two more items in remaining space */}
