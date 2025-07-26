@@ -1,6 +1,6 @@
 "use client";
 import { Route } from "lucide-react";
-import { Column, GlitchFx, Icon, Row, Text, type IconProps } from "@nuvix/ui/components";
+import { Column, GlitchFx, Icon, Mask, Row, Text, type IconProps } from "@nuvix/ui/components";
 import { GlowingEffect } from "~/ui/glowing-effect";
 import { cn } from "@nuvix/sui/lib/utils";
 import { Authentication } from "./features/auth";
@@ -10,6 +10,7 @@ import { DataAPIs } from "./features/apis";
 import { Vector } from "./features/vector";
 import { Schemas } from "./features/schemas";
 import { Link } from "react-router";
+import type React from "react";
 
 export function FeaturesSection() {
   return (
@@ -23,9 +24,25 @@ export function FeaturesSection() {
           description="Every project comes with a fully managed Postgres database."
           wide
           extra={
-            <GlitchFx speed="slow" className="!hidden md:!block">
-              <img className="object-fit size-78" src="/images/services/postgre.svg" />
-            </GlitchFx>
+            <Mask x={10} y={-200} radius={138} className="!hidden md:!block">
+              <img className="object-fit size-78 mx-auto" src="/images/services/postgre.svg" />
+            </Mask>
+          }
+          info={
+            <Column className="mt-auto">
+              {[
+                'PostgreSQL at the Core',
+                'Easy to extend',
+                'Secure by Default with RLS & TLS',
+              ].map((feature) => (
+                <Row key={feature} gap="8" vertical="center">
+                  <Icon name="check" size="xs" onBackground="neutral-medium" />
+                  <Text variant="body-default-s" onBackground="neutral-medium">
+                    {feature}
+                  </Text>
+                </Row>
+              ))}
+            </Column>
           }
         />
         <GridItem
@@ -84,11 +101,12 @@ interface GridItemProps {
   icon: IconProps["name"];
   title: string;
   description: React.ReactNode;
+  info?: React.ReactNode;
   wide?: boolean;
   extra?: React.ReactNode;
 }
 
-const GridItem = ({ area, icon, title, description, wide, extra }: GridItemProps) => {
+const GridItem = ({ area, icon, title, info, description, wide, extra }: GridItemProps) => {
   return (
     <li className={`min-h-[24rem] list-none ${area} group`}>
       <Link className="" to="">
@@ -114,6 +132,7 @@ const GridItem = ({ area, icon, title, description, wide, extra }: GridItemProps
                 <Text variant="body-default-m" onBackground="neutral-weak">
                   {description}
                 </Text>
+                {info}
               </Column>
               {extra}
             </div>
