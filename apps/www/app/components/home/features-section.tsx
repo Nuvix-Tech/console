@@ -7,6 +7,7 @@ import { Authentication } from "./features/auth";
 import { Storage } from "./features/storage";
 import { Messaging } from "./features/messaging";
 import { DataAPIs } from "./features/apis";
+import { Vector } from "./features/vector";
 
 export function FeaturesSection() {
   return (
@@ -77,6 +78,7 @@ export function FeaturesSection() {
           icon="sparkle"
           title="Vector"
           description="Integrate your favorite ML-models to store, index and search vector embeddings."
+          extra={<Vector />}
         />
       </ul>
     </div>
