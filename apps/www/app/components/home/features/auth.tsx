@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 
 export const Authentication = () => (
   <RevealFx delay={0.2} translateY={0.5}>
-    <motion.div className="mx-auto w-78 pb-2">
+    <motion.div className="mx-auto w-[calc(90%_-_20px)] max-w-72 pb-2">
       <Column
         radius="l"
         borderWidth={2}

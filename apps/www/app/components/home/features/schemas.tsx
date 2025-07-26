@@ -1,19 +1,17 @@
 import { cn } from "@nuvix/sui/lib/utils"
-import { Checkbox, Column, Fade, Row, Text } from "@nuvix/ui/components"
+import { Checkbox, Column, Fade, Icon, Row, Text } from "@nuvix/ui/components"
 
 export const Schemas = () => {
     const roles = [
         { name: "guests", permissions: ["READ"] },
         { name: "users", permissions: ["CREATE", "READ"] },
         { name: "user:12567", permissions: ["UPDATE"] },
-        { name: "label:admin", permissions: ["CREATE", "READ", "UPDATE", "DELETE"] },
+        { name: "team:acme-corp", permissions: ["CREATE", "READ", "UPDATE", "DELETE"] },
     ]
-    return (
-        <div>
-            <Fade to="top" pattern={{ display: true, size: '8' }} blur={0.5} padding="4" base={'transparent' as any}>
 
-            </Fade>
-            <div className="relative w-full">
+    return (
+        <Column fill gap="4">
+            <div className="relative w-full pb-24">
                 {/* Products Table */}
                 <Fade to="bottom" pattern={{ display: true, size: '4' }} blur={0.5} base={'transparent' as any} fillWidth>
                     <Column background="neutral-alpha-weak" padding="4" radius="xs" fillWidth border="neutral-alpha-weak" >
@@ -54,7 +52,7 @@ export const Schemas = () => {
                     </Column>
                 </Fade>
 
-                <Column background="transparent" overflow="hidden" className="-rotate-5 group-hover:-bottom-12 transition-all backdrop-blur-xs absolute -bottom-16 -right-4 w-11/12" radius="xs" border="neutral-alpha-weak">
+                <Column background="transparent" overflow="hidden" className="-rotate-5 group-hover:-rotate-10 transition-all backdrop-blur-xs absolute bottom-5 -right-4 w-11/12" radius="xs" border="neutral-alpha-weak">
                     <Row gap="12" vertical="center" paddingX="12" paddingY="8" overflow="hidden" borderBottom="neutral-weak" background="neutral-alpha-weak">
                         {['ROLE', 'CREATE', 'READ', 'UPDATE', 'DELETE']
                             .map((h, i) => <Text key={h} variant="body-strong-xs" onBackground="neutral-medium" className={cn("!text-[10px]", { "w-20 max-w-20 truncate": i === 0 })}>
@@ -79,6 +77,31 @@ export const Schemas = () => {
                     ))}
                 </Column>
             </div>
-        </div>
+
+            <Column gap="4" className="mt-auto">
+                {
+                    [
+                        'Secure by Default',
+                        'Row & Table Security',
+                        'Document-Like Collections',
+                        'Rule-Based Managed Tables',
+                        'Raw SQL Control',
+                        'Granular Role Permissions',
+                        'Schema-Level Access Control',
+                        'Schema Flexibility',
+                        'Instant API Generation',
+                        'Powered by PostgreSQL'
+                    ].map((feature, index) => (
+                        <Row key={feature} gap="8" vertical="center">
+                            <Icon name="check" size="xs" onBackground="neutral-medium" />
+                            <Text variant="body-default-s" onBackground="neutral-medium">
+                                {feature}
+                            </Text>
+
+                        </Row>
+                    ))
+                }
+            </Column>
+        </Column>
     )
 }

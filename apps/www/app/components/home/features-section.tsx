@@ -9,11 +9,12 @@ import { Messaging } from "./features/messaging";
 import { DataAPIs } from "./features/apis";
 import { Vector } from "./features/vector";
 import { Schemas } from "./features/schemas";
+import { Link } from "react-router";
 
 export function FeaturesSection() {
   return (
-    <div className="pb-24 container mx-auto">
-      <ul className="grid grid-cols-1 gap-4 md:grid-cols-10 md:grid-rows-3">
+    <div className="pb-24 container mx-auto px-4">
+      <ul className="grid grid-cols-1 gap-4 md:grid-cols-10 md:grid-rows-3 !p-0">
         {/* First row: two columns, first 60%, second 40% */}
         <GridItem
           area="col-span-1 md:col-span-6 md:row-span-1"
@@ -22,7 +23,7 @@ export function FeaturesSection() {
           description="Every project comes with a fully managed Postgres database."
           wide
           extra={
-            <GlitchFx speed="slow">
+            <GlitchFx speed="slow" className="!hidden md:!block">
               <img className="object-fit size-78" src="/images/services/postgre.svg" />
             </GlitchFx>
           }
@@ -90,33 +91,35 @@ interface GridItemProps {
 const GridItem = ({ area, icon, title, description, wide, extra }: GridItemProps) => {
   return (
     <li className={`min-h-[24rem] list-none ${area} group`}>
-      <div className="relative h-full rounded-2xl border p-2 md:rounded-3xl md:p-3">
-        <GlowingEffect
-          spread={40}
-          glow={true}
-          disabled={false}
-          proximity={64}
-          inactiveZone={0.01}
-        />
-        <div className="border-0.75 relative flex h-full flex-col justify-between gap-6 overflow-hidden rounded-lg p-6 md:p-6 neutral-background-alpha-weak">
-          <div
-            className={cn("relative flex flex-1 flex-col gap-3", {
-              "flex-row": wide,
-            })}
-          >
-            <Column gap="16">
-              <Row gap="8" vertical="center">
-                <Icon name={icon} border="brand-alpha-weak" radius="l" className="p-2" />
-                <Text variant="label-strong-m">{title}</Text>
-              </Row>
-              <Text variant="body-default-m" onBackground="neutral-weak">
-                {description}
-              </Text>
-            </Column>
-            {extra}
+      <Link className="" to="">
+        <div className="relative h-full rounded-2xl border p-2 md:rounded-3xl md:p-3">
+          <GlowingEffect
+            spread={40}
+            glow={true}
+            disabled={false}
+            proximity={64}
+            inactiveZone={0.01}
+          />
+          <div className="border-0.75 relative flex h-full flex-col justify-between gap-6 overflow-hidden rounded-lg p-6 md:p-6 neutral-background-alpha-weak">
+            <div
+              className={cn("relative flex flex-1 flex-col gap-3", {
+                "flex-row": wide,
+              })}
+            >
+              <Column gap="16">
+                <Row gap="8" vertical="center" className="w-full">
+                  <Icon name={icon} border="brand-alpha-weak" radius="l" className="p-2" />
+                  <Text variant="label-strong-m">{title}</Text>
+                </Row>
+                <Text variant="body-default-m" onBackground="neutral-weak">
+                  {description}
+                </Text>
+              </Column>
+              {extra}
+            </div>
           </div>
         </div>
-      </div>
+      </Link>
     </li>
   );
 };
