@@ -12,6 +12,7 @@ interface CheckboxProps
   isChecked?: boolean;
   isIndeterminate?: boolean;
   onToggle?: () => void;
+  checkboxClass?: string;
 }
 
 const generateId = () => `checkbox-${Math.random().toString(36).substring(2, 9)}`;
@@ -21,6 +22,7 @@ const Checkbox: React.FC<CheckboxProps> = forwardRef<HTMLInputElement, CheckboxP
     {
       style,
       className,
+      checkboxClass,
       isChecked: controlledIsChecked,
       isIndeterminate = false,
       onToggle,
@@ -107,7 +109,7 @@ const Checkbox: React.FC<CheckboxProps> = forwardRef<HTMLInputElement, CheckboxP
                 ? controlledIsChecked || isIndeterminate
                 : isChecked,
             [styles.disabled]: disabled,
-          })}
+          }, checkboxClass)}
         >
           {(controlledIsChecked !== undefined ? controlledIsChecked : isChecked) &&
             !isIndeterminate && (
