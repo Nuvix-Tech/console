@@ -6,12 +6,13 @@ import { cn } from "@nuvix/sui/lib/utils";
 import { Authentication } from "./features/auth";
 import { Storage } from "./features/storage";
 import { Messaging } from "./features/messaging";
+import { DataAPIs } from "./features/apis";
 
 export function FeaturesSection() {
   return (
     <div className="py-24 container mx-auto">
       <div className="text-center mb-16">
-        <Text as="h2" variant="display-default-l">
+        <Text as="h2" variant="display-default-m">
           All the products you need, <br /> in one platform
         </Text>
         <Text as="p" variant="body-default-m" onBackground="neutral-weak" className="mt-4">
@@ -69,6 +70,7 @@ export function FeaturesSection() {
           icon={<Route className="size-4 neutral-on-background-weak" />}
           title="Data APIs"
           description="Instant ready-to-use Restful APIs."
+          extra={<DataAPIs />}
         />
         <GridItem
           area="col-span-1 md:col-span-3 md:row-start-3 md:row-span-1"

@@ -4,15 +4,15 @@ import classNames from "classnames";
 import type React from "react";
 import { type ReactNode, forwardRef } from "react";
 
-import { Flex, Icon, Text } from ".";
+import { Flex, Icon, IconProps, Text } from ".";
 import styles from "./Tag.module.scss";
 
 interface TagProps extends React.ComponentProps<typeof Flex> {
   variant?: "brand" | "accent" | "warning" | "success" | "danger" | "neutral" | "info" | "gradient";
   size?: "s" | "m" | "l";
   label?: string;
-  prefixIcon?: string;
-  suffixIcon?: string;
+  prefixIcon?: IconProps["name"];
+  suffixIcon?: IconProps["name"];
   children?: ReactNode;
 }
 

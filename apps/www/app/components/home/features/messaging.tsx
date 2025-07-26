@@ -6,6 +6,11 @@ import React, { forwardRef, useRef } from "react";
 
 import { AnimatedBeam } from "~/magicui/animated-beam";
 
+const colors = {
+  start: 'var(--accent-alpha-medium)',
+  stop: 'var(--accent-solid-weak)',
+}
+
 const Circle = forwardRef<HTMLDivElement, { className?: string; children?: React.ReactNode }>(
   ({ className, children }, ref) => {
     return (
@@ -54,22 +59,39 @@ export function Messaging({ className }: { className?: string }) {
         </div>
         <div className="flex flex-col justify-center gap-2">
           <Circle ref={div1Ref}>
-            <Icon name="authentication" />
+            <Icon name="mail" />
           </Circle>
           <Circle ref={div2Ref}>
-            <Icon name="discord" />
+            <Icon name="sms" />
           </Circle>
           <Circle ref={div3Ref}>
-            <Icon name="calendar" />
+            <Icon name="push" />
           </Circle>
         </div>
       </div>
 
       {/* AnimatedBeams */}
-      <AnimatedBeam containerRef={containerRef} fromRef={div1Ref} toRef={div6Ref} duration={3} />
-      <AnimatedBeam containerRef={containerRef} fromRef={div2Ref} toRef={div6Ref} duration={3} />
-      <AnimatedBeam containerRef={containerRef} fromRef={div3Ref} toRef={div6Ref} duration={3} />
-      <AnimatedBeam containerRef={containerRef} fromRef={div6Ref} toRef={div7Ref} duration={3} />
+      <AnimatedBeam
+        gradientStartColor={colors.start}
+        gradientStopColor={colors.stop}
+        containerRef={containerRef} fromRef={div1Ref} toRef={div6Ref} duration={3} />
+      <AnimatedBeam
+        gradientStartColor={colors.start}
+        gradientStopColor={colors.stop}
+        containerRef={containerRef} fromRef={div2Ref} toRef={div6Ref} duration={3} />
+      <AnimatedBeam
+        gradientStartColor={colors.start}
+        gradientStopColor={colors.stop}
+        containerRef={containerRef} fromRef={div3Ref} toRef={div6Ref} duration={3} />
+      <AnimatedBeam
+        containerRef={containerRef}
+        gradientStartColor="var(--brand-alpha-medium)"
+        gradientStopColor="var(--brand-on-background-weak)"
+        fromRef={div6Ref}
+        toRef={div7Ref}
+        duration={9}
+        delay={1}
+      />
     </div>
   );
 }

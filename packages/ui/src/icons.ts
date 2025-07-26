@@ -58,6 +58,10 @@ import {
   TbGraph,
   TbReceiptDollar,
   TbSettings,
+  TbTable,
+  TbMail,
+  TbMessages,
+  TbNotification,
 } from "react-icons/tb";
 
 export const iconMap = {
@@ -94,6 +98,7 @@ export const iconMap = {
   sparkle: HiOutlineSparkles,
   house: TbHome,
   tableEditor: TbTableSpark,
+  table: TbTable,
   storage: TbFolder,
   database: TbDatabase,
   messaging: TbMessage,
@@ -117,6 +122,10 @@ export const iconMap = {
   billing: TbReceiptDollar,
 
   settings: TbSettings,
+
+  mail: TbMail,
+  sms: TbMessages,
+  push: TbNotification
 } as const;
 
 export type IconName = keyof typeof iconMap;
