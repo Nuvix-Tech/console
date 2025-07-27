@@ -1,11 +1,12 @@
 import { Button, Column, Icon, Input, Row, Text } from "@nuvix/ui/components";
 import { useEffect, useState } from "react";
+import { nuvix } from "~/lib/sdk";
 
 export const CtaSection = () => {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isJoined, setIsJoined] = useState(true);
-  const [isNew, setIsNew] = useState(true);
+  const [isJoined, setIsJoined] = useState(false);
+  const [isNew, setIsNew] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const STORAGE_KEY = "nuvix-waitlisted";
@@ -31,22 +32,13 @@ export const CtaSection = () => {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch("/api/waitlist", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
+      await nuvix.client.call("post", new URL(nuvix.client.config.endpoint + "/users/waitlist"), {
+        email,
       });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Failed to join the waitlist.");
-      }
 
       localStorage.setItem(STORAGE_KEY, "true");
       setIsJoined(true);
+      setIsNew(true);
       setEmail("");
     } catch (err: any) {
       setError(err.message || "Something went wrong.");
