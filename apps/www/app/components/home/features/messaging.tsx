@@ -7,9 +7,9 @@ import React, { forwardRef, useRef } from "react";
 import { AnimatedBeam } from "~/magicui/animated-beam";
 
 const colors = {
-  start: 'var(--accent-alpha-medium)',
-  stop: 'var(--accent-solid-weak)',
-}
+  start: "var(--accent-alpha-medium)",
+  stop: "var(--accent-solid-weak)",
+};
 
 const Circle = forwardRef<HTMLDivElement, { className?: string; children?: React.ReactNode }>(
   ({ className, children }, ref) => {
@@ -74,15 +74,27 @@ export function Messaging({ className }: { className?: string }) {
       <AnimatedBeam
         gradientStartColor={colors.start}
         gradientStopColor={colors.stop}
-        containerRef={containerRef} fromRef={div1Ref} toRef={div6Ref} duration={3} />
+        containerRef={containerRef}
+        fromRef={div1Ref}
+        toRef={div6Ref}
+        duration={3}
+      />
       <AnimatedBeam
         gradientStartColor={colors.start}
         gradientStopColor={colors.stop}
-        containerRef={containerRef} fromRef={div2Ref} toRef={div6Ref} duration={3} />
+        containerRef={containerRef}
+        fromRef={div2Ref}
+        toRef={div6Ref}
+        duration={3}
+      />
       <AnimatedBeam
         gradientStartColor={colors.start}
         gradientStopColor={colors.stop}
-        containerRef={containerRef} fromRef={div3Ref} toRef={div6Ref} duration={3} />
+        containerRef={containerRef}
+        fromRef={div3Ref}
+        toRef={div6Ref}
+        duration={3}
+      />
       <AnimatedBeam
         containerRef={containerRef}
         gradientStartColor="var(--brand-alpha-medium)"

@@ -103,13 +103,17 @@ const Checkbox: React.FC<CheckboxProps> = forwardRef<HTMLInputElement, CheckboxP
           aria-labelledby={checkboxId}
           onClick={toggleItem}
           onKeyDown={handleKeyDown}
-          className={classNames(styles.element, {
-            [styles.checked]:
-              controlledIsChecked !== undefined
-                ? controlledIsChecked || isIndeterminate
-                : isChecked,
-            [styles.disabled]: disabled,
-          }, checkboxClass)}
+          className={classNames(
+            styles.element,
+            {
+              [styles.checked]:
+                controlledIsChecked !== undefined
+                  ? controlledIsChecked || isIndeterminate
+                  : isChecked,
+              [styles.disabled]: disabled,
+            },
+            checkboxClass,
+          )}
         >
           {(controlledIsChecked !== undefined ? controlledIsChecked : isChecked) &&
             !isIndeterminate && (

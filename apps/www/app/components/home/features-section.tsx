@@ -30,18 +30,16 @@ export function FeaturesSection() {
           }
           info={
             <Column className="mt-auto">
-              {[
-                'PostgreSQL at the Core',
-                'Easy to extend',
-                'Secure by Default with RLS & TLS',
-              ].map((feature) => (
-                <Row key={feature} gap="8" vertical="center">
-                  <Icon name="check" size="xs" onBackground="neutral-medium" />
-                  <Text variant="body-default-s" onBackground="neutral-medium">
-                    {feature}
-                  </Text>
-                </Row>
-              ))}
+              {["PostgreSQL at the Core", "Easy to extend", "Secure by Default with RLS & TLS"].map(
+                (feature) => (
+                  <Row key={feature} gap="8" vertical="center">
+                    <Icon name="check" size="xs" onBackground="neutral-medium" />
+                    <Text variant="body-default-s" onBackground="neutral-medium">
+                      {feature}
+                    </Text>
+                  </Row>
+                ),
+              )}
             </Column>
           }
           link="/products/postgres"
@@ -76,7 +74,14 @@ export function FeaturesSection() {
           area="col-span-1 md:col-span-3 md:row-start-2 md:row-end-4"
           icon="nuvixSchemas"
           title="Flexible Schema Engine"
-          description={<>Choose between <Text onBackground="neutral-strong">Document</Text>, <Text onBackground="neutral-strong">Managed</Text>, and <Text onBackground="neutral-strong">Unmanaged</Text> schemas - designed for full control, flexibility, and native PostgreSQL performance.</>}
+          description={
+            <>
+              Choose between <Text onBackground="neutral-strong">Document</Text>,{" "}
+              <Text onBackground="neutral-strong">Managed</Text>, and{" "}
+              <Text onBackground="neutral-strong">Unmanaged</Text> schemas - designed for full
+              control, flexibility, and native PostgreSQL performance.
+            </>
+          }
           extra={<Schemas />}
           link="/products/schemas"
         />
@@ -101,7 +106,8 @@ export function FeaturesSection() {
       </ul>
       <div className="mt-4 px-2">
         <Text as="h3" variant="heading-default-xl" onBackground="neutral-weak">
-          <Text onBackground="neutral-medium">Use what you need.</Text> Built to work better together.
+          <Text onBackground="neutral-medium">Use what you need.</Text> Built to work better
+          together.
         </Text>
       </div>
     </div>

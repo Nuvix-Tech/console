@@ -60,7 +60,7 @@ export const HeroSection = () => {
             transition={{ duration: 0.5, delay: 0.6 }}
             className="mt-6 flex flex-col sm:flex-row gap-4 sm:gap-8 justify-center items-center"
           >
-            <Link to={{ hash: 'waitlist' }}>
+            <Link to={{ hash: "waitlist" }}>
               <button
                 className="relative overflow-hidden cursor-pointer rounded-xl px-8 py-2.5 font-medium 
                        bg-gradient-to-r from-orange-500 to-amber-600 

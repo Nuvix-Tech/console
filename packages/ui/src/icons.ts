@@ -129,7 +129,7 @@ export const iconMap = {
 
   mail: TbMail,
   sms: TbMessages,
-  push: TbNotification
+  push: TbNotification,
 } as const;
 
 export type IconName = keyof typeof iconMap;

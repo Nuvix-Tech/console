@@ -1,7 +1,7 @@
 import type { Route } from "./+types/home";
 import { HeroSection, FeaturedSection, FeaturesSection, CtaSection } from "~/components/home";
 
-export function meta({ }: Route.MetaArgs) {
+export function meta({}: Route.MetaArgs) {
   return [
     { title: "Nuvix - Backend as a Service for Modern Applications" },
     {

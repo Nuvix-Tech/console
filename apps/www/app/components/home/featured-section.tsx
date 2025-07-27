@@ -12,8 +12,7 @@ export const FeaturedSection = () => {
         viewport={{ once: true }}
       >
         <div className="flex flex-row ">
-          <div className="w-1/2 min-w-1/2">
-          </div>
+          <div className="w-1/2 min-w-1/2"></div>
           <Fade to="right">
             <div className="relative rounded-md border md:rounded-3xl bg-muted">
               <div className="backdrop-blur-3xl p-0.5 md:p-1 rounded-sm md:rounded-md">
