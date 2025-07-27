@@ -54,7 +54,7 @@ export function NavMenu() {
   return (
     <NavigationMenu>
       <NavigationMenuList>
-        <NavigationMenuItem>
+        {/* <NavigationMenuItem>
           <NavigationMenuTrigger className="bg-transparent">Products</NavigationMenuTrigger>
           <NavigationMenuContent className="neutral-background-medium">
             <ul className="grid gap-3 p-6 md:w-[500px] lg:w-[600px] lg:grid-cols-[.75fr_1fr]">
@@ -92,11 +92,11 @@ export function NavMenu() {
               Pricing
             </NavigationMenuLink>
           </Link>
-        </NavigationMenuItem>
+        </NavigationMenuItem> */}
         <NavigationMenuItem>
-          <Link to="/docs">
+          <Link to="https://docs.nuvix.in">
             <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "bg-transparent")}>
-              Docs
+              Documentation
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>

@@ -1,6 +1,60 @@
 import { Button, Column, Icon, Input, Row, Text } from "@nuvix/ui/components";
+import { useEffect, useState } from "react";
 
 export const CtaSection = () => {
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isJoined, setIsJoined] = useState(true);
+  const [isNew, setIsNew] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const STORAGE_KEY = "nuvix-waitlisted";
+
+  useEffect(() => {
+    if (localStorage.getItem(STORAGE_KEY)) {
+      setIsJoined(true);
+    }
+  }, []);
+
+  const validateEmail = (value: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  };
+
+  const handleJoin = async () => {
+    setError(null);
+
+    if (!validateEmail(email)) {
+      setError("Please enter a valid email.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to join the waitlist.");
+      }
+
+      localStorage.setItem(STORAGE_KEY, "true");
+      setIsJoined(true);
+      setEmail("");
+    } catch (err: any) {
+      setError(err.message || "Something went wrong.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <section id="waitlist" className="py-24 relative overflow-hidden">
       <Column
@@ -14,6 +68,7 @@ export const CtaSection = () => {
           <Icon name="rocket" size="l" />
           <Text variant="heading-default-xl">Be Among the First to Build with Nuvix</Text>
         </Row>
+
         <Text
           className="text-center max-w-10/12"
           variant="body-default-s"
@@ -23,10 +78,55 @@ export const CtaSection = () => {
           Get early access to a high-performance backend platform designed for speed, scale, and
           developer freedom. Join the waitlist and shape the future of modern app development.
         </Text>
-        <Row gap="12" center className="mt-10">
-          <Input labelAsPlaceholder label="Enter you email" height="s" type="email" />
-          <Button className="!h-[38px] !min-h-[38px]">Join Waitlist</Button>
+
+        <Row gap="12" center className="mt-10 w-full max-w-[480px]">
+          {isJoined ? (
+            isNew ? (
+              <Column center textVariant="body-default-s" onBackground="neutral-weak">
+                <Text variant="label-strong-m" onBackground="success-medium" className="mb-1">
+                  🎉 You're In!
+                </Text>
+                Thanks for joining the waitlist. You're now one step closer to building with Nuvix -
+                a high-performance backend platform designed for speed, scale, and developer-first
+                freedom. We'll keep you updated with early access invites, product updates, and
+                opportunities to shape what's next.
+              </Column>
+            ) : (
+              <Text
+                variant="body-default-m"
+                onBackground="success-medium"
+                className="text-center w-full"
+              >
+                🎉 You're already on the waitlist!
+              </Text>
+            )
+          ) : (
+            <>
+              <Input
+                labelAsPlaceholder
+                label="Enter your email"
+                height="s"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full"
+              />
+              <Button
+                onClick={handleJoin}
+                disabled={isSubmitting}
+                className="!h-[38px] !min-h-[38px]"
+              >
+                {isSubmitting ? "Joining..." : "Join Waitlist"}
+              </Button>
+            </>
+          )}
         </Row>
+
+        {error && (
+          <Text variant="body-default-s" className="text-danger mt-4 text-center">
+            {error}
+          </Text>
+        )}
       </Column>
     </section>
   );
