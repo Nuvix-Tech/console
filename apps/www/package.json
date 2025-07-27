@@ -9,6 +9,7 @@
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
+    "@nuvix/console": "0.0.5-alpha.4",
     "@react-router/node": "^7.7.0",
     "@react-router/serve": "^7.7.0",
     "isbot": "^5.1.27",

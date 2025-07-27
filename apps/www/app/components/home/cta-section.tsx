@@ -24,7 +24,7 @@ export const CtaSection = () => {
           developer freedom. Join the waitlist and shape the future of modern app development.
         </Text>
         <Row gap="12" center className="mt-10">
-          <Input labelAsPlaceholder label="Enter you email" height="s" />
+          <Input labelAsPlaceholder label="Enter you email" height="s" type="email" />
           <Button className="!h-[38px] !min-h-[38px]">Join Waitlist</Button>
         </Row>
       </Column>

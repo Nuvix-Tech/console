@@ -25,7 +25,7 @@ export function FeaturesSection() {
           wide
           extra={
             <Mask x={10} y={-200} radius={138} className="!hidden md:!block">
-              <img className="object-fit size-78 mx-auto" src="/images/services/postgre.svg" />
+              <img className="object-fit size-78 mx-auto" src="/images/services/postgre.png" />
             </Mask>
           }
           info={

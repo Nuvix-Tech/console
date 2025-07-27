@@ -1,21 +1,20 @@
-// import { BackgroundGradient } from "components/ui/background-gradient";
 import React, { useEffect, useState } from "react";
 import { NavMenu } from "./navbar";
-import { Button } from "@nuvix/sui/components/button";
-// import { sdk } from "~/lib/sdk";
+import { nuvix } from "~/lib/sdk";
+import { Button } from "@nuvix/ui/components";
 
 const Header: React.FC = () => {
   const [isLogged, setIsLogged] = useState(false);
 
-  // useEffect(() => {
-  //   async function check() {
-  //     try {
-  //       await sdk.account.get();
-  //       setIsLogged(true);
-  //     } catch {}
-  //   }
-  //   check();
-  // }, []);
+  useEffect(() => {
+    async function check() {
+      try {
+        await nuvix.account.get();
+        setIsLogged(true);
+      } catch {}
+    }
+    check();
+  }, []);
 
   return (
     <header className="h-18 fixed top-0 left-0 flex w-full border-b justify-between items-center bg-background/10 backdrop-blur-lg px-4 py-2 z-[999]">
@@ -25,22 +24,29 @@ const Header: React.FC = () => {
             src="https://server.nuvix.in/public/images/nuvix-logo-dark.svg"
             width={100}
             alt="logo"
+            className="hidden dark:block"
+          />
+          <img
+            src="https://server.nuvix.in/public/images/nuvix-logo-dark.svg"
+            width={100}
+            alt="logo"
+            className="block dark:hidden"
           />
           <NavMenu />
         </div>
         <aside>
-          {/* <BackgroundGradient containerClassName="p-0.5"> */}
           {isLogged ? (
             <Button
-              className="rounded-full bg-orange-600/30 text-white hover:text-black"
+              variant="secondary"
               onClick={() => (window.location.href = "https://console.nuvix.in")}
             >
               Go to Console
             </Button>
           ) : (
-            <Button className="rounded-full">Sign In</Button>
+            <Button onClick={() => (window.location.href = "https://console.nuvix.in/auth/login")}>
+              Sign In
+            </Button>
           )}
-          {/* </BackgroundGradient> */}
         </aside>
       </div>
     </header>
