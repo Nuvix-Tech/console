@@ -32,7 +32,10 @@ export const CtaSection = () => {
     setIsSubmitting(true);
 
     try {
-      await nuvix.client.call("post", new URL(nuvix.client.config.endpoint + "/users/waitlist"), undefined, {
+      const apiHeaders: { [header: string]: string } = {
+        'content-type': 'application/json',
+      }
+      await nuvix.client.call("post", new URL(nuvix.client.config.endpoint + "/users/waitlist"), apiHeaders, {
         email,
       });
 
