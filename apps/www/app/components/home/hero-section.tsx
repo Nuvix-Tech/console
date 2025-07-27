@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import { Link } from "react-router";
 import { Spotlight } from "~/ui/spotlight-new";
 
 export const HeroSection = () => {
@@ -45,7 +46,7 @@ export const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="mt-4 text-base sm:text-lg text-neutral-200 max-w-2xl mx-auto text-center leading-relaxed"
+            className="mt-4 text-base sm:text-lg neutral-on-background-medium max-w-2xl mx-auto text-center leading-relaxed"
           >
             Nuvix is a high-performance backend with Postgres at its core, offering ultimate data
             flexibility for any data shape. Get powerful auth, storage, messaging, and APIs to
@@ -59,21 +60,19 @@ export const HeroSection = () => {
             transition={{ duration: 0.5, delay: 0.6 }}
             className="mt-6 flex flex-col sm:flex-row gap-4 sm:gap-8 justify-center items-center"
           >
-            <button
-              className="relative overflow-hidden cursor-pointer rounded-xl px-8 py-2.5 font-medium 
+            <Link to={{ hash: 'waitlist' }}>
+              <button
+                className="relative overflow-hidden cursor-pointer rounded-xl px-8 py-2.5 font-medium 
                        bg-gradient-to-r from-orange-500 to-amber-600 
                        before:absolute before:inset-0 before:bg-gradient-to-r 
                        before:from-amber-500 before:to-orange-600 before:opacity-0
                        before:transition-opacity before:duration-300 hover:before:opacity-100
                        shadow-[0_0_20px_rgba(246,173,85,0.3)] hover:shadow-[0_0_25px_rgba(246,173,85,0.5)]
                        transition-all duration-300 hover:scale-105 text-white"
-            >
-              Join Waitlist
-            </button>
-
-            {/* <HoverBorderGradient containerClassName="rounded-xl" className="px-8 py-2.5 rounded-xl">
-              <span>Request a Demo</span>
-            </HoverBorderGradient> */}
+              >
+                Join Waitlist
+              </button>
+            </Link>
           </motion.div>
         </div>
       </div>

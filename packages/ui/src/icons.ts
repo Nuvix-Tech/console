@@ -63,6 +63,7 @@ import {
   TbMessages,
   TbNotification,
   TbLayersDifference,
+  TbRocket,
 } from "react-icons/tb";
 
 export const iconMap = {
@@ -97,6 +98,7 @@ export const iconMap = {
   visa: RiVisaLine,
   security: HiOutlineShieldCheck,
   sparkle: HiOutlineSparkles,
+  rocket: TbRocket,
   house: TbHome,
   tableEditor: TbTableSpark,
   table: TbTable,

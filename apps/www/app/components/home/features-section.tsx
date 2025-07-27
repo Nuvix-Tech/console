@@ -44,6 +44,7 @@ export function FeaturesSection() {
               ))}
             </Column>
           }
+          link="/products/postgres"
         />
         <GridItem
           area="col-span-1 md:col-span-4 md:row-span-1"
@@ -51,6 +52,7 @@ export function FeaturesSection() {
           title="Authentication"
           description="Secure user authentication with social logins, multi-factor auth, and custom auth flows."
           extra={<Authentication />}
+          link="/products/auth"
         />
 
         {/* Second row: three columns, third is tall */}
@@ -60,6 +62,7 @@ export function FeaturesSection() {
           title="Storage"
           description="Store and serve files with automatic CDN distribution and access control."
           extra={<Storage />}
+          link="/products/storage"
         />
         <GridItem
           area="col-span-1 md:col-span-4 md:row-start-2 md:row-span-1"
@@ -67,6 +70,7 @@ export function FeaturesSection() {
           title="Messaging"
           description="Set up a full-functioning messaging service that covers multiple channels under one unified platform"
           extra={<Messaging />}
+          link="/products/messaging"
         />
         <GridItem
           area="col-span-1 md:col-span-3 md:row-start-2 md:row-end-4"
@@ -74,6 +78,7 @@ export function FeaturesSection() {
           title="Flexible Schema Engine"
           description={<>Choose between <Text onBackground="neutral-strong">Document</Text>, <Text onBackground="neutral-strong">Managed</Text>, and <Text onBackground="neutral-strong">Unmanaged</Text> schemas - designed for full control, flexibility, and native PostgreSQL performance.</>}
           extra={<Schemas />}
+          link="/products/schemas"
         />
 
         {/* Third row: two more items in remaining space */}
@@ -83,6 +88,7 @@ export function FeaturesSection() {
           title="Data APIs"
           description="Instant ready-to-use Restful APIs."
           extra={<DataAPIs />}
+          link="/docs"
         />
         <GridItem
           area="col-span-1 md:col-span-3 md:row-start-3 md:row-span-1"
@@ -90,8 +96,14 @@ export function FeaturesSection() {
           title="Vector"
           description="Integrate your favorite ML-models to store, index and search vector embeddings."
           extra={<Vector />}
+          link="/products/vector"
         />
       </ul>
+      <div className="mt-4 px-2">
+        <Text as="h3" variant="heading-default-xl" onBackground="neutral-weak">
+          <Text onBackground="neutral-medium">Use what you need.</Text> Built to work better together.
+        </Text>
+      </div>
     </div>
   );
 }
@@ -104,12 +116,13 @@ interface GridItemProps {
   info?: React.ReactNode;
   wide?: boolean;
   extra?: React.ReactNode;
+  link?: string;
 }
 
-const GridItem = ({ area, icon, title, info, description, wide, extra }: GridItemProps) => {
+const GridItem = ({ area, icon, title, info, link, description, wide, extra }: GridItemProps) => {
   return (
     <li className={`min-h-[24rem] list-none ${area} group`}>
-      <Link className="" to="">
+      <Link className="" to={link ?? "#"}>
         <div className="relative h-full rounded-2xl border p-2 md:rounded-3xl md:p-3">
           <GlowingEffect
             spread={40}

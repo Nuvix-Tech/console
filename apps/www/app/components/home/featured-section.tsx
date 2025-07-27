@@ -1,5 +1,5 @@
-import { GlowingEffect } from "~/ui/glowing-effect";
 import { motion } from "motion/react";
+import { Fade } from "@nuvix/ui/components";
 
 export const FeaturedSection = () => {
   return (
@@ -11,25 +11,22 @@ export const FeaturedSection = () => {
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
       >
-        <div className="relative rounded-md border md:rounded-3xl bg-slate-200/10">
-          <div className="backdrop-blur-3xl p-2 md:p-3 rounded-md md:rounded-3xl">
-            <GlowingEffect
-              blur={0}
-              borderWidth={3}
-              spread={90}
-              glow={true}
-              disabled={false}
-              proximity={64}
-              inactiveZone={0.01}
-            />
-            <div className="rounded md:rounded-[12px] overflow-hidden">
-              <img
-                src="/images/dashboard/hero_default.png"
-                alt="Nuvix Dashboard"
-                className="w-full"
-              />
-            </div>
+        <div className="flex flex-row ">
+          <div className="w-1/2 min-w-1/2">
           </div>
+          <Fade to="right">
+            <div className="relative rounded-md border md:rounded-3xl bg-muted">
+              <div className="backdrop-blur-3xl p-0.5 md:p-1 rounded-sm md:rounded-md">
+                <div className="rounded md:rounded-md overflow-hidden">
+                  <img
+                    src="/images/dashboard/hero_default.png"
+                    alt="Nuvix Dashboard"
+                    className="w-full"
+                  />
+                </div>
+              </div>
+            </div>
+          </Fade>
         </div>
       </motion.div>
     </div>

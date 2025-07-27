@@ -1,5 +1,5 @@
 import type { Route } from "./+types/home";
-import { HeroSection, FeaturedSection, FeaturesSection } from "~/components/home";
+import { HeroSection, FeaturedSection, FeaturesSection, CtaSection } from "~/components/home";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -17,7 +17,8 @@ export default function Home() {
     <>
       <HeroSection />
       <FeaturesSection />
-      <FeaturedSection />
+      {/* <FeaturedSection /> */}
+      <CtaSection />
     </>
   );
 }
