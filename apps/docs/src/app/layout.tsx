@@ -1,6 +1,7 @@
 import "@nuvix/ui/styles/index.scss";
 import "@nuvix/ui/tokens/index.scss";
 import "@/styles/main.scss";
+import "@nuvix/sui/globals.css";
 
 import type { Metadata } from "next";
 import { headers } from "next/headers";
@@ -82,7 +83,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         data-brand={style.brand}
         data-accent={style.accent}
         data-border={style.border}
-        data-solid={style.solid}
+        data-solid={"contrast"}
         data-solid-style={style.solidStyle}
         data-surface={style.surface}
         data-transition={style.transition}

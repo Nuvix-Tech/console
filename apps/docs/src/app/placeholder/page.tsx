@@ -1,4 +1,4 @@
-import { Column, Text, Card, PasswordInput, Button } from "@nuvix/ui/components";
+import { Column, Text, Card, PasswordInput, Button, Icon } from "@nuvix/ui/components";
 import { cookies } from "next/headers";
 import { redirect, RedirectType } from "next/navigation";
 
@@ -31,7 +31,7 @@ export default function Placeholder() {
       >
         <div className="flex flex-col justify-center mb-4 items-center space-y-5">
           <div className="h-12 w-12 rounded-full bg-[var(--brand-alpha-strong)] flex items-center justify-center">
-            {/* <LockIcon className="h-6 w-6 text-white" /> */}
+            <Icon name="warningTriangle" className="text-white" size="l" />
           </div>
 
           <div className="flex flex-col justify-center items-center text-wrap">
@@ -55,8 +55,8 @@ export default function Placeholder() {
             </Button>
           </div>
         </form>
-        <div className="px-6 pb-4 text-xs text-gray-500 text-center">
-          <p>A security measure for development environments.</p>
+        <div className="px-6 pb-4 text-xs warning-on-background-medium text-center">
+          <p>We're currently working on the documentation, so it's not available right now.</p>
         </div>
       </Card>
     </Column>
