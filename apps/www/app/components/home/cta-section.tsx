@@ -33,11 +33,16 @@ export const CtaSection = () => {
 
     try {
       const apiHeaders: { [header: string]: string } = {
-        'content-type': 'application/json',
-      }
-      await nuvix.client.call("post", new URL(nuvix.client.config.endpoint + "/users/waitlist"), apiHeaders, {
-        email,
-      });
+        "content-type": "application/json",
+      };
+      await nuvix.client.call(
+        "post",
+        new URL(nuvix.client.config.endpoint + "/waitlist"),
+        apiHeaders,
+        {
+          email,
+        },
+      );
 
       localStorage.setItem(STORAGE_KEY, "true");
       setIsJoined(true);
@@ -51,7 +56,7 @@ export const CtaSection = () => {
   };
 
   return (
-    <section id="waitlist" className="py-24 relative overflow-hidden">
+    <section id="waitlist" className="py-24 relative overflow-hidden px-4">
       <Column
         background="neutral-alpha-weak"
         className="max-w-4xl w-full mx-auto px-4 py-6 sm:px-6 lg:px-8"
@@ -65,7 +70,7 @@ export const CtaSection = () => {
         </Row>
 
         <Text
-          className="text-center max-w-10/12"
+          className="text-center md:max-w-10/12"
           variant="body-default-s"
           onBackground="neutral-weak"
           marginTop="4"
@@ -74,7 +79,7 @@ export const CtaSection = () => {
           developer freedom. Join the waitlist and shape the future of modern app development.
         </Text>
 
-        <Row gap="12" center className="mt-10 w-full max-w-[480px]">
+        <Row gap="12" center className="mt-10 w-full max-w-[480px] !flex-col md:!flex-row">
           {isJoined ? (
             isNew ? (
               <Column center textVariant="body-default-s" onBackground="neutral-weak">
@@ -109,7 +114,7 @@ export const CtaSection = () => {
               <Button
                 onClick={handleJoin}
                 disabled={isSubmitting}
-                className="!h-[38px] !min-h-[38px]"
+                className="!h-[38px] !min-h-[38px] !w-full md:!w-auto"
               >
                 {isSubmitting ? "Joining..." : "Join Waitlist"}
               </Button>

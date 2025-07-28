@@ -1,5 +1,4 @@
 "use client";
-import { Illustration } from "@nuvix/sui/components/glowing-stars";
 import { Background, Column, Row, SmartImage } from "@nuvix/ui/components";
 import { Stack } from "@chakra-ui/react";
 
@@ -8,15 +7,15 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
     <>
       <Row background="page" fill position="relative">
         <Stack
-          height={{ base: "full" }}
+          height={{ base: "100svh" }}
           my="auto"
           width={{ base: "full" }}
           direction={{ base: "row" }}
         >
-          <Row fill hide="m">
+          {/* <Row fill hide="m">
             <SmartImage src="/images/login.png" alt="Preview image" sizes="560px" />
-          </Row>
-          <Column fillWidth horizontal="center" gap="20" padding="32" position="relative">
+          </Row> */}
+          <Column fill center gap="20" padding="32" position="relative">
             <Background
               position="absolute"
               mask={{
@@ -43,7 +42,13 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
                 height: "0.25rem",
               }}
             />
-            <Column horizontal="center" gap="20" position="relative" maxWidth={26}>
+            <Column
+              horizontal="center"
+              gap="20"
+              position="relative"
+              maxWidth={26}
+              className="md:!items-center"
+            >
               {children}
             </Column>
           </Column>

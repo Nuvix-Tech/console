@@ -1,5 +1,3 @@
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:1658189366.
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:3172598790.
 "use client";
 import { APP_NAME } from "@/lib/constants";
 import { sdkForConsole } from "@/lib/sdk";
@@ -41,10 +39,6 @@ export default function Login() {
 
   const validatePassword = (password: string) => {
     if (!password) return "Password cannot be empty.";
-    if (password.length < 8) return "Password must be at least 8 characters long.";
-    if (!/[a-z]/.test(password)) return "Password must contain a lowercase letter.";
-    if (!/[A-Z]/.test(password)) return "Password must contain an uppercase letter.";
-    if (!/[^a-zA-Z0-9]/.test(password)) return "Password must contain a special character.";
     return null;
   };
 
@@ -75,14 +69,17 @@ export default function Login() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="flex flex-col items-center size-full gap-5 justigy-center"
+      className="flex flex-col items-center size-full gap-5 justigy-center md:border md:p-4 rounded-sm"
     >
       <Logo size="l" wordmark={false} iconSrc="/favicon.ico" />
       <Heading as="h3" variant="display-default-xs" align="center">
         Welcome back
       </Heading>
-      <Text onBackground="neutral-medium">
-        Sign in to your account or <Link href="/auth/register">sign up</Link>
+      <Text onBackground="neutral-weak">
+        Sign in to your account or{" "}
+        <SmartLink className="neutral-on-background-medium" href="https://www.nuvix.in/#waitlist">
+          sign up
+        </SmartLink>
       </Text>
 
       {error && (
@@ -111,9 +108,9 @@ export default function Login() {
           onKeyDown={(e) => e.key === "Enter" && onSubmit()}
         />
         <Flex horizontal="end">
-          <SmartLink href="/auth/forgot-password" className="!text-gray-500">
+          {/* <SmartLink href="/auth/forgot-password" className="!text-gray-500">
             Forgot password?
-          </SmartLink>
+          </SmartLink> */}
         </Flex>
       </Column>
 
@@ -140,6 +137,8 @@ export default function Login() {
         variant="secondary"
         weight="default"
         prefixIcon="github"
+        disabled={true}
+        tooltip="Only email-password login available."
         size="l"
         onClick={() => {
           /* GitHub auth logic here */
