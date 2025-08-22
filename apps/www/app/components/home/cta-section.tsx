@@ -37,7 +37,7 @@ export const CtaSection = () => {
       };
       await nuvix.client.call(
         "post",
-        new URL(nuvix.client.config.endpoint + "/waitlist"),
+        new URL(nuvix.client.config.endpoint + "/join-waitlist"),
         apiHeaders,
         {
           email,

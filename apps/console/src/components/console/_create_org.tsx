@@ -43,14 +43,14 @@ export const CreateOrgPage = () => {
     setLoading(true);
     try {
       const plan = plansList?.plans?.find((p) => p.$id === selectedPlan);
-      if (!plan) {
-        throw new Error("Invalid plan selected.");
-      }
+      // if (!plan) {
+      //   throw new Error("Invalid plan selected.");
+      // }
 
       let org = await sdkForConsole.organizations.create(
         ID.unique(),
         orgName,
-        plan?.$id as BillingPlan,
+        (plan?.$id ?? 'tier-0') as BillingPlan,
       );
       addToast({
         variant: "success",

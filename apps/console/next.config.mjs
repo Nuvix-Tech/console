@@ -13,6 +13,9 @@ const nextConfig = {
       {
         hostname: "strapi.collegejaankaar.in",
       },
+      {
+        hostname: "ide.nuvix.in",
+      },
     ],
   },
   reactStrictMode: false,
