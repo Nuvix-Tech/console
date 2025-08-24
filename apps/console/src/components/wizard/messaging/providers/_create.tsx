@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Box, CloseButton, Dialog, Flex, Portal, Text } from "@chakra-ui/react";
 import { Form, SubmitButton } from "../../../others/forms";
 import { Button, Column, useToast } from "@nuvix/ui/components";
@@ -19,6 +19,7 @@ import { useProjectStore } from "@/lib/store";
 import { getQueryClient } from "@/data/query-client";
 import { useParams } from "next/navigation";
 import { useRouter } from "@bprogress/next";
+import { useFormik } from "formik";
 
 type CreateProviderProps = {
   children?: React.ReactNode;
@@ -33,27 +34,45 @@ export const CreateProvider: React.FC<CreateProviderProps> = ({
 }) => {
   const { addToast } = useToast();
   const { sdk } = useProjectStore((state) => state);
+  const [validationSchema, setValidationSchema] = useState<any>();
   const router = useRouter();
   const { id: projectId } = useParams<{ id: string }>();
-
   const path = `/project/${projectId}/messaging/providers`;
 
-  const getProviderTypeLabel = (providerType: MessagingProviderType) => {
-    switch (providerType) {
-      case MessagingProviderType.Email:
-        return "Email Provider";
-      case MessagingProviderType.Sms:
-        return "SMS Provider";
-      case MessagingProviderType.Push:
-        return "Push Provider";
-      default:
-        return "Provider";
+  const providerConfig = useMemo(() => {
+    if (!type) {
+      return {
+        schema: null,
+        initialValues: {} as ProviderFormData,
+        Component: () => null,
+      };
     }
-  };
+    const initialValues = getInitialValues(type);
+    const schema = getProviderSchema(initialValues.providerType);
+
+    switch (type) {
+      case MessagingProviderType.Email:
+        return { schema, initialValues, Component: CreateProviderTypeEmail };
+      case MessagingProviderType.Sms:
+        return { schema, initialValues, Component: CreateProviderTypeSms };
+      case MessagingProviderType.Push:
+        return { schema, initialValues, Component: CreateProviderTypePush };
+      default:
+        return { schema: null, initialValues: {} as ProviderFormData, Component: () => null };
+    }
+  }, [type]);
+
+  const formik = useFormik({
+    enableReinitialize: true,
+    initialValues: providerConfig.initialValues,
+    validationSchema: validationSchema || providerConfig.schema || undefined,
+    onSubmit(values, { resetForm }) {
+      return onSubmit(values, resetForm);
+    },
+  });
 
   async function onSubmit(values: ProviderFormData, resetForm: () => void) {
     if (!type) return;
-
     const client = getQueryClient();
     try {
       let res: Models.Provider = {} as Models.Provider;
@@ -220,66 +239,38 @@ export const CreateProvider: React.FC<CreateProviderProps> = ({
     }
   }
 
+  function getProviderTypeLabel(providerType: MessagingProviderType) {
+    switch (providerType) {
+      case MessagingProviderType.Email:
+        return "Email Provider";
+      case MessagingProviderType.Sms:
+        return "SMS Provider";
+      case MessagingProviderType.Push:
+        return "Push Provider";
+      default:
+        return "Provider";
+    }
+  }
+
   function handleClose({ open = false }: { open?: boolean }) {
-    // confirm({
-    //   title: "Exit process",
-    //   description:
-    //     "Are you sure you want to exit from this process? All data will be deleted. This action is irreversible.",
-    //   confirm: {
-    //     text: "Exit",
-    //   },
-    // }).then((v) => v && onOpenChange?.({ open }));
     onOpenChange?.({ open });
   }
 
-  const providerConfig = (() => {
-    if (!type) return null;
+  useEffect(() => {
+    if (formik.values.providerType)
+      setValidationSchema(getProviderSchema(formik.values.providerType));
+  }, [formik.values.providerType]);
 
-    try {
-      const initialValues = getInitialValues(type);
-      const schema = getProviderSchema(initialValues.providerType);
+  if (!type) return null;
 
-      switch (type) {
-        case MessagingProviderType.Email:
-          return {
-            schema,
-            component: CreateProviderTypeEmail,
-            initialValues,
-          };
-        case MessagingProviderType.Sms:
-          return {
-            schema,
-            component: CreateProviderTypeSms,
-            initialValues,
-          };
-        case MessagingProviderType.Push:
-          return {
-            schema,
-            component: CreateProviderTypePush,
-            initialValues,
-          };
-        default:
-          return null;
-      }
-    } catch (error) {
-      console.error(`Failed to initialize ${getProviderTypeLabel(type)} configuration:`, error);
-      return null;
-    }
-  })();
-
-  if (!providerConfig || !type) {
-    return null;
-  }
-
-  const { schema, component: ProviderComponent, initialValues } = providerConfig;
-  const providerTypeLabel = getProviderTypeLabel(type);
+  const { Component: ProviderComponent } = providerConfig;
 
   return (
     <Dialog.Root
       size="full"
       motionPreset="slide-in-right"
       onOpenChange={onOpenChange}
-      onEscapeKeyDown={(e) => handleClose({ open: false })}
+      onEscapeKeyDown={() => handleClose({ open: false })}
       {...props}
     >
       {children && <Dialog.Trigger asChild>{children}</Dialog.Trigger>}
@@ -287,17 +278,11 @@ export const CreateProvider: React.FC<CreateProviderProps> = ({
         <Dialog.Backdrop />
         <Dialog.Positioner>
           <Dialog.Content>
-            <Form
-              initialValues={initialValues}
-              validationSchema={schema}
-              onSubmit={async (values, { resetForm }) => {
-                await onSubmit(values as ProviderFormData, resetForm);
-              }}
-            >
+            <Form {...formik}>
               <Dialog.Body h="full" gap={10} p={12} display="flex">
-                <Box flex="1" h="full" maxWidth={{ base: "2xl" }} mx={"auto"}>
+                <Box flex="1" h="full" maxWidth={{ base: "2xl" }} mx="auto">
                   <Text fontSize="2xl" fontWeight="semibold" mb={6}>
-                    Create {providerTypeLabel}
+                    Create {getProviderTypeLabel(type)}
                   </Text>
                   <Column gap="8">
                     <ProviderComponent />
@@ -306,10 +291,9 @@ export const CreateProvider: React.FC<CreateProviderProps> = ({
                     <Button variant="tertiary" onClick={() => handleClose({ open: false })}>
                       Cancel
                     </Button>
-                    <SubmitButton>Create {providerTypeLabel}</SubmitButton>
+                    <SubmitButton>Create {getProviderTypeLabel(type)}</SubmitButton>
                   </Flex>
                 </Box>
-
                 <CloseButton
                   position="absolute"
                   top={4}

@@ -28,6 +28,7 @@
       "sharp"
     ],
     "ignoredBuiltDependencies": [
+      "@tailwindcss/oxide",
       "unrs-resolver"
     ]
   }

@@ -50,7 +50,7 @@ export const CreateOrgPage = () => {
       let org = await sdkForConsole.organizations.create(
         ID.unique(),
         orgName,
-        (plan?.$id ?? 'tier-0') as BillingPlan,
+        (plan?.$id ?? "tier-0") as BillingPlan,
       );
       addToast({
         variant: "success",
