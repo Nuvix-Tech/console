@@ -1,7 +1,33 @@
 import { Models } from "@nuvix/console";
 import * as Yup from "yup";
 
-type AttributeTypes = Models.AttributeString | Models.AttributeInteger | Models.AttributeBoolean;
+export type AttributeTypes =
+  | Models.AttributeString
+  | Models.AttributeInteger
+  | Models.AttributeBoolean
+  | Models.AttributeDatetime
+  | Models.AttributeEmail
+  | Models.AttributeEnum
+  | Models.AttributeIp
+  | Models.AttributeUrl
+  | Models.AttributeFloat
+  | Models.AttributeRelationship;
+
+export enum Attributes {
+  String = "string",
+  Integer = "integer",
+  Float = "float",
+  Boolean = "boolean",
+  Timestamptz = "timestamptz",
+  Relationship = "relationship",
+}
+
+export enum AttributeFormat {
+  Email = "email",
+  Url = "url",
+  Ip = "ip",
+  Enum = "enum",
+}
 
 export const generateYupSchema = (attributes: AttributeTypes[]) => {
   const schema: Record<string, Yup.AnySchema> = {};
@@ -67,12 +93,10 @@ export const generateYupSchema = (attributes: AttributeTypes[]) => {
         return;
     }
 
-    // Handle array case
     if (attribute.array) {
       fieldSchema = Yup.array().of(fieldSchema);
     }
 
-    // Handle required and nullable case
     if (attribute.required) {
       fieldSchema = fieldSchema.required(`${attribute.key} is required`);
     } else {

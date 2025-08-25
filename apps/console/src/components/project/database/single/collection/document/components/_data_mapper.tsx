@@ -1,9 +1,8 @@
 import { Models } from "@nuvix/console";
 import { UpdateField } from "./_data_field";
-import { DynamicField, FIELD_TYPES } from ".";
-import { generateYupSchema } from "./_utils";
-
-type AttributeTypes = Models.AttributeString | Models.AttributeInteger | Models.AttributeBoolean;
+import { DynamicField } from ".";
+import { generateYupSchema, type AttributeTypes, Attributes, AttributeFormat } from "./_utils";
+import React from "react";
 
 interface DataMapperProps<T = Models.Document> {
   document: T;
@@ -17,22 +16,34 @@ export const DataMapper = <T,>({ attributes, document }: DataMapperProps<T>) => 
       name: attribute.key,
       nullable: !attribute.required,
       isArray: attribute.array,
-      type: "string" as (typeof FIELD_TYPES)[number],
+      type: Attributes.String as Attributes | AttributeFormat,
       options: !attribute.required ? [{ value: "null", label: "NULL" }] : [],
     };
 
-    switch (attribute.type) {
-      case "string":
+    const Wrapper = ({ children }: { children: React.ReactNode }) => (
+      <UpdateField
+        schema={schema}
+        name={attribute.key}
+        value={document[attribute.key as keyof T]}
+        key={index}
+        attribute={attribute}
+      >
+        {" "}
+        {children}{" "}
+      </UpdateField>
+    );
+
+    switch (attribute.type as Attributes) {
+      case Attributes.String:
         if ("format" in attribute) {
-          switch (attribute.format) {
-            case "email":
-              commonProps.type = "email";
+          switch (attribute.format as AttributeFormat) {
+            case AttributeFormat.Email:
+            case AttributeFormat.Url:
+            case AttributeFormat.Ip:
+              commonProps.type = attribute.format as AttributeFormat;
               break;
-            case "url":
-              commonProps.type = "url";
-              break;
-            case "enum":
-              commonProps.type = "enum";
+            case AttributeFormat.Enum:
+              commonProps.type = AttributeFormat.Enum;
               commonProps.options.push(
                 ...(attribute as Models.AttributeEnum).elements.map((v) => ({
                   value: v,
@@ -43,48 +54,43 @@ export const DataMapper = <T,>({ attributes, document }: DataMapperProps<T>) => 
           }
         }
         return (
-          <UpdateField
-            schema={schema}
-            name={attribute.key}
-            value={document[attribute.key as keyof T]}
-            key={index}
-            attribute={attribute}
-          >
+          <Wrapper>
             <DynamicField {...commonProps} size={(attribute as Models.AttributeString)?.size} />
-          </UpdateField>
+          </Wrapper>
         );
-      case "integer":
+      case Attributes.Float:
+      case Attributes.Integer:
         return (
-          <UpdateField
-            name={attribute.key}
-            schema={schema}
-            value={document[attribute.key as keyof T]}
-            key={index}
-            attribute={attribute}
-          >
+          <Wrapper>
             <DynamicField
               {...commonProps}
               min={(attribute as Models.AttributeInteger).min}
               max={(attribute as Models.AttributeInteger).max}
-              type="integer"
+              type={attribute.type as Attributes}
             />
-          </UpdateField>
+          </Wrapper>
         );
-      case "boolean":
+      case Attributes.Boolean:
         commonProps.options = [
           { value: "true", label: "True" },
           { value: "false", label: "False" },
         ];
         return (
-          <UpdateField
-            schema={schema}
-            name={attribute.key}
-            value={document[attribute.key as keyof T]}
-            key={index}
-            attribute={attribute}
-          >
-            <DynamicField {...commonProps} type="boolean" />
-          </UpdateField>
+          <Wrapper>
+            <DynamicField {...commonProps} type={Attributes.Boolean} />
+          </Wrapper>
+        );
+      case Attributes.Timestamptz:
+        return (
+          <Wrapper>
+            <DynamicField {...commonProps} type={Attributes.Timestamptz} />
+          </Wrapper>
+        );
+      case Attributes.Relationship:
+        return (
+          <Wrapper>
+            <DynamicField {...commonProps} type={Attributes.Relationship} />
+          </Wrapper>
         );
       default:
         return null;

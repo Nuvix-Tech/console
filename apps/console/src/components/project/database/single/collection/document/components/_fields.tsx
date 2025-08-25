@@ -6,18 +6,7 @@ import { Input, NumberInput, Select, Textarea } from "@nuvix/ui/components";
 import { CloseButton } from "@nuvix/cui/close-button";
 import { LuPlus } from "react-icons/lu";
 import { AttributeIcon } from "../../components";
-
-export const FIELD_TYPES = [
-  "string",
-  "integer",
-  "boolean",
-  "enum",
-  "url",
-  "email",
-  "relationship",
-  "datetime",
-  "ip",
-] as const;
+import { AttributeFormat, Attributes } from "./_utils";
 
 interface Props {
   name: string;
@@ -25,7 +14,7 @@ interface Props {
   size?: number;
   nullable?: boolean;
   isArray?: boolean;
-  type?: (typeof FIELD_TYPES)[number];
+  type?: Attributes | AttributeFormat;
   options?: { value: string; label: string }[];
   min?: number;
   max?: number;
@@ -77,16 +66,22 @@ export const DynamicField = (props: Props) => {
 
   const getFieldComponent = () => {
     switch (type) {
-      case "integer":
+      case Attributes.Float:
         return NumberField;
-      case "boolean":
+      case Attributes.Integer:
+        return NumberField;
+      case Attributes.Boolean:
         return SelectBooleanField;
-      case "enum":
-        return SelectField;
-      case "relationship":
-        return RelationshipField;
-      case "datetime":
+      case Attributes.Timestamptz:
         return DateTimeField;
+      case Attributes.Relationship:
+        return RelationshipField;
+      case AttributeFormat.Enum:
+        return SelectField;
+      case Attributes.String:
+      case AttributeFormat.Email:
+      case AttributeFormat.Url:
+      case AttributeFormat.Ip:
       default:
         return TextareaField;
     }
