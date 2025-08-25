@@ -35,7 +35,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
       style={{
         borderRadius: "var(--radius-full)",
       }}
-      dropClass={dropClass}
+      
       trigger={
         <Flex
           tabIndex={0}

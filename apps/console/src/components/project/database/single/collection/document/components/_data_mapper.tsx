@@ -9,10 +9,18 @@ interface DataMapperProps<T = Models.Document> {
   attributes: AttributeTypes[];
 }
 
+interface CommonProps {
+  name: string;
+  nullable: boolean;
+  isArray?: boolean;
+  type: Attributes | AttributeFormat;
+  options?: any;
+}
+
 export const DataMapper = <T,>({ attributes, document }: DataMapperProps<T>) => {
   return attributes.map((attribute, index) => {
     let schema = generateYupSchema([attribute]);
-    const commonProps = {
+    const commonProps: CommonProps = {
       name: attribute.key,
       nullable: !attribute.required,
       isArray: attribute.array,
@@ -28,8 +36,7 @@ export const DataMapper = <T,>({ attributes, document }: DataMapperProps<T>) => 
         key={index}
         attribute={attribute}
       >
-        {" "}
-        {children}{" "}
+        {children}
       </UpdateField>
     );
 

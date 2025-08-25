@@ -3,8 +3,13 @@ import { useSteps } from "@chakra-ui/react";
 import { StepperDrawer } from "@/components/others/stepper";
 import { Models } from "@nuvix/console";
 import { useCollectionStore, useDatabaseStore, useProjectStore } from "@/lib/store";
-import { DynamicField, FIELD_TYPES } from "../document/components";
-import { generateYupSchema } from "../document/components/_utils";
+import { DynamicField } from "../document/components";
+import {
+  AttributeFormat,
+  Attributes,
+  AttributeTypes,
+  generateYupSchema,
+} from "../document/components/_utils";
 import { SubmitButton } from "@/components/others/forms";
 import { useToast } from "@nuvix/ui/components";
 import { PermissionsEditor } from "@/components/others/permissions";
@@ -99,10 +104,16 @@ export const CreateDocument: React.FC<CreateDocumentProps> = ({ isOpen, onClose,
   );
 };
 
-type AttributeTypes = Models.AttributeString | Models.AttributeInteger | Models.AttributeBoolean;
-
 interface DataMapperProps {
   attributes: AttributeTypes[];
+}
+
+interface CommonProps {
+  name: string;
+  nullable: boolean;
+  isArray?: boolean;
+  type: Attributes | AttributeFormat;
+  options?: any;
 }
 
 const DataFields = ({ attributes }: DataMapperProps) => {
@@ -110,27 +121,25 @@ const DataFields = ({ attributes }: DataMapperProps) => {
     <>
       <div className="flex flex-col gap-4">
         {attributes.map((attribute) => {
-          const commonProps = {
+          const commonProps: CommonProps = {
             name: attribute.key,
-            showAbout: true,
             nullable: !attribute.required,
             isArray: attribute.array,
-            type: "string" as (typeof FIELD_TYPES)[number],
+            type: Attributes.String as Attributes | AttributeFormat,
             options: !attribute.required ? [{ value: "null", label: "NULL" }] : [],
           };
 
-          switch (attribute.type) {
-            case "string":
+          switch (attribute.type as Attributes) {
+            case Attributes.String:
               if ("format" in attribute) {
-                switch (attribute.format) {
-                  case "email":
-                    commonProps.type = "email";
+                switch (attribute.format as AttributeFormat) {
+                  case AttributeFormat.Email:
+                  case AttributeFormat.Url:
+                  case AttributeFormat.Ip:
+                    commonProps.type = attribute.format as AttributeFormat;
                     break;
-                  case "url":
-                    commonProps.type = "url";
-                    break;
-                  case "enum":
-                    commonProps.type = "enum";
+                  case AttributeFormat.Enum:
+                    commonProps.type = AttributeFormat.Enum;
                     commonProps.options.push(
                       ...(attribute as Models.AttributeEnum).elements.map((v) => ({
                         value: v,
@@ -141,24 +150,28 @@ const DataFields = ({ attributes }: DataMapperProps) => {
                 }
               }
               return (
-                <DynamicField
-                  key={attribute.key}
-                  {...commonProps}
-                  size={(attribute as Models.AttributeString)?.size}
-                />
+                <DynamicField {...commonProps} size={(attribute as Models.AttributeString)?.size} />
               );
-            case "integer":
+            case Attributes.Float:
+            case Attributes.Integer:
               return (
                 <DynamicField
-                  key={attribute.key}
                   {...commonProps}
                   min={(attribute as Models.AttributeInteger).min}
                   max={(attribute as Models.AttributeInteger).max}
-                  type="integer"
+                  type={attribute.type as Attributes}
                 />
               );
-            case "boolean":
-              return <DynamicField key={attribute.key} {...commonProps} type="boolean" />;
+            case Attributes.Boolean:
+              commonProps.options = [
+                { value: "true", label: "True" },
+                { value: "false", label: "False" },
+              ];
+              return <DynamicField {...commonProps} type={Attributes.Boolean} />;
+            case Attributes.Timestamptz:
+              return <DynamicField {...commonProps} type={Attributes.Timestamptz} />;
+            case Attributes.Relationship:
+              return <DynamicField {...commonProps} type={Attributes.Relationship} />;
             default:
               return null;
           }

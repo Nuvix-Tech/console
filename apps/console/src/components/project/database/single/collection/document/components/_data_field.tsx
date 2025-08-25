@@ -8,7 +8,6 @@ import {
 import { Form, SubmitButton } from "@/components/others/forms";
 import { useToast } from "@nuvix/ui/components";
 import React from "react";
-import { FIELD_TYPES } from "./_fields";
 import { AttributeIcon } from "../../components";
 import {
   useCollectionStore,
@@ -16,6 +15,7 @@ import {
   useDocumentStore,
   useProjectStore,
 } from "@/lib/store";
+import { AttributeFormat, Attributes } from "./_utils";
 
 interface Props {
   name: string;
@@ -28,8 +28,8 @@ interface Props {
 export const getFieldType = (attribute: {
   type: string;
   format?: string;
-}): (typeof FIELD_TYPES)[number] => {
-  return (attribute.format || attribute.type) as (typeof FIELD_TYPES)[number];
+}): Attributes | AttributeFormat => {
+  return (attribute.format || attribute.type) as Attributes | AttributeFormat;
 };
 
 export const UpdateField: React.FC<Props> = ({ name, value, schema, children, attribute }) => {

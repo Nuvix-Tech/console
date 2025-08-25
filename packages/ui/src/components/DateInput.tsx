@@ -1,18 +1,20 @@
 "use client";
 
-import type React from "react";
-import { useCallback, useEffect, useState } from "react";
-import { DatePicker, DropdownWrapper, Flex, Input } from ".";
+import React, { useState, useCallback, useEffect } from "react";
+import { Input, DropdownWrapper, DatePicker } from ".";
 
 interface DateInputProps extends Omit<React.ComponentProps<typeof Input>, "onChange" | "value"> {
   id: string;
-  label: string;
+  label?: string;
+  placeholder?: string;
   value?: Date;
   onChange?: (date: Date) => void;
   minHeight?: number;
   className?: string;
   style?: React.CSSProperties;
   timePicker?: boolean;
+  minDate?: Date;
+  maxDate?: Date;
 }
 
 const formatDate = (date: Date, timePicker: boolean) => {
@@ -33,6 +35,7 @@ const formatDate = (date: Date, timePicker: boolean) => {
 export const DateInput: React.FC<DateInputProps> = ({
   id,
   label,
+  placeholder,
   value,
   onChange,
   error,
@@ -40,6 +43,8 @@ export const DateInput: React.FC<DateInputProps> = ({
   className,
   style,
   timePicker = false,
+  minDate,
+  maxDate,
   ...rest
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -66,38 +71,49 @@ export const DateInput: React.FC<DateInputProps> = ({
     setIsOpen(true);
   }, []);
 
-  const trigger = (
-    <Input
-      className="cursor-interactive"
-      style={{
-        textOverflow: "ellipsis",
-      }}
-      id={id}
-      label={label}
-      value={inputValue}
-      error={error}
-      readOnly
-      onClick={handleInputClick}
-      {...rest}
-    />
-  );
-
-  const dropdown = (
-    <Flex padding="20">
-      <DatePicker value={value} onChange={handleDateChange} timePicker={timePicker} />
-    </Flex>
-  );
+  const handleInputFocus = useCallback(() => {
+    setIsOpen(true);
+  }, []);
 
   return (
     <DropdownWrapper
+      trigger={
+        <Input
+          style={{
+            textOverflow: "ellipsis",
+          }}
+          id={id}
+          label={label}
+          placeholder={placeholder}
+          value={inputValue}
+          error={error}
+          readOnly
+          onFocus={handleInputFocus}
+          {...rest}
+        />
+      }
+      dropdown={
+        <DatePicker
+          key={`datepicker-${isOpen ? "open" : "closed"}-${value?.getTime() || 0}`}
+          padding="20"
+          value={value}
+          onChange={handleDateChange}
+          timePicker={timePicker}
+          minDate={minDate}
+          maxDate={maxDate}
+          autoFocus={true}
+          isOpen={isOpen}
+        />
+      }
       fillWidth
-      trigger={trigger}
       minHeight={minHeight}
-      dropdown={dropdown}
       isOpen={isOpen}
       onOpenChange={setIsOpen}
       className={className}
+      closeAfterClick={!timePicker}
+      disableTriggerClick={true}
       style={{ ...style }}
+      handleArrowNavigation={false}
     />
   );
 };

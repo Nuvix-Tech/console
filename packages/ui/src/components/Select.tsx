@@ -168,7 +168,6 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
         }}
         isOpen={isDropdownOpen}
         onOpenChange={setIsDropdownOpen}
-        floatingPlacement={floatingPlacement}
         minHeight={minHeight}
         trigger={
           <Input

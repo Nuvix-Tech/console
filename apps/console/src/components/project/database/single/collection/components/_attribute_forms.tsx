@@ -16,6 +16,7 @@ import { DynamicField, SelectField } from "../document/components";
 import { useQuery } from "@tanstack/react-query";
 import { RadioCardItem, RadioCardRoot } from "@nuvix/cui/radio-card";
 import { MoveHorizontal, MoveRight } from "lucide-react";
+import { AttributeFormat, Attributes } from "../document/components/_utils";
 
 interface BaseProps {
   onClose: () => void;
@@ -23,12 +24,15 @@ interface BaseProps {
   refetch: () => Promise<void>;
 }
 
-const DefaultValueField = ({ type }: { type: string }) => {
+const DefaultValueField = ({ type }: { type: Attributes | AttributeFormat }) => {
   const { values } = useFormikContext<{
     required: boolean;
     array: boolean;
     default: string | number | boolean;
     elements: string[];
+    min?: number;
+    max?: number;
+    size?: number;
   }>();
 
   const commonProps = {
@@ -36,40 +40,47 @@ const DefaultValueField = ({ type }: { type: string }) => {
     label: "Default Value",
     disabled: values.required || values.array,
     nullable: true,
+    type,
+  };
+
+  const extra: Record<string, any> = {
+    options: [],
   };
 
   switch (type) {
-    case "string":
-      return <InputField {...commonProps} />;
-    case "integer":
-    case "float":
-      return <InputNumberField {...commonProps} />;
-    case "boolean":
-      return <DynamicField {...commonProps} type="boolean" />;
-    case "enum":
+    case Attributes.String:
+    case AttributeFormat.Email:
+    case AttributeFormat.Url:
+    case AttributeFormat.Ip:
+    case AttributeFormat.Enum:
+      extra.options.push(
+        ...(type === AttributeFormat.Enum
+          ? values.elements.map((v) => ({
+              value: v,
+              label: v,
+            }))
+          : []),
+      );
       return (
         <DynamicField
-          {...commonProps}
-          type="enum"
-          options={[
-            { value: "null", label: "NULL" },
-            ...values.elements?.map((element: string) => ({
-              value: element,
-              label: element,
-            })),
-          ]}
+          {...{
+            ...commonProps,
+            ...extra,
+          }}
+          size={values.size}
         />
       );
-    case "datetime":
-      return <InputField {...commonProps} type="datetime-local" />;
-    case "ip":
-      return <InputField {...commonProps} placeholder="192.168.1.1" />;
-    case "url":
-      return <InputField {...commonProps} placeholder="https://example.com" />;
-    case "email":
-      return <InputField {...commonProps} placeholder="user@example.com" type="email" />;
-    default:
-      return <InputField {...commonProps} />;
+    case Attributes.Float:
+    case Attributes.Integer:
+      return <DynamicField {...commonProps} min={values.min} max={values.max} />;
+    case Attributes.Boolean:
+      extra.options = [
+        { value: "true", label: "True" },
+        { value: "false", label: "False" },
+      ];
+      return <DynamicField {...commonProps} />;
+    case Attributes.Timestamptz:
+      return <DynamicField {...commonProps} />;
   }
 };
 
@@ -138,6 +149,7 @@ const AttributeFormBase = ({
   submitAction: (values: any) => Promise<void>;
 }) => {
   const { addToast } = useToast();
+  const { refresh } = useCollectionStore((s) => s);
 
   return (
     <FormDialog
@@ -164,6 +176,7 @@ const AttributeFormBase = ({
             });
             onClose();
             await refetch();
+            await refresh();
           } catch (error: any) {
             addToast({
               message: error.message,
@@ -197,7 +210,7 @@ const keyField = (
   />
 );
 
-const commonFormFields = (type: string) => (
+const commonFormFields = (type: Attributes | AttributeFormat) => (
   <>
     <DefaultValueField type={type} />
     <RequiredField />
@@ -228,7 +241,7 @@ export const StringAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => 
     <>
       {keyField}
       <InputNumberField name="size" label="Size" required />
-      {commonFormFields("string")}
+      {commonFormFields(Attributes.String)}
     </>
   );
 
@@ -238,7 +251,7 @@ export const StringAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => 
       isOpen={isOpen}
       refetch={refetch}
       title="String"
-      format="string"
+      format={Attributes.String}
       description="Create a new string attribute for this collection"
       initialValues={{
         key: "",
@@ -286,7 +299,7 @@ export const IntegerAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) =>
         <InputNumberField name="min" label="Minimum" nullable />
         <InputNumberField name="max" label="Maximum" nullable />
       </Row>
-      {commonFormFields("integer")}
+      {commonFormFields(Attributes.Integer)}
     </>
   );
 
@@ -296,7 +309,7 @@ export const IntegerAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) =>
       isOpen={isOpen}
       refetch={refetch}
       title="Integer"
-      format="integer"
+      format={Attributes.Integer}
       description="Create a new integer attribute for this collection"
       initialValues={{
         key: "",
@@ -346,7 +359,7 @@ export const FloatAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
         <InputNumberField name="min" label="Minimum" nullable />
         <InputNumberField name="max" label="Maximum" nullable />
       </Row>
-      {commonFormFields("float")}
+      {commonFormFields(Attributes.Float)}
     </>
   );
 
@@ -356,7 +369,7 @@ export const FloatAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
       isOpen={isOpen}
       refetch={refetch}
       title="Float"
-      format="float"
+      format={Attributes.Float}
       description="Create a new float attribute for this collection"
       initialValues={{
         key: "",
@@ -400,7 +413,7 @@ export const BooleanAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) =>
   const formFields = (
     <>
       {keyField}
-      {commonFormFields("boolean")}
+      {commonFormFields(Attributes.Boolean)}
     </>
   );
 
@@ -410,7 +423,7 @@ export const BooleanAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) =>
       isOpen={isOpen}
       refetch={refetch}
       title="Boolean"
-      format="boolean"
+      format={Attributes.Boolean}
       description="Create a new boolean attribute for this collection"
       initialValues={{
         key: "",
@@ -450,7 +463,7 @@ export const DatetimeAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) =
   const formFields = (
     <>
       {keyField}
-      {commonFormFields("datetime")}
+      {commonFormFields(Attributes.Timestamptz)}
     </>
   );
 
@@ -460,7 +473,7 @@ export const DatetimeAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) =
       isOpen={isOpen}
       refetch={refetch}
       title="Datetime"
-      format="datetime"
+      format={Attributes.Timestamptz}
       description="Create a new datetime attribute for this collection"
       initialValues={{
         key: "",
@@ -500,7 +513,7 @@ export const IpAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
   const formFields = (
     <>
       {keyField}
-      {commonFormFields("ip")}
+      {commonFormFields(AttributeFormat.Ip)}
     </>
   );
 
@@ -510,7 +523,7 @@ export const IpAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
       isOpen={isOpen}
       refetch={refetch}
       title="IP Attribute"
-      format="ip"
+      format={AttributeFormat.Ip}
       description="Create a new IP address attribute for this collection"
       initialValues={{
         key: "",
@@ -550,7 +563,7 @@ export const UrlAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
   const formFields = (
     <>
       {keyField}
-      {commonFormFields("url")}
+      {commonFormFields(AttributeFormat.Url)}
     </>
   );
 
@@ -560,7 +573,7 @@ export const UrlAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
       isOpen={isOpen}
       refetch={refetch}
       title="URL"
-      format="url"
+      format={AttributeFormat.Url}
       description="Create a new URL attribute for this collection"
       initialValues={{
         key: "",
@@ -600,7 +613,7 @@ export const EmailAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
   const formFields = (
     <>
       {keyField}
-      {commonFormFields("email")}
+      {commonFormFields(AttributeFormat.Email)}
     </>
   );
 
@@ -610,7 +623,7 @@ export const EmailAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
       isOpen={isOpen}
       refetch={refetch}
       title="Email"
-      format="email"
+      format={AttributeFormat.Email}
       description="Create a new email attribute for this collection"
       initialValues={{
         key: "",
@@ -652,7 +665,7 @@ export const EnumAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
     <>
       {keyField}
       <InputTagField name="elements" label="Elements" />
-      {commonFormFields("enum")}
+      {commonFormFields(AttributeFormat.Enum)}
     </>
   );
 
@@ -662,7 +675,7 @@ export const EnumAttributeForm = ({ onClose, isOpen, refetch }: BaseProps) => {
       isOpen={isOpen}
       refetch={refetch}
       title="Enum"
-      format="enum"
+      format={AttributeFormat.Enum}
       description="Create a new enum attribute for this collection"
       initialValues={{
         key: "",
@@ -711,7 +724,7 @@ export const RelationshipAttributeForm = ({ onClose, isOpen, refetch }: BaseProp
       isOpen={isOpen}
       refetch={refetch}
       title="Relationship"
-      format="relationship"
+      format={Attributes.Relationship}
       description="Create a new relationship attribute for this collection"
       initialValues={{
         key: "",
@@ -840,7 +853,7 @@ const RelationshipAttributeFormFields = () => {
           <DynamicField
             name="relationType"
             label="Relation Type"
-            type="enum"
+            type={AttributeFormat.Enum}
             options={[
               { value: "oneToOne", label: "One to One" },
               { value: "oneToMany", label: "One to Many" },
@@ -903,7 +916,7 @@ const RelationshipAttributeFormFields = () => {
           <DynamicField
             name="onDelete"
             label="On Delete Action"
-            type="enum"
+            type={AttributeFormat.Enum}
             options={[
               { value: "cascade", label: "Cascade" },
               { value: "restrict", label: "Restrict" },

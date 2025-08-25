@@ -1,12 +1,12 @@
-import classNames from "classnames";
-import type React from "react";
-import { forwardRef } from "react";
-import { Flex, Text } from ".";
-import { ElementType } from "./ElementType";
-import styles from "./Option.module.scss";
+"use client";
 
-export interface OptionProps {
-  label: React.ReactNode;
+import classNames from "classnames";
+import { Text, ElementType, Column, Row } from ".";
+import styles from "./Option.module.scss";
+import React, { forwardRef, KeyboardEvent, useRef, useEffect, useState } from "react";
+
+export interface OptionProps extends Omit<React.ComponentProps<typeof Row>, "onClick"> {
+  label?: React.ReactNode;
   href?: string;
   value: string;
   hasPrefix?: React.ReactNode;
@@ -14,9 +14,12 @@ export interface OptionProps {
   description?: React.ReactNode;
   danger?: boolean;
   selected?: boolean;
+  disabled?: boolean;
   highlighted?: boolean;
   tabIndex?: number;
+  children?: React.ReactNode;
   onClick?: (value: string) => void;
+  onLinkClick?: () => void;
 }
 
 const Option = forwardRef<HTMLDivElement, OptionProps>(
@@ -30,56 +33,114 @@ const Option = forwardRef<HTMLDivElement, OptionProps>(
       description,
       danger,
       selected,
+      disabled = false,
       highlighted,
       tabIndex,
       onClick,
-      ...props
+      onLinkClick,
+      children,
+      ...flex
     },
     ref,
   ) => {
-    if (href && onClick) {
-      console.warn("Option should not have both `href` and `onClick` props.");
-    }
+    // Track if the element has the highlighted class applied by ArrowNavigation
+    const [isHighlightedByClass, setIsHighlightedByClass] = useState(false);
+    // Use a more generic type that works with ElementType
+    const elementRef = useRef<HTMLElement>(null);
 
+    // Check for highlighted class applied by ArrowNavigation
+    useEffect(() => {
+      if (!elementRef.current) return;
+
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (
+            mutation.type === "attributes" &&
+            (mutation.attributeName === "class" || mutation.attributeName === "data-highlighted")
+          ) {
+            if (mutation.target instanceof HTMLElement) {
+              const element = mutation.target;
+              setIsHighlightedByClass(
+                element.classList.contains("highlighted") ||
+                  element.getAttribute("data-highlighted") === "true",
+              );
+            }
+          }
+        });
+      });
+
+      observer.observe(elementRef.current, {
+        attributes: true,
+        attributeFilter: ["class", "data-highlighted"],
+      });
+
+      // Initial check
+      setIsHighlightedByClass(
+        elementRef.current.classList.contains("highlighted") ||
+          elementRef.current.getAttribute("data-highlighted") === "true",
+      );
+
+      return () => observer.disconnect();
+    }, []);
     return (
       <ElementType
         tabIndex={tabIndex}
-        ref={ref}
+        ref={(el) => {
+          // Forward the ref
+          if (typeof ref === "function") {
+            ref(el as HTMLDivElement);
+          } else if (ref) {
+            ref.current = el as HTMLDivElement;
+          }
+          // Store our own ref
+          elementRef.current = el;
+        }}
         href={href}
-        className="reset-button-styles"
-        style={{ width: "100%" }}
+        disabled={disabled}
+        className="reset-button-styles fill-width"
+        onLinkClick={onLinkClick}
+        onClick={() => onClick?.(value)}
+        data-value={value}
+        role="option"
+        aria-selected={selected}
+        aria-disabled={disabled}
+        onKeyDown={(e: KeyboardEvent<HTMLElement>) => {
+          if ((e.key === "Enter" || e.key === " ") && !disabled) {
+            e.preventDefault();
+            e.stopPropagation();
+            elementRef.current?.click();
+          }
+        }}
       >
-        <Flex
-          {...props}
+        <Row
           fillWidth
           vertical="center"
           paddingX="12"
           paddingY="8"
           gap="12"
           radius="m"
-          role="option"
-          aria-selected={selected}
           tabIndex={-1}
           borderWidth={1}
           borderStyle="solid"
-          cursor="interactive"
+          cursor={disabled ? "not-allowed" : "interactive"}
           transition="micro-medium"
-          onClick={() => onClick?.(value)}
+          onBackground="neutral-strong"
           className={classNames(styles.option, {
             [styles.danger]: danger,
             [styles.selected]: selected,
-            [styles.highlighted]: highlighted,
+            [styles.highlighted]: highlighted || isHighlightedByClass,
+            [styles.disabled]: disabled,
           })}
-          data-value={value}
+          {...flex}
         >
-          {hasPrefix && <Flex className={styles.prefix}>{hasPrefix}</Flex>}
-          <Flex
+          {hasPrefix && <Row className={styles.prefix}>{hasPrefix}</Row>}
+          {children}
+          <Column
             horizontal="start"
             style={{
               whiteSpace: "nowrap",
             }}
             fillWidth
-            direction="column"
           >
             <Text onBackground="neutral-strong" variant="label-default-s">
               {label}
@@ -89,9 +150,9 @@ const Option = forwardRef<HTMLDivElement, OptionProps>(
                 {description}
               </Text>
             )}
-          </Flex>
-          {hasSuffix && <Flex className={styles.suffix}>{hasSuffix}</Flex>}
-        </Flex>
+          </Column>
+          {hasSuffix && <Row className={styles.suffix}>{hasSuffix}</Row>}
+        </Row>
       </ElementType>
     );
   },

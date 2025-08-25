@@ -1,32 +1,47 @@
 import React from "react";
-import { HStack, Button } from "@chakra-ui/react";
+import { HStack, Button, Input as ChakraInput } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 import { Field } from "@nuvix/cui/field";
-import { Input, NumberInput, Select, Textarea } from "@nuvix/ui/components";
+import { DateInput, Input, NumberInput, Select, Textarea } from "@nuvix/ui/components";
 import { CloseButton } from "@nuvix/cui/close-button";
 import { LuPlus } from "react-icons/lu";
 import { AttributeIcon } from "../../components";
 import { AttributeFormat, Attributes } from "./_utils";
 
-interface Props {
+type BaseFieldProps = {
   name: string;
   label?: string;
   size?: number;
   nullable?: boolean;
   isArray?: boolean;
-  type?: Attributes | AttributeFormat;
-  options?: { value: string; label: string }[];
   min?: number;
   max?: number;
   showAbout?: boolean;
   [key: string]: any;
-}
+};
+
+type EnumFieldProps = BaseFieldProps & {
+  type: AttributeFormat.Enum;
+  options: { value: string; label: string }[];
+};
+
+type RelationshipFieldProps = BaseFieldProps & {
+  type: Attributes.Relationship;
+  options: { value: string; label: string }[];
+};
+
+type ScalarFieldProps = BaseFieldProps & {
+  type: Attributes | AttributeFormat;
+  options?: never;
+};
+
+type Props = EnumFieldProps | RelationshipFieldProps | ScalarFieldProps;
 
 export const DynamicField = (props: Props) => {
   const {
     name,
     isArray,
-    type = "string",
+    type = Attributes.String,
     options = [],
     nullable,
     label,
@@ -36,6 +51,7 @@ export const DynamicField = (props: Props) => {
   const { values, errors, touched, setFieldValue, setFieldTouched } =
     useFormikContext<Record<string, any>>();
   const id = React.useId();
+
   const handleChange = (index: number, value: string | number | boolean | null) => {
     if (isArray) {
       const newArray = values[name] ? [...values[name]] : [];
@@ -67,7 +83,6 @@ export const DynamicField = (props: Props) => {
   const getFieldComponent = () => {
     switch (type) {
       case Attributes.Float:
-        return NumberField;
       case Attributes.Integer:
         return NumberField;
       case Attributes.Boolean:
@@ -88,6 +103,24 @@ export const DynamicField = (props: Props) => {
   };
 
   const FieldComponent = getFieldComponent();
+
+  const renderArrayField = (FieldComponent: React.FC<any>) =>
+    values[name]?.map((item: any, index: number) => (
+      <HStack width="full" key={index}>
+        <FieldComponent
+          {...commonProps}
+          isNull={item === null}
+          value={item}
+          onChange={(e: any) => handleChange(index, e.target.value)}
+          onBlur={() => setFieldTouched(name, true)}
+          options={options}
+          nullable={nullable}
+          index={index}
+        />
+        <CloseButton onClick={() => handleRemoveField(index)} />
+      </HStack>
+    ));
+
   return (
     <Field
       ids={{
@@ -107,24 +140,7 @@ export const DynamicField = (props: Props) => {
       required={!nullable}
     >
       {isArray ? (
-        values[name]?.map((item: any, index: number) => {
-          const onChange = (e: any) => handleChange(index, e.target.value);
-          return (
-            <HStack width="full" key={index}>
-              <FieldComponent
-                isNull={item === null}
-                {...commonProps}
-                value={item}
-                onChange={onChange}
-                onBlur={(e: any) => setFieldTouched(name, true)}
-                options={options}
-                nullable={nullable}
-                index={index}
-              />
-              <CloseButton onClick={() => handleRemoveField(index)} />
-            </HStack>
-          );
-        })
+        renderArrayField(FieldComponent)
       ) : (
         <FieldComponent
           {...commonProps}
@@ -133,7 +149,7 @@ export const DynamicField = (props: Props) => {
           onChange={(e: any) => handleChange(0, e.target.value)}
           options={options}
           nullable={nullable}
-          onBlur={(e: any) => setFieldTouched(name, true)}
+          onBlur={() => setFieldTouched(name, true)}
         />
       )}
 
@@ -157,11 +173,13 @@ type FieldProps = {
 };
 
 type SelectFieldProps = FieldProps & {
+  name: string;
   options: Array<{ value: string; label: string }>;
-};
+} & Partial<React.ComponentProps<typeof Select>>;
 
-const TextareaField = ({ value, onChange, maxLength, ...props }: FieldProps) => {
-  return maxLength && maxLength > 50 ? (
+// Text input / textarea
+const TextareaField = ({ value, onChange, maxLength, ...props }: FieldProps) =>
+  maxLength && maxLength > 50 ? (
     <Textarea
       lines={5}
       placeholder="Start typing..."
@@ -180,92 +198,69 @@ const TextareaField = ({ value, onChange, maxLength, ...props }: FieldProps) => 
       onChange={onChange}
     />
   );
-};
 
-const NumberField = ({ value, onChange, ...props }: FieldProps) => {
-  return (
-    <NumberInput
-      {...props}
-      value={value}
-      labelAsPlaceholder
-      onChange={(v: number | null) => onChange({ target: { value: v } })}
-    />
-  );
-};
+// Numeric input
+const NumberField = ({ value, onChange, ...props }: FieldProps) => (
+  <NumberInput
+    {...props}
+    value={value}
+    labelAsPlaceholder
+    onChange={(v: number | null) => onChange({ target: { value: v } })}
+  />
+);
 
-export const SelectField = ({
-  value,
-  onChange,
-  options = [],
-  nullable,
-  ...props
-}: SelectFieldProps & React.ComponentProps<typeof Select>) => {
-  const _onChange = (v: string) => {
-    if ((v === null || v === "null") && nullable) {
-      onChange({ target: { value: null } });
-    } else {
-      onChange({ target: { value: v } });
-    }
-  };
-  return (
-    <Select
-      {...props}
-      labelAsPlaceholder
-      value={value == null ? "null" : value}
-      options={options}
-      onSelect={_onChange}
-    />
-  );
-};
+// Select field factory
+const makeSelectField =
+  (baseOptions: Array<{ value: string; label: string }>) =>
+  ({ value, onChange, options = [], nullable, ...props }: SelectFieldProps) => {
+    const _onChange = (v: string) => {
+      if ((v === null || v === "null") && nullable) {
+        onChange({ target: { value: null } });
+      } else {
+        onChange({ target: { value: v } });
+      }
+    };
 
-export const SelectBooleanField = ({ value, onChange, nullable, ...props }: SelectFieldProps) => {
-  const _onChange = (v: string) => {
-    if ((v === null || v === "null") && nullable) {
-      onChange({ target: { value: null } });
-    } else {
-      onChange({ target: { value: v === "true" } });
-    }
+    const finalOptions = nullable
+      ? [{ value: "null", label: "NULL" }, ...baseOptions, ...options]
+      : [...baseOptions, ...options];
+
+    return (
+      <Select
+        {...props}
+        labelAsPlaceholder
+        value={value == null ? "null" : value}
+        options={finalOptions}
+        onSelect={_onChange}
+      />
+    );
   };
 
-  const booleanOptions = [
-    { value: "true", label: "True" },
-    { value: "false", label: "False" },
-  ];
+// Concrete select fields
+export const SelectField = makeSelectField([]);
+const SelectBooleanField = makeSelectField([
+  { value: "true", label: "True" },
+  { value: "false", label: "False" },
+]);
 
-  if (nullable) {
-    booleanOptions.unshift({ value: "null", label: "NULL" });
-  }
+// Relationship (async-ready)
+const RelationshipField = ({ value, onChange, options, ...props }: SelectFieldProps) => (
+  <Select
+    {...props}
+    value={value ?? ""}
+    options={options}
+    onSelect={(v: string) => onChange({ target: { value: v } })}
+  />
+);
 
-  return (
-    <Select
-      {...props}
-      nullable={nullable}
-      labelAsPlaceholder
-      value={value == null ? "null" : value === true ? "true" : "false"}
-      options={booleanOptions}
-      onSelect={_onChange}
-    />
-  );
-};
-
-const RelationshipField = ({ value, onChange, ...props }: FieldProps) => {
-  return (
-    <Select
-      value={value ?? ""}
-      options={[{ value: "1", label: "Relation 1" }]}
-      onSelect={(v: string) => onChange({ target: { value: v } })}
-      {...props}
-    />
-  );
-};
-
-const DateTimeField = ({ value, onChange, ...props }: FieldProps) => {
-  return (
-    <input
-      type="datetime-local"
-      value={value ?? ""}
-      onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e)}
-      {...props}
-    />
-  );
-};
+const DateTimeField = ({ value, onChange, ...props }: FieldProps) => (
+  <DateInput
+    id={`idx_${props.index}`}
+    labelAsPlaceholder
+    label=""
+    timePicker
+    value={value ? new Date(value) : undefined}
+    onChange={(d) => onChange({ target: { value: d } })}
+    {...props}
+  />
+);
