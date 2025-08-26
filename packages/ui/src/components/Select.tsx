@@ -1,14 +1,22 @@
 "use client";
 
-import type { Placement } from "@floating-ui/react-dom";
+import React, { useState, useRef, useEffect, forwardRef, ReactNode, useId } from "react";
 import classNames from "classnames";
-import React from "react";
-import { type ReactNode, forwardRef, useEffect, useRef, useState } from "react";
-import { DropdownWrapper, Flex, Icon, IconButton, Input, type InputProps, Option } from ".";
-import type { DropdownWrapperProps } from "./DropdownWrapper";
+import {
+  DropdownWrapper,
+  Flex,
+  Icon,
+  IconButton,
+  Input,
+  InputProps,
+  Option,
+  OptionProps,
+  DropdownWrapperProps,
+  Column,
+  ArrowNavigation,
+} from ".";
 import inputStyles from "./Input.module.scss";
-import type { OptionProps } from "./Option";
-import { ChevronsUpDown } from "lucide-react";
+import { Placement } from "@floating-ui/react-dom";
 
 type SelectOptionType = Omit<OptionProps, "selected">;
 
@@ -16,13 +24,15 @@ interface SelectProps
   extends Omit<InputProps, "onSelect" | "value">,
     Pick<DropdownWrapperProps, "minHeight" | "minWidth" | "maxWidth"> {
   options: SelectOptionType[];
-  value?: string;
+  value?: string | string[];
   emptyState?: ReactNode;
-  onSelect?: (value: string) => void;
-  floatingPlacement?: Placement;
+  onSelect?: (value: any) => void;
+  placement?: Placement;
   searchable?: boolean;
   className?: string;
   style?: React.CSSProperties;
+  fillWidth?: boolean;
+  multiple?: boolean;
   nullable?: boolean;
 }
 
@@ -32,135 +42,143 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
       options,
       value = "",
       onSelect,
-      labelAsPlaceholder,
       searchable = false,
       emptyState = "No results",
       minHeight,
       minWidth,
       maxWidth,
-      floatingPlacement,
+      placement,
       className,
+      fillWidth = true,
       style,
+      multiple = false,
       nullable = false,
       ...rest
     },
     ref,
   ) => {
     const [isFocused, setIsFocused] = useState(false);
-    const [isFilled, setIsFilled] = useState(!!value);
+    const [isFilled, setIsFilled] = useState(false);
+
+    const [internalValue, setInternalValue] = useState(multiple ? [] : value);
+
+    useEffect(() => {
+      if (value !== undefined) {
+        setInternalValue(value);
+      }
+    }, [value]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [highlightedIndex, setHighlightedIndex] = useState<number | null>(() => {
-      if (!options?.length || !value) return null;
-      return options.findIndex((option) => option.value === value);
-    });
+    const searchInputId = useId();
     const [searchQuery, setSearchQuery] = useState("");
     const selectRef = useRef<HTMLDivElement | null>(null);
     const clearButtonRef = useRef<HTMLButtonElement>(null);
-    // const _id = React.useId();
-    // rest.id = rest.id ?? _id;
+
+    // Track if we should skip the next focus event
+    const skipNextFocusRef = useRef(false);
+    // Track if we just selected an option to prevent reopening
+    const justSelectedRef = useRef(false);
 
     const handleFocus = () => {
+      // Allow reopening the dropdown even after selection
       setIsFocused(true);
+      setIsDropdownOpen(true);
+      // Set highlighted index to first option or current selection
+      const currentIndex = options.findIndex((option) =>
+        multiple
+          ? Array.isArray(currentValue) && currentValue.includes(option.value)
+          : option.value === currentValue,
+      );
     };
 
     const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+      // Don't close dropdown if focus is moving to an element within the select component
       if (selectRef.current && !selectRef.current.contains(event.relatedTarget as Node)) {
-        setIsFocused(false);
-        setIsDropdownOpen(false);
+        // Only close if we're not moving to the dropdown or its children
+        const isMovingToDropdown =
+          event.relatedTarget && (event.relatedTarget as Element).closest("[data-dropdown]");
+
+        if (!isMovingToDropdown) {
+          setIsFocused(false);
+          setIsDropdownOpen(false);
+        }
       }
     };
 
     const handleSelect = (value: string) => {
-      if (onSelect) onSelect(value);
-      setIsDropdownOpen(false);
-      setIsFilled(true);
-    };
-
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (!isFocused && event.key !== "Enter") return;
-
-      switch (event.key) {
-        case "Escape":
-          setIsDropdownOpen(false);
-          break;
-        case "ArrowDown":
-          if (!isDropdownOpen) {
-            setIsDropdownOpen(true);
-            break;
-          }
-          event.preventDefault();
-          setHighlightedIndex((prevIndex) => {
-            const newIndex =
-              prevIndex === null || prevIndex === options.length - 1 ? 0 : prevIndex + 1;
-            return newIndex;
-          });
-          break;
-
-        case "ArrowUp":
-          event.preventDefault();
-          setHighlightedIndex((prevIndex) => {
-            const newIndex =
-              prevIndex === null || prevIndex === 0 ? options.length - 1 : prevIndex - 1;
-            return newIndex;
-          });
-          break;
-
-        case "Enter":
-          event.preventDefault();
-          if (highlightedIndex !== null && isDropdownOpen) {
-            handleSelect(options[highlightedIndex].value);
-          } else {
-            setIsDropdownOpen(true);
-          }
-          break;
-
-        default:
-          break;
+      if (multiple) {
+        const currentValues = Array.isArray(currentValue) ? currentValue : [];
+        const newValues = currentValues.includes(value)
+          ? currentValues.filter((v) => v !== value)
+          : [...currentValues, value];
+        setInternalValue(newValues);
+        onSelect?.(newValues);
+      } else {
+        setInternalValue(value);
+        onSelect?.(value);
+        setIsDropdownOpen(false);
       }
+      justSelectedRef.current = true;
     };
 
     const handleClearSearch = (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
       setSearchQuery("");
-      // Force focus back to the input after clearing
       const input = selectRef.current?.querySelector("input");
       if (input) {
         input.focus();
       }
     };
 
+    const currentValue = value !== undefined ? value : internalValue;
+    const selectedOption = options.find((opt) => opt.value === currentValue) || null;
+
+    // For multiple mode, get display text
+    const getDisplayText = () => {
+      if (multiple) {
+        const selectedValues = Array.isArray(currentValue) ? currentValue : [];
+        if (selectedValues.length === 0) return "";
+        if (selectedValues.length === 1) {
+          const option = options.find((opt) => opt.value === selectedValues[0]);
+          return String(option?.label || selectedValues[0]);
+        }
+        return `${selectedValues.length} options selected`;
+      } else {
+        return selectedOption?.label ? String(selectedOption.label) : "";
+      }
+    };
+
     useEffect(() => {
-      const handleClickOutside = (event: MouseEvent) => {
-        if (
-          selectRef.current &&
-          !selectRef.current.contains(event.target as Node) &&
-          !clearButtonRef.current?.contains(event.target as Node)
-        ) {
-          setIsDropdownOpen(false);
+      if (isDropdownOpen) {
+        // Reset skip flag when dropdown opens
+        skipNextFocusRef.current = false;
+
+        // If searchable is true, focus the search input
+        if (searchable) {
+          setTimeout(() => {
+            const searchInput = selectRef.current?.querySelector(
+              `#select-search-${searchInputId}`,
+            ) as HTMLInputElement;
+            if (searchInput) {
+              searchInput.focus();
+            }
+          }, 0);
         }
-      };
+      }
+    }, [isDropdownOpen, searchable, searchInputId]);
 
-      const handleFocusOut = (event: FocusEvent) => {
-        if (event.target instanceof HTMLInputElement) {
-          handleBlur(event as unknown as React.FocusEvent<HTMLInputElement>);
-        }
-      };
-
-      document.addEventListener("mousedown", handleClickOutside);
-      document.addEventListener("focusout", handleFocusOut);
-
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-        document.removeEventListener("focusout", handleFocusOut);
-      };
-    }, []);
-
-    const label = options.find((option) => option.value === value)?.label;
+    // Filter options based on search query
+    const filteredOptions = options.filter((option) =>
+      searchable
+        ? option.label?.toString().toLowerCase().includes(searchQuery.toLowerCase())
+        : true,
+    );
 
     return (
       <DropdownWrapper
-        fillWidth
+        fillWidth={fillWidth}
+        minWidth={minWidth}
+        maxWidth={maxWidth}
         ref={(node) => {
           selectRef.current = node;
           if (typeof ref === "function") ref(node);
@@ -168,105 +186,136 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
         }}
         isOpen={isDropdownOpen}
         onOpenChange={setIsDropdownOpen}
-        minHeight={minHeight}
+        placement={placement}
+        closeAfterClick={false}
+        disableTriggerClick={true}
+        style={{
+          ...style,
+        }}
         trigger={
           <Input
-            label={rest.label}
-            labelAsPlaceholder={labelAsPlaceholder}
+            {...rest}
             style={{
               textOverflow: "ellipsis",
               ...style,
             }}
-            value={
-              nullable && value === null
-                ? "NULL"
-                : typeof label === "string" && label
-                  ? label
-                  : value
-            }
+            cursor="interactive"
+            value={nullable && value === null ? "NULL" : getDisplayText()}
             onFocus={handleFocus}
-            onKeyDown={handleKeyDown}
             readOnly
-            className={classNames("cursor-interactive", "fill-width", {
+            className={classNames("fill-width", {
               [inputStyles.filled]: isFilled,
               [inputStyles.focused]: isFocused,
               className,
             })}
             aria-haspopup="listbox"
             aria-expanded={isDropdownOpen}
-            hasSuffix={<ChevronsUpDown size={rest.height === "s" ? 14 : 20} />}
-            height={rest.height}
-            // TODO: ----
-            // {...rest}
+            hasSuffix={<Icon name="chevronsUpDown" size={rest.height} />}
           />
         }
         dropdown={
-          <>
+          <Column fillWidth padding="2" data-dropdown="true">
             {searchable && (
-              <Flex fillWidth position="relative">
-                <Input
-                  data-scaling="90"
-                  style={{
-                    marginTop: "-1px",
-                    marginLeft: "-1px",
-                    width: "calc(100% + 2px)",
-                  }}
-                  labelAsPlaceholder
-                  id="search"
-                  label="Search"
-                  height="s"
-                  radius="none"
-                  hasSuffix={
-                    searchQuery ? (
-                      <IconButton
-                        tooltip="Clear"
-                        tooltipPosition="left"
-                        icon="close"
-                        variant="ghost"
-                        size="s"
-                        onClick={handleClearSearch}
-                      />
-                    ) : undefined
+              <Input
+                data-scaling="90"
+                id={`select-search-${searchInputId}`}
+                placeholder="Search"
+                height="s"
+                hasSuffix={
+                  searchQuery ? (
+                    <IconButton
+                      tooltip="Clear"
+                      tooltipPosition="left"
+                      icon="close"
+                      variant="ghost"
+                      size="s"
+                      onClick={handleClearSearch}
+                    />
+                  ) : undefined
+                }
+                hasPrefix={<Icon name="search" size="xs" />}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  setIsDropdownOpen(true);
+                }}
+                onFocus={(e) => {
+                  e.stopPropagation();
+                  setIsDropdownOpen(true);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Escape") {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setIsDropdownOpen(false);
+                    setSearchQuery("");
+                    const mainInput = selectRef.current?.querySelector(
+                      "input:not([id^='select-search'])",
+                    );
+                    if (mainInput instanceof HTMLInputElement) {
+                      mainInput.focus();
+                    }
                   }
-                  hasPrefix={<Icon name="search" size="xs" />}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                  onBlur={handleBlur}
-                />
-              </Flex>
+                }}
+                onBlur={(e) => {
+                  const relatedTarget = e.relatedTarget as Node;
+                  const isClickInDropdown =
+                    selectRef.current && selectRef.current.contains(relatedTarget);
+                  if (!isClickInDropdown) {
+                    handleBlur(e);
+                  }
+                }}
+              />
             )}
-            <Flex fillWidth padding="4" direction="column" gap="2">
-              {options
-                .filter((option) =>
-                  option.label?.toString().toLowerCase().includes(searchQuery.toLowerCase()),
-                )
-                .map((option, index) => (
+            <ArrowNavigation
+              layout="column"
+              itemCount={filteredOptions.length}
+              onSelect={(index) => {
+                if (index >= 0 && index < filteredOptions.length) {
+                  handleSelect(filteredOptions[index].value);
+                }
+              }}
+              onEscape={() => setIsDropdownOpen(false)}
+              autoFocus={!searchable}
+              disabled={searchable}
+            >
+              <Column fillWidth padding="4" gap="2">
+                {filteredOptions.map((option, index) => (
                   <Option
                     key={option.value}
                     {...option}
                     onClick={() => {
                       option.onClick?.(option.value);
                       handleSelect(option.value);
+                      setIsDropdownOpen(false);
                     }}
                     selected={
-                      option.value === value ||
-                      (nullable && value == null && option.value === "null")
+                      multiple
+                        ? Array.isArray(currentValue) && currentValue.includes(option.value)
+                        : option.value === currentValue
                     }
-                    highlighted={index === highlightedIndex}
                     tabIndex={-1}
+                    hasPrefix={
+                      multiple ? (
+                        Array.isArray(currentValue) && currentValue.includes(option.value) ? (
+                          <Icon name="check" size="xs" onBackground="neutral-weak" />
+                        ) : Array.isArray(currentValue) && currentValue.length > 0 ? (
+                          <Flex minWidth="20" />
+                        ) : undefined
+                      ) : undefined
+                    }
                   />
                 ))}
-              {searchQuery &&
-                options.filter((option) =>
-                  option.label?.toString().toLowerCase().includes(searchQuery.toLowerCase()),
-                ).length === 0 && (
-                  <Flex fillWidth vertical="center" horizontal="center" paddingX="16" paddingY="32">
+                {searchQuery && filteredOptions.length === 0 && (
+                  <Flex fillWidth center paddingX="16" paddingY="32">
                     {emptyState}
                   </Flex>
                 )}
-            </Flex>
-          </>
+              </Column>
+            </ArrowNavigation>
+          </Column>
         }
       />
     );

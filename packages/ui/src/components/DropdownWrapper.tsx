@@ -142,7 +142,7 @@ const DropdownWrapper = forwardRef<HTMLDivElement, DropdownWrapperProps>(
 
             if (fillWidth && triggerRef.current) {
               const triggerWidth = triggerRef.current.getBoundingClientRect().width;
-              width = `${Math.max(triggerWidth, 200)}px`;
+              width = `${Math.max(triggerWidth, 80)}px`;
             }
 
             Object.assign(elements.floating.style, {
@@ -557,7 +557,7 @@ const DropdownWrapper = forwardRef<HTMLDivElement, DropdownWrapperProps>(
                 >
                   <Flex
                     zIndex={9}
-                    className={`${styles.fadeIn} dropdown-portal`}
+                    className={`${styles.fadeIn} dropdown-portal !z-[999]`} // TODO: ----
                     minWidth={minWidth}
                     ref={dropdownRef}
                     style={{

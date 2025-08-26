@@ -9,6 +9,7 @@ import {
   HiChevronLeft,
   HiChevronRight,
   HiChevronUp,
+  HiChevronUpDown,
   HiComputerDesktop,
   HiExclamationCircle,
   HiExclamationTriangle,
@@ -69,6 +70,7 @@ import {
 export const iconMap = {
   chevronUp: HiChevronUp,
   chevronDown: HiChevronDown,
+  chevronsUpDown: HiChevronUpDown,
   chevronRight: HiChevronRight,
   chevronLeft: HiChevronLeft,
   refresh: HiOutlineArrowPath,

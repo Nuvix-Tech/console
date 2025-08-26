@@ -24,7 +24,7 @@ const DatabasePage = () => {
     return await sdk.schema.list();
   };
 
-  const { data, isFetching } = useSuspenseQuery({
+  const { data, isFetching, refetch } = useSuspenseQuery({
     queryKey: ["databases", page, limit, search],
     queryFn: fetcher,
   });
@@ -34,6 +34,7 @@ const DatabasePage = () => {
       hasPermission={canCreateDatabases}
       label="Create Schema"
       component={CreateSchema}
+      extraProps={{ refetch }}
     />
   );
 

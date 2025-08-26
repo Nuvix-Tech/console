@@ -107,23 +107,9 @@ export class Schema {
     return res;
   }
 
-  async createTypeDocument(name: string, description: string): Promise<Models.Schema> {
-    const apiPath = this.namespace + "/document";
-    const payload: Payload = {
-      name,
-      description,
-    };
-    const uri = new URL(this.endpoint + apiPath);
-
-    const apiHeaders: { [header: string]: string } = {
-      "content-type": "application/json",
-    };
-    return await this.client.call("post", uri, apiHeaders, payload);
-  }
-
   async create(
     name: string,
-    type: "managed" | "unmanaged",
+    type: "managed" | "unmanaged" | "document",
     description?: string,
   ): Promise<Models.Schema> {
     const apiPath = this.namespace;

@@ -34,16 +34,11 @@ export const CreateSchema = ({ onClose, isOpen }: CreateSchemaProps) => {
         initialValues: {
           name: "",
           type: "managed",
-          description: "",
         },
         onSubmit: async (values) => {
           try {
             let { name, type, description } = values;
-            if (type === "document") {
-              await sdk.schema.createTypeDocument(name, description);
-            } else {
-              await sdk.schema.create(name, type, description);
-            }
+            await sdk.schema.create(name, type, description);
             addToast({
               message: `Schema ${name} created successfully`,
               variant: "success",

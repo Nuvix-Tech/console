@@ -3,7 +3,7 @@ import * as React from "react";
 import * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
 import { cn } from "@nuvix/sui/lib/utils";
-import { Label } from "@nuvix/sui/components/label";
+import { Label } from "./label";
 import { useFormikContext } from "formik";
 
 const useFormField = () => {
@@ -93,7 +93,7 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p"> & { fiel
     <p
       data-slot="form-message"
       // id={formMessageId}
-      className={cn("text-destructive-foreground text-sm", className)}
+      className={cn("danger-on-background-weak text-sm", className)}
       {...props}
     >
       {body}

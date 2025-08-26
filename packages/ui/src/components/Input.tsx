@@ -57,6 +57,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   hasSuffix?: ReactNode;
   labelAsPlaceholder?: boolean;
   validate?: (value: ReactNode) => ReactNode | null;
+  cursor?: undefined | "interactive";
   nullable?: boolean;
   isNull?: boolean;
   inputClass?: string;
@@ -84,6 +85,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       validate,
       nullable = false,
       isNull = false,
+      cursor,
       maxLength: max,
       onChange,
       inputClass,
@@ -152,15 +154,22 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 
     const displayError = validationError || errorMessage;
 
-    const inputClassNames = classNames(styles.input, "font-body", "font-default", "font-m", {
-      [styles.filled]: isFilled,
-      [styles.focused]: isFocused,
-      [styles.withPrefix]: hasPrefix,
-      [styles.withSuffix]: hasSuffix,
-      [styles.labelAsPlaceholder]: labelAsPlaceholder,
-      [styles.hasChildren]: children,
-      [styles.error]: displayError && debouncedValue !== "",
-    });
+    const inputClassNames = classNames(
+      styles.input,
+      "font-body",
+      "font-default",
+      "font-m",
+      cursor === "interactive" ? "cursor-interactive" : undefined,
+      {
+        [styles.filled]: isFilled,
+        [styles.focused]: isFocused,
+        [styles.withPrefix]: hasPrefix,
+        [styles.withSuffix]: hasSuffix,
+        [styles.labelAsPlaceholder]: labelAsPlaceholder,
+        [styles.hasChildren]: children,
+        [styles.error]: displayError && debouncedValue !== "",
+      },
+    );
 
     const optional = labelOptional ? `(${labelOptional})` : "";
 

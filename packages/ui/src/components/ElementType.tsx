@@ -1,19 +1,22 @@
-import type React from "react";
-import { type ReactNode, forwardRef } from "react";
+import React, { ReactNode, forwardRef } from "react";
+import { Flex } from ".";
 import { useMeta } from "../contexts";
 
 interface ElementTypeProps {
   href?: string;
+  onClick?: () => void;
+  onLinkClick?: () => void;
   children: ReactNode;
   className?: string;
   style?: React.CSSProperties;
+  type?: "button" | "submit" | "reset";
   [key: string]: any;
 }
 
 const isExternalLink = (url: string) => /^https?:\/\//.test(url);
 
 const ElementType = forwardRef<HTMLElement, ElementTypeProps>(
-  ({ href, children, className, style, ...props }, ref) => {
+  ({ href, type, onClick, onLinkClick, children, className, style, ...props }, ref) => {
     const { link: Link } = useMeta();
     if (href) {
       const isExternal = isExternalLink(href);
@@ -26,6 +29,7 @@ const ElementType = forwardRef<HTMLElement, ElementTypeProps>(
             ref={ref as React.Ref<HTMLAnchorElement>}
             className={className}
             style={style}
+            onClick={() => onLinkClick?.()}
             {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
           >
             {children}
@@ -35,26 +39,41 @@ const ElementType = forwardRef<HTMLElement, ElementTypeProps>(
       return (
         <Link
           href={href}
-          to={href}
           ref={ref as React.Ref<HTMLAnchorElement>}
           className={className}
           style={style}
+          onClick={() => onLinkClick?.()}
           {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
         >
           {children}
         </Link>
       );
     }
+
+    if (onClick || type === "submit" || type === "button") {
+      return (
+        <button
+          ref={ref as React.Ref<HTMLButtonElement>}
+          className={className}
+          onClick={onClick}
+          style={style}
+          type={type}
+          {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
+        >
+          {children}
+        </button>
+      );
+    }
+
     return (
-      <button
-        ref={ref as React.Ref<HTMLButtonElement>}
+      <Flex
+        ref={ref as React.Ref<HTMLDivElement>}
         className={className}
         style={style}
-        type="button"
-        {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
+        {...(props as React.HTMLAttributes<HTMLDivElement>)}
       >
         {children}
-      </button>
+      </Flex>
     );
   },
 );
