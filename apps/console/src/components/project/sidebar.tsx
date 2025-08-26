@@ -114,7 +114,7 @@ export const FirstSidebar = ({ inMobile, onClose }: FirstSidebarProps) => {
     },
     {
       name: "Collections",
-      href: href(`schema`),
+      href: href(`collections`),
       icon: "refresh",
     },
     {
