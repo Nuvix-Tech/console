@@ -1,4 +1,4 @@
-import { IndexesPage } from "@/components/project/database/single/collection";
+import { IndexesPage } from "@/components/project/schema/single/collection";
 import { PropsWithParams } from "@/types";
 
 type Props = {

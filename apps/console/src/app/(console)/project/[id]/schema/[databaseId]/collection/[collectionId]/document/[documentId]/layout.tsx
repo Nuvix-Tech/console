@@ -1,6 +1,6 @@
 import { PropsWithParams } from "@/types";
 import { PropsWithChildren, Suspense } from "react";
-import { DocumentLayout } from "@/components/project/database/single/collection/document";
+import { DocumentLayout } from "@/components/project/schema/single/collection/document";
 
 type Props = {
   id: string;

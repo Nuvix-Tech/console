@@ -1,12 +1,12 @@
 import { FormDialog, InputField, InputSelectField, SubmitButton } from "@/components/others/forms";
 import { useProjectStore } from "@/lib/store";
-import { useSchemaStore } from "@/lib/store/schema";
 import { Column, useToast } from "@nuvix/ui/components";
 import * as y from "yup";
 
 interface CreateSchemaProps {
   onClose: () => void;
   isOpen: boolean;
+  refetch: () => Promise<any>;
 }
 
 const schema = y.object({
@@ -15,9 +15,8 @@ const schema = y.object({
   description: y.string().optional(),
 });
 
-export const CreateSchema = ({ onClose, isOpen }: CreateSchemaProps) => {
+export const CreateSchema = ({ onClose, isOpen, refetch }: CreateSchemaProps) => {
   const sdk = useProjectStore.use.sdk();
-  const refetch = useSchemaStore.use.refetch();
   const { addToast } = useToast();
 
   return (
@@ -34,6 +33,7 @@ export const CreateSchema = ({ onClose, isOpen }: CreateSchemaProps) => {
         initialValues: {
           name: "",
           type: "managed",
+          description: "",
         },
         onSubmit: async (values) => {
           try {

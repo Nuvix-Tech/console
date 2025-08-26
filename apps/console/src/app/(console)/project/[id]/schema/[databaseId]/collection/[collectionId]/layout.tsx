@@ -1,6 +1,6 @@
 import { PropsWithParams } from "@/types";
 import { PropsWithChildren } from "react";
-import { CollectionLayout } from "@/components/project/database/single/collection";
+import { CollectionLayout } from "@/components/project/schema/single/collection";
 
 export default async function ({
   children,

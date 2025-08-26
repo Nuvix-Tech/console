@@ -1,4 +1,4 @@
-import { AttributesPage } from "@/components/project/database/single/collection";
+import { AttributesPage } from "@/components/project/schema/single/collection";
 import { PropsWithParams } from "@/types";
 
 type Props = {

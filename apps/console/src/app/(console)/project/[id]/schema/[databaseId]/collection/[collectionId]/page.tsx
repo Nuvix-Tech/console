@@ -1,4 +1,4 @@
-import { CollectionPage } from "@/components/project/database/single/collection";
+import { CollectionPage } from "@/components/project/schema/single/collection";
 import { PropsWithParams } from "@/types";
 import React from "react";
 

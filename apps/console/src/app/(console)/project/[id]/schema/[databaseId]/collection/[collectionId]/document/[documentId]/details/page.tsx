@@ -1,4 +1,4 @@
-import { DocumentDetails } from "@/components/project/database/single/collection/document";
+import { DocumentDetails } from "@/components/project/schema/single/collection/document";
 
 export default function DocumentDetailsPage() {
   return (

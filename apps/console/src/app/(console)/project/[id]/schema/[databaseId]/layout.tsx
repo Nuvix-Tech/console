@@ -1,4 +1,4 @@
-import { DatabaseSingleLayout } from "@/components/project/database/single";
+import { DatabaseSingleLayout } from "@/components/project/schema/single";
 import { PropsWithParams } from "@/types";
 import React, { PropsWithChildren } from "react";
 
