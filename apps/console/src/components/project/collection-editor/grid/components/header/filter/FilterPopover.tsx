@@ -9,9 +9,9 @@ import type { Filter } from "../../../types";
 import FilterRow from "./FilterRow";
 import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/popover";
 import { Button } from "@nuvix/ui/components";
-import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { Separator } from "@nuvix/sui/components/separator";
 import { cn } from "@nuvix/sui/lib/utils";
+import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 
 export interface FilterPopoverProps {
   filters: string[];
@@ -58,7 +58,7 @@ interface FilterOverlayProps {
 }
 
 const FilterOverlay = ({ filters: filtersFromUrl, onApplyFilters }: FilterOverlayProps) => {
-  const snap = useTableEditorTableStateSnapshot();
+  const snap = useCollectionEditorCollectionStateSnapshot();
 
   const initialFilters = useMemo(
     () => formatFilterURLParams((filtersFromUrl as string[]) ?? []),
@@ -67,7 +67,7 @@ const FilterOverlay = ({ filters: filtersFromUrl, onApplyFilters }: FilterOverla
   const [filters, setFilters] = useState<Filter[]>(initialFilters);
 
   function onAddFilter() {
-    const column = snap.table.columns[0]?.name;
+    const column = snap.collection.attributes[0]?.key;
 
     if (column) {
       setFilters([
@@ -102,9 +102,9 @@ const FilterOverlay = ({ filters: filtersFromUrl, onApplyFilters }: FilterOverla
   const onSelectApplyFilters = () => {
     // [Unkown] Trim empty spaces in input for only UUID type columns
     const formattedFilters = filters.map((f) => {
-      const column = snap.table.columns.find((c) => c.name === f.column);
-      if (column?.format === "uuid") return { ...f, value: f.value.trim() };
-      else return f;
+      const column = snap.collection.attributes.find((c) => c.key === f.column);
+      // TODO: ---------
+      return f;
     });
     setFilters(formattedFilters);
     onApplyFilters(formattedFilters);

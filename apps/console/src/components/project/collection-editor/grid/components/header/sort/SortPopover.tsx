@@ -6,13 +6,14 @@ import { useCallback, useMemo, useState } from "react";
 import { formatSortURLParams } from "@/components/grid/NuvixGrid.utils";
 import { DropdownControl } from "@/components/grid/components/common/DropdownControl";
 import type { Sort } from "@/components/grid/types";
-import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import SortRow from "./SortRow";
 import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/popover";
 import { Button } from "@nuvix/ui/components";
 import { Separator } from "@nuvix/sui/components/separator";
 import { cn } from "@nuvix/sui/lib/utils";
 import { TopDot } from "../filter/FilterPopover";
+import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
+import { Attributes } from "@/components/project/schema/single/collection/document/components/_utils";
 
 export interface SortPopoverProps {
   sorts: string[];
@@ -59,31 +60,34 @@ export interface SortOverlayProps {
 }
 
 const SortOverlay = ({ sorts: sortsFromUrl, onApplySorts }: SortOverlayProps) => {
-  const snap = useTableEditorTableStateSnapshot();
+  const snap = useCollectionEditorCollectionStateSnapshot();
 
   const initialSorts = useMemo(
-    () => formatSortURLParams(snap.table.name, sortsFromUrl ?? []),
-    [snap.table.name, sortsFromUrl],
+    () => formatSortURLParams(snap.collection.name, sortsFromUrl ?? []),
+    [snap.collection.name, sortsFromUrl],
   );
   const [sorts, setSorts] = useState<Sort[]>(initialSorts);
 
-  const columns = snap.table.columns.filter((x) => {
+  const columns = snap.collection.attributes.filter((x) => {
     // exclude json/jsonb columns from sorting. Sorting by json fields in PG is only possible if you provide key from
     // the JSON object.
-    if (x.dataType === "json" || x.dataType === "jsonb") {
+    if (x.type === Attributes.Relationship) {
       return false;
     }
-    const found = sorts.find((y) => y.column == x.name);
+    const found = sorts.find((y) => y.column == x.key);
     return !found;
   });
 
   const dropdownOptions =
     columns?.map((x) => {
-      return { value: x.name, label: x.name };
+      return { value: x.key, label: x.key };
     }) || [];
 
   function onAddSort(columnName: string | number) {
-    setSorts([...sorts, { table: snap.table.name, column: columnName as string, ascending: true }]);
+    setSorts([
+      ...sorts,
+      { table: snap.collection.name, column: columnName as string, ascending: true },
+    ]);
   }
 
   const onDeleteSort = useCallback((column: string) => {

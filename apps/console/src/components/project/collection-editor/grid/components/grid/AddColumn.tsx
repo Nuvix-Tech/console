@@ -1,27 +1,26 @@
-import { Plus } from "lucide-react";
 import type { CalculatedColumn } from "react-data-grid";
 
 import { useTableEditorStore } from "@/lib/store/table-editor";
 import { ADD_COLUMN_KEY } from "../../constants";
 import { DefaultFormatter } from "../formatter/DefaultFormatter";
-import { Button } from "@nuvix/ui/components";
+import { IconButton } from "@nuvix/ui/components";
 
 export const AddColumn: CalculatedColumn<any, any> = {
   key: ADD_COLUMN_KEY,
   name: "",
-  idx: 999,
-  width: 100,
-  maxWidth: 100,
+  idx: 0,
+  width: 40,
+  maxWidth: 40,
   resizable: false,
   sortable: false,
-  frozen: false,
-  // isLastFrozenColumn: false,
+  frozen: true,
+  editable: false,
   renderHeaderCell() {
     return <AddColumnHeader aria-label="Add New Row" />;
   },
   renderCell: DefaultFormatter,
 
-  // [Next 18 Refactor] Double check if this is correct
+  // [Next 18 Refactor] Doubmle check if this is correct
   parent: undefined,
   level: 0,
   minWidth: 0,
@@ -33,13 +32,12 @@ const AddColumnHeader = () => {
 
   return (
     <div className="flex h-full w-full py-1.5 items-center">
-      <Button
-        fillWidth
+      <IconButton
+        icon="plus"
         variant="tertiary"
         size="s"
         type="text"
         onClick={tableEditorSnap.onAddColumn}
-        prefixIcon={<Plus size={16} />}
       />
     </div>
   );

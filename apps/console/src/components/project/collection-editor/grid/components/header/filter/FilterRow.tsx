@@ -4,9 +4,10 @@ import { KeyboardEvent, memo } from "react";
 import { DropdownControl } from "@/components/grid/components/common/DropdownControl";
 import type { Filter, FilterOperator } from "@/components/grid/types";
 import { FilterOperatorOptions } from "./Filter.constants";
-import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { Button, IconButton } from "@nuvix/ui/components";
 import { Input } from "@/components/others/ui";
+import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
+import { Attributes } from "@/components/project/schema/single/collection/document/components/_utils";
 
 export interface FilterRowProps {
   filterIdx: number;
@@ -17,19 +18,15 @@ export interface FilterRowProps {
 }
 
 const FilterRow = ({ filter, filterIdx, onChange, onDelete, onKeyDown }: FilterRowProps) => {
-  const snap = useTableEditorTableStateSnapshot();
-  const column = snap.table.columns.find((x) => x.name === filter.column);
+  const snap = useCollectionEditorCollectionStateSnapshot();
+  const column = snap.collection.attributes.find((x) => x.key === filter.column);
   const columnOptions =
-    snap.table.columns?.map((x) => {
-      return { value: x.name, label: x.name, postLabel: x.dataType };
+    snap.collection.attributes?.map((x) => {
+      return { value: x.key, label: x.key, postLabel: x.type };
     }) || [];
 
   const placeholder =
-    column?.format === "timestamptz"
-      ? "yyyy-mm-dd hh:mm:ss+zz"
-      : column?.format === "timestamp"
-        ? "yyyy-mm-dd hh:mm:ss"
-        : "Enter a value";
+    column?.type === Attributes.Timestamptz ? "yyyy-mm-dd hh:mm:ss+zz" : "Enter a value";
 
   return (
     <div className="flex w-full items-center justify-between gap-x-1 px-3">
@@ -49,7 +46,7 @@ const FilterRow = ({ filter, filterIdx, onChange, onDelete, onKeyDown }: FilterR
           }
           className="!w-32 justify-start"
         >
-          <span>{column?.name ?? ""}</span>
+          <span>{column?.key ?? ""}</span>
         </Button>
       </DropdownControl>
       <DropdownControl

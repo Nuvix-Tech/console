@@ -115,7 +115,7 @@ export const Grid = memo(
 
       return (
         <div
-          className={cn(`flex flex-col relative`, containerClass)}
+          className={cn(`flex flex-col relative px-0.5`, containerClass)}
           style={{ width: width || "100%", height: height || "50vh" }}
         >
           {/* Render no rows fallback outside of the DataGrid */}

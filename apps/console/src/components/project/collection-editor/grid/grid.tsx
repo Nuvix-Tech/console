@@ -34,7 +34,7 @@ export const CollectionGrid = ({
   PropsWithChildren<{
     gridProps?: GridProps;
   }>) => {
-  const { collectionId } = useParams<{ collectionId: string; }>();
+  const { collectionId } = useParams<{ collectionId: string }>();
   const { project, sdk } = useProjectStore();
 
   const state = useCollectionEditorStore();

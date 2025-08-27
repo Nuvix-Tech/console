@@ -6,7 +6,7 @@ import { type MouseEventHandler, type ReactNode, forwardRef } from "react";
 import { Flex, Icon, IconButton, type IconButtonProps, Text } from ".";
 import styles from "./Chip.module.scss";
 
-interface ChipProps extends React.ComponentProps<typeof Flex> {
+export interface ChipProps extends React.ComponentProps<typeof Flex> {
   label: string;
   selected?: boolean;
   prefixIcon?: React.ComponentProps<typeof Icon>["name"];

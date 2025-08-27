@@ -4,9 +4,9 @@ import { memo, useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 
 import type { DragItem, Sort } from "@/components/grid/types";
-import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { Toggle } from "@nuvix/sui/components/toggle";
 import { Button, IconButton, Switch } from "@nuvix/ui/components";
+import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 
 export interface SortRowProps {
   index: number;
@@ -18,8 +18,8 @@ export interface SortRowProps {
 }
 
 const SortRow = ({ index, columnName, sort, onDelete, onToggle, onDrag }: SortRowProps) => {
-  const snap = useTableEditorTableStateSnapshot();
-  const column = snap.table.columns.find((x) => x.name === columnName);
+  const snap = useCollectionEditorCollectionStateSnapshot();
+  const column = snap.collection.attributes.find((x) => x.key === columnName);
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -114,7 +114,7 @@ const SortRow = ({ index, columnName, sort, onDelete, onToggle, onDrag }: SortRo
           <span className="text-xs neutral-on-background-weak">
             {index > 0 ? "then by" : "sort by"}
           </span>
-          {column.name}
+          {column.key}
         </span>
       </div>
       <div className="flex items-center gap-1">

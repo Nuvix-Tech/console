@@ -1,4 +1,4 @@
-import { CalculatedColumn } from "react-data-grid";
+import { CalculatedColumn, type RenderCellProps } from "react-data-grid";
 
 import { COLUMN_MIN_WIDTH } from "../constants";
 import { BooleanEditor } from "../components/editor/BooleanEditor";
@@ -19,17 +19,19 @@ import {
   Attributes,
   AttributeTypes,
 } from "@/components/project/schema/single/collection/document/components/_utils";
+import { IDChip } from "@/components/others";
+import type { PropsWithChildren } from "react";
 
 export const ESTIMATED_CHARACTER_PIXEL_WIDTH = 9;
 
 const internalAttributes = [
   {
-    key: '$id',
+    key: "$id",
     internal: true,
     type: Attributes.String,
-    format: 'id',
+    format: "id",
     isPrimaryKey: true,
-    size: 36
+    size: 36,
   },
   {
     key: "$createdAt",
@@ -40,7 +42,7 @@ const internalAttributes = [
     key: "$updatedAt",
     internal: true,
     type: Attributes.Timestamptz,
-  }
+  },
 ];
 
 export function getGridColumns(
@@ -54,7 +56,13 @@ export function getGridColumns(
     onExpandTextEditor: (column: string, row: Models.Document) => void;
   },
 ): any[] {
-  const columns = ([internalAttributes[0], ...collection.attributes, ...internalAttributes.slice(1),] as unknown as Models.AttributeString[]).map((x, idx) => {
+  const columns = (
+    [
+      internalAttributes[0],
+      ...collection.attributes,
+      ...internalAttributes.slice(1),
+    ] as unknown as Models.AttributeString[]
+  ).map((x, idx) => {
     const columnType = getColumnType(x);
     const columnDefaultWidth = getColumnDefaultWidth(x);
     const rawSize = typeof x.size === "number" ? x.size : columnDefaultWidth;
@@ -83,12 +91,12 @@ export function getGridColumns(
       ),
       renderEditCell: options
         ? getCellEditor(
-          x,
-          columnType,
-          (x as any).internal ? false : (options?.editable ?? false),
-          options.onExpandJSONEditor,
-          options.onExpandTextEditor,
-        )
+            x,
+            columnType,
+            (x as any).internal ? false : (options?.editable ?? false),
+            options.onExpandJSONEditor,
+            options.onExpandTextEditor,
+          )
         : undefined,
       renderCell: getCellRenderer(x, columnType, {
         collectionId: options?.collectionId,
@@ -125,6 +133,8 @@ function getCellEditor(
       );
     } else if (columnType === Attributes.Timestamptz) {
       return DateTimeEditor(true, true);
+    } else if ((columnDefinition as any).format === "id") {
+      return undefined;
     } else if (
       !([Attributes.Integer, Attributes.Float, Attributes.Boolean] as string[]).includes(columnType)
     ) {
@@ -180,11 +190,17 @@ function getCellEditor(
 function getCellRenderer(
   columnDef: AttributeTypes,
   columnType: ColumnType,
-  metadata: { collectionId?: string; },
+  metadata: { collectionId?: string },
 ) {
+  if ((columnDef as any).format === "id") {
+    return (p: PropsWithChildren<RenderCellProps<Models.Document, unknown>>) => {
+      const value = p.row[p.column.key];
+      return <IDChip id={value} hideIcon height={"24"} />;
+    };
+  }
   switch (columnType) {
     case Attributes.Boolean: {
-      return Date;
+      return BooleanFormatter;
     }
     case Attributes.Relationship: {
       // if (!columnDef.isUpdatable) {

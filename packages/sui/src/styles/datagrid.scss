@@ -188,3 +188,13 @@ header/sort/SortRow
 .nx-grid-header {
     background-color: color-mix(in srgb, var(--color-main-background) 60%, var(--neutral-background-weak));
 }
+
+.rdg-add-column-cell,
+.rdg-add-column-header-cell {
+    position: sticky !important;
+    right: 0;
+    z-index: 2;
+    box-shadow: -1px 0 5px 0px rgba(136, 136, 136, .3) !important;
+}
+
+// var(--neutral-border-medium)
