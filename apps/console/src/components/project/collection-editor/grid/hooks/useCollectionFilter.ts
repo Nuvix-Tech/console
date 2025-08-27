@@ -1,17 +1,17 @@
 import { useCallback } from "react";
 
-import { filtersToUrlParams, formatFilterURLParams } from "@/components/grid/NuvixGrid.utils";
-import type { Filter } from "@/components/grid/types";
-import { useSaveTableEditorState } from "./useSaveTableEditorState";
+import { useSaveCollectionEditorState } from "./useSaveCollectionEditorState";
 import { useTableEditorFiltersSort } from "@/hooks/useTableEditorFilterSort";
+import { filtersToUrlParams, formatFilterURLParams } from "../grid.utils";
+import type { Filter } from "../types";
 
 /**
- * Hook for managing table filter URL parameters and saving.
+ * Hook for managing collection filter URL parameters and saving.
  * NO direct snapshot interaction.
  */
-export function useTableFilter() {
+export function useCollectionFilter() {
   const { filters: urlFilters, setParams } = useTableEditorFiltersSort();
-  const { saveFiltersAndTriggerSideEffects } = useSaveTableEditorState();
+  const { saveFiltersAndTriggerSideEffects } = useSaveCollectionEditorState();
 
   const filters = formatFilterURLParams(urlFilters);
 

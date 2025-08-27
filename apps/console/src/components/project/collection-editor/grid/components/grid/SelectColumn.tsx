@@ -9,12 +9,12 @@ import {
   useRowSelection,
 } from "react-data-grid";
 
-import { useTableEditorStore } from "@/lib/store/table-editor";
-import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { SELECT_COLUMN_KEY } from "../../constants";
-import type { NuvixRow } from "../../types";
 import { IconButton } from "@nuvix/ui/components";
 import { Checkbox } from "@nuvix/cui/checkbox";
+import type { Models } from "@nuvix/console";
+import { useCollectionEditorStore } from "@/lib/store/collection-editor";
+import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 
 export const SelectColumn: CalculatedColumn<any, any> = {
   key: SELECT_COLUMN_KEY,
@@ -40,7 +40,7 @@ export const SelectColumn: CalculatedColumn<any, any> = {
       />
     );
   },
-  renderCell: (props: RenderCellProps<NuvixRow>) => {
+  renderCell: (props: RenderCellProps<Models.Document>) => {
     // [Alaister] formatter is actually a valid React component, so we can use hooks here
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const { isRowSelected, onRowSelectionChange } = useRowSelection();
@@ -58,7 +58,7 @@ export const SelectColumn: CalculatedColumn<any, any> = {
       />
     );
   },
-  renderGroupCell: (props: RenderGroupCellProps<NuvixRow>) => {
+  renderGroupCell: (props: RenderGroupCellProps<Models.Document>) => {
     // [Alaister] groupFormatter is actually a valid React component, so we can use hooks here
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const { isRowSelected, onRowSelectionChange } = useRowSelection();
@@ -98,7 +98,7 @@ type SharedInputProps = Pick<
 
 interface SelectCellFormatterProps extends SharedInputProps {
   value: boolean;
-  row?: NuvixRow;
+  row?: Models.Document;
   onChange: (value: boolean, isShiftClick: boolean) => void;
 }
 
@@ -112,7 +112,7 @@ function SelectCellFormatter({
   "aria-label": ariaLabel,
   "aria-labelledby": ariaLabelledBy,
 }: SelectCellFormatterProps) {
-  const snap = useTableEditorStore();
+  const snap = useCollectionEditorStore();
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     onChange(e.target.checked, (e.nativeEvent as MouseEvent).shiftKey);
@@ -168,7 +168,7 @@ function SelectCellHeader({
   "aria-label": ariaLabel,
   "aria-labelledby": ariaLabelledBy,
 }: SelectCellHeaderProps) {
-  const snap = useTableEditorTableStateSnapshot();
+  const snap = useCollectionEditorCollectionStateSnapshot();
   const inputRef = useRef<HTMLInputElement>(null);
 
   // indeterminate state === some rows are selected but not all

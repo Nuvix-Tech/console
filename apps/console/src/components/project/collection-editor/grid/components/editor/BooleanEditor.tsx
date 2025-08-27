@@ -1,5 +1,4 @@
 import type { RenderEditCellProps } from "react-data-grid";
-import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import {
   Select,
   SelectContent,
@@ -7,6 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@nuvix/sui/components/select";
+import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 
 interface Props<TRow, TSummaryRow = unknown> extends RenderEditCellProps<TRow, TSummaryRow> {
   isNullable?: boolean;
@@ -19,7 +19,7 @@ export const BooleanEditor = <TRow, TSummaryRow = unknown>({
   onRowChange,
   onClose,
 }: Props<TRow, TSummaryRow>) => {
-  const snap = useTableEditorTableStateSnapshot();
+  const snap = useCollectionEditorCollectionStateSnapshot();
   const gridColumn = snap.gridColumns.find((x) => x.name == column.key);
   const value = row[column.key as keyof TRow] as unknown as string;
 

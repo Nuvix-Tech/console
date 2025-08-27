@@ -1,7 +1,7 @@
 import type {
   AttributeFormat,
   Attributes,
-} from "@/components/project/schema/single/collection/document/components/_utils.js";
+} from "@/components/project/schema/single/collection/document/components/_utils";
 import { CalculatedColumn, RenderHeaderCellProps } from "react-data-grid";
 
 export interface SavedState {

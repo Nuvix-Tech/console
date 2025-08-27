@@ -1,8 +1,8 @@
-import type { ProjectSdk } from "@/lib/sdk.js";
+import type { ProjectSdk } from "@/lib/sdk";
 import { Query, type Models, type NuvixException } from "@nuvix/console";
 import { useQuery } from "@tanstack/react-query";
-import { collectionKeys } from "../keys.js";
-import type { QueryOptions } from "@/types/index.js";
+import { collectionKeys } from "../keys";
+import type { QueryOptions } from "@/types/index";
 
 type TableRowsVariables = {
   projectRef: string;

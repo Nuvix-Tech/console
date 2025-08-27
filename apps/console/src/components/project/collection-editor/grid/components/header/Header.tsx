@@ -28,17 +28,14 @@ import {
 } from "@nuvix/sui/components/dropdown-menu";
 import FilterPopover from "./filter/FilterPopover";
 import { SortPopover } from "./sort";
-import { Filter, Sort, NuvixRow } from "../../types";
+import { Filter, Sort } from "../../types";
 import { useAppStore, useProjectStore } from "@/lib/store";
 import { useParams } from "next/navigation";
 import { Button, useToast } from "@nuvix/ui/components";
 import { cn } from "@nuvix/sui/lib/utils";
 import { Separator } from "@nuvix/sui/components/separator";
 import { useTableEditorFiltersSort } from "@/hooks/useTableEditorFilterSort";
-import { fetchAllTableRows, useTableRowsQuery } from "@/data/table-rows/table-rows-query";
-import { useTableRowsCountQuery } from "@/data/table-rows/table-rows-count-query";
 import { toast } from "sonner";
-import { formatTableRowsToSQL } from "@/components/editor/TableEntity.utils";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 import { useCollectionEditorStore } from "@/lib/store/collection-editor";
 // [Unkown] CSV exports require this guard as a fail-safe if the table is

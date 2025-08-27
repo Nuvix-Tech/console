@@ -3,7 +3,6 @@ import { ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { RenderEditCellProps } from "react-data-grid";
 
-import { BlockKeys, Key } from "../common/BlockKeys";
 import { Input } from "@/components/editor/components";
 import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/popover";
 import { cn } from "@nuvix/sui/lib/utils";
@@ -14,33 +13,26 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@nuvix/sui/components/dropdown-menu";
-import {
-  TimestampInfo,
-  timestampLocalFormatter,
-} from "@/components/editor/components/_timestamp_info";
+import { timestampLocalFormatter } from "@/components/editor/components/_timestamp_info";
+import { BlockKeys, Key } from "@/components/grid/components/common/BlockKeys";
 
 interface BaseEditorProps<TRow, TSummaryRow = unknown>
   extends RenderEditCellProps<TRow, TSummaryRow> {
-  type: "date" | "datetime" | "datetimetz";
+  type: "datetime";
   isNullable: boolean;
 }
 
-const FORMAT_MAP = {
-  date: "YYYY-MM-DD",
-  datetime: "YYYY-MM-DD HH:mm:ss",
-  datetimetz: "YYYY-MM-DD HH:mm:ss+ZZ",
-};
+const FORMAT = "YYYY-MM-DDTHH:mm:ss";
 
 function BaseEditor<TRow, TSummaryRow = unknown>({
   row,
   column,
-  type,
   isNullable,
   onRowChange,
   onClose,
 }: BaseEditorProps<TRow, TSummaryRow>) {
   const ref = useRef<HTMLInputElement>(null);
-  const format = FORMAT_MAP[type];
+  const format = FORMAT;
 
   const value = row[column.key as keyof TRow] as unknown as string;
   const [inputValue, setInputValue] = useState(value);
@@ -52,13 +44,7 @@ function BaseEditor<TRow, TSummaryRow = unknown>({
   };
 
   const setToNow = () => {
-    const formattedNow = dayjs().format(
-      type === "date"
-        ? "YYYY-MM-DD"
-        : type === "datetimetz"
-          ? "YYYY-MM-DDTHH:mm:ssZ"
-          : "YYYY-MM-DDTHH:mm:ss",
-    );
+    const formattedNow = dayjs().format("YYYY-MM-DDTHH:mm:ss");
     saveChanges(formattedNow);
   };
 
@@ -99,23 +85,11 @@ function BaseEditor<TRow, TSummaryRow = unknown>({
             <p className="text-sm font-mono text-muted-foreground">Enter a valid date format</p>
           ) : timeValue === "Invalid Date" ? (
             <p className="text-sm font-mono text-muted-foreground">Invalid date format</p>
-          ) : type === "datetimetz" ? (
-            <TimestampInfo
-              displayAs="utc"
-              utcTimestamp={timeValue}
-              labelFormat="DD MMM YYYY HH:mm:ss (ZZ)"
-              className="text-left !text-sm font-mono tracking-tight"
-            />
           ) : (
             <p className="text-sm font-mono tracking-tight">
               {timestampLocalFormatter({
                 utcTimestamp: timeValue,
-                format:
-                  type === "date"
-                    ? "DD MMM YYYY"
-                    : type === "datetime"
-                      ? "DD MMM YYYY HH:mm:ss"
-                      : undefined,
+                format: "DD MMM YYYY HH:mm:ss",
               })}
             </p>
           )}
@@ -169,9 +143,9 @@ function BaseEditor<TRow, TSummaryRow = unknown>({
   );
 }
 
-export function DateTimeEditor(type: "datetime" | "datetimetz" | "date", isNullable: boolean) {
+export function DateTimeEditor(isNullable: boolean) {
   // eslint-disable-next-line react/display-name
   return <TRow, TSummaryRow = unknown>(props: RenderEditCellProps<TRow, TSummaryRow>) => {
-    return <BaseEditor {...props} type={type} isNullable={isNullable} />;
+    return <BaseEditor {...props} type="datetime" isNullable={isNullable} />;
   };
 }

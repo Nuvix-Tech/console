@@ -4,24 +4,25 @@ import { DataGrid, CalculatedColumn, DataGridHandle } from "react-data-grid";
 import { handleCopyCell } from "@/components/grid/NuvixGrid.utils";
 import { useForeignKeyConstraintsQuery } from "@/data/database/foreign-key-constraints-query";
 // import { useSendEventMutation } from "data/telemetry/send-event-mutation";
-import type { Filter, GridProps, NuvixRow } from "../../types";
+import type { Filter, GridProps } from "../../types";
 import { useOnRowsChange } from "./Grid.utils";
 import RowRenderer from "./RowRenderer";
-import { useTableEditorStore } from "@/lib/store/table-editor";
-import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { useAppStore, useProjectStore } from "@/lib/store";
 import { cn } from "@nuvix/sui/lib/utils";
 import { Button } from "@nuvix/ui/components";
 import { formatForeignKeys } from "@/components/editor/SidePanelEditor/ForeignKeySelector/ForeignKeySelector.utils";
 import { GenericSkeletonLoader } from "@/components/editor/components/GenericSkeleton";
 import { Alert, AlertDescription, AlertTitle } from "@nuvix/sui/components/alert";
+import type { Models } from "@nuvix/console";
+import { useCollectionEditorStore } from "@/lib/store/collection-editor";
+import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 
-const rowKeyGetter = (row: NuvixRow) => {
+const rowKeyGetter = (row: Models.Document) => {
   return row?.idx ?? -1;
 };
 
 interface IGrid extends GridProps {
-  rows: any[];
+  rows: Models.Document[];
   error: any;
   isLoading: boolean;
   isSuccess: boolean;
@@ -69,13 +70,13 @@ export const Grid = memo(
       },
       ref: React.Ref<DataGridHandle> | undefined,
     ) => {
-      const tableEditorSnap = useTableEditorStore();
+      const tableEditorSnap = useCollectionEditorStore();
 
-      const snap = useTableEditorTableStateSnapshot();
+      const snap = useCollectionEditorCollectionStateSnapshot();
 
       const onRowsChange = useOnRowsChange(rows);
 
-      function onSelectedRowsChange(selectedRows: Set<number>) {
+      function onSelectedRowsChange(selectedRows: Set<string>) {
         snap.setSelectedRows(selectedRows);
       }
 
@@ -86,33 +87,14 @@ export const Grid = memo(
         snap.setSelectedCellPosition({ idx: args.column.idx, rowIdx: args.rowIdx });
       }
 
-      const table = snap.table;
+      const collection = snap.collection;
 
       // const { mutate: sendEvent } = useSendEventMutation();
       const { organization: org } = useAppStore();
       const { project, sdk } = useProjectStore();
 
-      const { data } = useForeignKeyConstraintsQuery({
-        projectRef: project?.$id,
-        sdk,
-        schema: table?.schema ?? undefined,
-      });
-
       function getColumnForeignKey(columnName: string) {
-        const { targetTableSchema, targetTableName, targetColumnName } =
-          table?.columns.find((x) => x.name == columnName)?.foreignKey ?? {};
-
-        const fk = data?.find(
-          (key: any) =>
-            key.source_schema === table?.schema &&
-            key.source_table === table?.name &&
-            key.source_columns.includes(columnName) &&
-            key.target_schema === targetTableSchema &&
-            key.target_table === targetTableName &&
-            key.target_columns.includes(targetColumnName),
-        );
-
-        return fk !== undefined ? formatForeignKeys([fk])[0] : undefined;
+        return undefined;
       }
 
       function onRowDoubleClick(row: any, column: any) {

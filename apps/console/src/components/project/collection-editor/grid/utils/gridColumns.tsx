@@ -22,6 +22,8 @@ import {
 
 export const ESTIMATED_CHARACTER_PIXEL_WIDTH = 9;
 
+const internalAttributes = [];
+
 export function getGridColumns(
   collection: Models.Collection,
   options?: {
@@ -36,12 +38,10 @@ export function getGridColumns(
   const columns = collection.attributes.map((x, idx) => {
     const columnType = getColumnType(x);
     const columnDefaultWidth = getColumnDefaultWidth(x);
-    const columnWidthBasedOnName = (x.size ?? 0) * ESTIMATED_CHARACTER_PIXEL_WIDTH;
-    const columnWidth = options?.defaultWidth
-      ? options.defaultWidth
-      : columnDefaultWidth < columnWidthBasedOnName
-        ? columnWidthBasedOnName
-        : columnDefaultWidth;
+    const rawSize = typeof x.size === "number" ? x.size : columnDefaultWidth;
+    // clamp size to be strictly below 500
+    const columnSize = Math.min(rawSize, columnDefaultWidth);
+    const columnWidth = Math.max(columnDefaultWidth, columnSize);
 
     const columnDefinition: CalculatedColumn<Models.Document> = {
       key: x.key,
@@ -74,8 +74,6 @@ export function getGridColumns(
       renderCell: getCellRenderer(x, columnType, {
         collectionId: options?.collectionId,
       }),
-
-      // [Next 18 Refactor] Double check if this is correct
       parent: undefined,
       level: 0,
       maxWidth: undefined,
@@ -132,7 +130,7 @@ function getCellEditor(
       // eslint-disable-next-line react/display-name
       return (p: any) => <BooleanEditor {...p} isNullable={!columnDefinition.required} />;
     case Attributes.Timestamptz:
-      return DateTimeEditor("datetimetz", !columnDefinition.required || false);
+      return DateTimeEditor(!columnDefinition.required || false);
     case Attributes.Relationship:
     case Attributes.String: // TODO: Implement String and other formats
     case AttributeFormat.Email:

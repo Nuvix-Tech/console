@@ -1,24 +1,23 @@
-import type { PostgresColumn } from "@nuvix/pg-meta";
 import { PropsWithChildren, createContext, useContext, useRef } from "react";
 import { proxy, useSnapshot } from "valtio";
 
-import type { NuvixRow } from "@/components/grid/types";
 import { ForeignKey } from "@/components/editor/SidePanelEditor/ForeignKeySelector/ForeignKeySelector.types";
-import { Dictionary } from "@nuvix/pg-meta/src/query";
 import { EditValue } from "@/components/editor/SidePanelEditor/RowEditor/RowEditor.types";
+import type { Models } from "@nuvix/console";
+import type { AttributeTypes } from "@/components/project/schema/single/collection/document/components/_utils";
 
 export const COLLECTION_EDITOR_DEFAULT_ROWS_PER_PAGE = 100;
 
 type ForeignKeyState = {
   foreignKey: ForeignKey;
-  row: Dictionary<any>;
-  column: PostgresColumn;
+  row: Models.Document;
+  column: AttributeTypes;
 };
 
 export type SidePanel =
-  | { type: "cell"; value?: { column: string; row: Dictionary<any> } }
-  | { type: "row"; row?: Dictionary<any> }
-  | { type: "column"; column?: Readonly<PostgresColumn> }
+  | { type: "cell"; value?: { column: string; row: Models.Document } }
+  | { type: "row"; row?: Models.Document }
+  | { type: "column"; column?: AttributeTypes }
   | { type: "table"; mode: "new" | "edit" | "duplicate" }
   | { type: "schema"; mode: "new" | "edit" }
   | { type: "json"; jsonValue: EditValue }
@@ -30,13 +29,13 @@ export type SidePanel =
 
 export type ConfirmationDialog =
   | { type: "table"; isDeleteWithCascade: boolean }
-  | { type: "column"; column: PostgresColumn; isDeleteWithCascade: boolean }
+  | { type: "column"; column: AttributeTypes; isDeleteWithCascade: boolean }
   // [Unkown] Just FYI callback, numRows, allRowsSelected is a temp workaround so that
   // DeleteConfirmationDialog can trigger dispatch methods after the successful deletion of rows.
   // Once we deprecate react tracked and move things to valtio, we can remove this.
   | {
       type: "row";
-      rows: NuvixRow[];
+      rows: Models.Document[];
       numRows?: number;
       allRowsSelected?: boolean;
       callback?: () => void;
@@ -121,13 +120,13 @@ export const createCollectionEditorState = () => {
         sidePanel: { type: "column" },
       };
     },
-    onEditColumn: (column: PostgresColumn) => {
+    onEditColumn: (column: AttributeTypes) => {
       state.ui = {
         open: "side-panel",
         sidePanel: { type: "column", column },
       };
     },
-    onDeleteColumn: (column: PostgresColumn) => {
+    onDeleteColumn: (column: AttributeTypes) => {
       state.ui = {
         open: "confirmation-dialog",
         confirmationDialog: { type: "column", column, isDeleteWithCascade: false },
@@ -141,14 +140,14 @@ export const createCollectionEditorState = () => {
         sidePanel: { type: "row" },
       };
     },
-    onEditRow: (row: Dictionary<any>) => {
+    onEditRow: (row: Models.Document) => {
       state.ui = {
         open: "side-panel",
         sidePanel: { type: "row", row },
       };
     },
     onDeleteRows: (
-      rows: NuvixRow[],
+      rows: Models.Document[],
       meta: { numRows?: number; allRowsSelected: boolean; callback?: () => void } = {
         numRows: 0,
         allRowsSelected: false,
@@ -169,7 +168,7 @@ export const createCollectionEditorState = () => {
         sidePanel: { type: "json", jsonValue },
       };
     },
-    onExpandTextEditor: (column: string, row: Dictionary<any>) => {
+    onExpandTextEditor: (column: string, row: Models.Document) => {
       state.ui = {
         open: "side-panel",
         sidePanel: { type: "cell", value: { column, row } },

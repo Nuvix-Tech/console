@@ -1,8 +1,6 @@
 import { ChevronDown, Edit, Lock, Trash, Unlock } from "lucide-react";
 import type { CalculatedColumn } from "react-data-grid";
 
-import { useTableEditorStore } from "@/lib/store/table-editor";
-import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import {
   DropdownMenu,
@@ -11,7 +9,9 @@ import {
   DropdownMenuTrigger,
 } from "@nuvix/sui/components/dropdown-menu";
 import { Separator } from "@nuvix/sui/components/separator";
-import { Button, IconButton } from "@nuvix/ui/components";
+import { IconButton } from "@nuvix/ui/components";
+import { useCollectionEditorStore } from "@/lib/store/collection-editor";
+import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 
 interface ColumnMenuProps {
   column: CalculatedColumn<any, unknown>;
@@ -19,9 +19,9 @@ interface ColumnMenuProps {
 }
 
 const ColumnMenu = ({ column, isEncrypted }: ColumnMenuProps) => {
-  const tableEditorSnap = useTableEditorStore();
+  const tableEditorSnap = useCollectionEditorStore();
 
-  const snap = useTableEditorTableStateSnapshot();
+  const snap = useCollectionEditorCollectionStateSnapshot();
 
   const columnKey = column.key;
 
@@ -34,14 +34,14 @@ const ColumnMenu = ({ column, isEncrypted }: ColumnMenuProps) => {
   }
 
   function onEditColumn() {
-    const pgColumn = snap.originalTable.columns.find((c) => c.name === column.name);
+    const pgColumn = snap.collection.attributes.find((c) => c.key === column.name);
     if (pgColumn) {
       tableEditorSnap.onEditColumn(pgColumn);
     }
   }
 
   function onDeleteColumn() {
-    const pgColumn = snap.originalTable.columns.find((c) => c.name === column.name);
+    const pgColumn = snap.collection.attributes.find((c) => c.key === column.name);
     if (pgColumn) {
       tableEditorSnap.onDeleteColumn(pgColumn);
     }

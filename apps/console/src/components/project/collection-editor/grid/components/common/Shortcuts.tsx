@@ -1,17 +1,17 @@
 import { RefObject, useMemo } from "react";
 import type { DataGridHandle } from "react-data-grid";
 
-import { NuvixRow } from "../../types";
-import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
-import { useKeyboardShortcuts } from "./Hooks";
+import type { Models } from "@nuvix/console";
+import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
+import { useKeyboardShortcuts } from "@/components/grid/components/common/Hooks";
 
 type ShortcutsProps = {
   gridRef: RefObject<DataGridHandle>;
-  rows: NuvixRow[];
+  rows: Models.Document[];
 };
 
 export function Shortcuts({ gridRef, rows }: ShortcutsProps) {
-  const snap = useTableEditorTableStateSnapshot();
+  const snap = useCollectionEditorCollectionStateSnapshot();
 
   const metaKey = useMemo(() => {
     function getClientOS() {

@@ -1,7 +1,6 @@
 import type { RenderEditCellProps } from "react-data-grid";
-
-import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { Select } from "@/components/others/ui";
+import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 
 interface SelectEditorProps<TRow, TSummaryRow = unknown>
   extends RenderEditCellProps<TRow, TSummaryRow> {
@@ -17,7 +16,7 @@ export function SelectEditor<TRow, TSummaryRow = unknown>({
   options,
   isNullable,
 }: SelectEditorProps<TRow, TSummaryRow>) {
-  const snap = useTableEditorTableStateSnapshot();
+  const snap = useCollectionEditorCollectionStateSnapshot();
   const gridColumn = snap.gridColumns.find((x) => x.name == column.key);
 
   const value = row[column.key as keyof TRow] as unknown as string;

@@ -4,20 +4,12 @@ import type { RenderEditCellProps } from "react-data-grid";
 
 import { prettifyJSON, removeJSONTrailingComma, tryParseJson } from "@/lib/helpers";
 import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
-import { BlockKeys, Key } from "../common/BlockKeys";
-import { MonacoEditor } from "../common/MonacoEditor";
-import { NullValue } from "../common/NullValue";
-import { TruncatedWarningOverlay } from "./TruncatedWarningOverlay";
-import { useProjectStore } from "@/lib/store";
-import { useParams } from "next/navigation";
+import { BlockKeys, Key } from "@/components/grid/components/common/BlockKeys";
 import { useToast } from "@nuvix/ui/components";
-import { MAX_ARRAY_SIZE, MAX_CHARACTERS } from "../../constants";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import Popover from "@/components/editor/components/_popover";
-import { useGetCellValueMutation } from "@/data/table-rows/get-cell-value-mutation";
-import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
-import { isTableLike } from "@/data/table-editor/table-editor-types";
-import { TableParam } from "@/types";
+import { MonacoEditor } from "@/components/grid/components/common/MonacoEditor";
+import { NullValue } from "@/components/grid/components/common/NullValue";
 
 const verifyJSON = (value: string) => {
   try {
@@ -55,16 +47,7 @@ export const JsonEditor = <TRow, TSummaryRow = unknown>({
   onExpandEditor,
 }: JsonEditorProps<TRow, TSummaryRow>) => {
   const snap = useTableEditorTableStateSnapshot();
-  const { project, sdk } = useProjectStore();
   const { addToast } = useToast();
-  const { tableId } = useParams<TableParam>();
-
-  const { data: selectedTable } = useTableEditorQuery({
-    projectRef: project?.$id,
-    sdk,
-    id: Number(tableId),
-  });
-
   const gridColumn = snap.gridColumns.find((x) => x.name == column.key);
 
   const rawInitialValue = row[column.key as keyof TRow] as unknown;
@@ -75,49 +58,8 @@ export const JsonEditor = <TRow, TSummaryRow = unknown>({
 
   const jsonString = prettifyJSON(initialValue ? tryFormatInitialValue(initialValue) : "");
 
-  const isTruncated =
-    (typeof initialValue === "string" &&
-      initialValue.endsWith("...") &&
-      initialValue.length > MAX_CHARACTERS) ||
-    // if the value is an array which total representation is > MAX_CHARACTERS
-    // we'll select the first MAX_ARRAY_SIZE elements and add a "..." last element at the end of it
-    (typeof initialValue === "string" &&
-      // If the string represent an array finishing with "..." element
-      initialValue.startsWith('["') &&
-      initialValue.endsWith(',"..."]') &&
-      // If the array have MAX_ARRAY_SIZE elements in it
-      // its a large truncated array
-      (initialValue.match(/","/g) || []).length >= MAX_ARRAY_SIZE);
   const [isPopoverOpen, setIsPopoverOpen] = useState(true);
   const [value, setValue] = useState<string | null>(jsonString);
-
-  const { mutate: getCellValue, isPending: isLoading, isSuccess } = useGetCellValueMutation();
-
-  const loadFullValue = () => {
-    if (!isTableLike(selectedTable)) return;
-    if (selectedTable.primary_keys.length === 0) {
-      return addToast("Unable to load value as table has no primary keys");
-    }
-
-    const pkMatch = selectedTable.primary_keys.reduce((a, b) => {
-      return { ...a, [b.name]: (row as any)[b.name] };
-    }, {});
-
-    getCellValue(
-      {
-        table: { schema: selectedTable.schema, name: selectedTable.name },
-        column: column.name as string,
-        pkMatch,
-        projectRef: project?.$id,
-        sdk,
-      },
-      {
-        onSuccess: (data) => {
-          setValue(JSON.stringify(data));
-        },
-      },
-    );
-  };
 
   const cancelChanges = useCallback(() => {
     if (isEditable) onRowChange(row, true);
@@ -133,7 +75,7 @@ export const JsonEditor = <TRow, TSummaryRow = unknown>({
         setIsPopoverOpen(false);
       }
     },
-    [isSuccess],
+    [initialValue],
   );
 
   const onChange = (_value: string | undefined) => {
@@ -176,61 +118,45 @@ export const JsonEditor = <TRow, TSummaryRow = unknown>({
       sideOffset={-35}
       className="rounded-none"
       overlay={
-        isTruncated && !isSuccess ? (
-          <div
-            style={{ width: `${gridColumn?.width || column.width}px` }}
-            className="flex items-center justify-center flex-col relative"
-          >
-            <MonacoEditor
-              readOnly
-              onChange={() => {}}
-              width={`${gridColumn?.width || column.width}px`}
-              value={value ?? ""}
-              language="markdown"
-            />
-            <TruncatedWarningOverlay isLoading={isLoading} loadFullValue={loadFullValue} />
-          </div>
-        ) : (
-          <BlockKeys value={value} onEscape={cancelChanges} onEnter={saveChanges}>
-            <MonacoEditor
-              width={`${gridColumn?.width || column.width}px`}
-              value={value ?? ""}
-              language="json"
-              readOnly={!isEditable}
-              onChange={onChange}
-            />
-            <div className="flex items-start justify-between p-2 gap-x-2">
-              {isEditable && (
-                <div className="space-y-1">
-                  <div className="flex items-center space-x-2">
-                    <Key>⏎</Key>
-                    <p className="text-xs text-muted-foreground">Save changes</p>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Key>Esc</Key>
-                    <p className="text-xs text-muted-foreground">Cancel changes</p>
-                  </div>
+        <BlockKeys value={value} onEscape={cancelChanges} onEnter={saveChanges}>
+          <MonacoEditor
+            width={`${gridColumn?.width || column.width}px`}
+            value={value ?? ""}
+            language="json"
+            readOnly={!isEditable}
+            onChange={onChange}
+          />
+          <div className="flex items-start justify-between p-2 gap-x-2">
+            {isEditable && (
+              <div className="space-y-1">
+                <div className="flex items-center space-x-2">
+                  <Key>⏎</Key>
+                  <p className="text-xs text-muted-foreground">Save changes</p>
                 </div>
-              )}
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div
-                    className={[
-                      "border border-strong rounded p-1 flex items-center justify-center",
-                      "transition cursor-pointer bg-selection hover:bg-border-strong",
-                    ].join(" ")}
-                    onClick={() => onSelectExpand()}
-                  >
-                    <Maximize size={12} strokeWidth={2} />
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" align="center">
-                  <span>Expand editor</span>
-                </TooltipContent>
-              </Tooltip>
-            </div>
-          </BlockKeys>
-        )
+                <div className="flex items-center space-x-2">
+                  <Key>Esc</Key>
+                  <p className="text-xs text-muted-foreground">Cancel changes</p>
+                </div>
+              </div>
+            )}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div
+                  className={[
+                    "border border-strong rounded p-1 flex items-center justify-center",
+                    "transition cursor-pointer bg-selection hover:bg-border-strong",
+                  ].join(" ")}
+                  onClick={() => onSelectExpand()}
+                >
+                  <Maximize size={12} strokeWidth={2} />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" align="center">
+                <span>Expand editor</span>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+        </BlockKeys>
       }
     >
       <div

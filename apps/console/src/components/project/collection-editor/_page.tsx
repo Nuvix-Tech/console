@@ -9,11 +9,12 @@ import { useRouter } from "@bprogress/next";
 import { Loader2Icon } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useCallback } from "react";
+import { CollectionGrid } from "./grid";
 
 export const CollectionEditor = () => {
   const { collectionId, id: projectRef } = useParams<{ id: string; collectionId: string }>();
   const router = useRouter();
-  const { project, sdk } = useProjectStore();
+  const { project, sdk } = useProjectStore((s) => s);
   const { selectedSchema } = useQuerySchemaState();
   const { params } = useSearchQuery();
 
@@ -83,25 +84,12 @@ export const CollectionEditor = () => {
         collection={collection}
         editable={editable}
       >
-        {/* <NuvixGrid
-          key={gridKey}
-          gridProps={{ height: "100%" }}
-          customHeader={
-            (isViewSelected || isTableSelected) && selectedView === "definition" ? (
-              <div className="flex items-center space-x-2">
-                <p>
-                  SQL Definition of <Code className="text-sm">{table.name}</Code>
-                </p>
-                <p className="text-muted-foreground text-sm">(Read only)</p>
-              </div>
-            ) : null
-          }
-        > */}
-        {/* Conditional rendering for table definition can be added here if needed */}
-        {/* {(isViewSelected || isTableSelected) && selectedView === 'definition' && (
+        <CollectionGrid key={gridKey} gridProps={{ height: "100%" }} customHeader>
+          {/* Conditional rendering for table definition can be added here if needed */}
+          {/* {(isViewSelected || isTableSelected) && selectedView === 'definition' && (
               <TableDefinition entity={table} />
             )} */}
-        {/* </NuvixGrid> */}
+        </CollectionGrid>
 
         {/* <SidePanelEditor
           editable={editable}

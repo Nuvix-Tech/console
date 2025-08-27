@@ -20,9 +20,9 @@ import { Filter, GridProps } from "./types";
 import { useProjectStore } from "@/lib/store";
 import { useTableEditorFiltersSort } from "@/hooks/useTableEditorFilterSort";
 import { Column } from "@nuvix/ui/components";
-import { useCollectionEditorStore } from "@/lib/store/collection-editor.jsx";
-import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection.jsx";
-import { useCollectionDocumentsQuery } from "@/data/collections/documents/documents_query.js";
+import { useCollectionEditorStore } from "@/lib/store/collection-editor";
+import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
+import { useCollectionDocumentsQuery } from "@/data/collections/documents/documents_query";
 
 const EMPTY_ARR: any[] = [];
 

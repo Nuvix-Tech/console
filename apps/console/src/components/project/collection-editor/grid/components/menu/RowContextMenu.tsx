@@ -1,21 +1,20 @@
 import { Clipboard, Edit, Trash } from "lucide-react";
 import { useCallback } from "react";
 import { Item, ItemParams, Menu } from "react-contexify";
-
-import type { NuvixRow } from "../../types";
-import { useTableEditorStore } from "@/lib/store/table-editor";
-import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { ROW_CONTEXT_MENU_ID } from ".";
 import { copyToClipboard, formatClipboardValue } from "../../utils/common";
+import type { Models } from "@nuvix/console";
+import { useCollectionEditorStore } from "@/lib/store/collection-editor";
+import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 
 export type RowContextMenuProps = {
-  rows: NuvixRow[];
+  rows: Models.Document[];
 };
 
 const RowContextMenu = ({ rows }: RowContextMenuProps) => {
-  const tableEditorSnap = useTableEditorStore();
+  const tableEditorSnap = useCollectionEditorStore();
 
-  const snap = useTableEditorTableStateSnapshot();
+  const snap = useCollectionEditorCollectionStateSnapshot();
 
   function onDeleteRow(p: ItemParams) {
     const { props } = p;

@@ -1,4 +1,4 @@
-import { NuvixRow } from "./table";
+import type { Models } from "@nuvix/console";
 
 export interface GridProps {
   width?: string | number;
@@ -6,5 +6,5 @@ export interface GridProps {
   defaultColumnWidth?: string | number;
   containerClass?: string;
   gridClass?: string;
-  rowClass?: ((row: NuvixRow) => string | undefined) | undefined;
+  rowClass?: ((row: Models.Document) => string | undefined) | undefined;
 }

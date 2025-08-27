@@ -1,28 +1,16 @@
 import { Maximize } from "lucide-react";
 import { useCallback, useState } from "react";
 import type { RenderEditCellProps } from "react-data-grid";
-import { toast } from "sonner";
-
-import { MAX_CHARACTERS } from "@nuvix/pg-meta/src/query/table-row-query";
-
-import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
-import { isTableLike } from "@/data/table-editor/table-editor-types";
-import { useGetCellValueMutation } from "@/data/table-rows/get-cell-value-mutation";
-import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { Button, IconButton, useToast } from "@nuvix/ui/components";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import { cn } from "@nuvix/sui/lib/utils";
-import { BlockKeys, Key } from "../common/BlockKeys";
-import { EmptyValue } from "../common/EmptyValue";
-import { MonacoEditor } from "../common/MonacoEditor";
-import { NullValue } from "../common/NullValue";
-import { TruncatedWarningOverlay } from "./TruncatedWarningOverlay";
-import { useParams } from "next/navigation";
-import { useProjectStore } from "@/lib/store";
-import { useTableEditorStore } from "@/lib/store/table-editor";
 import Popover from "@/components/editor/components/_popover";
 import ConfirmationModal from "@/components/editor/components/_confim_dialog";
-import { TableParam } from "@/types";
+import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
+import { BlockKeys, Key } from "@/components/grid/components/common/BlockKeys";
+import { MonacoEditor } from "@/components/grid/components/common/MonacoEditor";
+import { NullValue } from "@/components/grid/components/common/NullValue";
+import { EmptyValue } from "@/components/grid/components/common/EmptyValue";
 
 export const TextEditor = <TRow, TSummaryRow = unknown>({
   row,
@@ -36,16 +24,8 @@ export const TextEditor = <TRow, TSummaryRow = unknown>({
   isEditable?: boolean;
   onExpandEditor: (column: string, row: TRow) => void;
 }) => {
-  const snap = useTableEditorTableStateSnapshot();
-  const { addToast } = useToast();
-  const { project, sdk } = useProjectStore();
-  const { tableId } = useParams<TableParam>();
-
-  const { data: selectedTable } = useTableEditorQuery({
-    projectRef: project.$id,
-    sdk,
-    id: Number(tableId),
-  });
+  // TODO: add support for text formats
+  const snap = useCollectionEditorCollectionStateSnapshot();
 
   const gridColumn = snap.gridColumns.find((x) => x.name == column.key);
   const rawValue = row[column.key as keyof TRow] as unknown;
@@ -53,36 +33,6 @@ export const TextEditor = <TRow, TSummaryRow = unknown>({
   const [isPopoverOpen, setIsPopoverOpen] = useState(true);
   const [value, setValue] = useState<string | null>(initialValue);
   const [isConfirmNextModalOpen, setIsConfirmNextModalOpen] = useState(false);
-
-  const { mutate: getCellValue, isPending: isLoading, isSuccess } = useGetCellValueMutation();
-
-  const isTruncated =
-    typeof initialValue === "string" &&
-    initialValue.endsWith("...") &&
-    initialValue.length > MAX_CHARACTERS;
-
-  const loadFullValue = () => {
-    if (!isTableLike(selectedTable)) return;
-
-    if (selectedTable.primary_keys.length === 0) {
-      return addToast("Unable to load value as table has no primary keys");
-    }
-
-    const pkMatch = selectedTable.primary_keys.reduce((a, b) => {
-      return { ...a, [b.name]: (row as any)[b.name] };
-    }, {});
-
-    getCellValue(
-      {
-        table: { schema: selectedTable.schema, name: selectedTable.name },
-        column: column.name as string,
-        pkMatch,
-        projectRef: project?.$id,
-        sdk,
-      },
-      { onSuccess: (data) => setValue(data) },
-    );
-  };
 
   const cancelChanges = useCallback(() => {
     if (isEditable) onRowChange(row, true);
@@ -96,7 +46,7 @@ export const TextEditor = <TRow, TSummaryRow = unknown>({
       }
       setIsPopoverOpen(false);
     },
-    [isSuccess],
+    [initialValue],
   );
 
   const onSelectExpand = () => {
@@ -122,73 +72,57 @@ export const TextEditor = <TRow, TSummaryRow = unknown>({
         sideOffset={-35}
         className="rounded-none"
         overlay={
-          isTruncated && !isSuccess ? (
-            <div
-              style={{ width: `${gridColumn?.width || column.width}px` }}
-              className="flex items-center justify-center flex-col relative"
-            >
-              <MonacoEditor
-                readOnly
-                onChange={() => {}}
-                width={`${gridColumn?.width || column.width}px`}
-                value={value ?? ""}
-                language="markdown"
-              />
-              <TruncatedWarningOverlay isLoading={isLoading} loadFullValue={loadFullValue} />
-            </div>
-          ) : (
-            <BlockKeys
-              value={value}
-              onEscape={cancelChanges}
-              onEnter={saveChanges}
-              ignoreOutsideClicks={isConfirmNextModalOpen}
-            >
-              <MonacoEditor
-                width={`${gridColumn?.width || column.width}px`}
-                value={value ?? ""}
-                readOnly={!isEditable}
-                onChange={onChange}
-              />
-              {isEditable && (
-                <div className="flex items-start justify-between p-2 space-x-2">
-                  <div className="space-y-1">
-                    <div className="flex items-center space-x-2">
-                      <Key>⏎</Key>
-                      <p className="text-xs text-muted-foreground">Save changes</p>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Key>Esc</Key>
-                      <p className="text-xs text-muted-foreground">Cancel changes</p>
-                    </div>
+          <BlockKeys
+            value={value}
+            onEscape={cancelChanges}
+            onEnter={saveChanges}
+            ignoreOutsideClicks={isConfirmNextModalOpen}
+          >
+            <MonacoEditor
+              width={`${gridColumn?.width || column.width}px`}
+              value={value ?? ""}
+              readOnly={!isEditable}
+              onChange={onChange}
+            />
+            {isEditable && (
+              <div className="flex items-start justify-between p-2 space-x-2">
+                <div className="space-y-1">
+                  <div className="flex items-center space-x-2">
+                    <Key>⏎</Key>
+                    <p className="text-xs text-muted-foreground">Save changes</p>
                   </div>
-                  <div className="flex flex-col items-end gap-y-1">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <IconButton
-                          type="button"
-                          variant="secondary"
-                          size="s"
-                          onClick={() => onSelectExpand()}
-                          icon={<Maximize size={12} strokeWidth={2} />}
-                        />
-                      </TooltipTrigger>
-                      <TooltipContent side="bottom">Expand editor</TooltipContent>
-                    </Tooltip>
-                    {isNullable && (
-                      <Button
-                        size="s"
-                        type="button"
-                        variant="secondary"
-                        onClick={() => setIsConfirmNextModalOpen(true)}
-                      >
-                        Set to NULL
-                      </Button>
-                    )}
+                  <div className="flex items-center space-x-2">
+                    <Key>Esc</Key>
+                    <p className="text-xs text-muted-foreground">Cancel changes</p>
                   </div>
                 </div>
-              )}
-            </BlockKeys>
-          )
+                <div className="flex flex-col items-end gap-y-1">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <IconButton
+                        type="button"
+                        variant="secondary"
+                        size="s"
+                        onClick={() => onSelectExpand()}
+                        icon={<Maximize size={12} strokeWidth={2} />}
+                      />
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">Expand editor</TooltipContent>
+                  </Tooltip>
+                  {isNullable && (
+                    <Button
+                      size="s"
+                      type="button"
+                      variant="secondary"
+                      onClick={() => setIsConfirmNextModalOpen(true)}
+                    >
+                      Set to NULL
+                    </Button>
+                  )}
+                </div>
+              </div>
+            )}
+          </BlockKeys>
         }
       >
         <div

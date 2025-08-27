@@ -8,18 +8,18 @@ import { THRESHOLD_COUNT, useTableRowsCountQuery } from "@/data/table-rows/table
 // import { RoleImpersonationState } from "lib/role-impersonation";
 // import { useRoleImpersonationStateSnapshot } from "state/role-impersonation-state";
 
-import { DropdownControl } from "../../common/DropdownControl";
 import { formatEstimatedCount } from "./Pagination.utils";
 import { useParams, useSearchParams } from "next/navigation";
 import { useProjectStore } from "@/lib/store";
-import { useTableEditorStore } from "@/lib/store/table-editor";
-import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { Button } from "@nuvix/ui/components";
 import { Input } from "@/components/editor/components";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import ConfirmationModal from "@/components/editor/components/_confim_dialog";
 import { TableParam } from "@/types";
 import { IconButton } from "@chakra-ui/react";
+import { DropdownControl } from "@/components/grid/components/common/DropdownControl";
+import { useCollectionEditorStore } from "@/lib/store/collection-editor";
+import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 
 const rowsPerPageOptions = [
   { value: 100, label: "100 rows" },
@@ -31,9 +31,9 @@ const Pagination = () => {
   const params = useSearchParams();
   const { tableId } = useParams<TableParam>();
   const { project, sdk } = useProjectStore();
-  const tableEditorSnap = useTableEditorStore();
+  const tableEditorSnap = useCollectionEditorStore();
 
-  const snap = useTableEditorTableStateSnapshot();
+  const snap = useCollectionEditorCollectionStateSnapshot();
 
   const { data: selectedTable } = useTableEditorQuery({
     sdk,
@@ -51,7 +51,6 @@ const Pagination = () => {
   // const roleImpersonationState = useRoleImpersonationStateSnapshot();
   const [isConfirmNextModalOpen, setIsConfirmNextModalOpen] = useState(false);
   const [isConfirmPreviousModalOpen, setIsConfirmPreviousModalOpen] = useState(false);
-  const [isConfirmFetchExactCountModalOpen, setIsConfirmFetchExactCountModalOpen] = useState(false);
 
   const [value, setValue] = useState<string>(page.toString());
 
@@ -202,32 +201,6 @@ const Pagination = () => {
               {`${count} ${data?.count === 0 || (data?.count ?? 0) > 1 ? `records` : "record"}`}{" "}
               {data?.is_estimate ? "(estimated)" : ""}
             </p>
-
-            {data?.is_estimate && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <IconButton
-                    size="xs"
-                    variant="outline"
-                    onClick={() => {
-                      // Show warning if either NOT a table entity, or table rows estimate is beyond threshold
-                      if (rowsCountEstimate === null || data.count > THRESHOLD_COUNT) {
-                        setIsConfirmFetchExactCountModalOpen(true);
-                      } else snap.setEnforceExactCount(true);
-                    }}
-                  >
-                    {isFetching ? <Loader2 className="animate-spin" /> : <HelpCircle />}
-                  </IconButton>
-                </TooltipTrigger>
-                <TooltipContent side="top" className="w-72">
-                  This is an estimated value as your table has more than{" "}
-                  {THRESHOLD_COUNT.toLocaleString()} rows. <br />
-                  <span className="text-brand">
-                    Click to retrieve the exact count of the table.
-                  </span>
-                </TooltipContent>
-              </Tooltip>
-            )}
           </div>
         </>
       )}
@@ -263,26 +236,6 @@ const Pagination = () => {
       >
         <p className="text-sm text-foreground-light">
           The currently selected lines will be deselected, do you want to proceed?
-        </p>
-      </ConfirmationModal>
-
-      <ConfirmationModal
-        variant="warning"
-        visible={isConfirmFetchExactCountModalOpen}
-        title="Confirm to fetch exact count for table"
-        confirmLabel="Retrieve exact count"
-        onCancel={() => setIsConfirmFetchExactCountModalOpen(false)}
-        onConfirm={() => {
-          snap.setEnforceExactCount(true);
-          setIsConfirmFetchExactCountModalOpen(false);
-        }}
-      >
-        <p className="text-sm text-foreground-light">
-          {rowsCountEstimate === null
-            ? `If your table has a row count of greater than ${THRESHOLD_COUNT.toLocaleString()} rows,
-          retrieving the exact count of the table may cause performance issues on your database.`
-            : `Your table has a row count of greater than ${THRESHOLD_COUNT.toLocaleString()} rows, and
-          retrieving the exact count of the table may cause performance issues on your database.`}
         </p>
       </ConfirmationModal>
     </div>

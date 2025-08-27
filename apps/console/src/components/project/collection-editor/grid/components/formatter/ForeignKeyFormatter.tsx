@@ -4,16 +4,16 @@ import type { RenderCellProps } from "react-data-grid";
 
 import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
 import { useTablesQuery } from "@/data/tables/tables-query";
-import type { NuvixRow } from "../../types";
-import { NullValue } from "../common/NullValue";
 import { ReferenceRecordPeek } from "./ReferenceRecordPeek";
 import { useProjectStore } from "@/lib/store";
 import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/popover";
 import { IconButton } from "@nuvix/ui/components";
 import { isTableLike } from "@/data/table-editor/table-editor-types";
 import { convertByteaToHex } from "@/components/editor/SidePanelEditor/RowEditor/RowEditor.utils";
+import type { Models } from "@nuvix/console";
+import { NullValue } from "@/components/grid/components/common/NullValue";
 
-interface Props extends PropsWithChildren<RenderCellProps<NuvixRow, unknown>> {
+interface Props extends PropsWithChildren<RenderCellProps<Models.Document, unknown>> {
   tableId: string;
 }
 

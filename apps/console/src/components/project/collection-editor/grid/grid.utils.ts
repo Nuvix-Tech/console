@@ -8,7 +8,7 @@ import type { Filter, SavedState } from "@/components/grid/types";
 // import { copyToClipboard } from "ui";
 import { FilterOperatorOptions } from "./components/header/filter/Filter.constants";
 import { STORAGE_KEY_PREFIX } from "./constants";
-import type { Sort, NuvixColumn } from "./types";
+import type { Sort } from "./types";
 import { formatClipboardValue } from "./utils/common";
 import { useRouter, useSearchParams } from "next/navigation";
 import type { Models } from "@nuvix/console";

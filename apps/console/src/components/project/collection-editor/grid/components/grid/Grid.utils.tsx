@@ -2,53 +2,42 @@ import { QueryKey, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { RowsChangeData } from "react-data-grid";
 
-import { NuvixRow } from "@/components/grid/types";
 // import { useProjectContext } from "components/layouts/ProjectLayout/ProjectContext";
 // import { DocsButton } from "components/ui/DocsButton";
-import { isTableLike } from "@/data/table-editor/table-editor-types";
-import { tableRowKeys } from "@/data/table-rows/keys";
-import { useTableRowUpdateMutation } from "@/data/table-rows/table-row-update-mutation";
-import type { TableRowsData } from "@/data/table-rows/table-rows-query";
 // import { useGetImpersonatedRoleState } from "state/role-impersonation-state";
 
-import { Dictionary } from "../../types";
 import { useProjectStore } from "@/lib/store";
-import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { toast } from "sonner";
-import { convertByteaToHex } from "@/components/editor/SidePanelEditor/RowEditor/RowEditor.utils";
+import type { Models } from "@nuvix/console";
+import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
+import { collectionKeys } from "@/data/collections/keys";
+import { useDocumentUpdateMutation } from "@/data/collections/documents/document_update_mutation";
 
-export function useOnRowsChange(rows: NuvixRow[]) {
+export function useOnRowsChange(rows: Models.Document[]) {
   const { project, sdk } = useProjectStore();
 
-  const snap = useTableEditorTableStateSnapshot();
+  const snap = useCollectionEditorCollectionStateSnapshot();
   const queryClient = useQueryClient();
-  // const getImpersonatedRoleState = useGetImpersonatedRoleState();
 
-  const { mutate: mutateUpdateTableRow } = useTableRowUpdateMutation({
-    async onMutate({ projectRef, table, configuration, payload }) {
-      const primaryKeyColumns = new Set(Object.keys(configuration.identifiers));
-
-      const queryKey = tableRowKeys.tableRows(projectRef, { table: { id: table.id } });
+  const { mutate: mutateUpdateTableRow } = useDocumentUpdateMutation({
+    async onMutate({ projectRef, collection, documentId, payload }) {
+      const queryKey = collectionKeys.documents(projectRef, collection.$schema, collection.$id);
 
       await queryClient.cancelQueries({ queryKey: queryKey });
 
-      const previousRowsQueries = queryClient.getQueriesData<TableRowsData>({ queryKey });
+      const previousRowsQueries = queryClient.getQueriesData({ queryKey });
 
-      queryClient.setQueriesData<TableRowsData>(
+      queryClient.setQueriesData(
         {
           queryKey: queryKey,
         },
-        (old) => {
+        (old: any) => {
           return {
-            rows:
-              old?.rows.map((row) => {
+            documents:
+              old?.documents.map((row: Models.Document) => {
                 // match primary keys
-                if (
-                  Object.entries(row)
-                    .filter(([key]) => primaryKeyColumns.has(key))
-                    .every(([key, value]) => value === configuration.identifiers[key])
-                ) {
-                  return { ...row, ...payload };
+                if (row.$id === documentId) {
+                  return { ...row, ...payload } as Models.Document;
                 }
 
                 return row;
@@ -84,7 +73,7 @@ export function useOnRowsChange(rows: NuvixRow[]) {
   });
 
   return useCallback(
-    (_rows: NuvixRow[], data: RowsChangeData<NuvixRow, unknown>) => {
+    (_rows: Models.Document[], data: RowsChangeData<Models.Document, unknown>) => {
       if (!project) return;
 
       const rowData = _rows[data.indexes[0]];
@@ -97,50 +86,14 @@ export function useOnRowsChange(rows: NuvixRow[]) {
 
       const updatedData = { [changedColumn]: rowData[changedColumn] };
 
-      const enumArrayColumns = snap.originalTable.columns
-        ?.filter((column) => {
-          return (column?.enums ?? []).length > 0 && column.data_type.toLowerCase() === "array";
-        })
-        .map((column) => column.name);
-
-      const identifiers = {} as Dictionary<any>;
-      isTableLike(snap.originalTable) &&
-        snap.originalTable.primary_keys.forEach((column) => {
-          const col = snap.originalTable.columns.find((c) => c.name === column.name);
-          identifiers[column.name] =
-            col?.format === "bytea"
-              ? convertByteaToHex(previousRow[column.name])
-              : previousRow[column.name];
-        });
-
-      const configuration = { identifiers };
-      if (Object.keys(identifiers).length === 0) {
-        return toast("Unable to update row as table has no primary keys", {
-          description: (
-            <div>
-              <p className="text-sm text-foreground-light">
-                Add a primary key column to your table first to serve as a unique identifier for
-                each row before updating or deleting the row.
-              </p>
-              <div className="mt-3">
-                {/* <DocsButton href="https://nuvix.in/docs/guides/database/tables#primary-keys" /> */}
-              </div>
-            </div>
-          ),
-        });
-      }
-
       mutateUpdateTableRow({
         projectRef: project.$id,
         sdk,
-        table: snap.originalTable,
-        configuration,
+        collection: snap.collection,
+        documentId: rowData.$id,
         payload: updatedData,
-        enumArrayColumns,
-        // roleImpersonationState: getImpersonatedRoleState(),
       });
     },
-    [project, rows, snap.originalTable, mutateUpdateTableRow],
+    [project, rows, snap.collection, mutateUpdateTableRow],
   );
 }
-// getImpersonatedRoleState, mutateUpdateTableRow,

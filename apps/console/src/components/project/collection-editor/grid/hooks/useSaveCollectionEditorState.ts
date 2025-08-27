@@ -1,15 +1,15 @@
 import { useCallback } from "react";
 
-import { saveTableEditorStateToLocalStorage } from "@/components/grid/NuvixGrid.utils";
 import { useProjectStore } from "@/lib/store";
-import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
+import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
+import { saveCollectionEditorStateToLocalStorage } from "../grid.utils";
 
 /**
  * Hook for saving state and triggering side effects.
  */
-export function useSaveTableEditorState() {
+export function useSaveCollectionEditorState() {
   const { project } = useProjectStore();
-  const snap = useTableEditorTableStateSnapshot();
+  const snap = useCollectionEditorCollectionStateSnapshot();
 
   const saveDataAndTriggerSideEffects = useCallback(
     (dataToSave: { filters?: string[]; sorts?: string[] }) => {
@@ -17,7 +17,7 @@ export function useSaveTableEditorState() {
 
       if (!projectRef) {
         return console.warn(
-          "[useSaveTableEditorState] ProjectRef missing, cannot save or trigger side effects.",
+          "[useSaveCollectionEditorState] ProjectRef missing, cannot save or trigger side effects.",
         );
       }
 
@@ -25,21 +25,26 @@ export function useSaveTableEditorState() {
         snap.setPage(1);
         snap.setEnforceExactCount(false);
 
-        const tableName = snap.table?.name;
-        const schema = snap.table?.schema;
+        const collectionName = snap.collection?.name;
+        const schema = snap.collection?.$schema;
 
-        if (tableName) {
-          saveTableEditorStateToLocalStorage({
+        if (collectionName) {
+          saveCollectionEditorStateToLocalStorage({
             projectRef,
-            tableName,
+            collectionName,
             schema,
             ...dataToSave,
           });
         } else {
-          console.warn("[useSaveTableEditorState] Table name missing, skipping localStorage save.");
+          console.warn(
+            "[useSaveCollectionEditorState] Collection name missing, skipping localStorage save.",
+          );
         }
       } catch (error) {
-        console.error("[useSaveTableEditorState] Error during interaction with snapshot:", error);
+        console.error(
+          "[useSaveCollectionEditorState] Error during interaction with snapshot:",
+          error,
+        );
       }
     },
     [snap, project],
