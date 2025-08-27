@@ -1,5 +1,5 @@
 import { CalculatedColumn } from "react-data-grid";
-import { ADD_COLUMN_KEY, SELECT_COLUMN_KEY } from "../constants";
+import { SELECT_COLUMN_KEY } from "../constants";
 import type { SavedState } from "../types";
 
 export function getInitialGridColumns(
@@ -33,10 +33,6 @@ export function getInitialGridColumns(
     const selectColumn = gridColumns.find((x) => x.key === SELECT_COLUMN_KEY);
     if (selectColumn) {
       result = [selectColumn, ...result];
-    }
-    const addColumn = gridColumns.find((x) => x.key === ADD_COLUMN_KEY);
-    if (addColumn) {
-      result.push(addColumn);
     }
   }
 

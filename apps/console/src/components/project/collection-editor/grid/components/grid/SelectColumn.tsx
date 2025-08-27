@@ -1,4 +1,4 @@
-import { Maximize2 } from "lucide-react";
+import { Maximize2, MoreHorizontal } from "lucide-react";
 import { ChangeEvent, InputHTMLAttributes, SyntheticEvent, useEffect, useRef } from "react";
 import {
   CalculatedColumn,
@@ -15,15 +15,14 @@ import { Checkbox } from "@nuvix/cui/checkbox";
 import type { Models } from "@nuvix/console";
 import { useCollectionEditorStore } from "@/lib/store/collection-editor";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
-
-// TODO --- merge SelectColumn & AddColumn
+import { cn } from "@nuvix/sui/lib/utils";
 
 export const SelectColumn: CalculatedColumn<any, any> = {
   key: SELECT_COLUMN_KEY,
   name: "",
   idx: 0,
-  width: 32,
-  maxWidth: 32,
+  width: 60,
+  maxWidth: 60,
   resizable: false,
   sortable: false,
   frozen: true,
@@ -127,8 +126,10 @@ function SelectCellFormatter({
     }
   }
 
+  const collValue = row?.$sequence;
+
   return (
-    <div className="nx-grid-select-cell__formatter flex justify-between items-center">
+    <div className="nx-grid-select-cell__formatter flex justify-between items-center w-full">
       <Checkbox
         size={"sm"}
         checked={value}
@@ -139,19 +140,31 @@ function SelectCellFormatter({
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledBy}
         tabIndex={tabIndex}
-        className="rdg-row__select-column__select-action"
+        className={cn(
+          "rdg-row__select-column__select-action rdg-row__select-column__checkbox-action",
+          "transition-all duration-200",
+          {
+            "flex! opacity-100!": value,
+          },
+        )}
       />
-      {/* {row && (
+      <p
+        className={cn("rdg-row__select-column__seq", {
+          hidden: value,
+        })}
+      >
+        {collValue}
+      </p>
+      {row && (
         <IconButton
           type="text"
           size="s"
           variant="tertiary"
-          className="px-1 rdg-row__select-column__edit-action"
-          icon={<Maximize2 size={14} />}
-          onClick={onEditClick}
-          tooltip={"Expand row"}
+          icon={<MoreHorizontal size={14} />}
+          // onClick={onEditClick}
+          tooltip={"More Actions"}
         />
-      )} */}
+      )}
     </div>
   );
 }
@@ -181,7 +194,7 @@ function SelectCellHeader({
   }
 
   return (
-    <div className="nx-grid-select-cell__header">
+    <div className="nx-grid-select-cell__header flex items-center justify-between w-full">
       <Checkbox
         size={"sm"}
         borderColor={"fg.success"}
@@ -197,6 +210,15 @@ function SelectCellHeader({
         tabIndex={tabIndex}
         className="nx-grid-select-cell__header__input"
       />
+      <AddColumnHeader />
     </div>
   );
 }
+
+const AddColumnHeader = () => {
+  const tableEditorSnap = useCollectionEditorStore();
+
+  return (
+    <IconButton icon="plus" variant="tertiary" size="s" onClick={tableEditorSnap.onAddColumn} />
+  );
+};

@@ -9,7 +9,6 @@ import { SelectEditor } from "../components/editor/SelectEditor";
 import { TextEditor } from "../components/editor/TextEditor";
 import { BooleanFormatter } from "../components/formatter/BooleanFormatter";
 import { DefaultFormatter } from "../components/formatter/DefaultFormatter";
-import { AddColumn } from "../components/grid/AddColumn";
 import { ColumnHeader } from "../components/grid/ColumnHeader";
 import { SelectColumn } from "../components/grid/SelectColumn";
 import type { ColumnType } from "../types";
@@ -111,10 +110,6 @@ export function getGridColumns(
   });
 
   const gridColumns = [SelectColumn, ...columns];
-  if (options?.onAddColumn) {
-    gridColumns.push(AddColumn);
-  }
-
   return gridColumns;
 }
 

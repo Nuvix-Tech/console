@@ -197,4 +197,24 @@ header/sort/SortRow
     box-shadow: -1px 0 5px 0px rgba(136, 136, 136, .3) !important;
 }
 
-// var(--neutral-border-medium)
+.rdg-row__select-column__checkbox-action {
+    display: none !important;
+    opacity: 0 !important;
+}
+
+.rdg-row:hover .rdg-row__select-column__checkbox-action {
+    display: flex !important;
+    opacity: 1 !important;
+}
+
+.rdg-row__select-column__checkbox-action:hover {
+    opacity: 1 !important;
+}
+
+.rdg-row__select-column__seq {
+    @apply opacity-100;
+}
+
+.rdg-row:hover .rdg-row__select-column__seq {
+    @apply opacity-0;
+}

@@ -3,10 +3,6 @@ import { isEmpty, isUndefined, noop } from "lodash";
 import { useState } from "react";
 import { toast } from "sonner";
 
-// import { useIsTableEditorTabsEnabled } from "components/interfaces/App/FeaturePreview/FeaturePreviewContext";
-import { useDatabasePublicationCreateMutation } from "@/data/database-publications/database-publications-create-mutation";
-import { useDatabasePublicationsQuery } from "@/data/database-publications/database-publications-query";
-import { useDatabasePublicationUpdateMutation } from "@/data/database-publications/database-publications-update-mutation";
 import type { Constraint } from "@/data/database/constraints-query";
 import type { ForeignKeyConstraint } from "@/data/database/foreign-key-constraints-query";
 import { databaseKeys } from "@/data/database/keys";
@@ -51,7 +47,6 @@ import { useTableEditorStore } from "@/lib/store/table-editor";
 import { useProjectStore } from "@/lib/store";
 import { Dictionary } from "@/components/grid/types";
 import { useTableEditorFiltersSort } from "@/hooks/useTableEditorFilterSort";
-import ConfirmationModal from "../components/_confim_dialog";
 import { useParams } from "next/navigation";
 import { PostgresTable } from "@nuvix/pg-meta";
 import { SonnerProgress } from "@nuvix/sui/components/sooner-progress";

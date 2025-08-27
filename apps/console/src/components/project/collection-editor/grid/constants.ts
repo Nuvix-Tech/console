@@ -5,8 +5,7 @@ export const STORAGE_KEY_PREFIX = "nx_collection_grid";
 export const TOTAL_ROWS_INITIAL = -1;
 export const TOTAL_ROWS_RESET = -2;
 
-export const SELECT_COLUMN_KEY = "nx-grid-select-row";
-export const ADD_COLUMN_KEY = "$sequence";
+export const SELECT_COLUMN_KEY = "$sequence";
 
 const RLS_ACKNOWLEDGED_KEY = "nx-acknowledge-rls-warning";
 
