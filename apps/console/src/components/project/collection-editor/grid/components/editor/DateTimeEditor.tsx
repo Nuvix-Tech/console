@@ -47,7 +47,7 @@ function BaseEditor<TRow, TSummaryRow = unknown>({
   };
 
   const setToNow = () => {
-    const formattedNow = dayjs().format(format);
+    const formattedNow = dayjs().format();
     saveChanges(formattedNow);
   };
 

@@ -1,19 +1,19 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { RefreshCw } from "lucide-react";
-
-import { tableRowKeys } from "@/data/table-rows/keys";
 import { Button } from "@nuvix/ui/components";
 import { useParams } from "next/navigation";
+import { collectionKeys } from "@/data/collections/keys";
 
 export type RefreshButtonProps = {
-  tableId?: number;
+  schema: string;
+  collectionId: string;
   isRefetching?: boolean;
 };
 
-const RefreshButton = ({ tableId, isRefetching }: RefreshButtonProps) => {
+const RefreshButton = ({ collectionId, schema, isRefetching }: RefreshButtonProps) => {
   const { id: ref } = useParams();
   const queryClient = useQueryClient();
-  const queryKey = tableRowKeys.tableRowsAndCount(ref as string, tableId);
+  const queryKey = collectionKeys.documents(ref as string, schema, collectionId);
 
   async function onClick() {
     await queryClient.invalidateQueries({ queryKey });

@@ -16,12 +16,14 @@ import type { Models } from "@nuvix/console";
 import { useCollectionEditorStore } from "@/lib/store/collection-editor";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 
+// TODO --- merge SelectColumn & AddColumn
+
 export const SelectColumn: CalculatedColumn<any, any> = {
   key: SELECT_COLUMN_KEY,
   name: "",
   idx: 0,
-  width: 65,
-  maxWidth: 65,
+  width: 32,
+  maxWidth: 32,
   resizable: false,
   sortable: false,
   frozen: true,
@@ -139,7 +141,7 @@ function SelectCellFormatter({
         tabIndex={tabIndex}
         className="rdg-row__select-column__select-action"
       />
-      {row && (
+      {/* {row && (
         <IconButton
           type="text"
           size="s"
@@ -149,7 +151,7 @@ function SelectCellFormatter({
           onClick={onEditClick}
           tooltip={"Expand row"}
         />
-      )}
+      )} */}
     </div>
   );
 }

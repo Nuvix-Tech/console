@@ -23,7 +23,6 @@ export function useSaveCollectionEditorState() {
 
       try {
         snap.setPage(1);
-        snap.setEnforceExactCount(false);
 
         const collectionName = snap.collection?.name;
         const schema = snap.collection?.$schema;

@@ -107,7 +107,6 @@ const DefaultHeader = () => {
 
   const onApplyFilters = useCallback(
     (appliedFilters: Filter[]) => {
-      snap.setEnforceExactCount(false);
       // Reset page to 1 when filters change
       snap.setPage(1);
 

@@ -1,21 +1,9 @@
-import { ArrowLeft, ArrowRight, HelpCircle, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { formatFilterURLParams } from "@/components/grid/NuvixGrid.utils";
-import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
-import { isTableLike } from "@/data/table-editor/table-editor-types";
-import { THRESHOLD_COUNT, useTableRowsCountQuery } from "@/data/table-rows/table-rows-count-query";
-// import { RoleImpersonationState } from "lib/role-impersonation";
-// import { useRoleImpersonationStateSnapshot } from "state/role-impersonation-state";
-
-import { formatEstimatedCount } from "./Pagination.utils";
-import { useParams, useSearchParams } from "next/navigation";
-import { useProjectStore } from "@/lib/store";
 import { Button } from "@nuvix/ui/components";
 import { Input } from "@/components/editor/components";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import ConfirmationModal from "@/components/editor/components/_confim_dialog";
-import { TableParam } from "@/types";
 import { IconButton } from "@chakra-ui/react";
 import { DropdownControl } from "@/components/grid/components/common/DropdownControl";
 import { useCollectionEditorStore } from "@/lib/store/collection-editor";
@@ -28,27 +16,11 @@ const rowsPerPageOptions = [
 ];
 
 const Pagination = () => {
-  const params = useSearchParams();
-  const { tableId } = useParams<TableParam>();
-  const { project, sdk } = useProjectStore();
   const tableEditorSnap = useCollectionEditorStore();
 
   const snap = useCollectionEditorCollectionStateSnapshot();
-
-  const { data: selectedTable } = useTableEditorQuery({
-    sdk,
-    id: Number(tableId),
-    projectRef: project?.$id,
-  });
-
-  // rowsCountEstimate is only applicable to table entities
-  const rowsCountEstimate = isTableLike(selectedTable) ? selectedTable.live_rows_estimate : null;
-
-  const filter = params.getAll("filter");
-  const filters = formatFilterURLParams(filter as string[]);
   const page = snap.page;
 
-  // const roleImpersonationState = useRoleImpersonationStateSnapshot();
   const [isConfirmNextModalOpen, setIsConfirmNextModalOpen] = useState(false);
   const [isConfirmPreviousModalOpen, setIsConfirmPreviousModalOpen] = useState(false);
 
@@ -59,22 +31,9 @@ const Pagination = () => {
     setValue(String(page));
   }, [page]);
 
-  const { data, isLoading, isSuccess, isError, isFetching } = useTableRowsCountQuery(
-    {
-      sdk,
-      tableId: Number(tableId),
-      projectRef: project?.$id,
-      filters,
-      enforceExactCount: rowsCountEstimate !== null && rowsCountEstimate <= THRESHOLD_COUNT,
-    },
-    {
-      enabled: !!tableId && isTableLike(selectedTable),
-    },
-  );
-
-  const count = data?.is_estimate ? formatEstimatedCount(data.count) : data?.count.toLocaleString();
-  const maxPages = Math.ceil((data?.count ?? 0) / tableEditorSnap.rowsPerPage);
-  const totalPages = (data?.count ?? 0) > 0 ? maxPages : 1;
+  const count = snap.countDocuments;
+  const maxPages = Math.ceil((count ?? 0) / tableEditorSnap.rowsPerPage);
+  const totalPages = (count ?? 0) > 0 ? maxPages : 1;
 
   const onPreviousPage = () => {
     if (page > 1) {
@@ -130,86 +89,56 @@ const Pagination = () => {
     }
   }, [page, totalPages]);
 
-  useEffect(() => {
-    if (tableId !== undefined) {
-      snap.setEnforceExactCount(rowsCountEstimate !== null && rowsCountEstimate <= THRESHOLD_COUNT);
-    }
-  }, [tableId]);
-  data;
-
   return (
     <div className="flex items-center gap-x-4">
-      {isLoading && <p className="text-sm text-foreground-light">Loading records count...</p>}
+      <div className="flex items-center gap-x-2">
+        <IconButton variant="outline" size="xs" disabled={page <= 1} onClick={onPreviousPage}>
+          <ArrowLeft />
+        </IconButton>
+        <p className="text-xs neutral-on-background-medium">Page</p>
+        <Input
+          min={1}
+          size={"xs"}
+          width={"12"}
+          max={maxPages}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onKeyDown={(e) => {
+            const parsedValue = Number(value);
+            if (
+              e.code === "Enter" &&
+              !Number.isNaN(parsedValue) &&
+              parsedValue >= 1 &&
+              parsedValue <= maxPages
+            ) {
+              onPageChange(parsedValue);
+            }
+          }}
+        />
 
-      {isSuccess && (
-        <>
-          <div className="flex items-center gap-x-2">
-            <IconButton
-              variant="outline"
-              size="xs"
-              disabled={page <= 1 || isLoading}
-              onClick={onPreviousPage}
-            >
-              <ArrowLeft />
-            </IconButton>
-            <p className="text-xs neutral-on-background-medium">Page</p>
-            <Input
-              min={1}
-              size={"xs"}
-              width={"12"}
-              max={maxPages}
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              onKeyDown={(e) => {
-                const parsedValue = Number(value);
-                if (
-                  e.code === "Enter" &&
-                  !Number.isNaN(parsedValue) &&
-                  parsedValue >= 1 &&
-                  parsedValue <= maxPages
-                ) {
-                  onPageChange(parsedValue);
-                }
-              }}
-            />
+        <p className="text-xs neutral-on-background-medium">of {totalPages.toLocaleString()}</p>
 
-            <p className="text-xs neutral-on-background-medium">of {totalPages.toLocaleString()}</p>
+        <IconButton variant="outline" size={"xs"} disabled={page >= maxPages} onClick={onNextPage}>
+          <ArrowRight />
+        </IconButton>
 
-            <IconButton
-              variant="outline"
-              size={"xs"}
-              disabled={page >= maxPages || isLoading}
-              onClick={onNextPage}
-            >
-              <ArrowRight />
-            </IconButton>
+        <DropdownControl
+          options={rowsPerPageOptions}
+          onSelect={onRowsPerPageChange}
+          side="top"
+          align="start"
+        >
+          <Button size="s" variant="secondary" type="outline" style={{ padding: "3px 10px" }}>
+            <span>{`${tableEditorSnap.rowsPerPage} rows`}</span>
+          </Button>
+        </DropdownControl>
+      </div>
 
-            <DropdownControl
-              options={rowsPerPageOptions}
-              onSelect={onRowsPerPageChange}
-              side="top"
-              align="start"
-            >
-              <Button size="s" variant="secondary" type="outline" style={{ padding: "3px 10px" }}>
-                <span>{`${tableEditorSnap.rowsPerPage} rows`}</span>
-              </Button>
-            </DropdownControl>
-          </div>
-
-          <div className="flex items-center gap-x-2">
-            <p className="text-xs text-foreground-light">
-              {`${count} ${data?.count === 0 || (data?.count ?? 0) > 1 ? `records` : "record"}`}{" "}
-              {data?.is_estimate ? "(estimated)" : ""}
-            </p>
-          </div>
-        </>
-      )}
-
-      {isError && (
-        <p className="text-sm text-foreground-light">
-          Error fetching records count. Please refresh the page.
+      <div className="flex items-center gap-x-2">
+        <p className="text-xs text-foreground-light">
+          {`${count} ${count === 0 || (count ?? 0) > 1 ? `records` : "record"}`}{" "}
         </p>
-      )}
+      </div>
 
       <ConfirmationModal
         visible={isConfirmPreviousModalOpen}

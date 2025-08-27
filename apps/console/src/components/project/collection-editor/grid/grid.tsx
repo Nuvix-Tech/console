@@ -50,7 +50,6 @@ export const CollectionGrid = ({
 
   const onApplyFilters = useCallback(
     (appliedFilters: Filter[]) => {
-      snap.setEnforceExactCount(false);
       // Reset page to 1 when filters change
       snap.setPage(1);
 
@@ -112,6 +111,7 @@ export const CollectionGrid = ({
   }, []);
 
   const rows = data?.documents ?? EMPTY_ARR;
+  snap.setCountDocuments(data?.total ?? 0);
 
   return (
     <DndProvider backend={HTML5Backend} context={window}>

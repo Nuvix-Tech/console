@@ -11,4 +11,6 @@ export const collectionKeys = {
     ["projects", projectRef, "collections", schema, id] as const,
   documents: (projectRef: string, schema: string, collectionId: string) =>
     ["projects", projectRef, "collections", schema, collectionId, "documents"] as const,
+  documentsCount: (projectRef: string, schema: string, collectionId: string) =>
+    ["projects", projectRef, "collections", schema, collectionId, "documents", "count"] as const,
 };

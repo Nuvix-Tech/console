@@ -122,12 +122,6 @@ export const createCollectionEditorCollectionState = ({
       state.selectedCellPosition = position;
     },
 
-    /* Misc */
-    enforceExactCount: false,
-    setEnforceExactCount: (value: boolean) => {
-      state.enforceExactCount = value;
-    },
-
     page: 1,
     setPage: (page: number) => {
       state.page = page;
@@ -135,7 +129,10 @@ export const createCollectionEditorCollectionState = ({
       // reset selected row state
       state.setSelectedRows(new Set());
     },
-
+    countDocuments: 0,
+    setCountDocuments: (count: number) => {
+      state.countDocuments = count;
+    },
     editable,
   });
 
