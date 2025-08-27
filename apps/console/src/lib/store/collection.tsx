@@ -3,16 +3,14 @@ import { CalculatedColumn } from "react-data-grid";
 import { proxy, ref, subscribe, useSnapshot } from "valtio";
 import { proxySet } from "valtio/utils";
 
-// import {
-//   loadCollectionEditorStateFromLocalStorage,
-//   parseNuvixCollection,
-//   saveCollectionEditorStateToLocalStorageDebounced,
-// } from "@/components/grid/NuvixGrid.utils";
-import { NuvixRow } from "@/components/grid/types";
-import { getInitialGridColumns } from "@/components/grid/utils/column";
-import { getGridColumns } from "@/components/grid/utils/gridColumns";
+import {
+  loadCollectionEditorStateFromLocalStorage,
+  saveCollectionEditorStateToLocalStorageDebounced,
+} from "@/components/project/collection-editor/grid/grid.utils";
 import { useCollectionEditorStateSnapshot } from "./collection-editor";
 import { Models } from "@nuvix/console";
+import { getInitialGridColumns } from "@/components/project/collection-editor/grid/utils/column";
+import { getGridColumns } from "@/components/project/collection-editor/grid/utils/gridColumns";
 
 export const createCollectionEditorCollectionState = ({
   projectRef,
@@ -27,19 +25,23 @@ export const createCollectionEditorCollectionState = ({
   /** If set to true, render an additional "+" column to support adding a new column in the grid editor */
   editable?: boolean;
   onAddColumn: () => void;
-  onExpandJSONEditor: (column: string, row: NuvixRow) => void;
-  onExpandTextEditor: (column: string, row: NuvixRow) => void;
+  onExpandJSONEditor: (column: string, row: Models.Document) => void;
+  onExpandTextEditor: (column: string, row: Models.Document) => void;
 }) => {
-  // const savedState = loadCollectionEditorStateFromLocalStorage(projectRef, table.name, table.schema);
+  const savedState = loadCollectionEditorStateFromLocalStorage(
+    projectRef,
+    collection.name,
+    collection.$schema,
+  );
   const gridColumns = getInitialGridColumns(
-    getGridColumns(collection as any, {
-      tableId: collection.$id as any,
+    getGridColumns(collection, {
+      collectionId: collection.$id,
       editable,
       onAddColumn: editable ? onAddColumn : undefined,
       onExpandJSONEditor,
       onExpandTextEditor,
     }),
-    // savedState,
+    savedState,
   );
 
   const state = proxy({
@@ -53,19 +55,19 @@ export const createCollectionEditorCollectionState = ({
     _originalCollectionRef: ref(collection),
 
     updateCollection: (collection: Models.Collection) => {
-      // const gridColumns = getInitialGridColumns(
-      //   getGridColumns(collection, {
-      //     tableId: table.id,
-      //     editable,
-      //     onAddColumn: editable ? onAddColumn : undefined,
-      //     onExpandJSONEditor,
-      //     onExpandTextEditor,
-      //   }),
-      //   { gridColumns: state.gridColumns },
-      // );
+      const gridColumns = getInitialGridColumns(
+        getGridColumns(collection, {
+          collectionId: collection.$id,
+          editable,
+          onAddColumn: editable ? onAddColumn : undefined,
+          onExpandJSONEditor,
+          onExpandTextEditor,
+        }),
+        { gridColumns: state.gridColumns },
+      );
 
       state.collection = collection;
-      // state.gridColumns = gridColumns;
+      state.gridColumns = gridColumns;
       state._originalCollectionRef = ref(collection);
     },
 
@@ -165,14 +167,14 @@ export const CollectionEditorCollectionStateContextProvider = ({
       projectRef,
       collection,
       onAddColumn: collectionEditorSnap.onAddColumn,
-      onExpandJSONEditor: (column: string, row: NuvixRow) => {
+      onExpandJSONEditor: (column: string, row: Models.Document) => {
         collectionEditorSnap.onExpandJSONEditor({
           column,
           row,
           value: JSON.stringify(row[column]) || "",
         });
       },
-      onExpandTextEditor: (column: string, row: NuvixRow) => {
+      onExpandTextEditor: (column: string, row: Models.Document) => {
         collectionEditorSnap.onExpandTextEditor(column, row);
       },
     }),
@@ -180,14 +182,14 @@ export const CollectionEditorCollectionStateContextProvider = ({
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      // return subscribe(state, () => {
-      //   saveCollectionEditorStateToLocalStorageDebounced({
-      //     gridColumns: state.gridColumns,
-      //     projectRef,
-      //     tableName: state.table.name,
-      //     schema: state.table.schema,
-      //   });
-      // });
+      return subscribe(state, () => {
+        saveCollectionEditorStateToLocalStorageDebounced({
+          gridColumns: state.gridColumns,
+          projectRef,
+          collectionName: state.collection.name,
+          schema: state.collection.$schema,
+        });
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

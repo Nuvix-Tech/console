@@ -9,4 +9,6 @@ export const collectionKeys = {
   ) => ["projects", projectRef, "collections", ...(params ? [params] : [])] as const,
   editor: (projectRef: string, schema: string, id: string) =>
     ["projects", projectRef, "collections", schema, id] as const,
+  documents: (projectRef: string, schema: string, collectionId: string) =>
+    ["projects", projectRef, "collections", schema, collectionId, "documents"] as const,
 };
