@@ -1,2 +1,3 @@
 export * from "./_layout";
 export * from "./components/_empty_editor";
+export * from "./_page";

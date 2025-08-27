@@ -1,24 +1,23 @@
-import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import InfiniteList from "@/ui/InfiniteList";
 import SchemaSelector from "@/ui/SchemaSelector";
 import { useSchemasQuery } from "@/data/database/schemas-query";
 import { useParams } from "next/navigation";
-import { useTableEditorStateSnapshot } from "@/lib/store/table-editor";
 import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
 import { useProjectStore } from "@/lib/store";
-import { Button } from "@nuvix/ui/components";
+import { IconButton } from "@nuvix/ui/components";
 import { Input } from "@chakra-ui/react";
 import { InnerSideBarEmptyPanel } from "@/ui/InnerSideBarEmptyPanel";
 import { TableMenuEmptyState } from "../../table-editor/components/TableMenuEmptyState";
 import { CollectionListItem } from "./_collections_list_item";
 import { useCollectionsQuery } from "@/data/collections/collections_infinite-query";
 import EditorMenuListSkeleton from "../../table-editor/components/EditorMenuListSkeleton";
+import { useCollectionEditorStateSnapshot } from "@/lib/store/collection-editor";
 
 export const Sidebar = () => {
   const { id: ref, collectionId } = useParams<{ collectionId: string; id: string }>();
-  const snap = useTableEditorStateSnapshot();
+  const snap = useCollectionEditorStateSnapshot();
   const { selectedSchema, setSelectedSchema } = useQuerySchemaState();
   // const isTableEditorTabsEnabled = useIsTableEditorTabsEnabled()
   const isMobile = false; // useBreakpoint()
@@ -74,38 +73,32 @@ export const Sidebar = () => {
               onSelectCreateSchema={() => snap.onAddSchema()}
             />
 
-            <div className="grid gap-3">
-              <Button
-                fillWidth
+            <div className="flex gap-2 items-center">
+              <IconButton
                 title="Create a new collection"
-                label="New collection"
                 disabled={!canCreateCollections}
-                size="s"
-                prefixIcon={<Plus size={14} strokeWidth={1.5} className="text-foreground-muted" />}
+                size="m"
                 variant="secondary"
-                justifyContent="flex-start"
-                onClick={snap.onAddTable}
+                onClick={snap.onAddCollection}
                 tooltip={
                   !canCreateCollections
                     ? "You need additional permissions to create collection"
-                    : undefined
+                    : "Create a new collection"
                 }
-              >
-                New collection
-              </Button>
+                icon="plus"
+              />
+              <Input
+                size={"xs"}
+                autoFocus={!isMobile}
+                name="search-collections"
+                value={searchText}
+                placeholder="Search collections..."
+                aria-labelledby="Search collections"
+                onChange={(e) => setSearchText(e.target.value)}
+              />
             </div>
           </div>
           <div className="flex flex-auto flex-col gap-2 pb-4">
-            <Input
-              size={"xs"}
-              autoFocus={!isMobile}
-              name="search-collections"
-              value={searchText}
-              placeholder="Search collections..."
-              aria-labelledby="Search collections"
-              onChange={(e) => setSearchText(e.target.value)}
-            />
-
             {isLoading && <EditorMenuListSkeleton />}
 
             {isError && (
