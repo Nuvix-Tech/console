@@ -22,7 +22,26 @@ import {
 
 export const ESTIMATED_CHARACTER_PIXEL_WIDTH = 9;
 
-const internalAttributes = [];
+const internalAttributes = [
+  {
+    key: '$id',
+    internal: true,
+    type: Attributes.String,
+    format: 'id',
+    isPrimaryKey: true,
+    size: 36
+  },
+  {
+    key: "$createdAt",
+    internal: true,
+    type: Attributes.Timestamptz,
+  },
+  {
+    key: "$updatedAt",
+    internal: true,
+    type: Attributes.Timestamptz,
+  }
+];
 
 export function getGridColumns(
   collection: Models.Collection,
@@ -35,7 +54,7 @@ export function getGridColumns(
     onExpandTextEditor: (column: string, row: Models.Document) => void;
   },
 ): any[] {
-  const columns = collection.attributes.map((x, idx) => {
+  const columns = ([internalAttributes[0], ...collection.attributes, ...internalAttributes.slice(1),] as unknown as Models.AttributeString[]).map((x, idx) => {
     const columnType = getColumnType(x);
     const columnDefaultWidth = getColumnDefaultWidth(x);
     const rawSize = typeof x.size === "number" ? x.size : columnDefaultWidth;
@@ -57,19 +76,19 @@ export function getGridColumns(
         <ColumnHeader
           {...props}
           columnType={columnType}
-          isPrimaryKey={false}
-          isEncrypted={false}
+          isPrimaryKey={(x as any).isPrimaryKey}
+          isEncrypted={(x as any).encrypted}
           isArray={x.array}
         />
       ),
       renderEditCell: options
         ? getCellEditor(
-            x,
-            columnType,
-            options?.editable ?? false,
-            options.onExpandJSONEditor,
-            options.onExpandTextEditor,
-          )
+          x,
+          columnType,
+          (x as any).internal ? false : (options?.editable ?? false),
+          options.onExpandJSONEditor,
+          options.onExpandTextEditor,
+        )
         : undefined,
       renderCell: getCellRenderer(x, columnType, {
         collectionId: options?.collectionId,
@@ -104,6 +123,8 @@ function getCellEditor(
       return (p: any) => (
         <JsonEditor {...p} isEditable={isEditable} onExpandEditor={onExpandJSONEditor} />
       );
+    } else if (columnType === Attributes.Timestamptz) {
+      return DateTimeEditor(true, true);
     } else if (
       !([Attributes.Integer, Attributes.Float, Attributes.Boolean] as string[]).includes(columnType)
     ) {
@@ -112,12 +133,9 @@ function getCellEditor(
         <TextEditor {...p} isEditable={isEditable} onExpandEditor={onExpandTextEditor} />
       );
     } else {
-      return;
+      return undefined;
     }
   }
-  // if (columnDefinition.isPrimaryKey || !columnDefinition.isUpdatable) {
-  //   return;
-  // }
   if (columnDefinition.array) {
     // eslint-disable-next-line react/display-name
     return (p: any) => <JsonEditor {...p} onExpandEditor={onExpandJSONEditor} />;
@@ -162,11 +180,11 @@ function getCellEditor(
 function getCellRenderer(
   columnDef: AttributeTypes,
   columnType: ColumnType,
-  metadata: { collectionId?: string },
+  metadata: { collectionId?: string; },
 ) {
   switch (columnType) {
-    case Attributes.Timestamptz: {
-      return BooleanFormatter;
+    case Attributes.Boolean: {
+      return Date;
     }
     case Attributes.Relationship: {
       // if (!columnDef.isUpdatable) {

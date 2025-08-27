@@ -12,7 +12,7 @@ import { useCallback } from "react";
 import { CollectionGrid } from "./grid";
 
 export const CollectionEditor = () => {
-  const { collectionId, id: projectRef } = useParams<{ id: string; collectionId: string }>();
+  const { collectionId, id: projectRef } = useParams<{ id: string; collectionId: string; }>();
   const router = useRouter();
   const { project, sdk } = useProjectStore((s) => s);
   const { selectedSchema } = useQuerySchemaState();
@@ -30,7 +30,7 @@ export const CollectionEditor = () => {
   });
 
   const onTableCreated = useCallback(
-    (collection: { $id: string }) => {
+    (collection: { $id: string; }) => {
       if (project?.$id) {
         router.push(`/project/${project.$id}/collections/${collection.$id}`);
       }
@@ -84,12 +84,11 @@ export const CollectionEditor = () => {
         collection={collection}
         editable={editable}
       >
-        <CollectionGrid key={gridKey} gridProps={{ height: "100%" }} customHeader>
-          {/* Conditional rendering for table definition can be added here if needed */}
-          {/* {(isViewSelected || isTableSelected) && selectedView === 'definition' && (
-              <TableDefinition entity={table} />
-            )} */}
-        </CollectionGrid>
+        <CollectionGrid
+          key={gridKey}
+          gridProps={{ height: "100%" }}
+          customHeader={undefined}
+        />
 
         {/* <SidePanelEditor
           editable={editable}
@@ -105,6 +104,6 @@ export const CollectionEditor = () => {
   );
 };
 
-const CollectionNotFound = ({ id }: { id: string }) => {
+const CollectionNotFound = ({ id }: { id: string; }) => {
   return <>COllection {id} not found.</>;
 };

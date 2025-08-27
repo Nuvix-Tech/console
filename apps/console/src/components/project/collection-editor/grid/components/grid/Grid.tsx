@@ -142,9 +142,9 @@ export const Grid = memo(
                 <>
                   {(filters ?? []).length === 0 ? (
                     <div className="flex flex-col items-center justify-center col-span-full h-full">
-                      <p className="text-sm text-light">This table is empty</p>
+                      <p className="text-sm text-light">This collection is empty</p>
                       <p className="text-sm text-light mt-1">
-                        Add rows to your table to get started.
+                        Add documents to your collection to get started.
                       </p>
                       <div className="flex items-center space-x-2 mt-4">
                         {
@@ -170,7 +170,7 @@ export const Grid = memo(
                   ) : (
                     <div className="flex flex-col items-center justify-center col-span-full">
                       <p className="text-sm text-light">
-                        The filters applied have returned no results from this table
+                        The filters applied have returned no results from this collection
                       </p>
                       <div className="flex items-center space-x-2 mt-4">
                         <Button onClick={() => removeAllFilters()}>Remove all filters</Button>

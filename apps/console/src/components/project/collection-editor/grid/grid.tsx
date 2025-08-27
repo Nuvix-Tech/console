@@ -34,7 +34,7 @@ export const CollectionGrid = ({
   PropsWithChildren<{
     gridProps?: GridProps;
   }>) => {
-  const { collectionId } = useParams<{ collectionId: string }>();
+  const { collectionId } = useParams<{ collectionId: string; }>();
   const { project, sdk } = useProjectStore();
 
   const state = useCollectionEditorStore();
@@ -87,7 +87,6 @@ export const CollectionGrid = ({
       filters,
       page: snap.page,
       limit: state.rowsPerPage,
-      // roleImpersonationState: roleImpersonationState as RoleImpersonationState,
     },
     {
       // keepPreviousData: true,
@@ -116,7 +115,7 @@ export const CollectionGrid = ({
 
   return (
     <DndProvider backend={HTML5Backend} context={window}>
-      <Column fill radius="l" overflow="hidden" className="grid-table-editor">
+      <Column fill radius="l" overflow="hidden" className="grid-collection-editor">
         <Header sorts={sorts} filters={filters} customHeader={customHeader} />
 
         {children || (

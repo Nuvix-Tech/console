@@ -13,16 +13,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@nuvix/sui/components/dropdown-menu";
-import { timestampLocalFormatter } from "@/components/editor/components/_timestamp_info";
+import { TimestampInfo } from "@/components/editor/components/_timestamp_info";
 import { BlockKeys, Key } from "@/components/grid/components/common/BlockKeys";
 
 interface BaseEditorProps<TRow, TSummaryRow = unknown>
   extends RenderEditCellProps<TRow, TSummaryRow> {
   type: "datetime";
   isNullable: boolean;
+  readonly?: boolean;
 }
 
-const FORMAT = "YYYY-MM-DDTHH:mm:ss";
+const FORMAT = "YYYY-MM-DD HH:mm:ss+ZZ";
 
 function BaseEditor<TRow, TSummaryRow = unknown>({
   row,
@@ -30,6 +31,7 @@ function BaseEditor<TRow, TSummaryRow = unknown>({
   isNullable,
   onRowChange,
   onClose,
+  readonly,
 }: BaseEditorProps<TRow, TSummaryRow>) {
   const ref = useRef<HTMLInputElement>(null);
   const format = FORMAT;
@@ -39,12 +41,13 @@ function BaseEditor<TRow, TSummaryRow = unknown>({
   const timeValue = inputValue ? Number(dayjs(inputValue, format)) : inputValue;
 
   const saveChanges = (value: string | null) => {
+    if (readonly) return;
     if ((typeof value === "string" && value.length === 0) || timeValue === "Invalid Date") return;
     onRowChange({ ...row, [column.key]: value }, true);
   };
 
   const setToNow = () => {
-    const formattedNow = dayjs().format("YYYY-MM-DDTHH:mm:ss");
+    const formattedNow = dayjs().format(format);
     saveChanges(formattedNow);
   };
 
@@ -75,6 +78,7 @@ function BaseEditor<TRow, TSummaryRow = unknown>({
             value={inputValue ?? ""}
             placeholder={format}
             variant={"subtle"}
+            readOnly={readonly}
             onChange={(e) => setInputValue(e.target.value)}
             className="!border-0 !rounded-b-none !bg-[var(--neutral-alpha-weak)] !outline-none !ring-0 !ring-offset-0"
           />
@@ -86,66 +90,68 @@ function BaseEditor<TRow, TSummaryRow = unknown>({
           ) : timeValue === "Invalid Date" ? (
             <p className="text-sm font-mono text-muted-foreground">Invalid date format</p>
           ) : (
-            <p className="text-sm font-mono tracking-tight">
-              {timestampLocalFormatter({
-                utcTimestamp: timeValue,
-                format: "DD MMM YYYY HH:mm:ss",
-              })}
-            </p>
+            <TimestampInfo
+              displayAs="utc"
+              utcTimestamp={timeValue}
+              labelFormat="DD MMM YYYY HH:mm:ss (ZZ)"
+              className="text-left !text-sm font-mono tracking-tight"
+            />
           )}
         </div>
-        <div className="px-3 pt-1 pb-2 flex justify-between gap-x-1">
-          <div className="space-y-1">
-            <div className="flex items-center space-x-2">
-              <Key>⏎</Key>
-              <p className="text-xs text-muted-foreground">Save changes</p>
+        {!readonly && (
+          <div className="px-3 pt-1 pb-2 flex justify-between gap-x-1">
+            <div className="space-y-1">
+              <div className="flex items-center space-x-2">
+                <Key>⏎</Key>
+                <p className="text-xs text-muted-foreground">Save changes</p>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Key>Esc</Key>
+                <p className="text-xs text-muted-foreground">Cancel changes</p>
+              </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <Key>Esc</Key>
-              <p className="text-xs text-muted-foreground">Cancel changes</p>
-            </div>
-          </div>
-          <div className="flex">
-            {isNullable ? (
-              <>
-                <Button
-                  size="s"
-                  variant="secondary"
-                  type="button"
-                  className="!rounded-r-none"
-                  onClick={() => saveChanges(null)}
-                >
-                  Set NULL
+            <div className="flex">
+              {isNullable ? (
+                <>
+                  <Button
+                    size="s"
+                    variant="secondary"
+                    type="button"
+                    className="!rounded-r-none"
+                    onClick={() => saveChanges(null)}
+                  >
+                    Set NULL
+                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <IconButton
+                        type="button"
+                        variant="secondary"
+                        icon={<ChevronDown size={18} />}
+                        className="!rounded-l-none !border-l-0"
+                      />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-20" align="end">
+                      <DropdownMenuItem onClick={setToNow}>Set to NOW</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </>
+              ) : (
+                <Button type="button" size="s" variant="secondary" onClick={setToNow}>
+                  Set to NOW
                 </Button>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <IconButton
-                      type="button"
-                      variant="secondary"
-                      icon={<ChevronDown size={18} />}
-                      className="!rounded-l-none !border-l-0"
-                    />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-20" align="end">
-                    <DropdownMenuItem onClick={setToNow}>Set to NOW</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </>
-            ) : (
-              <Button type="button" size="s" variant="secondary" onClick={setToNow}>
-                Set to NOW
-              </Button>
-            )}
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </PopoverContent>
     </Popover>
   );
 }
 
-export function DateTimeEditor(isNullable: boolean) {
+export function DateTimeEditor(isNullable: boolean, readOnly?: boolean) {
   // eslint-disable-next-line react/display-name
   return <TRow, TSummaryRow = unknown>(props: RenderEditCellProps<TRow, TSummaryRow>) => {
-    return <BaseEditor {...props} type="datetime" isNullable={isNullable} />;
+    return <BaseEditor {...props} type="datetime" isNullable={isNullable} readonly={readOnly} />;
   };
 }
