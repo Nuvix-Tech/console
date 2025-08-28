@@ -78,21 +78,28 @@ function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
   );
 }
 
-function FormMessage({ className, ...props }: React.ComponentProps<"p"> & { field?: string }) {
-  const { name } = useFormField();
+function FormMessage({
+  field,
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"p"> & { field?: string }) {
+  const { name: contextName } = useFormField();
+  const name = field ?? contextName;
   const { errors, touched } = useFormikContext<Record<string, any>>();
-  // const formMessageId = React.useId();
-  const error = touched[name] && errors[name];
-  const body = error ? String(error ?? "") : props.children;
 
-  if (!body) {
+  const error = name ? touched?.[name] && errors?.[name] : undefined;
+  const body = error ? String(error) : children;
+
+  if (body === null || body === undefined || (typeof body === "string" && body.trim() === "")) {
     return null;
   }
 
   return (
     <p
       data-slot="form-message"
-      // id={formMessageId}
+      role="alert"
+      aria-live="polite"
       className={cn("danger-on-background-weak text-sm", className)}
       {...props}
     >

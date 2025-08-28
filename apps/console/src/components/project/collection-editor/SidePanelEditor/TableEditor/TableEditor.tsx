@@ -1,23 +1,22 @@
-import { isEmpty, isUndefined, noop } from "lodash";
+import { isUndefined, noop } from "lodash";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
 import ActionBar from "../ActionBar";
 import HeaderTitle from "./HeaderTitle";
-import type { CollectionField } from "./TableEditor.types";
-import {
-  generateCollectionField,
-  generateCollectionFieldFromCollection,
-  validateFields,
-} from "./TableEditor.utils";
 import { useSearchQuery } from "@/hooks/useQuery";
 import { SidePanel } from "@/ui/SidePanel";
-import { Input } from "@/components/others/ui";
 import type { Models } from "@nuvix/console";
 import { useCollectionEditorStore } from "@/lib/store/collection-editor";
 // import { useSendEventMutation } from "@/data/telemetry/send-event-mutation";
 // import { useSelectedOrganization } from "hooks/misc/useSelectedOrganization";
+import * as y from "yup";
+import { FieldWrapper, InputField, InputSwitchField } from "@/components/others/forms";
+import { CustomID } from "@/components/_custom_id";
+import { PermissionField } from "@/components/others/permissions";
+import { useProjectStore } from "@/lib/store";
+import { useFormikContext } from "formik";
 
 export interface CollectionEditorProps {
   collection?: Models.Collection;
@@ -38,6 +37,14 @@ export interface CollectionEditorProps {
   ) => void;
   updateEditorDirty: () => void;
 }
+
+const schema = y.object({
+  id: y.string(),
+  name: y.string().required(),
+  enabled: y.boolean().default(true).required(),
+  documentSecurity: y.boolean().default(false),
+  $permissions: y.array().of(y.string()),
+});
 
 const TableEditor = ({
   collection,
@@ -60,61 +67,13 @@ const TableEditor = ({
     }
   }, [snap, params, setQueryParam]);
 
-  const [errors, setErrors] = useState<any>({});
   const [isDuplicateRows, setIsDuplicateRows] = useState<boolean>(false);
-  const [tableFields, setTableFields] = useState<CollectionField | undefined>(undefined);
-
-  const onUpdateField = (changes: Partial<CollectionField>) => {
-    const updatedTableFields = { ...tableFields, ...changes } as CollectionField;
-    setTableFields(updatedTableFields);
-    updateEditorDirty();
-
-    const updatedErrors = { ...errors };
-    for (const key of Object.keys(changes)) {
-      delete updatedErrors[key];
-    }
-    setErrors(updatedErrors);
-  };
-
-  const onSaveChanges = (resolve: any) => {
-    if (tableFields) {
-      const errors: any = validateFields(tableFields);
-      if (errors.columns) {
-        toast.error(errors.columns);
-      }
-      setErrors(errors);
-
-      if (isEmpty(errors)) {
-        const payload = {
-          name: tableFields.name.trim(),
-          schema: selectedSchema,
-        };
-        const configuration = {
-          collectionId: collection?.$id,
-          isDuplicateRows: isDuplicateRows,
-        };
-        saveChanges(payload, isNewRecord, configuration, resolve);
-      } else {
-        resolve();
-      }
-    }
-  };
 
   useEffect(() => {
     if (visible) {
-      setErrors({});
       setIsDuplicateRows(false);
-      if (isNewRecord) {
-        const tableFields = generateCollectionField();
-        setTableFields(tableFields);
-      } else {
-        const tableFields = generateCollectionFieldFromCollection(collection, isDuplicating);
-        setTableFields(tableFields);
-      }
     }
   }, [visible]);
-
-  if (!tableFields) return null;
 
   return (
     <SidePanel
@@ -130,28 +89,80 @@ const TableEditor = ({
       }
       className={`transition-all duration-100 ease-in`}
       onCancel={closePanel}
-      onConfirm={() => (resolve: () => void) => onSaveChanges(resolve)}
       customFooter={
         <ActionBar
           backButtonLabel="Cancel"
           applyButtonLabel="Save"
           closePanel={closePanel}
-          applyFunction={(resolve: () => void) => onSaveChanges(resolve)}
+          isInForm
         />
       }
+      form={{
+        validationSchema: schema,
+        initialValues: isNewRecord
+          ? {
+            id: "",
+            name: "",
+            enabled: true,
+            documentSecurity: false,
+            permissions: [],
+          }
+          : collection,
+        dirty: isDuplicating,
+        onSubmit: (values) => {
+          const payload = {
+            ...values,
+            id: isNewRecord ? undefined : values.id,
+          };
+        },
+      }}
     >
-      <SidePanel.Content className="space-y-10 py-6">
-        <Input
-          data-testid="table-name-input"
-          label="Name"
-          orientation="horizontal"
-          type="text"
-          errorText={errors.name}
-          value={tableFields?.name}
-          onChange={(event: any) => onUpdateField({ name: event.target.value })}
-        />
-      </SidePanel.Content>
+      <Fields isDuplicating={isDuplicating} isNewRecord={isNewRecord} updateEditorDirty={updateEditorDirty} />
     </SidePanel>
+  );
+};
+
+const Fields = (props: { isNewRecord: boolean; isDuplicating: boolean; updateEditorDirty: Function; }) => {
+  const sdk = useProjectStore.use.sdk();
+  const { dirty, values, setFieldValue } = useFormikContext<any>();
+
+  useEffect(() => {
+    if (dirty) {
+      props.updateEditorDirty();
+    }
+  }, [dirty, props]);
+
+  useEffect(() => {
+    if (props.isDuplicating) {
+      setFieldValue("id", "");
+      setFieldValue("name", values.name ? `${values.name} (Copy)` : "");
+    }
+  }, [props.isDuplicating]);
+
+  return (
+    <SidePanel.Content className="space-y-6 py-6">
+      {(props.isNewRecord || props.isDuplicating) && <CustomID name="id" label="Collection ID" />}
+      <InputField name="name" label="Name" layout="horizontal" />
+      <InputSwitchField name="enabled" label={"Enabled"} layout="horizontal" />
+      <FieldWrapper name="$permissions" label="Permissions" layout="horizontal">
+        <PermissionField name="$permissions" sdk={sdk} withCreate />
+      </FieldWrapper>
+      <InputSwitchField
+        name="documentSecurity"
+        label={"Document Security"}
+        layout="horizontal"
+        descriptionSide="right"
+        description={
+          <>
+            When document security is enabled, users can access documents if they have either
+            document-specific permissions or collection-level permissions.
+            <br /> <br />
+            If document security is disabled, access is granted only through collection
+            permissions, and document-specific permissions are ignored.
+          </>
+        }
+      />
+    </SidePanel.Content>
   );
 };
 

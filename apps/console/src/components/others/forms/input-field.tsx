@@ -27,32 +27,91 @@ import {
 import { Input } from "@nuvix/ui/components";
 import { RadioGroup } from "@nuvix/sui/components/radio-group";
 import { PlusIcon } from "lucide-react";
+import { cn } from "@nuvix/sui/lib/utils";
 
 interface Props extends Omit<InputProps, "onChange" | "value" | "id"> {
   name: string;
+  descriptionSide?: "left" | "right";
 }
 
-const Wrapper = ({ Field, ...props }: { Field: any } & any) => {
-  const { name, label, placeholder, description, ...rest } = props as Props;
-  const { values, handleBlur, handleChange } = useFormikContext<Record<string, string | number>>();
+export const FieldWrapper = ({
+  name,
+  label,
+  description,
+  layout = "vertical",
+  children,
+  labelClass = "mt-4",
+  descriptionSide = "left",
+  ...props
+}: Props & {
+  children: React.ReactNode;
+  layout?: "vertical" | "horizontal";
+  labelClass?: string;
+}) => {
+  const labelComponent = label ? <FormLabel>{label}</FormLabel> : null;
+  const descriptionComponent = description ? (
+    <FormDescription>{description}</FormDescription>
+  ) : null;
+
+  if (layout === "vertical") {
+    return (
+      <FormItem {...(props as Props)}>
+        {labelComponent}
+        <FormControl>{children}</FormControl>
+        {descriptionComponent}
+        <FormMessage field={name} />
+      </FormItem>
+    );
+  }
 
   return (
     <FormItem {...(props as Props)}>
-      {label && <FormLabel>{label}</FormLabel>}
-      <FormControl>
-        <Field
-          name={name}
-          placeholder={placeholder ?? label}
-          value={values[name]}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          labelAsPlaceholder
-          {...rest}
-        />
-      </FormControl>
-      {description && <FormDescription>{description} </FormDescription>}
-      <FormMessage field={name} />
+      <div className="flex items-start gap-6">
+        <div
+          className={cn("min-w-[30%] max-w-[30%]", {
+            [labelClass]: !description || descriptionSide === "right",
+          })}
+        >
+          {labelComponent}
+          {descriptionSide === "left" && descriptionComponent}
+        </div>
+
+        <div className="flex-1">
+          <FormControl>{children}</FormControl>
+          <div className="mt-1">
+            {descriptionSide === "right" && descriptionComponent}
+            <FormMessage field={name} />
+          </div>
+        </div>
+      </div>
     </FormItem>
+  );
+};
+
+const Wrapper = ({ Field, ...props }: { Field: any } & any) => {
+  const { name, label, placeholder, ...rest } = props as Props & any;
+  const { values, handleBlur, handleChange } = useFormikContext<Record<string, string | number>>();
+
+  const fieldProps = {
+    name,
+    placeholder: placeholder ?? label,
+    value: values[name],
+    onChange: handleChange,
+    onBlur: handleBlur,
+    labelAsPlaceholder: true,
+    ...rest,
+  };
+
+  return (
+    <FieldWrapper
+      name={name}
+      label={label}
+      description={props.description}
+      layout={props.layout}
+      {...props}
+    >
+      <Field {...fieldProps} />
+    </FieldWrapper>
   );
 };
 
@@ -106,23 +165,26 @@ export const InputTextareaField = (props: Props & TextareaProps) => {
 };
 
 export const InputSwitchField = (props: Omit<SwitchProps, "onToggle" | "isChecked"> & Props) => {
-  const { name, label, placeholder, ...rest } = props;
+  const { name, label, placeholder, layout, ...rest } = props;
   const { values, handleBlur, setFieldValue } = useFormikContext<Record<string, boolean>>();
 
   return (
-    <FormItem {...props}>
-      <FormControl>
-        <Switch
-          label={label}
-          onBlur={handleBlur}
-          isChecked={values[name]}
-          onToggle={(() => setFieldValue(name, !values[name])) as any}
-          {...rest}
-        />
-      </FormControl>
-      {/* {description && <FormDescription>{description} </FormDescription>} */}
-      <FormMessage field={name} />
-    </FormItem>
+    <FieldWrapper
+      {...rest}
+      layout={layout}
+      label={layout === "horizontal" ? label : ""}
+      description={props.description}
+      name={name}
+      labelClass="mt-1.5"
+    >
+      <Switch
+        label={layout === "horizontal" ? undefined : label}
+        onBlur={handleBlur}
+        isChecked={values[name]}
+        onToggle={(() => setFieldValue(name, !values[name])) as any}
+        {...rest}
+      />
+    </FieldWrapper>
   );
 };
 

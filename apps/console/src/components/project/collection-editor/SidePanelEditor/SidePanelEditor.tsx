@@ -99,7 +99,7 @@ const SidePanelEditor = ({
   const saveRow = async (
     payload: any,
     isNewRecord: boolean,
-    configuration: { identifiers: any; rowIdx: number },
+    configuration: { identifiers: any; rowIdx: number; },
     onComplete: (err?: any) => void,
   ) => {
     if (!project || selectedCollection === undefined) {
@@ -232,23 +232,23 @@ const SidePanelEditor = ({
 
     const response: any = isNewRecord
       ? await createColumn({
-          projectRef: project?.$id!,
-          sdk,
-          payload: payload as CreateColumnPayload,
-          selectedCollection,
-          primaryKey,
-          foreignKeyRelations,
-        })
+        projectRef: project?.$id!,
+        sdk,
+        payload: payload as CreateColumnPayload,
+        selectedCollection,
+        primaryKey,
+        foreignKeyRelations,
+      })
       : await updateColumn({
-          projectRef: project?.$id!,
-          sdk,
-          id: columnId as string,
-          payload: payload as UpdateColumnPayload,
-          selectedCollection,
-          primaryKey,
-          foreignKeyRelations,
-          existingForeignKeyRelations,
-        });
+        projectRef: project?.$id!,
+        sdk,
+        id: columnId as string,
+        payload: payload as UpdateColumnPayload,
+        selectedCollection,
+        primaryKey,
+        foreignKeyRelations,
+        existingForeignKeyRelations,
+      });
 
     if (response?.error) {
       toast.error(response.error.message);
@@ -459,7 +459,7 @@ const SidePanelEditor = ({
       <TableEditor
         collection={
           snap.sidePanel?.type === "table" &&
-          (snap.sidePanel.mode === "edit" || snap.sidePanel.mode === "duplicate")
+            (snap.sidePanel.mode === "edit" || snap.sidePanel.mode === "duplicate")
             ? selectedCollection
             : undefined
         }

@@ -1,6 +1,7 @@
 import { noop } from "lodash";
 import { PropsWithChildren, useState } from "react";
 import { Button } from "@nuvix/ui/components";
+import { SubmitButton } from "@/components/others/forms";
 
 interface ActionBarProps {
   loading?: boolean;
@@ -11,6 +12,7 @@ interface ActionBarProps {
   applyFunction?: (resolve: any) => void;
   closePanel: () => void;
   formId?: string;
+  isInForm?: boolean;
 }
 const ActionBar = ({
   loading = false,
@@ -21,6 +23,7 @@ const ActionBar = ({
   backButtonLabel = "Back",
   applyFunction = undefined,
   closePanel = noop,
+  isInForm,
   formId,
 }: PropsWithChildren<ActionBarProps>) => {
   const [isRunning, setIsRunning] = useState(false);
@@ -47,7 +50,9 @@ const ActionBar = ({
 
       {children}
 
-      {applyFunction !== undefined ? (
+      {isInForm ? (
+        <SubmitButton label={applyButtonLabel} />
+      ) : applyFunction !== undefined ? (
         // Old solution, necessary when loading is handled by this component itself
         <Button
           onClick={onSelectApply}

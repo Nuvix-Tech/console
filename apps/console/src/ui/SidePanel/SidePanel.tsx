@@ -6,6 +6,7 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTrigger,
+  SheetTitle,
 } from "@nuvix/sui/components/sheet";
 import { DialogProps, DialogContentProps } from "@nuvix/sui/components/dialog";
 import React from "react";
@@ -15,6 +16,7 @@ import styles from "./SidePanel.module.css";
 import classNames from "classnames";
 import { Form, FormikConfigs, FormikProps } from "@/components/others/forms";
 import { FormikValues } from "formik";
+import { VisuallyHidden } from "@chakra-ui/react";
 
 export type SidePanelProps = RadixProps & CustomProps;
 
@@ -145,6 +147,9 @@ const SidePanel = ({
           if (props.onInteractOutside) props.onInteractOutside(event);
         }}
       >
+        <VisuallyHidden>
+          <SheetTitle />
+        </VisuallyHidden>
         <Wrrapper form={form}>
           {header && <SheetHeader className="flex-row border-b w-full block">{header}</SheetHeader>}
           <div className="h-full overflow-y-auto">{children}</div>
@@ -180,7 +185,7 @@ const getSize = (size: CustomProps["size"]) => {
 
 function Wrrapper({ form, children }: { form?: any; children: any }) {
   return form ? (
-    <Form {...form} className="h-[calc(100vh-100px)]">
+    <Form {...form} className="h-[calc(100vh-120px)]">
       {children}
     </Form>
   ) : (
