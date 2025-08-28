@@ -198,6 +198,11 @@ export const createCollectionEditorState = () => {
           overrideIsDeleteWithCascade ?? !state.ui.confirmationDialog.isDeleteWithCascade;
       }
     },
+
+    schema: undefined as unknown as string,
+    setSchema: (schema: string) => {
+      state.schema = schema;
+    },
   });
 
   return state;

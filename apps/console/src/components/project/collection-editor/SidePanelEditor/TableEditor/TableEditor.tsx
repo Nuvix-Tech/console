@@ -1,6 +1,5 @@
 import { isUndefined, noop } from "lodash";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
 
 import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
 import ActionBar from "../ActionBar";
@@ -101,28 +100,47 @@ const TableEditor = ({
         validationSchema: schema,
         initialValues: isNewRecord
           ? {
-            id: "",
-            name: "",
-            enabled: true,
-            documentSecurity: false,
-            permissions: [],
-          }
+              id: "",
+              name: "",
+              enabled: true,
+              documentSecurity: false,
+              permissions: [],
+            }
           : collection,
         dirty: isDuplicating,
         onSubmit: (values) => {
           const payload = {
             ...values,
-            id: isNewRecord ? undefined : values.id,
+            $id: isNewRecord || isDuplicating ? values.id : collection.$id,
           };
+          return new Promise((resolve) => {
+            saveChanges(
+              payload,
+              isNewRecord,
+              {
+                collectionId: collection?.$id,
+                isDuplicateRows,
+              },
+              resolve,
+            );
+          });
         },
       }}
     >
-      <Fields isDuplicating={isDuplicating} isNewRecord={isNewRecord} updateEditorDirty={updateEditorDirty} />
+      <Fields
+        isDuplicating={isDuplicating}
+        isNewRecord={isNewRecord}
+        updateEditorDirty={updateEditorDirty}
+      />
     </SidePanel>
   );
 };
 
-const Fields = (props: { isNewRecord: boolean; isDuplicating: boolean; updateEditorDirty: Function; }) => {
+const Fields = (props: {
+  isNewRecord: boolean;
+  isDuplicating: boolean;
+  updateEditorDirty: Function;
+}) => {
   const sdk = useProjectStore.use.sdk();
   const { dirty, values, setFieldValue } = useFormikContext<any>();
 
@@ -157,8 +175,8 @@ const Fields = (props: { isNewRecord: boolean; isDuplicating: boolean; updateEdi
             When document security is enabled, users can access documents if they have either
             document-specific permissions or collection-level permissions.
             <br /> <br />
-            If document security is disabled, access is granted only through collection
-            permissions, and document-specific permissions are ignored.
+            If document security is disabled, access is granted only through collection permissions,
+            and document-specific permissions are ignored.
           </>
         }
       />

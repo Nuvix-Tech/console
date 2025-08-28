@@ -31,7 +31,7 @@ import type {
 } from "./SidePanelEditor.types";
 import {
   createColumn,
-  createTable,
+  createCollection,
   duplicateTable,
   insertRowsViaSpreadsheet,
   insertTableRows,
@@ -49,6 +49,7 @@ import { SonnerProgress } from "@nuvix/sui/components/sooner-progress";
 import type { Models } from "@nuvix/console";
 import ConfirmationModal from "@/components/editor/components/_confim_dialog";
 import { useCollectionEditorStore } from "@/lib/store/collection-editor";
+import { collectionKeys } from "@/data/collections/keys";
 
 export interface SidePanelEditorProps {
   editable?: boolean;
@@ -99,7 +100,7 @@ const SidePanelEditor = ({
   const saveRow = async (
     payload: any,
     isNewRecord: boolean,
-    configuration: { identifiers: any; rowIdx: number; },
+    configuration: { identifiers: any; rowIdx: number },
     onComplete: (err?: any) => void,
   ) => {
     if (!project || selectedCollection === undefined) {
@@ -232,23 +233,23 @@ const SidePanelEditor = ({
 
     const response: any = isNewRecord
       ? await createColumn({
-        projectRef: project?.$id!,
-        sdk,
-        payload: payload as CreateColumnPayload,
-        selectedCollection,
-        primaryKey,
-        foreignKeyRelations,
-      })
+          projectRef: project?.$id!,
+          sdk,
+          payload: payload as CreateColumnPayload,
+          selectedCollection,
+          primaryKey,
+          foreignKeyRelations,
+        })
       : await updateColumn({
-        projectRef: project?.$id!,
-        sdk,
-        id: columnId as string,
-        payload: payload as UpdateColumnPayload,
-        selectedCollection,
-        primaryKey,
-        foreignKeyRelations,
-        existingForeignKeyRelations,
-      });
+          projectRef: project?.$id!,
+          sdk,
+          id: columnId as string,
+          payload: payload as UpdateColumnPayload,
+          selectedCollection,
+          primaryKey,
+          foreignKeyRelations,
+          existingForeignKeyRelations,
+        });
 
     if (response?.error) {
       toast.error(response.error.message);
@@ -313,10 +314,7 @@ const SidePanelEditor = ({
   };
 
   const saveTable = async (
-    payload: {
-      name: string;
-      schema: string;
-    },
+    payload: Models.Collection,
     isNewRecord: boolean,
     configuration: {
       collectionId?: string;
@@ -326,7 +324,6 @@ const SidePanelEditor = ({
   ) => {
     let toastId;
     let saveTableError = false;
-    const { isDuplicateRows } = configuration;
 
     try {
       if (
@@ -334,52 +331,46 @@ const SidePanelEditor = ({
         snap.sidePanel.mode === "duplicate" &&
         selectedCollection
       ) {
-        const tableToDuplicate = selectedCollection;
+        const collectionToDuplicate = selectedCollection;
 
-        toastId = toast.loading(`Duplicating table: ${tableToDuplicate.name}...`);
+        toastId = toast.loading(`Duplicating collection: ${collectionToDuplicate.name}...`);
 
-        // const table = await duplicateTable(project?.$id!, sdk, payload, {
-        //   isRLSEnabled,
-        //   isDuplicateRows,
-        //   duplicateTable: tableToDuplicate,
-        //   foreignKeyRelations,
-        // });
+        const collection = await createCollection({
+          sdk,
+          toastId,
+          payload,
+          schema: snap.schema,
+        });
 
-        // await Promise.all([
-        //   queryClient.invalidateQueries({
-        //     queryKey: tableKeys.list(project?.$id, table.schema, includeColumns),
-        //   }),
-        //   queryClient.invalidateQueries({ queryKey: entityTypeKeys.list(project?.$id) }),
-        // ]);
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: collectionKeys.list(project?.$id, { schema: collection.$schema }),
+          }),
+        ]);
 
-        // toast.success(
-        //   `Table ${tableToDuplicate.name} has been successfully duplicated into ${table.name}!`,
-        //   { id: toastId },
-        // );
-        // onCollectionCreated(collection);
+        toast.success(
+          `Collection ${collectionToDuplicate.name} has been successfully duplicated into ${collection.name}!`,
+          { id: toastId },
+        );
+        onCollectionCreated(collection);
       } else if (isNewRecord) {
-        toastId = toast.loading(`Creating new table: ${payload.name}...`);
+        toastId = toast.loading(`Creating new collection: ${payload.name}...`);
 
-        // const collection = await createTable({
-        //   projectRef: project?.$id!,
-        //   sdk,
-        //   toastId,
-        //   payload,
-        //   columns,
-        //   foreignKeyRelations,
-        //   isRLSEnabled,
-        //   importContent,
-        // });
+        const collection = await createCollection({
+          sdk,
+          toastId,
+          payload,
+          schema: snap.schema,
+        });
 
-        // await Promise.all([
-        //   queryClient.invalidateQueries({
-        //     queryKey: tableKeys.list(project?.$id, table.schema, includeColumns),
-        //   }),
-        //   queryClient.invalidateQueries({ queryKey: entityTypeKeys.list(project?.$id) }),
-        // ]);
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: collectionKeys.list(project?.$id, { schema: collection.$schema }),
+          }),
+        ]);
 
-        // toast.success(`Table ${table.name} is good to go!`, { id: toastId });
-        // onCollectionCreated(collection);
+        toast.success(`Collection ${collection.name} is good to go!`, { id: toastId });
+        onCollectionCreated(collection);
       } else if (selectedCollection) {
         toastId = toast.loading(`Updating collection: ${selectedCollection?.name}...`);
 
@@ -459,7 +450,7 @@ const SidePanelEditor = ({
       <TableEditor
         collection={
           snap.sidePanel?.type === "table" &&
-            (snap.sidePanel.mode === "edit" || snap.sidePanel.mode === "duplicate")
+          (snap.sidePanel.mode === "edit" || snap.sidePanel.mode === "duplicate")
             ? selectedCollection
             : undefined
         }
