@@ -19,7 +19,8 @@ import { useQuery } from "@tanstack/react-query";
 import { RadioCardItem, RadioCardRoot } from "@nuvix/cui/radio-card";
 import { MoveHorizontal, MoveRight } from "lucide-react";
 import { AttributeFormat, Attributes } from "./utils";
-import type { RelationMutate, RelationshipType } from "@nuvix/console";
+import type { Models, RelationMutate, RelationshipType } from "@nuvix/console";
+import type { ProjectSdk } from "@/lib/sdk";
 
 // ======================== TYPE DEFINITIONS ========================
 
@@ -65,7 +66,8 @@ interface AttributeConfig<T = any> {
   initialValues: T;
   validationSchema: y.Schema<T>;
   formFields: React.ReactNode;
-  submitAction: (values: T) => Promise<void>;
+  submitAction: (values: T) => Promise<any>;
+  updateAction: (key: string, values: T) => Promise<any>;
 }
 
 interface AttributeFormBaseProps<T = any> extends BaseProps {
@@ -206,7 +208,7 @@ const RequiredField: React.FC = () => {
   );
 };
 
-const ArrayField: React.FC = () => {
+const ArrayField: React.FC<{ disabled?: boolean }> = ({ disabled }) => {
   const { values, setFieldValue } = useFormikContext<AttributeFormValues>();
 
   useEffect(() => {
@@ -223,7 +225,7 @@ const ArrayField: React.FC = () => {
       label="Is Array"
       description="Allows storing multiple values of this type"
       reverse
-      disabled={values.required}
+      disabled={disabled || values.required}
     />
   );
 };
@@ -303,11 +305,15 @@ const AttributeFormBase = <T extends FormikValues>({
 // ======================== ATTRIBUTE CONFIG FACTORY ========================
 
 export class AttributeConfigFactory {
+  private forUpdate: boolean;
   constructor(
-    private sdk: any,
+    private sdk: ProjectSdk,
     private database: any,
     private collection: any,
-  ) {}
+    private column?: Models.AttributeString,
+  ) {
+    this.forUpdate = column ? true : false;
+  }
 
   private createStringConfig(): AttributeConfig<StringFormValues> {
     return {
@@ -334,12 +340,12 @@ export class AttributeConfigFactory {
           <InputNumberField name="size" label="Size" required />
           <DefaultValueField type={Attributes.String} />
           <RequiredField />
-          <ArrayField />
+          <ArrayField disabled={this.forUpdate} />
         </>
       ),
       submitAction: async (values) => {
         const { key, size, default: defaultValue, required, array } = values;
-        await this.sdk.databases.createStringAttribute(
+        return this.sdk.databases.createStringAttribute(
           this.database.$id,
           this.collection.$id,
           key,
@@ -347,6 +353,18 @@ export class AttributeConfigFactory {
           required,
           defaultValue,
           array,
+        );
+      },
+      updateAction: (key, values) => {
+        const { required, default: x, size, key: newKey } = values;
+        return this.sdk.databases.updateStringAttribute(
+          this.database.$id,
+          this.collection.$id,
+          key,
+          required,
+          x,
+          size,
+          key === newKey ? undefined : newKey,
         );
       },
     };
@@ -379,17 +397,17 @@ export class AttributeConfigFactory {
           <MinMaxFields />
           <DefaultValueField type={Attributes.Integer} />
           <RequiredField />
-          <ArrayField />
+          <ArrayField disabled={this.forUpdate} />
         </>
       ),
       submitAction: async (values) => {
         const { key, default: defaultValue, required, array, min, max } = values;
-        await this.sdk.databases.createIntegerAttribute(
+        return await this.sdk.databases.createIntegerAttribute(
           this.database.$id,
           this.collection.$id,
           key,
           required,
-          min,
+          min ?? undefined,
           max,
           defaultValue,
           array,
@@ -425,7 +443,7 @@ export class AttributeConfigFactory {
           <MinMaxFields />
           <DefaultValueField type={Attributes.Float} />
           <RequiredField />
-          <ArrayField />
+          <ArrayField disabled={this.forUpdate} />
         </>
       ),
       submitAction: async (values) => {
@@ -466,7 +484,7 @@ export class AttributeConfigFactory {
           <KeyField />
           <DefaultValueField type={Attributes.Boolean} />
           <RequiredField />
-          <ArrayField />
+          <ArrayField disabled={this.forUpdate} />
         </>
       ),
       submitAction: async (values) => {
@@ -505,7 +523,7 @@ export class AttributeConfigFactory {
           <KeyField />
           <DefaultValueField type={Attributes.Timestamptz} />
           <RequiredField />
-          <ArrayField />
+          <ArrayField disabled={this.forUpdate} />
         </>
       ),
       submitAction: async (values) => {
@@ -544,7 +562,7 @@ export class AttributeConfigFactory {
           <KeyField />
           <DefaultValueField type={AttributeFormat.Ip} />
           <RequiredField />
-          <ArrayField />
+          <ArrayField disabled={this.forUpdate} />
         </>
       ),
       submitAction: async (values) => {
@@ -583,7 +601,7 @@ export class AttributeConfigFactory {
           <KeyField />
           <DefaultValueField type={AttributeFormat.Url} />
           <RequiredField />
-          <ArrayField />
+          <ArrayField disabled={this.forUpdate} />
         </>
       ),
       submitAction: async (values) => {
@@ -622,7 +640,7 @@ export class AttributeConfigFactory {
           <KeyField />
           <DefaultValueField type={AttributeFormat.Email} />
           <RequiredField />
-          <ArrayField />
+          <ArrayField disabled={this.forUpdate} />
         </>
       ),
       submitAction: async (values) => {
@@ -679,7 +697,7 @@ export class AttributeConfigFactory {
           <InputTagField name="elements" label="Elements" />
           <DefaultValueField type={AttributeFormat.Enum} />
           <RequiredField />
-          <ArrayField />
+          <ArrayField disabled={this.forUpdate} />
         </>
       ),
       submitAction: async (values) => {

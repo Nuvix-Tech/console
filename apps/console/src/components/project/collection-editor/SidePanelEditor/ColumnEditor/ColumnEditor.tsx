@@ -53,6 +53,10 @@ const ColumnEditor = ({
   >();
 
   useEffect(() => {
+    setType(visible ? initialType : undefined);
+  }, [visible]);
+
+  useEffect(() => {
     if (type) {
       const state = factory.getConfig(type);
       if (state) {
@@ -65,7 +69,9 @@ const ColumnEditor = ({
 
   const formik = useFormik({
     enableReinitialize: true,
-    initialValues: formikConfig?.initialValues || {},
+    initialValues: column
+      ? { ...formikConfig?.initialValues, ...column }
+      : formikConfig?.initialValues || {},
     validationSchema: formikConfig?.validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
       try {
@@ -110,21 +116,24 @@ const ColumnEditor = ({
       }
     >
       <div className="p-4">
-        <Select
-          label="Type"
-          options={ATTRIBUTES.map((attr) => ({
-            label: attr.label,
-            value: attr.key,
-            icon: AttributeIcon(attr.key),
-          }))}
-          placeholder="Select type"
-          value={type ?? ""}
-          onValueChange={onTypeChange}
-          required
-          multiple={false}
-        />
+        {!column && (
+          <Select
+            label="Type"
+            options={ATTRIBUTES.map((attr) => ({
+              label: attr.label,
+              value: attr.key,
+              icon: AttributeIcon(attr.key),
+            }))}
+            placeholder="Select type"
+            value={type ?? ""}
+            onValueChange={onTypeChange}
+            required
+            multiple={false}
+            className="mb-6"
+          />
+        )}
 
-        {type && formikConfig && <div className="space-y-6 mt-6">{formikConfig.formFields}</div>}
+        {type && formikConfig && <div className="space-y-6">{formikConfig.formFields}</div>}
       </div>
     </SidePanel>
   );
