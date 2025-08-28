@@ -408,9 +408,22 @@ export class AttributeConfigFactory {
           key,
           required,
           min ?? undefined,
-          max,
+          max ?? undefined,
           defaultValue,
           array,
+        );
+      },
+      updateAction: (key, values) => {
+        const { required, default: x, min, max, key: newKey } = values;
+        return this.sdk.databases.updateIntegerAttribute(
+          this.database.$id,
+          this.collection.$id,
+          key,
+          required,
+          min!,
+          max!,
+          x,
+          key === newKey ? undefined : newKey,
         );
       },
     };
@@ -448,15 +461,28 @@ export class AttributeConfigFactory {
       ),
       submitAction: async (values) => {
         const { key, default: defaultValue, required, array, min, max } = values;
-        await this.sdk.databases.createFloatAttribute(
+        return await this.sdk.databases.createFloatAttribute(
           this.database.$id,
           this.collection.$id,
           key,
           required,
-          min,
-          max,
+          min?? undefined,
+          max?? undefined,
           defaultValue,
           array,
+        );
+      },
+      updateAction: (key, values) => {
+        const { required, default: x, min, max, key: newKey } = values;
+        return this.sdk.databases.updateFloatAttribute(
+          this.database.$id,
+          this.collection.$id,
+          key,
+          required,
+          min!,
+          max!,
+          x,
+          key === newKey ? undefined : newKey,
         );
       },
     };
@@ -489,13 +515,24 @@ export class AttributeConfigFactory {
       ),
       submitAction: async (values) => {
         const { key, default: defaultValue, required, array } = values;
-        await this.sdk.databases.createBooleanAttribute(
+        return await this.sdk.databases.createBooleanAttribute(
           this.database.$id,
           this.collection.$id,
           key,
           required,
           defaultValue,
           array,
+        );
+      },
+      updateAction: (key, values) => {
+        const { required, default: x, key: newKey } = values;
+        return this.sdk.databases.updateBooleanAttribute(
+          this.database.$id,
+          this.collection.$id,
+          key,
+          required,
+          x,
+          key === newKey ? undefined : newKey,
         );
       },
     };
@@ -528,13 +565,24 @@ export class AttributeConfigFactory {
       ),
       submitAction: async (values) => {
         const { key, default: defaultValue, required, array } = values;
-        await this.sdk.databases.createDatetimeAttribute(
+        return await this.sdk.databases.createDatetimeAttribute(
           this.database.$id,
           this.collection.$id,
           key,
           required,
           defaultValue,
           array,
+        );
+      },
+      updateAction: (key, values) => {
+        const { required, default: x, key: newKey } = values;
+        return this.sdk.databases.updateDatetimeAttribute(
+          this.database.$id,
+          this.collection.$id,
+          key,
+          required,
+          x,
+          key === newKey ? undefined : newKey,
         );
       },
     };
@@ -567,13 +615,24 @@ export class AttributeConfigFactory {
       ),
       submitAction: async (values) => {
         const { key, default: defaultValue, required, array } = values;
-        await this.sdk.databases.createIpAttribute(
+        return await this.sdk.databases.createIpAttribute(
           this.database.$id,
           this.collection.$id,
           key,
           required,
           defaultValue,
           array,
+        );
+      },
+      updateAction: (key, values) => {
+        const { required, default: x, key: newKey } = values;
+        return this.sdk.databases.updateIpAttribute(
+          this.database.$id,
+          this.collection.$id,
+          key,
+          required,
+          x,
+          key === newKey ? undefined : newKey,
         );
       },
     };
@@ -606,13 +665,24 @@ export class AttributeConfigFactory {
       ),
       submitAction: async (values) => {
         const { key, default: defaultValue, required, array } = values;
-        await this.sdk.databases.createUrlAttribute(
+        return await this.sdk.databases.createUrlAttribute(
           this.database.$id,
           this.collection.$id,
           key,
           required,
           defaultValue,
           array,
+        );
+      },
+      updateAction: (key, values) => {
+        const { required, default: x, key: newKey } = values;
+        return this.sdk.databases.updateUrlAttribute(
+          this.database.$id,
+          this.collection.$id,
+          key,
+          required,
+          x,
+          key === newKey ? undefined : newKey,
         );
       },
     };
@@ -645,13 +715,24 @@ export class AttributeConfigFactory {
       ),
       submitAction: async (values) => {
         const { key, default: defaultValue, required, array } = values;
-        await this.sdk.databases.createEmailAttribute(
+        return await this.sdk.databases.createEmailAttribute(
           this.database.$id,
           this.collection.$id,
           key,
           required,
           defaultValue,
           array,
+        );
+      },
+      updateAction: (key, values) => {
+        const { required, default: x, key: newKey } = values;
+        return this.sdk.databases.updateEmailAttribute(
+          this.database.$id,
+          this.collection.$id,
+          key,
+          required,
+          x,
+          key === newKey ? undefined : newKey,
         );
       },
     };
@@ -702,7 +783,7 @@ export class AttributeConfigFactory {
       ),
       submitAction: async (values) => {
         const { key, elements, default: defaultValue, required, array } = values;
-        await this.sdk.databases.createEnumAttribute(
+        return await this.sdk.databases.createEnumAttribute(
           this.database.$id,
           this.collection.$id,
           key,
@@ -710,6 +791,18 @@ export class AttributeConfigFactory {
           required,
           defaultValue,
           array,
+        );
+      },
+      updateAction: (key, values) => {
+        const { required, default: x, elements,  key: newKey } = values;
+        return this.sdk.databases.updateEnumAttribute(
+          this.database.$id,
+          this.collection.$id,
+          key,
+          elements,
+          required,
+          x,
+          key === newKey ? undefined : newKey,
         );
       },
     };
@@ -746,7 +839,7 @@ export class AttributeConfigFactory {
       formFields: <RelationshipAttributeFormFields />,
       submitAction: async (values) => {
         const { key, relatedCollection, relationType, twoWay, twoWayKey, onDelete } = values;
-        await this.sdk.databases.createRelationshipAttribute(
+        return await this.sdk.databases.createRelationshipAttribute(
           this.database.$id,
           this.collection.$id,
           relatedCollection,
@@ -756,6 +849,9 @@ export class AttributeConfigFactory {
           twoWay ? twoWayKey : undefined,
           onDelete as RelationMutate,
         );
+      },
+      updateAction(key, values) {
+        throw Error('currently updating relationship attribute does not supported')
       },
     };
   }

@@ -2,20 +2,9 @@ import { Editor } from "@monaco-editor/react";
 import { Loader } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import remarkGfm from "remark-gfm";
-import { toast } from "sonner";
 
-import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
-import { isTableLike } from "@/data/table-editor/table-editor-types";
-import { useGetCellValueMutation } from "@/data/table-rows/get-cell-value-mutation";
-import { MAX_CHARACTERS } from "@nuvix/pg-meta/src/query/table-row-query";
 import ActionBar from "../ActionBar";
-import { isValueTruncated } from "./RowEditor.utils";
-import { useParams } from "next/navigation";
-import { useProjectStore } from "@/lib/store";
 import { SidePanel } from "@/ui/SidePanel";
-import { cn } from "@nuvix/sui/lib/utils";
-import { Button } from "@nuvix/ui/components";
-import { TableParam } from "@/types";
 import { TwoOptionToggle } from "@/components/others/ui";
 import { Markdown } from "@/components/others/markdown";
 import { Code } from "@chakra-ui/react";
@@ -24,7 +13,7 @@ import { useTheme } from "next-themes";
 interface TextEditorProps {
   visible: boolean;
   readOnly?: boolean;
-  row?: { [key: string]: any };
+  row?: { [key: string]: any; };
   column: string;
   closePanel: () => void;
   onSaveField: (value: string, resolve: () => void) => void;
@@ -38,10 +27,6 @@ export const TextEditor = ({
   closePanel,
   onSaveField,
 }: TextEditorProps) => {
-  const { id: _id } = useParams();
-  const { tableId } = useParams<TableParam>();
-  const id = tableId ? Number(tableId) : undefined;
-  const { project, sdk } = useProjectStore();
   const { resolvedTheme } = useTheme();
 
   const theme = useCallback(() => {
@@ -52,51 +37,9 @@ export const TextEditor = ({
     }
   }, [resolvedTheme]);
 
-  const { data: selectedTable } = useTableEditorQuery({
-    projectRef: project?.$id,
-    sdk,
-    id,
-  });
-
   const [strValue, setStrValue] = useState("");
   const [view, setView] = useState<"edit" | "view">("edit");
   const value = row?.[column as keyof typeof row] as unknown as string;
-  const isTruncated = isValueTruncated(value);
-
-  const {
-    mutate: getCellValue,
-    isPending: isLoading,
-    isSuccess,
-    reset,
-  } = useGetCellValueMutation();
-
-  const loadFullValue = () => {
-    if (
-      selectedTable === undefined ||
-      project === undefined ||
-      row === undefined ||
-      !isTableLike(selectedTable)
-    )
-      return;
-    if (selectedTable.primary_keys.length === 0) {
-      return toast("Unable to load value as table has no primary keys");
-    }
-
-    const pkMatch = selectedTable.primary_keys.reduce((a, b) => {
-      return { ...a, [b.name]: (row as any)[b.name] };
-    }, {});
-
-    getCellValue(
-      {
-        table: { schema: selectedTable.schema, name: selectedTable.name },
-        column: column,
-        pkMatch,
-        projectRef: project?.$id,
-        sdk,
-      },
-      { onSuccess: (data) => setStrValue(data) },
-    );
-  };
 
   const saveValue = (resolve: () => void) => {
     if (onSaveField) onSaveField(strValue, resolve);
@@ -109,12 +52,9 @@ export const TextEditor = ({
     }
   }, [visible]);
 
-  // reset the mutation when the panel closes. Fixes an issue where the value is truncated if you close and reopen the
-  // panel again
   const onClose = useCallback(() => {
-    reset();
     closePanel();
-  }, [reset]);
+  }, []);
 
   return (
     <SidePanel
@@ -126,14 +66,12 @@ export const TextEditor = ({
           <p>
             {readOnly ? "Viewing" : "Editing"} value of: <Code>{column}</Code>
           </p>
-          {(!isTruncated || (isTruncated && isSuccess)) && (
-            <TwoOptionToggle
-              options={["view", "edit"]}
-              size="xs"
-              activeOption={view}
-              onClickOption={setView}
-            />
-          )}
+          <TwoOptionToggle
+            options={["view", "edit"]}
+            size="xs"
+            activeOption={view}
+            onClickOption={setView}
+          />
         </div>
       }
       customFooter={
@@ -188,26 +126,6 @@ export const TextEditor = ({
               content={strValue}
             />
           </SidePanel.Content>
-        )}
-        {isTruncated && !isSuccess && (
-          <div
-            className={cn(
-              "absolute top-0 left-0 flex items-center justify-center flex-col gap-y-3",
-              "text-sm w-full h-full px-2 text-center",
-              "bg-background/80 backdrop-blur-[1.5px]",
-            )}
-          >
-            <div className="flex flex-col gap-y-1 w-80">
-              <p>Text value is larger than {MAX_CHARACTERS.toLocaleString()} characters</p>
-              <p className="text-foreground-light">
-                You may try to render the entire text value, but your browser may run into
-                performance issues
-              </p>
-            </div>
-            <Button type="default" loading={isLoading} onClick={loadFullValue}>
-              Load full text data
-            </Button>
-          </div>
         )}
       </div>
     </SidePanel>

@@ -3,20 +3,12 @@ import { isEmpty, isUndefined, noop } from "lodash";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import type { Constraint } from "@/data/database/constraints-query";
-import type { ForeignKeyConstraint } from "@/data/database/foreign-key-constraints-query";
-import { databaseKeys } from "@/data/database/keys";
-import { ENTITY_TYPE } from "@/data/entity-types/entity-type-constants";
-import { entityTypeKeys } from "@/data/entity-types/keys";
-import { tableEditorKeys } from "@/data/table-editor/keys";
-import { tableRowKeys } from "@/data/table-rows/keys";
+
+
 import { useTableRowCreateMutation } from "@/data/table-rows/table-row-create-mutation";
 import { useTableRowUpdateMutation } from "@/data/table-rows/table-row-update-mutation";
-import { tableKeys } from "@/data/tables/keys";
-import { getTables } from "@/data/tables/tables-query";
-// import { useGetImpersonatedRoleState } from "state/role-impersonation-state";
+
 // import { createTabId, updateTab } from "state/tabs";
-// import { SonnerProgress } from "ui";
 import ColumnEditor from "./ColumnEditor/ColumnEditor";
 import type { ForeignKey } from "./ForeignKeySelector/ForeignKeySelector.types";
 import ForeignRowSelector from "./RowEditor/ForeignRowSelector/ForeignRowSelector";
@@ -33,10 +25,8 @@ import {
 import SpreadsheetImport from "./SpreadsheetImport/SpreadsheetImport";
 import TableEditor from "./TableEditor/TableEditor";
 import { useProjectStore } from "@/lib/store";
-import { Dictionary } from "@/components/grid/types";
 import { useTableEditorFiltersSort } from "@/hooks/useTableEditorFilterSort";
 import { useParams } from "next/navigation";
-import { PostgresTable } from "@nuvix/pg-meta";
 import { SonnerProgress } from "@nuvix/sui/components/sooner-progress";
 import type { Models } from "@nuvix/console";
 import ConfirmationModal from "@/components/editor/components/_confim_dialog";
@@ -56,7 +46,6 @@ export interface SidePanelEditorProps {
 const SidePanelEditor = ({
   editable = true,
   selectedCollection,
-  includeColumns = false,
   onCollectionCreated = noop,
 }: SidePanelEditorProps) => {
   const { id: ref } = useParams();
@@ -86,7 +75,7 @@ const SidePanelEditor = ({
   const saveRow = async (
     payload: any,
     isNewRecord: boolean,
-    configuration: { identifiers: any; rowIdx: number },
+    configuration: { documentId: string, rowIdx: number; },
     onComplete: (err?: any) => void,
   ) => {
     if (!project || selectedCollection === undefined) {
@@ -146,25 +135,21 @@ const SidePanelEditor = ({
     let payload;
     let configuration;
     const isNewRecord = false;
-    const identifiers = {} as Dictionary<any>;
+
     if (snap.sidePanel?.type === "json") {
       const selectedValueForJsonEdit = snap.sidePanel.jsonValue;
       const { row, column } = selectedValueForJsonEdit;
       payload = { [column]: value === null ? null : JSON.parse(value as any) };
-      selectedCollection.primary_keys.forEach(
-        (column) => (identifiers[column.name] = row![column.name]),
-      );
-      configuration = { identifiers, rowIdx: row.idx };
+
+      configuration = { rowIdx: row.idx, documentId: row.$id };
     } else if (snap.sidePanel?.type === "cell") {
       const column = snap.sidePanel.value?.column;
       const row = snap.sidePanel.value?.row;
 
       if (!column || !row) return;
       payload = { [column]: value === null ? null : value };
-      selectedCollection.primary_keys.forEach(
-        (column) => (identifiers[column.name] = row![column.name]),
-      );
-      configuration = { identifiers, rowIdx: row.idx };
+
+      configuration = { rowIdx: row.idx, documentId: row.$id };
     }
 
     if (payload !== undefined && configuration !== undefined) {
@@ -198,7 +183,7 @@ const SidePanelEditor = ({
   //   } catch (error) {}
   // };
 
-  const saveColumn = async (resolve: any, column?: Models.AttributeString, error?: any) => {
+  const saveColumn = async (resolve: any, isNewRecord: boolean, column?: Models.AttributeString, error?: any) => {
     const selectedColumnToEdit = snap.sidePanel?.type === "column" && snap.sidePanel.column;
     if (!project || selectedCollection === undefined) {
       return console.error("no project or table selected");
@@ -207,14 +192,14 @@ const SidePanelEditor = ({
     if (error) {
       toast.error(error.message);
     } else {
-      // if (
-      //   !isNewRecord &&
-      //   payload.name &&
-      //   selectedColumnToEdit &&
-      //   selectedColumnToEdit.name !== payload.name
-      // ) {
-      //   reAddRenamedColumnSortAndFilter(selectedColumnToEdit.name, payload.name);
-      // }
+      if (
+        !isNewRecord &&
+        column?.key &&
+        selectedColumnToEdit &&
+        selectedColumnToEdit?.key !== column?.key
+      ) {
+        reAddRenamedColumnSortAndFilter(selectedColumnToEdit.key, column?.key);
+      }
 
       await Promise.all([
         queryClient.invalidateQueries({
@@ -382,7 +367,7 @@ const SidePanelEditor = ({
       <TableEditor
         collection={
           snap.sidePanel?.type === "table" &&
-          (snap.sidePanel.mode === "edit" || snap.sidePanel.mode === "duplicate")
+            (snap.sidePanel.mode === "edit" || snap.sidePanel.mode === "duplicate")
             ? selectedCollection
             : undefined
         }
@@ -392,7 +377,6 @@ const SidePanelEditor = ({
         saveChanges={saveTable}
         updateEditorDirty={() => setIsEdited(true)}
       />
-      {/* <SchemaEditor visible={snap.sidePanel?.type === "schema"} closePanel={onClosePanel} /> */}
       <JsonEditor
         visible={snap.sidePanel?.type === "json"}
         row={(snap.sidePanel?.type === "json" && snap.sidePanel.jsonValue.row) || {}}

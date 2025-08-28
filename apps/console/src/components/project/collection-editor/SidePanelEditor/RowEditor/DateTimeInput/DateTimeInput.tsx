@@ -8,7 +8,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@nuvix/sui/components/dropdown-menu";
-import { getColumnType } from "./DateTimeInput.utils";
 import { IconButton } from "@nuvix/ui/components";
 import { cn } from "@nuvix/sui/lib/utils";
 import { Input } from "@/components/others/ui";
@@ -37,7 +36,6 @@ const DateTimeInput = ({
   description,
   disabled = false,
 }: DateTimeInputProps) => {
-  const inputType = getColumnType(format);
 
   return (
     <Input
@@ -55,8 +53,8 @@ const DateTimeInput = ({
       optionalText={format}
       size="sm"
       value={value}
-      type={inputType}
-      step={inputType == "datetime-local" || inputType == "time" ? "1" : undefined}
+      type="datetime-local"
+      step={"1"}
       hasSuffix={
         !disabled && (
           <DropdownMenu>
@@ -70,13 +68,7 @@ const DateTimeInput = ({
               <DropdownMenuItem
                 onClick={() =>
                   onChange(
-                    dayjs().format(
-                      format === "date"
-                        ? "YYYY-MM-DD"
-                        : ["time", "timetz"].includes(format)
-                          ? "HH:mm:ss"
-                          : "YYYY-MM-DDTHH:mm:ss",
-                    ),
+                    dayjs().format("YYYY-MM-DDTHH:mm:ss"),
                   )
                 }
               >

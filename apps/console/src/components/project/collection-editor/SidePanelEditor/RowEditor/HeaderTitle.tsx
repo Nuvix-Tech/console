@@ -2,16 +2,16 @@ import { Code } from "@chakra-ui/react";
 
 interface HeaderTitleProps {
   isNewRecord: boolean;
-  tableName?: string;
+  collectionName?: string;
 }
 
-const HeaderTitle = ({ isNewRecord, tableName }: HeaderTitleProps) => {
-  let header = `${isNewRecord ? "Add new" : "Update"} row ${isNewRecord ? "to" : "from"} `;
+const HeaderTitle = ({ isNewRecord, collectionName }: HeaderTitleProps) => {
+  let header = `${isNewRecord ? "Add new" : "Update"} document ${isNewRecord ? "to" : "from"} `;
 
   return (
     <>
       {header}
-      {tableName && <Code>{tableName}</Code>}
+      {collectionName && <Code>{collectionName}</Code>}
     </>
   );
 };

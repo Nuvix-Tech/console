@@ -1,7 +1,6 @@
 import ActionBar from "../ActionBar";
 import HeaderTitle from "./HeaderTitle";
 import { useProjectStore } from "@/lib/store";
-import { useParams } from "next/navigation";
 import { SidePanel } from "@/ui/SidePanel";
 import type { Models } from "@nuvix/console";
 import {
@@ -24,7 +23,7 @@ export interface ColumnEditorProps {
   visible: boolean;
   closePanel: () => void;
   updateEditorDirty: () => void;
-  onSave: (resolve: any, column?: Models.AttributeString, error?: any) => Promise<void>;
+  onSave: (resolve: any, isNewRecord: boolean, column?: Models.AttributeString, error?: any) => Promise<void>;
 }
 
 const ColumnEditor = ({
@@ -35,8 +34,7 @@ const ColumnEditor = ({
   updateEditorDirty = () => {},
   onSave,
 }: ColumnEditorProps) => {
-  const { id: ref } = useParams();
-  const { project, sdk } = useProjectStore();
+  const { sdk } = useProjectStore();
   const editorState = useCollectionEditorStore();
   const snap = useCollectionEditorCollectionStateSnapshot();
 
@@ -44,8 +42,8 @@ const ColumnEditor = ({
   const [type, setType] = useState<Attributes | AttributeFormat | undefined>(initialType);
 
   const factory = useMemo(
-    () => new AttributeConfigFactory(sdk, { name: editorState.schema }, snap.collection),
-    [sdk, editorState.schema, snap.collection],
+    () => new AttributeConfigFactory(sdk, { name: editorState.schema }, snap.collection, column as any),
+    [sdk, editorState.schema, snap.collection, column],
   );
 
   const [formikConfig, setFormikConfig] = useState<
@@ -73,16 +71,18 @@ const ColumnEditor = ({
       ? { ...formikConfig?.initialValues, ...column }
       : formikConfig?.initialValues || {},
     validationSchema: formikConfig?.validationSchema,
-    onSubmit: async (values, { setSubmitting }) => {
+    onSubmit: async (values) => {
+      const isNewRecord = !column;
+      let _column;
       try {
-        // HREE WE GO----------------
-        setSubmitting(false);
-        // WE HAVE TO INVALIDATE CACHES,
-        onSave(() => {});
+        if (!isNewRecord) {
+          _column = await formikConfig?.updateAction(column.key, values);
+        } else {
+          _column = await formikConfig?.submitAction(values);
+        }
+        onSave(() => {}, isNewRecord, _column);
       } catch (error) {
-        // HERE WE HAVE TO SHOW TOAST
-        onSave(() => {}, undefined, error);
-        setSubmitting(false);
+        onSave(() => {}, isNewRecord, _column, error);
       }
     },
   });

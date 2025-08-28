@@ -2,26 +2,17 @@ import { AlignLeft } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
-import { isTableLike } from "@/data/table-editor/table-editor-types";
-import { useGetCellValueMutation } from "@/data/table-rows/get-cell-value-mutation";
-import { MAX_CHARACTERS } from "@nuvix/pg-meta/src/query/table-row-query";
 import { minifyJSON, prettifyJSON, removeJSONTrailingComma, tryParseJson } from "@/lib/helpers";
 import ActionBar from "../../ActionBar";
-import { isValueTruncated } from "../RowEditor.utils";
-import { DrilldownViewer } from "./DrilldownViewer";
-import JsonCodeEditor from "./JsonCodeEditor";
-import { useParams } from "next/navigation";
-import { useProjectStore } from "@/lib/store";
 import { SidePanel } from "@/ui/SidePanel";
-import { cn } from "@nuvix/sui/lib/utils";
-import { Button, IconButton } from "@nuvix/ui/components";
-import { TableParam } from "@/types";
+import { IconButton } from "@nuvix/ui/components";
 import { TwoOptionToggle } from "@/components/others/ui";
 import { Code } from "@chakra-ui/react";
+import JsonCodeEditor from "@/components/editor/SidePanelEditor/RowEditor/JsonEditor/JsonCodeEditor";
+import { DrilldownViewer } from "@/components/editor/SidePanelEditor/RowEditor/JsonEditor/DrilldownViewer";
 
 interface JsonEditProps {
-  row?: { [key: string]: any };
+  row?: { [key: string]: any; };
   column: string;
   visible: boolean;
   backButtonLabel?: string;
@@ -41,29 +32,10 @@ const JsonEdit = ({
   closePanel,
   onSaveJSON,
 }: JsonEditProps) => {
-  const { tableId: _id } = useParams<TableParam>();
-  const id = _id ? Number(_id) : undefined;
-  const { project, sdk } = useProjectStore();
-
-  const { data: selectedTable } = useTableEditorQuery({
-    projectRef: project?.$id,
-    sdk,
-    id,
-  });
-
   const [view, setView] = useState<"edit" | "view">("edit");
   const [jsonStr, setJsonStr] = useState("");
-  // sometimes the value is a JSON object if it was truncated, then fully loaded from the grid.
   const value = row?.[column as keyof typeof row] as unknown;
   const jsonString = typeof value === "object" ? JSON.stringify(value) : (value as string);
-  const isTruncated = isValueTruncated(jsonString);
-
-  const {
-    mutate: getCellValue,
-    isPending: isLoading,
-    isSuccess,
-    reset,
-  } = useGetCellValueMutation();
 
   const validateJSON = async (resolve: () => void) => {
     try {
@@ -81,38 +53,6 @@ const JsonEdit = ({
     setJsonStr(res);
   };
 
-  const loadFullValue = () => {
-    if (
-      selectedTable === undefined ||
-      project === undefined ||
-      row === undefined ||
-      !isTableLike(selectedTable)
-    )
-      return;
-    if (selectedTable.primary_keys.length === 0) {
-      return toast("Unable to load value as table has no primary keys");
-    }
-
-    const pkMatch = selectedTable.primary_keys.reduce((a, b) => {
-      return { ...a, [b.name]: (row as any)[b.name] };
-    }, {});
-
-    getCellValue(
-      {
-        table: { schema: selectedTable.schema, name: selectedTable.name },
-        column: column,
-        pkMatch,
-        projectRef: project?.$id,
-        sdk,
-      },
-      {
-        onSuccess: (data) => {
-          setJsonStr(JSON.stringify(data));
-        },
-      },
-    );
-  };
-
   useEffect(() => {
     if (visible) {
       const temp = prettifyJSON(jsonString);
@@ -120,12 +60,9 @@ const JsonEdit = ({
     }
   }, [visible]);
 
-  // reset the mutation when the panel closes. Fixes an issue where the value is truncated if you close and reopen the
-  // panel again
   const onClose = useCallback(() => {
-    reset();
     closePanel();
-  }, [reset]);
+  }, []);
 
   return (
     <SidePanel
@@ -141,25 +78,23 @@ const JsonEdit = ({
               Viewing JSON Field: <Code>{column}</Code>
             </p>
           )}
-          {(!isTruncated || (isTruncated && isSuccess)) && (
-            <div className="flex items-center gap-x-2">
-              {view === "edit" && (
-                <IconButton
-                  variant="ghost"
-                  icon={<AlignLeft size={18} />}
-                  onClick={() => prettify()}
-                  tooltip={"Prettify JSON"}
-                  tooltipPosition="bottom"
-                />
-              )}
-              <TwoOptionToggle
-                size="xs"
-                options={["view", "edit"]}
-                activeOption={view}
-                onClickOption={setView}
+          <div className="flex items-center gap-x-2">
+            {view === "edit" && (
+              <IconButton
+                variant="ghost"
+                icon={<AlignLeft size={18} />}
+                onClick={() => prettify()}
+                tooltip={"Prettify JSON"}
+                tooltipPosition="bottom"
               />
-            </div>
-          )}
+            )}
+            <TwoOptionToggle
+              size="xs"
+              options={["view", "edit"]}
+              activeOption={view}
+              onClickOption={setView}
+            />
+          </div>
         </div>
       }
       visible={visible}
@@ -186,26 +121,6 @@ const JsonEdit = ({
           </div>
         ) : (
           <DrilldownViewer jsonData={tryParseJson(jsonStr)} />
-        )}
-        {isTruncated && !isSuccess && (
-          <div
-            className={cn(
-              "absolute top-0 left-0 flex items-center justify-center flex-col gap-y-3",
-              "text-sm w-full h-full px-2 text-center",
-              "bg-default/80 backdrop-blur-[1.5px]",
-            )}
-          >
-            <div className="flex flex-col gap-y-1 w-80">
-              <p>JSON value is larger than {MAX_CHARACTERS.toLocaleString()} characters</p>
-              <p className="text-foreground-light">
-                You may try to render the entire JSON value, but your browser may run into
-                performance issues
-              </p>
-            </div>
-            <Button type="default" loading={isLoading} onClick={loadFullValue}>
-              Load full JSON data
-            </Button>
-          </div>
         )}
       </div>
     </SidePanel>

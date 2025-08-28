@@ -1,15 +1,12 @@
-import type { PostgresTable } from "@nuvix/pg-meta";
 import { isEmpty, noop, partition } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 
-import { useForeignKeyConstraintsQuery } from "@/data/database/foreign-key-constraints-query";
 import ActionBar from "../ActionBar";
-import { formatForeignKeys } from "../ForeignKeySelector/ForeignKeySelector.utils";
 import ForeignRowSelector from "./ForeignRowSelector/ForeignRowSelector";
 import HeaderTitle from "./HeaderTitle";
 import InputField from "./InputField";
 import { JsonEditor } from "./JsonEditor";
-import type { EditValue, RowField } from "./RowEditor.types";
+import type { EditValue } from "./RowEditor.types";
 import {
   convertByteaToHex,
   generateRowFields,
@@ -20,10 +17,11 @@ import {
 import { TextEditor } from "./TextEditor";
 import { useProjectStore } from "@/lib/store";
 import { SidePanel } from "@/ui/SidePanel";
+import type { Models } from "@nuvix/console";
 
 export interface RowEditorProps {
-  row?: Dictionary<any>;
-  selectedTable: PostgresTable;
+  row?: Models.Document;
+  selectedCollection: Models.Collection;
   visible: boolean;
   editable?: boolean;
   closePanel: () => void;
@@ -38,7 +36,7 @@ export interface RowEditorProps {
 
 const RowEditor = ({
   row,
-  selectedTable,
+  selectedCollection,
   visible = false,
   editable = true,
   closePanel = noop,
@@ -110,7 +108,7 @@ const RowEditor = ({
     setReferenceRow(row);
   };
 
-  const onSelectForeignRowValue = (value?: { [key: string]: any }) => {
+  const onSelectForeignRowValue = (value?: { [key: string]: any; }) => {
     if (referenceRow !== undefined && value !== undefined) {
       onUpdateField(value);
     }
@@ -169,9 +167,8 @@ const RowEditor = ({
       key="RowEditor"
       visible={visible}
       header={<HeaderTitle isNewRecord={isNewRecord} tableName={selectedTable.name} />}
-      className={`transition-all duration-100 ease-in ${
-        isEditingText || isEditingJson || isSelectingForeignKey ? " mr-32" : ""
-      }`}
+      className={`transition-all duration-100 ease-in ${isEditingText || isEditingJson || isSelectingForeignKey ? " mr-32" : ""
+        }`}
       onCancel={closePanel}
     >
       <form onSubmit={(e) => onSaveChanges(e)} className="h-full">

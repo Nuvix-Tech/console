@@ -1,321 +1,269 @@
-import { includes, noop } from "lodash";
-import { Edit, Edit2, Eye } from "lucide-react";
-
+import React from "react";
+import { HStack, Button, Input as ChakraInput } from "@chakra-ui/react";
+import { useFormikContext } from "formik";
+import { Field } from "@nuvix/cui/field";
+import { DateInput, Input, NumberInput, Select, Textarea } from "@nuvix/ui/components";
+import { CloseButton } from "@nuvix/cui/close-button";
+import { LuPlus } from "react-icons/lu";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@nuvix/sui/components/dropdown-menu";
-import { Button, IconButton } from "@nuvix/ui/components";
-import { DATETIME_TYPES, JSON_TYPES, TEXT_TYPES } from "../SidePanelEditor.constants";
-import { DateTimeInput } from "./DateTimeInput";
-import type { EditValue, RowField } from "./RowEditor.types";
-import { isValueTruncated } from "./RowEditor.utils";
-import { Input, Select, Textarea } from "@/components/others/ui";
+  AttributeFormat,
+  Attributes,
+} from "../ColumnEditor/utils";
+import { AttributeIcon } from "../ColumnEditor/_attribute_icon";
 
-export interface InputFieldProps {
-  field: RowField;
-  errors: any;
-  isEditable?: boolean;
-  onUpdateField?: (changes: object) => void;
-  onEditJson?: (data: any) => void;
-  onEditText?: (data: EditValue) => void;
-  onSelectForeignKey?: () => void;
-}
+type BaseFieldProps = {
+  name: string;
+  label?: string;
+  size?: number;
+  nullable?: boolean;
+  isArray?: boolean;
+  min?: number;
+  max?: number;
+  showAbout?: boolean;
+  [key: string]: any;
+};
 
-const InputField = ({
-  field,
-  errors,
-  isEditable = true,
-  onUpdateField = noop,
-  onEditJson = noop,
-  onEditText = noop,
-  onSelectForeignKey = noop,
-}: InputFieldProps) => {
-  if (field.enums.length > 0) {
-    const isArray = field.format[0] === "_";
+type EnumFieldProps = BaseFieldProps & {
+  type: AttributeFormat.Enum;
+  options: { value: string; label: string; }[];
+};
+
+type RelationshipFieldProps = BaseFieldProps & {
+  type: Attributes.Relationship;
+  options: { value: string; label: string; }[];
+};
+
+type ScalarFieldProps = BaseFieldProps & {
+  type: Attributes | AttributeFormat;
+  options?: never;
+};
+
+type Props = EnumFieldProps | RelationshipFieldProps | ScalarFieldProps;
+
+export const DynamicField = (props: Props) => {
+  const {
+    name,
+    isArray,
+    type = Attributes.String,
+    options = [],
+    nullable,
+    label,
+    showAbout,
+    ...rest
+  } = props;
+  const { values, errors, touched, setFieldValue, setFieldTouched } =
+    useFormikContext<Record<string, any>>();
+  const id = React.useId();
+
+  const handleChange = (index: number, value: string | number | boolean | null) => {
     if (isArray) {
-      return (
-        <div className="text-area-text-sm">
-          <Textarea
-            data-testid={`${field.name}-input`}
-            orientation="horizontal"
-            label={field.name}
-            className="text-sm"
-            helperText={field.comment}
-            optionalText={field.format}
-            disabled={!isEditable}
-            errorText={errors[field.name]}
-            rows={5}
-            value={field.value ?? ""}
-            placeholder={
-              field.defaultValue === null
-                ? ""
-                : typeof field.defaultValue === "string" && field.defaultValue.length === 0
-                  ? "EMPTY"
-                  : `Default: ${field.defaultValue}`
-            }
-            onChange={(event: any) => onUpdateField({ [field.name]: event.target.value })}
-          />
-        </div>
-      );
+      const newArray = values[name] ? [...values[name]] : [];
+      newArray[index] = value;
+      setFieldValue(name, newArray);
     } else {
-      return (
-        <Select
-          size="md"
-          orientation="horizontal"
-          value={field.value ?? ""}
-          label={field.name}
-          placeholder="---"
-          optionalText={field.format}
-          helperText={field.comment}
-          disabled={!isEditable}
-          errorText={errors[field.name]}
-          onValueChange={(value) => onUpdateField({ [field.name]: value })}
-          options={[...field.enums.map((value: string) => ({ value, label: value }))]}
-        />
-      );
+      setFieldValue(name, value);
     }
-  }
+  };
 
-  if (field.foreignKey !== undefined) {
-    return (
-      <Input
-        data-testid={`${field.name}-input`}
-        orientation="horizontal"
-        placeholder="NULL"
-        label={field.name}
-        value={field.value ?? ""}
-        helperText={
-          <>
-            {field.comment && (
-              <span className="text-sm text-foreground-lighter">{field.comment} </span>
-            )}
-            <span className="text-sm text-foreground-lighter">
-              {field.comment && "("}Has a foreign key relation to
-            </span>
-            <span className="text-code font-mono text-xs text-foreground-lighter">
-              {field.foreignKey.target_table_schema}.{field.foreignKey.target_table_name}.
-              {field.foreignKey.target_column_name}
-            </span>
-            {field.comment && <span className="text-sm text-foreground-lighter">{`)`}</span>}
-          </>
-        }
-        optionalText={field.format}
-        disabled={!isEditable}
-        errorText={errors[field.name]}
-        onChange={(event: any) => onUpdateField({ [field.name]: event.target.value })}
-        hasSuffix={
-          isEditable && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <IconButton size="s" type="default" icon={<Edit size={14} />} variant="secondary" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-28">
-                {field.isNullable && (
-                  <DropdownMenuItem onClick={() => onUpdateField({ [field.name]: null })}>
-                    Set to NULL
-                  </DropdownMenuItem>
-                )}
-                <DropdownMenuItem onClick={onSelectForeignKey}>Select record</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )
-        }
-      />
-    );
-  }
+  const handleAddField = () => {
+    if (isArray) {
+      setFieldValue(name, [...(values[name] || []), ""]);
+    }
+  };
 
-  if (includes(TEXT_TYPES, field.format)) {
-    const isTruncated = isValueTruncated(field.value);
+  const handleRemoveField = (index: number) => {
+    if (isArray) {
+      const newArray = values[name]?.filter((_: any, i: number) => i !== index) || [];
+      setFieldValue(name, newArray);
+    }
+  };
 
-    return (
-      <div className="text-area-text-sm">
-        <Textarea
-          data-testid={`${field.name}-input`}
-          orientation="horizontal"
-          label={field.name}
-          className="text-sm"
-          resize="vertical"
-          helperText={
-            <>
-              {field.comment && <p>{field.comment}</p>}
-              {isTruncated && (
-                <p>
-                  Note: Value is too large to be rendered in the dashboard. Please expand the editor
-                  to edit the value
-                </p>
-              )}
-            </>
-          }
-          // textAreaClassName="pr-8"
-          optionalText={field.format}
-          disabled={!isEditable || isTruncated}
-          errorText={errors[field.name]}
-          rows={5}
-          value={field.value ?? ""}
-          placeholder={
-            field.value === null && field.defaultValue === null
-              ? "NULL"
-              : field.value === ""
-                ? "EMPTY"
-                : typeof field.defaultValue === "string" && field.defaultValue.length === 0
-                  ? "EMPTY"
-                  : `NULL (Default: ${field.defaultValue})`
-          }
-          hasSuffix={
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <IconButton size="s" variant="secondary" type="default" icon={<Edit size={14} />} />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-28">
-                {isEditable && (
-                  <DropdownMenuItem onClick={() => onUpdateField({ [field.name]: null })}>
-                    Set to NULL
-                  </DropdownMenuItem>
-                )}
-                <DropdownMenuItem
-                  onClick={() => onEditText({ column: field.name, value: field.value || "" })}
-                >
-                  Expand editor
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          }
-          onChange={(event) => onUpdateField({ [field.name]: event.target.value })}
+  const commonProps: any = {
+    maxLength: props.size,
+    ...rest,
+  };
+
+  const getFieldComponent = () => {
+    switch (type) {
+      case Attributes.Float:
+      case Attributes.Integer:
+        return NumberField;
+      case Attributes.Boolean:
+        return SelectBooleanField;
+      case Attributes.Timestamptz:
+        return DateTimeField;
+      case Attributes.Relationship:
+        return RelationshipField;
+      case AttributeFormat.Enum:
+        return SelectField;
+      case Attributes.String:
+      case AttributeFormat.Email:
+      case AttributeFormat.Url:
+      case AttributeFormat.Ip:
+      default:
+        return TextareaField;
+    }
+  };
+
+  const FieldComponent = getFieldComponent();
+
+  const renderArrayField = (FieldComponent: React.FC<any>) =>
+    values[name]?.map((item: any, index: number) => (
+      <HStack width="full" key={index}>
+        <FieldComponent
+          {...commonProps}
+          isNull={item === null}
+          value={item}
+          onChange={(e: any) => handleChange(index, e.target.value)}
+          onBlur={() => setFieldTouched(name, true)}
+          options={options}
+          nullable={nullable}
+          index={index}
         />
-      </div>
-    );
-  }
-
-  if (includes(JSON_TYPES, field.format)) {
-    const isTruncated = isValueTruncated(field.value);
-
-    return (
-      <Input
-        data-testid={`${field.name}-input`}
-        orientation="horizontal"
-        value={field.value ?? ""}
-        label={field.name}
-        helperText={
-          <>
-            {field.comment && <p>{field.comment}</p>}
-            {isTruncated && (
-              <p>
-                Note: Value is too large to be rendered in the dashboard. Please expand the editor
-                to edit the value
-              </p>
-            )}
-          </>
-        }
-        optionalText={field.format}
-        disabled={!isEditable || isTruncated}
-        placeholder={field?.defaultValue ?? "NULL"}
-        errorText={errors[field.name]}
-        onChange={(event: any) => onUpdateField({ [field.name]: event.target.value })}
-        hasSuffix={
-          <Button
-            type="button"
-            size="s"
-            variant="secondary"
-            onClick={() => onEditJson({ column: field.name, value: field.value })}
-            prefixIcon={isEditable ? <Edit2 size={14} /> : <Eye size={14} />}
-          >
-            {isEditable ? "Edit JSON" : "View JSON"}
-          </Button>
-        }
-      />
-    );
-  }
-
-  if (includes(DATETIME_TYPES, field.format)) {
-    return (
-      <DateTimeInput
-        name={field.name}
-        format={field.format}
-        value={field.value ?? ""}
-        isNullable={field.isNullable}
-        description={
-          <>
-            {field.defaultValue && <p>Default: {field.defaultValue}</p>}
-            {field.comment && <p>{field.comment}</p>}
-          </>
-        }
-        onChange={(value: any) => onUpdateField({ [field.name]: value })}
-        disabled={!isEditable}
-      />
-    );
-  }
-
-  if (field.format === "bool") {
-    const options = [
-      { value: "true", label: "TRUE" },
-      { value: "false", label: "FALSE" },
-      ...(field.isNullable ? [{ value: "null", label: "NULL" }] : []),
-    ];
-
-    const defaultValue = field.value === null ? undefined : field.value;
-
-    return (
-      <Select
-        size="md"
-        orientation="horizontal"
-        value={field.value === null ? "null" : field.value}
-        label={field.name}
-        placeholder="---"
-        optionalText={field.format}
-        helperText={field.comment}
-        disabled={!isEditable}
-        errorText={errors[field.name]}
-        onValueChange={(value) => onUpdateField({ [field.name]: value === "null" ? null : value })}
-        options={options.map((option) => ({ value: option.value, label: option.label }))}
-      />
-    );
-  }
-
-  if (field.format === "bytea") {
-    return (
-      <Input
-        data-testid={`${field.name}-input`}
-        orientation="horizontal"
-        label={field.name}
-        helperText={
-          <>
-            {field.comment && <p>{field.comment}</p>}
-            <p>Bytea columns are edited and displayed as hex in the dashboard</p>
-          </>
-        }
-        optionalText={field.format}
-        errorText={errors[field.name]}
-        value={field.value ?? ""}
-        placeholder={`\\x`}
-        disabled={!isEditable}
-        onChange={(event: any) => onUpdateField({ [field.name]: event.target.value })}
-      />
-    );
-  }
+        <CloseButton onClick={() => handleRemoveField(index)} />
+      </HStack>
+    ));
 
   return (
-    <Input
-      data-testid={`${field.name}-input`}
-      orientation="horizontal"
-      label={field.name}
-      helperText={field.comment}
-      optionalText={field.format}
-      errorText={errors[field.name]}
-      value={field.value ?? ""}
-      placeholder={
-        field.isIdentity
-          ? "Automatically generated as identity"
-          : field.defaultValue !== null
-            ? `Default: ${field.defaultValue}`
-            : "NULL"
+    <Field
+      ids={{
+        root: id,
+        errorText: `${id}-error`,
+        label: `${id}-label`,
+        control: `${id}-input`,
+      }}
+      errorText={errors[name] && touched[name] ? (errors[name] as string) : undefined}
+      invalid={!!errors[name] && !!touched[name]}
+      label={
+        <div className="flex items-center gap-2">
+          {showAbout && <>{AttributeIcon({ format: type }, isArray, 12, "size-6")}</>}
+          {label ?? name}
+        </div>
       }
-      disabled={!isEditable}
-      onChange={(event: any) => onUpdateField({ [field.name]: event.target.value })}
-    />
+      required={!nullable}
+    >
+      {isArray ? (
+        renderArrayField(FieldComponent)
+      ) : (
+        <FieldComponent
+          {...commonProps}
+          isNull={values[name] === null}
+          value={values[name]}
+          onChange={(e: any) => handleChange(0, e.target.value)}
+          options={options}
+          nullable={nullable}
+          onBlur={() => setFieldTouched(name, true)}
+        />
+      )}
+
+      {isArray && (
+        <Button size="sm" onClick={handleAddField} variant="ghost">
+          <LuPlus size={20} /> Add Item
+        </Button>
+      )}
+    </Field>
   );
 };
 
-export default InputField;
+type FieldProps = {
+  value: any;
+  onChange: (event: { target: { value: any; }; }) => void;
+  isNull?: boolean;
+  nullable?: boolean;
+  maxLength?: number;
+  onBlur?: (event: React.FocusEvent) => void;
+  index?: number;
+};
+
+type SelectFieldProps = FieldProps & {
+  name: string;
+  options: Array<{ value: string; label: string; }>;
+} & Partial<React.ComponentProps<typeof Select>>;
+
+// Text input / textarea
+const TextareaField = ({ value, onChange, maxLength, ...props }: FieldProps) =>
+  maxLength && maxLength > 50 ? (
+    <Textarea
+      lines={5}
+      placeholder="Start typing..."
+      maxLength={maxLength}
+      {...props}
+      value={value ?? ""}
+      onChange={onChange}
+    />
+  ) : (
+    <Input
+      labelAsPlaceholder
+      placeholder="Enter value"
+      maxLength={maxLength}
+      {...props}
+      value={value ?? ""}
+      onChange={onChange}
+    />
+  );
+
+// Numeric input
+const NumberField = ({ value, onChange, ...props }: FieldProps) => (
+  <NumberInput
+    {...props}
+    value={value}
+    labelAsPlaceholder
+    onChange={(v: number | null) => onChange({ target: { value: v } })}
+  />
+);
+
+// Select field factory
+const makeSelectField =
+  (baseOptions: Array<{ value: string; label: string; }>) =>
+    ({ value, onChange, options = [], nullable, ...props }: SelectFieldProps) => {
+      const _onChange = (v: string) => {
+        if ((v === null || v === "null") && nullable) {
+          onChange({ target: { value: null } });
+        } else {
+          onChange({ target: { value: v } });
+        }
+      };
+
+      const finalOptions = nullable
+        ? [{ value: "null", label: "NULL" }, ...baseOptions, ...options]
+        : [...baseOptions, ...options];
+
+      return (
+        <Select
+          {...props}
+          labelAsPlaceholder
+          value={value == null ? "null" : value}
+          options={finalOptions}
+          onSelect={_onChange}
+        />
+      );
+    };
+
+// Concrete select fields
+export const SelectField = makeSelectField([]);
+const SelectBooleanField = makeSelectField([
+  { value: "true", label: "True" },
+  { value: "false", label: "False" },
+]);
+
+// Relationship (async-ready)
+const RelationshipField = ({ value, onChange, options, ...props }: SelectFieldProps) => (
+  <Select
+    {...props}
+    value={value ?? ""}
+    options={options}
+    onSelect={(v: string) => onChange({ target: { value: v } })}
+  />
+);
+
+const DateTimeField = ({ value, onChange, ...props }: FieldProps) => (
+  <DateInput
+    id={`idx_${props.index}`}
+    labelAsPlaceholder
+    label=""
+    timePicker
+    value={value ? new Date(value) : undefined}
+    onChange={(d) => onChange({ target: { value: d } })}
+    {...props}
+  />
+);
