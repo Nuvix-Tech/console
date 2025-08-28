@@ -3,7 +3,7 @@ import { useCollectionStore, useDatabaseStore, useProjectStore } from "@/lib/sto
 import { Column, useToast } from "@nuvix/ui/components";
 import * as y from "yup";
 import { DynamicField } from "../document/components";
-import { AttributeFormat } from "../document/components/_utils";
+import { AttributeFormat } from "../../../../collection-editor/SidePanelEditor/ColumnEditor/utils";
 
 interface CreateIndexProps {
   onClose: () => void;

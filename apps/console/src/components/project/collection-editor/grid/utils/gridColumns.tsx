@@ -17,7 +17,7 @@ import {
   AttributeFormat,
   Attributes,
   AttributeTypes,
-} from "@/components/project/schema/single/collection/document/components/_utils";
+} from "@/components/project/collection-editor/SidePanelEditor/ColumnEditor/utils";
 import { IDChip } from "@/components/others";
 import type { PropsWithChildren } from "react";
 

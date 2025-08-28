@@ -24,11 +24,6 @@ import JsonEditor from "./RowEditor/JsonEditor/JsonEditor";
 import RowEditor from "./RowEditor/RowEditor";
 import { convertByteaToHex } from "./RowEditor/RowEditor.utils";
 import { TextEditor } from "./RowEditor/TextEditor";
-import type {
-  ColumnField,
-  CreateColumnPayload,
-  UpdateColumnPayload,
-} from "./SidePanelEditor.types";
 import {
   createCollection,
   insertRowsViaSpreadsheet,
@@ -73,12 +68,6 @@ const SidePanelEditor = ({
 
   const [isEdited, setIsEdited] = useState<boolean>(false);
   const [isClosingPanel, setIsClosingPanel] = useState<boolean>(false);
-
-  const enumArrayColumns = (selectedCollection?.columns ?? [])
-    .filter((column) => {
-      return (column?.enums ?? []).length > 0 && column.data_type.toLowerCase() === "array";
-    })
-    .map((column) => column.name);
 
   const { mutateAsync: createTableRows } = useTableRowCreateMutation({
     onSuccess() {
@@ -209,81 +198,40 @@ const SidePanelEditor = ({
   //   } catch (error) {}
   // };
 
-  const saveColumn = async (
-    payload: CreateColumnPayload | UpdateColumnPayload,
-    isNewRecord: boolean,
-    configuration: {
-      columnId?: string;
-      primaryKey?: Constraint;
-      foreignKeyRelations: ForeignKey[];
-      existingForeignKeyRelations: ForeignKeyConstraint[];
-    },
-    resolve: any,
-  ) => {
+  const saveColumn = async (resolve: any, column?: Models.AttributeString, error?: any) => {
     const selectedColumnToEdit = snap.sidePanel?.type === "column" && snap.sidePanel.column;
-    const { columnId, primaryKey, foreignKeyRelations, existingForeignKeyRelations } =
-      configuration;
-
     if (!project || selectedCollection === undefined) {
       return console.error("no project or table selected");
     }
 
-    const response: any = isNewRecord
-      ? await createColumn({
-          projectRef: project?.$id!,
-          sdk,
-          payload: payload as CreateColumnPayload,
-          selectedCollection,
-          primaryKey,
-          foreignKeyRelations,
-        })
-      : await updateColumn({
-          projectRef: project?.$id!,
-          sdk,
-          id: columnId as string,
-          payload: payload as UpdateColumnPayload,
-          selectedCollection,
-          primaryKey,
-          foreignKeyRelations,
-          existingForeignKeyRelations,
-        });
-
-    if (response?.error) {
-      toast.error(response.error.message);
+    if (error) {
+      toast.error(error.message);
     } else {
-      if (
-        !isNewRecord &&
-        payload.name &&
-        selectedColumnToEdit &&
-        selectedColumnToEdit.name !== payload.name
-      ) {
-        reAddRenamedColumnSortAndFilter(selectedColumnToEdit.name, payload.name);
-      }
+      // if (
+      //   !isNewRecord &&
+      //   payload.name &&
+      //   selectedColumnToEdit &&
+      //   selectedColumnToEdit.name !== payload.name
+      // ) {
+      //   reAddRenamedColumnSortAndFilter(selectedColumnToEdit.name, payload.name);
+      // }
 
       await Promise.all([
         queryClient.invalidateQueries({
-          queryKey: tableEditorKeys.tableEditor(project?.$id, selectedCollection?.id),
+          queryKey: collectionKeys.editor(project?.$id, snap.schema, selectedCollection?.$id),
         }),
-        queryClient.invalidateQueries({
-          queryKey: databaseKeys.foreignKeyConstraints(project?.$id, selectedCollection?.schema),
-        }),
-        queryClient.invalidateQueries({
-          queryKey: databaseKeys.tableDefinition(project?.$id, selectedCollection?.id),
-        }),
-        queryClient.invalidateQueries({ queryKey: entityTypeKeys.list(project?.$id) }),
+        queryClient.invalidateQueries({ queryKey: collectionKeys.list(project?.$id) }),
       ]);
 
       // // We need to invalidate tableRowsAndCount after tableEditor
       // // to ensure the query sent is correct
       await queryClient.invalidateQueries({
-        queryKey: tableRowKeys.tableRowsAndCount(project?.$id, selectedCollection?.id),
+        queryKey: collectionKeys.documentsCount(project?.$id, snap.schema, selectedCollection?.$id),
       });
 
       setIsEdited(false);
       snap.closeSidePanel();
     }
-
-    resolve();
   };
 
   const { setParams } = useTableEditorFiltersSort();
@@ -420,17 +368,17 @@ const SidePanelEditor = ({
           saveChanges={saveRow}
           updateEditorDirty={() => setIsEdited(true)}
         />
-      )}
+      )} */}
       {!isUndefined(selectedCollection) && (
         <ColumnEditor
-          column={snap.sidePanel?.type === "column" ? (snap.sidePanel.column as any) : undefined}
+          column={snap.sidePanel?.type === "column" ? snap.sidePanel.column : undefined}
           selectedCollection={selectedCollection}
           visible={snap.sidePanel?.type === "column"}
           closePanel={onClosePanel}
-          saveChanges={saveColumn}
+          onSave={saveColumn}
           updateEditorDirty={() => setIsEdited(true)}
         />
-      )} */}
+      )}
       <TableEditor
         collection={
           snap.sidePanel?.type === "table" &&

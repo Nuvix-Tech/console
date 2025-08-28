@@ -123,9 +123,9 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
             <SelectTrigger ref={ref}>
               <SelectValueText placeholder={placeholder ?? "---"} />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="!bg-popover backdrop-blur-md">
               {collection.items.map((option, id) => (
-                <SelectItem key={id} item={option} className="flex items-center gap-2">
+                <SelectItem key={id} item={option} className="flex items-center gap-2 !rounded-xl">
                   <div className="flex gap-2 justify-start items-center">
                     {option.icon && <span>{option.icon}</span>}
                     <div className="flex flex-col">

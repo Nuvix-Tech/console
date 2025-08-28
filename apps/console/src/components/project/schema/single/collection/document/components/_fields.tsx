@@ -6,7 +6,10 @@ import { DateInput, Input, NumberInput, Select, Textarea } from "@nuvix/ui/compo
 import { CloseButton } from "@nuvix/cui/close-button";
 import { LuPlus } from "react-icons/lu";
 import { AttributeIcon } from "../../components";
-import { AttributeFormat, Attributes } from "./_utils";
+import {
+  AttributeFormat,
+  Attributes,
+} from "../../../../../collection-editor/SidePanelEditor/ColumnEditor/utils";
 
 type BaseFieldProps = {
   name: string;

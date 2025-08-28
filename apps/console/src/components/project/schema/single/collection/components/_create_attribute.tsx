@@ -19,9 +19,9 @@ import {
   RelationshipAttributeForm,
   StringAttributeForm,
   UrlAttributeForm,
-} from "./_attribute_forms";
+} from "../../../../collection-editor/SidePanelEditor/ColumnEditor/_attribute_forms";
 import { Button } from "@nuvix/ui/components";
-import { AttributeIcon } from "./_attribute_icon";
+import { AttributeIcon } from "../../../../collection-editor/SidePanelEditor/ColumnEditor/_attribute_icon";
 
 const attributeTypes = [
   { label: "String", value: "string" },

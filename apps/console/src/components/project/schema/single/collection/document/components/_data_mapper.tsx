@@ -1,7 +1,12 @@
 import { Models } from "@nuvix/console";
 import { UpdateField } from "./_data_field";
 import { DynamicField } from ".";
-import { generateYupSchema, type AttributeTypes, Attributes, AttributeFormat } from "./_utils";
+import {
+  generateYupSchema,
+  type AttributeTypes,
+  Attributes,
+  AttributeFormat,
+} from "../../../../../collection-editor/SidePanelEditor/ColumnEditor/utils";
 import React from "react";
 
 interface DataMapperProps<T = Models.Document> {

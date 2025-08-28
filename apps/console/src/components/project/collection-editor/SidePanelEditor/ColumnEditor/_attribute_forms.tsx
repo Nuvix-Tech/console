@@ -12,11 +12,11 @@ import * as y from "yup";
 import { AttributeIcon, RelationshipIcon } from "./_attribute_icon";
 import { useFormikContext } from "formik";
 import { useEffect } from "react";
-import { DynamicField, SelectField } from "../document/components";
+import { DynamicField, SelectField } from "../../../schema/single/collection/document/components";
 import { useQuery } from "@tanstack/react-query";
 import { RadioCardItem, RadioCardRoot } from "@nuvix/cui/radio-card";
 import { MoveHorizontal, MoveRight } from "lucide-react";
-import { AttributeFormat, Attributes } from "../document/components/_utils";
+import { AttributeFormat, Attributes } from "./utils";
 
 interface BaseProps {
   onClose: () => void;

@@ -15,7 +15,10 @@ import {
   useDocumentStore,
   useProjectStore,
 } from "@/lib/store";
-import { AttributeFormat, Attributes } from "./_utils";
+import {
+  AttributeFormat,
+  Attributes,
+} from "../../../../../collection-editor/SidePanelEditor/ColumnEditor/utils";
 
 interface Props {
   name: string;

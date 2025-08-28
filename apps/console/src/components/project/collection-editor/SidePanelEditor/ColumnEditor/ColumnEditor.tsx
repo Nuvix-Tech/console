@@ -1,382 +1,131 @@
-import type { PostgresColumn, PostgresTable } from "@nuvix/pg-meta";
-import { isEmpty, noop } from "lodash";
-import { ExternalLink, Plus } from "lucide-react";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-
-import { FormSection, FormSectionContent, FormSectionLabel } from "@/ui/Forms/FormSection";
-import {
-  CONSTRAINT_TYPE,
-  Constraint,
-  useTableConstraintsQuery,
-} from "@/data/database/constraints-query";
-import {
-  ForeignKeyConstraint,
-  useForeignKeyConstraintsQuery,
-} from "@/data/database/foreign-key-constraints-query";
-import { useEnumeratedTypesQuery } from "@/data/enumerated-types/enumerated-types-query";
-import { PROTECTED_SCHEMAS_WITHOUT_EXTENSIONS } from "@/lib/constants/schemas";
 import ActionBar from "../ActionBar";
-import type { ForeignKey } from "../ForeignKeySelector/ForeignKeySelector.types";
-import { formatForeignKeys } from "../ForeignKeySelector/ForeignKeySelector.utils";
-import { TEXT_TYPES } from "../SidePanelEditor.constants";
-import type {
-  ColumnField,
-  CreateColumnPayload,
-  UpdateColumnPayload,
-} from "../SidePanelEditor.types";
-import ColumnDefaultValue from "./ColumnDefaultValue";
-import {
-  generateColumnField,
-  generateColumnFieldFromPostgresColumn,
-  generateCreateColumnPayload,
-  generateUpdateColumnPayload,
-  getPlaceholderText,
-  validateFields,
-} from "./ColumnEditor.utils";
-import ColumnForeignKey from "./ColumnForeignKey";
-import ColumnType from "./ColumnType";
 import HeaderTitle from "./HeaderTitle";
-import { Dictionary } from "@/components/grid/types";
 import { useProjectStore } from "@/lib/store";
 import { useParams } from "next/navigation";
 import { SidePanel } from "@/ui/SidePanel";
-import { Button, Checkbox, Switch } from "@nuvix/ui/components";
-import { Input } from "@/components/others/ui";
+import type { Models } from "@nuvix/console";
+import {
+  ATTRIBUTES,
+  type AttributeFormat,
+  type AttributeTypes,
+  Attributes,
+} from "@/components/project/collection-editor/SidePanelEditor/ColumnEditor/utils";
+import { useFormik } from "formik";
+import { AttributeIcon } from "./_attribute_icon";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Select } from "@/components/others/ui";
+import { AttributeConfigFactory } from "./ColumnConfig";
+import { useCollectionEditorStore } from "@/lib/store/collection-editor";
+import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 
 export interface ColumnEditorProps {
-  column?: Readonly<PostgresColumn>;
-  selectedTable: PostgresTable;
+  column?: Readonly<AttributeTypes>;
+  selectedCollection: Models.Collection;
   visible: boolean;
   closePanel: () => void;
-  saveChanges: (
-    payload: CreateColumnPayload | UpdateColumnPayload,
-    isNewRecord: boolean,
-    configuration: {
-      columnId?: string;
-      primaryKey?: Constraint;
-      foreignKeyRelations: ForeignKey[];
-      existingForeignKeyRelations: ForeignKeyConstraint[];
-    },
-    resolve: any,
-  ) => void;
   updateEditorDirty: () => void;
+  onSave: (resolve: any, column?: Models.AttributeString, error?: any) => Promise<void>;
 }
 
 const ColumnEditor = ({
   column,
-  selectedTable,
+  selectedCollection,
   visible = false,
-  closePanel = noop,
-  saveChanges = noop,
-  updateEditorDirty = noop,
+  closePanel = () => {},
+  updateEditorDirty = () => {},
+  onSave,
 }: ColumnEditorProps) => {
   const { id: ref } = useParams();
   const { project, sdk } = useProjectStore();
+  const editorState = useCollectionEditorStore();
+  const snap = useCollectionEditorCollectionStateSnapshot();
 
-  const [errors, setErrors] = useState<Dictionary<any>>({});
-  const [columnFields, setColumnFields] = useState<ColumnField>();
-  const [fkRelations, setFkRelations] = useState<ForeignKey[]>([]);
-  const [placeholder, setPlaceholder] = useState(
-    getPlaceholderText(columnFields?.format, columnFields?.name),
+  const initialType = column?.type as Attributes | AttributeFormat | undefined;
+  const [type, setType] = useState<Attributes | AttributeFormat | undefined>(initialType);
+
+  const factory = useMemo(
+    () => new AttributeConfigFactory(sdk, { name: editorState.schema }, snap.collection),
+    [sdk, editorState.schema, snap.collection],
   );
 
-  const { data: types } = useEnumeratedTypesQuery({
-    projectRef: project?.$id,
-    sdk,
-  });
-  const enumTypes = (types ?? []).filter(
-    (type: any) => !PROTECTED_SCHEMAS_WITHOUT_EXTENSIONS.includes(type.schema),
-  );
-
-  const { data: constraints } = useTableConstraintsQuery({
-    projectRef: project?.$id,
-    sdk,
-    id: selectedTable?.id,
-  });
-  const primaryKey = (constraints ?? []).find(
-    (constraint) => constraint.type === CONSTRAINT_TYPE.PRIMARY_KEY_CONSTRAINT,
-  );
-
-  const { data } = useForeignKeyConstraintsQuery({
-    projectRef: project?.$id,
-    sdk,
-    schema: selectedTable?.schema,
-  });
-
-  const isNewRecord = column === undefined;
-  const foreignKeyMeta = data || [];
-  const foreignKeys = foreignKeyMeta.filter((relation) => {
-    return relation.source_id === column?.table_id && relation.source_columns.includes(column.name);
-  });
-  const lockColumnType =
-    fkRelations.find(
-      (fk) =>
-        fk.columns.find((col) => col.source === columnFields?.name) !== undefined && !fk.toRemove,
-    ) !== undefined;
+  const [formikConfig, setFormikConfig] = useState<
+    ReturnType<AttributeConfigFactory["getConfig"]> | undefined
+  >();
 
   useEffect(() => {
-    if (visible) {
-      setErrors({});
-      const columnFields = isNewRecord
-        ? generateColumnField({ schema: selectedTable.schema, table: selectedTable.name })
-        : generateColumnFieldFromPostgresColumn(column, selectedTable, foreignKeyMeta);
-      setColumnFields(columnFields);
-      setFkRelations(formatForeignKeys(foreignKeys));
-    }
-  }, [visible]);
-
-  if (!columnFields) return null;
-
-  const onUpdateField = (changes: Partial<ColumnField>) => {
-    const isTextBasedColumn = TEXT_TYPES.includes(columnFields.format);
-    if (!isTextBasedColumn && changes.defaultValue === "") {
-      changes.defaultValue = null;
-    }
-
-    const changedName = "name" in changes && changes.name !== columnFields.name;
-    const changedFormat = "format" in changes && changes.format !== columnFields.format;
-
-    if (
-      changedName &&
-      fkRelations.find((fk) => fk.columns.find(({ source }) => source === columnFields?.name))
-    ) {
-      setFkRelations(
-        fkRelations.map((relation) => ({
-          ...relation,
-          columns: relation.columns.map((col) =>
-            col.source === columnFields?.name ? { ...col, source: changes.name! } : col,
-          ),
-        })),
-      );
-    }
-
-    if (changedName || changedFormat) {
-      setPlaceholder(
-        getPlaceholderText(
-          changes.format || columnFields.format,
-          changes.name || columnFields.name,
-        ),
-      );
-    }
-
-    const updatedColumnFields: ColumnField = { ...columnFields, ...changes };
-    setColumnFields(updatedColumnFields);
-    updateEditorDirty();
-
-    const updatedErrors = { ...errors };
-    for (const key of Object.keys(changes)) {
-      delete updatedErrors[key];
-    }
-    setErrors(updatedErrors);
-  };
-
-  const onSaveChanges = (resolve: () => void) => {
-    if (columnFields) {
-      const errors = validateFields(columnFields);
-      setErrors(errors);
-
-      if (isEmpty(errors)) {
-        const payload = isNewRecord
-          ? generateCreateColumnPayload(selectedTable.id, columnFields)
-          : generateUpdateColumnPayload(column!, selectedTable, columnFields);
-        const configuration = {
-          columnId: column?.id,
-          primaryKey,
-          foreignKeyRelations: fkRelations,
-          existingForeignKeyRelations: foreignKeys,
-        };
-        saveChanges(payload, isNewRecord, configuration, resolve);
-      } else {
-        resolve();
+    if (type) {
+      const state = factory.getConfig(type);
+      if (state) {
+        setFormikConfig(state);
       }
+    } else {
+      setFormikConfig(undefined);
     }
-  };
+  }, [type, factory]);
+
+  const formik = useFormik({
+    enableReinitialize: true,
+    initialValues: formikConfig?.initialValues || {},
+    validationSchema: formikConfig?.validationSchema,
+    onSubmit: async (values, { setSubmitting }) => {
+      try {
+        // HREE WE GO----------------
+        setSubmitting(false);
+        // WE HAVE TO INVALIDATE CACHES,
+        onSave(() => {});
+      } catch (error) {
+        // HERE WE HAVE TO SHOW TOAST
+        onSave(() => {}, undefined, error);
+        setSubmitting(false);
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (formik.dirty) updateEditorDirty();
+  }, [formik.dirty, updateEditorDirty]);
+
+  const onTypeChange = useCallback((v: string) => {
+    setType(v as Attributes | AttributeFormat);
+  }, []);
 
   return (
     <SidePanel
-      size="xlarge"
+      size="medium"
       key="ColumnEditor"
       visible={visible}
-      // @ts-ignore
-      onConfirm={(resolve: () => void) => onSaveChanges(resolve)}
-      // @ts-ignore
-      header={<HeaderTitle table={selectedTable} column={column} />}
+      onConfirm={formik.submitForm}
+      header={<HeaderTitle collection={selectedCollection} attribute={column!} />}
       onCancel={closePanel}
+      form={formik}
       customFooter={
         <ActionBar
           backButtonLabel="Cancel"
           applyButtonLabel="Save"
           closePanel={closePanel}
-          applyFunction={(resolve: () => void) => onSaveChanges(resolve)}
+          isInForm
+          loading={formik.isSubmitting}
+          disableApply={!formik.isValid || !formik.dirty}
         />
       }
     >
-      <FormSection header={<FormSectionLabel className="lg:!col-span-4">General</FormSectionLabel>}>
-        <FormSectionContent loading={false} className="lg:!col-span-8">
-          <Input
-            label="Name"
-            type="text"
-            helperText="Recommended to use lowercase and use an underscore to separate words e.g. column_name"
-            placeholder="column_name"
-            errorText={errors.name}
-            value={columnFields?.name ?? ""}
-            onChange={(event) => onUpdateField({ name: event.target.value })}
-          />
-          <Input
-            label="Description"
-            optionalText="Optional"
-            type="text"
-            value={columnFields?.comment ?? ""}
-            onChange={(event) => onUpdateField({ comment: event.target.value })}
-          />
-        </FormSectionContent>
-      </FormSection>
-      <SidePanel.Separator />
-      <FormSection
-        header={
-          <FormSectionLabel
-            className="lg:!col-span-4"
-            description={
-              <div className="space-y-2">
-                <Button
-                  variant="secondary"
-                  size="s"
-                  prefixIcon={<Plus size={14} strokeWidth={2} />}
-                  href={`/project/${ref}/database/types`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Create enum types
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="s"
-                  prefixIcon={<ExternalLink size={14} strokeWidth={2} />}
-                  href="https://nuvix.in/docs/guides/database/tables#data-types"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  About data types
-                </Button>
-              </div>
-            }
-          >
-            Data Type
-          </FormSectionLabel>
-        }
-      >
-        <FormSectionContent loading={false} className="lg:!col-span-8">
-          <ColumnType
-            showRecommendation
-            value={columnFields?.format ?? ""}
-            layout="vertical"
-            enumTypes={enumTypes}
-            error={errors.format}
-            description={
-              lockColumnType ? "Column type cannot be changed as it has a foreign key relation" : ""
-            }
-            disabled={lockColumnType}
-            onOptionSelect={(format: string) => onUpdateField({ format, defaultValue: null })}
-          />
-          {columnFields.foreignKey === undefined && (
-            <div className="space-y-4">
-              {columnFields.format.includes("int") && (
-                <div className="w-full">
-                  <Checkbox
-                    label="Is Identity"
-                    description="Automatically assign a sequential unique number to the column"
-                    isChecked={columnFields.isIdentity}
-                    onToggle={() => {
-                      const isIdentity = !columnFields.isIdentity;
-                      const isArray = isIdentity ? false : columnFields.isArray;
-                      onUpdateField({ isIdentity, isArray });
-                    }}
-                  />
-                </div>
-              )}
-              {!columnFields.isPrimaryKey && (
-                <div className="w-full">
-                  <Checkbox
-                    label="Define as Array"
-                    description="Allow column to be defined as variable-length multidimensional arrays"
-                    isChecked={columnFields.isArray}
-                    onToggle={() => {
-                      const isArray = !columnFields.isArray;
-                      const isIdentity = isArray ? false : columnFields.isIdentity;
-                      onUpdateField({ isArray, isIdentity });
-                    }}
-                  />
-                </div>
-              )}
-            </div>
-          )}
-          <ColumnDefaultValue
-            columnFields={columnFields}
-            enumTypes={enumTypes}
-            onUpdateField={onUpdateField}
-          />
-        </FormSectionContent>
-      </FormSection>
+      <div className="p-4">
+        <Select
+          label="Type"
+          options={ATTRIBUTES.map((attr) => ({
+            label: attr.label,
+            value: attr.key,
+            icon: AttributeIcon(attr.key),
+          }))}
+          placeholder="Select type"
+          value={type ?? ""}
+          onValueChange={onTypeChange}
+          required
+          multiple={false}
+        />
 
-      <SidePanel.Separator />
-
-      <FormSection
-        header={<FormSectionLabel className="lg:!col-span-4">Foreign Keys</FormSectionLabel>}
-      >
-        <FormSectionContent loading={false} className="lg:!col-span-8">
-          <ColumnForeignKey
-            column={columnFields}
-            relations={fkRelations}
-            closePanel={closePanel}
-            onUpdateColumnType={(format: string) => {
-              if (format[0] === "_") {
-                onUpdateField({ format: format.slice(1), isArray: true, isIdentity: false });
-              } else {
-                onUpdateField({ format });
-              }
-            }}
-            onUpdateFkRelations={setFkRelations}
-          />
-        </FormSectionContent>
-      </FormSection>
-      <SidePanel.Separator />
-      <FormSection
-        header={<FormSectionLabel className="lg:!col-span-4">Constraints</FormSectionLabel>}
-      >
-        <FormSectionContent loading={false} className="lg:!col-span-8">
-          <Switch
-            label="Is Primary Key"
-            reverse
-            description="A primary key indicates that a column or group of columns can be used as a unique identifier for rows in the table"
-            isChecked={columnFields?.isPrimaryKey ?? false}
-            onToggle={() => onUpdateField({ isPrimaryKey: !columnFields?.isPrimaryKey })}
-          />
-          <Switch
-            label="Allow Nullable"
-            description="Allow the column to assume a NULL value if no value is provided"
-            reverse
-            isChecked={columnFields.isNullable}
-            onToggle={() => onUpdateField({ isNullable: !columnFields.isNullable })}
-          />
-          <Switch
-            label="Is Unique"
-            reverse
-            description="Enforce values in the column to be unique across rows"
-            isChecked={columnFields.isUnique}
-            onToggle={() => onUpdateField({ isUnique: !columnFields.isUnique })}
-          />
-          <Input
-            label="CHECK Constraint"
-            optionalText="Optional"
-            placeholder={placeholder}
-            type="text"
-            value={columnFields?.check ?? ""}
-            onChange={(event: any) => onUpdateField({ check: event.target.value })}
-            className="[&_input]:font-mono"
-          />
-        </FormSectionContent>
-      </FormSection>
+        {type && formikConfig && <div className="space-y-6 mt-6">{formikConfig.formFields}</div>}
+      </div>
     </SidePanel>
   );
 };

@@ -89,7 +89,7 @@ export const FieldWrapper = ({
 };
 
 const Wrapper = ({ Field, ...props }: { Field: any } & any) => {
-  const { name, label, placeholder, ...rest } = props as Props & any;
+  const { name, label, placeholder, description, ...rest } = props as Props & any;
   const { values, handleBlur, handleChange } = useFormikContext<Record<string, string | number>>();
 
   const fieldProps = {
@@ -106,7 +106,7 @@ const Wrapper = ({ Field, ...props }: { Field: any } & any) => {
     <FieldWrapper
       name={name}
       label={label}
-      description={props.description}
+      description={description}
       layout={props.layout}
       {...props}
     >
@@ -165,7 +165,7 @@ export const InputTextareaField = (props: Props & TextareaProps) => {
 };
 
 export const InputSwitchField = (props: Omit<SwitchProps, "onToggle" | "isChecked"> & Props) => {
-  const { name, label, placeholder, layout, ...rest } = props;
+  const { name, label, placeholder, layout, description, ...rest } = props;
   const { values, handleBlur, setFieldValue } = useFormikContext<Record<string, boolean>>();
 
   return (
@@ -173,7 +173,7 @@ export const InputSwitchField = (props: Omit<SwitchProps, "onToggle" | "isChecke
       {...rest}
       layout={layout}
       label={layout === "horizontal" ? label : ""}
-      description={props.description}
+      description={description}
       name={name}
       labelClass="mt-1.5"
     >

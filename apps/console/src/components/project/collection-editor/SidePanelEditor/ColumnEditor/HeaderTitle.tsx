@@ -1,23 +1,24 @@
+import type { AttributeTypes } from "@/components/project/collection-editor/SidePanelEditor/ColumnEditor/utils";
 import { Code } from "@chakra-ui/react";
-import type { PostgresTable, PostgresColumn } from "@nuvix/pg-meta";
+import type { Models } from "@nuvix/console";
 
 interface Props {
-  table: PostgresTable;
-  column: PostgresColumn;
+  collection: Models.Collection;
+  attribute: AttributeTypes;
 }
 
 // Need to fix for new column later
-const HeaderTitle: React.FC<Props> = ({ table, column }) => {
-  if (!column) {
+const HeaderTitle: React.FC<Props> = ({ collection, attribute }) => {
+  if (!attribute) {
     return (
       <>
-        Add new column to <Code>{table.name}</Code>
+        Add new attribute to <Code>{collection.name}</Code>
       </>
     );
   }
   return (
     <>
-      Update column <Code>{column.name}</Code> from <Code>{column.table}</Code>
+      Update attribute <Code>{attribute.key}</Code> from <Code>{collection.name}</Code>
     </>
   );
 };

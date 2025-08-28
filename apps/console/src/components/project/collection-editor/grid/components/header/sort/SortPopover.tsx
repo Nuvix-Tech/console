@@ -13,7 +13,7 @@ import { Separator } from "@nuvix/sui/components/separator";
 import { cn } from "@nuvix/sui/lib/utils";
 import { TopDot } from "../filter/FilterPopover";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
-import { Attributes } from "@/components/project/schema/single/collection/document/components/_utils";
+import { Attributes } from "@/components/project/collection-editor/SidePanelEditor/ColumnEditor/utils";
 
 export interface SortPopoverProps {
   sorts: string[];

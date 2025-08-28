@@ -1,5 +1,3 @@
-import { TIMESTAMP_TYPES, DATE_TYPES, TIME_TYPES } from "../../SidePanelEditor.constants";
-
 export function getColumnType(format: string) {
   if (isDateColumn(format)) {
     return "date";

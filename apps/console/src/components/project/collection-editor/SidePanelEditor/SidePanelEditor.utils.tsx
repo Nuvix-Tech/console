@@ -1,41 +1,12 @@
-import type { PostgresPrimaryKey, PostgresTable } from "@nuvix/pg-meta";
-import { chunk, find, isEmpty, isEqual } from "lodash";
+import { chunk, find } from "lodash";
 import Papa from "papaparse";
 import { toast } from "sonner";
 
 import { Query } from "@nuvix/pg-meta/src/query";
-import SparkBar from "@/ui/SparkBar";
-import { createDatabaseColumn } from "@/data/database-columns/database-column-create-mutation";
-import { deleteDatabaseColumn } from "@/data/database-columns/database-column-delete-mutation";
-import { updateDatabaseColumn } from "@/data/database-columns/database-column-update-mutation";
-import type { Constraint } from "@/data/database/constraints-query";
-import { FOREIGN_KEY_CASCADE_ACTION } from "@/data/database/database-query-constants";
-import { ForeignKeyConstraint } from "@/data/database/foreign-key-constraints-query";
-import { databaseKeys } from "@/data/database/keys";
-import { entityTypeKeys } from "@/data/entity-types/keys";
-import { prefetchEditorTablePage } from "@/data/prefetchers/project.$ref.editor.$id";
 import { getQueryClient } from "@/data/query-client";
 import { executeSql } from "@/data/sql/execute-sql-query";
-import { tableEditorKeys } from "@/data/table-editor/keys";
-import { prefetchTableEditor } from "@/data/table-editor/table-editor-query";
-import { tableRowKeys } from "@/data/table-rows/keys";
-import { tableKeys } from "@/data/tables/keys";
-import { deleteTable as deleteTableMutation } from "@/data/tables/table-delete-mutation";
-import { updateTable as updateTableMutation } from "@/data/tables/table-update-mutation";
-import { getTables } from "@/data/tables/tables-query";
 import { timeout, tryParseJson } from "@/lib/helpers";
-import {
-  generateCreateColumnPayload,
-  generateUpdateColumnPayload,
-} from "./ColumnEditor/ColumnEditor.utils";
-import type { ForeignKey } from "./ForeignKeySelector/ForeignKeySelector.types";
-import type {
-  ColumnField,
-  CreateColumnPayload,
-  UpdateColumnPayload,
-} from "./SidePanelEditor.types";
 import { ProjectSdk } from "@/lib/sdk";
-import { useCreateCollection } from "@/data/collections/collection-create-mutation";
 import type { Models } from "@nuvix/console";
 import { collectionKeys } from "@/data/collections/keys";
 

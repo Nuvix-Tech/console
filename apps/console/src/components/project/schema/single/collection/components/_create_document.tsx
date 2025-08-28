@@ -9,7 +9,7 @@ import {
   Attributes,
   AttributeTypes,
   generateYupSchema,
-} from "../document/components/_utils";
+} from "../../../../collection-editor/SidePanelEditor/ColumnEditor/utils";
 import { SubmitButton } from "@/components/others/forms";
 import { useToast } from "@nuvix/ui/components";
 import { PermissionsEditor } from "@/components/others/permissions";

@@ -10,15 +10,7 @@ import { compact, isEqual, isNull, isString, omitBy } from "lodash";
 import { MAX_CHARACTERS } from "@nuvix/pg-meta/src/query/table-row-query";
 import { minifyJSON, tryParseJson } from "@/lib/helpers";
 import { ForeignKey } from "../ForeignKeySelector/ForeignKeySelector.types";
-import {
-  DATETIME_TYPES,
-  JSON_TYPES,
-  TEXT_TYPES,
-  TIMESTAMP_TYPES,
-  TIME_TYPES,
-} from "../SidePanelEditor.constants";
 import type { RowField } from "./RowEditor.types";
-import { Dictionary } from "../SidePanelEditor.types";
 
 const getRowValue = ({ column, row }: { column: PostgresColumn; row?: Dictionary<any> }) => {
   const isNewRow = row === undefined;

@@ -18,7 +18,6 @@ import {
   validateFields,
 } from "./RowEditor.utils";
 import { TextEditor } from "./TextEditor";
-import { Dictionary } from "../SidePanelEditor.types";
 import { useProjectStore } from "@/lib/store";
 import { SidePanel } from "@/ui/SidePanel";
 

@@ -167,3 +167,16 @@ export const generateYupSchema = <T extends readonly AttributeTypes[]>(attribute
 
   return Yup.object().shape(schema) as Yup.ObjectSchema<SchemaFromAttributes<T>>;
 };
+
+export const ATTRIBUTES = [
+  { key: Attributes.String, label: "String" },
+  { key: Attributes.Integer, label: "Integer" },
+  { key: Attributes.Float, label: "Float" },
+  { key: Attributes.Boolean, label: "Boolean" },
+  { key: Attributes.Timestamptz, label: "Datetime" },
+  { key: AttributeFormat.Ip, label: "IP" },
+  { key: AttributeFormat.Enum, label: "Enum" },
+  { key: AttributeFormat.Url, label: "URL" },
+  { key: AttributeFormat.Email, label: "Email" },
+  { key: Attributes.Relationship, label: "Relationship" },
+] as const;

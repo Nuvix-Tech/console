@@ -12,7 +12,7 @@ import { getForeignKeyCascadeAction } from "@/components/editor/SidePanelEditor/
 import { Text } from "@nuvix/ui/components";
 import { Code } from "@chakra-ui/react";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
-import { Attributes } from "@/components/project/schema/single/collection/document/components/_utils";
+import { Attributes } from "@/components/project/collection-editor/SidePanelEditor/ColumnEditor/utils";
 
 export function ColumnHeader<R>({
   column,

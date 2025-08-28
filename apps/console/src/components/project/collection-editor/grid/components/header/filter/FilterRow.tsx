@@ -7,7 +7,7 @@ import { FilterOperatorOptions } from "./Filter.constants";
 import { Button, IconButton } from "@nuvix/ui/components";
 import { Input } from "@/components/others/ui";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
-import { Attributes } from "@/components/project/schema/single/collection/document/components/_utils";
+import { Attributes } from "@/components/project/collection-editor/SidePanelEditor/ColumnEditor/utils";
 
 export interface FilterRowProps {
   filterIdx: number;

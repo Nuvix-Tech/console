@@ -4,7 +4,7 @@ import { proxy, useSnapshot } from "valtio";
 import { ForeignKey } from "@/components/editor/SidePanelEditor/ForeignKeySelector/ForeignKeySelector.types";
 import { EditValue } from "@/components/editor/SidePanelEditor/RowEditor/RowEditor.types";
 import type { Models } from "@nuvix/console";
-import type { AttributeTypes } from "@/components/project/schema/single/collection/document/components/_utils";
+import type { AttributeTypes } from "@/components/project/collection-editor/SidePanelEditor/ColumnEditor/utils";
 
 export const COLLECTION_EDITOR_DEFAULT_ROWS_PER_PAGE = 100;
 
