@@ -30,13 +30,10 @@ import type {
   UpdateColumnPayload,
 } from "./SidePanelEditor.types";
 import {
-  createColumn,
   createCollection,
-  duplicateTable,
   insertRowsViaSpreadsheet,
   insertTableRows,
-  updateColumn,
-  updateTable,
+  updateCollection,
 } from "./SidePanelEditor.utils";
 import SpreadsheetImport from "./SpreadsheetImport/SpreadsheetImport";
 import TableEditor from "./TableEditor/TableEditor";
@@ -374,34 +371,21 @@ const SidePanelEditor = ({
       } else if (selectedCollection) {
         toastId = toast.loading(`Updating collection: ${selectedCollection?.name}...`);
 
-        // const { table, hasError } = await updateTable({
-        //   projectRef: project?.$id!,
-        //   sdk,
-        //   toastId,
-        //   table: selectedCollection,
-        //   payload,
-        //   columns,
-        //   foreignKeyRelations,
-        //   existingForeignKeyRelations,
-        //   primaryKey,
-        // });
+        const collection = await updateCollection({
+          projectRef: project?.$id!,
+          sdk,
+          toastId,
+          collectionId: configuration.collectionId!,
+          payload,
+          schema: snap.schema,
+        });
 
-        // if (table === undefined) {
-        //   return toast.error("Failed to update table");
+        // if (isTableEditorTabsEnabled && ref && payload.name) {
+        //   // [Unkown] Only table entities can be updated via the dashboard
+        //   const tabId = createTabId(ENTITY_TYPE.TABLE, { id: selectedCollection.id });
+        //   updateTab(ref, tabId, { label: payload.name });
         // }
-
-        // if (hasError) {
-        //   toast.warning(
-        //     `Table ${table.name} has been updated but there were some errors. Please check these errors separately.`,
-        //   );
-        // } else {
-        //   // if (isTableEditorTabsEnabled && ref && payload.name) {
-        //   //   // [Unkown] Only table entities can be updated via the dashboard
-        //   //   const tabId = createTabId(ENTITY_TYPE.TABLE, { id: selectedCollection.id });
-        //   //   updateTab(ref, tabId, { label: payload.name });
-        //   // }
-        //   toast.success(`Successfully updated ${table.name}!`, { id: toastId });
-        // }
+        toast.success(`Successfully updated ${collection.name}!`, { id: toastId });
       }
     } catch (error: any) {
       saveTableError = true;

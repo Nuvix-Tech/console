@@ -8,15 +8,17 @@ import { CollectionEditorCollectionStateContextProvider } from "@/lib/store/coll
 import { useRouter } from "@bprogress/next";
 import { Loader2Icon } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { CollectionGrid } from "./grid";
 import SidePanelEditor from "./SidePanelEditor/SidePanelEditor";
+import { useCollectionEditorStore } from "@/lib/store/collection-editor";
 
 export const CollectionEditor = () => {
   const { collectionId, id: projectRef } = useParams<{ id: string; collectionId: string }>();
   const router = useRouter();
   const { project, sdk } = useProjectStore((s) => s);
   const { selectedSchema } = useQuerySchemaState();
+  const collectionStore = useCollectionEditorStore();
   const { params } = useSearchQuery();
 
   const {
@@ -24,7 +26,7 @@ export const CollectionEditor = () => {
     isLoading,
     isError,
   } = useCollectionEditorQuery({
-    projectRef: project.$id,
+    projectRef: project?.$id,
     sdk,
     id: collectionId,
     schema: selectedSchema,
@@ -53,6 +55,10 @@ export const CollectionEditor = () => {
       router.push(`/project/${projectRef}/collections`);
     }
   }, [projectRef, router, selectedSchema]); // getTables
+
+  useEffect(() => {
+    collectionStore.setSchema(selectedSchema);
+  }, [selectedSchema, collectionStore]);
 
   // --- TODO: Replace hardcoded permissions with actual permission checks ---
   const canEditTables = true; // Example: useCheckPermissions(PermissionAction.TENANT_SQL_ADMIN_WRITE, 'tables')

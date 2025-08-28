@@ -37,389 +37,15 @@ import type {
 import { ProjectSdk } from "@/lib/sdk";
 import { useCreateCollection } from "@/data/collections/collection-create-mutation";
 import type { Models } from "@nuvix/console";
+import { collectionKeys } from "@/data/collections/keys";
 
 const BATCH_SIZE = 1000;
 const CHUNK_SIZE = 1024 * 1024 * 0.1; // 0.1MB
 
 /**
- * The functions below are basically just queries but may be supported directly
- * from the pg-meta library in the future
- */
-export const addPrimaryKey = async (
-  projectRef: string,
-  sdk: ProjectSdk,
-  schema: string,
-  table: string,
-  columns: string[],
-) => {
-  const primaryKeyColumns = columns.join('","');
-  const query = `ALTER TABLE "${schema}"."${table}" ADD PRIMARY KEY ("${primaryKeyColumns}")`;
-  return await executeSql({
-    projectRef: projectRef,
-    sdk,
-    sql: query,
-    queryKey: ["primary-keys"],
-  });
-};
-
-export const dropConstraint = async (
-  projectRef: string,
-  sdk: ProjectSdk,
-  schema: string,
-  table: string,
-  name: string,
-) => {
-  const query = `ALTER TABLE "${schema}"."${table}" DROP CONSTRAINT "${name}"`;
-  return await executeSql({
-    projectRef: projectRef,
-    sdk,
-    sql: query,
-    queryKey: ["drop-constraint"],
-  });
-};
-
-export const getAddForeignKeySQL = ({
-  table,
-  foreignKeys,
-}: {
-  table: { schema: string; name: string };
-  foreignKeys: ForeignKey[];
-}) => {
-  const getOnDeleteSql = (action: string) =>
-    action === FOREIGN_KEY_CASCADE_ACTION.CASCADE
-      ? "ON DELETE CASCADE"
-      : action === FOREIGN_KEY_CASCADE_ACTION.RESTRICT
-        ? "ON DELETE RESTRICT"
-        : action === FOREIGN_KEY_CASCADE_ACTION.SET_DEFAULT
-          ? "ON DELETE SET DEFAULT"
-          : action === FOREIGN_KEY_CASCADE_ACTION.SET_NULL
-            ? "ON DELETE SET NULL"
-            : "";
-  const getOnUpdateSql = (action: string) =>
-    action === FOREIGN_KEY_CASCADE_ACTION.CASCADE
-      ? "ON UPDATE CASCADE"
-      : action === FOREIGN_KEY_CASCADE_ACTION.RESTRICT
-        ? "ON UPDATE RESTRICT"
-        : "";
-  return (
-    foreignKeys
-      .map((relation) => {
-        const { deletionAction, updateAction } = relation;
-        const onDeleteSql = getOnDeleteSql(deletionAction);
-        const onUpdateSql = getOnUpdateSql(updateAction);
-        return `
-      ALTER TABLE "${table.schema}"."${table.name}"
-      ADD FOREIGN KEY (${relation.columns.map((column) => `"${column.source}"`).join(",")})
-      REFERENCES "${relation.schema}"."${relation.table}" (${relation.columns.map((column) => `"${column.target}"`).join(",")})
-      ${onUpdateSql}
-      ${onDeleteSql}
-    `
-          .replace(/\s+/g, " ")
-          .trim();
-      })
-      .join(";") + ";"
-  );
-};
-
-export const addForeignKey = async ({
-  projectRef,
-  sdk,
-  table,
-  foreignKeys,
-}: {
-  projectRef: string;
-  sdk: ProjectSdk;
-  table: { schema: string; name: string };
-  foreignKeys: ForeignKey[];
-}) => {
-  const query = getAddForeignKeySQL({ table, foreignKeys });
-  return await executeSql({
-    projectRef: projectRef,
-    sdk,
-    sql: query,
-    queryKey: ["foreign-keys"],
-  });
-};
-
-export const getRemoveForeignKeySQL = ({
-  table,
-  foreignKeys,
-}: {
-  table: { schema: string; name: string };
-  foreignKeys: ForeignKey[];
-}) => {
-  return (
-    foreignKeys
-      .map((relation) =>
-        `
-ALTER TABLE IF EXISTS "${table.schema}"."${table.name}"
-DROP CONSTRAINT IF EXISTS "${relation.name}"
-`
-          .replace(/\s+/g, " ")
-          .trim(),
-      )
-      .join(";") + ";"
-  );
-};
-
-export const removeForeignKey = async ({
-  projectRef,
-  sdk,
-  table,
-  foreignKeys,
-}: {
-  projectRef: string;
-  sdk: ProjectSdk;
-  table: { schema: string; name: string };
-  foreignKeys: ForeignKey[];
-}) => {
-  const query = getRemoveForeignKeySQL({ table, foreignKeys });
-  return await executeSql({
-    projectRef: projectRef,
-    sdk,
-    sql: query,
-    queryKey: ["foreign-keys"],
-  });
-};
-
-export const updateForeignKey = async ({
-  projectRef,
-  sdk,
-  table,
-  foreignKeys,
-}: {
-  projectRef: string;
-  sdk: ProjectSdk;
-  table: { schema: string; name: string };
-  foreignKeys: ForeignKey[];
-}) => {
-  const query = `
-  ${getRemoveForeignKeySQL({ table, foreignKeys })}
-  ${getAddForeignKeySQL({ table, foreignKeys })}
-  `
-    .replace(/\s+/g, " ")
-    .trim();
-  return await executeSql({
-    projectRef: projectRef,
-    sdk,
-    sql: query,
-    queryKey: ["foreign-keys"],
-  });
-};
-
-/**
  * The methods below involve several contexts due to the UI flow of the
  * dashboard and hence do not sit within their own stores
  */
-export const createColumn = async ({
-  projectRef,
-  sdk,
-  payload,
-  selectedTable,
-  primaryKey,
-  foreignKeyRelations = [],
-  skipSuccessMessage = false,
-  toastId: _toastId,
-}: {
-  projectRef: string;
-  sdk: ProjectSdk;
-  payload: CreateColumnPayload;
-  selectedTable: PostgresTable;
-  primaryKey?: Constraint;
-  foreignKeyRelations?: ForeignKey[];
-  skipSuccessMessage?: boolean;
-  toastId?: string | number;
-}) => {
-  const toastId = _toastId ?? toast.loading(`Creating column "${payload.name}"...`);
-  try {
-    // Once pg-meta supports composite keys, we can remove this logic
-    const { is_primary_key: isPrimaryKey, ...formattedPayload } = payload;
-    const column = await createDatabaseColumn({
-      projectRef: projectRef,
-      sdk,
-      payload: formattedPayload,
-    });
-
-    // Firing createColumn in createTable will bypass this block
-    if (isPrimaryKey) {
-      toast.loading("Assigning primary key to column...", { id: toastId });
-      // Same logic in createTable: Remove any primary key constraints first (we'll add it back later)
-      const existingPrimaryKeys = selectedTable.primary_keys.map((x) => x.name);
-
-      if (existingPrimaryKeys.length > 0 && primaryKey !== undefined) {
-        await dropConstraint(projectRef, sdk, column.schema, column.table, primaryKey.name);
-      }
-
-      const primaryKeyColumns = existingPrimaryKeys.concat([column.name]);
-      await addPrimaryKey(projectRef, sdk, column.schema, column.table, primaryKeyColumns);
-    }
-
-    // Then add the foreign key constraints here
-    if (foreignKeyRelations.length > 0) {
-      await addForeignKey({
-        projectRef,
-        sdk,
-        table: { schema: column.schema, name: column.table },
-        foreignKeys: foreignKeyRelations,
-      });
-    }
-
-    if (!skipSuccessMessage) {
-      toast.success(`Successfully created column "${column.name}"`, { id: toastId });
-    }
-    return { error: undefined };
-  } catch (error: any) {
-    toast.error(`An error occurred while creating the column "${payload.name}"`, { id: toastId });
-    return { error };
-  }
-};
-
-export const updateColumn = async ({
-  projectRef,
-  sdk,
-  id,
-  payload,
-  selectedTable,
-  primaryKey,
-  foreignKeyRelations = [],
-  existingForeignKeyRelations = [],
-  skipPKCreation,
-  skipSuccessMessage = false,
-}: {
-  projectRef: string;
-  sdk: ProjectSdk;
-  id: string;
-  payload: UpdateColumnPayload;
-  selectedTable: PostgresTable;
-  primaryKey?: Constraint;
-  foreignKeyRelations?: ForeignKey[];
-  existingForeignKeyRelations?: ForeignKeyConstraint[];
-  skipPKCreation?: boolean;
-  skipSuccessMessage?: boolean;
-}) => {
-  try {
-    const { is_primary_key: isPrimaryKey, ...formattedPayload } = payload;
-    const column = await updateDatabaseColumn({
-      projectRef,
-      sdk,
-      id,
-      payload: formattedPayload,
-    });
-
-    if (!skipPKCreation && isPrimaryKey !== undefined) {
-      const existingPrimaryKeys = selectedTable.primary_keys.map((x) => x.name);
-
-      // Primary key is getting updated for the column
-      if (existingPrimaryKeys.length > 0 && primaryKey !== undefined) {
-        await dropConstraint(projectRef, sdk, column.schema, column.table, primaryKey.name);
-      }
-
-      const primaryKeyColumns = isPrimaryKey
-        ? existingPrimaryKeys.concat([column.name])
-        : existingPrimaryKeys.filter((x) => x !== column.name);
-
-      if (primaryKeyColumns.length) {
-        await addPrimaryKey(projectRef, sdk, column.schema, column.table, primaryKeyColumns);
-      }
-    }
-
-    // Then update foreign keys
-    if (foreignKeyRelations.length > 0) {
-      await updateForeignKeys({
-        projectRef,
-        sdk,
-        table: { schema: column.schema, name: column.table },
-        foreignKeys: foreignKeyRelations,
-        existingForeignKeyRelations,
-      });
-    }
-
-    if (!skipSuccessMessage) toast.success(`Successfully updated column "${column.name}"`);
-  } catch (error: any) {
-    return { error };
-  }
-};
-
-export const duplicateTable = async (
-  projectRef: string,
-  sdk: ProjectSdk,
-  payload: { name: string; comment?: string },
-  metadata: {
-    duplicateTable: PostgresTable;
-    isRLSEnabled: boolean;
-    isDuplicateRows: boolean;
-    foreignKeyRelations: ForeignKey[];
-  },
-) => {
-  const queryClient = getQueryClient();
-  const { duplicateTable, isRLSEnabled, isDuplicateRows, foreignKeyRelations } = metadata;
-  const { name: sourceTableName, schema: sourceTableSchema } = duplicateTable;
-  const duplicatedTableName = payload.name;
-
-  // The following query will copy the structure of the table along with indexes, constraints and
-  // triggers. However, foreign key constraints are not duplicated over - has to be done separately
-  await executeSql({
-    projectRef,
-    sdk,
-    sql: [
-      `CREATE TABLE "${sourceTableSchema}"."${duplicatedTableName}" (LIKE "${sourceTableSchema}"."${sourceTableName}" INCLUDING ALL);`,
-      payload.comment !== undefined
-        ? `comment on table "${sourceTableSchema}"."${duplicatedTableName}" is '${payload.comment}';`
-        : "",
-    ].join("\n"),
-  });
-  await queryClient.invalidateQueries({ queryKey: tableKeys.list(projectRef, sourceTableSchema) });
-
-  // Duplicate foreign key constraints over
-  if (foreignKeyRelations.length > 0) {
-    await addForeignKey({
-      projectRef,
-      sdk,
-      table: { ...duplicateTable, name: payload.name },
-      foreignKeys: foreignKeyRelations,
-    });
-  }
-
-  // Duplicate rows if needed
-  if (isDuplicateRows) {
-    await executeSql({
-      projectRef,
-      sdk,
-      sql: `INSERT INTO "${sourceTableSchema}"."${duplicatedTableName}" SELECT * FROM "${sourceTableSchema}"."${sourceTableName}";`,
-    });
-
-    // Insert into does not copy over auto increment sequences, so we manually do it next if any
-    const columns = duplicateTable.columns ?? [];
-    const identityColumns = columns.filter((column) => column.identity_generation !== null);
-    identityColumns.map(async (column) => {
-      await executeSql({
-        projectRef,
-        sdk,
-        sql: `SELECT setval('"${sourceTableSchema}"."${duplicatedTableName}_${column.name}_seq"', (SELECT MAX("${column.name}") FROM "${sourceTableSchema}"."${sourceTableName}"));`,
-      });
-    });
-  }
-
-  const tables = await queryClient.fetchQuery({
-    queryKey: tableKeys.list(projectRef, sourceTableSchema),
-    queryFn: ({ signal }) => getTables({ projectRef, sdk, schema: sourceTableSchema }, signal),
-  });
-
-  const duplicatedTable = find(tables, { schema: sourceTableSchema, name: duplicatedTableName })!;
-
-  if (isRLSEnabled) {
-    await updateTableMutation({
-      projectRef,
-      sdk,
-      id: duplicatedTable?.id!,
-      schema: duplicatedTable?.schema!,
-      payload: { rls_enabled: isRLSEnabled },
-    });
-  }
-
-  return duplicateTable;
-};
-
 export const createCollection = async ({
   sdk,
   toastId,
@@ -449,154 +75,52 @@ export const createCollection = async ({
   }
 };
 
-export const updateTable = async ({
-  projectRef,
+export const updateCollection = async ({
   sdk,
   toastId,
-  table,
   payload,
-  columns,
-  foreignKeyRelations,
-  existingForeignKeyRelations,
-  primaryKey,
+  collectionId,
+  schema,
+  projectRef,
 }: {
   projectRef: string;
   sdk: ProjectSdk;
   toastId: string | number;
-  table: PostgresTable;
-  payload: any;
-  columns: ColumnField[];
-  foreignKeyRelations: ForeignKey[];
-  existingForeignKeyRelations: ForeignKeyConstraint[];
-  primaryKey?: Constraint;
+  payload: Models.Collection;
+  schema: string;
+  collectionId: string;
 }) => {
-  // Prepare a check to see if primary keys to the tables were updated or not
-  const primaryKeyColumns = columns
-    .filter((column) => column.isPrimaryKey)
-    .map((column) => column.name);
+  try {
+    const collection = await sdk.databases.updateCollection(
+      schema,
+      collectionId,
+      payload.name,
+      payload.$permissions,
+      payload.documentSecurity,
+      payload.enabled,
+    );
+    const queryClient = getQueryClient();
 
-  const existingPrimaryKeyColumns = table.primary_keys.map((pk: PostgresPrimaryKey) => pk.name);
-  const isPrimaryKeyUpdated = !isEqual(primaryKeyColumns, existingPrimaryKeyColumns);
+    await Promise.all([
+      queryClient.invalidateQueries({
+        queryKey: collectionKeys.editor(projectRef, schema, collection.$id),
+      }),
+      queryClient.invalidateQueries({ queryKey: collectionKeys.list(projectRef, { schema }) }),
+    ]);
 
-  if (isPrimaryKeyUpdated) {
-    // Remove any primary key constraints first (we'll add it back later)
-    // If we do it later, and if the user deleted a PK column, we'd need to do
-    // an additional check when removing PK if the column in the PK was removed
-    // So doing this one step earlier, lets us skip that additional check.
-    if (primaryKey !== undefined) {
-      await dropConstraint(projectRef, sdk, table.schema, table.name, primaryKey.name);
-    }
-  }
-
-  // Update the table
-  const updatedTable = await updateTableMutation({
-    projectRef,
-    sdk,
-    id: table.id,
-    schema: table.schema,
-    payload,
-  });
-
-  const originalColumns = table.columns ?? [];
-  const columnIds = columns.map((column) => column.id);
-
-  // Delete any removed columns
-  const columnsToRemove = originalColumns.filter((column) => !columnIds.includes(column.id));
-  for (const column of columnsToRemove) {
-    toast.loading(`Removing column ${column.name} from ${updatedTable.name}`, { id: toastId });
-    await deleteDatabaseColumn({
-      projectRef,
-      sdk,
-      id: column.id,
+    // We need to invalidate tableRowsAndCount after collectionEditor
+    // to ensure the query sent is correct
+    await queryClient.invalidateQueries({
+      queryKey: collectionKeys.documentsCount(projectRef, schema, collection.$id),
     });
+
+    return collection;
+  } catch (e) {
+    toast.error(`An error occurred while updating the collection "${payload.name}"`, {
+      id: toastId,
+    });
+    throw e;
   }
-
-  // Add any new columns / Update any existing columns
-  let hasError = false;
-  for (const column of columns) {
-    if (!column.id.includes(table.id.toString())) {
-      toast.loading(`Adding column ${column.name} to ${updatedTable.name}`, { id: toastId });
-      // Ensure that columns do not created as primary key first, cause the primary key will
-      // be added later on further down in the code
-      const columnPayload = generateCreateColumnPayload(updatedTable.id, {
-        ...column,
-        isPrimaryKey: false,
-      });
-      const { error } = await createColumn({
-        projectRef: projectRef,
-        sdk,
-        payload: columnPayload,
-        selectedTable: updatedTable,
-        skipSuccessMessage: true,
-        toastId,
-      });
-      if (!!error) hasError = true;
-    } else {
-      const originalColumn = find(originalColumns, { id: column.id });
-      if (originalColumn) {
-        const columnPayload = generateUpdateColumnPayload(originalColumn, updatedTable, column);
-        if (!isEmpty(columnPayload)) {
-          toast.loading(`Updating column ${column.name} from ${updatedTable.name}`, {
-            id: toastId,
-          });
-
-          const res = await updateColumn({
-            projectRef: projectRef,
-            sdk,
-            id: column.id,
-            payload: columnPayload,
-            selectedTable: updatedTable,
-            skipPKCreation: true,
-            skipSuccessMessage: true,
-          });
-          if (res?.error) {
-            hasError = true;
-            toast.error(`Failed to update column "${column.name}": ${res.error.message}`);
-          }
-        }
-      }
-    }
-  }
-
-  // Then add back the primary keys again
-  if (isPrimaryKeyUpdated && primaryKeyColumns.length > 0) {
-    await addPrimaryKey(projectRef, sdk, updatedTable.schema, updatedTable.name, primaryKeyColumns);
-  }
-
-  // Foreign keys will get updated here accordingly
-  await updateForeignKeys({
-    projectRef,
-    sdk,
-    table: updatedTable,
-    foreignKeys: foreignKeyRelations,
-    existingForeignKeyRelations,
-  });
-
-  const queryClient = getQueryClient();
-
-  await Promise.all([
-    queryClient.invalidateQueries({ queryKey: tableEditorKeys.tableEditor(projectRef, table.id) }),
-    queryClient.invalidateQueries({
-      queryKey: databaseKeys.foreignKeyConstraints(projectRef, table.schema),
-    }),
-    queryClient.invalidateQueries({ queryKey: databaseKeys.tableDefinition(projectRef, table.id) }),
-    queryClient.invalidateQueries({ queryKey: entityTypeKeys.list(projectRef) }),
-  ]);
-
-  // We need to invalidate tableRowsAndCount after tableEditor
-  // to ensure the query sent is correct
-  await queryClient.invalidateQueries({
-    queryKey: tableRowKeys.tableRowsAndCount(projectRef, table.id),
-  });
-
-  return {
-    table: await prefetchTableEditor(queryClient, {
-      projectRef,
-      sdk,
-      id: table.id,
-    }),
-    hasError,
-  };
 };
 
 export const insertRowsViaSpreadsheet = async (
@@ -718,53 +242,33 @@ export const insertTableRows = async (
   return { error: insertError };
 };
 
-const updateForeignKeys = async ({
-  projectRef,
+export const deleteCollection = async ({
   sdk,
-  table,
-  foreignKeys,
-  existingForeignKeyRelations,
+  toastId,
+  collectionId,
+  schema,
+  projectRef,
 }: {
   projectRef: string;
   sdk: ProjectSdk;
-  table: { schema: string; name: string };
-  foreignKeys: ForeignKey[];
-  existingForeignKeyRelations: ForeignKeyConstraint[];
+  toastId: string | number;
+  collectionId: string;
+  schema: string;
 }) => {
-  // Foreign keys will get updated here accordingly
-  const relationsToAdd = foreignKeys.filter((x) => typeof x.id === "string");
-  if (relationsToAdd.length > 0) {
-    await addForeignKey({
-      projectRef,
-      sdk,
-      table,
-      foreignKeys: relationsToAdd,
-    });
-  }
+  try {
+    await sdk.databases.deleteCollection(schema, collectionId);
+    const queryClient = getQueryClient();
 
-  const relationsToRemove = foreignKeys.filter((x) => x.toRemove);
-  if (relationsToRemove.length > 0) {
-    await removeForeignKey({
-      projectRef,
-      sdk,
-      table,
-      foreignKeys: relationsToRemove,
+    queryClient.invalidateQueries({
+      queryKey: collectionKeys.editor(projectRef, schema, collectionId),
     });
-  }
-
-  const remainingRelations = foreignKeys.filter((x) => typeof x.id === "number" && !x.toRemove);
-  const relationsToUpdate = remainingRelations.filter((x) => {
-    const existingRelation = existingForeignKeyRelations.find((y) => x.id === y.id);
-    if (existingRelation !== undefined) {
-      return checkIfRelationChanged(existingRelation, x);
-    } else return false;
-  });
-  if (relationsToUpdate.length > 0) {
-    await updateForeignKey({
-      projectRef,
-      sdk,
-      table,
-      foreignKeys: relationsToUpdate,
+    queryClient.invalidateQueries({ queryKey: collectionKeys.list(projectRef, { schema }) });
+    queryClient.invalidateQueries({
+      queryKey: collectionKeys.documentsCount(projectRef, schema, collectionId),
     });
+    return true;
+  } catch (error) {
+    toast.error("An error occurred while deleting the collection", { id: toastId });
+    throw error;
   }
 };

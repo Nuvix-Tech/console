@@ -23,10 +23,7 @@ export interface CollectionEditorProps {
   visible: boolean;
   closePanel: () => void;
   saveChanges: (
-    payload: {
-      name: string;
-      schema: string;
-    },
+    payload: Models.Collection,
     isNewRecord: boolean,
     configuration: {
       collectionId?: string;

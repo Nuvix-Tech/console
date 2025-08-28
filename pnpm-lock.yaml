@@ -48,8 +48,8 @@ importers:
         specifier: ^4.7.0
         version: 4.7.0(monaco-editor@0.52.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@nuvix/console':
-        specifier: 0.0.5-alpha.4
-        version: 0.0.5-alpha.4
+        specifier: 0.0.5-alpha.7
+        version: 0.0.5-alpha.7
       '@radix-ui/react-popover':
         specifier: ^1.1.6
         version: 1.1.11(@types/react-dom@19.0.2(@types/react@19.0.1))(@types/react@19.0.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -2003,6 +2003,9 @@ packages:
 
   '@nuvix/console@0.0.5-alpha.4':
     resolution: {integrity: sha512-tgXuyIua1mI4pB7I9otHuIrC5K2I5zaNWxVNPFyPYsk7KwqbXIzVreq4ImpwJCVTW4Qmw2CWRTPPDmVZpqDooA==}
+
+  '@nuvix/console@0.0.5-alpha.7':
+    resolution: {integrity: sha512-6wp4j18xJ66+uz1vDYziZnf99BGd/fzwr9wJjexV/FGyh+NWiRMzuYvy8JLNcNt/1kdnxiNIw8Zx9ISuosF0aw==}
 
   '@orama/orama@3.1.10':
     resolution: {integrity: sha512-YNou2xlCIgPhMDe1TBEmp1wsAPFCL7Fd11rct7YfXYYiNAVBNL2rWoEydJRDJFVmqgt0l6mzSg35sDQ3i8yfKQ==}
@@ -9548,6 +9551,14 @@ snapshots:
       which: 3.0.1
 
   '@nuvix/console@0.0.5-alpha.4':
+    dependencies:
+      socket.io-client: 4.8.1
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
+  '@nuvix/console@0.0.5-alpha.7':
     dependencies:
       socket.io-client: 4.8.1
     transitivePeerDependencies:
