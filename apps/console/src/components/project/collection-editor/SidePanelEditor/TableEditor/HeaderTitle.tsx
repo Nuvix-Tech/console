@@ -2,28 +2,28 @@ import { Code } from "@chakra-ui/react";
 
 interface HeaderTitleProps {
   schema: string;
-  table?: { name: string };
+  collection?: { name: string };
   isDuplicating: boolean;
 }
 
-const HeaderTitle = ({ schema, table, isDuplicating }: HeaderTitleProps) => {
-  if (!table) {
+const HeaderTitle = ({ schema, collection, isDuplicating }: HeaderTitleProps) => {
+  if (!collection) {
     return (
       <>
-        Create a new table under <Code className="text-sm">{schema}</Code>
+        Create a new collection under <Code className="text-sm">{schema}</Code>
       </>
     );
   }
   if (isDuplicating) {
     return (
       <>
-        Duplicate table <Code className="text-sm">{table?.name}</Code>
+        Duplicate collection <Code className="text-sm">{collection?.name}</Code>
       </>
     );
   }
   return (
     <>
-      Update table <Code className="text-sm">{table?.name}</Code>
+      Update collection <Code className="text-sm">{collection?.name}</Code>
     </>
   );
 };

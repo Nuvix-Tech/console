@@ -35,8 +35,6 @@ import type {
   CreateColumnPayload,
   UpdateColumnPayload,
 } from "./SidePanelEditor.types";
-import { checkIfRelationChanged } from "./TableEditor/ForeignKeysManagement/ForeignKeysManagement.utils";
-import type { ImportContent } from "./TableEditor/TableEditor.types";
 import { ProjectSdk } from "@/lib/sdk";
 
 const BATCH_SIZE = 1000;

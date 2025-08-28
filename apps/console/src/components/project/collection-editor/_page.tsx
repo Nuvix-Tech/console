@@ -10,6 +10,7 @@ import { Loader2Icon } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useCallback } from "react";
 import { CollectionGrid } from "./grid";
+import SidePanelEditor from "./SidePanelEditor/SidePanelEditor";
 
 export const CollectionEditor = () => {
   const { collectionId, id: projectRef } = useParams<{ id: string; collectionId: string }>();
@@ -62,7 +63,6 @@ export const CollectionEditor = () => {
   const canEditViaTableEditor = true;
   const editable = !isReadOnly && canEditViaTableEditor;
 
-  const selectedView = params.get("view") || "data";
   const gridKey = `${selectedSchema}_${collection?.name}_${collectionId}`; // Include tableId for uniqueness
 
   // --- Render Logic ---
@@ -86,12 +86,12 @@ export const CollectionEditor = () => {
       >
         <CollectionGrid key={gridKey} gridProps={{ height: "100%" }} customHeader={undefined} />
 
-        {/* <SidePanelEditor
+        <SidePanelEditor
           editable={editable}
-          selectedTable={isTableLike(table) ? table : undefined}
-          onTableCreated={onTableCreated}
+          selectedCollection={collection}
+          onCollectionCreated={onTableCreated}
         />
-        <DeleteConfirmationDialogs
+        {/* <DeleteConfirmationDialogs
           selectedTable={isTableLike(selectedTable) ? selectedTable : undefined}
           onTableDeleted={onTableDeleted}
         /> */}
@@ -101,5 +101,5 @@ export const CollectionEditor = () => {
 };
 
 const CollectionNotFound = ({ id }: { id: string }) => {
-  return <>COllection {id} not found.</>;
+  return <>Collection {id} not found.</>;
 };

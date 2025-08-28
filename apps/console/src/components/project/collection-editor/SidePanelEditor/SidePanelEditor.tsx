@@ -9,7 +9,6 @@ import { databaseKeys } from "@/data/database/keys";
 import { ENTITY_TYPE } from "@/data/entity-types/entity-type-constants";
 import { entityTypeKeys } from "@/data/entity-types/keys";
 import { tableEditorKeys } from "@/data/table-editor/keys";
-import { isTableLike } from "@/data/table-editor/table-editor-types";
 import { tableRowKeys } from "@/data/table-rows/keys";
 import { useTableRowCreateMutation } from "@/data/table-rows/table-row-create-mutation";
 import { useTableRowUpdateMutation } from "@/data/table-rows/table-row-update-mutation";
@@ -25,7 +24,6 @@ import JsonEditor from "./RowEditor/JsonEditor/JsonEditor";
 import RowEditor from "./RowEditor/RowEditor";
 import { convertByteaToHex } from "./RowEditor/RowEditor.utils";
 import { TextEditor } from "./RowEditor/TextEditor";
-import SchemaEditor from "./SchemaEditor";
 import type {
   ColumnField,
   CreateColumnPayload,
@@ -42,33 +40,34 @@ import {
 } from "./SidePanelEditor.utils";
 import SpreadsheetImport from "./SpreadsheetImport/SpreadsheetImport";
 import TableEditor from "./TableEditor/TableEditor";
-import type { ImportContent } from "./TableEditor/TableEditor.types";
-import { useTableEditorStore } from "@/lib/store/table-editor";
 import { useProjectStore } from "@/lib/store";
 import { Dictionary } from "@/components/grid/types";
 import { useTableEditorFiltersSort } from "@/hooks/useTableEditorFilterSort";
 import { useParams } from "next/navigation";
 import { PostgresTable } from "@nuvix/pg-meta";
 import { SonnerProgress } from "@nuvix/sui/components/sooner-progress";
+import type { Models } from "@nuvix/console";
+import ConfirmationModal from "@/components/editor/components/_confim_dialog";
+import { useCollectionEditorStore } from "@/lib/store/collection-editor";
 
 export interface SidePanelEditorProps {
   editable?: boolean;
-  selectedTable?: PostgresTable;
+  selectedCollection?: Models.Collection;
   includeColumns?: boolean; // This is mainly used for invalidating useTablesQuery
 
   // Because the panel is shared between grid editor and database pages
   // Both require different responses upon success of these events
-  onTableCreated?: (table: PostgresTable) => void;
+  onCollectionCreated?: (collection: Models.Collection) => void;
 }
 
 const SidePanelEditor = ({
   editable = true,
-  selectedTable,
+  selectedCollection,
   includeColumns = false,
-  onTableCreated = noop,
+  onCollectionCreated = noop,
 }: SidePanelEditorProps) => {
   const { id: ref } = useParams();
-  const snap = useTableEditorStore();
+  const snap = useCollectionEditorStore();
   // const isTableEditorTabsEnabled = useIsTableEditorTabsEnabled();
 
   const queryClient = useQueryClient();
@@ -77,7 +76,7 @@ const SidePanelEditor = ({
   const [isEdited, setIsEdited] = useState<boolean>(false);
   const [isClosingPanel, setIsClosingPanel] = useState<boolean>(false);
 
-  const enumArrayColumns = (selectedTable?.columns ?? [])
+  const enumArrayColumns = (selectedCollection?.columns ?? [])
     .filter((column) => {
       return (column?.enums ?? []).length > 0 && column.data_type.toLowerCase() === "array";
     })
@@ -97,25 +96,14 @@ const SidePanelEditor = ({
     },
   });
 
-  const { data: publications } = useDatabasePublicationsQuery({
-    projectRef: project?.$id,
-    sdk,
-  });
-  const { mutateAsync: createPublication } = useDatabasePublicationCreateMutation();
-  const { mutateAsync: updatePublication } = useDatabasePublicationUpdateMutation({
-    onError: () => {},
-  });
-
-  const getImpersonatedRoleState = () => false; //useGetImpersonatedRoleState();
-
   const saveRow = async (
     payload: any,
     isNewRecord: boolean,
     configuration: { identifiers: any; rowIdx: number },
     onComplete: (err?: any) => void,
   ) => {
-    if (!project || selectedTable === undefined) {
-      return console.error("no project or table selected");
+    if (!project || selectedCollection === undefined) {
+      return console.error("no project or collection selected");
     }
 
     let saveRowError: Error | undefined;
@@ -124,7 +112,7 @@ const SidePanelEditor = ({
         await createTableRows({
           projectRef: project.$id,
           sdk,
-          table: selectedTable,
+          table: selectedCollection,
           payload,
           enumArrayColumns,
           roleImpersonationState: getImpersonatedRoleState(),
@@ -135,12 +123,12 @@ const SidePanelEditor = ({
     } else {
       const hasChanges = !isEmpty(payload);
       if (hasChanges) {
-        if (selectedTable.primary_keys.length > 0) {
+        if (selectedCollection.primary_keys.length > 0) {
           try {
             await updateTableRow({
               projectRef: project.$id,
               sdk,
-              table: selectedTable,
+              table: selectedCollection,
               configuration,
               payload,
               enumArrayColumns,
@@ -166,7 +154,7 @@ const SidePanelEditor = ({
   };
 
   const onSaveColumnValue = async (value: string | number | null, resolve: () => void) => {
-    if (selectedTable === undefined) return;
+    if (selectedCollection === undefined) return;
 
     let payload;
     let configuration;
@@ -176,7 +164,7 @@ const SidePanelEditor = ({
       const selectedValueForJsonEdit = snap.sidePanel.jsonValue;
       const { row, column } = selectedValueForJsonEdit;
       payload = { [column]: value === null ? null : JSON.parse(value as any) };
-      selectedTable.primary_keys.forEach(
+      selectedCollection.primary_keys.forEach(
         (column) => (identifiers[column.name] = row![column.name]),
       );
       configuration = { identifiers, rowIdx: row.idx };
@@ -186,7 +174,7 @@ const SidePanelEditor = ({
 
       if (!column || !row) return;
       payload = { [column]: value === null ? null : value };
-      selectedTable.primary_keys.forEach(
+      selectedCollection.primary_keys.forEach(
         (column) => (identifiers[column.name] = row![column.name]),
       );
       configuration = { identifiers, rowIdx: row.idx };
@@ -203,25 +191,25 @@ const SidePanelEditor = ({
     }
   };
 
-  const onSaveForeignRow = async (value?: { [key: string]: any }) => {
-    if (selectedTable === undefined || !(snap.sidePanel?.type === "foreign-row-selector")) return;
-    const selectedForeignKeyToEdit = snap.sidePanel.foreignKey;
+  // const onSaveForeignRow = async (value?: { [key: string]: any; }) => {
+  //   if (selectedCollection === undefined || !(snap.sidePanel?.type === "foreign-row-selector")) return;
+  //   const selectedForeignKeyToEdit = snap.sidePanel.foreignKey;
 
-    try {
-      const { row } = selectedForeignKeyToEdit;
-      const identifiers = {} as Dictionary<any>;
-      selectedTable.primary_keys.forEach((column) => {
-        const col = selectedTable.columns?.find((x) => x.name === column.name);
-        identifiers[column.name] =
-          col?.format === "bytea" ? convertByteaToHex(row![column.name]) : row![column.name];
-      });
+  //   try {
+  //     const { row } = selectedForeignKeyToEdit;
+  //     const identifiers = {} as Dictionary<any>;
+  //     selectedCollection.primary_keys.forEach((column) => {
+  //       const col = selectedCollection.columns?.find((x) => x.name === column.name);
+  //       identifiers[column.name] =
+  //         col?.format === "bytea" ? convertByteaToHex(row![column.name]) : row![column.name];
+  //     });
 
-      const isNewRecord = false;
-      const configuration = { identifiers, rowIdx: row.idx };
+  //     const isNewRecord = false;
+  //     const configuration = { identifiers, rowIdx: row.idx };
 
-      saveRow(value, isNewRecord, configuration, () => {});
-    } catch (error) {}
-  };
+  //     saveRow(value, isNewRecord, configuration, () => {});
+  //   } catch (error) {}
+  // };
 
   const saveColumn = async (
     payload: CreateColumnPayload | UpdateColumnPayload,
@@ -238,7 +226,7 @@ const SidePanelEditor = ({
     const { columnId, primaryKey, foreignKeyRelations, existingForeignKeyRelations } =
       configuration;
 
-    if (!project || selectedTable === undefined) {
+    if (!project || selectedCollection === undefined) {
       return console.error("no project or table selected");
     }
 
@@ -247,7 +235,7 @@ const SidePanelEditor = ({
           projectRef: project?.$id!,
           sdk,
           payload: payload as CreateColumnPayload,
-          selectedTable,
+          selectedCollection,
           primaryKey,
           foreignKeyRelations,
         })
@@ -256,7 +244,7 @@ const SidePanelEditor = ({
           sdk,
           id: columnId as string,
           payload: payload as UpdateColumnPayload,
-          selectedTable,
+          selectedCollection,
           primaryKey,
           foreignKeyRelations,
           existingForeignKeyRelations,
@@ -276,13 +264,13 @@ const SidePanelEditor = ({
 
       await Promise.all([
         queryClient.invalidateQueries({
-          queryKey: tableEditorKeys.tableEditor(project?.$id, selectedTable?.id),
+          queryKey: tableEditorKeys.tableEditor(project?.$id, selectedCollection?.id),
         }),
         queryClient.invalidateQueries({
-          queryKey: databaseKeys.foreignKeyConstraints(project?.$id, selectedTable?.schema),
+          queryKey: databaseKeys.foreignKeyConstraints(project?.$id, selectedCollection?.schema),
         }),
         queryClient.invalidateQueries({
-          queryKey: databaseKeys.tableDefinition(project?.$id, selectedTable?.id),
+          queryKey: databaseKeys.tableDefinition(project?.$id, selectedCollection?.id),
         }),
         queryClient.invalidateQueries({ queryKey: entityTypeKeys.list(project?.$id) }),
       ]);
@@ -290,7 +278,7 @@ const SidePanelEditor = ({
       // // We need to invalidate tableRowsAndCount after tableEditor
       // // to ensure the query sent is correct
       await queryClient.invalidateQueries({
-        queryKey: tableRowKeys.tableRowsAndCount(project?.$id, selectedTable?.id),
+        queryKey: tableRowKeys.tableRowsAndCount(project?.$id, selectedCollection?.id),
       });
 
       setIsEdited(false);
@@ -324,190 +312,105 @@ const SidePanelEditor = ({
     });
   };
 
-  const updateTableRealtime = async (table: PostgresTable, enabled: boolean) => {
-    if (!project) return console.error("Project is required");
-    let realtimePublication = (publications ?? []).find(
-      (pub: any) => pub.name === "supabase_realtime",
-    );
-    const publicTables = await queryClient.fetchQuery({
-      queryKey: tableKeys.list(project.$id, "public", includeColumns),
-      queryFn: ({ signal }) =>
-        getTables({ projectRef: project.$id, sdk, schema: "public" }, signal),
-    });
-
-    try {
-      if (realtimePublication === undefined) {
-        realtimePublication = await createPublication({
-          projectRef: project.$id,
-          sdk,
-          name: "supabase_realtime",
-          publish_insert: true,
-          publish_update: true,
-          publish_delete: true,
-        });
-      }
-      const { id, tables: publicationTables } = realtimePublication;
-      if (publicationTables === null) {
-        // UI doesn't have support for toggling realtime for ALL tables
-        // Switch it to individual tables via an array of strings
-        // Refer to PublicationStore for more information about this
-        const realtimeTables = enabled
-          ? publicTables.map((t: any) => `${t.schema}.${t.name}`)
-          : publicTables
-              .filter((t: any) => t.id !== table.id)
-              .map((t: any) => `${t.schema}.${t.name}`);
-        await updatePublication({
-          id,
-          projectRef: project.$id,
-          sdk,
-          tables: realtimeTables,
-        });
-      } else {
-        const isAlreadyEnabled = publicationTables.some((x: any) => x.id == table.id);
-        const realtimeTables =
-          isAlreadyEnabled && !enabled
-            ? // Toggle realtime off
-              publicationTables
-                .filter((t: any) => t.id !== table.id)
-                .map((t: any) => `${t.schema}.${t.name}`)
-            : !isAlreadyEnabled && enabled
-              ? // Toggle realtime on
-                [`${table.schema}.${table.name}`].concat(
-                  publicationTables.map((t: any) => `${t.schema}.${t.name}`),
-                )
-              : null;
-        if (realtimeTables === null) return;
-        await updatePublication({
-          id,
-          projectRef: project.$id,
-          sdk,
-          tables: realtimeTables,
-        });
-      }
-    } catch (error: any) {
-      toast.error(`Failed to update realtime for ${table.name}: ${error.message}`);
-    }
-  };
-
   const saveTable = async (
     payload: {
       name: string;
       schema: string;
-      comment?: string | undefined;
     },
-    columns: ColumnField[],
-    foreignKeyRelations: ForeignKey[],
     isNewRecord: boolean,
     configuration: {
-      tableId?: number;
-      importContent?: ImportContent;
-      isRLSEnabled: boolean;
-      isRealtimeEnabled: boolean;
+      collectionId?: string;
       isDuplicateRows: boolean;
-      existingForeignKeyRelations: ForeignKeyConstraint[];
-      primaryKey?: Constraint;
     },
     resolve: any,
   ) => {
     let toastId;
     let saveTableError = false;
-    const {
-      importContent,
-      isRLSEnabled,
-      isRealtimeEnabled,
-      isDuplicateRows,
-      existingForeignKeyRelations,
-      primaryKey,
-    } = configuration;
+    const { isDuplicateRows } = configuration;
 
     try {
       if (
         snap.sidePanel?.type === "table" &&
         snap.sidePanel.mode === "duplicate" &&
-        selectedTable
+        selectedCollection
       ) {
-        const tableToDuplicate = selectedTable;
+        const tableToDuplicate = selectedCollection;
 
         toastId = toast.loading(`Duplicating table: ${tableToDuplicate.name}...`);
 
-        const table = await duplicateTable(project?.$id!, sdk, payload, {
-          isRLSEnabled,
-          isDuplicateRows,
-          duplicateTable: tableToDuplicate,
-          foreignKeyRelations,
-        });
-        if (isRealtimeEnabled) await updateTableRealtime(table, isRealtimeEnabled);
+        // const table = await duplicateTable(project?.$id!, sdk, payload, {
+        //   isRLSEnabled,
+        //   isDuplicateRows,
+        //   duplicateTable: tableToDuplicate,
+        //   foreignKeyRelations,
+        // });
 
-        await Promise.all([
-          queryClient.invalidateQueries({
-            queryKey: tableKeys.list(project?.$id, table.schema, includeColumns),
-          }),
-          queryClient.invalidateQueries({ queryKey: entityTypeKeys.list(project?.$id) }),
-        ]);
+        // await Promise.all([
+        //   queryClient.invalidateQueries({
+        //     queryKey: tableKeys.list(project?.$id, table.schema, includeColumns),
+        //   }),
+        //   queryClient.invalidateQueries({ queryKey: entityTypeKeys.list(project?.$id) }),
+        // ]);
 
-        toast.success(
-          `Table ${tableToDuplicate.name} has been successfully duplicated into ${table.name}!`,
-          { id: toastId },
-        );
-        onTableCreated(table);
+        // toast.success(
+        //   `Table ${tableToDuplicate.name} has been successfully duplicated into ${table.name}!`,
+        //   { id: toastId },
+        // );
+        // onCollectionCreated(collection);
       } else if (isNewRecord) {
         toastId = toast.loading(`Creating new table: ${payload.name}...`);
 
-        const table = await createTable({
-          projectRef: project?.$id!,
-          sdk,
-          toastId,
-          payload,
-          columns,
-          foreignKeyRelations,
-          isRLSEnabled,
-          importContent,
-        });
-        if (isRealtimeEnabled) await updateTableRealtime(table, true);
+        // const collection = await createTable({
+        //   projectRef: project?.$id!,
+        //   sdk,
+        //   toastId,
+        //   payload,
+        //   columns,
+        //   foreignKeyRelations,
+        //   isRLSEnabled,
+        //   importContent,
+        // });
 
-        await Promise.all([
-          queryClient.invalidateQueries({
-            queryKey: tableKeys.list(project?.$id, table.schema, includeColumns),
-          }),
-          queryClient.invalidateQueries({ queryKey: entityTypeKeys.list(project?.$id) }),
-        ]);
+        // await Promise.all([
+        //   queryClient.invalidateQueries({
+        //     queryKey: tableKeys.list(project?.$id, table.schema, includeColumns),
+        //   }),
+        //   queryClient.invalidateQueries({ queryKey: entityTypeKeys.list(project?.$id) }),
+        // ]);
 
-        toast.success(`Table ${table.name} is good to go!`, { id: toastId });
-        onTableCreated(table);
-      } else if (selectedTable) {
-        toastId = toast.loading(`Updating table: ${selectedTable?.name}...`);
+        // toast.success(`Table ${table.name} is good to go!`, { id: toastId });
+        // onCollectionCreated(collection);
+      } else if (selectedCollection) {
+        toastId = toast.loading(`Updating collection: ${selectedCollection?.name}...`);
 
-        const { table, hasError } = await updateTable({
-          projectRef: project?.$id!,
-          sdk,
-          toastId,
-          table: selectedTable,
-          payload,
-          columns,
-          foreignKeyRelations,
-          existingForeignKeyRelations,
-          primaryKey,
-        });
+        // const { table, hasError } = await updateTable({
+        //   projectRef: project?.$id!,
+        //   sdk,
+        //   toastId,
+        //   table: selectedCollection,
+        //   payload,
+        //   columns,
+        //   foreignKeyRelations,
+        //   existingForeignKeyRelations,
+        //   primaryKey,
+        // });
 
-        if (table === undefined) {
-          return toast.error("Failed to update table");
-        }
-        if (isTableLike(table)) {
-          await updateTableRealtime(table, isRealtimeEnabled);
-        }
+        // if (table === undefined) {
+        //   return toast.error("Failed to update table");
+        // }
 
-        if (hasError) {
-          toast.warning(
-            `Table ${table.name} has been updated but there were some errors. Please check these errors separately.`,
-          );
-        } else {
-          // if (isTableEditorTabsEnabled && ref && payload.name) {
-          //   // [Unkown] Only table entities can be updated via the dashboard
-          //   const tabId = createTabId(ENTITY_TYPE.TABLE, { id: selectedTable.id });
-          //   updateTab(ref, tabId, { label: payload.name });
-          // }
-          toast.success(`Successfully updated ${table.name}!`, { id: toastId });
-        }
+        // if (hasError) {
+        //   toast.warning(
+        //     `Table ${table.name} has been updated but there were some errors. Please check these errors separately.`,
+        //   );
+        // } else {
+        //   // if (isTableEditorTabsEnabled && ref && payload.name) {
+        //   //   // [Unkown] Only table entities can be updated via the dashboard
+        //   //   const tabId = createTabId(ENTITY_TYPE.TABLE, { id: selectedCollection.id });
+        //   //   updateTab(ref, tabId, { label: payload.name });
+        //   // }
+        //   toast.success(`Successfully updated ${table.name}!`, { id: toastId });
+        // }
       }
     } catch (error: any) {
       saveTableError = true;
@@ -522,78 +425,6 @@ const SidePanelEditor = ({
     resolve();
   };
 
-  const onImportData = async (importContent: ImportContent) => {
-    if (!project || selectedTable === undefined) {
-      return console.error("no project or table selected");
-    }
-
-    const { file, rowCount, selectedHeaders, resolve } = importContent;
-    const toastId = toast.loading(
-      `Adding ${rowCount.toLocaleString()} rows to ${selectedTable.name}`,
-    );
-
-    if (file && rowCount > 0) {
-      // CSV file upload
-      const res: any = await insertRowsViaSpreadsheet(
-        project.$id!,
-        sdk,
-        file,
-        selectedTable,
-        selectedHeaders,
-        (progress: number) => {
-          toast.loading(
-            <>
-              <SonnerProgress
-                progress={progress}
-                message={`Adding ${rowCount.toLocaleString()} rows to ${selectedTable.name}`}
-              />
-            </>,
-            { id: toastId },
-          );
-        },
-      );
-      if (res.error) {
-        toast.error(`Failed to import data: ${res.error.message}`, { id: toastId });
-        return resolve();
-      }
-    } else {
-      // Text paste
-      const res: any = await insertTableRows(
-        project.$id!,
-        sdk,
-        selectedTable,
-        importContent.rows,
-        selectedHeaders,
-        (progress: number) => {
-          toast.loading(
-            <>
-              <SonnerProgress
-                progress={progress}
-                message={`Adding ${importContent.rows.length.toLocaleString()} rows to ${
-                  selectedTable.name
-                }`}
-              />
-            </>,
-            { id: toastId },
-          );
-        },
-      );
-      if (res.error) {
-        toast.error(`Failed to import data: ${res.error.message}`, { id: toastId });
-        return resolve();
-      }
-    }
-
-    await queryClient.invalidateQueries({
-      queryKey: tableRowKeys.tableRowsAndCount(project?.$id, selectedTable?.id),
-    });
-    toast.success(`Successfully imported ${rowCount} rows of data into ${selectedTable.name}`, {
-      id: toastId,
-    });
-    resolve();
-    snap.closeSidePanel();
-  };
-
   const onClosePanel = () => {
     if (isEdited) {
       setIsClosingPanel(true);
@@ -604,10 +435,10 @@ const SidePanelEditor = ({
 
   return (
     <>
-      {!isUndefined(selectedTable) && (
+      {/* {!isUndefined(selectedCollection) && (
         <RowEditor
           row={snap.sidePanel?.type === "row" ? snap.sidePanel.row : undefined}
-          selectedTable={selectedTable}
+          selectedCollection={selectedCollection}
           visible={snap.sidePanel?.type === "row"}
           editable={editable}
           closePanel={onClosePanel}
@@ -615,21 +446,21 @@ const SidePanelEditor = ({
           updateEditorDirty={() => setIsEdited(true)}
         />
       )}
-      {!isUndefined(selectedTable) && (
+      {!isUndefined(selectedCollection) && (
         <ColumnEditor
           column={snap.sidePanel?.type === "column" ? (snap.sidePanel.column as any) : undefined}
-          selectedTable={selectedTable}
+          selectedCollection={selectedCollection}
           visible={snap.sidePanel?.type === "column"}
           closePanel={onClosePanel}
           saveChanges={saveColumn}
           updateEditorDirty={() => setIsEdited(true)}
         />
-      )}
+      )} */}
       <TableEditor
-        table={
+        collection={
           snap.sidePanel?.type === "table" &&
           (snap.sidePanel.mode === "edit" || snap.sidePanel.mode === "duplicate")
-            ? selectedTable
+            ? selectedCollection
             : undefined
         }
         isDuplicating={snap.sidePanel?.type === "table" && snap.sidePanel.mode === "duplicate"}
@@ -638,7 +469,7 @@ const SidePanelEditor = ({
         saveChanges={saveTable}
         updateEditorDirty={() => setIsEdited(true)}
       />
-      <SchemaEditor visible={snap.sidePanel?.type === "schema"} closePanel={onClosePanel} />
+      {/* <SchemaEditor visible={snap.sidePanel?.type === "schema"} closePanel={onClosePanel} /> */}
       <JsonEditor
         visible={snap.sidePanel?.type === "json"}
         row={(snap.sidePanel?.type === "json" && snap.sidePanel.jsonValue.row) || {}}
@@ -656,7 +487,7 @@ const SidePanelEditor = ({
         closePanel={onClosePanel}
         onSaveField={onSaveColumnValue}
       />
-      <ForeignRowSelector
+      {/* <ForeignRowSelector
         visible={snap.sidePanel?.type === "foreign-row-selector"}
         // @ts-ignore
         foreignKey={
@@ -666,14 +497,14 @@ const SidePanelEditor = ({
         }
         closePanel={onClosePanel}
         onSelect={onSaveForeignRow}
-      />
-      <SpreadsheetImport
+      /> */}
+      {/* <SpreadsheetImport
         visible={snap.sidePanel?.type === "csv-import"}
-        selectedTable={selectedTable}
+        selectedCollection={selectedCollection}
         saveContent={onImportData}
         closePanel={onClosePanel}
         updateEditorDirty={setIsEdited}
-      />
+      /> */}
       <ConfirmationModal
         visible={isClosingPanel}
         title="Discard changes"
