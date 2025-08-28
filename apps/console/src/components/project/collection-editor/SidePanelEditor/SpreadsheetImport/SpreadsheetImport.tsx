@@ -7,7 +7,7 @@ import { toast } from "sonner";
 
 // import { useSendEventMutation } from "@/data/telemetry/send-event-mutation";
 import ActionBar from "../ActionBar";
-import type { ImportContent } from "../TableEditor/TableEditor.types";
+// import type { ImportContent } from "../TableEditor/TableEditor.types";
 import SpreadSheetFileUpload from "./SpreadSheetFileUpload";
 import SpreadsheetImportConfiguration from "./SpreadSheetImportConfiguration";
 import SpreadSheetTextInput from "./SpreadSheetTextInput";
@@ -33,7 +33,7 @@ interface SpreadsheetImportProps {
   rows?: any[];
   visible: boolean;
   selectedTable?: PostgresTable;
-  saveContent: (prefillData: ImportContent) => void;
+  saveContent: (prefillData: any) => void; // ImportContent
   closePanel: () => void;
   updateEditorDirty?: (value: boolean) => void;
 }

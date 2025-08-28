@@ -13,7 +13,7 @@ import { useTheme } from "next-themes";
 interface TextEditorProps {
   visible: boolean;
   readOnly?: boolean;
-  row?: { [key: string]: any; };
+  row?: { [key: string]: any };
   column: string;
   closePanel: () => void;
   onSaveField: (value: string, resolve: () => void) => void;

@@ -23,7 +23,12 @@ export interface ColumnEditorProps {
   visible: boolean;
   closePanel: () => void;
   updateEditorDirty: () => void;
-  onSave: (resolve: any, isNewRecord: boolean, column?: Models.AttributeString, error?: any) => Promise<void>;
+  onSave: (
+    resolve: any,
+    isNewRecord: boolean,
+    column?: Models.AttributeString,
+    error?: any,
+  ) => Promise<void>;
 }
 
 const ColumnEditor = ({
@@ -42,7 +47,8 @@ const ColumnEditor = ({
   const [type, setType] = useState<Attributes | AttributeFormat | undefined>(initialType);
 
   const factory = useMemo(
-    () => new AttributeConfigFactory(sdk, { name: editorState.schema }, snap.collection, column as any),
+    () =>
+      new AttributeConfigFactory(sdk, { name: editorState.schema }, snap.collection, column as any),
     [sdk, editorState.schema, snap.collection, column],
   );
 

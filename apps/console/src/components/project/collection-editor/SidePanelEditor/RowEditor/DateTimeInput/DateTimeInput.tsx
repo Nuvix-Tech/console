@@ -36,7 +36,6 @@ const DateTimeInput = ({
   description,
   disabled = false,
 }: DateTimeInputProps) => {
-
   return (
     <Input
       orientation="horizontal"
@@ -65,13 +64,7 @@ const DateTimeInput = ({
               {isNullable && (
                 <DropdownMenuItem onClick={() => onChange("")}>Set to NULL</DropdownMenuItem>
               )}
-              <DropdownMenuItem
-                onClick={() =>
-                  onChange(
-                    dayjs().format("YYYY-MM-DDTHH:mm:ss"),
-                  )
-                }
-              >
+              <DropdownMenuItem onClick={() => onChange(dayjs().format("YYYY-MM-DDTHH:mm:ss"))}>
                 Set to now
               </DropdownMenuItem>
             </DropdownMenuContent>

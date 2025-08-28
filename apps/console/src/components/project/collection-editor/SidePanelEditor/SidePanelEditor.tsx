@@ -3,8 +3,6 @@ import { isEmpty, isUndefined, noop } from "lodash";
 import { useState } from "react";
 import { toast } from "sonner";
 
-
-
 import { useTableRowCreateMutation } from "@/data/table-rows/table-row-create-mutation";
 import { useTableRowUpdateMutation } from "@/data/table-rows/table-row-update-mutation";
 
@@ -14,7 +12,6 @@ import type { ForeignKey } from "./ForeignKeySelector/ForeignKeySelector.types";
 import ForeignRowSelector from "./RowEditor/ForeignRowSelector/ForeignRowSelector";
 import JsonEditor from "./RowEditor/JsonEditor/JsonEditor";
 import RowEditor from "./RowEditor/RowEditor";
-import { convertByteaToHex } from "./RowEditor/RowEditor.utils";
 import { TextEditor } from "./RowEditor/TextEditor";
 import {
   createCollection,
@@ -75,7 +72,7 @@ const SidePanelEditor = ({
   const saveRow = async (
     payload: any,
     isNewRecord: boolean,
-    configuration: { documentId: string, rowIdx: number; },
+    configuration: { documentId: string; rowIdx: number },
     onComplete: (err?: any) => void,
   ) => {
     if (!project || selectedCollection === undefined) {
@@ -83,44 +80,44 @@ const SidePanelEditor = ({
     }
 
     let saveRowError: Error | undefined;
-    if (isNewRecord) {
-      try {
-        await createTableRows({
-          projectRef: project.$id,
-          sdk,
-          table: selectedCollection,
-          payload,
-          enumArrayColumns,
-          roleImpersonationState: getImpersonatedRoleState(),
-        });
-      } catch (error: any) {
-        saveRowError = error;
-      }
-    } else {
-      const hasChanges = !isEmpty(payload);
-      if (hasChanges) {
-        if (selectedCollection.primary_keys.length > 0) {
-          try {
-            await updateTableRow({
-              projectRef: project.$id,
-              sdk,
-              table: selectedCollection,
-              configuration,
-              payload,
-              enumArrayColumns,
-              roleImpersonationState: getImpersonatedRoleState(),
-            });
-          } catch (error: any) {
-            saveRowError = error;
-          }
-        } else {
-          saveRowError = new Error("No primary key");
-          toast.error(
-            "We can't make changes to this table because there is no primary key. Please create a primary key and try again.",
-          );
-        }
-      }
-    }
+    // if (isNewRecord) {
+    //   try {
+    //     await createTableRows({
+    //       projectRef: project.$id,
+    //       sdk,
+    //       table: selectedCollection,
+    //       payload,
+    //       enumArrayColumns,
+    //       roleImpersonationState: getImpersonatedRoleState(),
+    //     });
+    //   } catch (error: any) {
+    //     saveRowError = error;
+    //   }
+    // } else {
+    //   const hasChanges = !isEmpty(payload);
+    //   if (hasChanges) {
+    //     if (selectedCollection.primary_keys.length > 0) {
+    //       try {
+    //         await updateTableRow({
+    //           projectRef: project.$id,
+    //           sdk,
+    //           table: selectedCollection,
+    //           configuration,
+    //           payload,
+    //           enumArrayColumns,
+    //           roleImpersonationState: getImpersonatedRoleState(),
+    //         });
+    //       } catch (error: any) {
+    //         saveRowError = error;
+    //       }
+    //     } else {
+    //       saveRowError = new Error("No primary key");
+    //       toast.error(
+    //         "We can't make changes to this table because there is no primary key. Please create a primary key and try again.",
+    //       );
+    //     }
+    //   }
+    // }
 
     onComplete(saveRowError);
     if (!saveRowError) {
@@ -183,7 +180,12 @@ const SidePanelEditor = ({
   //   } catch (error) {}
   // };
 
-  const saveColumn = async (resolve: any, isNewRecord: boolean, column?: Models.AttributeString, error?: any) => {
+  const saveColumn = async (
+    resolve: any,
+    isNewRecord: boolean,
+    column?: Models.AttributeString,
+    error?: any,
+  ) => {
     const selectedColumnToEdit = snap.sidePanel?.type === "column" && snap.sidePanel.column;
     if (!project || selectedCollection === undefined) {
       return console.error("no project or table selected");
@@ -343,9 +345,9 @@ const SidePanelEditor = ({
 
   return (
     <>
-      {/* {!isUndefined(selectedCollection) && (
+      {!isUndefined(selectedCollection) && (
         <RowEditor
-          row={snap.sidePanel?.type === "row" ? snap.sidePanel.row : undefined}
+          row={snap.sidePanel?.type === "row" ? (snap.sidePanel.row as any) : undefined}
           selectedCollection={selectedCollection}
           visible={snap.sidePanel?.type === "row"}
           editable={editable}
@@ -353,7 +355,7 @@ const SidePanelEditor = ({
           saveChanges={saveRow}
           updateEditorDirty={() => setIsEdited(true)}
         />
-      )} */}
+      )}
       {!isUndefined(selectedCollection) && (
         <ColumnEditor
           column={snap.sidePanel?.type === "column" ? snap.sidePanel.column : undefined}
@@ -367,7 +369,7 @@ const SidePanelEditor = ({
       <TableEditor
         collection={
           snap.sidePanel?.type === "table" &&
-            (snap.sidePanel.mode === "edit" || snap.sidePanel.mode === "duplicate")
+          (snap.sidePanel.mode === "edit" || snap.sidePanel.mode === "duplicate")
             ? selectedCollection
             : undefined
         }

@@ -12,7 +12,7 @@ import JsonCodeEditor from "@/components/editor/SidePanelEditor/RowEditor/JsonEd
 import { DrilldownViewer } from "@/components/editor/SidePanelEditor/RowEditor/JsonEditor/DrilldownViewer";
 
 interface JsonEditProps {
-  row?: { [key: string]: any; };
+  row?: { [key: string]: any };
   column: string;
   visible: boolean;
   backButtonLabel?: string;

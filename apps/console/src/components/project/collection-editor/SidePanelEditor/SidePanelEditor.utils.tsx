@@ -1,3 +1,5 @@
+// I WILL BE BACK HERE!
+
 import { chunk, find } from "lodash";
 import Papa from "papaparse";
 import { toast } from "sonner";
@@ -98,7 +100,7 @@ export const insertRowsViaSpreadsheet = async (
   projectRef: string,
   sdk: ProjectSdk,
   file: any,
-  table: PostgresTable,
+  collection: Models.Collection,
   selectedHeaders: string[],
   onProgressUpdate: (progress: number) => void,
 ) => {
@@ -113,40 +115,40 @@ export const insertRowsViaSpreadsheet = async (
       skipEmptyLines: true,
       chunkSize: CHUNK_SIZE,
       quoteChar: file.type === "text/tab-separated-values" ? "" : '"',
-      chunk: async (results: any, parser: any) => {
-        parser.pause();
-        const formattedData = results.data.map((row: any) => {
-          const formattedRow: any = {};
-          selectedHeaders.forEach((header) => {
-            const column = table.columns?.find((c) => c.name === header);
-            if ((column?.data_type ?? "") === "ARRAY" || (column?.format ?? "").includes("json")) {
-              formattedRow[header] = tryParseJson(row[header]);
-            } else if (row[header] === "") {
-              // if the cell is empty string, convert it to NULL
-              formattedRow[header] = column?.is_nullable ? null : "";
-            } else {
-              formattedRow[header] = row[header];
-            }
-          });
-          return formattedRow;
-        });
-        const insertQuery = new Query()
-          .from(table.name, table.schema)
-          .insert(formattedData)
-          .toSql();
-        try {
-          await executeSql({ projectRef, sdk, sql: insertQuery });
-        } catch (error) {
-          console.warn(error);
-          insertError = error;
-          parser.abort();
-        }
-        chunkNumber += 1;
-        const progress = (chunkNumber * CHUNK_SIZE) / file.size;
-        const progressPercentage = progress > 1 ? 100 : progress * 100;
-        onProgressUpdate(progressPercentage);
-        parser.resume();
-      },
+      // chunk: async (results: any, parser: any) => {
+      //   parser.pause();
+      //   const formattedData = results.data.map((row: any) => {
+      //     const formattedRow: any = {};
+      //     selectedHeaders.forEach((header) => {
+      //       const column = table.columns?.find((c) => c.name === header);
+      //       if ((column?.data_type ?? "") === "ARRAY" || (column?.format ?? "").includes("json")) {
+      //         formattedRow[header] = tryParseJson(row[header]);
+      //       } else if (row[header] === "") {
+      //         // if the cell is empty string, convert it to NULL
+      //         formattedRow[header] = column?.is_nullable ? null : "";
+      //       } else {
+      //         formattedRow[header] = row[header];
+      //       }
+      //     });
+      //     return formattedRow;
+      //   });
+      //   const insertQuery = new Query()
+      //     .from(table.name, table.schema)
+      //     .insert(formattedData)
+      //     .toSql();
+      //   try {
+      //     await executeSql({ projectRef, sdk, sql: insertQuery });
+      //   } catch (error) {
+      //     console.warn(error);
+      //     insertError = error;
+      //     parser.abort();
+      //   }
+      //   chunkNumber += 1;
+      //   const progress = (chunkNumber * CHUNK_SIZE) / file.size;
+      //   const progressPercentage = progress > 1 ? 100 : progress * 100;
+      //   onProgressUpdate(progressPercentage);
+      //   parser.resume();
+      // },
       complete: () => {
         const t2: any = new Date();
         console.log(`Total time taken for importing spreadsheet: ${(t2 - t1) / 1000} seconds`);
@@ -159,7 +161,7 @@ export const insertRowsViaSpreadsheet = async (
 export const insertTableRows = async (
   projectRef: string,
   sdk: ProjectSdk,
-  table: PostgresTable,
+  collection: Models.Collection,
   rows: any,
   selectedHeaders: string[],
   onProgressUpdate: (progress: number) => void,
@@ -169,16 +171,16 @@ export const insertTableRows = async (
 
   const formattedRows = rows.map((row: any) => {
     const formattedRow: any = {};
-    selectedHeaders.forEach((header) => {
-      const column = table.columns?.find((c) => c.name === header);
-      if ((column?.data_type ?? "") === "ARRAY" || (column?.format ?? "").includes("json")) {
-        formattedRow[header] = tryParseJson(row[header]);
-      } else if (row[header] === "") {
-        formattedRow[header] = column?.is_nullable ? null : "";
-      } else {
-        formattedRow[header] = row[header];
-      }
-    });
+    // selectedHeaders.forEach((header) => {
+    //   const column = table.columns?.find((c) => c.name === header);
+    //   if ((column?.data_type ?? "") === "ARRAY" || (column?.format ?? "").includes("json")) {
+    //     formattedRow[header] = tryParseJson(row[header]);
+    //   } else if (row[header] === "") {
+    //     formattedRow[header] = column?.is_nullable ? null : "";
+    //   } else {
+    //     formattedRow[header] = row[header];
+    //   }
+    // });
     return formattedRow;
   });
 
@@ -187,15 +189,15 @@ export const insertTableRows = async (
     return () => {
       return Promise.race([
         new Promise(async (resolve, reject) => {
-          const insertQuery = new Query().from(table.name, table.schema).insert(batch).toSql();
-          try {
-            await executeSql({ projectRef, sdk, sql: insertQuery });
-          } catch (error) {
-            insertError = error;
-            reject(error);
-          }
+          // const insertQuery = new Query().from(table.name, table.schema).insert(batch).toSql();
+          // try {
+          //   await executeSql({ projectRef, sdk, sql: insertQuery });
+          // } catch (error) {
+          //   insertError = error;
+          //   reject(error);
+          // }
 
-          insertProgress = insertProgress + batch.length / rows.length;
+          // insertProgress = insertProgress + batch.length / rows.length;
           resolve({});
         }),
         timeout(30000),

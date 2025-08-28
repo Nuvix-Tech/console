@@ -10,7 +10,6 @@ import {
 } from "@/components/grid/utils/gridColumns";
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
-import { convertByteaToHex } from "../RowEditor.utils";
 import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { gridStyles2 } from "@/components/grid/components/grid/Grid";
 
@@ -41,13 +40,14 @@ const columnRender = (name: string, isPrimaryKey = false) => {
 // TODO: move this formatter out to a common component
 const formatter = ({ column, format, row }: { column: string; format: string; row: NuvixRow }) => {
   const formattedValue =
-    format === "bytea"
-      ? convertByteaToHex(row[column])
-      : row[column] === null
-        ? null
-        : typeof row[column] === "object"
-          ? JSON.stringify(row[column])
-          : row[column];
+    // format === "bytea"
+    //   ? convertByteaToHex(row[column])
+    //   : row[column] === null
+    //     ? null
+    //     : typeof row[column] === "object"
+    //       ? JSON.stringify(row[column])
+    //       :
+    row[column];
 
   return (
     <div className="group nx-grid-select-cell__formatter overflow-hidden">

@@ -5,10 +5,7 @@ import { Field } from "@nuvix/cui/field";
 import { DateInput, Input, NumberInput, Select, Textarea } from "@nuvix/ui/components";
 import { CloseButton } from "@nuvix/cui/close-button";
 import { LuPlus } from "react-icons/lu";
-import {
-  AttributeFormat,
-  Attributes,
-} from "../ColumnEditor/utils";
+import { AttributeFormat, Attributes } from "../ColumnEditor/utils";
 import { AttributeIcon } from "../ColumnEditor/_attribute_icon";
 
 type BaseFieldProps = {
@@ -25,12 +22,12 @@ type BaseFieldProps = {
 
 type EnumFieldProps = BaseFieldProps & {
   type: AttributeFormat.Enum;
-  options: { value: string; label: string; }[];
+  options: { value: string; label: string }[];
 };
 
 type RelationshipFieldProps = BaseFieldProps & {
   type: Attributes.Relationship;
-  options: { value: string; label: string; }[];
+  options: { value: string; label: string }[];
 };
 
 type ScalarFieldProps = BaseFieldProps & {
@@ -167,7 +164,7 @@ export const DynamicField = (props: Props) => {
 
 type FieldProps = {
   value: any;
-  onChange: (event: { target: { value: any; }; }) => void;
+  onChange: (event: { target: { value: any } }) => void;
   isNull?: boolean;
   nullable?: boolean;
   maxLength?: number;
@@ -177,7 +174,7 @@ type FieldProps = {
 
 type SelectFieldProps = FieldProps & {
   name: string;
-  options: Array<{ value: string; label: string; }>;
+  options: Array<{ value: string; label: string }>;
 } & Partial<React.ComponentProps<typeof Select>>;
 
 // Text input / textarea
@@ -214,30 +211,30 @@ const NumberField = ({ value, onChange, ...props }: FieldProps) => (
 
 // Select field factory
 const makeSelectField =
-  (baseOptions: Array<{ value: string; label: string; }>) =>
-    ({ value, onChange, options = [], nullable, ...props }: SelectFieldProps) => {
-      const _onChange = (v: string) => {
-        if ((v === null || v === "null") && nullable) {
-          onChange({ target: { value: null } });
-        } else {
-          onChange({ target: { value: v } });
-        }
-      };
-
-      const finalOptions = nullable
-        ? [{ value: "null", label: "NULL" }, ...baseOptions, ...options]
-        : [...baseOptions, ...options];
-
-      return (
-        <Select
-          {...props}
-          labelAsPlaceholder
-          value={value == null ? "null" : value}
-          options={finalOptions}
-          onSelect={_onChange}
-        />
-      );
+  (baseOptions: Array<{ value: string; label: string }>) =>
+  ({ value, onChange, options = [], nullable, ...props }: SelectFieldProps) => {
+    const _onChange = (v: string) => {
+      if ((v === null || v === "null") && nullable) {
+        onChange({ target: { value: null } });
+      } else {
+        onChange({ target: { value: v } });
+      }
     };
+
+    const finalOptions = nullable
+      ? [{ value: "null", label: "NULL" }, ...baseOptions, ...options]
+      : [...baseOptions, ...options];
+
+    return (
+      <Select
+        {...props}
+        labelAsPlaceholder
+        value={value == null ? "null" : value}
+        options={finalOptions}
+        onSelect={_onChange}
+      />
+    );
+  };
 
 // Concrete select fields
 export const SelectField = makeSelectField([]);

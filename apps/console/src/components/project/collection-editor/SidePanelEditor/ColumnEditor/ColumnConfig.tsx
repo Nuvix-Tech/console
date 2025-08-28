@@ -466,8 +466,8 @@ export class AttributeConfigFactory {
           this.collection.$id,
           key,
           required,
-          min?? undefined,
-          max?? undefined,
+          min ?? undefined,
+          max ?? undefined,
           defaultValue,
           array,
         );
@@ -794,7 +794,7 @@ export class AttributeConfigFactory {
         );
       },
       updateAction: (key, values) => {
-        const { required, default: x, elements,  key: newKey } = values;
+        const { required, default: x, elements, key: newKey } = values;
         return this.sdk.databases.updateEnumAttribute(
           this.database.$id,
           this.collection.$id,
@@ -851,7 +851,7 @@ export class AttributeConfigFactory {
         );
       },
       updateAction(key, values) {
-        throw Error('currently updating relationship attribute does not supported')
+        throw Error("currently updating relationship attribute does not supported");
       },
     };
   }

@@ -22,7 +22,6 @@ import { useTableRowsQuery } from "@/data/table-rows/table-rows-query";
 // } from "state/role-impersonation-state";
 import ActionBar from "../../ActionBar";
 import { ForeignKey } from "../../ForeignKeySelector/ForeignKeySelector.types";
-import { convertByteaToHex } from "../RowEditor.utils";
 import Pagination from "./Pagination";
 import SelectorGrid from "./SelectorGrid";
 import { useProjectStore } from "@/lib/store";
@@ -207,9 +206,10 @@ const ForeignRowSelector = ({
                           (x) => x.name === b.target,
                         );
                         const value =
-                          targetColumn?.format === "bytea"
-                            ? convertByteaToHex(row[b.target])
-                            : row[b.target];
+                          // targetColumn?.format === "bytea"
+                          //   ? convertByteaToHex(row[b.target])
+                          //   :
+                          row[b.target];
                         return { ...a, [b.source]: value };
                       }, {});
                       onSelect(value);
