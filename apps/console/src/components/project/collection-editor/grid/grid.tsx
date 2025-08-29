@@ -45,8 +45,8 @@ export const CollectionGrid = ({
 
   const { filters: filter, sorts: sort, setParams } = useTableEditorFiltersSort();
 
-  const sorts: any = formatSortURLParams(snap.collection.name, sort as string[] | undefined);
-  const filters: any = formatFilterURLParams(filter as string[]);
+  const sorts = formatSortURLParams(snap.collection.name, sort as string[] | undefined);
+  const filters = formatFilterURLParams(filter as string[]);
 
   const onApplyFilters = useCallback(
     (appliedFilters: Filter[]) => {

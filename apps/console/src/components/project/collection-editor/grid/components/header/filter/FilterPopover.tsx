@@ -23,9 +23,6 @@ const FilterPopover = ({ filters, portal = true, onApplyFilters }: FilterPopover
   const [open, setOpen] = useState(false);
 
   const btnText = "Filter";
-  // (filters || []).length > 0
-  //   ? `Filtered by ${filters.length} rule${filters.length > 1 ? "s" : ""}`
-  //   : "Filter";
 
   return (
     <Popover open={open} onOpenChange={setOpen} modal={false}>
@@ -74,7 +71,7 @@ const FilterOverlay = ({ filters: filtersFromUrl, onApplyFilters }: FilterOverla
         ...filters,
         {
           column,
-          operator: "=",
+          operator: "equal",
           value: "",
         },
       ]);

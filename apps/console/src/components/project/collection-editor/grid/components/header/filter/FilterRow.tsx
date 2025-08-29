@@ -2,12 +2,12 @@ import { ChevronDown, X } from "lucide-react";
 import { KeyboardEvent, memo } from "react";
 
 import { DropdownControl } from "@/components/grid/components/common/DropdownControl";
-import type { Filter, FilterOperator } from "@/components/grid/types";
 import { FilterOperatorOptions } from "./Filter.constants";
 import { Button, IconButton } from "@nuvix/ui/components";
 import { Input } from "@/components/others/ui";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 import { Attributes } from "@/components/project/collection-editor/SidePanelEditor/ColumnEditor/utils";
+import type { Filter, FilterOperator } from "../../../types";
 
 export interface FilterRowProps {
   filterIdx: number;
@@ -60,7 +60,6 @@ const FilterRow = ({ filter, filterIdx, onChange, onDelete, onKeyDown }: FilterR
         }
       >
         <Button
-          // asChild
           size="s"
           variant="secondary"
           prefixIcon={
@@ -88,7 +87,7 @@ const FilterRow = ({ filter, filterIdx, onChange, onDelete, onKeyDown }: FilterR
         type="text"
         size="s"
         variant="tertiary"
-        icon={<X strokeWidth={1.5} size={18} />}
+        icon={"close"}
         onClick={() => onDelete(filterIdx)}
       />
     </div>

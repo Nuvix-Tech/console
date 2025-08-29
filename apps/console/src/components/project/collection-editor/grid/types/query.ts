@@ -6,18 +6,18 @@ export interface Sort {
 }
 
 export type FilterOperator =
-  | "="
-  | "<>"
-  | ">"
-  | "<"
-  | ">="
-  | "<="
-  | "~~"
-  | "~~*"
-  | "!~~"
-  | "!~~*"
-  | "in"
-  | "is";
+  | "equal"
+  | "notEqual"
+  | "greaterThan"
+  | "lessThan"
+  | "greaterThanEqual"
+  | "lessThanEqual"
+  | "between"
+  | "startsWith"
+  | "endsWith"
+  | "contains"
+  | "isNull"
+  | "isNotNull";
 
 export interface Filter {
   column: string;

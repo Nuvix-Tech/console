@@ -1,5 +1,4 @@
 import { toast } from "sonner";
-import { useTableFilter } from "@/components/grid/hooks/useTableFilter";
 import { useProjectStore } from "@/lib/store";
 import type { Models } from "@nuvix/console";
 import {
@@ -10,6 +9,7 @@ import {
 import { useDocumentDeleteMutation } from "@/data/collections/documents/document_delete_mutation";
 import ConfirmationModal from "@/components/editor/components/_confim_dialog";
 import { useCollectionEditorStateSnapshot } from "@/lib/store/collection-editor";
+import { useCollectionFilter } from "../grid/hooks/useCollectionFilter";
 
 export type DeleteConfirmationDialogsProps = {
   selectedCollection?: Models.Collection;
@@ -22,7 +22,7 @@ const DeleteConfirmationDialogs = ({
 }: DeleteConfirmationDialogsProps) => {
   const { project, sdk } = useProjectStore((state) => state);
   const snap = useCollectionEditorStateSnapshot();
-  // const { filters, onApplyFilters } = useTableFilter();
+  const { filters, onApplyFilters } = useCollectionFilter();
 
   const removeDeletedColumnFromFiltersAndSorts = ({
     columnName,
@@ -32,7 +32,7 @@ const DeleteConfirmationDialogs = ({
     schema?: string;
     columnName: string;
   }) => {
-    // onApplyFilters(filters.filter((filter) => filter.column !== columnName));
+    onApplyFilters(filters.filter((filter) => filter.column !== columnName));
   };
 
   const { mutate: deleteColumn } = useAttributeDeleteMutation({

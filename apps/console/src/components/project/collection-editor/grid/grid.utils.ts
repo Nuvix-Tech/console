@@ -3,12 +3,11 @@ import { compact } from "lodash";
 import { useEffect } from "react";
 import { CalculatedColumn, CellKeyboardEvent } from "react-data-grid";
 
-import type { Filter, SavedState } from "@/components/grid/types";
 // import { useUrlState } from "hooks/ui/useUrlState";
 // import { copyToClipboard } from "ui";
 import { FilterOperatorOptions } from "./components/header/filter/Filter.constants";
 import { STORAGE_KEY_PREFIX } from "./constants";
-import type { Sort } from "./types";
+import type { Filter, SavedState, Sort } from "./types";
 import { formatClipboardValue } from "./utils/common";
 import { useRouter, useSearchParams } from "next/navigation";
 import type { Models } from "@nuvix/console";

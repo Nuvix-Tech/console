@@ -1,11 +1,10 @@
 import type { XYCoord } from "dnd-core";
-import { Menu, X } from "lucide-react";
+import { Menu } from "lucide-react";
 import { memo, useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 
 import type { DragItem, Sort } from "@/components/grid/types";
-import { Toggle } from "@nuvix/sui/components/toggle";
-import { Button, IconButton, Switch } from "@nuvix/ui/components";
+import { IconButton, Switch } from "@nuvix/ui/components";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 
 export interface SortRowProps {
@@ -126,7 +125,7 @@ const SortRow = ({ index, columnName, sort, onDelete, onToggle, onDrag }: SortRo
         />
       </div>
       <IconButton
-        icon={<X strokeWidth={1.5} size={18} />}
+        icon={"close"}
         size="s"
         variant="tertiary"
         type="text"

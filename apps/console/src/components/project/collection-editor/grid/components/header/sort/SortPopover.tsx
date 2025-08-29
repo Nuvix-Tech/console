@@ -25,10 +25,6 @@ const SortPopover = ({ sorts, portal = true, onApplySorts }: SortPopoverProps) =
   const [open, setOpen] = useState(false);
 
   const btnText = "Sort";
-  // (sorts || []).length > 0
-  //   ? `Sorted by ${sorts.length} rule${sorts.length > 1 ? "s" : ""}`
-  //   : "Sort";
-
   return (
     <Popover modal={false} open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
