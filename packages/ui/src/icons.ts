@@ -67,8 +67,18 @@ import {
   TbRocket,
   TbKey,
   TbLogs,
+  TbTextRecognition,
+  TbHash,
+  TbToggleLeft,
+  TbList,
+  TbLink,
+  TbBrandMailgun,
+  TbArrowGuide,
+  TbCalendar,
+  TbGlobe,
 } from "react-icons/tb";
 import { Trash2 } from "lucide-react";
+import { CgArrowLongRightC, CgArrowsH } from "react-icons/cg";
 
 export const iconMap = {
   chevronUp: HiChevronUp,
@@ -138,6 +148,20 @@ export const iconMap = {
   mail: TbMail,
   sms: TbMessages,
   push: TbNotification,
+
+  // attributes
+  string: TbTextRecognition,
+  integer: TbHash,
+  float: TbHash,
+  boolean: TbToggleLeft,
+  enum: TbList,
+  url: TbLink,
+  email: TbBrandMailgun,
+  relationship: TbArrowGuide,
+  timestamptz: TbCalendar,
+  ip: TbGlobe,
+  oneWay: CgArrowLongRightC,
+  twoWay: CgArrowsH,
 } as const;
 
 export type IconName = keyof typeof iconMap;

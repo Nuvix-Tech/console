@@ -12,15 +12,15 @@ import {
 import { useCollectionStore, useDatabaseStore, useProjectStore } from "@/lib/store";
 import { Column, Row, useToast } from "@nuvix/ui/components";
 import * as y from "yup";
-import { AttributeIcon, RelationshipIcon } from "./_attribute_icon";
+import { AttributeIcon, RelationshipIcon } from "./ColumnIcon";
 import { useFormikContext, type FormikValues, type FormikHelpers } from "formik";
-import { DynamicField, SelectField } from "../../../schema/single/collection/document/components";
 import { useQuery } from "@tanstack/react-query";
 import { RadioCardItem, RadioCardRoot } from "@nuvix/cui/radio-card";
 import { MoveHorizontal, MoveRight } from "lucide-react";
 import { AttributeFormat, Attributes } from "./utils";
 import type { Models, RelationMutate, RelationshipType } from "@nuvix/console";
 import type { ProjectSdk } from "@/lib/sdk";
+import { DynamicField, SelectField } from "../RowEditor/InputField";
 
 // ======================== TYPE DEFINITIONS ========================
 
@@ -280,7 +280,7 @@ const AttributeFormBase = <T extends FormikValues>({
       dialog={{
         title: (
           <Row gap="8">
-            {AttributeIcon({ format })}
+            <AttributeIcon type={format as any} />
             {title}
           </Row>
         ),
@@ -990,6 +990,7 @@ const RelationshipAttributeFormFields: React.FC = () => {
         onChange={handleRelatedCollectionChange}
         required
         options={collectionOptions}
+        portal={false}
         searchable
         emptyState="There are no collections that match your search"
       />

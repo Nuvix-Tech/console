@@ -3,7 +3,7 @@ import { Models } from "@nuvix/console";
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataGridProvider, Table } from "@/ui/data-grid";
-import { AttributeIcon, CreateAttribute } from "./components";
+import { AttributeIcon } from "./components";
 import { Ellipsis, Pencil, Trash } from "lucide-react";
 import { useCollectionStore, useDatabaseStore, useProjectStore } from "@/lib/store";
 import { PageContainer, PageHeading } from "@/components/others";
@@ -64,13 +64,17 @@ export const AttributesPage: React.FC<Props> = ({ databaseId, collectionId }) =>
         accessorKey: "key",
         minSize: 300,
         cell: ({ row }) => {
-          const attr = row.original;
+          const attr: any = row.original;
           const isUnavailable = attr.status !== "available";
 
           return (
             <div className="flex items-center gap-2 justify-between w-full">
               <div className="flex items-center gap-4">
-                {AttributeIcon(attr, Boolean(attr.array))}
+                <AttributeIcon
+                  type={attr.format || attr.type}
+                  array={attr.array}
+                  twoWay={attr?.options?.twoWay}
+                />
                 <p className="text-sm line-clamp-1 overflow-ellipsis">{attr.key}</p>
               </div>
               {isUnavailable ? (
@@ -151,7 +155,7 @@ export const AttributesPage: React.FC<Props> = ({ databaseId, collectionId }) =>
       <PageHeading
         heading="Attributes"
         description="Attributes are the fields that make up a document in a collection. Each attribute has a key, type, and optional default value."
-        right={<CreateAttribute refetch={refetch as any} />}
+        // right={<CreateAttribute refetch={refetch as any} />}
       />
 
       <DataGridProvider<any>

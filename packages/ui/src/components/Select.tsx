@@ -22,7 +22,7 @@ type SelectOptionType = Omit<OptionProps, "selected">;
 
 interface SelectProps
   extends Omit<InputProps, "onSelect" | "value">,
-    Pick<DropdownWrapperProps, "minHeight" | "minWidth" | "maxWidth"> {
+    Pick<DropdownWrapperProps, "minHeight" | "minWidth" | "maxWidth" | "portal"> {
   options: SelectOptionType[];
   value?: string | string[];
   emptyState?: ReactNode;
@@ -53,6 +53,8 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
       style,
       multiple = false,
       nullable = false,
+      isNull,
+      portal,
       ...rest
     },
     ref,
@@ -192,6 +194,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
         style={{
           ...style,
         }}
+        portal={portal}
         trigger={
           <Input
             {...rest}
@@ -304,7 +307,9 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
                         ) : Array.isArray(currentValue) && currentValue.length > 0 ? (
                           <Flex minWidth="20" />
                         ) : undefined
-                      ) : undefined
+                      ) : (
+                        option.hasPrefix
+                      )
                     }
                   />
                 ))}

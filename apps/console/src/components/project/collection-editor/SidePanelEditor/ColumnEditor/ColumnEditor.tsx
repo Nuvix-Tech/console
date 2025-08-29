@@ -10,12 +10,14 @@ import {
   Attributes,
 } from "@/components/project/collection-editor/SidePanelEditor/ColumnEditor/utils";
 import { useFormik } from "formik";
-import { AttributeIcon } from "./_attribute_icon";
+import { AttributeIcon } from "./ColumnIcon";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Select } from "@/components/others/ui";
 import { AttributeConfigFactory } from "./ColumnConfig";
 import { useCollectionEditorStore } from "@/lib/store/collection-editor";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
+import { Select } from "@nuvix/ui/components";
+import { SelectField } from "../RowEditor/InputField";
+import { cn } from "@nuvix/sui/lib/utils";
 
 export interface ColumnEditorProps {
   column?: Readonly<AttributeTypes>;
@@ -123,23 +125,25 @@ const ColumnEditor = ({
     >
       <div className="p-4">
         {!column && (
-          <Select
+          <SelectField
             label="Type"
+            name=""
             options={ATTRIBUTES.map((attr) => ({
               label: attr.label,
               value: attr.key,
-              icon: AttributeIcon(attr.key),
+              hasPrefix: <AttributeIcon type={attr.key} />,
             }))}
             placeholder="Select type"
             value={type ?? ""}
-            onValueChange={onTypeChange}
+            onChange={(e) => onTypeChange(e.target.value)}
             required
             multiple={false}
-            className="mb-6"
           />
         )}
 
-        {type && formikConfig && <div className="space-y-6">{formikConfig.formFields}</div>}
+        {type && formikConfig && (
+          <div className={cn("space-y-6", { "mt-6": !column })}>{formikConfig.formFields}</div>
+        )}
       </div>
     </SidePanel>
   );

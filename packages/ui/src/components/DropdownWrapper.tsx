@@ -47,6 +47,7 @@ export interface DropdownWrapperProps {
   optionsCount?: number;
   dropdownId?: string;
   disableTriggerClick?: boolean;
+  portal?: boolean;
 }
 
 // Global state to track the last opened dropdown
@@ -76,6 +77,7 @@ const DropdownWrapper = forwardRef<HTMLDivElement, DropdownWrapperProps>(
       optionsCount: propOptionsCount,
       dropdownId: propDropdownId,
       disableTriggerClick = false,
+      portal = true,
     },
     ref,
   ) => {
@@ -702,7 +704,7 @@ const DropdownWrapper = forwardRef<HTMLDivElement, DropdownWrapperProps>(
                 </Flex>
               )}
             </FocusTrap>,
-            document.body,
+            !portal && wrapperRef.current ? wrapperRef.current : document.body,
           )}
       </Column>
     );

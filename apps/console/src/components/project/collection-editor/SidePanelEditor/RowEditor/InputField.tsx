@@ -6,7 +6,7 @@ import { DateInput, Input, NumberInput, Select, Textarea } from "@nuvix/ui/compo
 import { CloseButton } from "@nuvix/cui/close-button";
 import { LuPlus } from "react-icons/lu";
 import { AttributeFormat, Attributes } from "../ColumnEditor/utils";
-import { AttributeIcon } from "../ColumnEditor/_attribute_icon";
+import { AttributeIcon } from "../ColumnEditor/ColumnIcon";
 
 type BaseFieldProps = {
   name: string;
@@ -17,7 +17,7 @@ type BaseFieldProps = {
   min?: number;
   max?: number;
   showAbout?: boolean;
-  orientation: "horizontal" | "vertical";
+  orientation?: "horizontal" | "vertical";
   [key: string]: any;
 };
 
@@ -135,7 +135,7 @@ export const DynamicField = (props: Props) => {
       invalid={!!errors[name] && !!touched[name]}
       label={
         <div className="flex items-center gap-2">
-          {showAbout && <>{AttributeIcon({ format: type }, isArray, 12, "size-6")}</>}
+          {showAbout && <AttributeIcon type={type} array={isArray} />}
           {label ?? name}
         </div>
       }
@@ -179,9 +179,11 @@ type FieldProps = {
   isEditable?: boolean;
 };
 
+type SelectProps = React.ComponentProps<typeof Select>;
+
 type SelectFieldProps = FieldProps & {
   name: string;
-  options: Array<{ value: string; label: string }>;
+  options: Array<SelectProps["options"][number]>;
 } & Partial<React.ComponentProps<typeof Select>>;
 
 // Text input / textarea
@@ -227,7 +229,7 @@ const NumberField = ({ value, onChange, ...props }: FieldProps) => (
 
 // Select field factory
 const makeSelectField =
-  (baseOptions: Array<{ value: string; label: string }>) =>
+  (baseOptions: SelectProps["options"]) =>
   ({ value, onChange, options = [], nullable, ...props }: SelectFieldProps) => {
     const _onChange = (v: string) => {
       if ((v === null || v === "null") && nullable) {
@@ -245,6 +247,7 @@ const makeSelectField =
       <Select
         {...props}
         labelAsPlaceholder
+        portal={false}
         value={value == null ? "null" : value}
         options={finalOptions}
         onSelect={_onChange}
