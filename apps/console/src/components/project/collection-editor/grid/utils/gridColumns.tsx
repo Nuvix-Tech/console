@@ -91,7 +91,7 @@ export function getGridColumns(
           {...props}
           columnType={columnType}
           isPrimaryKey={(x as any).isPrimaryKey}
-          isEncrypted={(x as any).encrypted}
+          isInternal={x.internal}
           isArray={x.array}
         />
       ),

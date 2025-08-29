@@ -1,12 +1,8 @@
-// I WILL BE BACK HERE!
-
 import { chunk, find } from "lodash";
 import Papa from "papaparse";
 import { toast } from "sonner";
 
-import { Query } from "@nuvix/pg-meta/src/query";
 import { getQueryClient } from "@/data/query-client";
-import { executeSql } from "@/data/sql/execute-sql-query";
 import { timeout, tryParseJson } from "@/lib/helpers";
 import { ProjectSdk } from "@/lib/sdk";
 import type { Models } from "@nuvix/console";

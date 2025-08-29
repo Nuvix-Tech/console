@@ -13,12 +13,13 @@ import { Text } from "@nuvix/ui/components";
 import { Code } from "@chakra-ui/react";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 import { Attributes } from "@/components/project/collection-editor/SidePanelEditor/ColumnEditor/utils";
+import { AttributeIcon } from "../../../SidePanelEditor/ColumnEditor/ColumnIcon";
 
 export function ColumnHeader<R>({
   column,
   columnType,
   isPrimaryKey,
-  isEncrypted,
+  isInternal,
   isArray,
   foreignKey,
 }: ColumnHeaderProps<R>) {
@@ -118,18 +119,25 @@ export function ColumnHeader<R>({
       <div className={`nx-grid-column-header ${cursor} flex w-full items-center justify-between`}>
         <div className="nx-grid-column-header__inner space-x-2 items-center flex justify-center">
           {renderColumnIcon(columnType, { name: column.name as string, foreignKey })}
-          {isPrimaryKey && (
-            <Tooltip>
-              <TooltipTrigger>
+          <Tooltip>
+            <TooltipTrigger>
+              {isPrimaryKey ? (
                 <div className="nx-grid-column-header__inner__primary-key brand-on-background-weak">
                   <Key size={14} strokeWidth={2} />
                 </div>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="font-normal">
-                Primary key
-              </TooltipContent>
-            </Tooltip>
-          )}
+              ) : (
+                <AttributeIcon
+                  type={columnFormat as any}
+                  array={isArray}
+                  size="s"
+                  className="size-6 p-0 !bg-transparent"
+                />
+              )}
+            </TooltipTrigger>
+            <TooltipContent side="bottom" className="font-normal">
+              {isPrimaryKey ? "Primary key" : columnFormat}
+            </TooltipContent>
+          </Tooltip>
           <Text
             as="span"
             variant="label-strong-s"
@@ -139,27 +147,8 @@ export function ColumnHeader<R>({
           >
             {column.name}
           </Text>
-          <Text
-            as="span"
-            variant="body-default-xs"
-            onBackground="neutral-weak"
-            className="nx-grid-column-header__inner__format"
-          >
-            {columnFormat}
-            {columnFormat === "bytea" ? ` (hex)` : ""}
-          </Text>
-          {isEncrypted && (
-            <Tooltip>
-              <TooltipTrigger>
-                <Lock size={14} strokeWidth={2} />
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="font-normal">
-                Encrypted column
-              </TooltipContent>
-            </Tooltip>
-          )}
         </div>
-        <ColumnMenu column={column} isEncrypted={isEncrypted} />
+        <ColumnMenu column={column} isInternal={isInternal} />
       </div>
     </div>
   );

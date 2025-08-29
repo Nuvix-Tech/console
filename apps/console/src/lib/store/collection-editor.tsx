@@ -18,6 +18,7 @@ export type SidePanel =
   | { type: "cell"; value?: { column: string; row: Models.Document } }
   | { type: "row"; row?: Models.Document }
   | { type: "column"; column?: AttributeTypes }
+  | { type: "index"; index?: Models.Index; attributes?: string[] }
   | { type: "table"; mode: "new" | "edit" | "duplicate" }
   | { type: "schema"; mode: "new" | "edit" }
   | { type: "json"; jsonValue: EditValue }
@@ -130,6 +131,20 @@ export const createCollectionEditorState = () => {
       state.ui = {
         open: "confirmation-dialog",
         confirmationDialog: { type: "column", column, isDeleteWithCascade: false },
+      };
+    },
+
+    /* Indexes */
+    onAddIndex: (attributes?: string[]) => {
+      state.ui = {
+        open: "side-panel",
+        sidePanel: { type: "index", attributes },
+      };
+    },
+    onEditIndex: (index: Models.Index) => {
+      state.ui = {
+        open: "side-panel",
+        sidePanel: { type: "index", index },
       };
     },
 

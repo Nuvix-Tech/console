@@ -26,6 +26,7 @@ import { useCollectionEditorStore } from "@/lib/store/collection-editor";
 import { collectionKeys } from "@/data/collections/keys";
 import { useDocumentCreateMutation } from "@/data/collections/documents/document_create_mutation";
 import { useDocumentUpdateMutation } from "@/data/collections/documents/document_update_mutation";
+import IndexEditor from "./IndexEditor/IndexEditor";
 
 export interface SidePanelEditorProps {
   editable?: boolean;
@@ -230,6 +231,38 @@ const SidePanelEditor = ({
     });
   };
 
+  const saveIndex = async (
+    resolve: any,
+    isNewRecord: boolean,
+    index?: Models.Index,
+    error?: any,
+  ) => {
+    const selectedIndexToEdit = snap.sidePanel?.type === "index" && snap.sidePanel.index;
+    if (!project || selectedCollection === undefined) {
+      return console.error("no project or table selected");
+    }
+
+    if (error) {
+      toast.error(error.message);
+    } else {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: collectionKeys.editor(project?.$id, snap.schema, selectedCollection?.$id),
+        }),
+        queryClient.invalidateQueries({ queryKey: collectionKeys.list(project?.$id) }),
+      ]);
+
+      // // We need to invalidate tableRowsAndCount after tableEditor
+      // // to ensure the query sent is correct
+      await queryClient.invalidateQueries({
+        queryKey: collectionKeys.documentsCount(project?.$id, snap.schema, selectedCollection?.$id),
+      });
+
+      setIsEdited(false);
+      snap.closeSidePanel();
+    }
+  };
+
   const saveTable = async (
     payload: Models.Collection,
     isNewRecord: boolean,
@@ -351,6 +384,16 @@ const SidePanelEditor = ({
           updateEditorDirty={() => setIsEdited(true)}
         />
       )}
+      {!isUndefined(selectedCollection) && (
+        <IndexEditor
+          index={snap.sidePanel?.type === "index" ? (snap.sidePanel.index as any) : undefined}
+          selectedCollection={selectedCollection}
+          visible={snap.sidePanel?.type === "index"}
+          closePanel={onClosePanel}
+          onSave={saveIndex}
+          updateEditorDirty={() => setIsEdited(true)}
+        />
+      )}
       <TableEditor
         collection={
           snap.sidePanel?.type === "table" &&
@@ -392,13 +435,13 @@ const SidePanelEditor = ({
         closePanel={onClosePanel}
         onSelect={onSaveForeignRow}
       /> */}
-      {/* <SpreadsheetImport
+      <SpreadsheetImport
         visible={snap.sidePanel?.type === "csv-import"}
         selectedCollection={selectedCollection}
-        saveContent={onImportData}
+        saveContent={() => {}}
         closePanel={onClosePanel}
         updateEditorDirty={setIsEdited}
-      /> */}
+      />
       <ConfirmationModal
         visible={isClosingPanel}
         title="Discard changes"

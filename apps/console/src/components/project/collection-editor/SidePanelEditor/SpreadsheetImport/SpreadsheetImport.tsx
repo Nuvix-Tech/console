@@ -8,22 +8,26 @@ import { toast } from "sonner";
 // import { useSendEventMutation } from "@/data/telemetry/send-event-mutation";
 import ActionBar from "../ActionBar";
 // import type { ImportContent } from "../TableEditor/TableEditor.types";
-import SpreadSheetFileUpload from "./SpreadSheetFileUpload";
-import SpreadsheetImportConfiguration from "./SpreadSheetImportConfiguration";
-import SpreadSheetTextInput from "./SpreadSheetTextInput";
-import { EMPTY_SPREADSHEET_DATA, UPLOAD_FILE_TYPES } from "./SpreadsheetImport.constants";
-import type { SpreadsheetData } from "./SpreadsheetImport.types";
+import SpreadSheetFileUpload from "@/components/editor/SidePanelEditor/SpreadsheetImport/SpreadSheetFileUpload";
+import SpreadsheetImportConfiguration from "@/components/editor/SidePanelEditor/SpreadsheetImport/SpreadSheetImportConfiguration";
+import {
+  EMPTY_SPREADSHEET_DATA,
+  UPLOAD_FILE_TYPES,
+} from "@/components/editor/SidePanelEditor/SpreadsheetImport/SpreadsheetImport.constants";
+import type { SpreadsheetData } from "@/components/editor/SidePanelEditor/SpreadsheetImport/SpreadsheetImport.types";
 import {
   acceptedFileExtension,
   parseSpreadsheet,
   parseSpreadsheetText,
-} from "./SpreadsheetImport.utils";
-import SpreadsheetImportPreview from "./SpreadsheetImportPreview";
+} from "@/components/editor/SidePanelEditor/SpreadsheetImport/SpreadsheetImport.utils";
+import SpreadsheetImportPreview from "@/components/editor/SidePanelEditor/SpreadsheetImport/SpreadsheetImportPreview";
 import { useParams } from "next/navigation";
 import { Button } from "@nuvix/ui/components";
 import { SidePanel } from "@/ui/SidePanel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@nuvix/sui/components/tabs";
 import { Code } from "@chakra-ui/react";
+import type { Models } from "@nuvix/console";
+import SpreadSheetTextInput from "@/components/editor/SidePanelEditor/SpreadsheetImport/SpreadSheetTextInput";
 
 const MAX_CSV_SIZE = 1024 * 1024 * 100; // 100 MB
 
@@ -33,6 +37,7 @@ interface SpreadsheetImportProps {
   rows?: any[];
   visible: boolean;
   selectedTable?: PostgresTable;
+  selectedCollection?: Models.Collection;
   saveContent: (prefillData: any) => void; // ImportContent
   closePanel: () => void;
   updateEditorDirty?: (value: boolean) => void;

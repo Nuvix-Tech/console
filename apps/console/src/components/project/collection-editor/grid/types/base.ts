@@ -28,7 +28,7 @@ export interface GridForeignKey {
 export interface ColumnHeaderProps<R> extends RenderHeaderCellProps<R> {
   columnType: ColumnType;
   isPrimaryKey: boolean | undefined;
-  isEncrypted: boolean | undefined;
+  isInternal: boolean | undefined;
   isArray?: boolean | undefined;
   foreignKey?: GridForeignKey;
 }

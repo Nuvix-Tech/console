@@ -40,7 +40,11 @@ export const BooleanEditor = <TRow, TSummaryRow = unknown>({
         onValueChange={onChange}
         value={value === null ? "null" : value.toString()}
       >
-        <SelectTrigger style={{ width: `${gridColumn?.width || column.width}px` }} onBlur={onBlur}>
+        <SelectTrigger
+          style={{ width: `${gridColumn?.width || column.width}px` }}
+          onBlur={onBlur}
+          className="rounded-none"
+        >
           <SelectValue />
         </SelectTrigger>
         <SelectContent>

@@ -1,7 +1,6 @@
-import { ChevronDown, Edit, Lock, Trash, Unlock } from "lucide-react";
+import { ChevronDown, Edit, Edit2, Lock, Unlock } from "lucide-react";
 import type { CalculatedColumn } from "react-data-grid";
 
-import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,16 +8,16 @@ import {
   DropdownMenuTrigger,
 } from "@nuvix/sui/components/dropdown-menu";
 import { Separator } from "@nuvix/sui/components/separator";
-import { IconButton } from "@nuvix/ui/components";
+import { Icon, IconButton, Text } from "@nuvix/ui/components";
 import { useCollectionEditorStore } from "@/lib/store/collection-editor";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 
 interface ColumnMenuProps {
   column: CalculatedColumn<any, unknown>;
-  isEncrypted?: boolean;
+  isInternal?: boolean;
 }
 
-const ColumnMenu = ({ column, isEncrypted }: ColumnMenuProps) => {
+const ColumnMenu = ({ column, isInternal }: ColumnMenuProps) => {
   const tableEditorSnap = useCollectionEditorStore();
 
   const snap = useCollectionEditorCollectionStateSnapshot();
@@ -50,41 +49,46 @@ const ColumnMenu = ({ column, isEncrypted }: ColumnMenuProps) => {
   function renderMenu() {
     return (
       <>
-        {snap.editable && (
-          <Tooltip>
-            <TooltipTrigger asChild className={`${isEncrypted ? "opacity-50" : ""}`}>
-              <DropdownMenuItem className="space-x-2" onClick={onEditColumn} disabled={isEncrypted}>
-                <Edit size={14} />
-                <p>Edit column</p>
-              </DropdownMenuItem>
-            </TooltipTrigger>
-            {isEncrypted && (
-              <TooltipContent side="bottom">Encrypted columns cannot be edited</TooltipContent>
-            )}
-          </Tooltip>
+        {!isInternal && snap.editable && (
+          <DropdownMenuItem className="space-x-2" onClick={onEditColumn} disabled={isInternal}>
+            <Icon name={Edit} size="s" />
+            <p>Edit column</p>
+          </DropdownMenuItem>
         )}
+
         <DropdownMenuItem
           className="space-x-2"
           onClick={column.frozen ? onUnfreezeColumn : onFreezeColumn}
         >
           {column.frozen ? (
             <>
-              <Unlock size={14} />
+              <Icon name={Unlock} size="s" />
               <p>Unfreeze column</p>
             </>
           ) : (
             <>
-              <Lock size={14} />
+              <Icon name={Lock} size="s" />
               <p>Freeze column</p>
             </>
           )}
         </DropdownMenuItem>
-        {snap.editable && (
+
+        <Separator className="my-0.5" />
+
+        <DropdownMenuItem
+          className="space-x-2"
+          onClick={() => tableEditorSnap.onAddIndex([column.key])}
+        >
+          <Icon name={Edit2} size="s" />
+          <p>Create Index</p>
+        </DropdownMenuItem>
+
+        {!isInternal && (
           <>
             <Separator className="my-0.5" />
             <DropdownMenuItem className="space-x-2" onClick={onDeleteColumn}>
-              <Trash size={14} stroke="red" />
-              <p>Delete column</p>
+              <Icon name="trash" onBackground="danger-weak" size="s" />
+              <Text onBackground="danger-weak">Delete column</Text>
             </DropdownMenuItem>
           </>
         )}

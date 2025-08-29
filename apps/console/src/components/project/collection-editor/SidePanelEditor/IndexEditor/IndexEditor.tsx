@@ -3,104 +3,79 @@ import HeaderTitle from "./HeaderTitle";
 import { useProjectStore } from "@/lib/store";
 import { SidePanel } from "@/ui/SidePanel";
 import type { Models } from "@nuvix/console";
-import {
-  ATTRIBUTES,
-  AttributeFormat,
-  type AttributeTypes,
-  Attributes,
-} from "@/components/project/collection-editor/SidePanelEditor/ColumnEditor/utils";
+import { AttributeFormat } from "@/components/project/collection-editor/SidePanelEditor/ColumnEditor/utils";
 import { useFormik } from "formik";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect } from "react";
 import { useCollectionEditorStore } from "@/lib/store/collection-editor";
-import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
-import { DynamicField, SelectField } from "../RowEditor/InputField";
-import * as y from "yup";
+import { DynamicField } from "../RowEditor/InputField";
 import { Column } from "@nuvix/ui/components";
 import { InputField, SelectObjectField } from "@/components/others/forms";
+import { validationSchema, IndexType } from "./utils";
 
-export interface ColumnEditorProps {
-  column?: Readonly<AttributeTypes>;
+export interface IndexEditorProps {
+  index?: Readonly<Models.Index>;
   selectedCollection: Models.Collection;
   visible: boolean;
   closePanel: () => void;
   updateEditorDirty: () => void;
-  onSave: (
-    resolve: any,
-    isNewRecord: boolean,
-    column?: Models.AttributeString,
-    error?: any,
-  ) => Promise<void>;
+  onSave: (resolve: any, isNewRecord: boolean, index?: Models.Index, error?: any) => Promise<void>;
 }
 
-const ColumnEditor = ({
-  column,
+const IndexEditor = ({
+  index,
   selectedCollection,
   visible = false,
   closePanel = () => {},
   updateEditorDirty = () => {},
   onSave,
-}: ColumnEditorProps) => {
+}: IndexEditorProps) => {
   const { sdk } = useProjectStore();
   const editorState = useCollectionEditorStore();
-  const snap = useCollectionEditorCollectionStateSnapshot();
 
-  const initialType = column?.type as Attributes | AttributeFormat | undefined;
-  const [type, setType] = useState<Attributes | AttributeFormat | undefined>(initialType);
-
-  useEffect(() => {
-    setType(visible ? initialType : undefined);
-  }, [visible]);
+  const initialType = index?.type as IndexType | undefined;
+  const attributes =
+    editorState.sidePanel?.type === "index" ? editorState.sidePanel.attributes : undefined;
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      key: "",
-      type: "key",
-      fields: {},
+      key: index?.key ?? `index_${selectedCollection.indexes.length + 1}`,
+      type: initialType ?? IndexType.KEY,
+      fields:
+        (attributes ?? index?.attributes)
+          ? (attributes ?? index?.attributes)?.reduce(
+              (acc, attr, i) => {
+                const order = index?.orders?.[i];
+                acc[attr] = order ?? "";
+                return acc;
+              },
+              {} as Record<string, string>,
+            )
+          : {},
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      const isNewRecord = !column;
-      let _column;
+      const isNewRecord = !index;
+      if (!isNewRecord) return;
+      let _index;
       try {
-        // if (!isNewRecord) {
-        //   _column = await formikConfig?.updateAction(column.key, values);
-        // } else {
-        //   _column = await formikConfig?.submitAction(values);
-        // }
+        const { key, type, fields } = values;
+        const attributes = Object.keys(fields ?? {});
+        const orders = Object.values(fields ?? {}) as string[];
+        const schema = editorState.schema;
 
-        //   try {
-        //     const { key, type, fields } = values;
+        _index = await sdk.databases.createIndex(
+          schema,
+          selectedCollection.$id,
+          key,
+          type as any,
+          attributes,
+          orders,
+        );
 
-        //     const attributes = Object.keys(fields);
-        //     const orders = Object.values(fields) as string[];
-
-        //     await sdk.databases.createIndex(
-        //       database?.$id!,
-        //       collection.$id,
-        //       key,
-        //       type,
-        //       attributes,
-        //       orders,
-        //     );
-
-        //     addToast({
-        //       message: "Index created successfully",
-        //       variant: "success",
-        //     });
-
-        //     if (refetch) await refetch();
-        //     onClose();
-        //   } catch (error: any) {
-        //     addToast({
-        //       message: error.message,
-        //       variant: "danger",
-        //     });
-        //   }
-        // },
-        await onSave(() => {}, isNewRecord, _column);
+        await onSave(() => {}, isNewRecord, _index);
       } catch (error) {
-        await onSave(() => {}, isNewRecord, _column, error);
+        await onSave(() => {}, isNewRecord, _index, error);
       }
     },
   });
@@ -111,11 +86,12 @@ const ColumnEditor = ({
 
   return (
     <SidePanel
+      hideFooter={!!index}
       size="medium"
-      key="ColumnEditor"
+      key="IndexEditor"
       visible={visible}
       onConfirm={formik.submitForm}
-      header={<HeaderTitle collection={selectedCollection} attribute={column!} />}
+      header={<HeaderTitle collection={selectedCollection} index={index!} />}
       onCancel={closePanel}
       form={formik}
       customFooter={
@@ -129,12 +105,13 @@ const ColumnEditor = ({
         />
       }
     >
-      <Column paddingY="12" fillWidth gap="16">
-        <InputField name="key" label="Key" />
+      <Column padding="12" fillWidth gap="16">
+        <InputField name="key" label="Key" disabled={!!index} />
 
         <DynamicField
           type={AttributeFormat.Enum}
           name="type"
+          disabled={!!index}
           options={[
             { value: "key", label: "Key" },
             { value: "unique", label: "Unique" },
@@ -170,20 +147,4 @@ const ColumnEditor = ({
   );
 };
 
-const validationSchema = y.object({
-  key: y.string().required("Key is required"),
-  type: y.string().oneOf(["key", "unique", "fulltext"]).required("Index type is required"),
-  fields: y
-    .object()
-    .test("is-valid-sort-field", "Each attribute must have a valid sort order", (value) => {
-      if (!value || Object.keys(value).length < 1) {
-        return false;
-      }
-
-      return Object.values(value).every((item) => {
-        return item === "ASC" || item === "DESC";
-      });
-    }),
-});
-
-export default ColumnEditor;
+export default IndexEditor;
