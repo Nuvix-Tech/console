@@ -107,7 +107,7 @@ const Icon = forwardRef<HTMLDivElement, IconProps>(
         {...rest}
       >
         {isValidReactComponent(IconComponent) ? (
-          <IconComponent width={iconWidth} height={iconHeight} />
+          <IconComponent width={iconWidth} height={iconHeight} className={colorClass} />
         ) : (
           (IconComponent as ReactNode) // fallback if already a valid ReactNode
         )}

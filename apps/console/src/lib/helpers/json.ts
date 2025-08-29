@@ -1,5 +1,6 @@
 import { useToast } from "@nuvix/ui/components";
 import { noop } from "lodash";
+import { toast } from "sonner";
 
 export const tryParseJson = (jsonString: any) => {
   try {
@@ -146,7 +147,7 @@ export const snakeToCamel = (str: string) =>
  */
 export const copyToClipboard = async (str: string | Promise<string>, callback = noop) => {
   const focused = window.document.hasFocus();
-  const { addToast } = useToast();
+
   if (focused) {
     if (typeof ClipboardItem && navigator.clipboard?.write) {
       // NOTE: Safari locks down the clipboard API to only work when triggered
@@ -168,10 +169,7 @@ export const copyToClipboard = async (str: string | Promise<string>, callback = 
         .then(callback);
     }
   } else {
-    addToast({
-      variant: "danger",
-      message: "Unable to copy to clipboard",
-    });
+    toast.error("Unable to copy to clipboard");
   }
 };
 

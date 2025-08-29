@@ -1,5 +1,5 @@
-import { Maximize2, MoreHorizontal } from "lucide-react";
-import { ChangeEvent, InputHTMLAttributes, SyntheticEvent, useEffect, useRef } from "react";
+import { Edit3, MoreHorizontal, Trash2 } from "lucide-react";
+import { ChangeEvent, InputHTMLAttributes, SyntheticEvent, useRef } from "react";
 import {
   CalculatedColumn,
   RenderCellProps,
@@ -10,12 +10,23 @@ import {
 } from "react-data-grid";
 
 import { SELECT_COLUMN_KEY } from "../../constants";
-import { IconButton } from "@nuvix/ui/components";
+import { Icon, IconButton, Text } from "@nuvix/ui/components";
 import { Checkbox } from "@nuvix/cui/checkbox";
 import type { Models } from "@nuvix/console";
 import { useCollectionEditorStore } from "@/lib/store/collection-editor";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 import { cn } from "@nuvix/sui/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@nuvix/sui/components/dropdown-menu";
+import { copyToClipboard } from "@/lib/helpers";
 
 export const SelectColumn: CalculatedColumn<any, any> = {
   key: SELECT_COLUMN_KEY,
@@ -119,13 +130,6 @@ function SelectCellFormatter({
     onChange(e.target.checked, (e.nativeEvent as MouseEvent).shiftKey);
   }
 
-  function onEditClick(e: any) {
-    e.stopPropagation();
-    if (row) {
-      snap.onEditRow(row);
-    }
-  }
-
   const collValue = row?.$sequence;
 
   return (
@@ -156,14 +160,88 @@ function SelectCellFormatter({
         {collValue}
       </p>
       {row && (
-        <IconButton
-          type="text"
-          size="s"
-          variant="tertiary"
-          icon={<MoreHorizontal size={14} />}
-          // onClick={onEditClick}
-          tooltip={"More Actions"}
-        />
+        <DropdownMenu>
+          <DropdownMenuTrigger className="text-foreground-lighter transition-all text-transparent group-hover:text-foreground data-[state=open]:text-foreground">
+            <IconButton
+              type="text"
+              size="s"
+              variant="tertiary"
+              icon={MoreHorizontal}
+              tooltip={"More Actions"}
+            />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="right" align="start" className="w-48">
+            <DropdownMenuItem
+              key="edit-row"
+              className="space-x-2"
+              onClick={(e) => {
+                e.stopPropagation();
+                snap.onEditRow(row);
+              }}
+            >
+              <Icon name={Edit3} size="s" />
+              <span>Update</span>
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator />
+
+            <DropdownMenuItem
+              key="managed-permissions"
+              className="space-x-2"
+              onClick={(e) => {
+                e.stopPropagation();
+                snap.onEditRow(row); // TODO: Implement edit permissions functionality
+              }}
+            >
+              <Icon name={"key"} size="s" />
+              <span>Manage permissions</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              key="view-activity"
+              className="space-x-2"
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <Icon name={"logs"} size="s" />
+              <span>View activity</span>
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator />
+
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger className="gap-x-2 space-x-2">
+                <Icon name="clipboard" size="s" />
+                Copy
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem
+                  key="copy-table-json"
+                  className="space-x-2"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    copyToClipboard(JSON.stringify(row));
+                  }}
+                >
+                  <span>Copy as JSON</span>
+                </DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
+
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              key="delete-collection"
+              className="space-x-2"
+              onClick={(e) => {
+                e.stopPropagation();
+                snap.onDeleteRows([row]);
+              }}
+            >
+              <Icon name="trash" size="s" onBackground="danger-weak" />
+              <Text onBackground="danger-weak">Delete document</Text>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       )}
     </div>
   );

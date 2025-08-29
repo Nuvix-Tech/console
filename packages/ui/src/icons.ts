@@ -65,7 +65,10 @@ import {
   TbNotification,
   TbLayersDifference,
   TbRocket,
+  TbKey,
+  TbLogs,
 } from "react-icons/tb";
+import { Trash2 } from "lucide-react";
 
 export const iconMap = {
   chevronUp: HiChevronUp,
@@ -111,6 +114,9 @@ export const iconMap = {
   authentication: TbUsersGroup,
   functions: TbLambda,
   nuvixSchemas: TbLayersDifference,
+  key: TbKey,
+  logs: TbLogs,
+  trash: Trash2,
   // File type icons
   image: LucideImage,
   document: LucideFileText,

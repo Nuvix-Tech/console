@@ -4,8 +4,6 @@ import React, { useEffect } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useAppStore, useProjectStore } from "@/lib/store";
 import { UploadProvider } from "@/ui/uploader";
-import { CollectionEditorStateContextProvider } from "@/lib/store/collection-editor";
-import { TableEditorStateContextProvider } from "@/lib/store/table-editor";
 
 export default function ProjectWrapper({
   children,
@@ -49,11 +47,7 @@ export default function ProjectWrapper({
 
   return (
     <>
-      <UploadProvider>
-        <TableEditorStateContextProvider>
-          <CollectionEditorStateContextProvider>{children}</CollectionEditorStateContextProvider>
-        </TableEditorStateContextProvider>
-      </UploadProvider>
+      <UploadProvider>{children}</UploadProvider>
     </>
   );
 }
