@@ -188,19 +188,19 @@ const DefaultHeader = () => {
                             onClick={onAddRow}
                           >
                             <div className="-mt-2 pr-1.5">
-                              <div className="border border-foreground-lighter w-[15px] h-[4px]" />
-                              <div className="border border-foreground-lighter w-[15px] h-[4px] my-[2px]" />
+                              <div className="border border-(--brand-on-background-weak) w-[15px] h-[4px]" />
+                              <div className="border border-(--neutral-on-background-weak) w-[15px] h-[4px] my-[2px]" />
                               <div
                                 className={cn([
-                                  "border border-foreground-light w-[15px] h-[4px] translate-x-0.5",
-                                  "transition duration-200 group-data-[highlighted]:border-brand group-data-[highlighted]:translate-x-0",
+                                  "border border-(--neutral-on-background-weak) w-[15px] h-[4px] translate-x-0.5",
+                                  "transition duration-200 group-data-[highlighted]:border-(--accent-on-background-weak) group-data-[highlighted]:translate-x-0",
                                 ])}
                               />
                             </div>
                             <div>
-                              <p>Insert row</p>
+                              <p>Insert document</p>
                               <p className="text-foreground-light">
-                                Insert a new row into {snap.collection.name}
+                                Insert a new document into {snap.collection.name}
                               </p>
                             </div>
                           </DropdownMenuItem>,
@@ -214,63 +214,63 @@ const DefaultHeader = () => {
                             onClick={onAddColumn}
                           >
                             <div className="flex -mt-2 pr-1.5">
-                              <div className="border border-foreground-lighter w-[4px] h-[15px]" />
-                              <div className="border border-foreground-lighter w-[4px] h-[15px] mx-[2px]" />
+                              <div className="border border-(--brand-on-background-weak) w-[4px] h-[15px]" />
+                              <div className="border border-(--neutral-on-background-weak) w-[4px] h-[15px] mx-[2px]" />
                               <div
                                 className={cn([
-                                  "border border-foreground-light w-[4px] h-[15px] -translate-y-0.5",
-                                  "transition duration-200 group-data-[highlighted]:border-brand group-data-[highlighted]:translate-y-0",
+                                  "border border-(--neutral-on-background-weak) w-[4px] h-[15px] -translate-y-0.5",
+                                  "transition duration-200 group-data-[highlighted]:border-(--accent-on-background-weak) group-data-[highlighted]:translate-y-0",
                                 ])}
                               />
                             </div>
                             <div>
-                              <p>Insert column</p>
+                              <p>Add attribute</p>
                               <p className="text-foreground-light">
-                                Insert a new column into {snap.collection.name}
+                                add a new attribute into {snap.collection.name}
                               </p>
                             </div>
                           </DropdownMenuItem>,
                         ]
                       : []),
-                    ...(onImportData !== undefined
-                      ? [
-                          <DropdownMenuItem
-                            key="import-data"
-                            className="group space-x-2"
-                            onClick={() => {
-                              onImportData();
-                              // sendEvent({
-                              //   action: "import_data_button_clicked",
-                              //   properties: { tableType: "Existing Table" },
-                              //   groups: {
-                              //     project: projectRef ?? "Unknown",
-                              //     organization: org?.$id ?? "Unknown",
-                              //   },
-                              // });
-                            }}
-                          >
-                            <div className="relative -mt-2">
-                              <FileText
-                                size={18}
-                                strokeWidth={1.5}
-                                className="-translate-x-[2px]"
-                              />
-                              <ArrowUp
-                                className={cn(
-                                  "transition duration-200 absolute bottom-0 right-0 translate-y-1 opacity-0 bg-brand-400 rounded-full",
-                                  "group-data-[highlighted]:translate-y-0 group-data-[highlighted]:text-brand group-data-[highlighted]:opacity-100",
-                                )}
-                                strokeWidth={3}
-                                size={12}
-                              />
-                            </div>
-                            <div>
-                              <p>Import data from CSV</p>
-                              <p className="text-foreground-light">Insert new rows from a CSV</p>
-                            </div>
-                          </DropdownMenuItem>,
-                        ]
-                      : []),
+                    // ...(onImportData !== undefined
+                    //   ? [
+                    //       <DropdownMenuItem
+                    //         key="import-data"
+                    //         className="group space-x-2"
+                    //         onClick={() => {
+                    //           onImportData();
+                    //           // sendEvent({
+                    //           //   action: "import_data_button_clicked",
+                    //           //   properties: { tableType: "Existing Table" },
+                    //           //   groups: {
+                    //           //     project: projectRef ?? "Unknown",
+                    //           //     organization: org?.$id ?? "Unknown",
+                    //           //   },
+                    //           // });
+                    //         }}
+                    //       >
+                    //         <div className="relative -mt-2">
+                    //           <FileText
+                    //             size={18}
+                    //             strokeWidth={1.5}
+                    //             className="-translate-x-[2px]"
+                    //           />
+                    //           <ArrowUp
+                    //             className={cn(
+                    //               "transition duration-200 absolute bottom-0 right-0 translate-y-1 opacity-0 bg-brand-400 rounded-full",
+                    //               "group-data-[highlighted]:translate-y-0 group-data-[highlighted]:text-brand group-data-[highlighted]:opacity-100",
+                    //             )}
+                    //             strokeWidth={3}
+                    //             size={12}
+                    //           />
+                    //         </div>
+                    //         <div>
+                    //           <p>Import data from CSV</p>
+                    //           <p className="text-foreground-light">Insert new rows from a CSV</p>
+                    //         </div>
+                    //       </DropdownMenuItem>,
+                    //     ]
+                    //   : []),
                   ]}
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -288,9 +288,9 @@ type RowHeaderProps = {
 };
 const RowHeader = ({ sorts, filters }: RowHeaderProps) => {
   // const { project, sdk } = useProjectStore();
-  // const tableEditorSnap = useCollectionEditorStore();
+  const tableEditorSnap = useCollectionEditorStore();
 
-  // const snap = useCollectionEditorCollectionStateSnapshot();
+  const snap = useCollectionEditorCollectionStateSnapshot();
   // const { addToast } = useToast();
 
   // // const roleImpersonationState = useRoleImpersonationStateSnapshot();
@@ -321,26 +321,24 @@ const RowHeader = ({ sorts, filters }: RowHeaderProps) => {
   //   // { keepPreviousData: true },
   // );
 
-  // const allRows: NuvixRow[] = data?.rows ?? [];
   // const totalRows = countData?.count ?? 0;
 
   // const onSelectAllRows = () => {
   //   snap.setSelectedRows(new Set(allRows.map((row) => row.idx)), true);
   // };
 
-  // const onRowsDelete = () => {
-  //   const numRows = snap.allRowsSelected ? totalRows : snap.selectedRows.size;
-  //   const rowIdxs = Array.from(snap.selectedRows) as number[];
-  //   const rows = allRows.filter((x) => rowIdxs.includes(x.idx));
+  const onRowsDelete = () => {
+    const numRows = snap.selectedRows.size;
+    const rowIdxs = Array.from(snap.selectedRows);
 
-  //   tableEditorSnap.onDeleteRows(rows, {
-  //     allRowsSelected: snap.allRowsSelected,
-  //     numRows,
-  //     callback: () => {
-  //       snap.setSelectedRows(new Set());
-  //     },
-  //   });
-  // };
+    tableEditorSnap.onDeleteRows(rowIdxs, {
+      allRowsSelected: snap.allRowsSelected,
+      numRows,
+      callback: () => {
+        snap.setSelectedRows(new Set());
+      },
+    });
+  };
 
   // async function onRowsExportCSV() {
   //   setIsExporting(true);
@@ -504,29 +502,20 @@ const RowHeader = ({ sorts, filters }: RowHeaderProps) => {
 
   return (
     <div className="flex items-center gap-x-2">
-      not implemented, when you see, just edit
-      apps/console/src/components/project/collection-editor/grid/components/header/Header.tsx
-      {/* {snap.editable && (
+      {snap.editable && (
         <Button
           type="default"
           size="s"
           variant="secondary"
-          prefixIcon={<Trash size={18} />}
+          prefixIcon={"trash"}
           onClick={onRowsDelete}
-          disabled={snap.allRowsSelected && isImpersonatingRole}
-        // tooltip={snap.allRowsSelected && isImpersonatingRole
-        //   ? "Table truncation is not supported when impersonating a role"
-        //   : undefined
-        // }
         >
-          {snap.allRowsSelected
-            ? `Delete all rows in table`
-            : snap.selectedRows.size > 1
-              ? `Delete ${snap.selectedRows.size} rows`
-              : `Delete ${snap.selectedRows.size} row`}
+          {snap.selectedRows.size > 1
+            ? `Delete ${snap.selectedRows.size} rows`
+            : `Delete ${snap.selectedRows.size} row`}
         </Button>
       )}
-      <DropdownMenu>
+      {/* <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
             type="default"
@@ -544,18 +533,7 @@ const RowHeader = ({ sorts, filters }: RowHeaderProps) => {
           </DropdownMenuItem>
           <DropdownMenuItem onClick={onRowsExportSQL}>Export to SQL</DropdownMenuItem>
         </DropdownMenuContent>
-      </DropdownMenu>
-
-      {!snap.allRowsSelected && totalRows > allRows.length && (
-        <>
-          <div className="h-6 ml-0.5">
-            <Separator orientation="vertical" />
-          </div>
-          <Button size="s" variant="secondary" type="text" onClick={() => onSelectAllRows()}>
-            Select all rows in table
-          </Button>
-        </>
-      )} */}
+      </DropdownMenu> */}
     </div>
   );
 };

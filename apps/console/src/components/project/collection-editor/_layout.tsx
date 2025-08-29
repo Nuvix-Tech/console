@@ -8,7 +8,7 @@ export const CollectionsEditorLayout = ({ children }: { children: React.ReactNod
 
   useEffect(() => {
     setSidebar({
-      title: "Collections Editor",
+      title: "Collection Editor",
       first: <Sidebar />,
       middle: null,
       last: null,

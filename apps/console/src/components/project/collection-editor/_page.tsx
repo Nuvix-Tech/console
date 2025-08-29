@@ -12,6 +12,7 @@ import { useCallback, useEffect } from "react";
 import { CollectionGrid } from "./grid";
 import SidePanelEditor from "./SidePanelEditor/SidePanelEditor";
 import { useCollectionEditorStore } from "@/lib/store/collection-editor";
+import DeleteConfirmationDialogs from "./components/_delete_confirmation_dialogs";
 
 export const CollectionEditor = () => {
   const { collectionId, id: projectRef } = useParams<{ id: string; collectionId: string }>();
@@ -97,10 +98,10 @@ export const CollectionEditor = () => {
           selectedCollection={collection}
           onCollectionCreated={onTableCreated}
         />
-        {/* <DeleteConfirmationDialogs
-          selectedTable={isTableLike(selectedTable) ? selectedTable : undefined}
-          onTableDeleted={onTableDeleted}
-        /> */}
+        <DeleteConfirmationDialogs
+          selectedCollection={collection}
+          onCollectionDeleted={onTableDeleted}
+        />
       </CollectionEditorCollectionStateContextProvider>
     </>
   );

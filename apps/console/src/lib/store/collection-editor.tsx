@@ -31,12 +31,13 @@ export type SidePanel =
 export type ConfirmationDialog =
   | { type: "table"; isDeleteWithCascade: boolean }
   | { type: "column"; column: AttributeTypes; isDeleteWithCascade: boolean }
+  | { type: "index"; index: Models.Index }
   // [Unkown] Just FYI callback, numRows, allRowsSelected is a temp workaround so that
   // DeleteConfirmationDialog can trigger dispatch methods after the successful deletion of rows.
   // Once we deprecate react tracked and move things to valtio, we can remove this.
   | {
       type: "row";
-      rows: Models.Document[];
+      rows: string[];
       numRows?: number;
       allRowsSelected?: boolean;
       callback?: () => void;
@@ -147,6 +148,12 @@ export const createCollectionEditorState = () => {
         sidePanel: { type: "index", index },
       };
     },
+    onDeleteIndex: (index: Models.Index) => {
+      state.ui = {
+        open: "confirmation-dialog",
+        confirmationDialog: { type: "index", index },
+      };
+    },
 
     /* Rows */
     onAddRow: () => {
@@ -162,7 +169,7 @@ export const createCollectionEditorState = () => {
       };
     },
     onDeleteRows: (
-      rows: Models.Document[],
+      rows: string[],
       meta: { numRows?: number; allRowsSelected: boolean; callback?: () => void } = {
         numRows: 0,
         allRowsSelected: false,

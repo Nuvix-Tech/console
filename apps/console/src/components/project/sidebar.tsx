@@ -113,9 +113,9 @@ export const FirstSidebar = ({ inMobile, onClose }: FirstSidebarProps) => {
       icon: "authentication",
     },
     {
-      name: "Collections",
+      name: "Collection Editor",
       href: href(`collections`),
-      icon: "refresh",
+      icon: "collectionEditor",
     },
     {
       name: "Database",

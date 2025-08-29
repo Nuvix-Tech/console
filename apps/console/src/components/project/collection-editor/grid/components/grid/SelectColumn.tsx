@@ -230,11 +230,11 @@ function SelectCellFormatter({
 
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              key="delete-collection"
+              key="delete-row"
               className="space-x-2"
               onClick={(e) => {
                 e.stopPropagation();
-                snap.onDeleteRows([row]);
+                snap.onDeleteRows([row.$id]);
               }}
             >
               <Icon name="trash" size="s" onBackground="danger-weak" />

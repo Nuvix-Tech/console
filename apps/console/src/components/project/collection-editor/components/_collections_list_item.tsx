@@ -1,10 +1,8 @@
-import { Clipboard, Copy, Download, Edit, Lock, MoreHorizontal, Trash, Unlock } from "lucide-react";
-import Link from "next/link";
+import { Clipboard, Copy, Download, Edit, MoreHorizontal } from "lucide-react";
 import { toast } from "sonner";
 
 import { IS_PLATFORM } from "@/lib/constants";
 import type { ItemRenderer } from "@/ui/InfiniteList";
-import { ENTITY_TYPE } from "@/data/entity-types/entity-type-constants";
 import { copyToClipboard } from "@/lib/helpers";
 import {
   DropdownMenu,
@@ -16,13 +14,12 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@nuvix/sui/components/dropdown-menu";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import { useProjectStore } from "@/lib/store";
 import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
 import { cn } from "@nuvix/sui/lib/utils";
 import { Models } from "@nuvix/console";
 import { useCollectionEditorStateSnapshot } from "@/lib/store/collection-editor";
-import { Icon, SmartLink } from "@nuvix/ui/components";
+import { Icon, SmartLink, Text } from "@nuvix/ui/components";
 import { TreeViewItemVariant } from "../../table-editor/components/EntityListItem";
 
 export interface EntityListItemProps {
@@ -55,27 +52,6 @@ export const CollectionListItem: ItemRenderer<Models.Collection, EntityListItemP
   const isOpened = true; // Object.values(tabs.tabsMap).some((tab) => tab.metadata?.tableId === entity.id)
   const isActive = id === collection.$id;
   const canEdit = isActive && !isLocked;
-
-  // const { data: lints = [] } = useProjectLintsQuery({
-  //   projectRef: project?.$id,
-  // })
-
-  const tableHasLints: boolean = false;
-  // getEntityLintDetails(
-  //   entity.name,
-  //   'rls_disabled_in_public',
-  //   ['ERROR'],
-  //   lints,
-  //   selectedSchema
-  // ).hasLint
-
-  const formatTooltipText = (entityType: string) => {
-    return Object.entries(ENTITY_TYPE)
-      .find(([, value]) => value === entityType)?.[0]
-      ?.toLowerCase()
-      ?.split("_")
-      ?.join(" ");
-  };
 
   const exportTableAsCSV = async () => {
     if (IS_PLATFORM && !sdk) {
@@ -156,25 +132,15 @@ export const CollectionListItem: ItemRenderer<Models.Collection, EntityListItemP
           className={cn(
             "truncate",
             "overflow-hidden text-ellipsis whitespace-nowrap flex items-center gap-2 relative w-full",
-            isActive && "text-foreground",
+            isActive
+              ? "text-foreground"
+              : "neutral-on-background-medium group-hover:text-foreground",
           )}
         >
-          <Icon name="refresh" size="xs" />
-          <span
-            className={cn(
-              isActive ? "text-foreground" : "text-foreground-light group-hover:text-foreground",
-              "text-sm",
-              "transition",
-              "truncate",
-            )}
-          >
+          <Icon name="table" size="s" />
+          <Text variant="label-default-m" className={cn("transition", "truncate")}>
             {collection.name}
-          </span>
-          <EntityTooltipTrigger
-            collection={collection}
-            isActive={isActive}
-            tableHasLints={tableHasLints}
-          />
+          </Text>
         </div>
 
         {canEdit && (
@@ -182,17 +148,17 @@ export const CollectionListItem: ItemRenderer<Models.Collection, EntityListItemP
             <DropdownMenuTrigger className="text-foreground-lighter transition-all text-transparent group-hover:text-foreground data-[state=open]:text-foreground">
               <MoreHorizontal size={14} strokeWidth={2} />
             </DropdownMenuTrigger>
-            <DropdownMenuContent side="bottom" align="start" className="w-44">
+            <DropdownMenuContent side="bottom" align="start" className="w-48">
               <DropdownMenuItem
                 key="copy-name"
                 className="space-x-2"
                 onClick={(e) => {
                   e.stopPropagation();
-                  copyToClipboard(collection.name);
+                  copyToClipboard(collection.$id);
                 }}
               >
-                <Clipboard size={12} />
-                <span>Copy name</span>
+                <Icon name={Clipboard} size="s" />
+                <span>Copy ID</span>
               </DropdownMenuItem>
 
               <DropdownMenuSeparator />
@@ -205,7 +171,7 @@ export const CollectionListItem: ItemRenderer<Models.Collection, EntityListItemP
                   snap.onEditCollection();
                 }}
               >
-                <Edit size={12} />
+                <Icon name={Edit} size="s" />
                 <span>Edit collection</span>
               </DropdownMenuItem>
               <DropdownMenuItem
@@ -216,22 +182,13 @@ export const CollectionListItem: ItemRenderer<Models.Collection, EntityListItemP
                   snap.onDuplicateCollection();
                 }}
               >
-                <Copy size={12} />
+                <Icon name={Copy} size="s" />
                 <span>Duplicate collection</span>
               </DropdownMenuItem>
-              <DropdownMenuItem key="view-policies" className="space-x-2" asChild>
-                <Link
-                  key="view-policies"
-                  href={`/project/${projectRef}/auth/policies?schema=${selectedSchema}&search=${collection.$id}`}
-                >
-                  <Lock size={12} />
-                  <span>View policies</span>
-                </Link>
-              </DropdownMenuItem>
 
-              <DropdownMenuSub>
+              {/* <DropdownMenuSub>
                 <DropdownMenuSubTrigger className="gap-x-2 space-x-2">
-                  <Download size={12} />
+                  <Icon name={Download} size="s" />
                   Export data
                 </DropdownMenuSubTrigger>
                 <DropdownMenuSubContent>
@@ -246,19 +203,19 @@ export const CollectionListItem: ItemRenderer<Models.Collection, EntityListItemP
                     <span>Export collection as CSV</span>
                   </DropdownMenuItem>
                 </DropdownMenuSubContent>
-              </DropdownMenuSub>
+              </DropdownMenuSub> */}
 
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 key="delete-collection"
-                className="gap-x-2"
+                className="space-x-2"
                 onClick={(e) => {
                   e.stopPropagation();
                   snap.onDeleteCollection();
                 }}
               >
-                <Trash size={12} />
-                <span>Delete collection</span>
+                <Icon name={"trash"} size="s" onBackground="danger-weak" />
+                <Text onBackground="danger-weak">Delete collection</Text>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -266,35 +223,4 @@ export const CollectionListItem: ItemRenderer<Models.Collection, EntityListItemP
       </>
     </SmartLink>
   );
-};
-
-const EntityTooltipTrigger = ({
-  collection,
-  isActive,
-  tableHasLints,
-}: {
-  collection: Models.Collection;
-  isActive: boolean;
-  tableHasLints: boolean;
-}) => {
-  let tooltipContent = "";
-
-  if (tooltipContent) {
-    return (
-      <Tooltip disableHoverableContent={true}>
-        <TooltipTrigger className="min-w-4">
-          <Unlock
-            size={14}
-            strokeWidth={2}
-            className={cn("min-w-4", isActive ? "text-warning-600" : "text-warning-500")}
-          />
-        </TooltipTrigger>
-        <TooltipContent side="bottom">
-          <span>{tooltipContent}</span>
-        </TooltipContent>
-      </Tooltip>
-    );
-  }
-
-  return null;
 };

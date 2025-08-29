@@ -76,9 +76,11 @@ import {
   TbArrowGuide,
   TbCalendar,
   TbGlobe,
+  TbTableAlias,
 } from "react-icons/tb";
 import { Trash2 } from "lucide-react";
 import { CgArrowLongRightC, CgArrowsH } from "react-icons/cg";
+import { HiCollection } from "react-icons/hi";
 
 export const iconMap = {
   chevronUp: HiChevronUp,
@@ -117,6 +119,7 @@ export const iconMap = {
   house: TbHome,
   tableEditor: TbTableSpark,
   table: TbTable,
+  collectionEditor: TbTableAlias,
   storage: TbFolder,
   database: TbDatabase,
   messaging: TbMessage,
