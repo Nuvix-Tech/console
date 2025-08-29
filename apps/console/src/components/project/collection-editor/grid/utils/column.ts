@@ -1,5 +1,5 @@
 import { CalculatedColumn } from "react-data-grid";
-import { SELECT_COLUMN_KEY } from "../constants";
+import { CREATED_AT_COLUMN_KEY, SELECT_COLUMN_KEY, UPDATED_AT_COLUMN_KEY } from "../constants";
 import type { SavedState } from "../types";
 
 export function getInitialGridColumns(
@@ -8,11 +8,15 @@ export function getInitialGridColumns(
 ) {
   let result = gridColumns;
 
+  const internalColumns = [SELECT_COLUMN_KEY, CREATED_AT_COLUMN_KEY, UPDATED_AT_COLUMN_KEY];
+
   if (savedState?.gridColumns) {
     result = [];
 
     // filter utility columns select, add-column
-    const stateColumnsFiltered = savedState.gridColumns.filter((x) => x?.name !== "");
+    const stateColumnsFiltered = savedState.gridColumns.filter(
+      (x) => !internalColumns.includes(x.key),
+    );
 
     for (let i = 0; i < stateColumnsFiltered.length; i++) {
       const state = stateColumnsFiltered[i];
@@ -25,14 +29,20 @@ export function getInitialGridColumns(
     const newGridColumns = gridColumns.filter((x) => {
       // no existed in stateColumnsFiltered and not utility column
       const found = stateColumnsFiltered.find((state) => state.key === x.key);
-      return !found && x.name !== "";
+      return !found && x.name !== "" && !internalColumns.includes(x.key);
     });
     result = result.concat(newGridColumns);
 
     // process utility columns
     const selectColumn = gridColumns.find((x) => x.key === SELECT_COLUMN_KEY);
     if (selectColumn) {
-      result = [selectColumn, ...result];
+      result = [
+        selectColumn,
+        ...result,
+        ...([CREATED_AT_COLUMN_KEY, UPDATED_AT_COLUMN_KEY]
+          .map((key) => gridColumns.find((col) => col.key === key))
+          .filter(Boolean) as CalculatedColumn<any, any>[]),
+      ];
     }
   }
 

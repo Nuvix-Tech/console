@@ -77,14 +77,20 @@ export function useOnRowsChange(rows: Models.Document[]) {
       if (!project) return;
 
       const rowData = _rows[data.indexes[0]];
-      const previousRow = rows.find((x) => x.idx == rowData.idx);
-      const changedColumn = Object.keys(rowData).find(
-        (name) => rowData[name] !== previousRow![name],
+      const previousRow = rows.find((x) => x.$id == rowData.$id);
+
+      if (!previousRow) return;
+
+      const changedColumns = Object.keys(rowData).filter(
+        (name) => rowData[name] !== previousRow[name],
       );
 
-      if (!previousRow || !changedColumn) return;
+      if (changedColumns.length === 0) return;
 
-      const updatedData = { [changedColumn]: rowData[changedColumn] };
+      const updatedData = changedColumns.reduce((acc, name) => {
+        acc[name] = rowData[name];
+        return acc;
+      }, {} as any);
 
       mutateUpdateTableRow({
         projectRef: project.$id,

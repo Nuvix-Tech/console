@@ -129,7 +129,10 @@ const RowEditor = ({
               nullable: !field.required,
               isArray: field.array,
               type: (field as any).format || field.type,
-              options: !field.required ? [{ value: "null", label: "NULL" }] : [],
+              options: (field as unknown as Models.AttributeEnum)?.elements?.map((element) => ({
+                value: element,
+                label: element,
+              })),
               min: (field as Models.AttributeInteger).min,
               max: (field as Models.AttributeInteger).max,
               size: field.size,

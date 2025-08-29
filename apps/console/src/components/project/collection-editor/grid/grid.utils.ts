@@ -12,6 +12,7 @@ import type { Sort } from "./types";
 import { formatClipboardValue } from "./utils/common";
 import { useRouter, useSearchParams } from "next/navigation";
 import type { Models } from "@nuvix/console";
+import { copyToClipboard } from "@/lib/helpers";
 
 export function formatSortURLParams(collectionName: string, sort?: string[]): Sort[] {
   if (Array.isArray(sort)) {
@@ -191,7 +192,6 @@ export const handleCopyCell = (
     const colKey = column.key;
     const cellValue = row[colKey] ?? "";
     const value = formatClipboardValue(cellValue);
-    // copyToClipboard(value);
-    console.warn("Not Implemented &&&");
+    copyToClipboard(value);
   }
 };

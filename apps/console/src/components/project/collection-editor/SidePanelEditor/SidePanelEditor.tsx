@@ -2,10 +2,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { isEmpty, isUndefined, noop } from "lodash";
 import { useState } from "react";
 import { toast } from "sonner";
-
-import { useTableRowCreateMutation } from "@/data/table-rows/table-row-create-mutation";
-import { useTableRowUpdateMutation } from "@/data/table-rows/table-row-update-mutation";
-
 // import { createTabId, updateTab } from "state/tabs";
 import ColumnEditor from "./ColumnEditor/ColumnEditor";
 import ForeignRowSelector from "./RowEditor/ForeignRowSelector/ForeignRowSelector";
@@ -28,6 +24,8 @@ import type { Models } from "@nuvix/console";
 import ConfirmationModal from "@/components/editor/components/_confim_dialog";
 import { useCollectionEditorStore } from "@/lib/store/collection-editor";
 import { collectionKeys } from "@/data/collections/keys";
+import { useDocumentCreateMutation } from "@/data/collections/documents/document_create_mutation";
+import { useDocumentUpdateMutation } from "@/data/collections/documents/document_update_mutation";
 
 export interface SidePanelEditorProps {
   editable?: boolean;
@@ -54,12 +52,12 @@ const SidePanelEditor = ({
   const [isEdited, setIsEdited] = useState<boolean>(false);
   const [isClosingPanel, setIsClosingPanel] = useState<boolean>(false);
 
-  const { mutateAsync: createTableRows } = useTableRowCreateMutation({
+  const { mutateAsync: createDocument } = useDocumentCreateMutation({
     onSuccess() {
       toast.success("Successfully created row");
     },
   });
-  const { mutateAsync: updateTableRow } = useTableRowUpdateMutation({
+  const { mutateAsync: updateDocument } = useDocumentUpdateMutation({
     onSuccess() {
       toast.success("Successfully updated row");
     },
@@ -79,44 +77,33 @@ const SidePanelEditor = ({
     }
 
     let saveRowError: Error | undefined;
-    // if (isNewRecord) {
-    //   try {
-    //     await createTableRows({
-    //       projectRef: project.$id,
-    //       sdk,
-    //       table: selectedCollection,
-    //       payload,
-    //       enumArrayColumns,
-    //       roleImpersonationState: getImpersonatedRoleState(),
-    //     });
-    //   } catch (error: any) {
-    //     saveRowError = error;
-    //   }
-    // } else {
-    //   const hasChanges = !isEmpty(payload);
-    //   if (hasChanges) {
-    //     if (selectedCollection.primary_keys.length > 0) {
-    //       try {
-    //         await updateTableRow({
-    //           projectRef: project.$id,
-    //           sdk,
-    //           table: selectedCollection,
-    //           configuration,
-    //           payload,
-    //           enumArrayColumns,
-    //           roleImpersonationState: getImpersonatedRoleState(),
-    //         });
-    //       } catch (error: any) {
-    //         saveRowError = error;
-    //       }
-    //     } else {
-    //       saveRowError = new Error("No primary key");
-    //       toast.error(
-    //         "We can't make changes to this table because there is no primary key. Please create a primary key and try again.",
-    //       );
-    //     }
-    //   }
-    // }
+    if (isNewRecord) {
+      try {
+        await createDocument({
+          projectRef: project.$id,
+          sdk,
+          collection: selectedCollection,
+          payload,
+        });
+      } catch (error: any) {
+        saveRowError = error;
+      }
+    } else {
+      const hasChanges = !isEmpty(payload);
+      if (hasChanges) {
+        try {
+          await updateDocument({
+            projectRef: project.$id,
+            sdk,
+            collection: selectedCollection,
+            documentId: configuration.documentId,
+            payload,
+          });
+        } catch (error: any) {
+          saveRowError = error;
+        }
+      }
+    }
 
     onComplete(saveRowError);
     if (!saveRowError) {
@@ -127,7 +114,6 @@ const SidePanelEditor = ({
 
   const onSaveColumnValue = async (value: string | number | null, resolve: () => void) => {
     if (selectedCollection === undefined) return;
-
     let payload;
     let configuration;
     const isNewRecord = false;

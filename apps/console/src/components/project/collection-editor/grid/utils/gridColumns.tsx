@@ -1,6 +1,6 @@
 import { CalculatedColumn, type RenderCellProps } from "react-data-grid";
 
-import { COLUMN_MIN_WIDTH } from "../constants";
+import { COLUMN_MIN_WIDTH, CREATED_AT_COLUMN_KEY, UPDATED_AT_COLUMN_KEY } from "../constants";
 import { BooleanEditor } from "../components/editor/BooleanEditor";
 import { DateTimeEditor } from "../components/editor/DateTimeEditor";
 import { JsonEditor } from "../components/editor/JsonEditor";
@@ -33,13 +33,15 @@ const internalAttributes = [
     size: 36,
   },
   {
-    key: "$createdAt",
+    key: CREATED_AT_COLUMN_KEY,
     internal: true,
     type: Attributes.Timestamptz,
+    idx: 9998,
   },
   {
-    key: "$updatedAt",
+    key: UPDATED_AT_COLUMN_KEY,
     internal: true,
+    idx: 9999,
     type: Attributes.Timestamptz,
   },
 ];
@@ -60,7 +62,12 @@ export function getGridColumns(
       internalAttributes[0],
       ...collection.attributes,
       ...internalAttributes.slice(1),
-    ] as unknown as Models.AttributeString[]
+    ] as unknown as (Models.AttributeString & {
+      idx?: number;
+      isPrimaryKey?: boolean;
+      encrypted?: boolean;
+      internal?: boolean;
+    })[]
   ).map((x, idx) => {
     const columnType = getColumnType(x);
     const columnDefaultWidth = getColumnDefaultWidth(x);
@@ -72,7 +79,7 @@ export function getGridColumns(
     const columnDefinition: CalculatedColumn<Models.Document> = {
       key: x.key,
       name: x.key,
-      idx: idx + 1,
+      idx: x.idx ? x.idx : idx + 1,
       resizable: true,
       sortable: true,
       width: columnWidth,

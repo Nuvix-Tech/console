@@ -18,7 +18,7 @@ import { useCollectionEditorStore } from "@/lib/store/collection-editor";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 
 const rowKeyGetter = (row: Models.Document) => {
-  return row?.idx ?? -1;
+  return row?.$id ?? -1;
 };
 
 interface IGrid extends GridProps {

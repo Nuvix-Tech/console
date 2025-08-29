@@ -173,6 +173,10 @@ type FieldProps = {
   maxLength?: number;
   onBlur?: (event: React.FocusEvent) => void;
   index?: number;
+  onEditJson?: any;
+  onEditText?: any;
+  onSelectForeignKey?: any;
+  isEditable?: boolean;
 };
 
 type SelectFieldProps = FieldProps & {
@@ -181,7 +185,16 @@ type SelectFieldProps = FieldProps & {
 } & Partial<React.ComponentProps<typeof Select>>;
 
 // Text input / textarea
-const TextareaField = ({ value, onChange, maxLength, ...props }: FieldProps) =>
+const TextareaField = ({
+  value,
+  onChange,
+  maxLength,
+  onEditJson,
+  onEditText,
+  onSelectForeignKey,
+  isEditable,
+  ...props
+}: FieldProps) =>
   maxLength && maxLength > 50 ? (
     <Textarea
       lines={5}

@@ -6,6 +6,8 @@ export const TOTAL_ROWS_INITIAL = -1;
 export const TOTAL_ROWS_RESET = -2;
 
 export const SELECT_COLUMN_KEY = "$sequence";
+export const CREATED_AT_COLUMN_KEY = "$createdAt";
+export const UPDATED_AT_COLUMN_KEY = "$updatedAt";
 
 const RLS_ACKNOWLEDGED_KEY = "nx-acknowledge-rls-warning";
 
