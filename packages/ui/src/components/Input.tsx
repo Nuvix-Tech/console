@@ -130,6 +130,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       setIsFilled(!!props.value);
     }, [props.value]);
 
+    useEffect(() => {
+      setNull(isNull || props.value === null);
+    }, [isNull]);
+
     const validateInput = useCallback(() => {
       if (!debouncedValue) {
         setValidationError(null);

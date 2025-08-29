@@ -260,7 +260,7 @@ const DateTimeField = ({ value, onChange, ...props }: FieldProps) => (
   <DateInput
     id={`idx_${props.index}`}
     labelAsPlaceholder
-    label=""
+    label="Select Date"
     timePicker
     value={value ? new Date(value) : undefined}
     onChange={(d) => onChange({ target: { value: d } })}

@@ -423,12 +423,9 @@ const SidePanelEditor = ({
           setIsEdited(false);
           snap.closeSidePanel();
         }}
-      >
-        <p className="text-sm text-foreground-light">
-          There are unsaved changes. Are you sure you want to close the panel? Your changes will be
-          lost.
-        </p>
-      </ConfirmationModal>
+        description="There are unsaved changes. Are you sure you want to close the panel? Your changes will be
+          lost."
+      />
     </>
   );
 };

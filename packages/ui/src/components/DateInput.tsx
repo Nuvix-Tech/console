@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, useEffect } from "react";
-import { Input, DropdownWrapper, DatePicker } from ".";
+import { Input, DropdownWrapper, DatePicker, Icon } from ".";
 
 interface DateInputProps extends Omit<React.ComponentProps<typeof Input>, "onChange" | "value"> {
   id: string;
@@ -89,8 +89,10 @@ export const DateInput: React.FC<DateInputProps> = ({
           onClick={handleInputClick}
           error={error}
           readOnly
+          hasPrefix={<Icon name="calendar" />}
           onFocus={handleInputFocus}
           {...rest}
+          isNull={rest.isNull || new Date(inputValue).toString() === "Invalid Date"}
         />
       }
       dropdown={

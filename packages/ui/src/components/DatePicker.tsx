@@ -834,10 +834,11 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
                   )
                 }
               />
-              <Flex fillWidth gap="16" vertical="center" data-scaling="110">
+              <Flex fillWidth gap="16" vertical="center" data-scaling="100">
                 <NumberInput
                   id="hours"
                   placeholder="Hours"
+                  labelAsPlaceholder
                   min={1}
                   max={12}
                   value={selectedTime?.hours ? convert24to12(selectedTime.hours) : 12}
@@ -852,6 +853,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
                 <NumberInput
                   id="minutes"
                   placeholder="Minutes"
+                  labelAsPlaceholder
                   min={0}
                   max={59}
                   padStart={2}
@@ -882,56 +884,57 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
             </Grid>
           ) : (
             isCalendarSynced && (
-              <ArrowNavigation
-                layout="grid"
-                columns={7}
-                itemCount={calculateTotalDays()}
-                initialFocusedIndex={isReady ? calculateInitialFocusedIndex() : 0}
-                wrap
-                itemSelector="button[data-value]:not([disabled])"
-                role="grid"
-                aria-label="Calendar"
-                key={`calendar-${currentYear}-${currentMonth}-${selectedDate?.getTime() || 0}`}
-                disableHighlighting={true}
-                autoFocus={autoFocus}
-                onSelect={(index) => {
-                  // Find the actual button element at this index and click it
-                  // Try multiple selectors for different scenarios (dropdown vs standalone)
-                  const container =
-                    document.querySelector('[data-role="dropdown-portal"]') ||
-                    document.querySelector("[data-dropdown-id]") ||
-                    document.activeElement?.closest('[data-role="dropdown-portal"]') ||
-                    document.activeElement?.closest('[data-role="dropdown-wrapper"]') ||
-                    document.body; // Fallback for standalone DatePicker
-                  if (container) {
-                    const buttons = Array.from(
-                      container.querySelectorAll("button[data-value]:not([disabled])"),
-                    );
-                    if (buttons[index]) {
-                      (buttons[index] as HTMLElement).click();
-                    }
-                  }
-                }}
-                onFocusChange={(index) => {
-                  // Let React handle highlighting through props only
-                  // No DOM manipulation needed
-                }}
-              >
-                <Grid fitWidth columns="7">
-                  {dayNames.map((day) => (
-                    <Text
-                      marginBottom="16"
-                      key={day}
-                      variant="label-default-m"
-                      onBackground="neutral-medium"
-                      align="center"
-                    >
-                      {day}
-                    </Text>
-                  ))}
-                  {renderCalendarGrid()}
-                </Grid>
-              </ArrowNavigation>
+              // ARROW NAVIGATION NOT WORKING WELL (react max depth)
+              // <ArrowNavigation
+              //   layout="grid"
+              //   columns={7}
+              //   itemCount={calculateTotalDays()}
+              //   initialFocusedIndex={isReady ? calculateInitialFocusedIndex() : 0}
+              //   wrap
+              //   itemSelector="button[data-value]:not([disabled])"
+              //   role="grid"
+              //   aria-label="Calendar"
+              //   key={`calendar-${currentYear}-${currentMonth}-${selectedDate?.getTime() || 0}`}
+              //   disableHighlighting={true}
+              //   // autoFocus={autoFocus}
+              //   onSelect={(index) => {
+              //     // Find the actual button element at this index and click it
+              //     // Try multiple selectors for different scenarios (dropdown vs standalone)
+              //     const container =
+              //       document.querySelector('[data-role="dropdown-portal"]') ||
+              //       document.querySelector("[data-dropdown-id]") ||
+              //       document.activeElement?.closest('[data-role="dropdown-portal"]') ||
+              //       document.activeElement?.closest('[data-role="dropdown-wrapper"]') ||
+              //       document.body; // Fallback for standalone DatePicker
+              //     if (container) {
+              //       const buttons = Array.from(
+              //         container.querySelectorAll("button[data-value]:not([disabled])"),
+              //       );
+              //       if (buttons[index]) {
+              //         (buttons[index] as HTMLElement).click();
+              //       }
+              //     }
+              //   }}
+              //   onFocusChange={(index) => {
+              //     // Let React handle highlighting through props only
+              //     // No DOM manipulation needed
+              //   }}
+              // >
+              <Grid fitWidth columns="7">
+                {dayNames.map((day) => (
+                  <Text
+                    marginBottom="16"
+                    key={day}
+                    variant="label-default-m"
+                    onBackground="neutral-medium"
+                    align="center"
+                  >
+                    {day}
+                  </Text>
+                ))}
+                {renderCalendarGrid()}
+              </Grid>
+              // </ArrowNavigation>
             )
           )}
         </RevealFx>

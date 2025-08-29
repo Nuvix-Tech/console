@@ -11,6 +11,7 @@ import {
   DialogTitle,
 } from "@nuvix/sui/components/dialog";
 import { Button } from "@chakra-ui/react";
+import { Text } from "@nuvix/ui/components";
 
 export interface ConfirmationModalProps {
   loading?: boolean;
@@ -81,8 +82,16 @@ const ConfirmationModal = forwardRef<
       >
         <DialogContent ref={ref}>
           <DialogHeader>
-            <DialogTitle>{title}</DialogTitle>
-            {description && <DialogDescription>{description}</DialogDescription>}
+            <DialogTitle>
+              <Text variant="heading-strong-m"> {title}</Text>
+            </DialogTitle>
+            {description && (
+              <DialogDescription>
+                <Text variant="body-default-s" onBackground="neutral-weak">
+                  {description}
+                </Text>
+              </DialogDescription>
+            )}
           </DialogHeader>
           {alert && (
             <Alert
