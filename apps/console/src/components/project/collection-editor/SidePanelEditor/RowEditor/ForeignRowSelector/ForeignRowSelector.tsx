@@ -21,7 +21,6 @@ import { useTableRowsQuery } from "@/data/table-rows/table-rows-query";
 //   useRoleImpersonationStateSnapshot,
 // } from "state/role-impersonation-state";
 import ActionBar from "../../ActionBar";
-import { ForeignKey } from "../../ForeignKeySelector/ForeignKeySelector.types";
 import Pagination from "./Pagination";
 import SelectorGrid from "./SelectorGrid";
 import { useProjectStore } from "@/lib/store";
@@ -34,7 +33,7 @@ import { Code } from "@chakra-ui/react";
 
 export interface ForeignRowSelectorProps {
   visible: boolean;
-  foreignKey?: ForeignKey;
+  foreignKey?: any; //  ForeignKey;
   onSelect: (value?: { [key: string]: any }) => void;
   closePanel: () => void;
 }
@@ -201,7 +200,7 @@ const ForeignRowSelector = ({
                   <SelectorGrid
                     rows={data.rows}
                     onRowSelect={(row) => {
-                      const value = columns?.reduce((a, b) => {
+                      const value = columns?.reduce((a: any, b: any) => {
                         const targetColumn = selectedTable?.columns.find(
                           (x) => x.name === b.target,
                         );

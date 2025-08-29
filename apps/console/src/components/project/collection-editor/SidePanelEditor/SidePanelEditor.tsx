@@ -8,7 +8,6 @@ import { useTableRowUpdateMutation } from "@/data/table-rows/table-row-update-mu
 
 // import { createTabId, updateTab } from "state/tabs";
 import ColumnEditor from "./ColumnEditor/ColumnEditor";
-import type { ForeignKey } from "./ForeignKeySelector/ForeignKeySelector.types";
 import ForeignRowSelector from "./RowEditor/ForeignRowSelector/ForeignRowSelector";
 import JsonEditor from "./RowEditor/JsonEditor/JsonEditor";
 import RowEditor from "./RowEditor/RowEditor";

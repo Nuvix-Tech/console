@@ -86,9 +86,9 @@ const ColumnEditor = ({
         } else {
           _column = await formikConfig?.submitAction(values);
         }
-        onSave(() => {}, isNewRecord, _column);
+        await onSave(() => {}, isNewRecord, _column);
       } catch (error) {
-        onSave(() => {}, isNewRecord, _column, error);
+        await onSave(() => {}, isNewRecord, _column, error);
       }
     },
   });

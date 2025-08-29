@@ -12,13 +12,16 @@ const useIsomorphicUseQueryState = (defaultSchema: string, type?: "doc") => {
     return [defaultSchema, () => {}] as const;
   } else {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useQueryState(type === 'doc' ? "docSchema" : "schema", parseAsString.withDefault(defaultSchema));
+    return useQueryState(
+      type === "doc" ? "docSchema" : "schema",
+      parseAsString.withDefault(defaultSchema),
+    );
   }
 };
 
 export const useQuerySchemaState = (type?: "doc") => {
-  const { id: ref } = useParams<{ id: string; }>();
-  let _schema = type === 'doc' ? '' : 'public';
+  const { id: ref } = useParams<{ id: string }>();
+  let _schema = type === "doc" ? "" : "public";
 
   const defaultSchema =
     typeof window !== "undefined" && ref && ref.length > 0

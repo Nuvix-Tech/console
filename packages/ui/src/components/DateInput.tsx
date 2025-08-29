@@ -86,6 +86,7 @@ export const DateInput: React.FC<DateInputProps> = ({
           label={label}
           placeholder={placeholder}
           value={inputValue}
+          onClick={handleInputClick}
           error={error}
           readOnly
           onFocus={handleInputFocus}

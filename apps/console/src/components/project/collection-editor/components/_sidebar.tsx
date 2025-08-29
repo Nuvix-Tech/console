@@ -15,9 +15,9 @@ import { useCollectionEditorStateSnapshot } from "@/lib/store/collection-editor"
 import DocSchemaSelector from "@/ui/DocSchemaSelector";
 
 export const Sidebar = () => {
-  const { id: ref, collectionId } = useParams<{ collectionId: string; id: string; }>();
+  const { id: ref, collectionId } = useParams<{ collectionId: string; id: string }>();
   const snap = useCollectionEditorStateSnapshot();
-  const { selectedSchema, setSelectedSchema } = useQuerySchemaState('doc');
+  const { selectedSchema, setSelectedSchema } = useQuerySchemaState("doc");
   // const isTableEditorTabsEnabled = useIsTableEditorTabsEnabled()
   const isMobile = false; // useBreakpoint()
 

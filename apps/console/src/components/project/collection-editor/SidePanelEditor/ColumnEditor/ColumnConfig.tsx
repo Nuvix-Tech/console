@@ -308,8 +308,8 @@ export class AttributeConfigFactory {
   private forUpdate: boolean;
   constructor(
     private sdk: ProjectSdk,
-    private database: any,
-    private collection: any,
+    private database: { name: string },
+    private collection: Models.Collection,
     private column?: Models.AttributeString,
   ) {
     this.forUpdate = column ? true : false;
@@ -346,7 +346,7 @@ export class AttributeConfigFactory {
       submitAction: async (values) => {
         const { key, size, default: defaultValue, required, array } = values;
         return this.sdk.databases.createStringAttribute(
-          this.database.$id,
+          this.database.name,
           this.collection.$id,
           key,
           size,
@@ -358,7 +358,7 @@ export class AttributeConfigFactory {
       updateAction: (key, values) => {
         const { required, default: x, size, key: newKey } = values;
         return this.sdk.databases.updateStringAttribute(
-          this.database.$id,
+          this.database.name,
           this.collection.$id,
           key,
           required,
@@ -403,7 +403,7 @@ export class AttributeConfigFactory {
       submitAction: async (values) => {
         const { key, default: defaultValue, required, array, min, max } = values;
         return await this.sdk.databases.createIntegerAttribute(
-          this.database.$id,
+          this.database.name,
           this.collection.$id,
           key,
           required,
@@ -416,7 +416,7 @@ export class AttributeConfigFactory {
       updateAction: (key, values) => {
         const { required, default: x, min, max, key: newKey } = values;
         return this.sdk.databases.updateIntegerAttribute(
-          this.database.$id,
+          this.database.name,
           this.collection.$id,
           key,
           required,
@@ -462,7 +462,7 @@ export class AttributeConfigFactory {
       submitAction: async (values) => {
         const { key, default: defaultValue, required, array, min, max } = values;
         return await this.sdk.databases.createFloatAttribute(
-          this.database.$id,
+          this.database.name,
           this.collection.$id,
           key,
           required,
@@ -475,7 +475,7 @@ export class AttributeConfigFactory {
       updateAction: (key, values) => {
         const { required, default: x, min, max, key: newKey } = values;
         return this.sdk.databases.updateFloatAttribute(
-          this.database.$id,
+          this.database.name,
           this.collection.$id,
           key,
           required,
@@ -516,7 +516,7 @@ export class AttributeConfigFactory {
       submitAction: async (values) => {
         const { key, default: defaultValue, required, array } = values;
         return await this.sdk.databases.createBooleanAttribute(
-          this.database.$id,
+          this.database.name,
           this.collection.$id,
           key,
           required,
@@ -527,7 +527,7 @@ export class AttributeConfigFactory {
       updateAction: (key, values) => {
         const { required, default: x, key: newKey } = values;
         return this.sdk.databases.updateBooleanAttribute(
-          this.database.$id,
+          this.database.name,
           this.collection.$id,
           key,
           required,
@@ -566,7 +566,7 @@ export class AttributeConfigFactory {
       submitAction: async (values) => {
         const { key, default: defaultValue, required, array } = values;
         return await this.sdk.databases.createDatetimeAttribute(
-          this.database.$id,
+          this.database.name,
           this.collection.$id,
           key,
           required,
@@ -577,7 +577,7 @@ export class AttributeConfigFactory {
       updateAction: (key, values) => {
         const { required, default: x, key: newKey } = values;
         return this.sdk.databases.updateDatetimeAttribute(
-          this.database.$id,
+          this.database.name,
           this.collection.$id,
           key,
           required,
@@ -616,7 +616,7 @@ export class AttributeConfigFactory {
       submitAction: async (values) => {
         const { key, default: defaultValue, required, array } = values;
         return await this.sdk.databases.createIpAttribute(
-          this.database.$id,
+          this.database.name,
           this.collection.$id,
           key,
           required,
@@ -627,7 +627,7 @@ export class AttributeConfigFactory {
       updateAction: (key, values) => {
         const { required, default: x, key: newKey } = values;
         return this.sdk.databases.updateIpAttribute(
-          this.database.$id,
+          this.database.name,
           this.collection.$id,
           key,
           required,
@@ -666,7 +666,7 @@ export class AttributeConfigFactory {
       submitAction: async (values) => {
         const { key, default: defaultValue, required, array } = values;
         return await this.sdk.databases.createUrlAttribute(
-          this.database.$id,
+          this.database.name,
           this.collection.$id,
           key,
           required,
@@ -677,7 +677,7 @@ export class AttributeConfigFactory {
       updateAction: (key, values) => {
         const { required, default: x, key: newKey } = values;
         return this.sdk.databases.updateUrlAttribute(
-          this.database.$id,
+          this.database.name,
           this.collection.$id,
           key,
           required,
@@ -716,7 +716,7 @@ export class AttributeConfigFactory {
       submitAction: async (values) => {
         const { key, default: defaultValue, required, array } = values;
         return await this.sdk.databases.createEmailAttribute(
-          this.database.$id,
+          this.database.name,
           this.collection.$id,
           key,
           required,
@@ -727,7 +727,7 @@ export class AttributeConfigFactory {
       updateAction: (key, values) => {
         const { required, default: x, key: newKey } = values;
         return this.sdk.databases.updateEmailAttribute(
-          this.database.$id,
+          this.database.name,
           this.collection.$id,
           key,
           required,
@@ -784,7 +784,7 @@ export class AttributeConfigFactory {
       submitAction: async (values) => {
         const { key, elements, default: defaultValue, required, array } = values;
         return await this.sdk.databases.createEnumAttribute(
-          this.database.$id,
+          this.database.name,
           this.collection.$id,
           key,
           elements,
@@ -796,7 +796,7 @@ export class AttributeConfigFactory {
       updateAction: (key, values) => {
         const { required, default: x, elements, key: newKey } = values;
         return this.sdk.databases.updateEnumAttribute(
-          this.database.$id,
+          this.database.name,
           this.collection.$id,
           key,
           elements,
@@ -840,7 +840,7 @@ export class AttributeConfigFactory {
       submitAction: async (values) => {
         const { key, relatedCollection, relationType, twoWay, twoWayKey, onDelete } = values;
         return await this.sdk.databases.createRelationshipAttribute(
-          this.database.$id,
+          this.database.name,
           this.collection.$id,
           relatedCollection,
           relationType as RelationshipType,
@@ -875,28 +875,6 @@ export class AttributeConfigFactory {
   }
 }
 
-// ======================== MAIN ATTRIBUTE FORM ========================
-
-export const AttributeForm: React.FC<BaseProps & { type: Attributes | AttributeFormat }> = ({
-  type,
-  onClose,
-  isOpen,
-  refetch,
-}) => {
-  const sdk = useProjectStore.use.sdk();
-  const database = useDatabaseStore.use.database!();
-  const collection = useCollectionStore.use.collection!();
-
-  const config = useMemo(() => {
-    const factory = new AttributeConfigFactory(sdk, database, collection);
-    return factory.getConfig(type);
-  }, [type, sdk, database, collection]);
-
-  if (!config) return null;
-
-  return <AttributeFormBase onClose={onClose} isOpen={isOpen} refetch={refetch} {...config} />;
-};
-
 // ======================== RELATIONSHIP FORM ========================
 
 const RelationshipAttributeFormFields: React.FC = () => {
@@ -909,7 +887,7 @@ const RelationshipAttributeFormFields: React.FC = () => {
     queryKey: ["collections", database?.$id],
     queryFn: async () => {
       if (!database) return { collections: [] };
-      return await sdk.databases.listCollections(database.$id);
+      return await sdk.databases.listCollections(database.name);
     },
     enabled: !!database,
   });
