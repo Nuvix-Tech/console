@@ -1,8 +1,6 @@
 import { useMemo, useState } from "react";
 
 import InfiniteList from "@/ui/InfiniteList";
-import SchemaSelector from "@/ui/SchemaSelector";
-import { useSchemasQuery } from "@/data/database/schemas-query";
 import { useParams } from "next/navigation";
 import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
 import { useProjectStore } from "@/lib/store";
@@ -14,11 +12,12 @@ import { CollectionListItem } from "./_collections_list_item";
 import { useCollectionsQuery } from "@/data/collections/collections_infinite-query";
 import EditorMenuListSkeleton from "../../table-editor/components/EditorMenuListSkeleton";
 import { useCollectionEditorStateSnapshot } from "@/lib/store/collection-editor";
+import DocSchemaSelector from "@/ui/DocSchemaSelector";
 
 export const Sidebar = () => {
-  const { id: ref, collectionId } = useParams<{ collectionId: string; id: string }>();
+  const { id: ref, collectionId } = useParams<{ collectionId: string; id: string; }>();
   const snap = useCollectionEditorStateSnapshot();
-  const { selectedSchema, setSelectedSchema } = useQuerySchemaState();
+  const { selectedSchema, setSelectedSchema } = useQuerySchemaState('doc');
   // const isTableEditorTabsEnabled = useIsTableEditorTabsEnabled()
   const isMobile = false; // useBreakpoint()
 
@@ -51,12 +50,6 @@ export const Sidebar = () => {
     [(data as any)?.pages],
   );
 
-  const { data: schemas } = useSchemasQuery({
-    projectRef: project?.$id,
-    sdk,
-  });
-
-  const schema = schemas?.find((schema) => schema.name === selectedSchema);
   const canCreateCollections = true; //useCheckPermissions(PermissionAction.TENANT_SQL_ADMIN_WRITE, 'tables')
 
   return (
@@ -64,7 +57,7 @@ export const Sidebar = () => {
       <div className="h-full w-full min-h-[calc(100svh-64px-54px)]">
         <div className="flex flex-col flex-grow gap-3 h-full px-2">
           <div className="flex flex-col gap-y-1.5">
-            <SchemaSelector
+            <DocSchemaSelector
               selectedSchemaName={selectedSchema}
               onSelectSchema={(name: string) => {
                 setSearchText("");

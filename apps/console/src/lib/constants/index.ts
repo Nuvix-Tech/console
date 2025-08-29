@@ -73,7 +73,7 @@ export const LOCAL_STORAGE_KEYS = {
   // Used for storing the last sign in method used by the user
   LAST_SIGN_IN_METHOD: "nuvix-last-sign-in-method",
   // Key to track the last selected schema. The project ref is intentionally put at the end for easier search in the browser console.
-  LAST_SELECTED_SCHEMA: (ref: string) => `last-selected-schema-${ref}`,
+  LAST_SELECTED_SCHEMA: (ref: string, type?: 'doc') => `last-selected-${type ? type + '_' : ''}schema-${ref}`,
   // Track position of nodes for schema visualizer
   SCHEMA_VISUALIZER_POSITIONS: (ref: string, schemaId: number) =>
     `schema-visualizer-positions-${ref}-${schemaId}`,

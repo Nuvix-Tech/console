@@ -17,6 +17,7 @@ type BaseFieldProps = {
   min?: number;
   max?: number;
   showAbout?: boolean;
+  orientation: "horizontal" | "vertical";
   [key: string]: any;
 };
 
@@ -46,6 +47,7 @@ export const DynamicField = (props: Props) => {
     nullable,
     label,
     showAbout,
+    orientation,
     ...rest
   } = props;
   const { values, errors, touched, setFieldValue, setFieldTouched } =
@@ -138,6 +140,7 @@ export const DynamicField = (props: Props) => {
         </div>
       }
       required={!nullable}
+      orientation={orientation}
     >
       {isArray ? (
         renderArrayField(FieldComponent)

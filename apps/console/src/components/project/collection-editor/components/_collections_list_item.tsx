@@ -43,7 +43,7 @@ export const CollectionListItem: ItemRenderer<Models.Collection, EntityListItemP
 }) => {
   const { project, sdk } = useProjectStore();
   const snap = useCollectionEditorStateSnapshot();
-  const { selectedSchema } = useQuerySchemaState();
+  const { selectedSchema } = useQuerySchemaState('doc');
 
   // For tabs preview flag logic
   // const isTableEditorTabsEnabled = useIsTableEditorTabsEnabled()
