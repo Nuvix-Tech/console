@@ -836,7 +836,12 @@ export class AttributeConfigFactory {
         }),
         onDelete: y.string().oneOf(["cascade", "restrict", "setNull"]).default("setNull"),
       }) as any,
-      formFields: <RelationshipAttributeFormFields />,
+      formFields: (
+        <RelationshipAttributeFormFields
+          schema={this.collection.$id}
+          collection={this.collection}
+        />
+      ),
       submitAction: async (values) => {
         const { key, relatedCollection, relationType, twoWay, twoWayKey, onDelete } = values;
         return await this.sdk.databases.createRelationshipAttribute(
@@ -877,19 +882,20 @@ export class AttributeConfigFactory {
 
 // ======================== RELATIONSHIP FORM ========================
 
-const RelationshipAttributeFormFields: React.FC = () => {
+const RelationshipAttributeFormFields: React.FC<{
+  schema: string;
+  collection: Models.Collection;
+}> = ({ collection, schema }) => {
   const { values, setFieldValue } = useFormikContext<RelationshipFormValues>();
   const sdk = useProjectStore.use.sdk();
-  const database = useDatabaseStore.use.database!();
-  const collection = useCollectionStore.use.collection!();
 
   const { data } = useQuery({
-    queryKey: ["collections", database?.$id],
+    queryKey: ["collections", schema],
     queryFn: async () => {
-      if (!database) return { collections: [] };
-      return await sdk.databases.listCollections(database.name);
+      if (!schema) return { collections: [] };
+      return await sdk.databases.listCollections(schema);
     },
-    enabled: !!database,
+    enabled: !!schema,
   });
 
   const relatedCollectionName = useMemo(

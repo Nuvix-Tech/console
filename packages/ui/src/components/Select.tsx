@@ -222,7 +222,8 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
               <Input
                 data-scaling="90"
                 id={`select-search-${searchInputId}`}
-                placeholder="Search"
+                label="Search"
+                labelAsPlaceholder
                 height="s"
                 hasSuffix={
                   searchQuery ? (

@@ -5,5 +5,3 @@ export * from "./_delete";
 export * from "./_name";
 export * from "./_permissions";
 export * from "../../../../collection-editor/SidePanelEditor/ColumnEditor/ColumnIcon";
-export * from "./_create_document";
-export * from "./_create_index";

@@ -22,7 +22,6 @@ import { EmptyState } from "@/components";
 import { useSearchQuery } from "@/hooks/useQuery";
 import { useCollectionStore, useDatabaseStore, useProjectStore } from "@/lib/store";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { CreateDocument } from "./components";
 
 type Props = {
   databaseId: string;
@@ -139,7 +138,7 @@ const CollectionPage: React.FC<Props> = ({ databaseId, collectionId }: Props) =>
           <CreateButton
             hasPermission={canCreateDocuments}
             label="Create Document"
-            component={CreateDocument}
+            // component={CreateDocument}
             disabled={!collection?.attributes.length}
             extraProps={{
               refetch,
