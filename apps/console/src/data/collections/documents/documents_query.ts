@@ -4,11 +4,12 @@ import { useQuery } from "@tanstack/react-query";
 import { collectionKeys } from "../keys";
 import type { QueryOptions } from "@/types/index";
 import type { Filter, Sort } from "@/components/project/collection-editor/grid/types";
+import { Attributes } from "@/components/project/collection-editor/SidePanelEditor/ColumnEditor/utils";
 
 type TableRowsVariables = {
   projectRef: string;
   sdk: ProjectSdk;
-  collectionId: string;
+  collection: Models.Collection;
   schema: string;
   filters?: Filter[];
   sorts?: Sort[];
@@ -58,7 +59,7 @@ function convertSortsToQueries(sorts: Sort[]): string[] {
 }
 
 export async function getDocuments(
-  { projectRef, sdk, collectionId, filters, sorts, limit, page, schema }: TableRowsVariables,
+  { projectRef, sdk, collection, filters, sorts, limit, page, schema }: TableRowsVariables,
   signal?: AbortSignal,
 ) {
   const queries: string[] = [];
@@ -67,23 +68,29 @@ export async function getDocuments(
   if (filters !== undefined) queries.push(...convertFiltersToQueries(filters));
   if (sorts !== undefined) queries.push(...convertSortsToQueries(sorts));
 
-  return sdk.databases.listDocuments(schema, collectionId, queries);
+  const relationships = collection.attributes.filter(
+    (a) => a.type === Attributes.Relationship && a.status === "available",
+  );
+  relationships.forEach((rel) => {
+    queries.push(Query.populate(rel.key, [Query.select(["$id"])]));
+  });
+
+  return sdk.databases.listDocuments(schema, collection.$id, queries);
 }
 
 export const useCollectionDocumentsQuery = <TData = Models.DocumentList<any>>(
-  { projectRef, sdk, collectionId, schema, ...args }: Omit<TableRowsVariables, "queryClient">,
+  { projectRef, sdk, collection, schema, ...args }: Omit<TableRowsVariables, "queryClient">,
   {
     enabled = true,
     ...options
   }: QueryOptions<Models.DocumentList<any>, NuvixException, TData> = {},
 ) => {
   return useQuery({
-    queryKey: collectionKeys.documents(projectRef, schema, collectionId),
+    queryKey: collectionKeys.documents(projectRef, schema, collection.$id),
 
-    queryFn: ({ signal }) =>
-      getDocuments({ projectRef, sdk, collectionId, schema, ...args }, signal),
+    queryFn: ({ signal }) => getDocuments({ projectRef, sdk, collection, schema, ...args }, signal),
 
-    enabled: enabled && typeof projectRef !== "undefined" && typeof collectionId !== "undefined",
+    enabled: enabled && typeof projectRef !== "undefined" && typeof collection.$id !== "undefined",
     ...options,
   });
 };

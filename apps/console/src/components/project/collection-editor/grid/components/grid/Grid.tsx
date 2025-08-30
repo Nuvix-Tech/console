@@ -129,9 +129,9 @@ export const Grid = memo(
               {isError && (
                 <Alert>
                   <AlertTitle>Failed to retrieve rows from table</AlertTitle>
-                  <p className="text-sm text-light">Error: {error?.message}</p>
                   {filters.length > 0 && (
                     <AlertDescription>
+                      <p className="text-sm text-light">Error: {error?.message}</p>
                       Verify that the filter values are correct, as the error may stem from an
                       incorrectly applied filter
                     </AlertDescription>

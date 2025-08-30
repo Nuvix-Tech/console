@@ -2,83 +2,78 @@ import { ArrowRight } from "lucide-react";
 import type { PropsWithChildren } from "react";
 import type { RenderCellProps } from "react-data-grid";
 
-import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
-import { useTablesQuery } from "@/data/tables/tables-query";
 import { ReferenceRecordPeek } from "./ReferenceRecordPeek";
 import { useProjectStore } from "@/lib/store";
 import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/popover";
 import { IconButton } from "@nuvix/ui/components";
-import { isTableLike } from "@/data/table-editor/table-editor-types";
-import { convertByteaToHex } from "@/components/editor/SidePanelEditor/RowEditor/RowEditor.utils";
 import type { Models } from "@nuvix/console";
 import { NullValue } from "@/components/grid/components/common/NullValue";
+import { useCollectionEditorQuery } from "@/data/collections";
+import { values } from "lodash";
 
 interface Props extends PropsWithChildren<RenderCellProps<Models.Document, unknown>> {
-  tableId: string;
+  collectionId: string;
+  schema: string;
 }
 
 export const ForeignKeyFormatter = (props: Props) => {
   const { project, sdk } = useProjectStore();
 
-  const { tableId, row, column } = props;
+  const { collectionId, schema, row, column } = props;
 
-  const { data } = useTableEditorQuery({
+  const { data } = useCollectionEditorQuery({
     projectRef: project?.$id,
     sdk,
-    id: Number(tableId),
+    id: collectionId,
+    schema: schema,
   });
-  const foreignKeyColumn = data?.columns.find((x) => x.name === column.key);
-  const selectedTable = isTableLike(data) ? data : undefined;
 
-  const relationship = (selectedTable?.relationships ?? []).find(
-    (r) =>
-      r.source_schema === selectedTable?.schema &&
-      r.source_table_name === selectedTable?.name &&
-      r.source_column_name === column.name,
-  );
-  const { data: tables } = useTablesQuery({
-    projectRef: project?.$id,
-    includeColumns: true,
-    sdk,
-    schema: relationship?.target_table_schema,
-  });
-  const targetTable = tables?.find(
-    (table) =>
-      table.schema === relationship?.target_table_schema &&
-      table.name === relationship.target_table_name,
-  );
-
+  const targetCollection = data;
   const value = row[column.key];
-  const formattedValue =
-    foreignKeyColumn?.format === "bytea" && !!value ? convertByteaToHex(value) : value;
+
+  const relationship = data?.attributes.find((a: any) => {
+    return a.type === "relationship" && a.twoWayKey === column.key;
+  });
 
   return (
     <div className="nx-grid-foreign-key-formatter flex justify-between">
       <span className="nx-grid-foreign-key-formatter__text">
-        {formattedValue === null ? <NullValue /> : formattedValue}
+        {value === null ? (
+          <NullValue />
+        ) : Array.isArray(value) ? (
+          values.length > 0 ? (
+            value.join(", ")
+          ) : (
+            "[]"
+          )
+        ) : (
+          value
+        )}
       </span>
-      {relationship !== undefined && targetTable !== undefined && formattedValue !== null && (
-        <Popover>
-          <PopoverTrigger asChild>
-            <IconButton
-              type="button"
-              size="s"
-              variant="secondary"
-              icon={<ArrowRight size={14} />}
-              onClick={(e: any) => e.stopPropagation()}
-              tooltip={"View referencing record"}
-            />
-          </PopoverTrigger>
-          <PopoverContent align="end" className="p-0 w-96">
-            {/* portal */}
-            <ReferenceRecordPeek
-              table={targetTable}
-              column={relationship.target_column_name}
-              value={formattedValue}
-            />
-          </PopoverContent>
-        </Popover>
-      )}
+      {relationship !== undefined &&
+        targetCollection !== undefined &&
+        (value !== null || (Array.isArray(value) && value.length > 0)) && (
+          <Popover>
+            <PopoverTrigger asChild>
+              <IconButton
+                type="button"
+                size="s"
+                variant="secondary"
+                icon={<ArrowRight size={14} />}
+                onClick={(e: any) => e.stopPropagation()}
+                tooltip={"View referencing record(s)"}
+              />
+            </PopoverTrigger>
+            <PopoverContent align="end" className="p-0 w-96">
+              {/* portal */}
+              <ReferenceRecordPeek
+                collection={targetCollection}
+                column={relationship as unknown as Models.AttributeRelationship}
+                value={value}
+              />
+            </PopoverContent>
+          </Popover>
+        )}
     </div>
   );
 };

@@ -24,7 +24,7 @@ import { ForeignKeyFormatter } from "../components/formatter/ForeignKeyFormatter
 
 export const ESTIMATED_CHARACTER_PIXEL_WIDTH = 9;
 
-const internalAttributes = [
+export const internalAttributes = [
   {
     key: "$id",
     internal: true,
@@ -106,7 +106,8 @@ export function getGridColumns(
           )
         : undefined,
       renderCell: getCellRenderer(x, columnType, {
-        collectionId: options?.collectionId,
+        collectionId: (x as any)?.relatedCollection,
+        schema: collection.$schema,
       }),
       parent: undefined,
       level: 0,
@@ -193,7 +194,7 @@ function getCellEditor(
 function getCellRenderer(
   columnDef: AttributeTypes,
   columnType: ColumnType,
-  metadata: { collectionId?: string },
+  metadata: { collectionId?: string; schema?: string },
 ) {
   if ((columnDef as any).format === "id") {
     return (p: PropsWithChildren<RenderCellProps<Models.Document, unknown>>) => {
@@ -207,7 +208,9 @@ function getCellRenderer(
     }
     case Attributes.Relationship: {
       // eslint-disable-next-line react/display-name
-      return (p: any) => <ForeignKeyFormatter {...p} tableId={metadata.collectionId} />;
+      return (p: any) => (
+        <ForeignKeyFormatter {...p} collectionId={metadata.collectionId} schema={metadata.schema} />
+      );
     }
     default: {
       return DefaultFormatter;

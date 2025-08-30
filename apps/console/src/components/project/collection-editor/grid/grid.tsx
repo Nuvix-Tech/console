@@ -80,7 +80,7 @@ export const CollectionGrid = ({
     {
       projectRef: project?.$id,
       sdk,
-      collectionId,
+      collection: snap.collection,
       schema: snap.collection.$schema,
       sorts,
       filters,

@@ -18,9 +18,7 @@ export const useCollectionEditorQuery = <TData = Models.Collection>(
   useQuery({
     queryKey: collectionKeys.editor(projectRef, schema, id),
     queryFn: async ({ signal }) => {
-      const coll = await sdk.databases.getCollection(schema, id);
-      coll.$schema = schema; // until backend support
-      return coll;
+      return sdk.databases.getCollection(schema, id);
     },
     enabled: enabled && typeof projectRef !== "undefined" && typeof id !== "undefined",
     refetchOnWindowFocus: false,
