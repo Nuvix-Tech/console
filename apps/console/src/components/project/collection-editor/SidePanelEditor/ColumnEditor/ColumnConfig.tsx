@@ -9,7 +9,7 @@ import {
   InputTagField,
   SubmitButton,
 } from "@/components/others/forms";
-import { useCollectionStore, useDatabaseStore, useProjectStore } from "@/lib/store";
+import { useCollectionStore, useProjectStore } from "@/lib/store";
 import { Column, Row, useToast } from "@nuvix/ui/components";
 import * as y from "yup";
 import { AttributeIcon, RelationshipIcon } from "./ColumnIcon";
@@ -838,8 +838,9 @@ export class AttributeConfigFactory {
       }) as any,
       formFields: (
         <RelationshipAttributeFormFields
-          schema={this.collection.$id}
+          schema={this.database?.name}
           collection={this.collection}
+          isUpdate={!!this.column}
         />
       ),
       submitAction: async (values) => {
@@ -885,11 +886,12 @@ export class AttributeConfigFactory {
 const RelationshipAttributeFormFields: React.FC<{
   schema: string;
   collection: Models.Collection;
-}> = ({ collection, schema }) => {
+  isUpdate: boolean;
+}> = ({ collection, schema, isUpdate }) => {
   const { values, setFieldValue } = useFormikContext<RelationshipFormValues>();
   const sdk = useProjectStore.use.sdk();
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["collections", schema],
     queryFn: async () => {
       if (!schema) return { collections: [] };
@@ -974,6 +976,7 @@ const RelationshipAttributeFormFields: React.FC<{
         width="full"
         value={values.twoWay ? "twoWay" : "oneWay"}
         onValueChange={handleTwoWayChange}
+        disabled={isUpdate}
       >
         <RadioCardItem
           icon={<RelationshipIcon type="oneWay" />}
@@ -992,24 +995,33 @@ const RelationshipAttributeFormFields: React.FC<{
       <SelectField
         name="relatedCollection"
         label="Related Collection"
+        labelOptional={isLoading ? "loading..." : ""}
         value={values.relatedCollection}
         onChange={handleRelatedCollectionChange}
         required
         options={collectionOptions}
         portal={false}
+        disabled={isUpdate}
         searchable
         emptyState="There are no collections that match your search"
       />
 
       {values.relatedCollection && (
         <>
-          <InputField name="key" label="Key" required description={KEY_VALIDATION_MESSAGE} />
+          <InputField
+            name="key"
+            label="Key"
+            disabled={isUpdate}
+            required
+            description={KEY_VALIDATION_MESSAGE}
+          />
 
           {values.twoWay && (
             <InputField
               name="twoWayKey"
               label="Key (Related Collection)"
               required
+              disabled={isUpdate}
               description={KEY_VALIDATION_MESSAGE}
             />
           )}
@@ -1019,6 +1031,7 @@ const RelationshipAttributeFormFields: React.FC<{
             label="Relation Type"
             type={AttributeFormat.Enum}
             options={RELATION_TYPE_OPTIONS as any}
+            disabled={isUpdate}
           />
 
           {relationshipDescriptions && (

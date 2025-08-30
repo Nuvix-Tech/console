@@ -160,38 +160,38 @@ function renderColumnIcon(
 ) {
   const { name, foreignKey } = columnMeta;
   switch (type) {
-    case Attributes.Relationship:
-      // [Unkown] Look into this separately but this should be a hover card instead
-      return (
-        <Tooltip>
-          <TooltipTrigger className="brand-on-background-weak">
-            <Link size={14} strokeWidth={2} />
-          </TooltipTrigger>
-          <TooltipContent side="bottom">
-            <div className="font-normal">
-              <p className="text-xs text-muted-foreground">Foreign key relation:</p>
-              <div className="flex items-center space-x-1">
-                <Code size={"xs"}>{name}</Code>
-                <ArrowRight size={14} strokeWidth={1.5} className="!text-accent" />
-                <Code size={"xs"}>
-                  {foreignKey?.targetTableSchema}.{foreignKey?.targetTableName}.
-                  {foreignKey?.targetColumnName}
-                </Code>
-              </div>
-              {foreignKey?.updateAction !== FOREIGN_KEY_CASCADE_ACTION.NO_ACTION && (
-                <p className="text-xs !text-secondary-foreground mt-1">
-                  On update: {getForeignKeyCascadeAction(foreignKey?.updateAction)}
-                </p>
-              )}
-              {foreignKey?.deletionAction !== FOREIGN_KEY_CASCADE_ACTION.NO_ACTION && (
-                <p className="text-xs !text-secondary-foreground mt-1">
-                  On delete: {getForeignKeyCascadeAction(foreignKey?.deletionAction)}
-                </p>
-              )}
-            </div>
-          </TooltipContent>
-        </Tooltip>
-      );
+    // case Attributes.Relationship:
+    //   // [Unkown] Look into this separately but this should be a hover card instead
+    //   return (
+    //     <Tooltip>
+    //       <TooltipTrigger className="brand-on-background-weak">
+    //         <Link size={14} strokeWidth={2} />
+    //       </TooltipTrigger>
+    //       <TooltipContent side="bottom">
+    //         <div className="font-normal">
+    //           <p className="text-xs text-muted-foreground">Foreign key relation:</p>
+    //           <div className="flex items-center space-x-1">
+    //             <Code size={"xs"}>{name}</Code>
+    //             <ArrowRight size={14} strokeWidth={1.5} className="!text-accent" />
+    //             <Code size={"xs"}>
+    //               {foreignKey?.targetTableSchema}.{foreignKey?.targetTableName}.
+    //               {foreignKey?.targetColumnName}
+    //             </Code>
+    //           </div>
+    //           {foreignKey?.updateAction !== FOREIGN_KEY_CASCADE_ACTION.NO_ACTION && (
+    //             <p className="text-xs !text-secondary-foreground mt-1">
+    //               On update: {getForeignKeyCascadeAction(foreignKey?.updateAction)}
+    //             </p>
+    //           )}
+    //           {foreignKey?.deletionAction !== FOREIGN_KEY_CASCADE_ACTION.NO_ACTION && (
+    //             <p className="text-xs !text-secondary-foreground mt-1">
+    //               On delete: {getForeignKeyCascadeAction(foreignKey?.deletionAction)}
+    //             </p>
+    //           )}
+    //         </div>
+    //       </TooltipContent>
+    //     </Tooltip>
+    //   );
     default:
       return null;
   }

@@ -20,6 +20,7 @@ import {
 } from "@/components/project/collection-editor/SidePanelEditor/ColumnEditor/utils";
 import { IDChip } from "@/components/others";
 import type { PropsWithChildren } from "react";
+import { ForeignKeyFormatter } from "../components/formatter/ForeignKeyFormatter";
 
 export const ESTIMATED_CHARACTER_PIXEL_WIDTH = 9;
 
@@ -205,12 +206,8 @@ function getCellRenderer(
       return BooleanFormatter;
     }
     case Attributes.Relationship: {
-      // if (!columnDef.isUpdatable) {
-      //   return DefaultFormatter;
-      // } else {
-      //   // eslint-disable-next-line react/display-name
-      //   return (p: any) => <ForeignKeyFormatter {...p} tableId={metadata.tableId} />;
-      // }
+      // eslint-disable-next-line react/display-name
+      return (p: any) => <ForeignKeyFormatter {...p} tableId={metadata.collectionId} />;
     }
     default: {
       return DefaultFormatter;

@@ -146,7 +146,7 @@ export const Grid = memo(
                       <p className="text-sm text-light mt-1">
                         Add documents to your collection to get started.
                       </p>
-                      <div className="flex items-center space-x-2 mt-4">
+                      {/* <div className="flex items-center space-x-2 mt-4">
                         {
                           <Button
                             type="default"
@@ -165,7 +165,7 @@ export const Grid = memo(
                             Import data from CSV
                           </Button>
                         }
-                      </div>
+                      </div> */}
                     </div>
                   ) : (
                     <div className="flex flex-col items-center justify-center col-span-full">

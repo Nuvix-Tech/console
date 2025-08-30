@@ -192,7 +192,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         <Flex
           transition="micro-medium"
           border="neutral-medium"
-          background={"neutral-alpha-weak"}
           position="relative"
           overflow="hidden"
           vertical="stretch"
@@ -206,7 +205,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             },
             radius === "none" ? "radius-none" : radius ? `radius-l-${radius}` : "radius-l",
             {
-              "!bg-[var(--neutral-solid-strong)]": props.disabled,
+              [styles["input-disabled"]]: props.disabled,
             },
             inputClass,
           )}
