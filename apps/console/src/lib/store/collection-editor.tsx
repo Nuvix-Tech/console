@@ -8,8 +8,8 @@ import type { AttributeTypes } from "@/components/project/collection-editor/Side
 
 export const COLLECTION_EDITOR_DEFAULT_ROWS_PER_PAGE = 100;
 
-type ForeignKeyState = {
-  foreignKey: ForeignKey;
+export type ForeignKeyState = {
+  attribute: Models.AttributeRelationship;
   row: Models.Document;
   column: AttributeTypes;
 };
@@ -24,7 +24,7 @@ export type SidePanel =
   | { type: "json"; jsonValue: EditValue }
   | {
       type: "foreign-row-selector";
-      foreignKey: ForeignKeyState;
+      relationship: ForeignKeyState;
     }
   | { type: "csv-import" };
 
@@ -196,10 +196,10 @@ export const createCollectionEditorState = () => {
         sidePanel: { type: "cell", value: { column, row } },
       };
     },
-    onEditForeignKeyColumnValue: (foreignKey: ForeignKeyState) => {
+    onEditForeignKeyColumnValue: (relationship: ForeignKeyState) => {
       state.ui = {
         open: "side-panel",
-        sidePanel: { type: "foreign-row-selector", foreignKey },
+        sidePanel: { type: "foreign-row-selector", relationship },
       };
     },
     onImportData: () => {

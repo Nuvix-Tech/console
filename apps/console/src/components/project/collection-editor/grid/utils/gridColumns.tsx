@@ -21,6 +21,7 @@ import {
 import { IDChip } from "@/components/others";
 import type { PropsWithChildren } from "react";
 import { ForeignKeyFormatter } from "../components/formatter/ForeignKeyFormatter";
+import { useCollectionEditorStore } from "@/lib/store/collection-editor";
 
 export const ESTIMATED_CHARACTER_PIXEL_WIDTH = 9;
 
@@ -106,8 +107,9 @@ export function getGridColumns(
           )
         : undefined,
       renderCell: getCellRenderer(x, columnType, {
-        collectionId: (x as any)?.relatedCollection,
+        collectionId: collection.$id,
         schema: collection.$schema,
+        column: x,
       }),
       parent: undefined,
       level: 0,
@@ -163,7 +165,6 @@ function getCellEditor(
       return (p: any) => <BooleanEditor {...p} isNullable={!columnDefinition.required} />;
     case Attributes.Timestamptz:
       return DateTimeEditor(!columnDefinition.required || false);
-    case Attributes.Relationship:
     case Attributes.String: // TODO: Implement String and other formats
     case AttributeFormat.Email:
     case AttributeFormat.Url:
@@ -194,7 +195,7 @@ function getCellEditor(
 function getCellRenderer(
   columnDef: AttributeTypes,
   columnType: ColumnType,
-  metadata: { collectionId?: string; schema?: string },
+  metadata: { collectionId?: string; schema?: string; column: any },
 ) {
   if ((columnDef as any).format === "id") {
     return (p: PropsWithChildren<RenderCellProps<Models.Document, unknown>>) => {
@@ -209,7 +210,12 @@ function getCellRenderer(
     case Attributes.Relationship: {
       // eslint-disable-next-line react/display-name
       return (p: any) => (
-        <ForeignKeyFormatter {...p} collectionId={metadata.collectionId} schema={metadata.schema} />
+        <ForeignKeyFormatter
+          {...p}
+          collectionId={metadata.collectionId}
+          schema={metadata.schema}
+          attribute={metadata.column}
+        />
       );
     }
     default: {

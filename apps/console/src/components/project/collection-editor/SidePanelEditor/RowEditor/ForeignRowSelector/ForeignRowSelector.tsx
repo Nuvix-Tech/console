@@ -8,14 +8,10 @@ import {
   formatFilterURLParams,
   formatSortURLParams,
   sortsToUrlParams,
-} from "@/components/grid/NuvixGrid.utils";
-import RefreshButton from "@/components/grid/components/header/RefreshButton";
-import FilterPopover from "@/components/grid/components/header/filter/FilterPopover";
-import { SortPopover } from "@/components/grid/components/header/sort";
-import type { Filter } from "@/components/grid/types";
-import { Sort } from "@/components/grid/types";
-import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
-import { useTableRowsQuery } from "@/data/table-rows/table-rows-query";
+} from "../../../grid/grid.utils";
+import { SortPopover } from "../../../grid/components/header/sort";
+import type { Filter } from "../../../grid/types";
+import { Sort } from "../../../grid/types";
 // import {
 //   RoleImpersonationState,
 //   useRoleImpersonationStateSnapshot,
@@ -26,44 +22,39 @@ import SelectorGrid from "./SelectorGrid";
 import { useProjectStore } from "@/lib/store";
 import { useParams } from "next/navigation";
 import { SidePanel } from "@/ui/SidePanel";
-import { TableEditorTableStateContextProvider } from "@/lib/store/table";
 import { Button } from "@nuvix/ui/components";
 import { TableParam } from "@/types";
 import { Code } from "@chakra-ui/react";
+import { Models } from "@nuvix/console";
+import { useCollectionDocumentsQuery, useCollectionEditorQuery } from "@/data/collections";
+import id from "@/components/others/id";
+import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
+import { CollectionEditorCollectionStateContextProvider } from "@/lib/store/collection";
+import RefreshButton from "../../../grid/components/header/RefreshButton";
+import FilterPopover from "../../../grid/components/header/filter/FilterPopover";
 
 export interface ForeignRowSelectorProps {
   visible: boolean;
-  foreignKey?: any; //  ForeignKey;
+  attribute?: Models.AttributeRelationship;
   onSelect: (value?: { [key: string]: any }) => void;
   closePanel: () => void;
 }
 
 const ForeignRowSelector = ({
   visible,
-  foreignKey,
+  attribute,
   onSelect,
   closePanel,
 }: ForeignRowSelectorProps) => {
-  const { tableId: id } = useParams<TableParam>();
   const { project, sdk } = useProjectStore();
-  const { data: selectedTable } = useTableEditorQuery({
+  const { relatedCollection, key } = attribute ?? {};
+  const { selectedSchema } = useQuerySchemaState("doc");
+
+  const { data: collection } = useCollectionEditorQuery({
     projectRef: project?.$id,
     sdk,
-    id: !!id ? Number(id) : undefined,
-  });
-
-  const { tableId: _tableId, schema: schemaName, table: tableName, columns } = foreignKey ?? {};
-  const tableId = _tableId ? Number(_tableId) : undefined;
-
-  // Only show Set NULL CTA if its a 1:1 foreign key, and source column is nullable
-  // As this wouldn't be straightforward for composite foreign keys
-  const sourceColumn = (selectedTable?.columns ?? []).find((c) => c.name === columns?.[0].source);
-  const isNullable = (columns ?? []).length === 1 && sourceColumn?.is_nullable;
-
-  const { data: table } = useTableEditorQuery({
-    projectRef: project?.$id,
-    sdk,
-    id: tableId,
+    id: relatedCollection!,
+    schema: selectedSchema,
   });
 
   const [{ sort: sorts, filter: filters }, setParams] = useState<{
@@ -97,18 +88,20 @@ const ForeignRowSelector = ({
   const rowsPerPage = 100;
   const [page, setPage] = useState(1);
 
-  const roleImpersonationState = () => false; //useRoleImpersonationStateSnapshot();
-
-  const { data, isLoading, isSuccess, isError, isRefetching } = useTableRowsQuery(
+  const { data, isLoading, isSuccess, isError, isRefetching } = useCollectionDocumentsQuery(
     {
       projectRef: project?.$id,
       sdk,
-      tableId: table?.id,
-      sorts: formatSortURLParams(table?.name || "", sorts),
+      collection: collection ?? ({ $id: "" } as any),
+      sorts: formatSortURLParams(collection?.name || "", sorts),
       filters: formatFilterURLParams(filters),
+      populate: [],
       page,
+      schema: selectedSchema,
       limit: rowsPerPage,
-      roleImpersonationState: roleImpersonationState(),
+    },
+    {
+      enabled: !!(visible && project?.$id && sdk && collection),
     },
     // {
     //   keepPreviousData: true,
@@ -123,7 +116,7 @@ const ForeignRowSelector = ({
         <div>
           Select a record to reference from{" "}
           <Code className="font-mono text-sm">
-            {schemaName}.{tableName}
+            {selectedSchema}.{collection?.name}
           </Code>
         </div>
       }
@@ -144,23 +137,27 @@ const ForeignRowSelector = ({
               <p className="text-sm text-foreground-light">
                 Unable to load rows from{" "}
                 <Code>
-                  {schemaName}.{tableName}
+                  {selectedSchema}.{collection?.name}
                 </Code>
                 . Please try again or contact support.
               </p>
             </div>
           )}
 
-          {project?.$id && table && isSuccess && (
-            <TableEditorTableStateContextProvider
+          {project?.$id && collection && isSuccess && (
+            <CollectionEditorCollectionStateContextProvider
               projectRef={project.$id}
-              table={table}
+              collection={collection!}
               editable={false}
             >
               <div className="h-full flex flex-col bg-muted">
                 <div className="flex items-center justify-between my-2 mx-3">
                   <div className="flex items-center gap-4">
-                    <RefreshButton tableId={table?.id} isRefetching={isRefetching} />
+                    <RefreshButton
+                      schema={selectedSchema}
+                      collectionId={collection?.$id}
+                      isRefetching={isRefetching}
+                    />
                     <FilterPopover
                       portal={false}
                       filters={filters}
@@ -176,10 +173,10 @@ const ForeignRowSelector = ({
                       page={page}
                       setPage={setPage}
                       rowsPerPage={rowsPerPage}
-                      currentPageRowsCount={data?.rows.length ?? 0}
+                      currentPageRowsCount={data?.documents.length ?? 0}
                       isLoading={isRefetching}
                     />
-                    {isNullable && (
+                    {/* {isNullable && (
                       <div className="pl-3">
                         <Button
                           type="default"
@@ -192,26 +189,26 @@ const ForeignRowSelector = ({
                           Set NULL
                         </Button>
                       </div>
-                    )}
+                    )} */}
                   </div>
                 </div>
 
-                {data.rows.length > 0 ? (
+                {data.documents.length > 0 ? (
                   <SelectorGrid
-                    rows={data.rows}
+                    rows={data.documents}
                     onRowSelect={(row) => {
-                      const value = columns?.reduce((a: any, b: any) => {
-                        const targetColumn = selectedTable?.columns.find(
-                          (x) => x.name === b.target,
-                        );
-                        const value =
-                          // targetColumn?.format === "bytea"
-                          //   ? convertByteaToHex(row[b.target])
-                          //   :
-                          row[b.target];
-                        return { ...a, [b.source]: value };
-                      }, {});
-                      onSelect(value);
+                      // const value = columns?.reduce((a: any, b: any) => {
+                      //   const targetColumn = selectedTable?.columns.find(
+                      //     (x) => x.name === b.target,
+                      //   );
+                      //   const value =
+                      //     // targetColumn?.format === "bytea"
+                      //     //   ? convertByteaToHex(row[b.target])
+                      //     //   :
+                      //     row[b.target];
+                      //   return { ...a, [b.source]: value };
+                      // }, {});
+                      // onSelect(value);
                     }}
                   />
                 ) : (
@@ -220,7 +217,7 @@ const ForeignRowSelector = ({
                   </div>
                 )}
               </div>
-            </TableEditorTableStateContextProvider>
+            </CollectionEditorCollectionStateContextProvider>
           )}
         </div>
       </SidePanel.Content>

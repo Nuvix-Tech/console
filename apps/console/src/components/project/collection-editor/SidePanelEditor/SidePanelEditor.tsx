@@ -146,25 +146,22 @@ const SidePanelEditor = ({
     }
   };
 
-  // const onSaveForeignRow = async (value?: { [key: string]: any; }) => {
-  //   if (selectedCollection === undefined || !(snap.sidePanel?.type === "foreign-row-selector")) return;
-  //   const selectedForeignKeyToEdit = snap.sidePanel.foreignKey;
-
-  //   try {
-  //     const { row } = selectedForeignKeyToEdit;
-  //     const identifiers = {} as Dictionary<any>;
-  //     selectedCollection.primary_keys.forEach((column) => {
-  //       const col = selectedCollection.columns?.find((x) => x.name === column.name);
-  //       identifiers[column.name] =
-  //         col?.format === "bytea" ? convertByteaToHex(row![column.name]) : row![column.name];
-  //     });
-
-  //     const isNewRecord = false;
-  //     const configuration = { identifiers, rowIdx: row.idx };
-
-  //     saveRow(value, isNewRecord, configuration, () => {});
-  //   } catch (error) {}
-  // };
+  const onSaveForeignRow = async (value?: { [key: string]: any }) => {
+    // if (selectedCollection === undefined || !(snap.sidePanel?.type === "foreign-row-selector")) return;
+    // const selectedForeignKeyToEdit = snap.sidePanel.foreignKey;
+    // try {
+    //   const { row } = selectedForeignKeyToEdit;
+    //   const identifiers = {} as Dictionary<any>;
+    //   selectedCollection.primary_keys.forEach((column) => {
+    //     const col = selectedCollection.columns?.find((x) => x.name === column.name);
+    //     identifiers[column.name] =
+    //       col?.format === "bytea" ? convertByteaToHex(row![column.name]) : row![column.name];
+    //   });
+    //   const isNewRecord = false;
+    //   const configuration = { identifiers, rowIdx: row.idx };
+    //   saveRow(value, isNewRecord, configuration, () => {});
+    // } catch (error) {}
+  };
 
   const saveColumn = async (
     resolve: any,
@@ -424,17 +421,17 @@ const SidePanelEditor = ({
         closePanel={onClosePanel}
         onSaveField={onSaveColumnValue}
       />
-      {/* <ForeignRowSelector
+      <ForeignRowSelector
         visible={snap.sidePanel?.type === "foreign-row-selector"}
         // @ts-ignore
-        foreignKey={
+        attribute={
           snap.sidePanel?.type === "foreign-row-selector"
-            ? snap.sidePanel.foreignKey.foreignKey
+            ? snap.sidePanel.relationship.attribute
             : undefined
         }
         closePanel={onClosePanel}
         onSelect={onSaveForeignRow}
-      /> */}
+      />
       <SpreadsheetImport
         visible={snap.sidePanel?.type === "csv-import"}
         selectedCollection={selectedCollection}

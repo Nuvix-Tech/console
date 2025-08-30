@@ -12,6 +12,7 @@ type TableRowsVariables = {
   collection: Models.Collection;
   schema: string;
   filters?: Filter[];
+  populate?: string[];
   sorts?: Sort[];
   limit?: number;
   page?: number;
@@ -59,7 +60,17 @@ function convertSortsToQueries(sorts: Sort[]): string[] {
 }
 
 export async function getDocuments(
-  { projectRef, sdk, collection, filters, sorts, limit, page, schema }: TableRowsVariables,
+  {
+    projectRef,
+    sdk,
+    collection,
+    filters,
+    sorts,
+    limit,
+    page,
+    schema,
+    populate,
+  }: TableRowsVariables,
   signal?: AbortSignal,
 ) {
   const queries: string[] = [];
@@ -68,12 +79,14 @@ export async function getDocuments(
   if (filters !== undefined) queries.push(...convertFiltersToQueries(filters));
   if (sorts !== undefined) queries.push(...convertSortsToQueries(sorts));
 
-  const relationships = collection.attributes.filter(
-    (a) => a.type === Attributes.Relationship && a.status === "available",
-  );
-  relationships.forEach((rel) => {
-    queries.push(Query.populate(rel.key, [Query.select(["$id"])]));
-  });
+  if (populate === undefined) {
+    const relationships = collection.attributes.filter(
+      (a) => a.type === Attributes.Relationship && a.status === "available",
+    );
+    relationships.forEach((rel) => {
+      queries.push(Query.populate(rel.key, [Query.select(["$id"])]));
+    });
+  }
 
   return sdk.databases.listDocuments(schema, collection.$id, queries);
 }

@@ -13,27 +13,24 @@ import { values } from "lodash";
 
 interface Props extends PropsWithChildren<RenderCellProps<Models.Document, unknown>> {
   collectionId: string;
+  attribute: Models.AttributeRelationship;
   schema: string;
 }
 
 export const ForeignKeyFormatter = (props: Props) => {
   const { project, sdk } = useProjectStore();
 
-  const { collectionId, schema, row, column } = props;
+  const { schema, attribute, row, column } = props;
 
   const { data } = useCollectionEditorQuery({
     projectRef: project?.$id,
     sdk,
-    id: collectionId,
+    id: attribute.relatedCollection,
     schema: schema,
   });
 
   const targetCollection = data;
   const value = row[column.key];
-
-  const relationship = data?.attributes.find((a: any) => {
-    return a.type === "relationship" && a.twoWayKey === column.key;
-  });
 
   return (
     <div className="nx-grid-foreign-key-formatter flex justify-between">
@@ -50,7 +47,7 @@ export const ForeignKeyFormatter = (props: Props) => {
           value
         )}
       </span>
-      {relationship !== undefined &&
+      {attribute !== undefined &&
         targetCollection !== undefined &&
         (value !== null || (Array.isArray(value) && value.length > 0)) && (
           <Popover>
@@ -66,11 +63,7 @@ export const ForeignKeyFormatter = (props: Props) => {
             </PopoverTrigger>
             <PopoverContent align="end" className="p-0 w-96">
               {/* portal */}
-              <ReferenceRecordPeek
-                collection={targetCollection}
-                column={relationship as unknown as Models.AttributeRelationship}
-                value={value}
-              />
+              <ReferenceRecordPeek collection={targetCollection} column={attribute} value={value} />
             </PopoverContent>
           </Popover>
         )}

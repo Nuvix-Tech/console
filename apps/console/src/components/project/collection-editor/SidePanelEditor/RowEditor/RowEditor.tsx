@@ -2,7 +2,6 @@ import { noop } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 
 import ActionBar from "../ActionBar";
-// import ForeignRowSelector from "./ForeignRowSelector/ForeignRowSelector";
 import HeaderTitle from "./HeaderTitle";
 import { DynamicField } from "./InputField";
 import { JsonEditor } from "./JsonEditor";
@@ -15,6 +14,7 @@ import { generateYupSchema } from "../ColumnEditor/utils";
 import { useFormik } from "formik";
 import { CustomID } from "@/components/_custom_id";
 import { generateRowFromCollection } from "./RowEditor.utils";
+import ForeignRowSelector from "./ForeignRowSelector/ForeignRowSelector";
 
 export interface RowEditorProps {
   row?: Readonly<Models.Document>;
@@ -47,7 +47,7 @@ const RowEditor = ({
   const [selectedValueForJsonEdit, setSelectedValueForJsonEdit] = useState<EditValue>();
 
   const [isSelectingForeignKey, setIsSelectingForeignKey] = useState<boolean>(false);
-  const [referenceRow, setReferenceRow] = useState<Models.AttributeRelationship>();
+  const [referenceAttr, setReferenceAttr] = useState<Models.AttributeRelationship>();
 
   const isNewRecord = row === undefined;
   const isEditingText = selectedValueForTextEdit !== undefined;
@@ -87,16 +87,16 @@ const RowEditor = ({
 
   const onOpenForeignRowSelector = async (field: Models.AttributeRelationship) => {
     setIsSelectingForeignKey(true);
-    setReferenceRow(field);
+    setReferenceAttr(field);
   };
 
   const onSelectForeignRowValue = (value?: { [key: string]: any }) => {
-    if (referenceRow !== undefined && value !== undefined) {
+    if (referenceAttr !== undefined && value !== undefined) {
       // onUpdateField(value);
     }
 
     setIsSelectingForeignKey(false);
-    setReferenceRow(undefined);
+    setReferenceAttr(undefined);
   };
 
   return (
@@ -175,16 +175,16 @@ const RowEditor = ({
         readOnly={!editable}
       />
 
-      {/* <ForeignRowSelector
-        key={`foreign-row-selector-${foreignKey?.id ?? "null"}`}
+      <ForeignRowSelector
+        key={`foreign-row-selector-${referenceAttr?.key ?? "null"}`}
         visible={isSelectingForeignKey}
-        foreignKey={foreignKey}
+        attribute={referenceAttr}
         onSelect={onSelectForeignRowValue}
         closePanel={() => {
           setIsSelectingForeignKey(false);
-          setReferenceRow(undefined);
+          setReferenceAttr(undefined);
         }}
-      /> */}
+      />
     </SidePanel>
   );
 };

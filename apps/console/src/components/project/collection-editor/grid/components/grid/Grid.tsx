@@ -93,16 +93,18 @@ export const Grid = memo(
       const { organization: org } = useAppStore();
       const { project, sdk } = useProjectStore();
 
-      function getColumnForeignKey(columnName: string) {
-        return undefined;
+      function getColumnForeignKey(columnName: string): Models.AttributeRelationship | undefined {
+        return collection?.attributes.find((attr) => attr.key === columnName) as
+          | Models.AttributeRelationship
+          | undefined;
       }
 
       function onRowDoubleClick(row: any, column: any) {
-        const foreignKey = getColumnForeignKey(column.name);
+        const attribute = getColumnForeignKey(column.name);
 
-        if (foreignKey) {
+        if (attribute) {
           tableEditorSnap.onEditForeignKeyColumnValue({
-            foreignKey,
+            attribute,
             row,
             column,
           });

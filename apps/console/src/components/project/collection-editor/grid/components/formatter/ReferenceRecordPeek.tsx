@@ -30,7 +30,9 @@ export const ReferenceRecordPeek = ({ collection, column, value }: ReferenceReco
       sdk,
       collection,
       schema: collection.$schema,
-      filters: [{ column: column.twoWayKey, operator: "equal", value }],
+      filters: [
+        { column: "$id", operator: "contains", value: Array.isArray(value) ? value : [value] },
+      ],
       page: 1,
       limit: 10,
     },
