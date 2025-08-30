@@ -85,14 +85,29 @@ const RowEditor = ({
     if (formik.dirty) updateEditorDirty();
   }, [formik.dirty]);
 
-  const onOpenForeignRowSelector = async (field: Models.AttributeRelationship) => {
+  const onOpenForeignRowSelector = (field: Models.AttributeRelationship) => {
     setIsSelectingForeignKey(true);
     setReferenceAttr(field);
   };
 
-  const onSelectForeignRowValue = (value?: string | string[] | null) => {
-    if (referenceAttr !== undefined && value !== undefined) {
-      // onUpdateField(value);
+  const onSelectForeignRowValue = (
+    diff: { deleted: string[]; addedValues: string[] } | null | string,
+  ) => {
+    if (referenceAttr !== undefined && diff !== undefined) {
+      if (typeof diff === "string") {
+        formik.setFieldValue(referenceAttr.key, diff);
+      } else {
+        if (isNewRecord) {
+          formik.setFieldValue(referenceAttr.key, {
+            set: diff?.addedValues,
+          });
+        } else {
+          formik.setFieldValue(referenceAttr.key, {
+            connect: diff?.addedValues,
+            disconnect: diff?.deleted,
+          });
+        }
+      }
     }
 
     setIsSelectingForeignKey(false);
@@ -180,6 +195,10 @@ const RowEditor = ({
         visible={isSelectingForeignKey}
         attribute={referenceAttr}
         onSelect={onSelectForeignRowValue}
+        relationship={{
+          attribute: referenceAttr!,
+          row: formik.values,
+        }}
         closePanel={() => {
           setIsSelectingForeignKey(false);
           setReferenceAttr(undefined);

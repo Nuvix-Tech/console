@@ -1,5 +1,5 @@
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
@@ -28,11 +28,16 @@ import {
 } from "@/lib/store/collection";
 import RefreshButton from "../../../grid/components/header/RefreshButton";
 import FilterPopover from "../../../grid/components/header/filter/FilterPopover";
+import { useCollectionEditorStore } from "@/lib/store/collection-editor";
 
 export interface ForeignRowSelectorProps {
   visible: boolean;
   attribute?: Models.AttributeRelationship;
-  onSelect: (value?: string[] | string | null) => void;
+  onSelect: (diff: { deleted: string[]; addedValues: string[] } | null | string) => void;
+  relationship?: {
+    attribute: Models.AttributeRelationship;
+    row: any;
+  };
   closePanel: () => void;
 }
 
@@ -56,10 +61,12 @@ const ForeignRowSelector = ({
   attribute,
   onSelect,
   closePanel,
+  relationship,
 }: ForeignRowSelectorProps) => {
   const { project, sdk } = useProjectStore();
   const { relatedCollection, key } = attribute ?? {};
   const { selectedSchema } = useQuerySchemaState("doc");
+  const isMany = attribute && isSelectMany(attribute);
 
   const { data: collection } = useCollectionEditorQuery({
     projectRef: project?.$id,
@@ -125,7 +132,7 @@ const ForeignRowSelector = ({
       size="large"
       header={
         <div>
-          Select a record to reference from{" "}
+          Select {isMany ? "documents" : "a document"} to reference from{" "}
           <Code className="font-mono text-sm">
             {selectedSchema}.{collection?.name}
           </Code>
@@ -184,7 +191,7 @@ const ForeignRowSelector = ({
                       page={page}
                       setPage={setPage}
                       rowsPerPage={rowsPerPage}
-                      currentPageRowsCount={data?.documents.length ?? 0}
+                      currentPageRowsCount={data?.total ?? 0}
                       isLoading={isRefetching}
                     />
                     {attribute && !isSelectMany(attribute) ? (
@@ -202,7 +209,7 @@ const ForeignRowSelector = ({
                       </div>
                     ) : (
                       <div className="pl-3">
-                        <UpdateButton onSelect={onSelect} />
+                        <UpdateButton onSelect={onSelect} relationship={relationship} />
                       </div>
                     )}
                   </div>
@@ -231,16 +238,58 @@ const ForeignRowSelector = ({
   );
 };
 
-const UpdateButton = ({ onSelect }: { onSelect: Function }) => {
+const UpdateButton = ({
+  onSelect,
+  relationship,
+}: {
+  onSelect: (diff: { deleted: string[]; addedValues: string[] }) => void;
+  relationship?: {
+    attribute: Models.AttributeRelationship;
+    row: any;
+  };
+}) => {
   const snap = useCollectionEditorCollectionStateSnapshot();
+  const editor = useCollectionEditorStore();
+  relationship =
+    (editor.sidePanel?.type === "foreign-row-selector"
+      ? editor.sidePanel?.relationship
+      : relationship) || relationship;
+
+  const attribute = relationship?.attribute;
+  const isMany = attribute && isSelectMany(attribute);
+
+  useEffect(() => {
+    if (relationship && isMany) {
+      const values = relationship.row[attribute.key];
+      if (Array.isArray(values)) {
+        const ids = values.filter((v) => v?.$id).map((v) => v.$id);
+        snap.setSelectedRows(new Set(ids));
+      }
+    }
+  }, [relationship, attribute?.key, relationship?.row]);
+
+  const diff = useMemo(() => {
+    if (!relationship || !isMany) return { deleted: [], addedValues: [] };
+
+    const values = relationship.row[attribute.key];
+    const existingIds = Array.isArray(values) ? values.filter((v) => v?.$id).map((v) => v.$id) : [];
+    const selectedIds = Array.from(snap.selectedRows);
+
+    const addedValues = selectedIds.filter((id) => !existingIds.includes(id));
+    const deleted = existingIds.filter((id) => !selectedIds.includes(id));
+
+    return { deleted, addedValues };
+  }, [relationship, attribute?.key, isMany, snap.selectedRows]);
+
+  const hasChanges = diff.deleted.length > 0 || diff.addedValues.length > 0;
+
   return (
     <Button
       type="default"
       variant="secondary"
       size="s"
-      onClick={() => {
-        onSelect(Array.from(snap.selectedRows));
-      }}
+      disabled={!hasChanges}
+      onClick={() => onSelect(diff)}
     >
       Update
     </Button>

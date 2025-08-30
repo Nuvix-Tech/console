@@ -2,11 +2,12 @@ import React from "react";
 import { HStack, Button, Input as ChakraInput } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 import { Field } from "@nuvix/cui/field";
-import { DateInput, Input, NumberInput, Select, Textarea } from "@nuvix/ui/components";
+import { DateInput, IconButton, Input, NumberInput, Select, Textarea } from "@nuvix/ui/components";
 import { CloseButton } from "@nuvix/cui/close-button";
 import { LuPlus } from "react-icons/lu";
 import { AttributeFormat, Attributes } from "../ColumnEditor/utils";
 import { AttributeIcon } from "../ColumnEditor/ColumnIcon";
+import { Edit3 } from "lucide-react";
 
 type BaseFieldProps = {
   name: string;
@@ -175,7 +176,7 @@ type FieldProps = {
   index?: number;
   onEditJson?: any;
   onEditText?: any;
-  onSelectForeignKey?: any;
+  onSelectForeignKey?: VoidFunction;
   isEditable?: boolean;
 };
 
@@ -263,14 +264,68 @@ const SelectBooleanField = makeSelectField([
 ]);
 
 // Relationship (async-ready)
-const RelationshipField = ({ value, onChange, options, ...props }: SelectFieldProps) => (
-  <Select
-    {...props}
-    value={value ?? ""}
-    options={options}
-    onSelect={(v: string) => onChange({ target: { value: v } })}
-  />
-);
+const RelationshipField = ({
+  onEditJson,
+  onEditText,
+  onSelectForeignKey,
+  isEditable,
+  value,
+  onChange,
+  options,
+  ...props
+}: SelectFieldProps) => {
+  const renderValue = () => {
+    if (value === null || value === undefined) {
+      return "NULL";
+    }
+
+    if (Array.isArray(value)) {
+      if (value.length === 0) {
+        return "";
+      }
+      // Check if array elements are objects
+      if (typeof value[0] === "object" && value[0] !== null) {
+        // Render $id of each object, joined by comma
+        return value
+          .map((v) => v.$id || "")
+          .filter(Boolean)
+          .join(", ");
+      } else {
+        // For non-object arrays, join as strings
+        return value.map((v) => v.toString()).join(", ");
+      }
+    }
+
+    if (typeof value === "object" && value !== null) {
+      if (value.$id) {
+        return value.$id.toString();
+      }
+      if (value.set && Array.isArray(value.set)) {
+        return value.set.map((v: any) => v.toString()).join(", ");
+      }
+      if (value.connect && Array.isArray(value.connect)) {
+        return value.connect.map((v: any) => v.toString()).join(", ");
+      }
+      // Fallback for other object cases
+      return "";
+    }
+
+    // For primitive values
+    return value.toString();
+  };
+
+  return (
+    <Input
+      labelAsPlaceholder
+      placeholder="Select value"
+      value={renderValue()}
+      readOnly
+      hasSuffix={
+        <IconButton icon={Edit3} onClick={onSelectForeignKey} variant="secondary" type="button" />
+      }
+    />
+  );
+};
 
 const DateTimeField = ({ value, onChange, ...props }: FieldProps) => (
   <DateInput

@@ -146,7 +146,9 @@ const SidePanelEditor = ({
     }
   };
 
-  const onSaveForeignRow = async (values?: string[] | string | null) => {
+  const onSaveForeignRow = async (
+    diff: { deleted: string[]; addedValues: string[] } | null | string,
+  ) => {
     if (selectedCollection === undefined || !(snap.sidePanel?.type === "foreign-row-selector"))
       return;
     const relationship = snap.sidePanel.relationship;
@@ -156,11 +158,15 @@ const SidePanelEditor = ({
       const configuration = { documentId: row.$id, rowIdx: row.idx };
       let _value: any;
 
-      if (Array.isArray(values)) {
-        _value = values;
-      } else {
-        _value = values;
+      if (typeof diff === "string" || diff === null) {
+        _value = diff;
+      } else if (typeof diff === "object") {
+        _value = {
+          connect: diff.addedValues,
+          disconnect: diff.deleted,
+        };
       }
+
       await saveRow({ [relationship.attribute.key]: _value }, isNewRecord, configuration, () => {});
     } catch (error) {}
   };

@@ -218,7 +218,7 @@ export function SelectCellHeader({
 
   return (
     <div className="nx-grid-select-cell__header flex items-center justify-between w-full backdrop-blur-md">
-      <Checkbox
+      {/* <Checkbox
         size={"sm"}
         borderColor={"fg.success"}
         checked={isIndeterminate ? "indeterminate" : value}
@@ -232,7 +232,7 @@ export function SelectCellHeader({
         aria-labelledby={ariaLabelledBy}
         tabIndex={tabIndex}
         className="nx-grid-select-cell__header__input"
-      />
+      /> */}
     </div>
   );
 }

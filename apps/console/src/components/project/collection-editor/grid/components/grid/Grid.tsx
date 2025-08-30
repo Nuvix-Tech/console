@@ -95,9 +95,9 @@ export const Grid = memo(
       const { project, sdk } = useProjectStore();
 
       function getColumnForeignKey(columnName: string): Models.AttributeRelationship | undefined {
-        return collection?.attributes.find((attr) => attr.key === columnName && attr.type === Attributes.Relationship) as
-          | Models.AttributeRelationship
-          | undefined;
+        return collection?.attributes.find(
+          (attr) => attr.key === columnName && attr.type === Attributes.Relationship,
+        ) as Models.AttributeRelationship | undefined;
       }
 
       function onRowDoubleClick(row: any, column: any) {
