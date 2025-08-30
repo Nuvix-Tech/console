@@ -47,7 +47,7 @@ import { formatTableRowsToSQL } from "@/components/editor/TableEntity.utils";
 export const TreeViewItemVariant = cva(
   // [Unkown Temp]: aria-selected:text-foreground not working as aria-selected property not rendered in DOM,
   // [Unkown Temp]: aria-selected:!bg-selection not working as aria-selected property not rendered in DOM
-  "w-full group relative transition-colors h-[28px] flex items-center gap-3 text-sm cursor-pointer select-none text-foreground-light hover:bg-control aria-expanded:bg-transparent data-[state=open]:bg-transparent", // data-[state=open]:bg-control bg state for context menu open
+  "w-full group relative transition-colors h-[28px] flex items-center gap-3 text-sm cursor-pointer select-none neutral-on-backround-medium hover:bg-control aria-expanded:bg-transparent data-[state=open]:bg-transparent", // data-[state=open]:bg-control bg state for context menu open
   {
     variants: {
       isSelected: {
@@ -281,7 +281,9 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
         >
           <span
             className={cn(
-              isActive ? "text-foreground" : "text-foreground-light group-hover:text-foreground",
+              isActive
+                ? "text-foreground"
+                : "neutral-on-backround-medium group-hover:text-foreground",
               "text-sm",
               "transition",
               "truncate",
@@ -300,7 +302,7 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
 
         {canEdit && (
           <DropdownMenu>
-            <DropdownMenuTrigger className="text-foreground-lighter transition-all text-transparent group-hover:text-foreground data-[state=open]:text-foreground">
+            <DropdownMenuTrigger className="neutral-on-backround-weak transition-all text-transparent group-hover:text-foreground data-[state=open]:text-foreground">
               <MoreHorizontal size={14} strokeWidth={2} />
             </DropdownMenuTrigger>
             <DropdownMenuContent side="bottom" align="start" className="w-44">

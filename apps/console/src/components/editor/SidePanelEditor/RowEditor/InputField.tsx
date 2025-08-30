@@ -90,16 +90,16 @@ const InputField = ({
         helperText={
           <>
             {field.comment && (
-              <span className="text-sm text-foreground-lighter">{field.comment} </span>
+              <span className="text-sm neutral-on-backround-weak">{field.comment} </span>
             )}
-            <span className="text-sm text-foreground-lighter">
+            <span className="text-sm neutral-on-backround-weak">
               {field.comment && "("}Has a foreign key relation to
             </span>
-            <span className="text-code font-mono text-xs text-foreground-lighter">
+            <span className="text-code font-mono text-xs neutral-on-backround-weak">
               {field.foreignKey.target_table_schema}.{field.foreignKey.target_table_name}.
               {field.foreignKey.target_column_name}
             </span>
-            {field.comment && <span className="text-sm text-foreground-lighter">{`)`}</span>}
+            {field.comment && <span className="text-sm neutral-on-backround-weak">{`)`}</span>}
           </>
         }
         optionalText={field.format}

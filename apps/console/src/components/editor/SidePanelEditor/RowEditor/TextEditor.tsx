@@ -199,7 +199,7 @@ export const TextEditor = ({
           >
             <div className="flex flex-col gap-y-1 w-80">
               <p>Text value is larger than {MAX_CHARACTERS.toLocaleString()} characters</p>
-              <p className="text-foreground-light">
+              <p className="neutral-on-backround-medium">
                 You may try to render the entire text value, but your browser may run into
                 performance issues
               </p>

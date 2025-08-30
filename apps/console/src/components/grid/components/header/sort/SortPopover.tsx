@@ -155,7 +155,7 @@ const SortOverlay = ({ sorts: sortsFromUrl, onApplySorts }: SortOverlayProps) =>
             </Button>
           </DropdownControl>
         ) : (
-          <p className="text-sm text-foreground-light">All columns have been added</p>
+          <p className="text-sm neutral-on-backround-medium">All columns have been added</p>
         )}
         <div className="flex items-center">
           <Button

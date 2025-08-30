@@ -196,7 +196,7 @@ const ColumnManagement = ({
         </div>
 
         {hasImportContent && (
-          <p className="text-sm text-foreground-light my-2">
+          <p className="text-sm neutral-on-backround-medium my-2">
             Your table will be created with {importContent?.rowCount?.toLocaleString()} rows and the
             following {columns.length} columns.
           </p>
@@ -230,10 +230,10 @@ const ColumnManagement = ({
             {/* Drag handle */}
             {isNewRecord && <div className="w-[5%]" />}
             <div className="w-[25%] flex items-center !space-x-2">
-              <h5 className="text-xs text-foreground-lighter">Name</h5>
+              <h5 className="text-xs neutral-on-backround-weak">Name</h5>
               <Tooltip>
                 <TooltipTrigger>
-                  <HelpCircle size={15} strokeWidth={1.5} className="text-foreground-lighter" />
+                  <HelpCircle size={15} strokeWidth={1.5} className="neutral-on-backround-weak" />
                 </TooltipTrigger>
                 <TooltipContent side="bottom" className="w-[300px]">
                   Recommended to use lowercase and use an underscore to separate words e.g.
@@ -242,13 +242,13 @@ const ColumnManagement = ({
               </Tooltip>
             </div>
             <div className="w-[25%]">
-              <h5 className="text-xs text-foreground-lighter">Type</h5>
+              <h5 className="text-xs neutral-on-backround-weak">Type</h5>
             </div>
             <div className={`${isNewRecord ? "w-[25%]" : "w-[30%]"} flex items-center !space-x-2`}>
-              <h5 className="text-xs text-foreground-lighter">Default Value</h5>
+              <h5 className="text-xs neutral-on-backround-weak">Default Value</h5>
               <Tooltip>
                 <TooltipTrigger>
-                  <HelpCircle size={15} strokeWidth={1.5} className="text-foreground-lighter" />
+                  <HelpCircle size={15} strokeWidth={1.5} className="neutral-on-backround-weak" />
                 </TooltipTrigger>
                 <TooltipContent side="bottom" className="w-[300px]">
                   Can either be a literal or an expression. When using an expression wrap your
@@ -257,7 +257,7 @@ const ColumnManagement = ({
               </Tooltip>
             </div>
             <div className="w-[10%]">
-              <h5 className="text-xs text-foreground-lighter">Primary</h5>
+              <h5 className="text-xs neutral-on-backround-weak">Primary</h5>
             </div>
             {/* Empty space */}
             <div className={`${hasImportContent ? "w-[10%]" : "w-0"}`} />

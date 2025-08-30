@@ -258,7 +258,7 @@ export const SchemaGraph = () => {
                                 ctaButtonLabel="Create a new table"
                                 ctaUrl={`/project/${ref}/editor?create=table`}
                             >
-                                <p className="text-sm text-foreground-light">
+                                <p className="text-sm neutral-on-backround-medium">
                                     There are no tables found in the schema "{selectedSchema}"
                                 </p>
                             </ProductEmptyState> */}

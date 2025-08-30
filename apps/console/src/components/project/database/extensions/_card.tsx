@@ -199,7 +199,7 @@ const ExtensionCard = ({ extension }: ExtensionCardProps) => {
         onConfirm={() => onConfirmDisable()}
       >
         <div className="flex flex-col gap-y-3">
-          <p className="text-sm text-foreground-light">
+          <p className="text-sm neutral-on-backround-medium">
             Are you sure you want to turn OFF the "{extension.name}" extension?
           </p>
           {EXTENSION_DISABLE_WARNINGS[extension.name] && (

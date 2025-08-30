@@ -262,7 +262,7 @@ export const ForeignKeySelector = ({
                   view: (
                     <div className="flex items-center gap-2">
                       <span className="hidden">{table.name}</span>
-                      <span className="text-foreground-lighter">{table.schema}</span>
+                      <span className="neutral-on-backround-weak">{table.schema}</span>
                       <span className="text-foreground">{table.name}</span>
                     </div>
                   ),
@@ -313,7 +313,7 @@ export const ForeignKeySelector = ({
                                 view: (
                                   <div className="flex items-center gap-2">
                                     <span className="text-foreground">{column.name}</span>
-                                    <span className="text-foreground-lighter">
+                                    <span className="neutral-on-backround-weak">
                                       {column.format === "" ? "-" : column.format}
                                     </span>
                                   </div>
@@ -338,7 +338,7 @@ export const ForeignKeySelector = ({
                               view: (
                                 <div className="flex items-center gap-2">
                                   <span className="text-foreground">{column.name}</span>
-                                  <span className="text-foreground-lighter">{column.format}</span>
+                                  <span className="neutral-on-backround-weak">{column.format}</span>
                                 </div>
                               ),
                             })),

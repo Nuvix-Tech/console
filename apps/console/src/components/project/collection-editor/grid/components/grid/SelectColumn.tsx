@@ -41,12 +41,13 @@ export const SelectColumn: CalculatedColumn<any, any> = {
   renderHeaderCell: (props: RenderHeaderCellProps<unknown>) => {
     // [Unkown] formatter is actually a valid React component, so we can use hooks here
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { isRowSelected, onRowSelectionChange } = useHeaderRowSelection();
+    const { isIndeterminate, isRowSelected, onRowSelectionChange } = useHeaderRowSelection();
 
     return (
       <SelectCellHeader
         aria-label="Select All"
         tabIndex={props.tabIndex}
+        isIndeterminate={isIndeterminate}
         value={isRowSelected}
         onChange={(checked) => onRowSelectionChange({ checked })}
       />
@@ -161,7 +162,7 @@ function SelectCellFormatter({
       </p>
       {row && (
         <DropdownMenu>
-          <DropdownMenuTrigger className="text-foreground-lighter transition-all text-transparent group-hover:text-foreground data-[state=open]:text-foreground">
+          <DropdownMenuTrigger className="neutral-on-backround-weak transition-all text-transparent group-hover:text-foreground data-[state=open]:text-foreground">
             <IconButton
               type="text"
               size="s"
@@ -250,23 +251,19 @@ function SelectCellFormatter({
 interface SelectCellHeaderProps extends SharedInputProps {
   value: boolean;
   onChange: (value: boolean, isShiftClick: boolean) => void;
+  isIndeterminate: boolean;
 }
 
-function SelectCellHeader({
+export function SelectCellHeader({
   disabled,
   tabIndex,
   value,
   onChange,
+  isIndeterminate,
   onClick,
   "aria-label": ariaLabel,
   "aria-labelledby": ariaLabelledBy,
 }: SelectCellHeaderProps) {
-  const snap = useCollectionEditorCollectionStateSnapshot();
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  // indeterminate state === some rows are selected but not all
-  const isIndeterminate = snap.selectedRows.size > 0 && !snap.allRowsSelected;
-
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     onChange(e.target.checked, (e.nativeEvent as MouseEvent).shiftKey);
   }

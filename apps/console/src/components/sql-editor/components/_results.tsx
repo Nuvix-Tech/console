@@ -131,7 +131,7 @@ const Results = ({ rows, panel = false }: { rows: readonly any[]; panel?: boolea
     <>
       {rows.length === 0 ? (
         <div className="bg-table-header-light [[data-theme*=dark]_&]:bg-table-header-dark">
-          <p className="m-0 border-0 px-4 py-3 font-mono text-sm text-foreground-light">
+          <p className="m-0 border-0 px-4 py-3 font-mono text-sm neutral-on-backround-medium">
             Success. No rows returned
           </p>
         </div>

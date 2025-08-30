@@ -117,7 +117,7 @@ const InputWithSuggestions = ({
                     onClick={() => onSelectSuggestion(suggestion)}
                   >
                     <div>{suggestion.name}</div>
-                    <div className="text-foreground-lighter">{suggestion.description}</div>
+                    <div className="neutral-on-backround-weak">{suggestion.description}</div>
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>

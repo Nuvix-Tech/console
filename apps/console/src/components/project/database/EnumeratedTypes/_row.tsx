@@ -29,7 +29,7 @@ const EnumeratedTypeValueRow = ({
           <div
             {...draggableProvided.dragHandleProps}
             className={`opacity-50 hover:opacity-100 transition ${
-              isDisabled ? "text-foreground-lighter !cursor-default" : "text-foreground"
+              isDisabled ? "neutral-on-backround-weak !cursor-default" : "text-foreground"
             }`}
           >
             <GripVertical size={16} strokeWidth={1.5} />

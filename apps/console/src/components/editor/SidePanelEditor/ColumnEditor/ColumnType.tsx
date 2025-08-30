@@ -160,7 +160,7 @@ const ColumnType = ({
 
   return (
     <div className={cn("flex flex-col gap-y-2", className)}>
-      {showLabel && <Label className="text-foreground-light">Type</Label>}
+      {showLabel && <Label className="neutral-on-backround-medium">Type</Label>}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <ChakraButton
@@ -202,7 +202,7 @@ const ColumnType = ({
                     <div className="flex items-center gap-2 pr-6">
                       <span>{inferIcon(option.type)}</span>
                       <span className="text-foreground">{option.name}</span>
-                      <span className="text-foreground-lighter">{option.description}</span>
+                      <span className="neutral-on-backround-weak">{option.description}</span>
                     </div>
                     <span className="absolute right-3 top-2">
                       {option.name === value ? <Check className="text-brand" size={14} /> : ""}
@@ -236,7 +236,10 @@ const ColumnType = ({
                             {option.format.replaceAll('"', "")}
                           </span>
                           {option.comment !== undefined && (
-                            <span title={option.comment ?? ""} className="text-foreground-lighter">
+                            <span
+                              title={option.comment ?? ""}
+                              className="neutral-on-backround-weak"
+                            >
                               {option.comment}
                             </span>
                           )}

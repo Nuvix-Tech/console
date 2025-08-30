@@ -90,7 +90,7 @@ const RowEditor = ({
     setReferenceAttr(field);
   };
 
-  const onSelectForeignRowValue = (value?: { [key: string]: any }) => {
+  const onSelectForeignRowValue = (value?: string | string[] | null) => {
     if (referenceAttr !== undefined && value !== undefined) {
       // onUpdateField(value);
     }

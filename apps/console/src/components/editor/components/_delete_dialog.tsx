@@ -215,7 +215,7 @@ const DeleteConfirmationDialogs = ({
         onConfirm={onConfirmDeleteColumn}
       >
         <div className="space-y-4">
-          <p className="text-sm text-foreground-light">
+          <p className="text-sm neutral-on-backround-medium">
             Are you sure you want to delete the selected column? This action cannot be undone.
           </p>
           <Checkbox
@@ -269,7 +269,7 @@ const DeleteConfirmationDialogs = ({
         onConfirm={onConfirmDeleteTable}
       >
         <div className="space-y-4">
-          <p className="text-sm text-foreground-light">
+          <p className="text-sm neutral-on-backround-medium">
             Are you sure you want to delete the selected table? This action cannot be undone.
           </p>
           <Checkbox
@@ -324,7 +324,7 @@ const DeleteConfirmationDialogs = ({
         onConfirm={() => onConfirmDeleteRow()}
       >
         <div className="space-y-4">
-          <p className="text-sm text-foreground-light">
+          <p className="text-sm neutral-on-backround-medium">
             <span>Are you sure you want to delete </span>
             <span>{isAllRowsSelected ? "all" : "the selected"} </span>
             <span>{numRows > 1 && `${numRows} `}</span>

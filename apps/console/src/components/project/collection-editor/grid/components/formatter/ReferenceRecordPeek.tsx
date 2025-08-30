@@ -13,6 +13,7 @@ import { useParams } from "next/navigation";
 import type { Models } from "@nuvix/console";
 import { useCollectionDocumentsQuery } from "@/data/collections";
 import { SmartLink } from "@nuvix/ui/components";
+import { Attributes } from "../../../SidePanelEditor/ColumnEditor/utils";
 
 interface ReferenceRecordPeekProps {
   collection: Models.Collection;
@@ -42,7 +43,7 @@ export const ReferenceRecordPeek = ({ collection, column, value }: ReferenceReco
   const columns = (
     [
       internalAttributes[0],
-      ...collection.attributes,
+      ...collection.attributes.filter((a) => a.type !== Attributes.Relationship),
       ...internalAttributes.slice(1),
     ] as unknown as (Models.AttributeString & {
       idx?: number;

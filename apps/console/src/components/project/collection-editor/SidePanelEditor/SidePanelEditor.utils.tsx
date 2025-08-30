@@ -29,7 +29,7 @@ export const createCollection = async ({
   try {
     const collection = sdk.databases.createCollection(
       schema,
-      payload.$id,
+      payload.$id || "unique()",
       payload.name,
       payload.$permissions,
       payload.documentSecurity,

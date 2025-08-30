@@ -16,6 +16,7 @@ import { Alert, AlertDescription, AlertTitle } from "@nuvix/sui/components/alert
 import type { Models } from "@nuvix/console";
 import { useCollectionEditorStore } from "@/lib/store/collection-editor";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
+import { Attributes } from "../../../SidePanelEditor/ColumnEditor/utils";
 
 const rowKeyGetter = (row: Models.Document) => {
   return row?.$id ?? -1;
@@ -94,7 +95,7 @@ export const Grid = memo(
       const { project, sdk } = useProjectStore();
 
       function getColumnForeignKey(columnName: string): Models.AttributeRelationship | undefined {
-        return collection?.attributes.find((attr) => attr.key === columnName) as
+        return collection?.attributes.find((attr) => attr.key === columnName && attr.type === Attributes.Relationship) as
           | Models.AttributeRelationship
           | undefined;
       }

@@ -228,7 +228,7 @@ const DeleteConfirmationDialogs = ({
         onConfirm={() => onConfirmDeleteRow()}
       >
         <div className="space-y-4">
-          <p className="text-sm text-foreground-light">
+          <p className="text-sm neutral-on-backround-medium">
             <span>Are you sure you want to delete </span>
             <span>{isAllRowsSelected ? "all" : "the selected"} </span>
             <span>{numRows > 1 && `${numRows} `}</span>

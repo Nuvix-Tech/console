@@ -70,7 +70,7 @@ export const ReferenceRecordPeek = ({ table, column, value }: ReferenceRecordPee
             </Tooltip>
           )}
           <span className="text-xs truncate">{column.name}</span>
-          <span className="text-xs text-foreground-light font-normal">{column.format}</span>
+          <span className="text-xs neutral-on-backround-medium font-normal">{column.format}</span>
         </div>
       ),
       renderCell: ({ column: col, row }) => {
@@ -80,7 +80,7 @@ export const ReferenceRecordPeek = ({ table, column, value }: ReferenceRecordPee
           <div
             className={cn(
               "flex items-center h-full w-full whitespace-pre",
-              formattedValue === null && "text-foreground-lighter",
+              formattedValue === null && "neutral-on-backround-weak",
             )}
           >
             {formattedValue === null ? "NULL" : formattedValue}
@@ -93,7 +93,7 @@ export const ReferenceRecordPeek = ({ table, column, value }: ReferenceRecordPee
 
   return (
     <>
-      <p className="px-2 py-2 text-xs text-foreground-light border-b">
+      <p className="px-2 py-2 text-xs neutral-on-backround-medium border-b">
         Referencing record from{" "}
         <span className="text-foreground">
           {table.schema}.{table.name}
@@ -117,11 +117,11 @@ export const ReferenceRecordPeek = ({ table, column, value }: ReferenceRecordPee
                 </div>
               )}
               {isError && (
-                <p className="text-foreground-light">
+                <p className="neutral-on-backround-medium">
                   Failed to find referencing row: {error.message}
                 </p>
               )}
-              {isSuccess && <p className="text-foreground-light">No results were returned</p>}
+              {isSuccess && <p className="neutral-on-backround-medium">No results were returned</p>}
             </div>
           ),
         }}

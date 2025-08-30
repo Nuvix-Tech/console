@@ -39,12 +39,12 @@ export const ForeignKeyFormatter = (props: Props) => {
           <NullValue />
         ) : Array.isArray(value) ? (
           values.length > 0 ? (
-            value.join(", ")
+            value.map((v) => v?.$id).join(", ")
           ) : (
             "[]"
           )
         ) : (
-          value
+          value?.$id
         )}
       </span>
       {attribute !== undefined &&

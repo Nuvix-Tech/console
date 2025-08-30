@@ -43,14 +43,14 @@ const InformationBox = forwardRef<HTMLDivElement, InformationBoxProps>(
         <div className="flex flex-col px-4">
           <div className="flex items-center justify-between">
             <div className="flex w-full space-x-3 items-center">
-              {icon && <span className="text-foreground-lighter">{icon}</span>}
+              {icon && <span className="neutral-on-backround-weak">{icon}</span>}
               <div className="flex-grow">
                 <h5 className="text-sm text-foreground">{title}</h5>
               </div>
             </div>
             {description && !hideCollapse ? (
               <div
-                className="cursor-pointer text-foreground-lighter"
+                className="cursor-pointer neutral-on-backround-weak"
                 onClick={() => setIsExpanded(!isExpanded)}
               >
                 {isExpanded ? (
@@ -68,7 +68,7 @@ const InformationBox = forwardRef<HTMLDivElement, InformationBoxProps>(
               }`}
               style={{ maxHeight: isExpanded ? 500 : 0 }}
             >
-              <div className="text-foreground-light text-sm">{description}</div>
+              <div className="neutral-on-backround-medium text-sm">{description}</div>
 
               {url && (
                 <div>

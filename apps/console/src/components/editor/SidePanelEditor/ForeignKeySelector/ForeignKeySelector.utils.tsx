@@ -33,8 +33,8 @@ export const generateCascadeActionDescription = (
     case FOREIGN_KEY_CASCADE_ACTION.NO_ACTION:
       return (
         <>
-          <span className="text-foreground-light">{actionName}</span>: {actionVerb} a record from{" "}
-          <Code className="text-xs text-foreground-light">{reference}</Code> will{" "}
+          <span className="neutral-on-backround-medium">{actionName}</span>: {actionVerb} a record
+          from <Code className="text-xs neutral-on-backround-medium">{reference}</Code> will{" "}
           <span className="text-amber-900 opacity-75">raise an error</span> if there are records
           existing in this table that reference it
         </>
@@ -42,8 +42,8 @@ export const generateCascadeActionDescription = (
     case FOREIGN_KEY_CASCADE_ACTION.CASCADE:
       return (
         <>
-          <span className="text-foreground-light">{actionName}</span>: {actionVerb} a record from{" "}
-          <Code className="text-xs text-foreground-light">{reference}</Code> will{" "}
+          <span className="neutral-on-backround-medium">{actionName}</span>: {actionVerb} a record
+          from <Code className="text-xs neutral-on-backround-medium">{reference}</Code> will{" "}
           <span className="text-amber-900 opacity-75">also {action}</span> any records that
           reference it in this table
         </>
@@ -51,10 +51,10 @@ export const generateCascadeActionDescription = (
     case FOREIGN_KEY_CASCADE_ACTION.RESTRICT:
       return (
         <>
-          <span className="text-foreground-light">{actionName}</span>
+          <span className="neutral-on-backround-medium">{actionName}</span>
           <Tooltip>
             <TooltipTrigger className="translate-y-[3px] mx-1">
-              <HelpCircle className="text-foreground-light" size={16} strokeWidth={1.5} />
+              <HelpCircle className="neutral-on-backround-medium" size={16} strokeWidth={1.5} />
             </TooltipTrigger>
             <TooltipContent side="bottom" className="w-80">
               This is similar to no action, but the restrict check cannot be deferred till later in
@@ -62,7 +62,7 @@ export const generateCascadeActionDescription = (
             </TooltipContent>
           </Tooltip>
           : {actionVerb} a record from{" "}
-          <Code className="text-xs text-foreground-light">{reference}</Code> will{" "}
+          <Code className="text-xs neutral-on-backround-medium">{reference}</Code> will{" "}
           <span className="text-amber-900 opacity-75">prevent {actionVerb.toLowerCase()}</span>{" "}
           existing referencing rows from this table.
         </>
@@ -70,18 +70,18 @@ export const generateCascadeActionDescription = (
     case FOREIGN_KEY_CASCADE_ACTION.SET_DEFAULT:
       return (
         <>
-          <span className="text-foreground-light">{actionName}</span>: {actionVerb} a record from{" "}
-          <Code className="text-xs text-foreground-light">{reference}</Code> will set the value of
-          any existing records in this table referencing it to their{" "}
+          <span className="neutral-on-backround-medium">{actionName}</span>: {actionVerb} a record
+          from <Code className="text-xs neutral-on-backround-medium">{reference}</Code> will set the
+          value of any existing records in this table referencing it to their{" "}
           <span className="text-amber-900 opacity-75">default value</span>
         </>
       );
     case FOREIGN_KEY_CASCADE_ACTION.SET_NULL:
       return (
         <>
-          <span className="text-foreground-light">{actionName}</span>: {actionVerb} a record from{" "}
-          <Code className="text-xs text-foreground-light">{reference}</Code> will set the value of
-          any existing records in this table referencing it{" "}
+          <span className="neutral-on-backround-medium">{actionName}</span>: {actionVerb} a record
+          from <Code className="text-xs neutral-on-backround-medium">{reference}</Code> will set the
+          value of any existing records in this table referencing it{" "}
           <span className="text-amber-900 opacity-75">to NULL</span>
         </>
       );

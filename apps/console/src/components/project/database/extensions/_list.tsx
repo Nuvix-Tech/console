@@ -73,7 +73,7 @@ const Extensions = () => {
 
       {isPermissionsLoaded && !canUpdateExtensions && (
         <InformationBox
-          icon={<AlertCircle className="text-foreground-light" size={18} strokeWidth={2} />}
+          icon={<AlertCircle className="neutral-on-backround-medium" size={18} strokeWidth={2} />}
           title="You need additional permissions to update database extensions"
         />
       )}

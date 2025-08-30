@@ -36,7 +36,7 @@ const SpreadsheetImportConfiguration = ({
                 <ChevronDown
                   size={18}
                   strokeWidth={2}
-                  className={cn("text-foreground-light", expandConfiguration && "rotate-180")}
+                  className={cn("neutral-on-backround-medium", expandConfiguration && "rotate-180")}
                 />
               }
               className="px-1"
@@ -49,8 +49,8 @@ const SpreadsheetImportConfiguration = ({
         <SidePanel.Content>
           <div className="py-2 space-y-3">
             <div>
-              <p className="text-sm text-foreground-light">Select which columns to import</p>
-              <p className="text-sm text-foreground-light">
+              <p className="text-sm neutral-on-backround-medium">Select which columns to import</p>
+              <p className="text-sm neutral-on-backround-medium">
                 By default, all columns are selected to be imported from your CSV
               </p>
             </div>

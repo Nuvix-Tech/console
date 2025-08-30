@@ -146,21 +146,23 @@ const SidePanelEditor = ({
     }
   };
 
-  const onSaveForeignRow = async (value?: { [key: string]: any }) => {
-    // if (selectedCollection === undefined || !(snap.sidePanel?.type === "foreign-row-selector")) return;
-    // const selectedForeignKeyToEdit = snap.sidePanel.foreignKey;
-    // try {
-    //   const { row } = selectedForeignKeyToEdit;
-    //   const identifiers = {} as Dictionary<any>;
-    //   selectedCollection.primary_keys.forEach((column) => {
-    //     const col = selectedCollection.columns?.find((x) => x.name === column.name);
-    //     identifiers[column.name] =
-    //       col?.format === "bytea" ? convertByteaToHex(row![column.name]) : row![column.name];
-    //   });
-    //   const isNewRecord = false;
-    //   const configuration = { identifiers, rowIdx: row.idx };
-    //   saveRow(value, isNewRecord, configuration, () => {});
-    // } catch (error) {}
+  const onSaveForeignRow = async (values?: string[] | string | null) => {
+    if (selectedCollection === undefined || !(snap.sidePanel?.type === "foreign-row-selector"))
+      return;
+    const relationship = snap.sidePanel.relationship;
+    try {
+      const { row } = relationship;
+      const isNewRecord = false;
+      const configuration = { documentId: row.$id, rowIdx: row.idx };
+      let _value: any;
+
+      if (Array.isArray(values)) {
+        _value = values;
+      } else {
+        _value = values;
+      }
+      await saveRow({ [relationship.attribute.key]: _value }, isNewRecord, configuration, () => {});
+    } catch (error) {}
   };
 
   const saveColumn = async (

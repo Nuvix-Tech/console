@@ -1,5 +1,13 @@
 import { Key } from "lucide-react";
-import { DataGrid, Column } from "react-data-grid";
+import {
+  DataGrid,
+  Column,
+  type CalculatedColumn,
+  type RenderHeaderCellProps,
+  useHeaderRowSelection,
+  type RenderCellProps,
+  useRowSelection,
+} from "react-data-grid";
 
 import { NullValue } from "@/components/grid/components/common/NullValue";
 import { COLUMN_MIN_WIDTH } from "@/components/grid/constants";
@@ -9,10 +17,15 @@ import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collecti
 import type { Models } from "@nuvix/console";
 import { getColumnDefaultWidth, internalAttributes } from "../../../grid/utils/gridColumns";
 import { Attributes } from "../../ColumnEditor/utils";
+import { SELECT_COLUMN_KEY } from "../../../grid/constants";
+import type { ChangeEvent } from "react";
+import { Checkbox } from "@nuvix/cui/checkbox";
+import { cn } from "@nuvix/sui/lib/utils";
 
 export interface SelectorGridProps {
   rows: Models.Document[];
   onRowSelect: (row: Models.Document) => void;
+  multiSelect: boolean;
 }
 
 const columnRender = (name: string, isPrimaryKey = false) => {
@@ -62,7 +75,7 @@ const formatter = ({
   );
 };
 
-const SelectorGrid = ({ rows, onRowSelect }: SelectorGridProps) => {
+const SelectorGrid = ({ rows, onRowSelect, multiSelect }: SelectorGridProps) => {
   const snap = useCollectionEditorCollectionStateSnapshot();
 
   const columns: Column<Models.Document>[] = [
@@ -88,15 +101,140 @@ const SelectorGrid = ({ rows, onRowSelect }: SelectorGridProps) => {
     return result;
   });
 
+  if (multiSelect) columns.unshift(SelectColumn);
+
+  function onSelectedRowsChange(selectedRows: Set<string>) {
+    snap.setSelectedRows(selectedRows);
+  }
+
   return (
     <DataGrid
       columns={columns}
       rows={rows}
       style={{ ...gridStyles2, height: "100%" }}
-      onCellClick={(props) => onRowSelect(props.row)}
-      rowClass={() => "cursor-pointer"}
+      onCellClick={multiSelect ? undefined : (props) => onRowSelect(props.row)}
+      rowClass={() => (multiSelect ? "cursor-pointer" : "")}
+      selectedRows={snap.selectedRows}
+      rowKeyGetter={(row) => row.$id}
+      onSelectedRowsChange={onSelectedRowsChange}
     />
   );
 };
+
+export const SelectColumn: CalculatedColumn<any, any> = {
+  key: SELECT_COLUMN_KEY,
+  name: "",
+  idx: 0,
+  width: 32,
+  maxWidth: 32,
+  resizable: false,
+  sortable: false,
+  frozen: true,
+  // isLastFrozenColumn: false,
+  renderHeaderCell: (props: RenderHeaderCellProps<unknown>) => {
+    // [Unkown] formatter is actually a valid React component, so we can use hooks here
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const { isIndeterminate, isRowSelected, onRowSelectionChange } = useHeaderRowSelection();
+
+    return (
+      <SelectCellHeader
+        aria-label="Select All"
+        tabIndex={props.tabIndex}
+        value={isRowSelected}
+        isIndeterminate={isIndeterminate}
+        onChange={(checked: any) => onRowSelectionChange({ checked })}
+      />
+    );
+  },
+  renderCell: (props: RenderCellProps<Models.Document>) => {
+    // [Unknwon] formatter is actually a valid React component, so we can use hooks here
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const { isRowSelected, onRowSelectionChange } = useRowSelection();
+    return (
+      <SelectCellFormatter
+        aria-label="Select"
+        tabIndex={props.tabIndex}
+        value={isRowSelected}
+        row={props.row}
+        onChange={(checked: any, isShiftClick: any) => {
+          onRowSelectionChange({ row: props.row, checked, isShiftClick });
+        }}
+        // Stop propagation to prevent row selection
+        onClick={(e: any) => e.stopPropagation()}
+      />
+    );
+  },
+  parent: undefined,
+  level: 0,
+  minWidth: 0,
+  draggable: false,
+};
+
+function SelectCellFormatter({
+  row,
+  value,
+  tabIndex,
+  disabled,
+  onClick,
+  onChange,
+  "aria-label": ariaLabel,
+  "aria-labelledby": ariaLabelledBy,
+}: any) {
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    onChange(e.target.checked, (e.nativeEvent as MouseEvent).shiftKey);
+  }
+
+  return (
+    <div className="nx-grid-select-cell__formatter flex justify-between items-center w-full backdrop-blur-md">
+      <Checkbox
+        size={"sm"}
+        checked={value}
+        disabled={disabled}
+        onClick={onClick as any}
+        onCheckedChange={(e) => onChange(!!e.checked, false)}
+        onChange={handleChange as any}
+        aria-label={ariaLabel}
+        aria-labelledby={ariaLabelledBy}
+        tabIndex={tabIndex}
+        className={cn("rdg-row__select-column__select-action", "transition-all duration-200")}
+      />
+    </div>
+  );
+}
+
+export function SelectCellHeader({
+  disabled,
+  tabIndex,
+  value,
+  onChange,
+  onClick,
+  isIndeterminate,
+  "aria-label": ariaLabel,
+  "aria-labelledby": ariaLabelledBy,
+}: any) {
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    onChange(e.target.checked, (e.nativeEvent as MouseEvent).shiftKey);
+  }
+
+  return (
+    <div className="nx-grid-select-cell__header flex items-center justify-between w-full backdrop-blur-md">
+      <Checkbox
+        size={"sm"}
+        borderColor={"fg.success"}
+        checked={isIndeterminate ? "indeterminate" : value}
+        disabled={disabled}
+        onClick={onClick as any}
+        onCheckedChange={({ checked }) =>
+          onChange(checked === "indeterminate" ? false : checked, false)
+        }
+        onChange={handleChange as any}
+        aria-label={ariaLabel}
+        aria-labelledby={ariaLabelledBy}
+        tabIndex={tabIndex}
+        className="nx-grid-select-cell__header__input"
+      />
+    </div>
+  );
+}
 
 export default SelectorGrid;

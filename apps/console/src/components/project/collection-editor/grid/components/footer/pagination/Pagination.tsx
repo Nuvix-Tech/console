@@ -135,7 +135,7 @@ const Pagination = () => {
       </div>
 
       <div className="flex items-center gap-x-2">
-        <p className="text-xs text-foreground-light">
+        <p className="text-xs neutral-on-backround-medium">
           {`${count} ${count === 0 || (count ?? 0) > 1 ? `records` : "record"}`}{" "}
         </p>
       </div>
@@ -149,7 +149,7 @@ const Pagination = () => {
           onConfirmPreviousPage();
         }}
       >
-        <p className="text-sm text-foreground-light">
+        <p className="text-sm neutral-on-backround-medium">
           The currently selected lines will be deselected, do you want to proceed?
         </p>
       </ConfirmationModal>
@@ -163,7 +163,7 @@ const Pagination = () => {
           onConfirmNextPage();
         }}
       >
-        <p className="text-sm text-foreground-light">
+        <p className="text-sm neutral-on-backround-medium">
           The currently selected lines will be deselected, do you want to proceed?
         </p>
       </ConfirmationModal>

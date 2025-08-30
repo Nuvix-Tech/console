@@ -27,7 +27,7 @@ const Pagination = ({
   const hasRunOutOfRows = currentPageRowsCount < rowsPerPage;
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 pr-2">
       {isLoading && <Loader size={14} className="animate-spin" />}
 
       <IconButton

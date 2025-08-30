@@ -145,7 +145,7 @@ export const CollectionListItem: ItemRenderer<Models.Collection, EntityListItemP
 
         {canEdit && (
           <DropdownMenu>
-            <DropdownMenuTrigger className="text-foreground-lighter transition-all text-transparent group-hover:text-foreground data-[state=open]:text-foreground">
+            <DropdownMenuTrigger className="neutral-on-backround-weak transition-all text-transparent group-hover:text-foreground data-[state=open]:text-foreground">
               <MoreHorizontal size={14} strokeWidth={2} />
             </DropdownMenuTrigger>
             <DropdownMenuContent side="bottom" align="start" className="w-48">

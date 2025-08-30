@@ -199,7 +199,7 @@ const DefaultHeader = () => {
                             </div>
                             <div>
                               <p>Insert document</p>
-                              <p className="text-foreground-light">
+                              <p className="neutral-on-backround-medium">
                                 Insert a new document into {snap.collection.name}
                               </p>
                             </div>
@@ -225,7 +225,7 @@ const DefaultHeader = () => {
                             </div>
                             <div>
                               <p>Add attribute</p>
-                              <p className="text-foreground-light">
+                              <p className="neutral-on-backround-medium">
                                 add a new attribute into {snap.collection.name}
                               </p>
                             </div>
@@ -266,7 +266,7 @@ const DefaultHeader = () => {
                     //         </div>
                     //         <div>
                     //           <p>Import data from CSV</p>
-                    //           <p className="text-foreground-light">Insert new rows from a CSV</p>
+                    //           <p className="neutral-on-backround-medium">Insert new rows from a CSV</p>
                     //         </div>
                     //       </DropdownMenuItem>,
                     //     ]
@@ -529,7 +529,7 @@ const RowHeader = ({ sorts, filters }: RowHeaderProps) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-40">
           <DropdownMenuItem onClick={onRowsExportCSV}>
-            <span className="text-foreground-light">Export to CSV</span>
+            <span className="neutral-on-backround-medium">Export to CSV</span>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={onRowsExportSQL}>Export to SQL</DropdownMenuItem>
         </DropdownMenuContent>

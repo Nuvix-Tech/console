@@ -140,7 +140,7 @@ const Pagination = () => {
 
   return (
     <div className="flex items-center gap-x-4">
-      {isLoading && <p className="text-sm text-foreground-light">Loading records count...</p>}
+      {isLoading && <p className="text-sm neutral-on-backround-medium">Loading records count...</p>}
 
       {isSuccess && (
         <>
@@ -198,7 +198,7 @@ const Pagination = () => {
           </div>
 
           <div className="flex items-center gap-x-2">
-            <p className="text-xs text-foreground-light">
+            <p className="text-xs neutral-on-backround-medium">
               {`${count} ${data?.count === 0 || (data?.count ?? 0) > 1 ? `records` : "record"}`}{" "}
               {data?.is_estimate ? "(estimated)" : ""}
             </p>
@@ -233,7 +233,7 @@ const Pagination = () => {
       )}
 
       {isError && (
-        <p className="text-sm text-foreground-light">
+        <p className="text-sm neutral-on-backround-medium">
           Error fetching records count. Please refresh the page.
         </p>
       )}
@@ -247,7 +247,7 @@ const Pagination = () => {
           onConfirmPreviousPage();
         }}
       >
-        <p className="text-sm text-foreground-light">
+        <p className="text-sm neutral-on-backround-medium">
           The currently selected lines will be deselected, do you want to proceed?
         </p>
       </ConfirmationModal>
@@ -261,7 +261,7 @@ const Pagination = () => {
           onConfirmNextPage();
         }}
       >
-        <p className="text-sm text-foreground-light">
+        <p className="text-sm neutral-on-backround-medium">
           The currently selected lines will be deselected, do you want to proceed?
         </p>
       </ConfirmationModal>
@@ -277,7 +277,7 @@ const Pagination = () => {
           setIsConfirmFetchExactCountModalOpen(false);
         }}
       >
-        <p className="text-sm text-foreground-light">
+        <p className="text-sm neutral-on-backround-medium">
           {rowsCountEstimate === null
             ? `If your table has a row count of greater than ${THRESHOLD_COUNT.toLocaleString()} rows,
           retrieving the exact count of the table may cause performance issues on your database.`

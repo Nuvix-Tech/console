@@ -19,7 +19,7 @@ export const TruncatedWarningOverlay = ({
     >
       <div className="flex flex-col gap-y-1">
         <p>Value is larger than {MAX_CHARACTERS.toLocaleString()} characters</p>
-        <p className="text-foreground-light">
+        <p className="neutral-on-backround-medium">
           You may try to render the entire value, but your browser may run into performance issues
         </p>
       </div>

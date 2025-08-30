@@ -59,7 +59,7 @@ export const BottomPanel = () => {
               <span className="text-foreground">
                 {result?.length} row{result?.length > 1 ? "s" : ""}
               </span>
-              {/* <span className="text-foreground-lighter ml-1">
+              {/* <span className="neutral-on-backround-weak ml-1">
                         {results.autoLimit !== undefined &&
                           ` (Limited to only ${results.autoLimit} rows)`}
                       </span> */}

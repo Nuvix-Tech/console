@@ -56,8 +56,8 @@ export const EntityTypeIcon = ({
         size={size}
         strokeWidth={strokeWidth}
         className={cn(
-          "text-foreground-muted group-hover:text-foreground-lighter group-aria-selected:text-foreground",
-          isActive && "text-foreground-light",
+          "text-foreground-muted group-hover:neutral-on-backround-weak group-aria-selected:text-foreground",
+          isActive && "neutral-on-backround-medium",
           "transition-colors",
         )}
       />
@@ -74,8 +74,8 @@ export const EntityTypeIcon = ({
         size={size}
         strokeWidth={strokeWidth}
         className={cn(
-          "text-foreground-muted group-hover:text-foreground-lighter",
-          isActive && "text-foreground-lighter",
+          "text-foreground-muted group-hover:neutral-on-backround-weak",
+          isActive && "neutral-on-backround-weak",
           "transition-colors",
         )}
       />
@@ -88,7 +88,7 @@ export const EntityTypeIcon = ({
         "flex items-center justify-center text-xs h-4 w-4 rounded-[2px] font-bold",
         type === ENTITY_TYPE.FOREIGN_TABLE && "text-yellow-900 bg-yellow-500",
         type === ENTITY_TYPE.MATERIALIZED_VIEW && "text-purple-1000 bg-purple-500",
-        type === ENTITY_TYPE.PARTITIONED_TABLE && "text-foreground-light bg-border-stronger",
+        type === ENTITY_TYPE.PARTITIONED_TABLE && "neutral-on-backround-medium bg-border-stronger",
       )}
     >
       {Object.entries(ENTITY_TYPE)
