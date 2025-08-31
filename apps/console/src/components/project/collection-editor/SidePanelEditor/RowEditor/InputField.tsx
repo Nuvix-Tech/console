@@ -144,7 +144,7 @@ export const DynamicField = (props: Props) => {
       invalid={!!errors[name] && !!touched[name]}
       label={
         <div className="flex items-center gap-2">
-          <AttributeIcon type={type} array={isArray} />
+          {showAbout && <AttributeIcon type={type} array={isArray} />}
           {label ?? name}
         </div>
       }

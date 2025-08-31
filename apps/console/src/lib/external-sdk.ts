@@ -73,10 +73,13 @@ export class Schema {
     this.endpoint2 = client2.config.endpoint;
   }
 
-  async list(): Promise<Models.SchemaList> {
+  async list(type?: string): Promise<Models.SchemaList> {
     const apiPath = this.namespace;
     const payload: Payload = {};
     const uri = new URL(this.endpoint + apiPath);
+    if (type) {
+      uri.searchParams.set("type", type);
+    }
 
     const apiHeaders: { [header: string]: string } = {
       "content-type": "application/json",

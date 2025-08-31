@@ -105,7 +105,7 @@ export const CollectionListItem: ItemRenderer<Models.Collection, EntityListItemP
     <SmartLink
       title={collection.name}
       id={collection.$id}
-      href={`/project/${projectRef}/collections/${collection.$id}?schema=${schema}`}
+      href={`/project/${projectRef}/collections/${collection.$id}?docSchema=${schema}`}
       role="button"
       aria-label={`View ${collection.name}`}
       fillWidth

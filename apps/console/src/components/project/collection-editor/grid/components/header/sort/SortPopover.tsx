@@ -64,7 +64,7 @@ const SortOverlay = ({ sorts: sortsFromUrl, onApplySorts }: SortOverlayProps) =>
   );
   const [sorts, setSorts] = useState<Sort[]>(initialSorts);
 
-  const columns = snap.collection.attributes.filter((x) => {
+  const columns = snap.getAttributes().filter((x) => {
     // exclude json/jsonb columns from sorting. Sorting by json fields in PG is only possible if you provide key from
     // the JSON object.
     if (x.type === Attributes.Relationship) {

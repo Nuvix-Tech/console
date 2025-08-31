@@ -856,8 +856,14 @@ export class AttributeConfigFactory {
           onDelete as RelationMutate,
         );
       },
-      updateAction(key, values) {
-        throw Error("currently updating relationship attribute does not supported");
+      updateAction: (key, values) => {
+        const { onDelete } = values;
+        return this.sdk.databases.updateRelationshipAttribute(
+          this.database.name,
+          this.collection.$id,
+          key,
+          onDelete as RelationMutate,
+        );
       },
     };
   }

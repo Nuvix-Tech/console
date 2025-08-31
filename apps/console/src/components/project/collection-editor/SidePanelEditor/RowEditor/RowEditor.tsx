@@ -157,6 +157,7 @@ const RowEditor = ({
                 key={field.key}
                 {...commonProps}
                 orientation="horizontal"
+                showAbout
                 onEditJson={setSelectedValueForJsonEdit}
                 onEditText={setSelectedValueForTextEdit}
                 onSelectForeignKey={() => onOpenForeignRowSelector(field as any)}

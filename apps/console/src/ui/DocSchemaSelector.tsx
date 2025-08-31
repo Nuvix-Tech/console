@@ -54,7 +54,7 @@ const DocSchemaSelector = ({
     refetch: refetchSchemas,
   } = useQuery({
     queryKey: ["doc-schemas", project?.$id],
-    queryFn: () => sdk.schema.list(),
+    queryFn: () => sdk.schema.list("document"),
     enabled: !!project?.$id && !!sdk,
   });
 

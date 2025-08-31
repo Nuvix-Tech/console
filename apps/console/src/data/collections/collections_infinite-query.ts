@@ -25,10 +25,11 @@ export const useCollectionsQuery = <TData = Models.CollectionList>(
   return useInfiniteQuery<Models.CollectionList, any, TData>({
     queryKey: collectionKeys.list(projectId, { schema, search, limit }),
     queryFn: ({ signal, pageParam }) =>
-      sdk.databases.listCollections(schema, [
-        Query.limit(limit),
-        Query.offset(((pageParam as number) ?? 0) * limit),
-      ]),
+      sdk.databases.listCollections(
+        schema,
+        [Query.limit(limit), Query.offset(((pageParam as number) ?? 0) * limit)],
+        search,
+      ),
     enabled: enabled && typeof projectId !== undefined,
     getNextPageParam(lastPage, pages) {
       const page = pages.length;

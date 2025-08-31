@@ -19,9 +19,10 @@ export interface FilterRowProps {
 
 const FilterRow = ({ filter, filterIdx, onChange, onDelete, onKeyDown }: FilterRowProps) => {
   const snap = useCollectionEditorCollectionStateSnapshot();
-  const column = snap.collection.attributes.find((x) => x.key === filter.column);
+  const attributes = snap.getAttributes().filter((a) => a.type !== Attributes.Relationship);
+  const column = attributes.find((x) => x.key === filter.column);
   const columnOptions =
-    snap.collection.attributes?.map((x) => {
+    attributes?.map((x) => {
       return { value: x.key, label: x.key, postLabel: x.type };
     }) || [];
 

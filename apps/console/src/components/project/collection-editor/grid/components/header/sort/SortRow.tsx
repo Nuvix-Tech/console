@@ -6,6 +6,7 @@ import { useDrag, useDrop } from "react-dnd";
 import type { DragItem, Sort } from "@/components/grid/types";
 import { IconButton, Switch } from "@nuvix/ui/components";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
+import { Attributes } from "@/components/project/collection-editor/SidePanelEditor/ColumnEditor/utils";
 
 export interface SortRowProps {
   index: number;
@@ -18,7 +19,10 @@ export interface SortRowProps {
 
 const SortRow = ({ index, columnName, sort, onDelete, onToggle, onDrag }: SortRowProps) => {
   const snap = useCollectionEditorCollectionStateSnapshot();
-  const column = snap.collection.attributes.find((x) => x.key === columnName);
+  const column = snap
+    .getAttributes()
+    .filter((x) => x.type !== Attributes.Relationship)
+    .find((x) => x.key === columnName);
 
   const ref = useRef<HTMLDivElement>(null);
 

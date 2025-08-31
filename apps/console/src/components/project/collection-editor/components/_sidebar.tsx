@@ -4,7 +4,7 @@ import InfiniteList from "@/ui/InfiniteList";
 import { useParams } from "next/navigation";
 import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
 import { useProjectStore } from "@/lib/store";
-import { IconButton } from "@nuvix/ui/components";
+import { Button, IconButton, Text } from "@nuvix/ui/components";
 import { Input } from "@chakra-ui/react";
 import { InnerSideBarEmptyPanel } from "@/ui/InnerSideBarEmptyPanel";
 import { TableMenuEmptyState } from "../../table-editor/components/TableMenuEmptyState";
@@ -95,15 +95,18 @@ export const Sidebar = () => {
             {isLoading && <EditorMenuListSkeleton />}
 
             {isError && (
-              <div className="p-2 rounded-lg bg-red-50 dark:bg-muted border">
-                <div className="flex flex-col gap-1">
-                  <h4 className="text-sm font-semibold text-destructive">
+              <div className="rounded-xs neutral-background-weak border">
+                <div className="flex flex-col gap-1 p-2">
+                  <Text as="h4" variant="label-default-m" onBackground="danger-weak">
                     Failed to retrieve tables
-                  </h4>
-                  <p className="text-xs text-destructive-foreground">
+                  </Text>
+                  <Text as="p" variant="body-default-xs" onBackground="neutral-weak">
                     {error?.message || "An unexpected error occurred"}
-                  </p>
+                  </Text>
                 </div>
+                <Button size="s" variant="tertiary" onClick={() => window.location.reload()}>
+                  Retry
+                </Button>
               </div>
             )}
 

@@ -10,7 +10,11 @@ import {
 import { useCollectionEditorStateSnapshot } from "./collection-editor";
 import { Models } from "@nuvix/console";
 import { getInitialGridColumns } from "@/components/project/collection-editor/grid/utils/column";
-import { getGridColumns } from "@/components/project/collection-editor/grid/utils/gridColumns";
+import {
+  getGridColumns,
+  internalAttributes,
+} from "@/components/project/collection-editor/grid/utils/gridColumns";
+import { Attributes } from "@/components/project/collection-editor/SidePanelEditor/ColumnEditor/utils";
 
 export const createCollectionEditorCollectionState = ({
   projectRef,
@@ -120,6 +124,14 @@ export const createCollectionEditorCollectionState = ({
     selectedCellPosition: null as { idx: number; rowIdx: number } | null,
     setSelectedCellPosition: (position: { idx: number; rowIdx: number } | null) => {
       state.selectedCellPosition = position;
+    },
+
+    getAttributes: () => {
+      return [
+        { key: "$sequence", type: Attributes.Integer },
+        ...internalAttributes,
+        ...state.collection.attributes,
+      ];
     },
 
     page: 1,

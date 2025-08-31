@@ -15,7 +15,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { AttributeConfigFactory } from "./ColumnConfig";
 import { useCollectionEditorStore } from "@/lib/store/collection-editor";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
-import { Select } from "@nuvix/ui/components";
 import { SelectField } from "../RowEditor/InputField";
 import { cn } from "@nuvix/sui/lib/utils";
 

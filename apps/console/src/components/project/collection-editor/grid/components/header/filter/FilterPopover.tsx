@@ -64,7 +64,7 @@ const FilterOverlay = ({ filters: filtersFromUrl, onApplyFilters }: FilterOverla
   const [filters, setFilters] = useState<Filter[]>(initialFilters);
 
   function onAddFilter() {
-    const column = snap.collection.attributes[0]?.key;
+    const column = snap.getAttributes()[0]?.key;
 
     if (column) {
       setFilters([

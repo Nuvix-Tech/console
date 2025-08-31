@@ -32,12 +32,19 @@ export const ReferenceRecordPeek = ({ collection, column, value }: ReferenceReco
       collection,
       schema: collection.$schema,
       filters: [
-        { column: "$id", operator: "contains", value: Array.isArray(value) ? value : [value] },
+        {
+          column: "$id",
+          operator: "equal",
+          value: Array.isArray(value) ? value.map((v) => v?.$id) : [value?.$id],
+        },
       ],
+      populate: [],
       page: 1,
       limit: 10,
     },
-    // { placeholderData: },
+    {
+      enabled: !!(project?.$id && sdk && value && collection),
+    },
   );
 
   const columns = (
@@ -136,7 +143,7 @@ export const ReferenceRecordPeek = ({ collection, column, value }: ReferenceReco
       />
       <div className="flex items-center justify-end px-2 py-1">
         <SmartLink
-          href={`/project/${ref}/collections/${collection.$id}?docSchema=${collection.$schema}&filter=${column.key}%3Aequal%3A${value}`}
+          href={`/project/${ref}/collections/${collection.$id}?docSchema=${collection.$schema}&filter=${getValueToUrl(value)}`}
         >
           <Button variant="solid" size="xs" as={"span"}>
             Open collection
@@ -146,3 +153,9 @@ export const ReferenceRecordPeek = ({ collection, column, value }: ReferenceReco
     </>
   );
 };
+
+function getValueToUrl(value: any) {
+  const _value = Array.isArray(value) ? value.map((v) => v?.$id) : [value?.$id];
+
+  return _value.map((v) => `$id:equal:${v}`).join(",");
+}
