@@ -143,7 +143,7 @@ export const ReferenceRecordPeek = ({ collection, column, value }: ReferenceReco
       />
       <div className="flex items-center justify-end px-2 py-1">
         <SmartLink
-          href={`/project/${ref}/collections/${collection.$id}?docSchema=${collection.$schema}&filter=${getValueToUrl(value)}`}
+          href={`/project/${ref}/collections/${collection.$id}?docSchema=${collection.$schema}&${getValueToUrl(value)}`}
         >
           <Button variant="solid" size="xs" as={"span"}>
             Open collection
@@ -157,5 +157,5 @@ export const ReferenceRecordPeek = ({ collection, column, value }: ReferenceReco
 function getValueToUrl(value: any) {
   const _value = Array.isArray(value) ? value.map((v) => v?.$id) : [value?.$id];
 
-  return _value.map((v) => `$id:equal:${v}`).join(",");
+  return _value.map((v) => `filter=%24id%3Aeq%3A${v}`).join("&");
 }

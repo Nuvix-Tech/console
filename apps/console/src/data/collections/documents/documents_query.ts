@@ -19,37 +19,76 @@ type TableRowsVariables = {
 };
 
 function convertFiltersToQueries(filters: Filter[]): string[] {
-  return filters.map((filter) => {
-    const { column, operator, value } = filter;
-    switch (operator) {
-      case "equal":
-        return Query.equal(column, value);
-      case "notEqual":
-        return Query.notEqual(column, value);
-      case "greaterThan":
-        return Query.greaterThan(column, value);
-      case "lessThan":
-        return Query.lessThan(column, value);
-      case "greaterThanEqual":
-        return Query.greaterThanEqual(column, value);
-      case "lessThanEqual":
-        return Query.lessThanEqual(column, value);
-      case "between":
-        return Query.between(column, value?.split(",", 2)?.[0], value?.split(",", 2)?.[1]);
-      case "startsWith":
-        return Query.startsWith(column, value);
-      case "endsWith":
-        return Query.endsWith(column, value);
-      case "contains":
-        return Query.search(column, value);
-      case "isNull":
-        return Query.isNull(column);
-      case "isNotNull":
-        return Query.isNotNull(column);
-      default:
-        throw new Error(`Unsupported operator: ${operator}`);
+  const groupedFilters: Record<string, Filter[]> = {};
+
+  // Group filters by column and operator
+  filters.forEach((filter) => {
+    const key = `${filter.column}-${filter.operator}`;
+    if (!groupedFilters[key]) {
+      groupedFilters[key] = [];
+    }
+    groupedFilters[key].push(filter);
+  });
+
+  const queries: string[] = [];
+
+  Object.values(groupedFilters).forEach((group) => {
+    if (group.length > 1 && group[0].operator === "equal") {
+      // Combine multiple equal filters for the same column into one with array values
+      const column = group[0].column;
+      const values = group.map((f) => f.value);
+      queries.push(Query.equal(column, values));
+    } else {
+      // Handle each filter individually
+      group.forEach((filter) => {
+        const { column, operator, value } = filter;
+        switch (operator) {
+          case "equal":
+            queries.push(Query.equal(column, value));
+            break;
+          case "notEqual":
+            queries.push(Query.notEqual(column, value));
+            break;
+          case "greaterThan":
+            queries.push(Query.greaterThan(column, value));
+            break;
+          case "lessThan":
+            queries.push(Query.lessThan(column, value));
+            break;
+          case "greaterThanEqual":
+            queries.push(Query.greaterThanEqual(column, value));
+            break;
+          case "lessThanEqual":
+            queries.push(Query.lessThanEqual(column, value));
+            break;
+          case "between":
+            queries.push(
+              Query.between(column, value?.split(",", 2)?.[0], value?.split(",", 2)?.[1]),
+            );
+            break;
+          case "startsWith":
+            queries.push(Query.startsWith(column, value));
+            break;
+          case "endsWith":
+            queries.push(Query.endsWith(column, value));
+            break;
+          case "contains":
+            queries.push(Query.contains(column, value));
+            break;
+          case "isNull":
+            queries.push(Query.isNull(column));
+            break;
+          case "isNotNull":
+            queries.push(Query.isNotNull(column));
+            break;
+          default:
+            throw new Error(`Unsupported operator: ${operator}`);
+        }
+      });
     }
   });
+
+  return queries;
 }
 
 function convertSortsToQueries(sorts: Sort[]): string[] {
@@ -99,7 +138,13 @@ export const useCollectionDocumentsQuery = <TData = Models.DocumentList<any>>(
   }: QueryOptions<Models.DocumentList<any>, NuvixException, TData> = {},
 ) => {
   return useQuery({
-    queryKey: collectionKeys.documents(projectRef, schema, collection.$id),
+    queryKey: collectionKeys.documents(projectRef, schema, collection.$id, {
+      filters: args.filters,
+      sorts: args.sorts,
+      limit: args.limit,
+      page: args.page,
+      populate: args.populate,
+    }),
 
     queryFn: ({ signal }) => getDocuments({ projectRef, sdk, collection, schema, ...args }, signal),
 

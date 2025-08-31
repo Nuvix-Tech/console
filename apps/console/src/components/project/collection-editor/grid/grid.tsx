@@ -74,8 +74,6 @@ export const CollectionGrid = ({
     [project?.$id, snap.collection.name, snap.collection.$schema],
   );
 
-  // const roleImpersonationState = useRoleImpersonationStateSnapshot();
-
   const { data, error, isSuccess, isError, isLoading, isRefetching } = useCollectionDocumentsQuery(
     {
       projectRef: project?.$id,

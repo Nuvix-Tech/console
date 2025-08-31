@@ -121,9 +121,6 @@ const ForeignRowSelector = ({
     {
       enabled: !!(visible && project?.$id && sdk && collection),
     },
-    // {
-    //   keepPreviousData: true,
-    // },
   );
 
   return (
@@ -191,7 +188,7 @@ const ForeignRowSelector = ({
                       page={page}
                       setPage={setPage}
                       rowsPerPage={rowsPerPage}
-                      currentPageRowsCount={data?.total ?? 0}
+                      currentPageRowsCount={data?.documents.length || 0}
                       isLoading={isRefetching}
                     />
                     {attribute && !isSelectMany(attribute) ? (
@@ -209,7 +206,11 @@ const ForeignRowSelector = ({
                       </div>
                     ) : (
                       <div className="pl-3">
-                        <UpdateButton onSelect={onSelect} relationship={relationship} />
+                        <UpdateButton
+                          onSelect={onSelect}
+                          relationship={relationship}
+                          documents={data.documents}
+                        />
                       </div>
                     )}
                   </div>
@@ -241,12 +242,14 @@ const ForeignRowSelector = ({
 const UpdateButton = ({
   onSelect,
   relationship,
+  documents,
 }: {
   onSelect: (diff: { deleted: string[]; addedValues: string[] }) => void;
   relationship?: {
     attribute: Models.AttributeRelationship;
     row: any;
   };
+  documents: Models.Document[];
 }) => {
   const snap = useCollectionEditorCollectionStateSnapshot();
   const editor = useCollectionEditorStore();
@@ -274,12 +277,15 @@ const UpdateButton = ({
     const values = relationship.row[attribute.key];
     const existingIds = Array.isArray(values) ? values.filter((v) => v?.$id).map((v) => v.$id) : [];
     const selectedIds = Array.from(snap.selectedRows);
+    const documentsIds = documents.map((d) => d.$id);
 
     const addedValues = selectedIds.filter((id) => !existingIds.includes(id));
-    const deleted = existingIds.filter((id) => !selectedIds.includes(id));
+    const deleted = existingIds.filter(
+      (id) => !selectedIds.includes(id) && documentsIds.includes(id),
+    );
 
     return { deleted, addedValues };
-  }, [relationship, attribute?.key, isMany, snap.selectedRows]);
+  }, [relationship, attribute?.key, isMany, snap.selectedRows, documents]);
 
   const hasChanges = diff.deleted.length > 0 || diff.addedValues.length > 0;
 
