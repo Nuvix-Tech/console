@@ -1,15 +1,17 @@
-import { Maximize } from "lucide-react";
+import { Edit3, Maximize } from "lucide-react";
 import { useCallback, useState } from "react";
 import type { RenderEditCellProps } from "react-data-grid";
 
 import { prettifyJSON, removeJSONTrailingComma, tryParseJson } from "@/lib/helpers";
-import { useTableEditorTableStateSnapshot } from "@/lib/store/table";
 import { BlockKeys, Key } from "@/components/grid/components/common/BlockKeys";
-import { useToast } from "@nuvix/ui/components";
+import { Column, useToast } from "@nuvix/ui/components";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import Popover from "@/components/editor/components/_popover";
 import { MonacoEditor } from "@/components/grid/components/common/MonacoEditor";
 import { NullValue } from "@/components/grid/components/common/NullValue";
+import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
+import { useCollectionEditorStore } from "@/lib/store/collection-editor";
+import type { Models } from "@nuvix/console";
 
 const verifyJSON = (value: string) => {
   try {
@@ -23,6 +25,7 @@ const verifyJSON = (value: string) => {
 interface JsonEditorProps<TRow, TSummaryRow = unknown>
   extends RenderEditCellProps<TRow, TSummaryRow> {
   isEditable: boolean;
+  isArray?: boolean;
   onExpandEditor: (column: string, row: TRow) => void;
 }
 
@@ -43,10 +46,12 @@ export const JsonEditor = <TRow, TSummaryRow = unknown>({
   row,
   column,
   isEditable = true,
+  isArray,
   onRowChange,
   onExpandEditor,
 }: JsonEditorProps<TRow, TSummaryRow>) => {
-  const snap = useTableEditorTableStateSnapshot();
+  // const collectionEditor = useCollectionEditorStore();
+  const snap = useCollectionEditorCollectionStateSnapshot();
   const { addToast } = useToast();
   const gridColumn = snap.gridColumns.find((x) => x.name == column.key);
 
@@ -91,6 +96,16 @@ export const JsonEditor = <TRow, TSummaryRow = unknown>({
       [column.key]: tryParseJson(value) || (row as any)[column.key],
     });
   };
+
+  // const onSelectAdvanceEditor = () => {
+  //   cancelChanges();
+  //   collectionEditor.onEditRow(
+  //     {
+  //       ...row,
+  //       [column.key]: tryParseJson(value) || (row as any)[column.key],
+  //     } as unknown as Models.Document,
+  //   );
+  // };
 
   const commitChange = (newValue: string | null) => {
     if (!isEditable) return;
@@ -139,22 +154,42 @@ export const JsonEditor = <TRow, TSummaryRow = unknown>({
                 </div>
               </div>
             )}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div
-                  className={[
-                    "border border-strong rounded p-1 flex items-center justify-center",
-                    "transition cursor-pointer bg-selection hover:bg-border-strong",
-                  ].join(" ")}
-                  onClick={() => onSelectExpand()}
-                >
-                  <Maximize size={12} strokeWidth={2} />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" align="center">
-                <span>Expand editor</span>
-              </TooltipContent>
-            </Tooltip>
+            <Column gap="2">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div
+                    className={[
+                      "border border-strong rounded p-1 flex items-center justify-center",
+                      "transition cursor-pointer bg-selection hover:bg-border-strong",
+                    ].join(" ")}
+                    onClick={() => onSelectExpand()}
+                  >
+                    <Maximize size={12} strokeWidth={2} />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" align="center">
+                  <span>Expand editor</span>
+                </TooltipContent>
+              </Tooltip>
+              {/* {isArray && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div
+                      className={[
+                        "border border-strong rounded p-1 flex items-center justify-center",
+                        "transition cursor-pointer bg-selection hover:bg-border-strong",
+                      ].join(" ")}
+                      onClick={() => onSelectAdvanceEditor()}
+                    >
+                      <Edit3 size={12} strokeWidth={2} />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" align="center">
+                    <span>Advance editor</span>
+                  </TooltipContent>
+                </Tooltip>
+              )} */}
+            </Column>
           </div>
         </BlockKeys>
       }

@@ -21,7 +21,6 @@ import {
 import { IDChip } from "@/components/others";
 import type { PropsWithChildren } from "react";
 import { ForeignKeyFormatter } from "../components/formatter/ForeignKeyFormatter";
-import { useCollectionEditorStore } from "@/lib/store/collection-editor";
 
 export const ESTIMATED_CHARACTER_PIXEL_WIDTH = 9;
 

@@ -1,10 +1,18 @@
 import React from "react";
-import { HStack, Button, Input as ChakraInput } from "@chakra-ui/react";
+import { HStack } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 import { Field } from "@nuvix/cui/field";
-import { DateInput, IconButton, Input, NumberInput, Select, Textarea } from "@nuvix/ui/components";
+import {
+  Button,
+  Column,
+  DateInput,
+  IconButton,
+  Input,
+  NumberInput,
+  Select,
+  Textarea,
+} from "@nuvix/ui/components";
 import { CloseButton } from "@nuvix/cui/close-button";
-import { LuPlus } from "react-icons/lu";
 import { AttributeFormat, Attributes } from "../ColumnEditor/utils";
 import { AttributeIcon } from "../ColumnEditor/ColumnIcon";
 import { Edit3 } from "lucide-react";
@@ -117,7 +125,7 @@ export const DynamicField = (props: Props) => {
           onChange={(e: any) => handleChange(index, e.target.value)}
           onBlur={() => setFieldTouched(name, true)}
           options={options}
-          nullable={nullable}
+          nullable={false}
           index={index}
         />
         <CloseButton onClick={() => handleRemoveField(index)} />
@@ -136,7 +144,7 @@ export const DynamicField = (props: Props) => {
       invalid={!!errors[name] && !!touched[name]}
       label={
         <div className="flex items-center gap-2">
-          {showAbout && <AttributeIcon type={type} array={isArray} />}
+          <AttributeIcon type={type} array={isArray} />
           {label ?? name}
         </div>
       }
@@ -144,7 +152,18 @@ export const DynamicField = (props: Props) => {
       orientation={orientation}
     >
       {isArray ? (
-        renderArrayField(FieldComponent)
+        <Column gap="4" fillWidth>
+          {renderArrayField(FieldComponent)}
+
+          <Button
+            size="s"
+            onClick={handleAddField}
+            variant="tertiary"
+            prefixIcon="plus"
+            label="Add Item"
+            type="button"
+          />
+        </Column>
       ) : (
         <FieldComponent
           {...commonProps}
@@ -155,12 +174,6 @@ export const DynamicField = (props: Props) => {
           nullable={nullable}
           onBlur={() => setFieldTouched(name, true)}
         />
-      )}
-
-      {isArray && (
-        <Button size="sm" onClick={handleAddField} variant="ghost">
-          <LuPlus size={20} /> Add Item
-        </Button>
       )}
     </Field>
   );
@@ -263,7 +276,6 @@ const SelectBooleanField = makeSelectField([
   { value: "false", label: "False" },
 ]);
 
-// Relationship (async-ready)
 const RelationshipField = ({
   onEditJson,
   onEditText,

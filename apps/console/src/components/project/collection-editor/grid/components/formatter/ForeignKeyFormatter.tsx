@@ -9,7 +9,6 @@ import { IconButton } from "@nuvix/ui/components";
 import type { Models } from "@nuvix/console";
 import { NullValue } from "@/components/grid/components/common/NullValue";
 import { useCollectionEditorQuery } from "@/data/collections";
-import { values } from "lodash";
 
 interface Props extends PropsWithChildren<RenderCellProps<Models.Document, unknown>> {
   collectionId: string;
@@ -32,41 +31,40 @@ export const ForeignKeyFormatter = (props: Props) => {
   const targetCollection = data;
   const value = row[column.key];
 
+  const getDisplayText = (val: any) => {
+    if (val === null) return <NullValue />;
+    if (Array.isArray(val)) {
+      return val.length > 0 ? val.map((v) => v?.$id).join(", ") : "[]";
+    }
+    return val?.$id;
+  };
+
+  const shouldShowPopover =
+    attribute && targetCollection && (Array.isArray(value) ? value.length > 0 : value !== null);
+
   return (
     <div className="nx-grid-foreign-key-formatter flex justify-between">
-      <span className="nx-grid-foreign-key-formatter__text">
-        {value === null ? (
-          <NullValue />
-        ) : Array.isArray(value) ? (
-          values.length > 0 ? (
-            value.map((v) => v?.$id).join(", ")
-          ) : (
-            "[]"
-          )
-        ) : (
-          value?.$id
-        )}
+      <span className="nx-grid-foreign-key-formatter__text truncate" title={getDisplayText(value)}>
+        {getDisplayText(value)}
       </span>
-      {attribute !== undefined &&
-        targetCollection !== undefined &&
-        (value !== null || (Array.isArray(value) && value.length > 0)) && (
-          <Popover>
-            <PopoverTrigger asChild>
-              <IconButton
-                type="button"
-                size="s"
-                variant="secondary"
-                icon={<ArrowRight size={14} />}
-                onClick={(e: any) => e.stopPropagation()}
-                tooltip={"View referencing record(s)"}
-              />
-            </PopoverTrigger>
-            <PopoverContent align="end" className="p-0 w-96">
-              {/* portal */}
-              <ReferenceRecordPeek collection={targetCollection} column={attribute} value={value} />
-            </PopoverContent>
-          </Popover>
-        )}
+      {shouldShowPopover && (
+        <Popover>
+          <PopoverTrigger asChild>
+            <IconButton
+              type="button"
+              size="s"
+              variant="secondary"
+              icon={<ArrowRight size={14} />}
+              onClick={(e: any) => e.stopPropagation()}
+              tooltip={"View referencing record(s)"}
+            />
+          </PopoverTrigger>
+          <PopoverContent align="end" className="p-0 w-96">
+            {/* portal */}
+            <ReferenceRecordPeek collection={targetCollection} column={attribute} value={value} />
+          </PopoverContent>
+        </Popover>
+      )}
     </div>
   );
 };

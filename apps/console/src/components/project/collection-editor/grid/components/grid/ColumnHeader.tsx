@@ -1,9 +1,7 @@
 import type { XYCoord } from "dnd-core";
-import { ArrowRight, Key, Link, Lock } from "lucide-react";
+import { ArrowRight, Key } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
-
-import { FOREIGN_KEY_CASCADE_ACTION } from "@/data/database/database-query-constants";
 
 import type { ColumnHeaderProps, ColumnType, DragItem, GridForeignKey } from "../../types";
 import { ColumnMenu } from "../menu";
@@ -14,7 +12,6 @@ import { Code } from "@chakra-ui/react";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 import { Attributes } from "@/components/project/collection-editor/SidePanelEditor/ColumnEditor/utils";
 import { AttributeIcon } from "../../../SidePanelEditor/ColumnEditor/ColumnIcon";
-import { useCollectionEditorStore } from "@/lib/store/collection-editor";
 import { RelationshipType } from "@nuvix/console";
 
 export function ColumnHeader<R>({

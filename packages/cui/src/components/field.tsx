@@ -18,6 +18,7 @@ export const Field = React.forwardRef<HTMLDivElement, FieldProps>(function Field
     errorText,
     optionalText,
     orientation = "vertical",
+    alignItems = "flex-start",
     ...rest
   } = props;
 
@@ -25,7 +26,7 @@ export const Field = React.forwardRef<HTMLDivElement, FieldProps>(function Field
     <ChakraField.Root ref={ref} {...rest}>
       {orientation === "horizontal" ? (
         <>
-          <Flex direction="row" align="center" gap={2} width={"full"}>
+          <Flex direction="row" align={alignItems} gap={2} width={"full"}>
             {label && (
               <ChakraField.Label minWidth={"1/4"} maxWidth={"1/4"}>
                 {label}

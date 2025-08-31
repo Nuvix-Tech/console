@@ -10,6 +10,7 @@ export const AttributeIcon: React.FC<
     "name"
   >
 > = ({ type, array, twoWay, className, ...rest }) => {
+  type = (type.endsWith("[]") ? type.slice(0, -2) : type) as Attributes | AttributeFormat;
   return (
     <div
       className={cn(
@@ -19,8 +20,8 @@ export const AttributeIcon: React.FC<
     >
       <Icon name={type} {...rest} />
       {(array || twoWay) && (
-        <div className="absolute bottom-0 right-0">
-          {array && <Icon name={Brackets} size="xs" />}
+        <div className="absolute bottom-0 right-0 flex items-center justify-center rounded-full bg-background border border-border">
+          {array && <Icon name={Brackets} className="!size-3" padding="1" decorative={false} />}
           {type === Attributes.Relationship && (
             <RelationshipIcon type={twoWay ? "twoWay" : "oneWay"} />
           )}
