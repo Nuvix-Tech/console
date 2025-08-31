@@ -43,7 +43,7 @@ const SparkBar = ({
             >
               {labelBottom}
             </p>
-            <p className={cn("neutral-on-backround-medium text-sm", labelTopClass)}>{labelTop}</p>
+            <p className={cn("neutral-on-background-medium text-sm", labelTopClass)}>{labelTop}</p>
           </div>
         )}
         <div

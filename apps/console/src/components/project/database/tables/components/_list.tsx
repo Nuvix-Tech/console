@@ -219,9 +219,9 @@ const TablesList = ({
             <Tooltip>
               <TooltipTrigger asChild>
                 {x.type === ENTITY_TYPE.TABLE ? (
-                  <Table2 size={15} strokeWidth={1.5} className="neutral-on-backround-weak" />
+                  <Table2 size={15} strokeWidth={1.5} className="neutral-on-background-weak" />
                 ) : x.type === ENTITY_TYPE.VIEW ? (
-                  <Eye size={15} strokeWidth={1.5} className="neutral-on-backround-weak" />
+                  <Eye size={15} strokeWidth={1.5} className="neutral-on-background-weak" />
                 ) : (
                   <div
                     className={cn(
@@ -231,7 +231,7 @@ const TablesList = ({
                       // [Alaister]: tables endpoint doesn't distinguish between tables and partitioned tables
                       // once we update the endpoint to include partitioned tables, we can uncomment this
                       // x.type === ENTITY_TYPE.PARTITIONED_TABLE &&
-                      //   'neutral-on-backround-medium bg-border-stronger'
+                      //   'neutral-on-background-medium bg-border-stronger'
                     )}
                   >
                     {Object.entries(ENTITY_TYPE)

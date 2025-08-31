@@ -162,7 +162,7 @@ function SelectCellFormatter({
       </p>
       {row && (
         <DropdownMenu>
-          <DropdownMenuTrigger className="neutral-on-backround-weak transition-all text-transparent group-hover:text-foreground data-[state=open]:text-foreground">
+          <DropdownMenuTrigger className="neutral-on-background-weak transition-all text-transparent group-hover:text-foreground data-[state=open]:text-foreground">
             <IconButton
               type="text"
               size="s"

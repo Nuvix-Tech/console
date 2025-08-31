@@ -45,7 +45,7 @@ const SpreadsheetPreviewGrid = ({
               <span
                 className={cn(
                   "text-sm flex items-center",
-                  isEmpty && "neutral-on-backround-medium",
+                  isEmpty && "neutral-on-background-medium",
                 )}
               >
                 {isEmpty ? "NULL" : row[header]}

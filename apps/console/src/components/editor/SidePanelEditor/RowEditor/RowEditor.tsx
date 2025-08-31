@@ -203,7 +203,7 @@ const RowEditor = ({
                   <div className="space-y-10 py-6">
                     <div>
                       <h3 className="text-base text-foreground">Optional Fields</h3>
-                      <p className="text-sm neutral-on-backround-weak">
+                      <p className="text-sm neutral-on-background-weak">
                         These are columns that do not need any value
                       </p>
                     </div>

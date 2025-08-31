@@ -73,7 +73,7 @@ function BaseEditor<TRow, TSummaryRow = unknown>({
   return (
     <Popover open>
       <PopoverTrigger>
-        <div className={cn("px-[8px]", value === null ? "neutral-on-backround-weak" : "")}>
+        <div className={cn("px-[8px]", value === null ? "neutral-on-background-weak" : "")}>
           {value === null ? "NULL" : value}
         </div>
       </PopoverTrigger>

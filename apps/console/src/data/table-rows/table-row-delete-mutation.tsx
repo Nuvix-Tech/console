@@ -118,7 +118,7 @@ export const useTableRowDeleteMutation = ({
           toast("Unable to delete row(s) as table has no primary keys", {
             description: (
               <div>
-                <p className="text-sm neutral-on-backround-medium">
+                <p className="text-sm neutral-on-background-medium">
                   Add a primary key column to your table first to serve as a unique identifier for
                   each row before updating or deleting the row.
                 </p>

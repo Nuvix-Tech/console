@@ -690,7 +690,7 @@ const SidePanelEditor = ({
           snap.closeSidePanel();
         }}
       >
-        <p className="text-sm neutral-on-backround-medium">
+        <p className="text-sm neutral-on-background-medium">
           There are unsaved changes. Are you sure you want to close the panel? Your changes will be
           lost.
         </p>

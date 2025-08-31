@@ -197,7 +197,7 @@ const JsonEdit = ({
           >
             <div className="flex flex-col gap-y-1 w-80">
               <p>JSON value is larger than {MAX_CHARACTERS.toLocaleString()} characters</p>
-              <p className="neutral-on-backround-medium">
+              <p className="neutral-on-background-medium">
                 You may try to render the entire JSON value, but your browser may run into
                 performance issues
               </p>

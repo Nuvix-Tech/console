@@ -34,7 +34,7 @@ interface MultiSelectContextProps {
 const MultiSelectContext = React.createContext<MultiSelectContextProps | null>(null);
 
 const commandItemClass = cn(
-  "relative neutral-on-backround-weak text-left px-2 py-1.5 rounded",
+  "relative neutral-on-background-weak text-left px-2 py-1.5 rounded",
   "hover:text-foreground hover:!bg-overlay-hover w-full flex items-center space-x-2",
   "peer-data-[value=true]:bg-overlay-hover peer-data-[value=true]:text-strong",
 );
@@ -272,7 +272,7 @@ const MultiSelectorTrigger = React.forwardRef<HTMLButtonElement, MultiSelectorTr
                     toggleValue(value);
                     setIsDeleteHovered(false);
                   }}
-                  className="ml-1 neutral-on-backround-weak hover:neutral-on-backround-medium transition-colors pointer-events-auto"
+                  className="ml-1 neutral-on-background-weak hover:neutral-on-background-medium transition-colors pointer-events-auto"
                 >
                   <RemoveIcon size={12} />
                 </div>
@@ -316,7 +316,7 @@ const MultiSelectorTrigger = React.forwardRef<HTMLButtonElement, MultiSelectorTr
           <ChevronsUpDown
             size={16}
             strokeWidth={2}
-            className="neutral-on-backround-weak shrink-0 ml-1.5"
+            className="neutral-on-background-weak shrink-0 ml-1.5"
           />
         )}
       </button>

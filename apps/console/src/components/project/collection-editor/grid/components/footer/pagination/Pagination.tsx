@@ -1,10 +1,7 @@
-import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { Button } from "@nuvix/ui/components";
-import { Input } from "@/components/editor/components";
+import { Button, Select } from "@nuvix/ui/components";
 import ConfirmationModal from "@/components/editor/components/_confim_dialog";
-import { IconButton } from "@chakra-ui/react";
 import { DropdownControl } from "@/components/grid/components/common/DropdownControl";
 import { useCollectionEditorStore } from "@/lib/store/collection-editor";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
@@ -92,35 +89,19 @@ const Pagination = () => {
   return (
     <div className="flex items-center gap-x-4">
       <div className="flex items-center gap-x-2">
-        <IconButton variant="outline" size="xs" disabled={page <= 1} onClick={onPreviousPage}>
-          <ArrowLeft />
-        </IconButton>
-        <p className="text-xs neutral-on-background-medium">Page</p>
-        <Input
-          min={1}
-          size={"xs"}
-          width={"12"}
-          max={maxPages}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onKeyDown={(e) => {
-            const parsedValue = Number(value);
-            if (
-              e.code === "Enter" &&
-              !Number.isNaN(parsedValue) &&
-              parsedValue >= 1 &&
-              parsedValue <= maxPages
-            ) {
-              onPageChange(parsedValue);
-            }
-          }}
-        />
-
-        <p className="text-xs neutral-on-background-medium">of {totalPages.toLocaleString()}</p>
-
-        <IconButton variant="outline" size={"xs"} disabled={page >= maxPages} onClick={onNextPage}>
-          <ArrowRight />
-        </IconButton>
+        <div className="w-20">
+          <Select
+            options={[...Array(maxPages).keys()].map((i) => ({
+              value: (i + 1).toString(),
+              label: (i + 1).toString(),
+            }))}
+            value={value}
+            onSelect={(v) => onPageChange(Number(v))}
+            labelAsPlaceholder
+            height="s"
+            inputClass="!h-8 !min-h-8 !bg-(--neutral-background-medium)"
+          />
+        </div>
 
         <DropdownControl
           options={rowsPerPageOptions}
@@ -135,8 +116,8 @@ const Pagination = () => {
       </div>
 
       <div className="flex items-center gap-x-2">
-        <p className="text-xs neutral-on-backround-medium">
-          {`${count} ${count === 0 || (count ?? 0) > 1 ? `records` : "record"}`}{" "}
+        <p className="text-xs neutral-on-background-medium">
+          {`${count} ${count === 0 || (count ?? 0) > 1 ? `documents` : "document"}`}{" "}
         </p>
       </div>
 
@@ -149,7 +130,7 @@ const Pagination = () => {
           onConfirmPreviousPage();
         }}
       >
-        <p className="text-sm neutral-on-backround-medium">
+        <p className="text-sm neutral-on-background-medium">
           The currently selected lines will be deselected, do you want to proceed?
         </p>
       </ConfirmationModal>
@@ -163,7 +144,7 @@ const Pagination = () => {
           onConfirmNextPage();
         }}
       >
-        <p className="text-sm neutral-on-backround-medium">
+        <p className="text-sm neutral-on-background-medium">
           The currently selected lines will be deselected, do you want to proceed?
         </p>
       </ConfirmationModal>

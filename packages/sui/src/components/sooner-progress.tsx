@@ -28,14 +28,16 @@ export const SonnerProgress = ({
     <div className="flex flex-col gap-2 w-full">
       <div className="flex w-full justify-between">
         <p className="text-foreground text-sm">{message}</p>
-        <p className="neutral-on-backround-medium text-sm font-mono">
+        <p className="neutral-on-background-medium text-sm font-mono">
           {progressPrefix || ""}
           {`${Number(progress).toFixed(0)}%`}
         </p>
       </div>
       <Progress value={progress} className="w-full" />
       <div className="flex flex-row gap-2 items-center justify-between">
-        <small className="neutral-on-backround-weak text-xs">Please do not close the browser</small>
+        <small className="neutral-on-background-weak text-xs">
+          Please do not close the browser
+        </small>
         {action}
       </div>
     </div>

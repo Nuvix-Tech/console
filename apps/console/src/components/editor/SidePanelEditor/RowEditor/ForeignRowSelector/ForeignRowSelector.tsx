@@ -137,13 +137,13 @@ const ForeignRowSelector = ({
           {isLoading && (
             <div className="flex h-full py-6 flex-col items-center justify-center space-y-2">
               <Loader2 size={14} className="animate-spin" />
-              <p className="text-sm neutral-on-backround-medium">Loading rows</p>
+              <p className="text-sm neutral-on-background-medium">Loading rows</p>
             </div>
           )}
 
           {isError && (
             <div className="flex h-full py-6 flex-col items-center justify-center">
-              <p className="text-sm neutral-on-backround-medium">
+              <p className="text-sm neutral-on-background-medium">
                 Unable to load rows from{" "}
                 <Code>
                   {schemaName}.{tableName}
@@ -217,7 +217,7 @@ const ForeignRowSelector = ({
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center border-b border-t border-default">
-                    <span className="neutral-on-backround-medium text-sm">No Rows Found</span>
+                    <span className="neutral-on-background-medium text-sm">No Rows Found</span>
                   </div>
                 )}
               </div>
