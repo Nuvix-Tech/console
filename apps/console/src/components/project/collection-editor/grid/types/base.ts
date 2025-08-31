@@ -2,6 +2,7 @@ import type {
   AttributeFormat,
   Attributes,
 } from "@/components/project/collection-editor/SidePanelEditor/ColumnEditor/utils";
+import type { RelationshipType } from "@nuvix/console";
 import { CalculatedColumn, RenderHeaderCellProps } from "react-data-grid";
 
 export interface SavedState {
@@ -18,11 +19,12 @@ export interface DragItem {
 export type ColumnType = Attributes | AttributeFormat;
 
 export interface GridForeignKey {
-  targetTableSchema?: string | null;
-  targetTableName?: string | null;
-  targetColumnName?: string | null;
-  deletionAction?: string;
-  updateAction?: string;
+  relatedCollection: string;
+  type: RelationshipType;
+  twoWay?: boolean;
+  twoWayKey?: string;
+  onDelete: string;
+  side: "parent" | "child";
 }
 
 export interface ColumnHeaderProps<R> extends RenderHeaderCellProps<R> {

@@ -9,11 +9,13 @@ import type { ColumnHeaderProps, ColumnType, DragItem, GridForeignKey } from "..
 import { ColumnMenu } from "../menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import { getForeignKeyCascadeAction } from "@/components/editor/SidePanelEditor/ColumnEditor/ColumnEditor.utils";
-import { Text } from "@nuvix/ui/components";
+import { Row, Text } from "@nuvix/ui/components";
 import { Code } from "@chakra-ui/react";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 import { Attributes } from "@/components/project/collection-editor/SidePanelEditor/ColumnEditor/utils";
 import { AttributeIcon } from "../../../SidePanelEditor/ColumnEditor/ColumnIcon";
+import { useCollectionEditorStore } from "@/lib/store/collection-editor";
+import { RelationshipType } from "@nuvix/console";
 
 export function ColumnHeader<R>({
   column,
@@ -119,25 +121,27 @@ export function ColumnHeader<R>({
       <div className={`nx-grid-column-header ${cursor} flex w-full items-center justify-between`}>
         <div className="nx-grid-column-header__inner space-x-2 items-center flex justify-center">
           {renderColumnIcon(columnType, { name: column.name as string, foreignKey })}
-          <Tooltip>
-            <TooltipTrigger>
-              {isPrimaryKey ? (
-                <div className="nx-grid-column-header__inner__primary-key brand-on-background-weak">
-                  <Key size={14} strokeWidth={2} />
-                </div>
-              ) : (
-                <AttributeIcon
-                  type={columnFormat as any}
-                  array={isArray}
-                  size="s"
-                  className="size-6 p-0 !bg-transparent"
-                />
-              )}
-            </TooltipTrigger>
-            <TooltipContent side="bottom" className="font-normal">
-              {isPrimaryKey ? "Primary key" : columnFormat}
-            </TooltipContent>
-          </Tooltip>
+          {!foreignKey && (
+            <Tooltip>
+              <TooltipTrigger>
+                {isPrimaryKey ? (
+                  <div className="nx-grid-column-header__inner__primary-key brand-on-background-weak">
+                    <Key size={14} strokeWidth={2} />
+                  </div>
+                ) : (
+                  <AttributeIcon
+                    type={columnFormat as any}
+                    array={isArray}
+                    size="s"
+                    className="size-6 p-0 !bg-transparent"
+                  />
+                )}
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="font-normal">
+                {isPrimaryKey ? "Primary key" : columnFormat}
+              </TooltipContent>
+            </Tooltip>
+          )}
           <Text
             as="span"
             variant="label-strong-s"
@@ -160,38 +164,40 @@ function renderColumnIcon(
 ) {
   const { name, foreignKey } = columnMeta;
   switch (type) {
-    // case Attributes.Relationship:
-    //   // [Unkown] Look into this separately but this should be a hover card instead
-    //   return (
-    //     <Tooltip>
-    //       <TooltipTrigger className="brand-on-background-weak">
-    //         <Link size={14} strokeWidth={2} />
-    //       </TooltipTrigger>
-    //       <TooltipContent side="bottom">
-    //         <div className="font-normal">
-    //           <p className="text-xs text-muted-foreground">Foreign key relation:</p>
-    //           <div className="flex items-center space-x-1">
-    //             <Code size={"xs"}>{name}</Code>
-    //             <ArrowRight size={14} strokeWidth={1.5} className="!text-accent" />
-    //             <Code size={"xs"}>
-    //               {foreignKey?.targetTableSchema}.{foreignKey?.targetTableName}.
-    //               {foreignKey?.targetColumnName}
-    //             </Code>
-    //           </div>
-    //           {foreignKey?.updateAction !== FOREIGN_KEY_CASCADE_ACTION.NO_ACTION && (
-    //             <p className="text-xs !text-secondary-foreground mt-1">
-    //               On update: {getForeignKeyCascadeAction(foreignKey?.updateAction)}
-    //             </p>
-    //           )}
-    //           {foreignKey?.deletionAction !== FOREIGN_KEY_CASCADE_ACTION.NO_ACTION && (
-    //             <p className="text-xs !text-secondary-foreground mt-1">
-    //               On delete: {getForeignKeyCascadeAction(foreignKey?.deletionAction)}
-    //             </p>
-    //           )}
-    //         </div>
-    //       </TooltipContent>
-    //     </Tooltip>
-    //   );
+    case Attributes.Relationship:
+      // [Unkown] Look into this separately but this should be a hover card instead
+      return (
+        <Tooltip>
+          <TooltipTrigger className="brand-on-background-weak">
+            <AttributeIcon type={type as any} size="s" className="size-6 p-0 !bg-transparent" />
+          </TooltipTrigger>
+          <TooltipContent side="bottom" className="max-w-xs">
+            <Row horizontal="space-between">
+              <Text variant="body-default-xs" onBackground="neutral-weak">
+                Relationship {foreignKey?.side === "child" ? " (child)" : ""}
+              </Text>
+              <Text variant="body-strong-xs" onBackground="neutral-medium">
+                {getRelationType(foreignKey?.type!)}
+              </Text>
+            </Row>
+            <div className="flex items-center space-x-1 text-sm my-1">
+              <Code size="xs" className="bg-muted px-1 py-0.5 rounded">
+                {name}
+              </Code>
+              <ArrowRight size={14} strokeWidth={1.5} className="text-primary" />
+              <Code size="xs" className="bg-muted px-1 py-0.5 rounded">
+                {foreignKey?.relatedCollection}
+                {foreignKey?.twoWay ? `.${foreignKey.twoWayKey}` : ""}
+              </Code>
+            </div>
+            {foreignKey?.onDelete && (
+              <Text variant="label-default-xs" onBackground="neutral-medium">
+                On delete: {getForeignKeyCascadeAction(foreignKey.onDelete)}
+              </Text>
+            )}
+          </TooltipContent>
+        </Tooltip>
+      );
     default:
       return null;
   }
@@ -201,4 +207,19 @@ function getColumnFormat(type: ColumnType, isArray: boolean) {
   if (isArray) {
     return `${type.replace("_", "")}[]`;
   } else return type;
+}
+
+function getRelationType(type: string) {
+  switch (type) {
+    case RelationshipType.OneToOne:
+      return "1:1";
+    case RelationshipType.OneToMany:
+      return "1:N";
+    case RelationshipType.ManyToOne:
+      return "N:1";
+    case RelationshipType.ManyToMany:
+      return "N:N";
+    default:
+      return type;
+  }
 }

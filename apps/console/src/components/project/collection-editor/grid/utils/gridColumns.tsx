@@ -95,6 +95,18 @@ export function getGridColumns(
           isPrimaryKey={(x as any).isPrimaryKey}
           isInternal={x.internal}
           isArray={x.array}
+          foreignKey={
+            (x as any).type === Attributes.Relationship
+              ? {
+                  relatedCollection: (x as any).relatedCollection,
+                  type: (x as any).relationType,
+                  twoWay: (x as any).twoWay ?? false,
+                  twoWayKey: (x as any).twoWayKey,
+                  onDelete: (x as any).onDelete,
+                  side: (x as any).side,
+                }
+              : undefined
+          }
         />
       ),
       renderEditCell: options
