@@ -6,7 +6,6 @@ import { useDrag, useDrop } from "react-dnd";
 import type { ColumnHeaderProps, ColumnType, DragItem, GridForeignKey } from "../../types";
 import { ColumnMenu } from "../menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
-import { getForeignKeyCascadeAction } from "@/components/editor/SidePanelEditor/ColumnEditor/ColumnEditor.utils";
 import { Row, Text } from "@nuvix/ui/components";
 import { Code } from "@chakra-ui/react";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
@@ -220,3 +219,16 @@ function getRelationType(type: string) {
       return type;
   }
 }
+
+export const getForeignKeyCascadeAction = (action?: string) => {
+  switch (action) {
+    case "cascade":
+      return "Cascade";
+    case "restrict":
+      return "Restrict";
+    case "setNull":
+      return "Set NULL";
+    default:
+      return undefined;
+  }
+};

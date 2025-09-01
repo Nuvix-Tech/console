@@ -43,6 +43,7 @@ import { useTableEditorStateSnapshot } from "@/lib/store/table-editor";
 import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
 import { cn } from "@nuvix/sui/lib/utils";
 import { formatTableRowsToSQL } from "@/components/editor/TableEntity.utils";
+import { Icon, Text } from "@nuvix/ui/components";
 
 export const TreeViewItemVariant = cva(
   // [Unkown Temp]: aria-selected:text-foreground not working as aria-selected property not rendered in DOM,
@@ -314,7 +315,7 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
                   copyToClipboard(entity.name);
                 }}
               >
-                <Clipboard size={12} />
+                <Icon name="clipboard" size="s" />
                 <span>Copy name</span>
               </DropdownMenuItem>
 
@@ -330,7 +331,7 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
                       snap.onEditTable();
                     }}
                   >
-                    <Edit size={12} />
+                    <Icon name="edit" size="s" />
                     <span>Edit table</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
@@ -341,7 +342,7 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
                       snap.onDuplicateTable();
                     }}
                   >
-                    <Copy size={12} />
+                    <Icon name={Copy} size="s" />
                     <span>Duplicate table</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem key="view-policies" className="space-x-2" asChild>
@@ -349,14 +350,14 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
                       key="view-policies"
                       href={`/project/${projectRef}/auth/policies?schema=${selectedSchema}&search=${entity.id}`}
                     >
-                      <Lock size={12} />
+                      <Icon name={Lock} size="s" />
                       <span>View policies</span>
                     </Link>
                   </DropdownMenuItem>
 
                   <DropdownMenuSub>
                     <DropdownMenuSubTrigger className="gap-x-2 space-x-2">
-                      <Download size={12} />
+                      <Icon name={Download} size="s" />
                       Export data
                     </DropdownMenuSubTrigger>
                     <DropdownMenuSubContent>
@@ -386,14 +387,14 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     key="delete-table"
-                    className="gap-x-2"
+                    className="space-x-2"
                     onClick={(e) => {
                       e.stopPropagation();
                       snap.onDeleteTable();
                     }}
                   >
-                    <Trash size={12} />
-                    <span>Delete table</span>
+                    <Icon name={"trash"} size="s" onBackground="danger-weak" />
+                    <Text onBackground="danger-weak">Delete table</Text>
                   </DropdownMenuItem>
                 </>
               )}

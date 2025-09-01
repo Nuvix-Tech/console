@@ -145,7 +145,7 @@ function SelectCellFormatter({
           size="s"
           variant="tertiary"
           className="px-1 rdg-row__select-column__edit-action"
-          icon={<Maximize2 size={14} />}
+          icon={Maximize2}
           onClick={onEditClick}
           tooltip={"Expand row"}
         />

@@ -1,5 +1,4 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { RefreshCw } from "lucide-react";
 
 import { tableRowKeys } from "@/data/table-rows/keys";
 import { Button } from "@nuvix/ui/components";
@@ -25,7 +24,7 @@ const RefreshButton = ({ tableId, isRefetching }: RefreshButtonProps) => {
       size="s"
       variant="secondary"
       loading={isRefetching}
-      prefixIcon={<RefreshCw className="text-foreground-muted" strokeWidth={1.5} size={18} />}
+      prefixIcon={"refresh"}
       onClick={() => onClick()}
     >
       Refresh

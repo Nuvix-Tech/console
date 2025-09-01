@@ -1,4 +1,3 @@
-import { Plus } from "lucide-react";
 import type { CalculatedColumn } from "react-data-grid";
 
 import { useTableEditorStore } from "@/lib/store/table-editor";
@@ -39,7 +38,7 @@ const AddColumnHeader = () => {
         size="s"
         type="text"
         onClick={tableEditorSnap.onAddColumn}
-        prefixIcon={<Plus size={16} />}
+        prefixIcon={"plus"}
       />
     </div>
   );

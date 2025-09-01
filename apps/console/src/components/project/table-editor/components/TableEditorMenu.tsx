@@ -145,7 +145,7 @@ const TableEditorMenu = () => {
                 label="New table"
                 disabled={!canCreateTables}
                 size="s"
-                prefixIcon={<Plus size={14} strokeWidth={1.5} className="text-foreground-muted" />}
+                prefixIcon={"plus"}
                 variant="secondary"
                 justifyContent="flex-start"
                 onClick={snap.onAddTable}
@@ -159,10 +159,10 @@ const TableEditorMenu = () => {
               <Alert>
                 <AlertTitle className="text-sm">Viewing protected schema</AlertTitle>
                 <AlertDescription className="text-xs">
-                  <p className="mb-2">
+                  <span className="!text-xs">
                     This schema is managed by Nuvix and is read-only through the table editor
-                  </p>
-                  <Button size="s" onClick={() => setShowModal(true)}>
+                  </span>
+                  <Button size="xs" className="mt-1.5" onClick={() => setShowModal(true)}>
                     Learn more
                   </Button>
                 </AlertDescription>
@@ -208,6 +208,7 @@ const TableEditorMenu = () => {
                 placeholder="Search tables..."
                 aria-labelledby="Search tables"
                 onChange={(e) => setSearchText(e.target.value)}
+                className="!border-(--neutral-border-medium)"
               />
             </InputGroup>
             <EntityTypeFilter
@@ -220,12 +221,12 @@ const TableEditorMenu = () => {
           {isLoading && <EditorMenuListSkeleton />}
 
           {isError && (
-            <div className="p-2 rounded-lg bg-red-50 dark:bg-muted border">
+            <div className="p-2 rounded-xs bg-background dark:bg-secondary border">
               <div className="flex flex-col gap-1">
-                <h4 className="text-sm font-semibold text-destructive">
+                <h4 className="text-sm font-semibold text-destructive-foreground">
                   Failed to retrieve tables
                 </h4>
-                <p className="text-xs text-destructive-foreground">
+                <p className="text-xs text-muted-foreground">
                   {error?.message || "An unexpected error occurred"}
                 </p>
               </div>
@@ -293,7 +294,7 @@ export const EntityTypeFilter = ({
         <Filter />
       </IconButton>
     </PopoverTrigger>
-    <PopoverContent className="p-0 w-56" side="bottom" align="center">
+    <PopoverContent className="p-0 w-60" side="bottom" align="center">
       <div className="px-3 pt-3 pb-2 flex flex-col gap-y-2">
         <p className="text-xs">Show entity types</p>
         <div className="flex flex-col w-full">
@@ -306,7 +307,7 @@ export const EntityTypeFilter = ({
                   isChecked={visibleTypes.includes(value)}
                   onToggle={() => toggleType(value)}
                 />
-                <Label htmlFor={key} className="capitalize text-xs text-nowrap line-clamp-1">
+                <Label htmlFor={key} className="capitalize !text-xs text-nowrap line-clamp-1">
                   {key.toLowerCase().replace("_", " ")}
                 </Label>
               </div>

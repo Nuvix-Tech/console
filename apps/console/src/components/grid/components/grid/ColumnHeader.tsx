@@ -180,7 +180,7 @@ function renderColumnIcon(
           <TooltipContent side="bottom">
             <div className="font-normal">
               <p className="text-xs text-muted-foreground">Foreign key relation:</p>
-              <div className="flex items-center space-x-1">
+              <div className="flex items-center space-x-1 mt-1">
                 <Code size={"xs"}>{name}</Code>
                 <ArrowRight size={14} strokeWidth={1.5} className="!text-accent" />
                 <Code size={"xs"}>

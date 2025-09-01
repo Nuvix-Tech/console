@@ -11,7 +11,7 @@ import iconStyles from "./IconButton.module.scss";
 
 interface CommonProps {
   variant?: "primary" | "secondary" | "tertiary" | "danger";
-  size?: "s" | "m" | "l";
+  size?: "xs" | "s" | "m" | "l";
   radius?:
     | "none"
     | "top"
@@ -133,7 +133,10 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps | AnchorProps>(
             paddingY="0"
             textWeight={weight}
             textSize={size}
-            className="font-label"
+            className={classNames({
+              "font-s font-body": size === "xs",
+              "font-label": size !== "xs",
+            })}
             align="center"
             vertical="center"
           >

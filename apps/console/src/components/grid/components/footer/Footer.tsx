@@ -28,7 +28,7 @@ const Footer = ({ isRefetching }: FooterProps) => {
     id: Number(tableId),
   });
 
-  const selectedView = params.get("view") || "data";
+  const selectedView = (params.get("view") || "data").toLowerCase();
 
   const setSelectedView = (view: string) => {
     if (view) {
@@ -54,7 +54,7 @@ const Footer = ({ isRefetching }: FooterProps) => {
           <TwoOptionToggle
             size="xs"
             height={"30px"}
-            options={["definition", "data"]}
+            options={["Definition", "Data"]}
             activeOption={selectedView}
             onClickOption={setSelectedView}
           />

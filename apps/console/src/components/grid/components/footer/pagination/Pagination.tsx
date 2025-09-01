@@ -174,6 +174,7 @@ const Pagination = () => {
                   onPageChange(parsedValue);
                 }
               }}
+              className="neutral-border-medium !bg-(--neutral-background-medium)"
             />
 
             <p className="text-xs neutral-on-background-medium">of {totalPages.toLocaleString()}</p>
@@ -261,6 +262,7 @@ const Pagination = () => {
         onCancel={() => setIsConfirmNextModalOpen(false)}
         onConfirm={() => {
           onConfirmNextPage();
+          setIsConfirmNextModalOpen(false);
         }}
       >
         <p className="text-sm neutral-on-background-medium">

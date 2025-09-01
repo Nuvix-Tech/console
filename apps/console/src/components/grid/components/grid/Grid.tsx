@@ -147,7 +147,7 @@ export const Grid = memo(
               {isError && (
                 <Alert>
                   <AlertTitle>Failed to retrieve rows from table</AlertTitle>
-                  <p className="text-sm text-light">Error: {error?.message}</p>
+                  <p className="text-sm neutral-on-background-weak">Error: {error?.message}</p>
                   {filters.length > 0 && (
                     <AlertDescription>
                       Verify that the filter values are correct, as the error may stem from an
@@ -160,14 +160,15 @@ export const Grid = memo(
                 <>
                   {(filters ?? []).length === 0 ? (
                     <div className="flex flex-col items-center justify-center col-span-full h-full">
-                      <p className="text-sm text-light">This table is empty</p>
-                      <p className="text-sm text-light mt-1">
+                      <p className="text-sm neutral-on-background-weak">This table is empty</p>
+                      <p className="text-sm neutral-on-background-medium mt-1">
                         Add rows to your table to get started.
                       </p>
                       <div className="flex items-center space-x-2 mt-4">
                         {
                           <Button
                             type="default"
+                            size="s"
                             onClick={() => {
                               tableEditorSnap.onImportData();
                               // sendEvent({
@@ -187,11 +188,13 @@ export const Grid = memo(
                     </div>
                   ) : (
                     <div className="flex flex-col items-center justify-center col-span-full">
-                      <p className="text-sm text-light">
+                      <p className="text-sm neutral-on-background-weak">
                         The filters applied have returned no results from this table
                       </p>
                       <div className="flex items-center space-x-2 mt-4">
-                        <Button onClick={() => removeAllFilters()}>Remove all filters</Button>
+                        <Button size="s" onClick={() => removeAllFilters()}>
+                          Remove all filters
+                        </Button>
                       </div>
                     </div>
                   )}

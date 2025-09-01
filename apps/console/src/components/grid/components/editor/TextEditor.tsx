@@ -169,7 +169,7 @@ export const TextEditor = <TRow, TSummaryRow = unknown>({
                           variant="secondary"
                           size="s"
                           onClick={() => onSelectExpand()}
-                          icon={<Maximize size={12} strokeWidth={2} />}
+                          icon={Maximize}
                         />
                       </TooltipTrigger>
                       <TooltipContent side="bottom">Expand editor</TooltipContent>

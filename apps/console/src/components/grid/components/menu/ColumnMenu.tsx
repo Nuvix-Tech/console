@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@nuvix/sui/components/dropdown-menu";
 import { Separator } from "@nuvix/sui/components/separator";
-import { Button, IconButton } from "@nuvix/ui/components";
+import { Icon, IconButton, Text } from "@nuvix/ui/components";
 
 interface ColumnMenuProps {
   column: CalculatedColumn<any, unknown>;
@@ -54,7 +54,7 @@ const ColumnMenu = ({ column, isEncrypted }: ColumnMenuProps) => {
           <Tooltip>
             <TooltipTrigger asChild className={`${isEncrypted ? "opacity-50" : ""}`}>
               <DropdownMenuItem className="space-x-2" onClick={onEditColumn} disabled={isEncrypted}>
-                <Edit size={14} />
+                <Icon name={"edit"} size="s" />
                 <p>Edit column</p>
               </DropdownMenuItem>
             </TooltipTrigger>
@@ -69,12 +69,12 @@ const ColumnMenu = ({ column, isEncrypted }: ColumnMenuProps) => {
         >
           {column.frozen ? (
             <>
-              <Unlock size={14} />
+              <Icon name={Unlock} size="s" />
               <p>Unfreeze column</p>
             </>
           ) : (
             <>
-              <Lock size={14} />
+              <Icon name={Lock} size="s" />
               <p>Freeze column</p>
             </>
           )}
@@ -83,8 +83,8 @@ const ColumnMenu = ({ column, isEncrypted }: ColumnMenuProps) => {
           <>
             <Separator className="my-0.5" />
             <DropdownMenuItem className="space-x-2" onClick={onDeleteColumn}>
-              <Trash size={14} stroke="red" />
-              <p>Delete column</p>
+              <Icon name="trash" size="s" onBackground="danger-weak" />
+              <Text onBackground="danger-weak">Delete column</Text>
             </DropdownMenuItem>
           </>
         )}
@@ -105,7 +105,7 @@ const ColumnMenu = ({ column, isEncrypted }: ColumnMenuProps) => {
             onClick={(e) => {
               e.stopPropagation();
             }}
-            icon={<ChevronDown size={16} strokeWidth={1} />}
+            icon={"chevronDown"}
           />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" side="bottom">

@@ -17,8 +17,8 @@ export const TwoOptionToggle = <T extends string>({
   ...rest
 }: TwoOptionToggleProps<T>) => {
   const nSize = size === "s" ? "xs" : size;
-  const firstActive = activeOption === options[0];
-  const secondActive = activeOption === options[1];
+  const firstActive = activeOption.toLowerCase() === options[0]?.toLowerCase();
+  const secondActive = activeOption.toLowerCase() === options[1]?.toLowerCase();
 
   return (
     <ButtonGroup
@@ -32,7 +32,7 @@ export const TwoOptionToggle = <T extends string>({
     >
       <Button
         {...rest}
-        onClick={() => onClickOption(options[0])}
+        onClick={() => onClickOption(options[0].toLowerCase() as T)}
         className={cn({
           "!bg-(--neutral-alpha-medium)": firstActive,
         })}
@@ -41,7 +41,7 @@ export const TwoOptionToggle = <T extends string>({
       </Button>
       <Button
         {...rest}
-        onClick={() => onClickOption(options[1])}
+        onClick={() => onClickOption(options[1].toLowerCase() as T)}
         className={cn({
           "!bg-(--neutral-alpha-medium)": secondActive,
         })}

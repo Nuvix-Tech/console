@@ -115,7 +115,7 @@
 
   --color-destructive: var(--destructive);
 
-  --color-destructive-foreground: var(--danger-on-background-medium);
+  --color-destructive-foreground: var(--danger-on-background-weak);
 
   --color-border: var(--border);
 

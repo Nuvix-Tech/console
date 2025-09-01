@@ -26,22 +26,25 @@ export const ProtectedSchemaModal = ({
           <DialogTitle>Schemas managed by Nuvix</DialogTitle>
         </DialogHeader>
         <div className="space-y-2">
-          <p className="text-sm">
+          <p className="text-sm neutral-on-background-medium">
             The following schemas are managed by Nuvix and are currently protected from write access
             through the dashboard.
           </p>
           <div className="flex flex-wrap gap-1">
             {PROTECTED_SCHEMAS.map((schema) => (
-              <code key={schema} className="text-xs">
+              <code
+                key={schema}
+                className="text-xs text-muted-foreground px-2 py-1 bg-muted rounded-full"
+              >
                 {schema}
               </code>
             ))}
           </div>
-          <p className="text-sm !mt-4">
+          <p className="text-sm !mt-4 neutral-on-background-medium">
             These schemas are critical to the functionality of your Nuvix project and hence we
             highly recommend not altering them.
           </p>
-          <p className="text-sm">
+          <p className="text-sm neutral-on-background-medium">
             You can, however, still interact with those schemas through the SQL Editor although we
             advise you only do so if you know what you are doing.
           </p>

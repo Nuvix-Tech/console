@@ -2,15 +2,12 @@ import { forwardRef, memo, useRef } from "react";
 import { DataGrid, CalculatedColumn, DataGridHandle } from "react-data-grid";
 
 import { handleCopyCell } from "@/components/grid/NuvixGrid.utils";
-import { useForeignKeyConstraintsQuery } from "@/data/database/foreign-key-constraints-query";
-// import { useSendEventMutation } from "data/telemetry/send-event-mutation";
 import type { Filter, GridProps } from "../../types";
 import { useOnRowsChange } from "./Grid.utils";
 import RowRenderer from "./RowRenderer";
 import { useAppStore, useProjectStore } from "@/lib/store";
 import { cn } from "@nuvix/sui/lib/utils";
 import { Button } from "@nuvix/ui/components";
-import { formatForeignKeys } from "@/components/editor/SidePanelEditor/ForeignKeySelector/ForeignKeySelector.utils";
 import { GenericSkeletonLoader } from "@/components/editor/components/GenericSkeleton";
 import { Alert, AlertDescription, AlertTitle } from "@nuvix/sui/components/alert";
 import type { Models } from "@nuvix/console";
@@ -134,7 +131,7 @@ export const Grid = memo(
                   <AlertTitle>Failed to retrieve rows from table</AlertTitle>
                   {filters.length > 0 && (
                     <AlertDescription>
-                      <p className="text-sm text-light">Error: {error?.message}</p>
+                      <p className="text-sm neutral-on-background-weak">Error: {error?.message}</p>
                       Verify that the filter values are correct, as the error may stem from an
                       incorrectly applied filter
                     </AlertDescription>
@@ -145,8 +142,8 @@ export const Grid = memo(
                 <>
                   {(filters ?? []).length === 0 ? (
                     <div className="flex flex-col items-center justify-center col-span-full h-full">
-                      <p className="text-sm text-light">This collection is empty</p>
-                      <p className="text-sm text-light mt-1">
+                      <p className="text-sm neutral-on-background-weak">This collection is empty</p>
+                      <p className="text-sm neutral-on-background-weak mt-1">
                         Add documents to your collection to get started.
                       </p>
                       {/* <div className="flex items-center space-x-2 mt-4">
@@ -172,11 +169,13 @@ export const Grid = memo(
                     </div>
                   ) : (
                     <div className="flex flex-col items-center justify-center col-span-full">
-                      <p className="text-sm text-light">
+                      <p className="text-sm neutral-on-background-weak">
                         The filters applied have returned no results from this collection
                       </p>
                       <div className="flex items-center space-x-2 mt-4">
-                        <Button onClick={() => removeAllFilters()}>Remove all filters</Button>
+                        <Button size="s" onClick={() => removeAllFilters()}>
+                          Remove all filters
+                        </Button>
                       </div>
                     </div>
                   )}

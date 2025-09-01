@@ -1,4 +1,4 @@
-import { Button } from "@nuvix/ui/components";
+import { Button, Text } from "@nuvix/ui/components";
 import { MAX_CHARACTERS } from "../../constants";
 import { cn } from "@nuvix/sui/lib/utils";
 
@@ -18,7 +18,9 @@ export const TruncatedWarningOverlay = ({
       )}
     >
       <div className="flex flex-col gap-y-1">
-        <p>Value is larger than {MAX_CHARACTERS.toLocaleString()} characters</p>
+        <Text variant="body-strong-s">
+          Value is larger than {MAX_CHARACTERS.toLocaleString()} characters
+        </Text>
         <p className="neutral-on-background-medium">
           You may try to render the entire value, but your browser may run into performance issues
         </p>

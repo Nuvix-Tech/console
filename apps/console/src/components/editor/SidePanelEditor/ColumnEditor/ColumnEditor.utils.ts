@@ -238,13 +238,13 @@ const formatArrayToPostgresArray = (arrayString: string) => {
 
 export const getForeignKeyCascadeAction = (action?: string) => {
   switch (action) {
-    case "cascade":
+    case FOREIGN_KEY_CASCADE_ACTION.CASCADE:
       return "Cascade";
-    case "restrict":
+    case FOREIGN_KEY_CASCADE_ACTION.RESTRICT:
       return "Restrict";
     case FOREIGN_KEY_CASCADE_ACTION.SET_DEFAULT:
       return "Set default";
-    case "setNull":
+    case FOREIGN_KEY_CASCADE_ACTION.SET_NULL:
       return "Set NULL";
     default:
       return undefined;

@@ -70,7 +70,7 @@ export const ReferenceRecordPeek = ({ table, column, value }: ReferenceRecordPee
             </Tooltip>
           )}
           <span className="text-xs truncate">{column.name}</span>
-          <span className="text-xs neutral-on-background-medium font-normal">{column.format}</span>
+          <span className="text-xs neutral-on-background-weak font-normal">{column.format}</span>
         </div>
       ),
       renderCell: ({ column: col, row }) => {
@@ -93,7 +93,7 @@ export const ReferenceRecordPeek = ({ table, column, value }: ReferenceRecordPee
 
   return (
     <>
-      <p className="px-2 py-2 text-xs neutral-on-background-medium border-b">
+      <p className="px-2 py-2 text-xs neutral-on-background-weak border-b">
         Referencing record from{" "}
         <span className="text-foreground">
           {table.schema}.{table.name}
@@ -136,7 +136,7 @@ export const ReferenceRecordPeek = ({ table, column, value }: ReferenceRecordPee
           id={String(table.id)}
           filters={[{ column, operator: "=", value: String(value) }]}
         >
-          <Button variant="solid" size="sm" as={"span"}>
+          <Button variant="solid" size="xs" as={"span"}>
             Open table
           </Button>
         </EditorTablePageLink>
