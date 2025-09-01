@@ -78,11 +78,11 @@ const SidePanel = ({
   ...props
 }: SidePanelProps) => {
   const footerContent = (
-    <SheetFooter className="p-0 border-t">
+    <SheetFooter className="p-0 border-t h-[60px]">
       {customFooter ? (
-        <div className="w-full relative">{customFooter}</div>
+        <div className="size-full relative">{customFooter}</div>
       ) : (
-        <div className="flex items-center justify-end py-2 px-4 gap-4">
+        <div className="flex items-center justify-end size-full px-4 gap-4">
           <Button
             disabled={loading}
             size="s"
@@ -151,7 +151,9 @@ const SidePanel = ({
           <SheetTitle />
         </VisuallyHidden>
         <Wrrapper form={form}>
-          {header && <SheetHeader className="flex-row border-b w-full block">{header}</SheetHeader>}
+          {header && (
+            <SheetHeader className="flex-row border-b w-full block h-[60px]">{header}</SheetHeader>
+          )}
           <div className="h-full overflow-y-auto">{children}</div>
           {!hideFooter && footerContent}
         </Wrrapper>

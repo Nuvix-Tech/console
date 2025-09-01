@@ -47,6 +47,7 @@ const PermissionEditor = ({
     initialValues: {
       permissions: row?.$permissions || [],
     },
+    enableReinitialize: true,
     validationSchema: schema,
     async onSubmit(values) {
       const configuration = { documentId: undefined as unknown as string, rowIdx: -1 };
@@ -60,11 +61,11 @@ const PermissionEditor = ({
     if (visible) {
       formik.resetForm({ values: { permissions: row?.$permissions || [] } });
     }
-  }, [visible]);
+  }, [visible, row]);
 
   useEffect(() => {
     if (formik.dirty) updateEditorDirty();
-  }, [formik.dirty]);
+  }, [formik.dirty, row]);
 
   return (
     <SidePanel

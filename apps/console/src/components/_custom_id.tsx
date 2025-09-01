@@ -20,7 +20,7 @@ export const CustomID = ({ label, name, id, setID }: CustomIDProps) => {
           selected={false}
           label={label}
           onClick={() => setShow(true)}
-          prefixIcon={<Pencil size={14} />}
+          prefixIcon={Pencil}
           iconButtonProps={{
             tooltip: `Custom ${label}`,
             tooltipPosition: "top",
@@ -30,23 +30,22 @@ export const CustomID = ({ label, name, id, setID }: CustomIDProps) => {
 
       {show && (
         <>
-          <Column paddingY="16" background="neutral-strong" radius="l" gap="4" position="relative">
-            <Column borderBottom="neutral-alpha-medium" paddingBottom="8" paddingX="16">
-              <Text variant="label-strong-m">{label}</Text>
+          <Column
+            paddingY="16"
+            background="neutral-alpha-weak"
+            radius="l"
+            gap="4"
+            position="relative"
+          >
+            <Column borderBottom="neutral-alpha-weak" paddingBottom="8" paddingX="16">
+              <Text variant="label-strong-s">{label}</Text>
               <Text variant="body-default-s" onBackground="neutral-weak">
                 Enter custom {label}, or leave it blank to generate a random one.
               </Text>
               <CloseButton className="!absolute !top-2 !right-2" onClick={() => setShow(false)} />
             </Column>
             <Column paddingX="16">
-              {name && (
-                <InputField
-                  name={name}
-                  maxLength={36}
-                  placeholder={label}
-                  description="Allowed characters: lowercase alphanumeric and non-leading hyphens"
-                />
-              )}
+              {name && <InputField name={name} maxLength={36} placeholder={label} />}
               {id && setID && (
                 <Input
                   labelAsPlaceholder
@@ -55,10 +54,17 @@ export const CustomID = ({ label, name, id, setID }: CustomIDProps) => {
                   onChange={(e) => {
                     setID?.(e.target.value);
                   }}
-                  description="Allowed characters: lowercase alphanumeric and non-leading hyphens"
                   value={id}
                 />
               )}
+              <Text
+                variant="body-default-xs"
+                onBackground="neutral-weak"
+                marginTop="4"
+                marginLeft="8"
+              >
+                Allowed characters: lowercase alphanumeric and non-leading hyphens
+              </Text>
             </Column>
           </Column>
         </>

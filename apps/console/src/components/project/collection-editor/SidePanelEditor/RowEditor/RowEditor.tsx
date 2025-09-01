@@ -14,6 +14,10 @@ import { generateYupSchema } from "../ColumnEditor/utils";
 import { useFormik } from "formik";
 import { CustomID } from "@/components/_custom_id";
 import { generateRowFromCollection } from "./RowEditor.utils";
+import { PermissionField } from "@/components/others/permissions";
+import { useProjectStore } from "@/lib/store";
+import { Admonition } from "@/ui/admonition";
+import InformationBox from "@/ui/InformationBox";
 import ForeignRowSelector from "./ForeignRowSelector/ForeignRowSelector";
 
 export interface RowEditorProps {
@@ -43,6 +47,7 @@ const RowEditor = ({
   saveChanges = async () => {},
   updateEditorDirty = noop,
 }: RowEditorProps) => {
+  const { sdk } = useProjectStore();
   const [selectedValueForTextEdit, setSelectedValueForTextEdit] = useState<EditValue>();
   const [selectedValueForJsonEdit, setSelectedValueForJsonEdit] = useState<EditValue>();
 
@@ -137,7 +142,6 @@ const RowEditor = ({
     >
       <SidePanel.Content>
         <div className="space-y-6 py-6">
-          {isNewRecord && <CustomID name="$id" label="Document ID" />}
           {selectedCollection.attributes.map((field) => {
             const commonProps = {
               name: field.key,
@@ -165,6 +169,27 @@ const RowEditor = ({
               />
             );
           })}
+          {isNewRecord && (
+            <>
+              <div className="mb-3 border-b border-dashed" />
+              <CustomID name="$id" label="Document ID" />
+              {selectedCollection.documentSecurity && (
+                <div className="space-y-1.5">
+                  <InformationBox
+                    icon={"key"}
+                    title="About Permissions"
+                    description={`
+                            A user requires appropriate permissions at either the collection level or document level to access a document.
+                            If no permissions are configured, no user can access the document.
+                          `}
+                    urlLabel="Learn more about database permissions"
+                    url="https://nuvix.com/docs/permissions"
+                  />
+                  <PermissionField sdk={sdk} name="permissions" withCreate={false} />
+                </div>
+              )}
+            </>
+          )}
         </div>
       </SidePanel.Content>
 
