@@ -59,7 +59,7 @@ export const TextEditor = ({
   });
 
   const [strValue, setStrValue] = useState("");
-  const [view, setView] = useState<"edit" | "view">("edit");
+  const [view, setView] = useState<"Edit" | "View">("Edit");
   const value = row?.[column as keyof typeof row] as unknown as string;
   const isTruncated = isValueTruncated(value);
 
@@ -104,7 +104,7 @@ export const TextEditor = ({
 
   useEffect(() => {
     if (visible) {
-      setView("edit");
+      setView("Edit");
       setStrValue(value);
     }
   }, [visible]);
@@ -128,7 +128,7 @@ export const TextEditor = ({
           </p>
           {(!isTruncated || (isTruncated && isSuccess)) && (
             <TwoOptionToggle
-              options={["view", "edit"]}
+              options={["View", "Edit"]}
               size="xs"
               activeOption={view}
               onClickOption={setView}
@@ -147,7 +147,7 @@ export const TextEditor = ({
       }
     >
       <div className="relative flex flex-auto h-full flex-col gap-y-4">
-        {view === "edit" ? (
+        {view === "Edit" ? (
           <div className="w-full h-full flex-grow">
             <Editor
               key={value}

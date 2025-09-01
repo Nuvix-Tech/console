@@ -10,7 +10,7 @@ import { NullValue } from "../common/NullValue";
 import { TruncatedWarningOverlay } from "./TruncatedWarningOverlay";
 import { useProjectStore } from "@/lib/store";
 import { useParams } from "next/navigation";
-import { useToast } from "@nuvix/ui/components";
+import { IconButton, useToast } from "@nuvix/ui/components";
 import { MAX_ARRAY_SIZE, MAX_CHARACTERS } from "../../constants";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import Popover from "@/components/editor/components/_popover";
@@ -214,15 +214,13 @@ export const JsonEditor = <TRow, TSummaryRow = unknown>({
               )}
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <div
-                    className={[
-                      "border border-strong rounded p-1 flex items-center justify-center",
-                      "transition cursor-pointer bg-selection hover:bg-border-strong",
-                    ].join(" ")}
+                  <IconButton
+                    variant="secondary"
+                    size="s"
+                    aria-label="Expand editor"
+                    icon={Maximize}
                     onClick={() => onSelectExpand()}
-                  >
-                    <Maximize size={12} strokeWidth={2} />
-                  </div>
+                  />
                 </TooltipTrigger>
                 <TooltipContent side="bottom" align="center">
                   <span>Expand editor</span>

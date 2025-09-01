@@ -1,5 +1,4 @@
 import { includes, noop } from "lodash";
-import { Edit, Edit2, Eye } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -13,6 +12,7 @@ import { DateTimeInput } from "./DateTimeInput";
 import type { EditValue, RowField } from "./RowEditor.types";
 import { isValueTruncated } from "./RowEditor.utils";
 import { Input, Select, Textarea } from "@/components/others/ui";
+import { Code } from "@chakra-ui/react";
 
 export interface InputFieldProps {
   field: RowField;
@@ -95,10 +95,10 @@ const InputField = ({
             <span className="text-sm neutral-on-background-weak">
               {field.comment && "("}Has a foreign key relation to
             </span>
-            <span className="text-code font-mono text-xs neutral-on-background-weak">
+            <Code className="text-code font-mono text-xs neutral-on-background-weak ml-1">
               {field.foreignKey.target_table_schema}.{field.foreignKey.target_table_name}.
               {field.foreignKey.target_column_name}
-            </span>
+            </Code>
             {field.comment && <span className="text-sm neutral-on-background-weak">{`)`}</span>}
           </>
         }
@@ -110,7 +110,13 @@ const InputField = ({
           isEditable && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <IconButton size="s" type="default" icon={<Edit size={14} />} variant="secondary" />
+                <IconButton
+                  size="s"
+                  type="default"
+                  icon={"edit"}
+                  variant="secondary"
+                  className="-mr-1"
+                />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-28">
                 {field.isNullable && (
@@ -167,7 +173,7 @@ const InputField = ({
           hasSuffix={
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <IconButton size="s" variant="secondary" type="default" icon={<Edit size={14} />} />
+                <IconButton size="s" variant="secondary" type="default" icon={"edit"} />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-28">
                 {isEditable && (
@@ -220,9 +226,10 @@ const InputField = ({
             size="s"
             variant="secondary"
             onClick={() => onEditJson({ column: field.name, value: field.value })}
-            prefixIcon={isEditable ? <Edit2 size={14} /> : <Eye size={14} />}
+            prefixIcon={isEditable ? "edit" : "eye"}
+            className="!-mr-2"
           >
-            {isEditable ? "Edit JSON" : "View JSON"}
+            {isEditable ? "Edit" : "View"}
           </Button>
         }
       />

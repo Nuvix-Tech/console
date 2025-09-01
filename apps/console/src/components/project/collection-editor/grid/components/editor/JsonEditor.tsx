@@ -1,17 +1,15 @@
-import { Edit3, Maximize } from "lucide-react";
+import { Maximize } from "lucide-react";
 import { useCallback, useState } from "react";
 import type { RenderEditCellProps } from "react-data-grid";
 
 import { prettifyJSON, removeJSONTrailingComma, tryParseJson } from "@/lib/helpers";
 import { BlockKeys, Key } from "@/components/grid/components/common/BlockKeys";
-import { Column, useToast } from "@nuvix/ui/components";
+import { Column, IconButton, useToast } from "@nuvix/ui/components";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import Popover from "@/components/editor/components/_popover";
 import { MonacoEditor } from "@/components/grid/components/common/MonacoEditor";
 import { NullValue } from "@/components/grid/components/common/NullValue";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
-import { useCollectionEditorStore } from "@/lib/store/collection-editor";
-import type { Models } from "@nuvix/console";
 
 const verifyJSON = (value: string) => {
   try {
@@ -157,15 +155,13 @@ export const JsonEditor = <TRow, TSummaryRow = unknown>({
             <Column gap="2">
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <div
-                    className={[
-                      "border border-strong rounded p-1 flex items-center justify-center",
-                      "transition cursor-pointer bg-selection hover:bg-border-strong",
-                    ].join(" ")}
+                  <IconButton
+                    variant="secondary"
+                    size="s"
+                    aria-label="Expand editor"
+                    icon={Maximize}
                     onClick={() => onSelectExpand()}
-                  >
-                    <Maximize size={12} strokeWidth={2} />
-                  </div>
+                  />
                 </TooltipTrigger>
                 <TooltipContent side="bottom" align="center">
                   <span>Expand editor</span>

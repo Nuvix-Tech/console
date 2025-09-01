@@ -11,7 +11,7 @@ interface BlockKeysProps {
 
 export const Key = ({ children }: { children: ReactNode }) => {
   return (
-    <div className="px-1.5 py-[2.5px] rounded bg-selection border border-strong flex items-center justify-center">
+    <div className="px-1.5 py-[2.5px] rounded neutral-background-alpha-weak border neutral-border-medium flex items-center justify-center">
       <span className="text-[10px]">{children}</span>
     </div>
   );

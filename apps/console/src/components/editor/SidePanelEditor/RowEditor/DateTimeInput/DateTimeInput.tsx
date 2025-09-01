@@ -61,7 +61,13 @@ const DateTimeInput = ({
         !disabled && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <IconButton size="s" type="default" icon={<Edit size={14} />} variant="secondary" />
+              <IconButton
+                size="s"
+                type="default"
+                icon={"edit"}
+                variant="secondary"
+                className="-mr-1.5"
+              />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-28 pointer-events-auto">
               {isNullable && (

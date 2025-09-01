@@ -1,7 +1,7 @@
 "use client";
 
 import classNames from "classnames";
-import React from "react";
+import React, { useRef } from "react";
 import { type ReactNode, forwardRef, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Flex, Icon, IconProps, Tooltip } from ".";
@@ -77,7 +77,11 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps | AnchorProps>(
         {tooltip &&
           isTooltipVisible &&
           createPortal(
-            <Flex position="absolute" zIndex={1} className={iconStyles[tooltipPosition]}>
+            <Flex
+              position="absolute"
+              zIndex={10}
+              className={classNames(iconStyles[tooltipPosition])}
+            >
               <Tooltip label={tooltip} />
             </Flex>,
             document.body,
@@ -114,7 +118,7 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps | AnchorProps>(
         type={href ? undefined : type}
         {...props}
       >
-        <Flex fill center>
+        <Flex fill center className="relative">
           {content}
         </Flex>
       </ElementType>

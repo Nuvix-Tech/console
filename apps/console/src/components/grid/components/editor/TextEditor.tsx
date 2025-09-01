@@ -154,7 +154,7 @@ export const TextEditor = <TRow, TSummaryRow = unknown>({
                   <div className="space-y-1">
                     <div className="flex items-center space-x-2">
                       <Key>⏎</Key>
-                      <p className="text-xs text-muted-foreground">Save changes</p>
+                      <p className="text-xs neutral-on-background-weak">Save changes</p>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Key>Esc</Key>
@@ -180,8 +180,10 @@ export const TextEditor = <TRow, TSummaryRow = unknown>({
                         type="button"
                         variant="secondary"
                         onClick={() => setIsConfirmNextModalOpen(true)}
+                        className="!text-xs"
+                        weight="default"
                       >
-                        Set to NULL
+                        Set NULL
                       </Button>
                     )}
                   </div>

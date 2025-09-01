@@ -44,13 +44,13 @@ const DrilldownPane = ({ pane, jsonData, activeKey, onSelectKey = noop }: Drilld
         <div
           key={key}
           className={`
-              ${key === activeKey ? "bg-surface-300" : ""}
+              ${key === activeKey ? "bg-(--neutral-alpha-weak)" : ""}
               group flex cursor-pointer items-center transition
-              justify-between py-2 px-5 hover:bg-surface-200
+              justify-between py-2 px-5 hover:bg-(--code-blue)/5
             `}
           onClick={() => onSelectKey(key, pane)}
         >
-          <p className="font-mono text-xs !text-blue-900">{key}</p>
+          <p className="font-mono text-xs font-semibold text-(--code-blue)">{key}</p>
           <div
             className={`${
               key === activeKey ? "opacity-100" : "opacity-50"
@@ -62,10 +62,10 @@ const DrilldownPane = ({ pane, jsonData, activeKey, onSelectKey = noop }: Drilld
       ))}
       {keysWithoutChildren.map((key: string) => (
         <div key={key} className="flex space-x-2 py-2 px-5">
-          <p className="font-mono text-xs !text-blue-900">{key}:</p>
+          <p className="font-mono text-xs font-semibold text-(--code-blue)">{key}:</p>
           <p
             className={`break-all font-mono text-xs ${
-              typeof jsonData[key] !== "string" ? "!text-green-900" : "!text-yellow-900"
+              typeof jsonData[key] !== "string" ? "text-(--code-moss)" : "text-(--code-gray)"
             }`}
           >
             {isNull(jsonData[key])

@@ -177,7 +177,7 @@ const RowEditor = ({
     >
       <form onSubmit={(e) => onSaveChanges(e)} className="h-full">
         <div className="flex h-full flex-col">
-          <div className="flex flex-grow flex-col">
+          <div className="flex flex-grow flex-col pb-16">
             <SidePanel.Content>
               <div className="space-y-10 py-6">
                 {requiredFields.map((field: RowField) => {
@@ -249,7 +249,7 @@ const RowEditor = ({
               readOnly={!editable}
             />
           </div>
-          <div className="flex-shrink">
+          <div className="flex-shrink border-t h-16 absolute bottom-0 left-0 right-0 bg-background">
             <ActionBar
               loading={loading}
               backButtonLabel="Cancel"
