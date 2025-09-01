@@ -1,4 +1,4 @@
-import ActionBar from "../ActionBar";
+import ActionBar from "@/components/editor/SidePanelEditor/ActionBar";
 import HeaderTitle from "./HeaderTitle";
 import { useProjectStore } from "@/lib/store";
 import { SidePanel } from "@/ui/SidePanel";

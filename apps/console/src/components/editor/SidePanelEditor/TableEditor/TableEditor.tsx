@@ -43,6 +43,8 @@ import { SidePanel } from "@/ui/SidePanel";
 import { Checkbox, Feedback, Tag } from "@nuvix/ui/components";
 import ConfirmationModal from "../../components/_confim_dialog";
 import { Input } from "@/components/others/ui";
+import InformationBox from "@/ui/InformationBox";
+import { Admonition } from "@/ui/admonition";
 // import { useSendEventMutation } from "@/data/telemetry/send-event-mutation";
 // import { useSelectedOrganization } from "hooks/misc/useSelectedOrganization";
 
@@ -313,19 +315,16 @@ const TableEditor = ({
           // size="medium"
         />
         {tableFields.isRLSEnabled ? (
-          <Feedback
-            variant="info"
-            className="!mt-3"
-            textSize="s"
-            textVariant="label-default-s"
+          <Admonition
+            type="note"
             title="Policies are required to query data"
             description={
-              <>
+              <p className="inline">
                 You need to create an access policy before you can query data from this table.
                 Without a policy, querying this table will return an{" "}
-                <u className="text-foreground">empty array</u> of results.{" "}
+                <i className="text-foreground">empty array</i> of results.{" "}
                 {isNewRecord ? "You can create policies after saving this table." : ""}
-              </>
+              </p>
             }
           >
             <DocsButton
@@ -333,12 +332,11 @@ const TableEditor = ({
               className="mt-2"
               href="https://nuvix.in/docs/guides/auth/row-level-security"
             />
-          </Feedback>
+          </Admonition>
         ) : (
-          <Feedback
-            variant="warning"
+          <Admonition
+            type="warning"
             className="!mt-3"
-            textVariant="label-default-s"
             title="You are allowing anonymous access to your table"
             description={
               <>
@@ -352,7 +350,7 @@ const TableEditor = ({
               className="mt-2"
               href="https://nuvix.in/docs/guides/auth/row-level-security"
             />
-          </Feedback>
+          </Admonition>
         )}
         {realtimeEnabled && (
           <Checkbox

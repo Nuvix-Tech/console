@@ -12,7 +12,7 @@ import {
 import { SortPopover } from "../../../grid/components/header/sort";
 import type { Filter } from "../../../grid/types";
 import { Sort } from "../../../grid/types";
-import ActionBar from "../../ActionBar";
+import ActionBar from "@/components/editor/SidePanelEditor/ActionBar";
 import Pagination from "./Pagination";
 import SelectorGrid from "./SelectorGrid";
 import { useProjectStore } from "@/lib/store";

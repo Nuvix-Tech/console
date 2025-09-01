@@ -1,5 +1,5 @@
 import { isEmpty, noop, partition } from "lodash";
-import { Edit, ExternalLink, HelpCircle, Key, Trash } from "lucide-react";
+import { Key } from "lucide-react";
 import { useState } from "react";
 import {
   DragDropContext,
@@ -12,7 +12,6 @@ import {
 import InformationBox from "@/ui/InformationBox";
 import type { EnumeratedType } from "@/data/enumerated-types/enumerated-types-query";
 // import { useSendEventMutation } from "@/data/telemetry/send-event-mutation";
-import { AlertDescription, AlertTitle, Alert } from "@nuvix/sui/components/alert";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 
 import { generateColumnField } from "../ColumnEditor/ColumnEditor.utils";
@@ -24,6 +23,7 @@ import Column from "./Column";
 import type { ImportContent, TableField } from "./TableEditor.types";
 import { useParams } from "next/navigation";
 import { Button, Icon } from "@nuvix/ui/components";
+import { Admonition } from "@/ui/admonition";
 
 interface ColumnManagementProps {
   table: TableField;
@@ -131,7 +131,7 @@ const ColumnManagement = ({
 
   return (
     <>
-      <div className="w-full space-y-4 table-editor-columns">
+      <div className="w-full !space-y-4 table-editor-columns">
         <div className="flex items-center justify-between w-full">
           <h5>Columns</h5>
           <div className="flex items-center gap-x-2">
@@ -139,7 +139,7 @@ const ColumnManagement = ({
               size="s"
               variant="secondary"
               type="button"
-              prefixIcon={<ExternalLink size={12} strokeWidth={2} />}
+              prefixIcon={"externalLink"}
               href="https://nuvix.in/docs/guides/database/tables#data-types"
               target="_blank"
               rel="noreferrer"
@@ -155,7 +155,7 @@ const ColumnManagement = ({
                       size="s"
                       variant="secondary"
                       type="button"
-                      prefixIcon={<Edit size={14} />}
+                      prefixIcon={"edit"}
                       onClick={onSelectImportData}
                     >
                       Edit content
@@ -164,7 +164,7 @@ const ColumnManagement = ({
                       size="s"
                       variant="danger"
                       type="button"
-                      prefixIcon={<Trash size={14} />}
+                      prefixIcon={"trash"}
                       onClick={onClearImportContent}
                     >
                       Remove content
@@ -203,22 +203,17 @@ const ColumnManagement = ({
         )}
 
         {primaryKeyColumns.length === 0 && (
-          <Alert variant="warning">
-            <span className="size-4">
-              <Icon name="warningTriangle" />
-            </span>
-            <AlertTitle>Warning: No primary keys selected</AlertTitle>
-            <AlertDescription>
-              Tables should have at least one column as the primary key to identify each row.
-              Without a primary key, you will not be able to update or delete rows from the table.
-            </AlertDescription>
-          </Alert>
+          <Admonition
+            type="warning"
+            title="Warning: No primary keys selected"
+            description="Tables should have at least one column as the primary key to identify each row. Without a primary key, you will not be able to update or delete rows from the table."
+          />
         )}
 
         {primaryKeyColumns.length > 1 && (
           <InformationBox
             block
-            icon={<Key size={16} />}
+            icon={Key}
             title="Composite primary key selected"
             description="The columns that you've selected will be grouped as a primary key, and will serve as the unique identifier for the rows in your table"
           />
@@ -229,11 +224,11 @@ const ColumnManagement = ({
           <div className="flex w-full px-3">
             {/* Drag handle */}
             {isNewRecord && <div className="w-[5%]" />}
-            <div className="w-[25%] flex items-center !space-x-2">
-              <h5 className="text-xs neutral-on-background-weak">Name</h5>
+            <div className="w-[25%] flex items-center">
+              <h5 className="text-xs neutral-on-background-weak !mr-2">Name</h5>
               <Tooltip>
-                <TooltipTrigger>
-                  <HelpCircle size={15} strokeWidth={1.5} className="neutral-on-background-weak" />
+                <TooltipTrigger asChild>
+                  <Icon name="helpCircle" size="xs" onBackground="neutral-weak" />
                 </TooltipTrigger>
                 <TooltipContent side="bottom" className="w-[300px]">
                   Recommended to use lowercase and use an underscore to separate words e.g.
@@ -244,11 +239,11 @@ const ColumnManagement = ({
             <div className="w-[25%]">
               <h5 className="text-xs neutral-on-background-weak">Type</h5>
             </div>
-            <div className={`${isNewRecord ? "w-[25%]" : "w-[30%]"} flex items-center !space-x-2`}>
-              <h5 className="text-xs neutral-on-background-weak">Default Value</h5>
+            <div className={`${isNewRecord ? "w-[25%]" : "w-[30%]"} flex items-center`}>
+              <h5 className="text-xs neutral-on-background-weak !mr-2">Default Value</h5>
               <Tooltip>
-                <TooltipTrigger>
-                  <HelpCircle size={15} strokeWidth={1.5} className="neutral-on-background-weak" />
+                <TooltipTrigger asChild>
+                  <Icon name="helpCircle" size="xs" onBackground="neutral-weak" />
                 </TooltipTrigger>
                 <TooltipContent side="bottom" className="w-[300px]">
                   Can either be a literal or an expression. When using an expression wrap your
@@ -273,7 +268,7 @@ const ColumnManagement = ({
                 {(droppableProvided: DroppableProvided) => (
                   <div
                     ref={droppableProvided.innerRef}
-                    className={`space-y-2 rounded-md bg-[var(--neutral-alpha-weak)] px-3 py-2 ${
+                    className={`space-y-2 rounded-md flex flex-col bg-[var(--neutral-alpha-weak)] px-3 py-2 ${
                       isNewRecord ? "" : "-mx-3"
                     }`}
                   >
@@ -318,7 +313,7 @@ const ColumnManagement = ({
               {(droppableProvided: DroppableProvided) => (
                 <div
                   ref={droppableProvided.innerRef}
-                  className={`space-y-2 py-2 ${isNewRecord ? "px-3 " : ""}`}
+                  className={`space-y-2 py-2 flex flex-col ${isNewRecord ? "px-3 " : ""}`}
                 >
                   {otherColumns.map((column: ColumnField, index: number) => (
                     <Draggable key={column.id} draggableId={column.id} index={index}>

@@ -28,6 +28,7 @@ const Chip: React.FC<ChipProps> = forwardRef<HTMLDivElement, ChipProps>(
       onClick,
       children,
       iconButtonProps = {},
+      className,
       ...rest
     },
     ref,
@@ -81,6 +82,7 @@ const Chip: React.FC<ChipProps> = forwardRef<HTMLDivElement, ChipProps>(
             [styles.unselected]: !selected,
           },
           "overflow-ellipsis ",
+          className,
         )}
         {...rest}
       >

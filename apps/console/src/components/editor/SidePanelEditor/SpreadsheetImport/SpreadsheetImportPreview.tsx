@@ -5,7 +5,7 @@ import type { SpreadsheetData } from "./SpreadsheetImport.types";
 import SpreadsheetPreviewGrid from "./SpreadsheetPreviewGrid";
 import { Badge, Code, Collapsible } from "@chakra-ui/react";
 import { SidePanel } from "@/ui/SidePanel";
-import { Button } from "@nuvix/ui/components";
+import { Button, IconButton, Text } from "@nuvix/ui/components";
 import { cn } from "@nuvix/sui/lib/utils";
 
 const MAX_ROWS = 20;
@@ -58,21 +58,20 @@ const SpreadsheetImportPreview = ({
       <Collapsible.Trigger asChild>
         <SidePanel.Content>
           <div className="py-1 flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <p className="text-sm">Preview data to be imported</p>
+            <div className="flex items-center gap-2">
+              <Text as={"p"} variant="label-strong-s">
+                Preview data to be imported
+              </Text>
               {!isCompatible && <Badge>Data incompatible</Badge>}
-              {errors.length > 0 && <Badge>{errors.length} issues found</Badge>}
+              {errors.length > 0 && (
+                <Badge colorPalette={"yellow"} variant={"surface"}>
+                  {errors.length} issues found
+                </Badge>
+              )}
             </div>
-            <Button
-              type="text"
-              prefixIcon={
-                <ChevronDown
-                  size={18}
-                  strokeWidth={2}
-                  className={cn("neutral-on-background-medium", expandPreview && "rotate-180")}
-                />
-              }
-              className="px-1"
+            <IconButton
+              variant="tertiary"
+              icon={expandPreview ? "chevronUp" : "chevronDown"}
               onClick={() => setExpandPreview(!expandPreview)}
             />
           </div>
@@ -115,7 +114,7 @@ const SpreadsheetImportPreview = ({
               <div className="flex flex-col space-y-1">
                 <p className="text-sm">Issues found in spreadsheet</p>
                 {isCompatible && (
-                  <p className="text-sm neutral-on-background-medium">
+                  <p className="text-sm neutral-on-background-weak">
                     {selectedTable !== undefined
                       ? "This CSV can still be imported into your table despite issues in the following rows."
                       : "Your table can still be created nonetheless despite issues in the following rows."}

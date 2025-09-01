@@ -60,19 +60,8 @@ export const ForeignKeyRow = ({
               className="py-0.5 px-1.5 !font-mono"
               size="s"
               variant="tertiary"
-              prefixIcon={
-                // <SVG
-                //   className="table-icon"
-                //   src={`${BASE_PATH}/img/icons/table-icon.svg`}
-                //   style={{ width: `16px`, height: `16px`, strokeWidth: "1px" }}
-                //   preProcessor={(Code: any) =>
-                //     Code.replace(/svg/, 'svg class="m-auto text-color-inherit"')
-                //   }
-                //   loader={<span className="block w-4 h-4 bg-[#133929] rounded-sm" />}
-                //   cacheRequests={true}
-                // />
-                <Table2Icon size={14} />
-              }
+              prefixIcon={"table"}
+              weight="default"
               target="_blank"
               rel="norefererer"
               href={`/project/${ref}/editor/${foreignKey.tableId}`}

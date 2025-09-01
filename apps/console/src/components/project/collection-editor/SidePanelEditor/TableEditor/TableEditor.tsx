@@ -2,7 +2,7 @@ import { isUndefined, noop } from "lodash";
 import { useEffect, useState } from "react";
 
 import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
-import ActionBar from "../ActionBar";
+import ActionBar from "../../../../editor/SidePanelEditor/ActionBar";
 import HeaderTitle from "./HeaderTitle";
 import { useSearchQuery } from "@/hooks/useQuery";
 import { SidePanel } from "@/ui/SidePanel";

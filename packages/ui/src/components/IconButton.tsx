@@ -50,6 +50,7 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps | AnchorProps>(
       children,
       className,
       style,
+      type = "button",
       ...props
     },
     ref,
@@ -110,6 +111,7 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps | AnchorProps>(
         onMouseEnter={() => setIsHover(true)}
         onMouseLeave={() => setIsHover(false)}
         aria-label={tooltip || icon}
+        type={href ? undefined : type}
         {...props}
       >
         <Flex fill center>

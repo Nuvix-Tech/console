@@ -78,7 +78,7 @@ import {
   TbGlobe,
   TbTableAlias,
 } from "react-icons/tb";
-import { Trash2 } from "lucide-react";
+import { Edit3, ExternalLink, Trash2 } from "lucide-react";
 import { CgArrowLongRightC, CgArrowsH } from "react-icons/cg";
 import { HiCollection } from "react-icons/hi";
 
@@ -117,6 +117,8 @@ export const iconMap = {
   sparkle: HiOutlineSparkles,
   rocket: TbRocket,
   house: TbHome,
+  edit: Edit3,
+  externalLink: ExternalLink,
   tableEditor: TbTableSpark,
   table: TbTable,
   collectionEditor: TbTableAlias,

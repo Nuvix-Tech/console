@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 // import { useSendEventMutation } from "@/data/telemetry/send-event-mutation";
-import ActionBar from "../ActionBar";
+import ActionBar from "@/components/editor/SidePanelEditor/ActionBar";
 // import type { ImportContent } from "../TableEditor/TableEditor.types";
 import SpreadSheetFileUpload from "@/components/editor/SidePanelEditor/SpreadsheetImport/SpreadSheetFileUpload";
 import SpreadsheetImportConfiguration from "@/components/editor/SidePanelEditor/SpreadsheetImport/SpreadSheetImportConfiguration";

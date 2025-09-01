@@ -1,11 +1,9 @@
-import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
 import type { SpreadsheetData } from "./SpreadsheetImport.types";
 import { Collapsible } from "@chakra-ui/react";
 import { SidePanel } from "@/ui/SidePanel";
-import { Button } from "@nuvix/ui/components";
-import { cn } from "@nuvix/sui/lib/utils";
+import { Chip, IconButton, Text } from "@nuvix/ui/components";
 
 interface SpreadSheetImportConfigurationProps {
   spreadsheetData: SpreadsheetData;
@@ -29,20 +27,12 @@ const SpreadsheetImportConfiguration = ({
       <Collapsible.Trigger asChild>
         <SidePanel.Content>
           <div className="py-1 flex items-center justify-between">
-            <p className="text-sm">Configure import data</p>
-            <Button
-              type="text"
-              prefixIcon={
-                <ChevronDown
-                  size={18}
-                  strokeWidth={2}
-                  className={cn(
-                    "neutral-on-background-medium",
-                    expandConfiguration && "rotate-180",
-                  )}
-                />
-              }
-              className="px-1"
+            <Text as={"p"} variant="label-strong-s">
+              Configure import data
+            </Text>
+            <IconButton
+              variant="tertiary"
+              icon={expandConfiguration ? "chevronUp" : "chevronDown"}
               onClick={() => setExpandConfiguration(!expandConfiguration)}
             />
           </div>
@@ -61,14 +51,13 @@ const SpreadsheetImportConfiguration = ({
               {spreadsheetData.headers.map((header) => {
                 const isSelected = selectedHeaders.includes(header);
                 return (
-                  <Button
+                  <Chip
+                    selected={isSelected}
+                    label={header}
                     key={header}
-                    type={isSelected ? "primary" : "default"}
-                    className={cn("transition", isSelected ? "opacity-100" : "opacity-75")}
                     onClick={() => onToggleHeader(header)}
-                  >
-                    {header}
-                  </Button>
+                    className="!py-0.5"
+                  />
                 );
               })}
             </div>

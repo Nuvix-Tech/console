@@ -38,7 +38,7 @@ const InformationBox = forwardRef<HTMLDivElement, InformationBoxProps>(
         ref={ref}
         role="alert"
         className={`${block ? "block w-full" : ""}
-      block w-full rounded-md border neutral-background-medium py-2 ${className}`}
+      block w-full rounded-md border bg-(--neutral-alpha-weak) dark:bg-(--neutral-background-medium) py-2 ${className}`}
       >
         <div className="flex flex-col px-4">
           <div className="flex items-center justify-between">

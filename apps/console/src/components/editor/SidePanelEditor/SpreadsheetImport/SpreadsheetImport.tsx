@@ -1,6 +1,5 @@
 import type { PostgresTable } from "@nuvix/pg-meta";
 import { debounce, includes, noop } from "lodash";
-import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -88,7 +87,7 @@ const SpreadsheetImport = ({
         <div className="space-y-1">
           <p>The dashboard currently only supports importing of CSVs below 100MB.</p>
           <p>For bulk data loading, we recommend doing so directly through the database.</p>
-          <Button asChild type="default" prefixIcon={<ExternalLink />} className="!mt-2">
+          <Button asChild type="default" prefixIcon={"externalLink"} className="!mt-2">
             <Link
               href="https://nuvix.in/docs/guides/database/tables#bulk-data-loading"
               target="_blank"

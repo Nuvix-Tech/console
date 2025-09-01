@@ -1,7 +1,7 @@
 import { noop } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 
-import ActionBar from "../ActionBar";
+import ActionBar from "../../../../editor/SidePanelEditor/ActionBar";
 import HeaderTitle from "./HeaderTitle";
 import { DynamicField } from "./InputField";
 import { JsonEditor } from "./JsonEditor";

@@ -3,6 +3,7 @@ import { DragEvent, useRef, useState } from "react";
 
 import SparkBar from "@/ui/SparkBar";
 import { Button } from "@nuvix/ui/components";
+import { Code } from "@chakra-ui/react";
 
 interface SpreadSheetFileUploadProps {
   parseProgress: number;
@@ -38,13 +39,12 @@ const SpreadSheetFileUpload = ({
   return (
     <div className="space-y-4">
       <div>
-        <p className="mb-2 text-sm text-muted-foreground">
+        <p className="mb-2 text-sm neutral-on-background-medium">
           Upload a CSV or TSV file. The first row should be the headers of the table, and your
-          headers should not include any special characters other than hyphens (
-          <span className="text-code">-</span>) or underscores (<span className="text-code">_</span>
-          ).
+          headers should not include any special characters other than hyphens (<Code>-</Code>) or
+          underscores (<Code>_</Code>).
         </p>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm neutral-on-background-weak">
           Tip: Datetime columns should be formatted as YYYY-MM-DD HH:mm:ss
         </p>
       </div>
@@ -59,7 +59,7 @@ const SpreadSheetFileUpload = ({
           onClick={() => (uploadButtonRef.current as any)?.click()}
         >
           <p className="text-sm">
-            Drag and drop, or <span className="text-brand">browse</span> your files
+            Drag and drop, or <span className="brand-on-background-weak">browse</span> your files
           </p>
         </div>
       ) : (
@@ -69,7 +69,7 @@ const SpreadSheetFileUpload = ({
             <p className="text-sm text-foreground">{uploadedFile.name}</p>
           </div>
           {parseProgress === 100 ? (
-            <Button variant="secondary" onClick={removeUploadedFile}>
+            <Button variant="secondary" size="s" onClick={removeUploadedFile}>
               Remove File
             </Button>
           ) : (
@@ -79,7 +79,7 @@ const SpreadSheetFileUpload = ({
                 value={parseProgress}
                 max={100}
                 type="horizontal"
-                barClass="bg-green-900"
+                barClass="success-solid-medium"
                 labelBottom="Checking file..."
                 labelTop={`${parseProgress}%`}
               />

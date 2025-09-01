@@ -3,7 +3,7 @@ import { Loader } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import remarkGfm from "remark-gfm";
 
-import ActionBar from "../ActionBar";
+import ActionBar from "@/components/editor/SidePanelEditor/ActionBar";
 import { SidePanel } from "@/ui/SidePanel";
 import { TwoOptionToggle } from "@/components/others/ui";
 import { Markdown } from "@/components/others/markdown";

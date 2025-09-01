@@ -1,7 +1,7 @@
 import { noop } from "lodash";
 import { useEffect } from "react";
 
-import ActionBar from "../ActionBar";
+import ActionBar from "@/components/editor/SidePanelEditor/ActionBar";
 import { SidePanel } from "@/ui/SidePanel";
 import type { Models } from "@nuvix/console";
 import { useFormik } from "formik";

@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { minifyJSON, prettifyJSON, removeJSONTrailingComma, tryParseJson } from "@/lib/helpers";
-import ActionBar from "../../ActionBar";
+import ActionBar from "../../../../../editor/SidePanelEditor/ActionBar";
 import { SidePanel } from "@/ui/SidePanel";
 import { IconButton } from "@nuvix/ui/components";
 import { TwoOptionToggle } from "@/components/others/ui";
