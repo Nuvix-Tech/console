@@ -107,15 +107,27 @@ export const FirstSidebar = ({ inMobile, onClose }: FirstSidebarProps) => {
       active: isEqual(),
     },
     {
+      name: "Collection Editor",
+      href: href(`collections`),
+      icon: "collectionEditor",
+    },
+    {
+      name: "Table Editor",
+      href: href(`editor`),
+      icon: "tableEditor",
+      active: isIncludes("editor"),
+    },
+
+    {
+      name: "SQL Editor",
+      href: href(`sql/new`),
+      icon: "runner",
+    },
+    {
       name: "Authentication",
       href: href(`authentication/users`),
       active: isIncludes("authentication"),
       icon: "authentication",
-    },
-    {
-      name: "Collection Editor",
-      href: href(`collections`),
-      icon: "collectionEditor",
     },
     {
       name: "Database",
@@ -129,23 +141,12 @@ export const FirstSidebar = ({ inMobile, onClose }: FirstSidebarProps) => {
       icon: "storage",
       active: isIncludes("buckets"),
     },
-    {
-      name: "Table Editor",
-      href: href(`editor`),
-      icon: "tableEditor",
-      active: isIncludes("editor"),
-    },
-    {
-      name: "SQL Editor",
-      href: href(`sql/new`),
-      icon: "runner",
-    },
-    {
-      name: "Functions",
-      href: href(`functions`),
-      icon: "functions",
-      active: isIncludes("functions"),
-    },
+    // {
+    //   name: "Functions",
+    //   href: href(`functions`),
+    //   icon: "functions",
+    //   active: isIncludes("functions"),
+    // },
     {
       name: "Messaging",
       href: href(`messaging`),

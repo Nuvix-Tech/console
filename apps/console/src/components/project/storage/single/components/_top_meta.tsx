@@ -1,10 +1,4 @@
-import {
-  ClipboardIconButton,
-  ClipboardInput,
-  ClipboardLabel,
-  ClipboardRoot,
-} from "@nuvix/cui/clipboard";
-import { InputGroup } from "@nuvix/cui/input-group";
+import { ClipboardInput, ClipboardLabel, ClipboardRoot } from "@nuvix/cui/clipboard";
 import { IDChip, TopCard } from "@/components/others";
 import { formatBytes } from "@/lib";
 import { useFileStore, useProjectStore } from "@/lib/store";
@@ -85,9 +79,7 @@ export const TopMeta = () => {
                 value={sdk.storage.getFileView(bucketId, file.$id).toString() + "&mode=admin"}
               >
                 <ClipboardLabel>File URL</ClipboardLabel>
-                <InputGroup width="full" endElement={<ClipboardIconButton me="-2" />}>
-                  <ClipboardInput />
-                </InputGroup>
+                <ClipboardInput />
               </ClipboardRoot>
             </VStack>
           </Stack>

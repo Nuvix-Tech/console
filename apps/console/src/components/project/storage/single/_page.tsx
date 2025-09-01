@@ -56,7 +56,7 @@ export const StorageSinglePage: FC<Props> = ({}) => {
       cell(props) {
         const row = props.row.original;
         return (
-          <Row gap="8">
+          <Row gap="8" vertical="center">
             <Avatar
               src={
                 sdk.storage.getFilePreview(bucket?.$id!, row.$id, 64, 64).toString() + "&mode=admin"
