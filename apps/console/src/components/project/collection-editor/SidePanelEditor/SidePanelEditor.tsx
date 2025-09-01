@@ -27,6 +27,7 @@ import { collectionKeys } from "@/data/collections/keys";
 import { useDocumentCreateMutation } from "@/data/collections/documents/document_create_mutation";
 import { useDocumentUpdateMutation } from "@/data/collections/documents/document_update_mutation";
 import IndexEditor from "./IndexEditor/IndexEditor";
+import PermissionEditor from "./RowEditor/PermissionEditor";
 
 export interface SidePanelEditorProps {
   editable?: boolean;
@@ -64,6 +65,15 @@ const SidePanelEditor = ({
     },
     onError: (error) => {
       toast.error(`Error updating row: ${error.message}`);
+    },
+  });
+
+  const { mutateAsync: updateDocumentPermissions } = useDocumentUpdateMutation({
+    onSuccess() {
+      toast.success("Successfully updated document permissions");
+    },
+    onError: (error) => {
+      toast.error(`Error updating document permissions: ${error.message}`);
     },
   });
 
@@ -107,6 +117,34 @@ const SidePanelEditor = ({
     }
 
     onComplete(saveRowError);
+    if (!saveRowError) {
+      setIsEdited(false);
+      snap.closeSidePanel();
+    }
+  };
+
+  const saveRowPermissions = async (
+    permissions: string[],
+    configuration: { documentId: string; rowIdx: number },
+  ) => {
+    if (!project || selectedCollection === undefined) {
+      return console.error("no project or collection selected");
+    }
+
+    let saveRowError: Error | undefined;
+    try {
+      await updateDocumentPermissions({
+        projectRef: project.$id,
+        sdk,
+        collection: selectedCollection,
+        documentId: configuration.documentId,
+        permissions,
+        payload: {},
+      });
+    } catch (error: any) {
+      saveRowError = error;
+    }
+
     if (!saveRowError) {
       setIsEdited(false);
       snap.closeSidePanel();
@@ -369,15 +407,28 @@ const SidePanelEditor = ({
   return (
     <>
       {!isUndefined(selectedCollection) && (
-        <RowEditor
-          row={snap.sidePanel?.type === "row" ? (snap.sidePanel.row as any) : undefined}
-          selectedCollection={selectedCollection}
-          visible={snap.sidePanel?.type === "row"}
-          editable={editable}
-          closePanel={onClosePanel}
-          saveChanges={saveRow}
-          updateEditorDirty={() => setIsEdited(true)}
-        />
+        <>
+          <RowEditor
+            row={snap.sidePanel?.type === "row" ? (snap.sidePanel.row as any) : undefined}
+            selectedCollection={selectedCollection}
+            visible={snap.sidePanel?.type === "row"}
+            editable={editable}
+            closePanel={onClosePanel}
+            saveChanges={saveRow}
+            updateEditorDirty={() => setIsEdited(true)}
+          />
+          <PermissionEditor
+            row={
+              snap.sidePanel?.type === "row-permissions" ? (snap.sidePanel.row as any) : undefined
+            }
+            visible={snap.sidePanel?.type === "row-permissions"}
+            collection={selectedCollection}
+            editable={editable}
+            closePanel={onClosePanel}
+            saveChanges={saveRowPermissions}
+            updateEditorDirty={() => setIsEdited(true)}
+          />
+        </>
       )}
       {!isUndefined(selectedCollection) && (
         <ColumnEditor

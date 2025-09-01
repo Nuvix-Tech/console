@@ -191,7 +191,7 @@ function SelectCellFormatter({
               className="space-x-2"
               onClick={(e) => {
                 e.stopPropagation();
-                snap.onEditRow(row); // TODO: Implement edit permissions functionality
+                snap.onEditRowPermissions(row);
               }}
             >
               <Icon name={"key"} size="s" />

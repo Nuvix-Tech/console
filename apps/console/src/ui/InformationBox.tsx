@@ -1,9 +1,9 @@
-import { Button } from "@nuvix/ui/components";
+import { Button, Icon, IconButton, Text, type IconProps } from "@nuvix/ui/components";
 import { ExternalLink, Maximize2, Minimize2 } from "lucide-react";
 import { ReactNode, useState, forwardRef } from "react";
 
 interface InformationBoxProps {
-  icon?: ReactNode;
+  icon?: IconProps["name"];
   title: ReactNode | string;
   description?: ReactNode | string;
   url?: string;
@@ -38,27 +38,28 @@ const InformationBox = forwardRef<HTMLDivElement, InformationBoxProps>(
         ref={ref}
         role="alert"
         className={`${block ? "block w-full" : ""}
-      block w-full rounded-md border bg-surface-300/25 py-3 ${className}`}
+      block w-full rounded-md border neutral-background-medium py-2 ${className}`}
       >
         <div className="flex flex-col px-4">
           <div className="flex items-center justify-between">
             <div className="flex w-full space-x-3 items-center">
-              {icon && <span className="neutral-on-background-weak">{icon}</span>}
+              {icon && <Icon name={icon} size="s" onBackground="neutral-medium" />}
               <div className="flex-grow">
-                <h5 className="text-sm text-foreground">{title}</h5>
+                <Text as="h5" variant="label-strong-s">
+                  {title}
+                </Text>
               </div>
             </div>
             {description && !hideCollapse ? (
-              <div
-                className="cursor-pointer neutral-on-background-weak"
+              <IconButton
                 onClick={() => setIsExpanded(!isExpanded)}
-              >
-                {isExpanded ? (
-                  <Minimize2 size={14} strokeWidth={1.5} />
-                ) : (
-                  <Maximize2 size={14} strokeWidth={1.5} />
-                )}
-              </div>
+                icon={isExpanded ? Minimize2 : Maximize2}
+                variant="ghost"
+                size="s"
+                className="neutral-on-background-medium"
+                type="button"
+                aria-label={isExpanded ? "Collapse" : "Expand"}
+              />
             ) : null}
           </div>
           {(description || url || button) && (
@@ -76,10 +77,12 @@ const InformationBox = forwardRef<HTMLDivElement, InformationBoxProps>(
                     type="default"
                     variant="secondary"
                     size="s"
-                    prefixIcon={<ExternalLink size={14} />}
+                    weight="default"
+                    prefixIcon={ExternalLink}
                     href={url}
                     target="_blank"
                     rel="noreferrer"
+                    className="neutral-on-background-medium !bg-(--neutral-background-weak)"
                   >
                     {urlLabel}
                   </Button>

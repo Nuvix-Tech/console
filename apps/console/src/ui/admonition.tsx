@@ -70,7 +70,7 @@ const WarningIcon = () => (
 const admonitionSVG = cva("", {
   variants: {
     type: {
-      default: `[&>svg]:bg-foreground-muted`,
+      default: ``,
       warning: ``,
       destructive: ``,
     },
@@ -80,9 +80,9 @@ const admonitionSVG = cva("", {
 const admonitionBase = cva("", {
   variants: {
     type: {
-      default: `bg-surface-200/25 border border-default`,
-      warning: `bg-alternative border border-default`,
-      destructive: `bg-alternative border border-default`,
+      default: `neutral-background-alpha-weak border border-default`,
+      warning: `warning-background-alpha-weak border border-default`,
+      destructive: `danger-background-alpha-weak border border-default`,
     },
   },
 });

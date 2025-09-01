@@ -1,10 +1,10 @@
-import {
-  PopoverRoot,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverArrow,
-  PopoverBody,
-} from "@nuvix/cui/popover";
+// import {
+//   PopoverRoot,
+//   PopoverTrigger,
+//   PopoverContent,
+//   PopoverArrow,
+//   PopoverBody,
+// } from "@nuvix/cui/popover";
 import { Card, Checkbox, IconButton } from "@nuvix/ui/components";
 import { Table, Text, VStack } from "@chakra-ui/react";
 import { LuPlus } from "react-icons/lu";
@@ -18,6 +18,12 @@ import { LabelRole } from "./label";
 import { CustomRole } from "./custom";
 import { Button } from "@nuvix/sui/components/button";
 import { DialogRoot } from "@nuvix/cui/dialog";
+import {
+  Popover,
+  PopoverAnchor,
+  PopoverContent,
+  PopoverTrigger,
+} from "@nuvix/sui/components/popover";
 
 export type Permission = {
   create: boolean;
@@ -210,9 +216,7 @@ export const PermissionsEditor = ({
             gap="12"
           >
             <PopoverBox addRole={addRole} sdk={sdk} groups={groups}>
-              <IconButton variant="secondary" size="m">
-                <LuPlus />
-              </IconButton>
+              <IconButton key={"add-role-button"} icon="plus" variant="secondary" size="m" />
             </PopoverBox>
             <Text textStyle="sm" color="var(--neutral-on-background-weak)">
               No roles added yet. Click "+" to begin.
@@ -233,8 +237,10 @@ export type PopoverBoxProps = {
 export const PopoverBox = ({ addRole, children, sdk, groups }: PopoverBoxProps) => {
   const [open, setOpen] = useState(false);
   const [comp, setComp] = useState<React.JSX.Element>();
+  const [popoverOpen, setPopoverOpen] = useState(false);
 
   const handleRoleClick = (role?: string, component?: React.JSX.Element | null) => {
+    setPopoverOpen(false);
     if (component) {
       setComp(component);
       setOpen(true);
@@ -271,27 +277,24 @@ export const PopoverBox = ({ addRole, children, sdk, groups }: PopoverBoxProps) 
 
   return (
     <>
-      <PopoverRoot size="xs" portalled={false}>
+      <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+        <PopoverAnchor />
         <PopoverTrigger asChild>{children}</PopoverTrigger>
-        <PopoverContent maxWidth="56" css={{ "--popover-bg": "var(--neutral-background-weak)" }}>
-          <PopoverArrow />
-          <PopoverBody overflowY="auto">
-            <VStack width="full">
-              {roles.map(({ role, component, label }, index) => (
-                <PopoverTrigger key={index} width="full">
-                  <Button
-                    variant="ghost"
-                    onClick={() => handleRoleClick(role, component)}
-                    className="w-full justify-start"
-                  >
-                    {label}
-                  </Button>
-                </PopoverTrigger>
-              ))}
-            </VStack>
-          </PopoverBody>
+        <PopoverContent>
+          <VStack width="full">
+            {roles.map(({ role, component, label }, index) => (
+              <Button
+                key={index}
+                variant="ghost"
+                onClick={() => handleRoleClick(role, component)}
+                className="w-full justify-start"
+              >
+                {label}
+              </Button>
+            ))}
+          </VStack>
         </PopoverContent>
-      </PopoverRoot>
+      </Popover>
 
       <DialogRoot open={open} onOpenChange={({ open }) => setOpen(open)}>
         {comp}

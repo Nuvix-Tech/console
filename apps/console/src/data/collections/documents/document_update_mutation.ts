@@ -11,7 +11,8 @@ export type TableRowUpdateVariables = {
   projectRef: string;
   sdk: ProjectSdk;
   collection: Models.Collection;
-  payload: any;
+  payload?: any;
+  permissions?: string[];
 };
 
 export async function updateTableRow({
@@ -19,8 +20,15 @@ export async function updateTableRow({
   sdk,
   collection,
   payload,
+  permissions,
 }: TableRowUpdateVariables) {
-  return sdk.databases.updateDocument(collection.$schema, collection.$id, documentId, payload);
+  return sdk.databases.updateDocument(
+    collection.$schema,
+    collection.$id,
+    documentId,
+    payload,
+    permissions,
+  );
 }
 
 export type DocumentData = Awaited<ReturnType<typeof updateTableRow>>;
