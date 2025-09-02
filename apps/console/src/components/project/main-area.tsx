@@ -11,8 +11,8 @@ export const MainArea = ({
 }: React.ComponentProps<typeof Stack> & { mlRounded?: boolean }) => {
   return (
     <Stack
-      className={cn("h-full md:h-[calc(100%_-_var(--static-space-12))]", {
-        "md:h-full ml:h-[calc(100%_-_var(--static-space-12))]": mlRounded,
+      className={cn("h-full md:h-[calc(100%_-_var(--static-space-8))]", {
+        "md:h-full ml:h-[calc(100%_-_var(--static-space-8))]": mlRounded,
       })}
       width={"full"}
       overflow="hidden"
@@ -22,8 +22,8 @@ export const MainArea = ({
       {...props}
     >
       <Column
-        className={cn("rounded-none md:rounded-(--radius-l) mb-0 md:mb-(--static-space-12)", {
-          "md:rounded-none ml:rounded-(--radius-l) md:mb-0 ml:mb-(--static-space-12)": mlRounded,
+        className={cn("rounded-none md:rounded-(--radius-xs) mb-0", {
+          "md:rounded-none ml:rounded-(--radius-xs) md:mb-0": mlRounded,
         })}
         as={as}
       >

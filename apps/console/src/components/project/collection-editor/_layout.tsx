@@ -15,5 +15,5 @@ export const CollectionsEditorLayout = ({ children }: { children: React.ReactNod
     });
   }, []);
 
-  return <div className="h-[calc(100svh-68px)]">{children}</div>;
+  return <div className="h-full">{children}</div>;
 };

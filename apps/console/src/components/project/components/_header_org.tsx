@@ -40,6 +40,7 @@ export function HeaderOrganization(props: React.ComponentProps<typeof Button>) {
         <Button
           variant="secondary"
           role="combobox"
+          size="s"
           aria-expanded={open}
           className="dark:!border-border/30"
           justifyContent="flex-start"

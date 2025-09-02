@@ -18,7 +18,7 @@ export const CollectionEditor = () => {
   const { collectionId, id: projectRef } = useParams<{ id: string; collectionId: string }>();
   const router = useRouter();
   const { project, sdk } = useProjectStore((s) => s);
-  const { selectedSchema } = useQuerySchemaState();
+  const { selectedSchema } = useQuerySchemaState("doc");
   const collectionStore = useCollectionEditorStore();
   const { params } = useSearchQuery();
 

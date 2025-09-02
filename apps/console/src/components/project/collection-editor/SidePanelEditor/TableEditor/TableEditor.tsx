@@ -51,7 +51,7 @@ const TableEditor = ({
   updateEditorDirty = noop,
 }: CollectionEditorProps) => {
   const snap = useCollectionEditorStore();
-  const { selectedSchema } = useQuerySchemaState();
+  const { selectedSchema } = useQuerySchemaState("doc");
   const isNewRecord = isUndefined(collection);
   // const { mutate: sendEvent } = useSendEventMutation();
 

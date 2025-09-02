@@ -44,6 +44,7 @@ export function HeaderProject(props: React.ComponentProps<typeof Button>) {
           variant="secondary"
           role="combobox"
           aria-expanded={open}
+          size="s"
           className="dark:!border-border/30"
           weight="default"
           justifyContent="flex-start"
