@@ -5,19 +5,19 @@ import {
   CardBoxItem,
   CardBoxTitle,
 } from "@/components/others/card";
-import { Form, InputNumberField, SubmitButton } from "@/components/others/forms";
+import { Form, SubmitButton } from "@/components/others/forms";
 import { sdkForConsole } from "@/lib/sdk";
 import { Column, NumberInput, Select, useToast } from "@nuvix/ui/components";
 import { Group } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import * as y from "yup";
 import { useProjectStore } from "@/lib/store";
 import { useTimeUnitPair } from "@/lib/helpers/unit";
 import { Label } from "@nuvix/sui/components/label";
 
 const schema = y.object({
-  length: y.number().min(0).optional(),
+  duration: y.number().min(0).optional(),
 });
 
 export const SessionDuration: React.FC = () => {
@@ -30,13 +30,13 @@ export const SessionDuration: React.FC = () => {
     <>
       <Form
         initialValues={{
-          length: project?.authDuration,
+          duration: project?.authDuration,
         }}
         enableReinitialize
         validationSchema={schema}
         onSubmit={async (values) => {
           try {
-            await projects.updateAuthDuration(project?.$id!, Number(values.length) ?? 0);
+            await projects.updateAuthDuration(project?.$id!, Number(values.duration) ?? 0);
             addToast({
               variant: "success",
               message: "Session duration updated.",
@@ -66,7 +66,7 @@ export const SessionDuration: React.FC = () => {
               </CardBoxDesc>
             </CardBoxItem>
             <CardBoxItem>
-              <SessionInput />
+              <SessionInput initialValue={project?.authDuration} />
             </CardBoxItem>
           </CardBoxBody>
         </CardBox>
@@ -75,18 +75,16 @@ export const SessionDuration: React.FC = () => {
   );
 };
 
-export const SessionInput = () => {
-  const { values, setFieldValue } = useFormikContext<{ length: number }>();
-  const { value, unit, units, setUnit, setValue, baseValue } = useTimeUnitPair(values.length);
-
-  console.log({ value, unit, units, setUnit, setValue, baseValue });
+export const SessionInput = ({ initialValue }: { initialValue: number }) => {
+  const { values, setFieldValue } = useFormikContext<{ duration: number }>();
+  const { value, unit, units, setUnit, setValue, baseValue } = useTimeUnitPair(initialValue);
 
   useEffect(() => {
     const currentUnit = units.find((u) => u.name === unit);
     if (currentUnit) {
       const newBaseValue = value * currentUnit.value;
-      if (values.length !== newBaseValue) {
-        setFieldValue("length", newBaseValue);
+      if (values.duration !== newBaseValue) {
+        setFieldValue("duration", newBaseValue);
       }
     }
   }, [value, unit]);

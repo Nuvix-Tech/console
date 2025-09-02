@@ -27,10 +27,23 @@ function createValueUnitState<T = string>(
     throw new Error("Units must have a value greater than 0");
   }
 
-  const sortedUnits = [...units].sort(
-    (a, b) => Math.abs(initialValue - b.value) - Math.abs(initialValue - a.value),
-  );
-  const initialUnit = sortedUnits[0];
+  const sortedUnits = [...units].sort((a, b) => b.value - a.value);
+
+  // Find the most suitable unit - largest unit where the value is a whole number or >= 1
+  let initialUnit = sortedUnits.find((unit) => {
+    const convertedValue = initialValue / unit.value;
+    return convertedValue >= 1 && convertedValue === Math.floor(convertedValue);
+  });
+
+  // If no perfect match found, use the largest unit where converted value >= 1
+  if (!initialUnit) {
+    initialUnit = sortedUnits.find((unit) => initialValue / unit.value >= 1);
+  }
+
+  // Fallback to smallest unit if still no match
+  if (!initialUnit) {
+    initialUnit = sortedUnits[sortedUnits.length - 1];
+  }
 
   const state = proxy<ValueUnitState<T>>({
     value: initialValue / initialUnit.value,

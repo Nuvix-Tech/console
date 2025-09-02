@@ -1,5 +1,5 @@
 import { Column, Row, SmartLink, Text, ToggleButton, Line } from "@nuvix/ui/components";
-import React from "react";
+import React, { Fragment } from "react";
 
 interface SidebarGroupItem {
   label: string;
@@ -16,6 +16,7 @@ interface SidebarGroupProps {
   titleUppercase?: boolean;
   items: SidebarGroupItem[];
   bottomLine?: boolean;
+  itemProps?: React.ComponentProps<typeof ToggleButton>;
 }
 
 const SidebarGroup = ({
@@ -24,10 +25,12 @@ const SidebarGroup = ({
   titleUppercase = true,
   action,
   bottomLine,
-}: SidebarGroupProps) => {
+  itemProps,
+  ...rest
+}: SidebarGroupProps & React.ComponentProps<typeof Column>) => {
   return (
-    <>
-      <Column fillWidth gap="4" paddingX="xs">
+    <Fragment key={title || "sidebar-group"}>
+      <Column fillWidth gap="4" paddingX="xs" {...rest}>
         {title || action ? (
           <Row
             fillWidth
@@ -61,6 +64,7 @@ const SidebarGroup = ({
             onClick={item.onClick}
             disabled={item.disabled}
             prefixIcon={item.icon}
+            {...itemProps}
           >
             <Row
               paddingX={title ? "4" : "0"}
@@ -74,7 +78,7 @@ const SidebarGroup = ({
         ))}
       </Column>
       {bottomLine && <Line />}
-    </>
+    </Fragment>
   );
 };
 

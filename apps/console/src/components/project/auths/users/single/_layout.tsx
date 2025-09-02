@@ -2,7 +2,7 @@
 import { Avatar } from "@nuvix/cui/avatar";
 import { SkeletonText } from "@nuvix/cui/skeleton";
 import { useProjectStore, useUserStore } from "@/lib/store";
-import { Line, Row } from "@nuvix/ui/components";
+import { Column, Line, Row } from "@nuvix/ui/components";
 import { SidebarGroup } from "@/ui/layout/navigation";
 import { Text } from "@chakra-ui/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -53,54 +53,61 @@ const SidebarAddon = ({ userId }: { userId: string }) => {
 
   return (
     <>
-      <Row paddingX="xs">
-        <Row vertical="center" gap="12" fillWidth>
-          <Avatar size="xs" src={sdk?.avatars.getInitials(user?.name)} />
-          {user ? (
-            <Text truncate textStyle={"lg"}>
-              {user?.name}
-            </Text>
-          ) : (
-            <SkeletonText noOfLines={1} />
-          )}
-        </Row>
-      </Row>
+      <Column paddingX="8" fillWidth>
+        <Column fillWidth background="neutral-alpha-weak" radius="xs" paddingY="8" gap="16">
+          <Row fillWidth paddingX="8">
+            <Row vertical="center" gap="12" fillWidth>
+              <Avatar size="2xs" src={sdk?.avatars.getInitials(user?.name)} />
+              {user ? (
+                <Text truncate textStyle={"md"}>
+                  {user?.name}
+                </Text>
+              ) : (
+                <SkeletonText noOfLines={1} />
+              )}
+            </Row>
+          </Row>
 
-      <SidebarGroup
-        items={[
-          {
-            label: "Overview",
-            href: resolveHref(),
-            isSelected: path === resolveHref(),
-          },
-          {
-            label: "Memberships",
-            href: resolveHref("memberships"),
-            isSelected: resolveIsSelected("memberships"),
-          },
-          {
-            label: "Sessions",
-            href: resolveHref("sessions"),
-            isSelected: resolveIsSelected("sessions"),
-          },
-          {
-            label: "Targets",
-            href: resolveHref("targets"),
-            isSelected: resolveIsSelected("targets"),
-          },
-          {
-            label: "Identities",
-            href: resolveHref("identities"),
-            isSelected: resolveIsSelected("identities"),
-          },
-          {
-            label: "Activity",
-            href: resolveHref("logs"),
-            isSelected: resolveIsSelected("logs"),
-          },
-        ]}
-      />
-
+          <SidebarGroup
+            paddingX="4"
+            itemProps={{
+              size: "s",
+            }}
+            items={[
+              {
+                label: "Overview",
+                href: resolveHref(),
+                isSelected: path === resolveHref(),
+              },
+              {
+                label: "Memberships",
+                href: resolveHref("memberships"),
+                isSelected: resolveIsSelected("memberships"),
+              },
+              {
+                label: "Sessions",
+                href: resolveHref("sessions"),
+                isSelected: resolveIsSelected("sessions"),
+              },
+              {
+                label: "Targets",
+                href: resolveHref("targets"),
+                isSelected: resolveIsSelected("targets"),
+              },
+              {
+                label: "Identities",
+                href: resolveHref("identities"),
+                isSelected: resolveIsSelected("identities"),
+              },
+              // {
+              //   label: "Activity",
+              //   href: resolveHref("logs"),
+              //   isSelected: resolveIsSelected("logs"),
+              // },
+            ]}
+          />
+        </Column>
+      </Column>
       <Line />
     </>
   );

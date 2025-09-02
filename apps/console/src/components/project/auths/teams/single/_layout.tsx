@@ -2,7 +2,7 @@
 import { Avatar } from "@nuvix/cui/avatar";
 import { SkeletonText } from "@nuvix/cui/skeleton";
 import { useProjectStore, useTeamStore } from "@/lib/store";
-import { Line, Row } from "@nuvix/ui/components";
+import { Column, Line, Row } from "@nuvix/ui/components";
 import { SidebarGroup } from "@/ui/layout/navigation";
 import { Text } from "@chakra-ui/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -54,39 +54,46 @@ const SidebarAddon = ({ teamId }: { teamId: string }) => {
 
   return (
     <>
-      <Row paddingX="xs">
-        <Row vertical="center" gap="12" fillWidth>
-          <Avatar size="xs" src={sdk?.avatars.getInitials(team?.name)} />
-          {team ? (
-            <Text truncate textStyle={"lg"}>
-              {team?.name}
-            </Text>
-          ) : (
-            <SkeletonText noOfLines={1} />
-          )}
-        </Row>
-      </Row>
+      <Column paddingX="8" fillWidth>
+        <Column fillWidth background="neutral-alpha-weak" radius="xs" paddingY="8" gap="16">
+          <Row fillWidth paddingX="8">
+            <Row vertical="center" gap="12" fillWidth>
+              <Avatar size="2xs" src={sdk?.avatars.getInitials(team?.name)} />
+              {team ? (
+                <Text truncate textStyle={"md"}>
+                  {team?.name}
+                </Text>
+              ) : (
+                <SkeletonText noOfLines={1} />
+              )}
+            </Row>
+          </Row>
 
-      <SidebarGroup
-        items={[
-          {
-            label: "Overview",
-            href: resolveHref(),
-            isSelected: path === resolveHref(),
-          },
-          {
-            label: "Members",
-            href: resolveHref("members"),
-            isSelected: resolveIsSelected("members"),
-          },
-          {
-            label: "Activity",
-            href: resolveHref("logs"),
-            isSelected: resolveIsSelected("logs"),
-          },
-        ]}
-      />
-
+          <SidebarGroup
+            paddingX="4"
+            itemProps={{
+              size: "s",
+            }}
+            items={[
+              {
+                label: "Overview",
+                href: resolveHref(),
+                isSelected: path === resolveHref(),
+              },
+              {
+                label: "Members",
+                href: resolveHref("members"),
+                isSelected: resolveIsSelected("members"),
+              },
+              // {
+              //   label: "Activity",
+              //   href: resolveHref("logs"),
+              //   isSelected: resolveIsSelected("logs"),
+              // },
+            ]}
+          />
+        </Column>
+      </Column>
       <Line />
     </>
   );

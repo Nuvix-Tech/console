@@ -208,7 +208,7 @@ const TopUserInfo = () => {
                 <>
                   <PopoverRoot>
                     <PopoverTrigger asChild>
-                      <Button variant={"solid"} width={{ base: "1/2", lg: "full" }}>
+                      <Button size={"sm"} variant={"solid"} width={{ base: "1/2", lg: "full" }}>
                         {status === "verified" ? "Unverify Account" : "Verify Account"}
                       </Button>
                     </PopoverTrigger>
@@ -282,7 +282,7 @@ const UpdaterButton = ({ children, callBackFn, ...props }: UpdaterButtonProps) =
   };
 
   return (
-    <Button loading={loading} onClick={handleClick} {...props}>
+    <Button size={"sm"} loading={loading} onClick={handleClick} {...props}>
       {children}
     </Button>
   );

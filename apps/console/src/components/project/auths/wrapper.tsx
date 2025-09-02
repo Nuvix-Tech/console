@@ -37,16 +37,16 @@ function Wrapper({ children }: { children: React.ReactNode }) {
             href: href("security"),
             isSelected: isEqual("security"),
           },
-          {
-            label: "Templates",
-            href: href("templates"),
-            isSelected: isEqual("templates"),
-          },
-          {
-            label: "Usage",
-            href: href("usage"),
-            isSelected: isEqual("usage"),
-          },
+          // {
+          //   label: "Templates",
+          //   href: href("templates"),
+          //   isSelected: isEqual("templates"),
+          // },
+          // {
+          //   label: "Usage",
+          //   href: href("usage"),
+          //   isSelected: isEqual("usage"),
+          // },
           {
             label: "Settings",
             href: href("settings"),
