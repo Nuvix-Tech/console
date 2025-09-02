@@ -158,9 +158,9 @@ export const FirstSidebar = ({ inMobile, onClose }: FirstSidebarProps) => {
   return (
     <>
       <Column
-        maxWidth={inMobile ? undefined : 4}
+        maxWidth={inMobile ? undefined : 3.5}
         fill
-        paddingBottom="12"
+        paddingBottom="8"
         paddingTop={inMobile ? "32" : undefined}
         vertical="space-between"
         position="relative"
@@ -170,19 +170,22 @@ export const FirstSidebar = ({ inMobile, onClose }: FirstSidebarProps) => {
         })}
         background={inMobile ? "transparent" : "surface"}
       >
-        <Column fillWidth paddingX="xs" gap="xs">
+        <Column fillWidth gap="8">
           {sideNav.map((item, index) => (
-            <SidebarSmallButton
-              key={index}
-              item={item}
-              showFullSidebar={!!inMobile}
-              onClose={onClose}
-              selected={item.active ?? pathname.includes(item.href ?? "")}
-            />
+            <>
+              {index === 4 && <Line />}
+              <SidebarSmallButton
+                key={index}
+                item={item}
+                showFullSidebar={!!inMobile}
+                onClose={onClose}
+                selected={item.active ?? pathname.includes(item.href ?? "")}
+              />
+            </>
           ))}
         </Column>
 
-        <Column fillWidth paddingX="xs" gap="xs">
+        <Column fillWidth gap="8">
           <Line />
 
           <SidebarSmallButton
@@ -213,15 +216,19 @@ export const SecondSidebar = ({ inMobile, onClose }: SecondSidebarProps) => {
     <Column fillWidth>
       {sidebar.title && (
         <Row
-          paddingY="8"
-          paddingX="8"
-          marginX="8"
+          paddingY="4"
+          marginX="16"
           marginBottom="8"
-          marginTop="0"
-          // radius="l"
-          // className="bg-[var(--main-background)]/50"
+          marginTop="4"
+          radius="l"
+          className="relative"
         >
-          <Text variant="label-strong-m">{sidebar.title}</Text>
+          <Text
+            variant="body-strong-s"
+            className="text-(--neutral-on-background-strong) dark:text-(--neutral-on-background-medium)"
+          >
+            {sidebar.title}
+          </Text>
         </Row>
       )}
       <Column gap="m" position="relative" overflowX="hidden" overflowY="auto">
@@ -268,10 +275,9 @@ const SidebarSmallButton = ({
 }) => {
   return (
     <Tooltip>
-      <TooltipTrigger>
+      <TooltipTrigger asChild>
         <ToggleButton
-          size="l"
-          fillWidth
+          size="m"
           href={item.href}
           justifyContent={showFullSidebar ? "flex-start" : "center"}
           selected={selected ?? false}
@@ -279,9 +285,9 @@ const SidebarSmallButton = ({
           disabled={item.disabled}
           prefixIcon={showFullSidebar ? item.icon : undefined}
           label={showFullSidebar && item.name}
-          className={cn({ " ": !showFullSidebar })}
+          className={cn({ "": !showFullSidebar }, "!size-10 mx-auto")}
         >
-          {!showFullSidebar && <Icon name={item.icon} />}
+          {!showFullSidebar && <Icon size="m" name={item.icon} />}
         </ToggleButton>
       </TooltipTrigger>
       <TooltipContent side="right">{item.name}</TooltipContent>

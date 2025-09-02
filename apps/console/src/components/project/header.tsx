@@ -54,16 +54,16 @@ const DesktopHeader = () => {
         position="relative"
       >
         <Row
-          className="absolute left-0 -z-1"
+          className="absolute left-0 z-1 flex items-center justify-center"
           background="surface"
-          width={4}
-          height={"64"}
+          width={3.5}
+          height={"48"}
           as={"span"}
-        />
-        <Row marginLeft="8" marginRight="16">
+        >
           <Logo wordmark={false} size="m" iconSrc="/trademark/nuvix.svg" />
         </Row>
-        <Row fillWidth vertical="center" horizontal="space-between">
+
+        <Row fillWidth vertical="center" horizontal="space-between" className="ml:pl-14">
           <Row vertical="center" gap={"8"}>
             <HeaderOrganization />
             <HeaderProject />
