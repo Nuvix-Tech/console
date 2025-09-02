@@ -12,6 +12,7 @@ import { Button } from "@nuvix/ui/components";
 import { Separator } from "@nuvix/sui/components/separator";
 import { cn } from "@nuvix/sui/lib/utils";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
+import { DotBadge } from "@/ui/DotBadge";
 
 export interface FilterPopoverProps {
   filters: string[];
@@ -31,12 +32,12 @@ const FilterPopover = ({ filters, portal = true, onApplyFilters }: FilterPopover
           size="s"
           variant="tertiary"
           className={cn({
-            "!text-[var(--brand-on-background-medium)]": (filters || []).length > 0,
+            "!text-[var(--brand-on-background-weak)]": (filters || []).length > 0,
           })}
           prefixIcon={<FilterIcon size={16} />}
         >
           {btnText}
-          {(filters || []).length > 0 && <TopDot value={(filters || []).length} />}
+          {(filters || []).length > 0 && <DotBadge value={(filters || []).length} />}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="p-0 w-96" side="bottom" align="start">
@@ -156,19 +157,5 @@ const FilterOverlay = ({ filters: filtersFromUrl, onApplyFilters }: FilterOverla
         </Button>
       </div>
     </div>
-  );
-};
-
-export const TopDot = ({ value, className }: { value?: string | number; className?: string }) => {
-  return (
-    <span
-      className={cn(
-        "absolute bg-primary hidden size-4 text-xs text-primary-foreground rounded-full left-0 top-0",
-        { block: value },
-        className,
-      )}
-    >
-      {value}
-    </span>
   );
 };

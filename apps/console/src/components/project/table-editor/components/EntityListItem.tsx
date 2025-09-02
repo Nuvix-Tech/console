@@ -48,11 +48,11 @@ import { Icon, Text } from "@nuvix/ui/components";
 export const TreeViewItemVariant = cva(
   // [Unkown Temp]: aria-selected:text-foreground not working as aria-selected property not rendered in DOM,
   // [Unkown Temp]: aria-selected:!bg-selection not working as aria-selected property not rendered in DOM
-  "w-full group relative transition-colors h-[28px] flex items-center gap-3 text-sm cursor-pointer select-none neutral-on-background-medium hover:bg-control aria-expanded:bg-transparent data-[state=open]:bg-transparent", // data-[state=open]:bg-control bg state for context menu open
+  "w-full group !rounded-none relative transition-colors h-[28px] flex items-center gap-3 text-sm cursor-pointer select-none neutral-on-background-medium hover:bg-(--neutral-alpha-weak)/30 aria-expanded:bg-transparent data-[state=open]:bg-transparent", // data-[state=open]:bg-control bg state for context menu open
   {
     variants: {
       isSelected: {
-        true: "text-foreground !bg-selection", // bg state for context menu open
+        true: "text-foreground !bg-[var(--neutral-alpha-weak)]", // bg state for context menu open
         false: "",
       },
       isOpened: {
@@ -254,10 +254,7 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
           isOpened: isOpened && !isPreview,
           isPreview,
         }),
-        "!px-4 flex items-center justify-between !mx-0",
-        {
-          "bg-[var(--neutral-alpha-weak)] border-x border-accent": isActive && !isPreview,
-        },
+        "!px-3 flex items-center justify-between !mx-0",
       )}
       // onDoubleClick={(e) => {
       //   e.preventDefault()
@@ -266,7 +263,7 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
       // }}
     >
       <>
-        {/* {isActive && <div className="absolute left-0 h-full w-0.5 bg-foreground" />} */}
+        {isActive && <div className="absolute left-0 h-full w-0.5 neutral-solid-strong" />}
         <Tooltip disableHoverableContent={true}>
           <TooltipTrigger className="min-w-4">
             <EntityTypeIcon type={entity.type} isActive={isActive} />
@@ -303,8 +300,8 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
 
         {canEdit && (
           <DropdownMenu>
-            <DropdownMenuTrigger className="neutral-on-background-weak transition-all text-transparent group-hover:text-foreground data-[state=open]:text-foreground">
-              <MoreHorizontal size={14} strokeWidth={2} />
+            <DropdownMenuTrigger className="neutral-on-background-weak transition-all text-transparent group-hover:!text-foreground data-[state=open]:!text-foreground flex items-center justify-center">
+              <Icon name={MoreHorizontal} size="s" />
             </DropdownMenuTrigger>
             <DropdownMenuContent side="bottom" align="start" className="w-44">
               <DropdownMenuItem

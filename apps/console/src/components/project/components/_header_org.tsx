@@ -53,7 +53,7 @@ export function HeaderOrganization(props: React.ComponentProps<typeof Button>) {
               ? orgs.find((org) => org.$id === organization.$id)?.name
               : "Select organization..."}
           </span>
-          <span className="ml-2 bg-[var(--neutral-alpha-weak)] text-sm font-medium px-2 py-1 rounded-md">
+          <span className="ml-2 bg-[var(--neutral-alpha-weak)] text-sm font-thin px-2 py-0.5 rounded-md">
             Free
           </span>
         </Button>

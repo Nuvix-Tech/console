@@ -51,7 +51,7 @@ const JsonEdit = ({
     id,
   });
 
-  const [view, setView] = useState<"Edit" | "View">("Edit");
+  const [view, setView] = useState<"edit" | "view">("edit");
   const [jsonStr, setJsonStr] = useState("");
   // sometimes the value is a JSON object if it was truncated, then fully loaded from the grid.
   const value = row?.[column as keyof typeof row] as unknown;
@@ -132,7 +132,7 @@ const JsonEdit = ({
       size="large"
       header={
         <div className="flex items-center justify-between">
-          {view === "Edit" ? (
+          {view === "edit" ? (
             <p>
               {readOnly ? "Viewing" : "Editing"} JSON Field: <Code>{column}</Code>
             </p>
@@ -143,7 +143,7 @@ const JsonEdit = ({
           )}
           {(!isTruncated || (isTruncated && isSuccess)) && (
             <div className="flex items-center gap-x-2">
-              {view === "Edit" && (
+              {view === "edit" && (
                 <IconButton
                   variant="secondary"
                   icon={<AlignLeft size={18} />}
@@ -154,7 +154,7 @@ const JsonEdit = ({
               )}
               <TwoOptionToggle
                 size="xs"
-                options={["View", "Edit"]}
+                options={["view", "edit"]}
                 activeOption={view}
                 onClickOption={setView}
               />
@@ -175,7 +175,7 @@ const JsonEdit = ({
       }
     >
       <div className="flex flex-auto h-full flex-col gap-y-4 relative">
-        {view === "Edit" ? (
+        {view === "edit" ? (
           <div className="w-full h-full flex-grow">
             <JsonCodeEditor
               key={jsonString}

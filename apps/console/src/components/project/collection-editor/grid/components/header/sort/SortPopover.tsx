@@ -11,9 +11,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/p
 import { Button } from "@nuvix/ui/components";
 import { Separator } from "@nuvix/sui/components/separator";
 import { cn } from "@nuvix/sui/lib/utils";
-import { TopDot } from "../filter/FilterPopover";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 import { Attributes } from "@/components/project/collection-editor/SidePanelEditor/ColumnEditor/utils";
+import { DotBadge } from "@/ui/DotBadge";
 
 export interface SortPopoverProps {
   sorts: string[];
@@ -32,12 +32,12 @@ const SortPopover = ({ sorts, portal = true, onApplySorts }: SortPopoverProps) =
           size="s"
           variant="tertiary"
           className={cn({
-            "!text-[var(--brand-on-background-medium)]": (sorts || []).length > 0,
+            "!text-[var(--brand-on-background-weak)]": (sorts || []).length > 0,
           })}
           prefixIcon={<List size={18} />}
         >
           {btnText}
-          {(sorts || []).length > 0 && <TopDot value={sorts.length} />}
+          {(sorts || []).length > 0 && <DotBadge value={sorts.length} />}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="p-0 w-96" side="bottom" align="start">

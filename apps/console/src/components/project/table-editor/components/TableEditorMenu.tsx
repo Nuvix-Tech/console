@@ -244,7 +244,10 @@ const TableEditorMenu = () => {
                 />
               )}
               {entityTypes.length > 0 && (
-                <div className="flex flex-1 flex-grow h-full min-h-24" data-testid="tables-list">
+                <div
+                  className="flex flex-1 flex-grow h-full min-h-24 -mx-2"
+                  data-testid="tables-list"
+                >
                   <InfiniteList
                     items={entityTypes}
                     // @ts-expect-error

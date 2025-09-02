@@ -119,8 +119,8 @@ export const TextEditor = <TRow, TSummaryRow = unknown>({
         open={isPopoverOpen}
         side="bottom"
         align="start"
-        sideOffset={-35}
-        className="rounded-none"
+        sideOffset={-28}
+        className="!rounded-t-none !rounded-b-xs"
         overlay={
           isTruncated && !isSuccess ? (
             <div

@@ -115,10 +115,7 @@ export const CollectionListItem: ItemRenderer<Models.Collection, EntityListItemP
           isOpened: isOpened && !isPreview,
           isPreview,
         }),
-        "!px-4 flex items-center justify-between !mx-0",
-        {
-          "bg-[var(--neutral-alpha-weak)] border-x border-accent": isActive && !isPreview,
-        },
+        "!px-3 flex items-center justify-between !mx-0",
       )}
       // onDoubleClick={(e) => {
       //   e.preventDefault()
@@ -127,7 +124,7 @@ export const CollectionListItem: ItemRenderer<Models.Collection, EntityListItemP
       // }}
     >
       <>
-        {/* {isActive && <div className="absolute left-0 h-full w-0.5 bg-foreground" />} */}
+        {isActive && <div className="absolute left-0 h-full w-0.5 neutral-solid-strong" />}
         <div
           className={cn(
             "truncate",
@@ -138,15 +135,24 @@ export const CollectionListItem: ItemRenderer<Models.Collection, EntityListItemP
           )}
         >
           <Icon name="table" size="s" />
-          <Text variant="label-default-m" className={cn("transition", "truncate")}>
+          <span
+            className={cn(
+              isActive
+                ? "text-foreground"
+                : "neutral-on-background-medium group-hover:text-foreground",
+              "text-sm",
+              "transition",
+              "truncate",
+            )}
+          >
             {collection.name}
-          </Text>
+          </span>
         </div>
 
         {canEdit && (
           <DropdownMenu>
-            <DropdownMenuTrigger className="neutral-on-background-weak transition-all text-transparent group-hover:text-foreground data-[state=open]:text-foreground">
-              <MoreHorizontal size={14} strokeWidth={2} />
+            <DropdownMenuTrigger className="neutral-on-background-weak transition-all text-transparent group-hover:!text-foreground data-[state=open]:!text-foreground flex items-center justify-center">
+              <Icon name={MoreHorizontal} size="s" />
             </DropdownMenuTrigger>
             <DropdownMenuContent side="bottom" align="start" className="w-48">
               <DropdownMenuItem

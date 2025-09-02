@@ -1,14 +1,10 @@
 "use client";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
-import { useAppStore } from "@/lib/store";
-import { Avatar } from "@nuvix/cui/avatar";
 import { cn } from "@nuvix/sui/lib/utils";
 import { Column, Icon, IconButton } from "@nuvix/ui/components";
 
 export const RightSidebar = () => {
   const [open, setOpen] = useLocalStorage("right-sidebar", false);
-  // const open = useAppStore.use.rightSidebarOpen();
-  // const setOpen = useAppStore.use.setRightSidebarOpen();
 
   return (
     <Column
@@ -28,10 +24,11 @@ export const RightSidebar = () => {
       >
         {open && (
           <>
-            <Avatar size={"sm"} fallback={<Icon name="sparkle" />} colorPalette={"teal"} />
-            <Avatar size={"sm"} fallback={<Icon name="code" />} colorPalette={"yellow"} />
-            <Avatar size={"sm"} fallback={<Icon name="discord" />} colorPalette={"purple"} />
-            <Avatar size={"sm"} fallback={<Icon name="plus" />} />
+            <IconButton icon="sparkle" variant="secondary" tooltip="AI Assistant" disabled />
+            <IconButton icon="search" variant="secondary" tooltip="Search" disabled />
+            <IconButton icon="github" variant="secondary" tooltip="Git" disabled />
+            <IconButton icon="settings" variant="secondary" tooltip="Settings" disabled />
+            <IconButton icon="plus" variant="secondary" tooltip="New File" disabled />
           </>
         )}
       </div>

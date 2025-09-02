@@ -16,8 +16,8 @@
   --card-foreground: var(--neutral-on-background-medium);
   --popover: var(--surface-background);
   --popover-foreground: var(--neutral-on-background-strong);
-  --primary: var(--neutral-on-background-strong);
-  --primary-foreground: var(--neutral-on-background-strong);
+  --primary: var(--neutral-solid-strong);
+  --primary-foreground: var(--neutral-on-solid-strong);
   --secondary: var(--neutral-background-medium);
   --secondary-foreground: var(--neutral-on-background-medium);
   --muted: var(--neutral-alpha-medium);

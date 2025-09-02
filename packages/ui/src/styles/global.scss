@@ -38,9 +38,9 @@ a:not(.button) {
     text-underline-offset: 0.25em;
     text-decoration-color: var(--neutral-border-strong) !important;
 
-    &:hover {
-        text-decoration-line: underline;
-    }
+    // &:hover {
+    //     text-decoration-line: underline;
+    // }
 }
 
 /* SCROLLBAR */

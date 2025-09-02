@@ -4,7 +4,7 @@ import { Handle, NodeProps, Node } from "@xyflow/react";
 
 import { cn } from "@nuvix/sui/lib/utils";
 import { IconButton } from "@chakra-ui/react";
-import { Text } from "@nuvix/ui/components";
+import { Icon, Text } from "@nuvix/ui/components";
 
 // ReactFlow is scaling everything by the factor of 2
 const TABLE_NODE_WIDTH = 320;
@@ -60,27 +60,29 @@ const TableNode = ({
         </header>
       ) : (
         <div
-          className="border-[0.5px] overflow-hidden rounded-sm border-[var(--neutral-alpha-medium)]"
+          className="border-[0.5px] overflow-hidden rounded-[8px] border-[var(--neutral-alpha-medium)]"
           style={{ width: TABLE_NODE_WIDTH / 2 }}
         >
           <header
             className={cn(
-              "pl-2 pr-1 bg-[var(--neutral-background-strong)]/60 rounded-t-sm backdrop-blur neutral-on-background-strong flex items-center justify-between",
+              "pl-2 pr-1 bg-[var(--neutral-background-strong)]/60 rounded-t-[8px] backdrop-blur neutral-on-background-strong flex items-center justify-between",
               itemHeight,
             )}
           >
-            <Text
-              className="flex gap-x-2 items-center truncate"
-              onBackground="neutral-medium"
-              variant="body-default-xs"
-            >
-              <Table2 strokeWidth={1} size={12} className="text-muted-foreground" />
-              <span className="truncate max-w-[80%]">{data.name}</span>
-            </Text>
+            <span className="flex gap-x-2 items-center truncate">
+              <Icon name="table" size="xs" onBackground="neutral-medium" />
+              <Text
+                onBackground="neutral-medium"
+                variant="label-default-s"
+                className="!truncate max-w-[80%]"
+              >
+                {data.name}
+              </Text>
+            </span>
             {data.id && !placeholder && (
               <IconButton asChild size={"2xs"} variant="plain">
                 <Link href={`/project/${data.ref}/editor/${data.id}`}>
-                  <ExternalLink className="text-muted-foreground !size-3" />
+                  <Icon name="externalLink" size="xs" onBackground="neutral-weak" />
                 </Link>
               </IconButton>
             )}
