@@ -13,7 +13,7 @@ export default function ({ children }: { children: React.ReactNode }) {
         position="relative"
         as={"main"}
         gap={0}
-        className="top-[96px] md:top-0 h-[calc(100%_-_96px)] md:h-[calc(100%_-_64px)]"
+        className="top-[96px] md:top-0 h-[calc(100%_-_96px)] md:h-[calc(100%_-_48px)]"
       >
         <Stack position="relative" as={"aside"} className="!hidden md:!flex w-[224px]">
           <ConsoleSidebar />

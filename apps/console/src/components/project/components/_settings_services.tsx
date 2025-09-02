@@ -72,8 +72,8 @@ export const UpdateServices = () => {
     ) {
       setDisabled(true);
       await switchWrapper(
-        async () => {
-          await projects.updateApiStatusAll(project?.$id!, enable);
+        () => {
+          return projects.updateServiceStatusAll(project?.$id!, enable);
         },
         `All services status ${enable ? "enabled" : "disabled"}.`,
       );

@@ -40,46 +40,51 @@ const DesktopHeader = () => {
         zIndex={8}
         gap="12"
         padding="8"
-        height="64"
-        minHeight="64"
+        height="48"
+        minHeight="48"
         vertical="center"
         ref={headerRef}
         position="relative"
       >
         <Row
-          className="absolute left-0 -z-1 hidden md:block"
+          className="absolute left-0 -z-1 hidden md:block items-center"
           background="surface"
           width={14}
-          height={"64"}
+          height={"48"}
           as={"span"}
-        />
-        <Row marginLeft="8" marginRight="16">
-          <Logo
-            icon={false}
-            size="l"
-            className="is-only-dark"
-            wordmarkSrc="/trademark/nuvix-logo-dark.svg"
-          />
-          <Logo
-            icon={false}
-            size="l"
-            className="is-only-light"
-            wordmarkSrc="/trademark/nuvix-logo-light.svg"
-          />
+        >
+          <Row marginLeft="8" marginRight="16">
+            <Logo
+              icon={false}
+              size="m"
+              className="is-only-dark"
+              wordmarkSrc="/trademark/nuvix-logo-dark.svg"
+            />
+            <Logo
+              icon={false}
+              size="m"
+              className="is-only-light"
+              wordmarkSrc="/trademark/nuvix-logo-light.svg"
+            />
+          </Row>
         </Row>
-        <Row fillWidth vertical="center" horizontal="space-between" marginLeft={"80"}>
+        <Row fillWidth vertical="center" horizontal="space-between" className="ml-56">
           <Row vertical="center" gap={"8"}>
             <HeaderOrganization />
           </Row>
           <Row fillWidth vertical="center" horizontal="end" gap="12">
             <div className="flex items-center gap-3">
-              {organization?.billingPlan === "tier-0" ? <Button>Upgrade</Button> : null}
-              <Button variant="secondary" className="bg-transparent">
+              {organization?.billingPlan === "tier-0" ? <Button size="s">Upgrade</Button> : null}
+              <Button size="s" variant="secondary" className="bg-transparent">
                 Feedback
               </Button>
               <div className="flex items-center gap-0.5">
-                <Button variant="tertiary">Help</Button>
-                <Button variant="tertiary">Docs</Button>
+                <Button size="s" variant="tertiary">
+                  Help
+                </Button>
+                <Button size="s" variant="tertiary">
+                  Docs
+                </Button>
               </div>
             </div>
             <UserProfile />

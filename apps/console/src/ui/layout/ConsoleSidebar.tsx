@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@nuvix/sui/lib/utils";
 import { Column, IconProps, Tag, ToggleButton } from "@nuvix/ui/components";
 import { useParams, usePathname } from "next/navigation";
 
@@ -85,12 +86,15 @@ const SidebarItem = ({ label, selected, icon, tag, href, onClose }: SidebarItemP
     <ToggleButton
       size="l"
       fillWidth
+      variant="ghost"
       justifyContent="flex-start"
       selected={selected}
       role="menuitem"
       aria-label={label}
       prefixIcon={icon}
-      // className="!px-2"
+      className={cn("!px-3 !h-8 !min-h-8 !border-0 font-label", {
+        "!text-(--neutral-on-background-weak)": !selected,
+      })}
       onClick={onClose}
       href={href}
     >

@@ -91,7 +91,7 @@ const Results = ({ rows, panel = false }: { rows: readonly any[]; panel?: boolea
   };
 
   const columnRender = (name: string) => {
-    return <div className="flex h-full items-center justify-center font-mono text-xs">{name}</div>;
+    return <div className="flex h-full items-center font-mono text-xs">{name}</div>;
   };
 
   const EST_CHAR_WIDTH = 8.25;
