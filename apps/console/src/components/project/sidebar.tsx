@@ -172,7 +172,7 @@ export const FirstSidebar = ({ inMobile, onClose }: FirstSidebarProps) => {
       >
         <Column fillWidth gap="8">
           {sideNav.map((item, index) => (
-            <>
+            <React.Fragment key={item.name}>
               {index === 4 && <Line />}
               <SidebarSmallButton
                 key={index}
@@ -181,7 +181,7 @@ export const FirstSidebar = ({ inMobile, onClose }: FirstSidebarProps) => {
                 onClose={onClose}
                 selected={item.active ?? pathname.includes(item.href ?? "")}
               />
-            </>
+            </React.Fragment>
           ))}
         </Column>
 

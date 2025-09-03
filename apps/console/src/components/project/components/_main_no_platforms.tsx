@@ -4,10 +4,10 @@ import { platformConfig } from "./_utils";
 
 const availablePlatforms = [
   { platform: "web", config: platformConfig.web, color: "gray" },
-  { platform: "flutter", config: platformConfig.flutter, color: "aqua" },
   { platform: "android", config: platformConfig.android, color: "green" },
-  { platform: "reactnative", config: platformConfig.reactnative, color: "blue" },
   { platform: "ios", config: platformConfig.ios, color: "violet" },
+  { platform: "flutter", config: platformConfig.flutter, color: "aqua" },
+  { platform: "reactnative", config: platformConfig.reactnative, color: "blue" },
 ];
 
 export const NoPlatforms = () => {
@@ -18,8 +18,8 @@ export const NoPlatforms = () => {
       gap="16"
       className="bg-gradient-to-t from-(--neutral-alpha-medium) to-transparent rounded-sm"
     >
-      <Column maxWidth={40} gap="24" className="py-28 pl-28">
-        <Text variant="display-default-s" color="neutral-strong">
+      <Column maxWidth={40} gap="24" className="p-12 lg:py-20 lg:pl-20 lg:pr-0 xl:py-28 xl:pl-28">
+        <Text variant="display-strong-s" color="neutral-strong">
           Add your first app and start building faster with
           <Text onBackground="brand-weak"> Nuvix!</Text>
         </Text>
@@ -45,11 +45,11 @@ export const NoPlatforms = () => {
         </div>
 
         <Text variant="body-default-m" onBackground="neutral-medium">
-          You can always add more apps later from the project settings.
+          Your project is ready. Start connecting platforms and let Nuvix handle the backend.
         </Text>
       </Column>
 
-      <div className="relative flex-1 p-28">
+      <div className="relative flex-1 p-12 lg:p-20 xl:p-28 hidden md:flex items-center">
         <img
           src="//www.gstatic.com/mobilesdk/240501_mobilesdk/2024-05-01-get_started_image_logo.png"
           alt=""

@@ -81,6 +81,7 @@ import {
   TbBrandFlutter,
   TbBrandApple,
   TbBrandAndroid,
+  TbBrandUnity,
 } from "react-icons/tb";
 import { Edit3, ExternalLink, Trash2 } from "lucide-react";
 import { CgArrowLongRightC, CgArrowsH } from "react-icons/cg";
@@ -176,6 +177,7 @@ export const iconMap = {
   flutter: TbBrandFlutter,
   apple: TbBrandApple,
   android: TbBrandAndroid,
+  unity: TbBrandUnity,
 } as const;
 
 export type IconName = keyof typeof iconMap;
