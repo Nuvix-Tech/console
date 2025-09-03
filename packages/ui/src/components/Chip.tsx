@@ -29,6 +29,7 @@ const Chip: React.FC<ChipProps> = forwardRef<HTMLDivElement, ChipProps>(
       children,
       iconButtonProps = {},
       className,
+      textVariant = "body-default-s",
       ...rest
     },
     ref,
@@ -88,7 +89,7 @@ const Chip: React.FC<ChipProps> = forwardRef<HTMLDivElement, ChipProps>(
       >
         {prefixIcon && <Icon name={prefixIcon} size="s" />}
         <Flex paddingX="8" paddingY="2" fillWidth>
-          <Text variant="body-default-s">{label || children}</Text>
+          <Text variant={textVariant}>{label || children}</Text>
         </Flex>
         {onRemove && (
           <IconButton

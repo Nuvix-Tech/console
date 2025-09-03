@@ -78,10 +78,12 @@ import {
   TbGlobe,
   TbTableAlias,
   TbBrandReactNative,
+  TbBrandFlutter,
+  TbBrandApple,
+  TbBrandAndroid,
 } from "react-icons/tb";
 import { Edit3, ExternalLink, Trash2 } from "lucide-react";
 import { CgArrowLongRightC, CgArrowsH } from "react-icons/cg";
-import { HiCollection } from "react-icons/hi";
 
 export const iconMap = {
   chevronUp: HiChevronUp,
@@ -171,6 +173,9 @@ export const iconMap = {
 
   // platform
   reactNative: TbBrandReactNative,
+  flutter: TbBrandFlutter,
+  apple: TbBrandApple,
+  android: TbBrandAndroid,
 } as const;
 
 export type IconName = keyof typeof iconMap;
