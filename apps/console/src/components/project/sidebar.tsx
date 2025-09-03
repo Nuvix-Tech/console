@@ -82,7 +82,7 @@ const ProjectSidebar: React.FC<{ defaultSize: number }> = ({ defaultSize }) => {
           {show ? <SecondSidebar /> : null}
         </ResizablePanel>
       ) : (
-        <span className="w-0 ml:w-4" />
+        <span className="w-0 ml:w-2" />
       )}
     </>
   );

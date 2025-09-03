@@ -9,7 +9,7 @@ export const SidebarExpandTrigger = ({ onClick }: { onClick: () => void }) => {
         onClick={onClick}
         aria-label="Expand sidebar"
         className={cn(
-          "absolute left-[64px] top-1/2 transform translate-y-[calc(-50%-64px)] z-10",
+          "absolute left-[56px] top-1/2 transform translate-y-[calc(-50%-48px)] z-10",
           "group/expand h-8 w-1.5 rounded-r-md transition-all duration-300",
           "bg-muted hover:w-4 hover:bg-muted/60",
           "flex items-center justify-center overflow-hidden cursor-pointer",

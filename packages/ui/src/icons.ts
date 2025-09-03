@@ -77,6 +77,7 @@ import {
   TbCalendar,
   TbGlobe,
   TbTableAlias,
+  TbBrandReactNative,
 } from "react-icons/tb";
 import { Edit3, ExternalLink, Trash2 } from "lucide-react";
 import { CgArrowLongRightC, CgArrowsH } from "react-icons/cg";
@@ -167,6 +168,9 @@ export const iconMap = {
   ip: TbGlobe,
   oneWay: CgArrowLongRightC,
   twoWay: CgArrowsH,
+
+  // platform
+  reactNative: TbBrandReactNative,
 } as const;
 
 export type IconName = keyof typeof iconMap;

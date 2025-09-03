@@ -114,7 +114,7 @@ export function HeaderProject(props: React.ComponentProps<typeof Button>) {
       </PopoverContent>
     </Popover>
   ) : (
-    <Row width="128" height={"40"}>
+    <Row width="128" height={"32"}>
       <Skeleton shape="block" fillWidth radius="l" />
     </Row>
   );
