@@ -1,11 +1,11 @@
 "use client";
 import { sdkForConsole } from "@/lib/sdk";
 import { Row } from "@nuvix/ui/components";
-import { Spinner } from "@chakra-ui/react";
 import { Models } from "@nuvix/console";
 import { useRouter } from "@bprogress/next";
 import { useEffect } from "react";
 import { useApp } from "@/lib/store";
+import LoadingUI from "@/components/loading";
 
 export default function Page() {
   const { user, setUser, setScopes } = useApp((state) => state);
@@ -50,7 +50,7 @@ export default function Page() {
 
   return (
     <Row fill center>
-      <Spinner size={"xl"} />
+      <LoadingUI />
     </Row>
   );
 }

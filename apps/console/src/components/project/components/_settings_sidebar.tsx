@@ -47,8 +47,8 @@ const SettingsSidebar = () => {
           },
           {
             label: "Smtp",
-            href: resolveHref("targets"),
-            isSelected: resolveIsSelected("targets"),
+            href: resolveHref("smtp"),
+            isSelected: resolveIsSelected("smtp"),
           },
         ]}
       />

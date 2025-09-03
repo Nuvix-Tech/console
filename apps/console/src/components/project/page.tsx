@@ -1,5 +1,4 @@
 "use client";
-import { Background, Row } from "@nuvix/ui/components";
 import React, { useEffect } from "react";
 import { useProjectStore } from "@/lib/store";
 import { TopInfo } from "./components";

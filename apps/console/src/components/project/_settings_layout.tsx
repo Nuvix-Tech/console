@@ -8,6 +8,7 @@ const SettingsLayout: React.FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     setSidebar({
+      title: "Settings",
       first: null,
       middle: <SettingsSidebar />,
     });

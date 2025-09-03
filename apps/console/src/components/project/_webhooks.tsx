@@ -1,12 +1,12 @@
 "use client";
 import React from "react";
+import { PageContainer, PageHeading } from "@/components/others";
 
 const WebhooksPage: React.FC = () => {
   return (
-    <div>
-      <h1>Webhooks Component</h1>
-      <p>This is the Webhooks component.</p>
-    </div>
+    <PageContainer>
+      <PageHeading heading="Webhooks" description="Manage your webhooks here." right={null} />
+    </PageContainer>
   );
 };
 

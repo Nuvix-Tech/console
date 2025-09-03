@@ -10,7 +10,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ai-sdk/react": "^2.0.30",
     "@bprogress/next": "^3.0.2",
+    "@chakra-ui/charts": "^3.26.0",
     "@chakra-ui/react": "^3.22.0",
     "@dagrejs/dagre": "^1.1.4",
     "@emotion/react": "^11.14.0",
@@ -23,6 +25,7 @@
     "@tanstack/react-query": "^5.68.0",
     "@tanstack/react-table": "^8.20.6",
     "@xyflow/react": "^12.5.5",
+    "ai": "^5.0.30",
     "awesome-debounce-promise": "^2.1.0",
     "class-variance-authority": "^0.7.1",
     "classnames": "^2.5.1",
