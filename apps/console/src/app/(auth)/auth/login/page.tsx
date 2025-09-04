@@ -77,7 +77,7 @@ export default function Login() {
       </Heading>
       <Text onBackground="neutral-weak">
         Sign in to your account or{" "}
-        <SmartLink className="neutral-on-background-medium" href="https://www.nuvix.in/#waitlist">
+        <SmartLink className="neutral-on-background-medium" href="/auth/register">
           sign up
         </SmartLink>
       </Text>
