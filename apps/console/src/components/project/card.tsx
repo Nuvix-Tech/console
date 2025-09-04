@@ -20,8 +20,8 @@ export const ProjectCard = ({ project }: { project: Models.Project }) => {
           <Text as={"h3"} variant="label-strong-l">
             {project.name}
           </Text>
-          <Tag size="m" marginTop="4">
-            {"NANO"}
+          <Tag size="m" marginTop="4" className="!items-center !flex !gap-1 !px-1">
+            {(project as any).environment === "dev" ? "Dev" : "Prod"}
           </Tag>
         </Row>
       </Column>
@@ -48,7 +48,7 @@ export const ProjectCard = ({ project }: { project: Models.Project }) => {
 const TagMapper = ({ type }: { type: string }) => {
   const comp = ({ name, icon }: { name: string; icon: any }) => (
     <Tag size="l">
-      <span className={`icon-${icon}`} aria-hidden="true"></span>
+      <Icon name={icon} size="s" onBackground="neutral-weak" />
       <Text marginLeft="4">{name}</Text>
     </Tag>
   );

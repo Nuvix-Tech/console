@@ -184,6 +184,10 @@ interface AppStore {
   setOrganization: (organization: Models.Organization<any>) => void;
   setUser: (user: Models.User<any>) => void;
   setRightSidebarOpen: (value: boolean) => void;
+
+  vars: {
+    [key: string]: string;
+  };
 }
 
 const useApp = create<AppStore>((set, get) => ({
@@ -193,6 +197,7 @@ const useApp = create<AppStore>((set, get) => ({
   organization: null as any,
   user: null as unknown as Models.User<any>,
   rightSidebarOpen: true,
+  vars: {},
 
   setIsDrawerOpen: (value: boolean) => set(() => ({ isDrawerOpen: value })),
   setIsSecondMenuOpen: (value: boolean) => set(() => ({ isSecondMenuOpen: value })),

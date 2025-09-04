@@ -127,7 +127,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
             >
               <Providers>
                 {children}
-                <Toaster />
+                <Toaster position="top-center" />
               </Providers>
             </Column>
           </ToastProvider>
