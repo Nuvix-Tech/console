@@ -11,9 +11,12 @@ import {
   DialogTrigger,
 } from "./dialog";
 import { cn } from "../lib/utils";
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 
-export const ThemeSelector = () => {
+export const ThemeSelector = ({
+  className,
+  ...rest
+}: React.ComponentProps<typeof DialogTrigger>) => {
   const { setPref, getPref } = usePreference();
   const { resolvedTheme } = useTheme();
   const neutral = getPref()?.neutral;
@@ -30,8 +33,10 @@ export const ThemeSelector = () => {
     <Dialog>
       <DialogTrigger
         className={cn(
-          "size-4 neutral-page-background flex items-center justify-center rounded-md border border-border hover:bg-accent/50 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-accent",
+          "size-6 page-background flex items-center justify-center rounded-md border-2 border-muted hover:bg-accent/50 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-accent",
+          className,
         )}
+        {...rest}
       />
       <DialogContent>
         <DialogHeader>

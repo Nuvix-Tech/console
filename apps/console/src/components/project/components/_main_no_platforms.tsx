@@ -49,11 +49,11 @@ export const NoPlatforms = () => {
         </Text>
       </Column>
 
-      <div className="relative flex-1 p-12 lg:p-20 xl:p-28 hidden md:flex items-center">
+      <div className="relative flex-1 p-12 lg:p-20 xl:p-28 hidden lg:flex items-center overflow-hidden">
         <img
-          src="//www.gstatic.com/mobilesdk/240501_mobilesdk/2024-05-01-get_started_image_logo.png"
+          src="/images/nuvix-no-platforms.svg"
           alt=""
-          className="size-96 absolute bottom-0"
+          className="h-[600px] w-[400px] min-w-96 absolute -bottom-12 -right-16 xl:right-0 opacity-90 select-none pointer-events-none"
         />
       </div>
     </Row>

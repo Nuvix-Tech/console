@@ -2,6 +2,7 @@
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { cn } from "@nuvix/sui/lib/utils";
 import { Column, Icon, IconButton } from "@nuvix/ui/components";
+import { ThemeSelector } from "@nuvix/sui/components/ThemeSelector";
 
 export const RightSidebar = () => {
   const [open, setOpen] = useLocalStorage("right-sidebar", false);
@@ -29,6 +30,7 @@ export const RightSidebar = () => {
             <IconButton icon="github" variant="secondary" tooltip="Git" disabled />
             <IconButton icon="settings" variant="secondary" tooltip="Settings" disabled />
             <IconButton icon="plus" variant="secondary" tooltip="New File" disabled />
+            <ThemeSelector className="mx-auto size-7" />
           </>
         )}
       </div>

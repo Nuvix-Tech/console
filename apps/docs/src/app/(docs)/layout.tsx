@@ -5,32 +5,26 @@ import "@/styles/global.css";
 // import { Sidebar } from "@/components/sidebar";
 import { DocsLayout } from "fumadocs-ui/layouts/notebook";
 import { source } from "@/lib/source";
-import { ThemeSelector } from "@nuvix/sui/components/ThemeSelector";
+import { layoutProps } from "@/components/layout/base-layout";
+import type { SidebarOptions } from "fumadocs-ui/layouts/docs/shared";
+import type { PageTree } from "fumadocs-core/server";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      {/* <Header />
-      <Sidebar />
-      <Row position="relative" className="ml-[256px]" marginTop="64" padding="16">
-        <Column className="flex-1"> */}
       <DocsLayout
+        {...layoutProps()}
         tree={source.pageTree}
+        nav={{ ...layoutProps().nav, mode: "auto" }}
+        tabMode="navbar"
         sidebar={{
-          banner: (
-            <>
-              <ThemeSelector />
-            </>
-          ),
+          components: {},
+          collapsible: true,
+          className: "backdrop-blur-md",
         }}
       >
         {children}
       </DocsLayout>
-      {/* </Column>
-        <Column width={16} minWidth={16} position="relative">
-          <HeadingNav width={16} position="sticky" top="64" fitHeight />
-        </Column>
-      </Row> */}
     </>
   );
 }
