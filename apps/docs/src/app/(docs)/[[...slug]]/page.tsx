@@ -21,7 +21,7 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
         >
           Docs are not ready yet. Visit the main site at{" "}
           <a
-            href="https://nuvix.dev"
+            href="https://nuvix.in"
             target="_blank"
             rel="noreferrer"
             className="!underline !underline-offset-4 font-medium inline accent-on-background-weak"

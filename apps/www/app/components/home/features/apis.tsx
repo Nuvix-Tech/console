@@ -63,7 +63,7 @@ export const DataAPIs = () => {
           </div>
         ))}
       </div>
-      {[
+      {/* {[
         { label: "GET", variant: "success" },
         { label: "POST", variant: "warning" },
         { label: "PUT", variant: "gradient" },
@@ -89,7 +89,7 @@ export const DataAPIs = () => {
             {tag.label}
           </Tag>
         );
-      })}
+      })} */}
     </div>
   );
 };

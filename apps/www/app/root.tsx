@@ -14,6 +14,7 @@ import "@nuvix/ui/tokens/index.scss";
 import "@nuvix/sui/globals.css";
 import { MetaProvider } from "@nuvix/ui/contexts";
 import { Link } from "react-router";
+import { Provider } from "@nuvix/cui/provider";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -32,7 +33,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en"
-      className="dark"
       data-theme="dark"
       data-neutral="custom"
       data-brand={"custom"}
@@ -52,7 +52,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <MetaProvider link={Link} img="img">
         <body className="page-background">
-          {children}
+          <Provider attribute={["class", "data-theme"]} defaultTheme="dark" enableSystem>
+            {children}
+          </Provider>
           <ScrollRestoration />
           <Scripts />
         </body>
