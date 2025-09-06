@@ -15,10 +15,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <DocsLayout
         {...layoutProps()}
         tree={source.pageTree}
-        nav={{ ...layoutProps().nav, mode: "auto" }}
-        tabMode="navbar"
+        nav={{ ...layoutProps().nav, mode: "top" }}
+        tabMode="sidebar"
         sidebar={{
-          components: {},
+          // component: <></>,
           collapsible: true,
           className: "backdrop-blur-md",
         }}

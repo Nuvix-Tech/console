@@ -3,9 +3,9 @@ import { ThemeSelector } from "@nuvix/sui/components/ThemeSelector";
 
 export const ThemeSwitch = () => {
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex items-center space-x-2 ml-auto">
       <ThemeSelector />
-      <ColorModeButton />
+      <ColorModeButton size={"xs"} />
     </div>
   );
 };

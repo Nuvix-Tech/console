@@ -12,7 +12,7 @@ export const layoutProps = (): BaseLayoutProps => {
     },
     themeSwitch: {
       enabled: false,
-      component: <NavBar />,
+      component: <ThemeSwitch />,
     },
   };
 };

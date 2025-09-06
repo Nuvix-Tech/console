@@ -5,3 +5,7 @@ body {
 #nd-subnav {
     background-color: var(--surface-background);
 }
+
+#nd-sidebar #nav_bar {
+    display: none   !important;
+}
