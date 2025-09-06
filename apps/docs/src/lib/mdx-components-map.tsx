@@ -1,4 +1,3 @@
-// lib/mdx-components-map.tsx
 import { SmartLink, Text, InlineCode } from "@nuvix/ui/components";
 import { MDXComponents } from "mdx/types";
 

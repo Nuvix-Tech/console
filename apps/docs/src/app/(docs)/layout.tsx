@@ -1,13 +1,7 @@
 import "@/styles/global.css";
-// import { Column, Row } from "@nuvix/ui/components";
-// import { HeadingNav } from "@nuvix/ui/modules";
-// import { Header } from "@/components/header";
-// import { Sidebar } from "@/components/sidebar";
 import { DocsLayout } from "fumadocs-ui/layouts/notebook";
 import { source } from "@/lib/source";
 import { layoutProps } from "@/components/layout/base-layout";
-import type { SidebarOptions } from "fumadocs-ui/layouts/docs/shared";
-import type { PageTree } from "fumadocs-core/server";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -18,7 +12,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         nav={{ ...layoutProps().nav, mode: "top" }}
         tabMode="sidebar"
         sidebar={{
-          // component: <></>,
           collapsible: true,
           className: "backdrop-blur-md",
         }}
