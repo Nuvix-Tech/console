@@ -77,7 +77,7 @@ const schemaData = {
 export default async function Layout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
   const cookie = cookieStore.get(COOKIES_KEYS.PREFERENCE)!;
-  const _style = getStyle(cookie?.value);
+  const style = getStyle(cookie?.value);
 
   return (
     <>
@@ -87,9 +87,9 @@ export default async function Layout({ children }: { children: React.ReactNode }
         lang="en"
         fillHeight
         background="page"
-        data-neutral={_style.neutral}
+        data-neutral={style.neutral}
         data-brand={style.brand}
-        data-accent={_style.accent}
+        data-accent={style.accent}
         data-border={style.border}
         data-solid={style.solid}
         data-solid-style={style.solidStyle}

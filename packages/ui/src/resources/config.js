@@ -17,7 +17,7 @@ const style = {
 };
 
 export function getStyle(value) {
-  const cookieData = JSON.parse(value);
+  const cookieData = value ? JSON.parse(value) : {};
   const _style = { ...style };
   if (["sand", "gray", "slate", "custom"].includes(cookieData.neutral))
     _style.neutral = cookieData.neutral ?? style.neutral;
