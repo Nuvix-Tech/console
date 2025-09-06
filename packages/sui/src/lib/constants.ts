@@ -119,3 +119,7 @@ export const PAGE_SIZE_CLASSES = {
   default: "max-w-5xl px-8",
   full: "w-full",
 } as const;
+
+export const COOKIES_KEYS = {
+  PREFERENCE: "PREF_COOKIE",
+};

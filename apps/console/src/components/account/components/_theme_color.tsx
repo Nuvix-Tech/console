@@ -5,7 +5,7 @@ import {
   CardBoxItem,
   CardBoxTitle,
 } from "@/components/others/card";
-import { usePreference } from "@/hooks/usePreference";
+import { usePreference } from "@nuvix/sui/hooks/usePreference";
 import { RadioCard } from "@chakra-ui/react";
 import { RadioCardLabel, RadioCardRoot } from "@nuvix/cui/radio-card";
 import { Text } from "@nuvix/ui/components";

@@ -106,14 +106,14 @@ export const MainMetrics = () => {
     <div className="space-y-6">
       <div className="grid gap-6 md:grid-cols-2">
         {/* Requests Chart */}
-        <CardBox className="!bg-muted/20">
+        {/* <CardBox className="!bg-muted/20">
           <CardHeader className="px-0">
             <CardTitle>Request Analytics</CardTitle>
           </CardHeader>
-          <CardContent className="px-0">
-            <Demo />
-          </CardContent>
-        </CardBox>
+          <CardContent className="px-0"> */}
+        <Demo />
+        {/* </CardContent> */}
+        {/* </CardBox> */}
 
         {/* Bandwidth Chart */}
         <CardBox className="!bg-muted/20">

@@ -16,6 +16,15 @@ const style = {
   scaling: "100", // 90 | 95 | 100 | 105 | 110
 };
 
+export function getStyle(value) {
+  const cookieData = JSON.parse(value);
+  const _style = { ...style };
+  if (["sand", "gray", "slate", "custom"].includes(cookieData.neutral))
+    _style.neutral = cookieData.neutral ?? style.neutral;
+
+  return _style;
+}
+
 // default metadata
 const meta = {
   title: `${APP_NAME}`,

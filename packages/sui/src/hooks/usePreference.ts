@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useCallback } from "react";
 import { COOKIES_KEYS } from "../lib/constants";
 
 function updateHtmlAttribute(value: string) {
@@ -12,19 +13,19 @@ function getPreferenceFromCookie() {
   try {
     const cookieValue = document.cookie
       .split("; ")
-      .find((row) => row.startsWith("PREF_COOKIE="))
+      .find((row) => row.startsWith(`${COOKIES_KEYS.PREFERENCE}=`))
       ?.split("=")[1];
     if (cookieValue) {
       return JSON.parse(decodeURIComponent(cookieValue));
     }
-  } catch (e) {
-    console.error("Failed to parse preference cookie", e);
-  }
+  } catch {}
   return {};
 }
 
 export function usePreference() {
-  const setPref = ({ neutral }: { neutral: string }) => {
+  const [preferences, setPreferences] = useState(() => getPreferenceFromCookie());
+
+  const setPref = useCallback(({ neutral }: { neutral: string }) => {
     const data = JSON.stringify({ neutral });
     const encodedData = encodeURIComponent(data);
 
@@ -32,7 +33,12 @@ export function usePreference() {
     document.cookie = cookieString;
 
     updateHtmlAttribute(neutral);
-  };
 
-  return { setPref, getPref: getPreferenceFromCookie };
+    // Update the local state to reflect the new preferences
+    setPreferences({ neutral });
+  }, []);
+
+  const getPref = useCallback(() => preferences, [preferences]);
+
+  return { setPref, getPref };
 }

@@ -4,13 +4,14 @@ import "@/styles/main.scss";
 import "@nuvix/sui/globals.css";
 
 import type { Metadata } from "next";
-import { headers } from "next/headers";
+import { headers, cookies } from "next/headers";
 import Providers from "@/components/providers";
 
 import { Column, Flex, ToastProvider } from "@nuvix/ui/components";
 import { Toaster } from "@nuvix/sui/components/sonner";
-import { baseURL, meta, og, schema, social, style } from "@nuvix/ui/resources/config";
+import { baseURL, meta, og, schema, social, getStyle } from "@nuvix/ui/resources/config";
 import { customFont, sourceCodePro } from "@nuvix/ui/fonts";
+import { COOKIES_KEYS } from "@nuvix/sui/lib/constants";
 import { cn } from "@nuvix/sui/lib/utils";
 import { MetaProvider } from "@nuvix/ui/contexts";
 import Link from "next/link";
@@ -70,7 +71,11 @@ const schemaData = {
   sameAs: Object.values(social).filter(Boolean),
 };
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({ children }: { children: React.ReactNode }) {
+  const cookieStore = await cookies();
+  const cookie = cookieStore.get(COOKIES_KEYS.PREFERENCE)!;
+  const style = getStyle(cookie?.value);
+
   return (
     <>
       <Flex

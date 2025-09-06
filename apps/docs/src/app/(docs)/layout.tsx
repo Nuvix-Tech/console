@@ -5,6 +5,7 @@ import "@/styles/global.css";
 // import { Sidebar } from "@/components/sidebar";
 import { DocsLayout } from "fumadocs-ui/layouts/notebook";
 import { source } from "@/lib/source";
+import { ThemeSelector } from "@nuvix/sui/components/ThemeSelector";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -13,7 +14,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Sidebar />
       <Row position="relative" className="ml-[256px]" marginTop="64" padding="16">
         <Column className="flex-1"> */}
-      <DocsLayout tree={source.pageTree}>{children}</DocsLayout>
+      <DocsLayout
+        tree={source.pageTree}
+        sidebar={{
+          banner: (
+            <>
+              <ThemeSelector />
+            </>
+          ),
+        }}
+      >
+        {children}
+      </DocsLayout>
       {/* </Column>
         <Column width={16} minWidth={16} position="relative">
           <HeadingNav width={16} position="sticky" top="64" fitHeight />

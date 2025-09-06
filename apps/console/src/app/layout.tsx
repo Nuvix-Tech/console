@@ -13,12 +13,12 @@ import { cookies, headers } from "next/headers";
 
 import { Column, Flex, ToastProvider } from "@nuvix/ui/components";
 import { Toaster } from "@nuvix/sui/components/sonner";
-import { baseURL, meta, og, schema, social, style } from "@nuvix/ui/resources/config";
+import { baseURL, meta, og, schema, social, getStyle } from "@nuvix/ui/resources/config";
 import { customFont, sourceCodePro } from "@nuvix/ui/fonts";
-import { COOKIES_KEYS } from "../lib/constants";
 import { MetaProvider } from "@nuvix/ui/contexts";
 import Link from "next/link";
 import Image from "next/image";
+import { COOKIES_KEYS } from "@nuvix/sui/lib/constants";
 
 /*
  */
@@ -75,17 +75,9 @@ const schemaData = {
 };
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
-  const _style = style;
   const cookieStore = await cookies();
-
-  if (cookieStore.has(COOKIES_KEYS.PREFERENCE)) {
-    const cookie = cookieStore.get(COOKIES_KEYS.PREFERENCE)!;
-    try {
-      const cookieData = JSON.parse(cookie.value);
-      // TODO: validate data
-      _style.neutral = cookieData.neutral ?? style.neutral;
-    } catch {}
-  }
+  const cookie = cookieStore.get(COOKIES_KEYS.PREFERENCE)!;
+  const _style = getStyle(cookie?.value);
 
   return (
     <>

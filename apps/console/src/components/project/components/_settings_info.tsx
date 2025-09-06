@@ -12,7 +12,6 @@ import { useRouter } from "@bprogress/next";
 import React from "react";
 import { LuExternalLink } from "react-icons/lu";
 import { useProjectStore } from "@/lib/store";
-import { usePreference } from "@/hooks/usePreference";
 
 export const ProjectInfo: React.FC = () => {
   const project = useProjectStore.use.project?.();
