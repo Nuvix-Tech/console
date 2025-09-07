@@ -6,7 +6,7 @@ import { useToast } from "@nuvix/ui/components";
 import { DataGridProvider, Table } from "@/ui/data-grid";
 import { useProjectStore, useUserStore } from "@/lib/store";
 import { EmptyState } from "@/components/_empty_state";
-import { PageContainer, PageHeading } from "@/components/others";
+import { IDChip, PageContainer, PageHeading } from "@/components/others";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 const TargetPage = () => {
@@ -30,31 +30,35 @@ const TargetPage = () => {
     {
       header: "Target ID",
       accessorKey: "$id",
+      cell: ({ row }) => <IDChip id={row.original.$id} />,
+      size: 240,
     },
     {
       header: "Target",
       accessorKey: "identifier",
+      minSize: 240,
     },
     {
       header: "Type",
       accessorKey: "providerType",
+      size: 71,
     },
     {
       header: "Provider",
       accessorKey: "providerId",
+      size: 120,
     },
     {
       header: "Created",
       accessorKey: "$createdAt",
+      cell: ({ row }) => new Date(row.original.$createdAt).toLocaleDateString(),
+      size: 120,
     },
   ];
 
   return (
     <PageContainer>
-      <PageHeading
-        heading="Targets"
-        description="Manage authentication targets associated with this user. Targets represent the different authentication methods or providers linked to user accounts."
-      />
+      <PageHeading heading="Targets" description="Manage user's targets." />
 
       <DataGridProvider<Models.Target>
         columns={columns}
@@ -70,7 +74,7 @@ const TargetPage = () => {
 
         {data.total > 0 && (
           <>
-            <Table />
+            <Table interactive={false} />
           </>
         )}
       </DataGridProvider>

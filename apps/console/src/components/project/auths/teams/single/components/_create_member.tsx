@@ -1,5 +1,6 @@
 import { FormDialog, InputField, InputTagField, SubmitButton } from "@/components/others/forms";
 import { useProjectStore, useTeamStore } from "@/lib/store";
+import { formValue } from "@/lib/utils";
 import { Column, useToast } from "@nuvix/ui/components";
 import * as y from "yup";
 
@@ -46,7 +47,7 @@ export const CreateMember = ({ onClose, isOpen, refetch }: CreateMemberProps) =>
               undefined,
               undefined,
               undefined,
-              name,
+              formValue(name),
             );
             addToast({
               message: "Member created successfully",

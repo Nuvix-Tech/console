@@ -5,6 +5,7 @@ import { Column, useToast } from "@nuvix/ui/components";
 import { useRouter } from "@bprogress/next";
 import { useParams } from "next/navigation";
 import * as y from "yup";
+import { formValue } from "@/lib/utils";
 
 interface CreateUserProps {
   onClose: () => void;
@@ -53,7 +54,13 @@ export const CreateUser = ({ onClose, isOpen }: CreateUserProps) => {
           try {
             let { id, email, phone, name, password } = values;
             id = id?.trim() || "unique()";
-            const user = await sdk.users.create(id, email, phone, password, name);
+            const user = await sdk.users.create(
+              formValue(id),
+              formValue(email),
+              formValue(phone),
+              formValue(password),
+              formValue(name),
+            );
             addToast({
               message: "User has been successfully created",
               variant: "success",

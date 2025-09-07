@@ -36,3 +36,11 @@ export const createSelectors = <S extends UseBoundStore<StoreApi<object>>>(
 
   return store;
 };
+
+export const formValue = (value: any) => {
+  // TODO: -------------
+  if (value === "") {
+    return undefined;
+  }
+  return value;
+};
