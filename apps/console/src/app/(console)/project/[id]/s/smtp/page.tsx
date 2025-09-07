@@ -2,12 +2,12 @@ import { CommingSoon } from "@/components/_comming_soon";
 import { PageContainer, PageHeading } from "@/components/others";
 import React from "react";
 
-const DomainsPage: React.FC = () => {
+const SmtpPage: React.FC = () => {
   return (
     <PageContainer>
       <PageHeading
-        heading="Custom Domains"
-        description="Manage your custom domains here."
+        heading="SMTP Settings"
+        description="Manage your SMTP settings here."
         right={null}
       />
 
@@ -16,4 +16,4 @@ const DomainsPage: React.FC = () => {
   );
 };
 
-export default DomainsPage;
+export default SmtpPage;

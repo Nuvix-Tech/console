@@ -1,11 +1,18 @@
+import { CommingSoon } from "@/components/_comming_soon";
+import { PageContainer, PageHeading } from "@/components/others";
 import React from "react";
 
 const UsagePage: React.FC = () => {
   return (
-    <div>
-      <h1>Usage Settings</h1>
-      <p>Here you can manage your usage settings.</p>
-    </div>
+    <PageContainer>
+      <PageHeading
+        heading="Usage"
+        description="Monitor your project usage and limits here."
+        right={null}
+      />
+
+      <CommingSoon />
+    </PageContainer>
   );
 };
 

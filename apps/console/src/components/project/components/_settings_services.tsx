@@ -105,7 +105,7 @@ export const UpdateServices = () => {
             <VStack justifyContent={"start"} alignItems="flex-start" flex="1" gap="3">
               {renderSwitch("Account", ApiService.Account, project?.serviceStatusForAccount)}
               {renderSwitch("Avatars", ApiService.Avatars, project?.serviceStatusForAvatars)}
-              {renderSwitch("Databases", ApiService.Databases, project?.serviceStatusForDatabases)}
+              {renderSwitch("Schemas", ApiService.Databases, project?.serviceStatusForDatabases)}
               {renderSwitch("Functions", ApiService.Functions, project?.serviceStatusForFunctions)}
               {renderSwitch("Health", ApiService.Health, project?.serviceStatusForHealth)}
             </VStack>
