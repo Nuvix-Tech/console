@@ -82,6 +82,8 @@ import {
   TbBrandApple,
   TbBrandAndroid,
   TbBrandUnity,
+  TbUser,
+  TbLogout,
 } from "react-icons/tb";
 import { Edit3, ExternalLink, Trash2 } from "lucide-react";
 import { CgArrowLongRightC, CgArrowsH } from "react-icons/cg";
@@ -178,6 +180,11 @@ export const iconMap = {
   apple: TbBrandApple,
   android: TbBrandAndroid,
   unity: TbBrandUnity,
+
+  // account
+  account: TbUser,
+  team: TbUsersGroup,
+  logout: TbLogout,
 } as const;
 
 export type IconName = keyof typeof iconMap;

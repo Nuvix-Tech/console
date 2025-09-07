@@ -46,7 +46,7 @@ export const InviteMember = ({ onClose, isOpen, refetch }: InviteMemberProps) =>
               undefined,
               undefined,
               undefined,
-              name,
+              name || undefined,
             );
             addToast({
               message: "Invitation sent successfully",

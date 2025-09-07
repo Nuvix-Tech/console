@@ -14,7 +14,11 @@ export const ProjectCard = ({ project }: { project: Models.Project }) => {
     >
       <Column gap="2" vertical="center" horizontal="start" fillWidth>
         <Text as={"span"} size="m" onBackground="neutral-weak">
-          {platformsCount ? (platformsCount > 1 ? `${platformsCount} apps` : "app") : "no apps"}
+          {platformsCount
+            ? platformsCount > 1
+              ? `${platformsCount} apps`
+              : `${platformsCount} app`
+            : "no apps"}
         </Text>
         <Row horizontal="space-between" vertical="center" fillWidth>
           <Text as={"h3"} variant="label-strong-l">
@@ -47,8 +51,8 @@ export const ProjectCard = ({ project }: { project: Models.Project }) => {
 
 const TagMapper = ({ type }: { type: string }) => {
   const comp = ({ name, icon }: { name: string; icon: any }) => (
-    <Tag size="l">
-      <Icon name={icon} size="s" onBackground="neutral-weak" />
+    <Tag size="m" className="!items-center !px-1">
+      <Icon name={icon} size="s" onBackground="neutral-weak" className="mt-0.5" />
       <Text marginLeft="4">{name}</Text>
     </Tag>
   );
