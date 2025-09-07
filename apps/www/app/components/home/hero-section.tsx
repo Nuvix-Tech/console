@@ -5,14 +5,14 @@ import { Spotlight } from "~/ui/spotlight-new";
 export const HeroSection = () => {
   return (
     <div className="h-[40rem] w-full rounded-md flex flex-col items-center justify-center antialiased bg-grid relative overflow-hidden px-4">
-      <Spotlight
+      {/* <Spotlight
         gradientFirst="radial-gradient(68.54% 68.72% at 55.02% 31.46%, hsla(30, 100%, 85%, .1) 0, hsla(30, 100%, 55%, .03) 50%, hsla(30, 100%, 45%, 0) 80%)"
         gradientSecond="radial-gradient(50% 50% at 50% 50%, hsla(30, 100%, 85%, .08) 0, hsla(30, 100%, 55%, .04) 80%, transparent 100%)"
         duration={0}
         translateY={-580}
         xOffset={49}
         smallWidth={45}
-      />
+      /> */}
 
       <div className="relative z-10 max-w-7xl w-full">
         <div className="flex flex-col items-center justify-center space-y-6">
@@ -29,7 +29,7 @@ export const HeroSection = () => {
 
           {/* Heading */}
           <motion.div
-            initial={{ opacity: 0 }}
+            initial={{ opacity: 0.1 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.7, delay: 0.2 }}
             className="text-center"
