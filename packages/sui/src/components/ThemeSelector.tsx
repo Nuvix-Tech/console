@@ -23,7 +23,7 @@ export const ThemeSelector = ({
   const variant = useMemo(() => (resolvedTheme === "dark" ? 200 : 900), [resolvedTheme]);
 
   const themes = [
-    { name: "Default", value: "custom", description: "Your system's default color scheme." },
+    { name: "Primary", value: "custom", description: "Your system's default color scheme." },
     { name: "Gray", value: "gray", description: "A classic, understated grayscale palette." },
     { name: "Slate", value: "slate", description: "A cool, sophisticated blue-gray theme." },
     { name: "Sand", value: "sand", description: "A warm, inviting earthy tone." },
