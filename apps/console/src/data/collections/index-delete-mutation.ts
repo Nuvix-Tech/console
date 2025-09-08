@@ -37,7 +37,7 @@ export const useIndexDeleteMutation = ({
         queryKey: collectionKeys.editor(projectRef, collection.$schema, collection.$id),
       });
       await queryClient.invalidateQueries({
-        queryKey: collectionKeys.documents(projectRef, collection.$schema, collection.$id),
+        queryKey: collectionKeys.indexes(projectRef, collection.$schema, collection.$id),
       });
       await onSuccess?.(data, variables, context);
     },

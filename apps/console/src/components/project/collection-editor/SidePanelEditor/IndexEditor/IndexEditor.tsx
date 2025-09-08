@@ -62,7 +62,7 @@ const IndexEditor = ({
         const { key, type, fields } = values;
         const attributes = Object.keys(fields ?? {});
         const orders = Object.values(fields ?? {}) as string[];
-        const schema = editorState.schema;
+        const schema = selectedCollection.$schema;
 
         _index = await sdk.databases.createIndex(
           schema,

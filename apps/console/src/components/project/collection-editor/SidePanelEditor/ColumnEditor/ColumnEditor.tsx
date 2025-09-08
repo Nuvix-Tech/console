@@ -13,10 +13,10 @@ import { useFormik } from "formik";
 import { AttributeIcon } from "./ColumnIcon";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AttributeConfigFactory } from "./ColumnConfig";
-import { useCollectionEditorStore } from "@/lib/store/collection-editor";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 import { SelectField } from "../RowEditor/InputField";
 import { cn } from "@nuvix/sui/lib/utils";
+import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
 
 export interface ColumnEditorProps {
   column?: Readonly<AttributeTypes>;
@@ -41,16 +41,15 @@ const ColumnEditor = ({
   onSave,
 }: ColumnEditorProps) => {
   const { sdk } = useProjectStore();
-  const editorState = useCollectionEditorStore();
   const snap = useCollectionEditorCollectionStateSnapshot();
+  const { selectedSchema } = useQuerySchemaState("doc");
 
   const initialType = column?.type as Attributes | AttributeFormat | undefined;
   const [type, setType] = useState<Attributes | AttributeFormat | undefined>(initialType);
 
   const factory = useMemo(
-    () =>
-      new AttributeConfigFactory(sdk, { name: editorState.schema }, snap.collection, column as any),
-    [sdk, editorState.schema, snap.collection, column],
+    () => new AttributeConfigFactory(sdk, { name: selectedSchema }, snap.collection, column as any),
+    [sdk, selectedSchema, snap.collection, column],
   );
 
   const [formikConfig, setFormikConfig] = useState<

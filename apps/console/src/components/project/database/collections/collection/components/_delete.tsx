@@ -1,53 +1,17 @@
 import { DangerCard } from "@/components/others/danger-card";
 import { formatDate } from "@/lib/utils";
-import { useConfirm, useToast } from "@nuvix/ui/components";
 import { Button, Text, VStack } from "@chakra-ui/react";
-import { useRouter } from "@bprogress/next";
-import { useState } from "react";
 import { useProjectStore } from "@/lib/store";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
+import { useCollectionEditorStore } from "@/lib/store/collection-editor";
 
 export const DeleteCollection = () => {
   const sdk = useProjectStore.use.sdk?.();
-  const project = useProjectStore.use.project?.();
+  const editorState = useCollectionEditorStore();
   const state = useCollectionEditorCollectionStateSnapshot();
   const collection = state.collection;
-  const [loading, setLoading] = useState(false);
-  const { addToast } = useToast();
-  const { replace } = useRouter();
-  const confirm = useConfirm();
 
   if (!collection || !sdk) return;
-
-  const deleteCollection = async (id: string) => {
-    if (
-      await confirm({
-        title: "Delete Collection",
-        description: "Are you sure you want to delete this collection?",
-        confirm: {
-          text: "Delete",
-          variant: "danger",
-        },
-      })
-    ) {
-      try {
-        setLoading(true);
-        await sdk.databases.deleteCollection(collection.$schema, id);
-        addToast({
-          variant: "success",
-          message: "Collection deleted successfully",
-        });
-        replace(`/project/${project?.$id}/schema/${collection.$schema}`);
-      } catch (e: any) {
-        addToast({
-          variant: "danger",
-          message: e.message,
-        });
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
 
   return (
     <DangerCard
@@ -57,8 +21,7 @@ export const DeleteCollection = () => {
         <Button
           variant={"surface"}
           colorPalette="red"
-          loading={loading}
-          onClick={() => deleteCollection(collection.$id)}
+          onClick={() => editorState.onDeleteCollection()}
           loadingText={"Deleting..."}
         >
           Delete

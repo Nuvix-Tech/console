@@ -28,6 +28,7 @@ import { useDocumentCreateMutation } from "@/data/collections/documents/document
 import { useDocumentUpdateMutation } from "@/data/collections/documents/document_update_mutation";
 import IndexEditor from "./IndexEditor/IndexEditor";
 import PermissionEditor from "./RowEditor/PermissionEditor";
+import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
 
 export interface SidePanelEditorProps {
   editable?: boolean;
@@ -46,6 +47,7 @@ const SidePanelEditor = ({
 }: SidePanelEditorProps) => {
   const { id: ref } = useParams();
   const snap = useCollectionEditorStore();
+  const { selectedSchema } = useQuerySchemaState("doc");
   // const isTableEditorTabsEnabled = useIsTableEditorTabsEnabled();
 
   const queryClient = useQueryClient();
@@ -234,15 +236,26 @@ const SidePanelEditor = ({
 
       await Promise.all([
         queryClient.invalidateQueries({
-          queryKey: collectionKeys.editor(project?.$id, snap.schema, selectedCollection?.$id),
+          queryKey: collectionKeys.editor(project?.$id, selectedSchema, selectedCollection?.$id),
         }),
         queryClient.invalidateQueries({ queryKey: collectionKeys.list(project?.$id) }),
+        queryClient.invalidateQueries({
+          queryKey: collectionKeys.attributes(
+            project?.$id,
+            selectedSchema,
+            selectedCollection?.$id,
+          ),
+        }),
       ]);
 
       // // We need to invalidate tableRowsAndCount after tableEditor
       // // to ensure the query sent is correct
       await queryClient.invalidateQueries({
-        queryKey: collectionKeys.documentsCount(project?.$id, snap.schema, selectedCollection?.$id),
+        queryKey: collectionKeys.documentsCount(
+          project?.$id,
+          selectedSchema,
+          selectedCollection?.$id,
+        ),
       });
 
       setIsEdited(false);
@@ -290,7 +303,7 @@ const SidePanelEditor = ({
     } else {
       await Promise.all([
         queryClient.invalidateQueries({
-          queryKey: collectionKeys.editor(project?.$id, snap.schema, selectedCollection?.$id),
+          queryKey: collectionKeys.editor(project?.$id, selectedSchema, selectedCollection?.$id),
         }),
         queryClient.invalidateQueries({ queryKey: collectionKeys.list(project?.$id) }),
       ]);
@@ -298,7 +311,11 @@ const SidePanelEditor = ({
       // // We need to invalidate tableRowsAndCount after tableEditor
       // // to ensure the query sent is correct
       await queryClient.invalidateQueries({
-        queryKey: collectionKeys.documentsCount(project?.$id, snap.schema, selectedCollection?.$id),
+        queryKey: collectionKeys.documentsCount(
+          project?.$id,
+          selectedSchema,
+          selectedCollection?.$id,
+        ),
       });
 
       setIsEdited(false);
@@ -332,7 +349,7 @@ const SidePanelEditor = ({
           sdk,
           toastId,
           payload,
-          schema: snap.schema,
+          schema: selectedSchema,
         });
 
         await Promise.all([
@@ -353,7 +370,7 @@ const SidePanelEditor = ({
           sdk,
           toastId,
           payload,
-          schema: snap.schema,
+          schema: selectedSchema,
         });
 
         await Promise.all([
@@ -373,7 +390,7 @@ const SidePanelEditor = ({
           toastId,
           collectionId: configuration.collectionId!,
           payload,
-          schema: snap.schema,
+          schema: selectedSchema,
         });
 
         // if (isTableEditorTabsEnabled && ref && payload.name) {

@@ -1,7 +1,6 @@
 "use client";
 import React, { PropsWithChildren } from "react";
 import { useProjectStore } from "@/lib/store";
-import { useQuery } from "@tanstack/react-query";
 import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
 import { CollectionEditorCollectionStateContextProvider } from "@/lib/store/collection";
 import SidePanelEditor from "@/components/project/collection-editor/SidePanelEditor/SidePanelEditor";
@@ -12,6 +11,7 @@ import { usePathname } from "next/navigation";
 import { Spinner } from "@nuvix/ui/components";
 import NotFoundPage from "@/components/others/page-not-found";
 import ErrorPage from "@/components/others/page-error";
+import { useCollectionEditorQuery } from "@/data/collections";
 
 type Props = PropsWithChildren & {
   collectionId: string;
@@ -23,15 +23,17 @@ export const CollectionLayout: React.FC<Props> = ({ children, collectionId }) =>
   const router = useRouter();
   const path = usePathname();
 
-  const fetcher = async () => {
-    return await sdk.databases.getCollection(selectedSchema, collectionId);
-  };
-
-  const { data, isPending, error } = useQuery({
-    queryKey: ["collection", selectedSchema, collectionId],
-    queryFn: fetcher,
-    enabled: !!sdk && !!selectedSchema && !!collectionId,
-  });
+  const { data, isPending, error } = useCollectionEditorQuery(
+    {
+      projectRef: project.$id,
+      sdk,
+      schema: selectedSchema,
+      id: collectionId,
+    },
+    {
+      enabled: !!sdk && !!selectedSchema && !!collectionId,
+    },
+  );
 
   const tabs = [
     { label: "Attributes", value: "attributes" },

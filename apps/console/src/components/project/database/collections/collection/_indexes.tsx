@@ -8,10 +8,11 @@ import { useProjectStore } from "@/lib/store";
 import { CreateButton, PageContainer, PageHeading } from "@/components/others";
 import { EmptyState } from "@/components/_empty_state";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Column, IconButton, Tag, Text } from "@nuvix/ui/components";
+import { Button, Column, IconButton, Tag, Text } from "@nuvix/ui/components";
 import { DropdownMenu, DropdownMenuItem } from "@/components/others/dropdown-menu";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 import { useCollectionEditorStore } from "@/lib/store/collection-editor";
+import { LogsDialog } from "@/components/others/ui";
 
 type Props = {
   collectionId: string;
@@ -36,6 +37,8 @@ export const IndexesPage: React.FC<Props> = ({ collectionId }) => {
       minSize: 300,
       cell: ({ row }) => {
         const index = row.original;
+        const error = index.error;
+
         return (
           <div className="flex items-center gap-2 justify-between w-full">
             <div className="flex items-center gap-4">
@@ -50,6 +53,20 @@ export const IndexesPage: React.FC<Props> = ({ collectionId }) => {
               >
                 {index.status}
               </Tag>
+            )}
+            {error && (
+              <LogsDialog
+                title="Attribute Error Logs"
+                message={{
+                  title: "",
+                  code: [error],
+                  description: "",
+                }}
+              >
+                <Button variant="danger" size="xs">
+                  error
+                </Button>
+              </LogsDialog>
             )}
           </div>
         );

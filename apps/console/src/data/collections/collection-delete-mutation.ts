@@ -36,6 +36,9 @@ export const useCollectionDeleteMutation = ({
       await queryClient.invalidateQueries({
         queryKey: collectionKeys.list(projectRef, { schema: collection.$schema }),
       });
+      await queryClient.invalidateQueries({
+        queryKey: collectionKeys.editor(projectRef, collection.$schema, collection.$id),
+      });
       await onSuccess?.(data, variables, context);
     },
     async onError(data, variables, context) {

@@ -2,7 +2,7 @@
 
 import { Spinner, useConfirm, useToast } from "@nuvix/ui/components";
 import { Models, Query } from "@nuvix/console";
-import React, { useEffect } from "react";
+import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Tooltip } from "@nuvix/cui/tooltip";
 import { HStack } from "@chakra-ui/react";
@@ -20,13 +20,14 @@ import { CreateButton, IDChip, PageContainer, PageHeading } from "@/components/o
 import { useProjectStore } from "@/lib/store";
 import { useSearchQuery } from "@/hooks/useQuery";
 import { EmptyState } from "@/components/_empty_state";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
 import DocSchemaSelector from "@/ui/DocSchemaSelector";
 import SidePanelEditor from "../../collection-editor/SidePanelEditor/SidePanelEditor";
 import { useCollectionEditorStore } from "@/lib/store/collection-editor";
 import NotFoundPage from "@/components/others/page-not-found";
 import ErrorPage from "@/components/others/page-error";
+import { collectionKeys } from "@/data/collections";
 
 const CollectionsPage = () => {
   const sdk = useProjectStore.use.sdk?.();
@@ -35,6 +36,7 @@ const CollectionsPage = () => {
   const [deleting, setDeleting] = React.useState(false);
   const { selectedSchema, setSelectedSchema } = useQuerySchemaState("doc");
   const state = useCollectionEditorStore();
+  const queryClient = useQueryClient();
 
   const { limit, page, search, hasQuery } = useSearchQuery();
   const confirm = useConfirm();
@@ -47,8 +49,13 @@ const CollectionsPage = () => {
     return await sdk.databases.listCollections(selectedSchema, queries, search ?? undefined);
   };
 
-  const { data, isFetching, refetch, error, isPending } = useQuery({
-    queryKey: ["collections", selectedSchema, page, limit, search],
+  const { data, isFetching, error, isPending } = useQuery({
+    queryKey: collectionKeys.list(project?.$id, {
+      schema: selectedSchema,
+      search,
+      page,
+      limit,
+    }),
     queryFn: fetcher,
     enabled: !!sdk && !!selectedSchema,
   });
@@ -125,13 +132,15 @@ const CollectionsPage = () => {
             });
           }
         }),
-      ).then((v) =>
+      ).then(async (v) => {
+        await queryClient.invalidateQueries({
+          queryKey: collectionKeys.list(project?.$id, { schema: selectedSchema }),
+        });
         addToast({
           message: `Successfully deleted ${ids.length} collection(s)`,
           variant: "success",
-        }),
-      );
-      await refetch();
+        });
+      });
     }
   };
 

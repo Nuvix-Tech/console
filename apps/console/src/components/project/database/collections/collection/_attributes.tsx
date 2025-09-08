@@ -8,11 +8,12 @@ import { useProjectStore } from "@/lib/store";
 import { CreateButton, PageContainer, PageHeading } from "@/components/others";
 import { EmptyState } from "@/components/_empty_state";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Column, IconButton, Tag, Text } from "@nuvix/ui/components";
+import { Button, Column, IconButton, Tag, Text } from "@nuvix/ui/components";
 import { DropdownMenu, DropdownMenuItem } from "@/components/others/dropdown-menu";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 import { useCollectionEditorStore } from "@/lib/store/collection-editor";
 import { AttributeIcon } from "@/components/project/collection-editor/SidePanelEditor/ColumnEditor/ColumnIcon";
+import { LogsDialog } from "@/components/others/ui";
 
 type Props = {
   collectionId: string;
@@ -42,16 +43,17 @@ export const AttributesPage: React.FC<Props> = ({ collectionId }) => {
         accessorKey: "key",
         minSize: 300,
         cell: ({ row }) => {
-          const attr: any = row.original;
+          const attr = row.original;
           const isUnavailable = attr.status !== "available";
+          const error = attr.error;
 
           return (
             <div className="flex items-center gap-2 justify-between w-full">
               <div className="flex items-center gap-4">
                 <AttributeIcon
-                  type={attr.format || attr.type}
+                  type={(attr as any).format || attr.type}
                   array={attr.array}
-                  twoWay={attr?.options?.twoWay}
+                  twoWay={(attr as any)?.options?.twoWay}
                 />
                 <p className="text-sm line-clamp-1 overflow-ellipsis">{attr.key}</p>
               </div>
@@ -71,6 +73,20 @@ export const AttributesPage: React.FC<Props> = ({ collectionId }) => {
                   </Tag>
                 )
               )}
+              {error && (
+                <LogsDialog
+                  title="Attribute Error Logs"
+                  message={{
+                    title: "",
+                    code: [error],
+                    description: "",
+                  }}
+                >
+                  <Button variant="danger" size="xs">
+                    error
+                  </Button>
+                </LogsDialog>
+              )}
             </div>
           );
         },
@@ -81,7 +97,7 @@ export const AttributesPage: React.FC<Props> = ({ collectionId }) => {
         minSize: 100,
         cell: ({ row }) => (
           <p className="capitalize">
-            {row.original.type} {row.original.array ? "[]" : ""}
+            {(row.original as any).format || row.original.type} {row.original.array ? "[]" : ""}
           </p>
         ),
       },

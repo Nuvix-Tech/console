@@ -37,6 +37,9 @@ export const useAttributeDeleteMutation = ({
         queryKey: collectionKeys.editor(projectRef, collection.$schema, collection.$id),
       });
       await queryClient.invalidateQueries({
+        queryKey: collectionKeys.attributes(projectRef, collection.$schema, collection.$id),
+      });
+      await queryClient.invalidateQueries({
         queryKey: collectionKeys.documents(projectRef, collection.$schema, collection.$id),
       });
       await onSuccess?.(data, variables, context);
