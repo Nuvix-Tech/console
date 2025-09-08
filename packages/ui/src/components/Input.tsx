@@ -162,7 +162,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       styles.input,
       "font-body",
       "font-default",
-      "font-m",
+      height === "s" ? "font-s" : "font-m",
       cursor === "interactive" ? "cursor-interactive" : undefined,
       {
         [styles.filled]: isFilled,

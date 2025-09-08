@@ -19,11 +19,6 @@ const DatbaseSidebar = () => {
             href: href("visualizer"),
             isSelected: isEqual("visualizer"),
           },
-          {
-            label: "Tables",
-            href: href("tables"),
-            isSelected: isIncludes("tables"),
-          },
         ]}
       />
 
@@ -32,6 +27,16 @@ const DatbaseSidebar = () => {
       <SidebarGroup
         title="Database Objects"
         items={[
+          {
+            label: "Tables",
+            href: href("tables"),
+            isSelected: isIncludes("tables"),
+          },
+          {
+            label: "Collections",
+            href: href("collections"),
+            isSelected: isIncludes("collections"),
+          },
           {
             label: "Functions",
             href: href("functions"),

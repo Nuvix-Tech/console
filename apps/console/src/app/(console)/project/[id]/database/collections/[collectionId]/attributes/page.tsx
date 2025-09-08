@@ -1,0 +1,11 @@
+import { AttributesPage } from "@/components/project/database/collections/collection";
+import { PropsWithParams } from "@/types";
+
+type Props = {
+  collectionId: string;
+};
+
+export default async function ({ params }: PropsWithParams<Props>) {
+  const props = await params;
+  return <AttributesPage {...props} />;
+}

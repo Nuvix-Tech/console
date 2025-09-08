@@ -1,4 +1,4 @@
-import { Clipboard, Copy, Download, Edit, MoreHorizontal } from "lucide-react";
+import { Clipboard, Copy, Edit, MoreHorizontal } from "lucide-react";
 import { toast } from "sonner";
 
 import { IS_PLATFORM } from "@/lib/constants";
@@ -9,9 +9,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
+  // DropdownMenuSub,
+  // DropdownMenuSubContent,
+  // DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@nuvix/sui/components/dropdown-menu";
 import { useProjectStore } from "@/lib/store";
@@ -28,6 +28,7 @@ export interface EntityListItemProps {
   isLocked: boolean;
   isActive?: boolean;
   schema: string;
+  href?: string;
 }
 
 export const CollectionListItem: ItemRenderer<Models.Collection, EntityListItemProps> = ({
@@ -36,6 +37,7 @@ export const CollectionListItem: ItemRenderer<Models.Collection, EntityListItemP
   item: collection,
   isLocked,
   isActive: _isActive,
+  href,
   schema,
 }) => {
   const { project, sdk } = useProjectStore();
@@ -101,11 +103,15 @@ export const CollectionListItem: ItemRenderer<Models.Collection, EntityListItemP
     }
   };
 
+  const url = href
+    ? `/project/${projectRef}${href}/${collection.$id}?docSchema=${selectedSchema}`
+    : `/project/${projectRef}/collections/${collection.$id}?docSchema=${selectedSchema}`;
+
   return (
     <SmartLink
       title={collection.name}
       id={collection.$id}
-      href={`/project/${projectRef}/collections/${collection.$id}?docSchema=${schema}`}
+      href={url}
       role="button"
       aria-label={`View ${collection.name}`}
       fillWidth

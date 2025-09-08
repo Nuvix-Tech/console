@@ -1,25 +1,29 @@
 import { DangerCard } from "@/components/others/danger-card";
+import { formatDate } from "@/lib/utils";
 import { useConfirm, useToast } from "@nuvix/ui/components";
 import { Button, Text, VStack } from "@chakra-ui/react";
 import { useRouter } from "@bprogress/next";
 import { useState } from "react";
 import { useProjectStore } from "@/lib/store";
+import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 
-export const DeleteDatabase = () => {
+export const DeleteCollection = () => {
   const sdk = useProjectStore.use.sdk?.();
   const project = useProjectStore.use.project?.();
+  const state = useCollectionEditorCollectionStateSnapshot();
+  const collection = state.collection;
   const [loading, setLoading] = useState(false);
   const { addToast } = useToast();
   const { replace } = useRouter();
   const confirm = useConfirm();
 
-  if (!sdk) return;
+  if (!collection || !sdk) return;
 
-  const deleteDatabase = async (id: string) => {
+  const deleteCollection = async (id: string) => {
     if (
       await confirm({
-        title: "Delete Database",
-        description: "Are you sure you want to delete this database?",
+        title: "Delete Collection",
+        description: "Are you sure you want to delete this collection?",
         confirm: {
           text: "Delete",
           variant: "danger",
@@ -28,12 +32,12 @@ export const DeleteDatabase = () => {
     ) {
       try {
         setLoading(true);
-        // await sdk.databases.delete(database.$id);
+        await sdk.databases.deleteCollection(collection.$schema, id);
         addToast({
           variant: "success",
-          message: "Database deleted",
+          message: "Collection deleted successfully",
         });
-        replace(`/project/${project?.$id}/schema`);
+        replace(`/project/${project?.$id}/schema/${collection.$schema}`);
       } catch (e: any) {
         addToast({
           variant: "danger",
@@ -47,14 +51,14 @@ export const DeleteDatabase = () => {
 
   return (
     <DangerCard
-      title="Delete Database"
-      description="This action is irreversible. All collections and documents will be deleted."
+      title="Delete Collection"
+      description="The collection will be permanently deleted, including all data associated with this collection. This action is irreversible."
       actions={
         <Button
           variant={"surface"}
           colorPalette="red"
           loading={loading}
-          // onClick={() => deleteDatabase(database.$id)}
+          onClick={() => deleteCollection(collection.$id)}
           loadingText={"Deleting..."}
         >
           Delete
@@ -63,10 +67,10 @@ export const DeleteDatabase = () => {
     >
       <VStack alignItems={"flex-start"} gap={0.2}>
         <Text textStyle="md" fontWeight="semibold">
-          {/* {database.name} */}
+          {collection.name}
         </Text>
         <Text textStyle={{ base: "sm", mdOnly: "xs" }} color={"fg.muted"} truncate>
-          {/* Last Updated: {formatDate(database.$updatedAt)} */}
+          Last Updated: {formatDate(collection.$updatedAt)}
         </Text>
       </VStack>
     </DangerCard>

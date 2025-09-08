@@ -1,7 +1,7 @@
 "use client";
 import { CloseButton } from "@nuvix/cui/close-button";
 import { cn } from "@nuvix/sui/lib/utils";
-import { Input, Row } from "@nuvix/ui/components";
+import { Icon, Input, Row } from "@nuvix/ui/components";
 import { Button, ButtonProps } from "@chakra-ui/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
@@ -50,6 +50,7 @@ export const Search: React.FC<SearchProps & React.ComponentProps<typeof Input>> 
   onClear,
   value,
   onSearch,
+  className,
   ...props
 }) => {
   const [searchValue, setSearchValue] = React.useState("");
@@ -76,7 +77,7 @@ export const Search: React.FC<SearchProps & React.ComponentProps<typeof Input>> 
   return (
     <>
       <Input
-        className={cn("max-w-md", props.className)}
+        className={cn("max-w-md", className)}
         height="s"
         {...props}
         labelAsPlaceholder
@@ -86,7 +87,7 @@ export const Search: React.FC<SearchProps & React.ComponentProps<typeof Input>> 
           setSearchValue(e.target.value);
           handleSearch(e.target.value);
         }}
-        hasPrefix={<LuSearch />}
+        hasPrefix={<Icon name="search" size="s" />}
         hasSuffix={!!searchValue.length && <CloseButton onClick={() => handleSearch()} />}
       />
     </>

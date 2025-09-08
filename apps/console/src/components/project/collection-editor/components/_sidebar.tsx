@@ -14,7 +14,7 @@ import EditorMenuListSkeleton from "../../table-editor/components/EditorMenuList
 import { useCollectionEditorStateSnapshot } from "@/lib/store/collection-editor";
 import DocSchemaSelector from "@/ui/DocSchemaSelector";
 
-export const Sidebar = () => {
+export const Sidebar = ({ href }: { href?: string }) => {
   const { id: ref, collectionId } = useParams<{ collectionId: string; id: string }>();
   const snap = useCollectionEditorStateSnapshot();
   const { selectedSchema, setSelectedSchema } = useQuerySchemaState("doc");
@@ -133,6 +133,7 @@ export const Sidebar = () => {
                         projectRef: project?.$id!,
                         id: collectionId,
                         schema: selectedSchema,
+                        href,
                       }}
                       getItemSize={() => 28}
                       hasNextPage={hasNextPage}

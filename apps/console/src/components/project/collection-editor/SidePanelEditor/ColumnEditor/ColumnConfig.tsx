@@ -2,18 +2,16 @@
 
 import React, { useEffect, useMemo } from "react";
 import {
-  FormDialog,
   InputField,
   InputNumberField,
   InputSwitchField,
   InputTagField,
-  SubmitButton,
 } from "@/components/others/forms";
-import { useCollectionStore, useProjectStore } from "@/lib/store";
-import { Column, Row, useToast } from "@nuvix/ui/components";
+import { useProjectStore } from "@/lib/store";
+import { Column, Row } from "@nuvix/ui/components";
 import * as y from "yup";
-import { AttributeIcon, RelationshipIcon } from "./ColumnIcon";
-import { useFormikContext, type FormikValues, type FormikHelpers } from "formik";
+import { RelationshipIcon } from "./ColumnIcon";
+import { useFormikContext } from "formik";
 import { useQuery } from "@tanstack/react-query";
 import { RadioCardItem, RadioCardRoot } from "@nuvix/cui/radio-card";
 import { MoveHorizontal, MoveRight } from "lucide-react";
@@ -236,71 +234,6 @@ const MinMaxFields: React.FC = () => (
     <InputNumberField name="max" label="Maximum" nullable />
   </Row>
 );
-
-// ======================== FORM BASE COMPONENT ========================
-
-const AttributeFormBase = <T extends FormikValues>({
-  onClose,
-  isOpen,
-  refetch,
-  title,
-  format,
-  description,
-  initialValues,
-  validationSchema,
-  formFields,
-  submitAction,
-}: AttributeFormBaseProps<T>) => {
-  const { addToast } = useToast();
-  const { refresh } = useCollectionStore((s) => s);
-
-  const handleSubmit = async (
-    values: FormikValues,
-    _formikHelpers: FormikHelpers<FormikValues>,
-  ) => {
-    try {
-      await submitAction(values as T);
-      addToast({
-        message: "Attribute created successfully",
-        variant: "success",
-      });
-      onClose();
-      await refetch();
-      await refresh();
-    } catch (error: any) {
-      addToast({
-        message: error?.message ?? "Failed to create attribute",
-        variant: "danger",
-      });
-    }
-  };
-
-  return (
-    <FormDialog
-      dialog={{
-        title: (
-          <Row gap="8">
-            <AttributeIcon type={format as any} />
-            {title}
-          </Row>
-        ),
-        description,
-        isOpen,
-        onClose,
-        footer: <SubmitButton label="Create" />,
-      }}
-      form={{
-        validationSchema,
-        initialValues,
-        onSubmit: handleSubmit,
-      }}
-    >
-      <Column paddingY="12" fillWidth gap="16">
-        {formFields}
-      </Column>
-    </FormDialog>
-  );
-};
 
 // ======================== ATTRIBUTE CONFIG FACTORY ========================
 
