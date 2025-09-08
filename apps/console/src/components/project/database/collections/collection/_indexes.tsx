@@ -8,49 +8,26 @@ import { useProjectStore } from "@/lib/store";
 import { CreateButton, PageContainer, PageHeading } from "@/components/others";
 import { EmptyState } from "@/components/_empty_state";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Column, IconButton, Tag, Text, useConfirm, useToast } from "@nuvix/ui/components";
+import { Column, IconButton, Tag, Text } from "@nuvix/ui/components";
 import { DropdownMenu, DropdownMenuItem } from "@/components/others/dropdown-menu";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
+import { useCollectionEditorStore } from "@/lib/store/collection-editor";
 
 type Props = {
   collectionId: string;
 };
 
 export const IndexesPage: React.FC<Props> = ({ collectionId }) => {
-  const { addToast } = useToast();
-  const confirm = useConfirm();
   const sdk = useProjectStore.use.sdk();
   const state = useCollectionEditorCollectionStateSnapshot();
+  const editor = useCollectionEditorStore();
   const collection = state.collection;
   const databaseId = collection.$schema;
 
-  const { data, isFetching, refetch } = useSuspenseQuery({
+  const { data, isFetching } = useSuspenseQuery({
     queryKey: ["indexes", databaseId, collectionId],
     queryFn: async () => sdk?.databases.listIndexes(databaseId, collectionId),
   });
-
-  const onDelete = async (index: Models.Index, refetch: () => Promise<any>) => {
-    const confirmed = await confirm({
-      title: "Delete Attribute",
-      description: `Are you sure you want to delete the index "${index.key}"?`,
-    });
-
-    if (!confirmed) return;
-
-    try {
-      await sdk.databases.deleteIndex(collection.$schema, collection.$id, index.key);
-      addToast({
-        message: `The index "${index.key}" has been deleted.`,
-        variant: "success",
-      });
-      await refetch();
-    } catch (error: any) {
-      addToast({
-        message: error.message,
-        variant: "danger",
-      });
-    }
-  };
 
   const columns: ColumnDef<Models.Index>[] = [
     {
@@ -105,7 +82,7 @@ export const IndexesPage: React.FC<Props> = ({ collectionId }) => {
         <DropdownMenu trigger={<IconButton icon={<Ellipsis />} size="s" variant="tertiary" />}>
           <Column>
             <DropdownMenuItem>Overview</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onDelete(row.original, refetch)}>
+            <DropdownMenuItem onClick={() => editor.onDeleteIndex(row.original)}>
               Delete
             </DropdownMenuItem>
           </Column>
@@ -124,9 +101,8 @@ export const IndexesPage: React.FC<Props> = ({ collectionId }) => {
         right={
           <CreateButton
             hasPermission={true}
-            // component={CreateIndex}
-            extraProps={{ refetch }}
             label="Create Index"
+            onClick={() => editor.onAddIndex()}
           />
         }
       />

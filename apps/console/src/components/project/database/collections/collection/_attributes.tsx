@@ -3,12 +3,12 @@ import { Models } from "@nuvix/console";
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataGridProvider, Table } from "@/ui/data-grid";
-import { Ellipsis, Pencil, Trash } from "lucide-react";
+import { Ellipsis } from "lucide-react";
 import { useProjectStore } from "@/lib/store";
 import { CreateButton, PageContainer, PageHeading } from "@/components/others";
 import { EmptyState } from "@/components/_empty_state";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Column, IconButton, Tag, Text, useConfirm, useToast } from "@nuvix/ui/components";
+import { Column, IconButton, Tag, Text } from "@nuvix/ui/components";
 import { DropdownMenu, DropdownMenuItem } from "@/components/others/dropdown-menu";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 import { useCollectionEditorStore } from "@/lib/store/collection-editor";
@@ -19,8 +19,6 @@ type Props = {
 };
 
 export const AttributesPage: React.FC<Props> = ({ collectionId }) => {
-  const { addToast } = useToast();
-  const confirm = useConfirm();
   const sdk = useProjectStore.use.sdk();
   const state = useCollectionEditorCollectionStateSnapshot();
   const editor = useCollectionEditorStore();
@@ -31,34 +29,11 @@ export const AttributesPage: React.FC<Props> = ({ collectionId }) => {
     return await sdk.databases.listAttributes(databaseId, collectionId);
   }, [sdk, databaseId, collectionId]);
 
-  const { data, isFetching, refetch } = useSuspenseQuery({
+  const { data, isFetching } = useSuspenseQuery({
     queryKey: ["attributes", databaseId, collectionId],
     queryFn: fetcher,
     staleTime: 30000, // 30 seconds
   });
-
-  const onDelete = async (attribute: Models.AttributeString, refetch: () => Promise<any>) => {
-    const confirmed = await confirm({
-      title: "Delete Attribute",
-      description: `Are you sure you want to delete the attribute "${attribute.key}"?`,
-    });
-
-    if (!confirmed) return;
-
-    try {
-      await sdk.databases.deleteAttribute(collection.$schema, collection.$id, attribute.key);
-      addToast({
-        message: `The attribute "${attribute.key}" has been deleted.`,
-        variant: "success",
-      });
-      await refetch();
-    } catch (error: any) {
-      addToast({
-        message: error.message,
-        variant: "danger",
-      });
-    }
-  };
 
   const columns = React.useMemo<ColumnDef<Models.AttributeString>[]>(
     () => [
@@ -125,21 +100,21 @@ export const AttributesPage: React.FC<Props> = ({ collectionId }) => {
           <DropdownMenu trigger={<IconButton icon={<Ellipsis />} size="s" variant="tertiary" />}>
             <Column>
               <DropdownMenuItem
-                prefixIcon={<Pencil size={12} />}
-                onClick={() => console.log("Update", row.original.key)}
+                prefixIcon={"edit"}
+                onClick={() => editor.onEditColumn(row.original)}
               >
                 Update
               </DropdownMenuItem>
               <DropdownMenuItem
                 prefixIcon="plus"
-                onClick={() => console.log("Create Index", row.original.key)}
+                onClick={() => editor.onAddIndex([row.original.key])}
               >
                 Create Index
               </DropdownMenuItem>
               <DropdownMenuItem
-                prefixIcon={<Trash size={12} />}
+                prefixIcon={"trash"}
                 variant="danger"
-                onClick={() => onDelete(row.original, refetch)}
+                onClick={() => editor.onDeleteColumn(row.original)}
               >
                 Delete
               </DropdownMenuItem>

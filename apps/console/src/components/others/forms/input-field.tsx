@@ -376,6 +376,7 @@ type SelectObjectFieldProps = Pick<InputObjectFieldProps, "label" | "name"> & {
   right: SelectObjectFieldInputProps;
   description?: string;
   addText?: string;
+  portal?: boolean;
 };
 
 export const SelectObjectField: React.FC<SelectObjectFieldProps> = ({
@@ -384,6 +385,7 @@ export const SelectObjectField: React.FC<SelectObjectFieldProps> = ({
   right,
   name,
   description,
+  portal,
   ...rest
 }) => {
   const [_values, setValues] = useState<Values>([]);
@@ -440,6 +442,7 @@ export const SelectObjectField: React.FC<SelectObjectFieldProps> = ({
                     placeholder={left.placeholder}
                     value={key}
                     options={left.options}
+                    portal={portal}
                     height="s"
                     labelAsPlaceholder
                     onSelect={(v) => handleFieldChange("key", v, i)}
@@ -447,6 +450,7 @@ export const SelectObjectField: React.FC<SelectObjectFieldProps> = ({
                   <Select
                     placeholder={right.placeholder}
                     value={value}
+                    portal={portal}
                     options={right.options}
                     height="s"
                     labelAsPlaceholder

@@ -2,7 +2,7 @@ import { IndexesPage } from "@/components/project/database/collections/collectio
 import { PropsWithParams } from "@/types";
 
 type Props = {
-  databaseId: string;
+  collectionId: string;
 };
 
 export default async function ({ params }: PropsWithParams<Props>) {

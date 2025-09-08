@@ -5,7 +5,7 @@ import { CollectionLayout } from "@/components/project/database/collections/coll
 export default async function ({
   children,
   params,
-}: PropsWithChildren & PropsWithParams<{ databaseId: string; collectionId: string }>) {
+}: PropsWithChildren & PropsWithParams<{ collectionId: string }>) {
   const props = await params;
 
   return <CollectionLayout {...props}>{children}</CollectionLayout>;

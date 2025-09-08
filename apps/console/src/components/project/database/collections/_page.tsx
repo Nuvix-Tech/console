@@ -1,6 +1,6 @@
 "use client";
 
-import { useConfirm, useToast } from "@nuvix/ui/components";
+import { Spinner, useConfirm, useToast } from "@nuvix/ui/components";
 import { Models, Query } from "@nuvix/console";
 import React, { useEffect } from "react";
 import { ColumnDef } from "@tanstack/react-table";
@@ -25,6 +25,8 @@ import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
 import DocSchemaSelector from "@/ui/DocSchemaSelector";
 import SidePanelEditor from "../../collection-editor/SidePanelEditor/SidePanelEditor";
 import { useCollectionEditorStore } from "@/lib/store/collection-editor";
+import NotFoundPage from "@/components/others/page-not-found";
+import ErrorPage from "@/components/others/page-error";
 
 const CollectionsPage = () => {
   const sdk = useProjectStore.use.sdk?.();
@@ -45,7 +47,7 @@ const CollectionsPage = () => {
     return await sdk.databases.listCollections(selectedSchema, queries, search ?? undefined);
   };
 
-  const { data, isFetching, refetch } = useQuery({
+  const { data, isFetching, refetch, error, isPending } = useQuery({
     queryKey: ["collections", selectedSchema, page, limit, search],
     queryFn: fetcher,
     enabled: !!sdk && !!selectedSchema,
@@ -62,7 +64,7 @@ const CollectionsPage = () => {
         return <IDChip id={props.getValue<string>()} hideIcon />;
       },
       meta: {
-        href: (row) => `${path}/${row.$id}/attributes`,
+        href: (row) => `${path}/${row.$id}/attributes?docSchema=${row.$schema || selectedSchema}`,
       },
     },
     {
@@ -163,26 +165,39 @@ const CollectionsPage = () => {
         </div>
       </div>
 
-      {selectedSchema && data && (
+      {isPending && (
+        <div className="flex h-[300px] w-full items-center justify-center">
+          <Spinner />
+        </div>
+      )}
+
+      {error &&
+        ((error as any).code === 404 ? (
+          <NotFoundPage error={error} />
+        ) : (
+          <ErrorPage error={error} className="h-auto" />
+        ))}
+
+      {!error && (
         <DataGridProvider<Models.Collection>
           columns={columns}
-          data={data.collections}
+          data={data?.collections || []}
           manualPagination
-          rowCount={data.total}
+          rowCount={data?.total}
           loading={isFetching}
           state={{ pagination: { pageIndex: page, pageSize: limit } }}
           showCheckbox={canDeleteCollections}
         >
           <EmptyState
-            show={data.total === 0 && !isFetching && !hasQuery}
+            show={data?.total === 0 && !isFetching && !hasQuery}
             title="No Collections"
             description="No collections have been created yet."
             primaryComponent={create}
           />
 
-          {(data.total > 0 || hasQuery) && (
+          {((data?.total ?? 0) > 0 || hasQuery) && (
             <>
-              <Table noResults={data.total === 0 && hasQuery} />
+              <Table noResults={data?.total === 0 && hasQuery} />
 
               <HStack justifyContent="space-between" alignItems="center">
                 <SelectLimit />

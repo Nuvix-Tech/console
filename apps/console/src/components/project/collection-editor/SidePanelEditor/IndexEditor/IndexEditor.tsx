@@ -121,6 +121,7 @@ const IndexEditor = ({
 
         <SelectObjectField
           name="fields"
+          portal={false}
           left={{
             label: "Attribute",
             options: [
