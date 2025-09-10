@@ -74,8 +74,8 @@ export const HeroSection = () => {
         <Fade to="right" fill>
           <Fade to="bottom" fill>
             <img
-              src={'I HAVE TO ADD SRC HERE'}
-              className="absolute min-w-3xl w-4xl right-0 z-50 bottom-0 -translate-y-15 translate-x-80 border-[8px] border-(--neutral-alpha-medium) rounded-md overflow-hidden"
+              src={'/images/dashboard/hero_dark.png'}
+              className="absolute min-w-3xl w-4xl right-0 z-50 bottom-0 -translate-y-30 translate-x-80 border-[8px] border-(--neutral-alpha-medium) rounded-md overflow-hidden"
             />
           </Fade>
         </Fade>
