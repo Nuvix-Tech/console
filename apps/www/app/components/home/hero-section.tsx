@@ -1,40 +1,34 @@
+import { Fade, Icon } from "@nuvix/ui/components";
 import { motion } from "motion/react";
 import { Link } from "react-router";
 import { Spotlight } from "~/ui/spotlight-new";
 
 export const HeroSection = () => {
   return (
-    <div className="h-[40rem] w-full rounded-md flex flex-col items-center justify-center antialiased bg-grid relative overflow-hidden px-4">
-      {/* <Spotlight
-        gradientFirst="radial-gradient(68.54% 68.72% at 55.02% 31.46%, hsla(30, 100%, 85%, .1) 0, hsla(30, 100%, 55%, .03) 50%, hsla(30, 100%, 45%, 0) 80%)"
-        gradientSecond="radial-gradient(50% 50% at 50% 50%, hsla(30, 100%, 85%, .08) 0, hsla(30, 100%, 55%, .04) 80%, transparent 100%)"
-        duration={0}
-        translateY={-580}
-        xOffset={49}
-        smallWidth={45}
-      /> */}
+    <div className="h-[40rem] mb-10 w-full rounded-md flex items-center justify-between antialiased bg-grid relative overflow-hidden px-12 ">
+      <Spotlight duration={0} translateY={-480} xOffset={280} smallWidth={459} />
 
-      <div className="relative z-10 max-w-7xl w-full">
-        <div className="flex flex-col items-center justify-center space-y-6">
+      <div className="relative max-w-3xl w-full flex justify-between">
+        <div className="flex flex-col items-start justify-start space-y-6">
           {/* Badge */}
-          {/* <motion.div
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <span className="px-3 py-1 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-300 text-sm font-medium">
-              Trusted by 5,000+ developers
+            <span className="px-3 flex items-center gap-2 py-1 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-300 text-sm font-medium">
+              <Icon name="sparkle" size="s" /> Launched BETA version, try now (free)
             </span>
-          </motion.div> */}
+          </motion.div>
 
           {/* Heading */}
           <motion.div
             initial={{ opacity: 0.1 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-center"
+            className=""
           >
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-medium bg-clip-text text-transparent bg-gradient-to-b from-foreground to-orange-500 py-4">
+            <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-medium bg-clip-text text-transparent bg-gradient-to-b from-foreground to-orange-500 py-4">
               You build the product.
               <br className="hidden sm:block" />
               We power the rest.
@@ -46,7 +40,7 @@ export const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="mt-4 text-base sm:text-lg neutral-on-background-medium max-w-2xl mx-auto text-center leading-relaxed"
+            className="mt-4 text-base sm:text-lg neutral-on-background-medium max-w-2xl mx-auto leading-relaxed"
           >
             Nuvix is a high-performance backend with Postgres at its core, offering ultimate data
             flexibility for any data shape. Get powerful auth, storage, messaging, and APIs to
@@ -75,6 +69,16 @@ export const HeroSection = () => {
             </Link>
           </motion.div>
         </div>
+      </div>
+      <div className="h-full relative w-xl">
+        <Fade to="right" fill>
+          <Fade to="bottom" fill>
+            <img
+              src={'I HAVE TO ADD SRC HERE'}
+              className="absolute min-w-3xl w-4xl right-0 z-50 bottom-0 -translate-y-15 translate-x-80 border-[8px] border-(--neutral-alpha-medium) rounded-md overflow-hidden"
+            />
+          </Fade>
+        </Fade>
       </div>
     </div>
   );
