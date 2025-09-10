@@ -1,89 +1,122 @@
-import React from "react";
-import { Area, AreaChart } from "recharts";
-import { Chart, useChart } from "@chakra-ui/charts";
-import { Bar, BarChart, CartesianGrid, Tooltip, XAxis, YAxis, Legend } from "recharts";
+"use client";
 
-const NetworkRequestsChart = () => {
-  const chart = useChart({ data: networkRequestsData });
+import React from "react";
+import {
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Tooltip,
+  XAxis,
+  YAxis,
+  Legend,
+} from "recharts";
+import { Chart, useChart } from "@chakra-ui/charts";
+import { useQuery } from "@tanstack/react-query";
+import { useProjectStore } from "@/lib/store";
+import { Models } from "@nuvix/console";
+import { cn } from "@/lib/utils";
+import { Button } from "@nuvix/ui/components";
+
+type UsageProject = Models.UsageProject;
+
+export enum ProjectUsageRange {
+  OneHour = "1h",
+  OneDay = "1d",
+  SevenDays = "7d",
+  ThirtyDays = "30d",
+  NinetyDays = "90d",
+}
+
+const ranges = [
+  { label: "24h", value: ProjectUsageRange.OneDay },
+  { label: "7d", value: ProjectUsageRange.SevenDays },
+  { label: "30d", value: ProjectUsageRange.ThirtyDays },
+  { label: "90d", value: ProjectUsageRange.NinetyDays },
+];
+
+/**
+ * Requests over time
+ */
+const RequestsChart = ({ data }: { data: Models.Metric[] }) => {
+  const chart = useChart({ data });
+
   return (
-    <Chart.Root maxH="xs" chart={chart}>
+    <Chart.Root h="xs" chart={chart}>
       <BarChart data={chart.data} margin={{ top: 20, right: 20, bottom: 20, left: 40 }}>
-        <CartesianGrid strokeDasharray="1 1" stroke={chart.color("border")} />
+        <CartesianGrid strokeDasharray="3 3" stroke={chart.color("border")} />
         <XAxis
-          dataKey="responseTime"
-          ticks={requestTicks}
-          label={{ value: "Response Time (ms)", position: "insideBottom", offset: -5 }}
+          dataKey={chart.key("date")}
+          tickLine={false}
+          axisLine={false}
+          tickMargin={8}
+          tickFormatter={(val: string) =>
+            new Date(val).toLocaleDateString([], {
+              month: "short",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            })
+          }
         />
-        <YAxis label={{ value: "Request Count", angle: -90, position: "insideLeft" }} />
+        {/* <YAxis
+          label={{ value: "Requests", angle: -90, position: "insideLeft" }}
+        /> */}
         <Tooltip
           formatter={(value) => [`${value}`, "Requests"]}
-          labelFormatter={(label) => {
-            const bin = networkRequestsData.find((item) => item.responseTime === Number(label));
-            return bin ? `Response Time: ${bin.responseTime}-${bin.maxTime}ms` : "";
-          }}
+          labelFormatter={(label) =>
+            new Date(label).toLocaleString([], {
+              month: "short",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            })
+          }
         />
-        <Bar dataKey="count" fill={chart.color("blue.500")} name="Request Count" />
+        <Bar
+          dataKey={chart.key("value")}
+          fill={"var(--neutral-solid-strong)"}
+          name="Requests"
+          radius={[8, 8, 0, 0]}
+        />
       </BarChart>
     </Chart.Root>
   );
 };
 
-// Network requests distribution by response time
-const networkRequestsData = [
-  { responseTime: 0, maxTime: 50, count: 1250 },
-  { responseTime: 50, maxTime: 100, count: 2100 },
-  { responseTime: 100, maxTime: 150, count: 1890 },
-  { responseTime: 150, maxTime: 200, count: 1650 },
-  { responseTime: 200, maxTime: 250, count: 1200 },
-  { responseTime: 250, maxTime: 300, count: 950 },
-  { responseTime: 300, maxTime: 350, count: 720 },
-  { responseTime: 350, maxTime: 400, count: 580 },
-  { responseTime: 400, maxTime: 450, count: 420 },
-  { responseTime: 450, maxTime: 500, count: 320 },
-  { responseTime: 500, maxTime: 600, count: 280 },
-  { responseTime: 600, maxTime: 700, count: 180 },
-  { responseTime: 700, maxTime: 800, count: 120 },
-  { responseTime: 800, maxTime: 900, count: 85 },
-  { responseTime: 900, maxTime: 1000, count: 65 },
-  { responseTime: 1000, maxTime: 1200, count: 45 },
-  { responseTime: 1200, maxTime: 1500, count: 25 },
-  { responseTime: 1500, maxTime: 2000, count: 15 },
-  { responseTime: 2000, maxTime: 3000, count: 8 },
-  { responseTime: 3000, maxTime: 5000, count: 3 },
-];
+/**
+ * Bandwidth over time
+ */
+const BandwidthChart = ({ data }: { data: Models.Metric[] }) => {
+  const bandwidthData = React.useMemo(() => {
+    return data.map((m) => ({
+      time: new Date(m.date).toLocaleDateString([], {
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      total: m.value,
+    }));
+  }, [data]);
 
-const requestTicks = [0, 250, 500, 750, 1000, 1500, 2000, 3000, 5000];
-
-const BandwidthChart = () => {
   const chart = useChart({
     data: bandwidthData,
-    series: [
-      { name: "inbound", color: "green.solid" },
-      { name: "outbound", color: "orange.solid" },
-      { name: "total", color: "blue.solid" },
-    ],
+    series: [{ name: "total", color: "var(--neutral-solid-strong)" }],
   });
 
   return (
-    <Chart.Root maxH="sm" chart={chart}>
+    <Chart.Root h="sm" chart={chart}>
       <AreaChart data={chart.data}>
         <CartesianGrid stroke={chart.color("border")} vertical={false} strokeDasharray="3 3" />
-        <XAxis
-          dataKey={chart.key("time")}
-          tickLine={false}
-          axisLine={false}
-          tickMargin={8}
-          tickFormatter={(value) => value}
-        />
-        <YAxis tickLine={false} axisLine={false} tickFormatter={(value) => `${value} GB`} />
+        <XAxis dataKey="time" tickLine={false} axisLine={false} tickMargin={8} />
+        <YAxis tickLine={false} axisLine={false} tickFormatter={(val) => `${val} MB`} />
         <Tooltip
           cursor={false}
           animationDuration={100}
           content={<Chart.Tooltip />}
-          formatter={(value, name) => [
-            `${value} GB`,
-            name === "inbound" ? "Inbound" : name === "outbound" ? "Outbound" : "Total",
-          ]}
+          formatter={(value, name) => [`${value} MB`, "Total"]}
         />
         <Legend content={<Chart.Legend />} />
 
@@ -108,7 +141,7 @@ const BandwidthChart = () => {
             fill={`url(#${item.name}-gradient)`}
             stroke={chart.color(item.color)}
             strokeWidth={2}
-            stackId={item.name === "total" ? "total" : "bandwidth"}
+            stackId={"total"}
           />
         ))}
       </AreaChart>
@@ -116,39 +149,80 @@ const BandwidthChart = () => {
   );
 };
 
-// Bandwidth usage over time (last 24 hours)
-const bandwidthData = [
-  { time: "00:00", inbound: 15.2, outbound: 8.7, total: 23.9 },
-  { time: "02:00", inbound: 12.5, outbound: 6.8, total: 19.3 },
-  { time: "04:00", inbound: 9.8, outbound: 4.2, total: 14.0 },
-  { time: "06:00", inbound: 18.4, outbound: 12.6, total: 31.0 },
-  { time: "08:00", inbound: 28.7, outbound: 18.9, total: 47.6 },
-  { time: "10:00", inbound: 35.2, outbound: 24.1, total: 59.3 },
-  { time: "12:00", inbound: 42.8, outbound: 31.5, total: 74.3 },
-  { time: "14:00", inbound: 38.9, outbound: 28.2, total: 67.1 },
-  { time: "16:00", inbound: 45.6, outbound: 33.8, total: 79.4 },
-  { time: "18:00", inbound: 52.3, outbound: 38.7, total: 91.0 },
-  { time: "20:00", inbound: 41.2, outbound: 29.6, total: 70.8 },
-  { time: "22:00", inbound: 26.8, outbound: 17.4, total: 44.2 },
-];
-
+/**
+ * Main Metrics wrapper
+ */
 export const MainMetrics = () => {
+  const { sdk } = useProjectStore((s) => s);
+  const [range, setRange] = React.useState<ProjectUsageRange>(ProjectUsageRange.OneDay);
+
+  const { data, isPending, error } = useQuery({
+    queryKey: ["project-usage", range],
+    queryFn: async () => {
+      const end = new Date();
+      let start = new Date();
+
+      switch (range) {
+        case ProjectUsageRange.SevenDays:
+          start = new Date(end.getTime() - 7 * 24 * 60 * 60 * 1000);
+          break;
+        case ProjectUsageRange.ThirtyDays:
+          start = new Date(end.getTime() - 30 * 24 * 60 * 60 * 1000);
+          break;
+        case ProjectUsageRange.NinetyDays:
+          start = new Date(end.getTime() - 90 * 24 * 60 * 60 * 1000);
+          break;
+        default:
+          start = new Date(end.getTime() - 24 * 60 * 60 * 1000);
+      }
+
+      return sdk.project.getUsage(
+        start.toISOString(),
+        end.toISOString(),
+        (range === ProjectUsageRange.OneHour
+          ? ProjectUsageRange.OneHour
+          : ProjectUsageRange.OneDay) as any,
+      );
+    },
+  });
+
+  if (isPending) return <p className="px-8">Loading metrics...</p>;
+  if (error) return <p className="px-8 text-red-500">Failed to load metrics</p>;
+  if (!data) return null;
+
   return (
-    <div className="space-y-6 px-8">
+    <div className="space-y-8 px-8">
+      {/* Range Switcher */}
+      <div className="flex space-x-2">
+        {ranges.map((r) => (
+          <Button
+            key={r.value}
+            size="s"
+            variant={range === r.value ? "secondary" : "tertiary"}
+            onClick={() => setRange(r.value)}
+            className={cn(
+              "rounded-full px-4",
+              range === r.value ? "font-semibold" : "text-muted-foreground",
+            )}
+          >
+            {r.label}
+          </Button>
+        ))}
+      </div>
+
+      {/* Charts */}
       <div className="grid gap-6 md:grid-cols-2">
         <div className="space-y-2">
-          <h3 className="text-lg font-semibold">Network Request Distribution</h3>
-          <p className="text-sm text-muted-foreground">
-            Response time distribution over the last hour
-          </p>
-          <NetworkRequestsChart />
+          <h3 className="text-lg font-semibold">Requests</h3>
+          <p className="text-sm text-muted-foreground">Requests over selected range</p>
+          <RequestsChart data={data.requests} />
         </div>
         <div className="space-y-2">
           <h3 className="text-lg font-semibold">Bandwidth Usage</h3>
           <p className="text-sm text-muted-foreground">
-            Inbound/Outbound traffic over the last 24 hours
+            Inbound/Outbound traffic over selected range
           </p>
-          <BandwidthChart />
+          <BandwidthChart data={data.network} />
         </div>
       </div>
     </div>

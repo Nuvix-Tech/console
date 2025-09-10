@@ -49,7 +49,7 @@ const sdkForProject = {
   health: new Health(clientProject),
   locale: new Locale(clientProject),
   messaging: new Messaging(clientProject),
-  project: new Project(clientProject),
+  project: new Project(clientServerProject),
   projectApi: new ProjectApi(clientProject),
   storage: new Storage(clientProject),
   teams: new Teams(clientProject),
