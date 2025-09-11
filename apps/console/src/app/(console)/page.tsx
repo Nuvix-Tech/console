@@ -40,7 +40,7 @@ export default function Page() {
           }),
         );
       }
-      const scopes = await organizations.getScopes(org!.$id);
+      const scopes = await organizations.getScopes(org?.$id!);
       setScopes(scopes);
       replace(`/organization/${org?.$id}`);
     }

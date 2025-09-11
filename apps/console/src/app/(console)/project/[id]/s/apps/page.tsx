@@ -1,18 +1,5 @@
-"use client";
-import { useParams } from "next/navigation";
-import { PageContainer, PageHeading } from "@/components/others";
+import { PlatformsPage } from "@/components/project/settings";
 
 export default function ProjectAppsPage() {
-  const params = useParams();
-  const projectId = params.id as string;
-
-  return (
-    <PageContainer>
-      <PageHeading
-        heading="Platforms"
-        description="Manage your project applications and configurations."
-        right={null}
-      />
-    </PageContainer>
-  );
+  return <PlatformsPage />;
 }

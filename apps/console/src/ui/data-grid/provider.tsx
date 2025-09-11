@@ -1,6 +1,7 @@
 "use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useReactTable, getCoreRowModel, TableOptions, Table } from "@tanstack/react-table";
+import { TimestampInfo } from "@/components/editor/components/_timestamp_info";
 
 type DataGridContextProps<T> = {
   table: Table<T>;
@@ -70,4 +71,8 @@ export const useDataGrid = <T,>() => {
     throw new Error("useDataGrid must be used within a DataGridProvider");
   }
   return context as DataGridContextProps<T>;
+};
+
+export const DateTimeColumn = ({ getValue }: { getValue: () => string | undefined | unknown }) => {
+  return <TimestampInfo utcTimestamp={(getValue() as string) ?? ""} displayAs="utc" />;
 };
