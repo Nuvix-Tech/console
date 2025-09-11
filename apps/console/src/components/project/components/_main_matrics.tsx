@@ -10,24 +10,20 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-  Legend,
   ResponsiveContainer,
   TooltipProps,
 } from "recharts";
-import { Chart, useChart } from "@chakra-ui/charts";
 import { useQuery } from "@tanstack/react-query";
 import { useProjectStore } from "@/lib/store";
-import { Models } from "@nuvix/console";
+import { Models, ProjectUsageRange as UsageRange } from "@nuvix/console";
 import { cn } from "@/lib/utils";
-import { Button } from "@nuvix/ui/components";
-import { TrendingUp, TrendingDown, Activity, Wifi, AlertCircle, Loader2 } from "lucide-react";
-
-type UsageProject = Models.UsageProject;
+import { Button, Icon, SegmentedControl, Text, type IconProps } from "@nuvix/ui/components";
+import { Activity, Wifi, AlertCircle } from "lucide-react";
+import { formatBytes } from "@/lib";
 
 export enum ProjectUsageRange {
   OneHour = "1h",
   OneDay = "1d",
-  SevenDays = "7d",
   ThirtyDays = "30d",
   NinetyDays = "90d",
 }
@@ -40,7 +36,6 @@ interface RangeOption {
 
 const ranges: RangeOption[] = [
   { label: "24h", value: ProjectUsageRange.OneDay, description: "Last 24 hours" },
-  { label: "7d", value: ProjectUsageRange.SevenDays, description: "Last week" },
   { label: "30d", value: ProjectUsageRange.ThirtyDays, description: "Last month" },
   { label: "90d", value: ProjectUsageRange.NinetyDays, description: "Last quarter" },
 ];
@@ -56,40 +51,21 @@ const formatNumber = (num: number): string => {
 };
 
 /**
- * Format bytes to human readable
- */
-const formatBytes = (bytes: number): string => {
-  if (bytes === 0) return "0 B";
-  const k = 1024;
-  const sizes = ["B", "KB", "MB", "GB", "TB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
-};
-
-/**
- * Calculate percentage change
- */
-const calculateChange = (current: number, previous: number): number => {
-  if (previous === 0) return current > 0 ? 100 : 0;
-  return ((current - previous) / previous) * 100;
-};
-
-/**
  * Custom tooltip component
  */
 const CustomTooltip: React.FC<TooltipProps<number, string>> = ({ active, payload, label }) => {
   if (!active || !payload || !payload.length) return null;
 
   return (
-    <div className="bg-white dark:bg-neutral-800 p-3 rounded-lg shadow-lg border border-neutral-200 dark:border-neutral-700">
-      <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">
+    <div className="neutral-background-weak p-3 radius-xs shadow-lg border neutral-border-medium">
+      <Text onBackground="neutral-medium">
         {new Date(label).toLocaleString([], {
           month: "short",
           day: "numeric",
           hour: "2-digit",
           minute: "2-digit",
         })}
-      </p>
+      </Text>
       {payload.map((entry, index) => (
         <p key={index} className="text-sm font-semibold" style={{ color: entry.color }}>
           {entry.name}: {formatNumber(Number(entry.value))}
@@ -106,45 +82,31 @@ const MetricCard: React.FC<{
   title: string;
   value: string;
   change?: number;
-  icon: React.ReactNode;
+  icon: IconProps["name"];
+  label?: string;
   loading?: boolean;
-}> = ({ title, value, change, icon, loading }) => {
-  const isPositive = change && change > 0;
-
+}> = ({ title, value, change, icon, loading, label }) => {
   return (
-    <div className="bg-white dark:bg-neutral-800 rounded-sm p-6 shadow-sm border border-neutral-200 dark:border-neutral-700 transition-all hover:shadow-md">
+    <div className="bg-(--neutral-alpha-weak)/30 border neutral-border-medium radius-s p-6">
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">{title}</p>
+          <Text variant="label-strong-s" onBackground="neutral-weak">
+            {title}
+          </Text>
           {loading ? (
-            <div className="h-8 w-24 bg-neutral-200 dark:bg-neutral-700 rounded animate-pulse" />
+            <div className="h-8 w-24 bg-(--neutral-alpha-weak) radius-s animate-pulse" />
           ) : (
             <>
-              <p className="text-2xl font-bold text-neutral-900 dark:text-white">{value}</p>
-              {change !== undefined && (
-                <div className="flex items-center mt-2 gap-1">
-                  {isPositive ? (
-                    <TrendingUp className="w-4 h-4 text-green-500" />
-                  ) : (
-                    <TrendingDown className="w-4 h-4 text-red-500" />
-                  )}
-                  <span
-                    className={cn(
-                      "text-sm font-medium",
-                      isPositive ? "text-green-600" : "text-red-600",
-                    )}
-                  >
-                    {Math.abs(change).toFixed(1)}%
-                  </span>
-                  <span className="text-sm text-neutral-500 dark:text-neutral-400">
-                    vs prev period
-                  </span>
-                </div>
-              )}
+              <Text as={"p"} variant="heading-strong-l" className="!mt-4">
+                {value}
+              </Text>
+              {label && <Text onBackground="neutral-weak">{label}</Text>}
             </>
           )}
         </div>
-        <div className="p-3 bg-neutral-100 dark:bg-neutral-700 rounded-lg">{icon}</div>
+        <div className="size-8 flex items-center justify-center bg-(--neutral-alpha-medium) rounded-lg">
+          <Icon name={icon} />
+        </div>
       </div>
     </div>
   );
@@ -166,16 +128,22 @@ const RequestsChart: React.FC<{ data: Models.Metric[]; range: ProjectUsageRange 
   };
 
   return (
-    <div className="bg-white dark:bg-neutral-800 rounded-sm p-6 shadow-sm border border-neutral-200 dark:border-neutral-700">
-      <div className="mb-4">
-        <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">Request Volume</h3>
-        <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1">
+    <div className="bg-(--neutral-alpha-weak)/30 border neutral-border-medium radius-s p-6">
+      <div className="mb-8">
+        <Text as="h3" variant="heading-strong-m">
+          Request Volume
+        </Text>
+        <Text onBackground="neutral-weak" variant="body-default-s">
           API requests over the selected time period
-        </p>
+        </Text>
       </div>
       <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={data} margin={{ top: 10, right: 10, bottom: 40, left: 40 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="var(--neutral-200)" vertical={false} />
+        <BarChart data={data} margin={{ top: 10, right: 10, bottom: 20, left: 10 }}>
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="var(--neutral-alpha-medium)"
+            vertical={false}
+          />
           <XAxis
             dataKey="date"
             tickLine={false}
@@ -190,7 +158,7 @@ const RequestsChart: React.FC<{ data: Models.Metric[]; range: ProjectUsageRange 
             tickFormatter={(val) => formatNumber(val)}
             style={{ fontSize: 12 }}
           />
-          <Tooltip content={<CustomTooltip />} />
+          <Tooltip cursor={{ fill: "var(--neutral-alpha-weak)" }} content={<CustomTooltip />} />
           <Bar
             dataKey="value"
             fill="var(--primary)"
@@ -214,7 +182,7 @@ const BandwidthChart: React.FC<{ data: Models.Metric[]; range: ProjectUsageRange
   const bandwidthData = React.useMemo(() => {
     return data.map((m) => ({
       date: m.date,
-      value: m.value / (1024 * 1024), // Convert to MB
+      value: m.value,
     }));
   }, [data]);
 
@@ -227,22 +195,28 @@ const BandwidthChart: React.FC<{ data: Models.Metric[]; range: ProjectUsageRange
   };
 
   return (
-    <div className="bg-white dark:bg-neutral-800 rounded-sm p-6 shadow-sm border border-neutral-200 dark:border-neutral-700">
-      <div className="mb-4">
-        <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">Bandwidth Usage</h3>
-        <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1">
+    <div className="bg-(--neutral-alpha-weak)/30 border neutral-border-medium radius-s p-6">
+      <div className="mb-8">
+        <Text as="h3" variant="heading-strong-m">
+          Bandwidth Usage
+        </Text>
+        <Text onBackground="neutral-weak" variant="body-default-s">
           Network traffic over the selected time period
-        </p>
+        </Text>
       </div>
       <ResponsiveContainer width="100%" height={300}>
-        <AreaChart data={bandwidthData} margin={{ top: 10, right: 10, bottom: 40, left: 40 }}>
+        <AreaChart data={bandwidthData} margin={{ top: 10, right: 10, bottom: 20, left: 10 }}>
           <defs>
             <linearGradient id="bandwidthGradient" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.3} />
               <stop offset="95%" stopColor="var(--primary)" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="var(--neutral-200)" vertical={false} />
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="var(--neutral-alpha-medium)"
+            vertical={false}
+          />
           <XAxis
             dataKey="date"
             tickLine={false}
@@ -254,12 +228,12 @@ const BandwidthChart: React.FC<{ data: Models.Metric[]; range: ProjectUsageRange
           <YAxis
             tickLine={false}
             axisLine={false}
-            tickFormatter={(val) => `${val.toFixed(0)} MB`}
+            tickFormatter={(val) => formatBytes(val)}
             style={{ fontSize: 12 }}
           />
           <Tooltip
             content={<CustomTooltip />}
-            formatter={(value: number) => [`${value.toFixed(2)} MB`, "Bandwidth"]}
+            formatter={(value: number) => [formatBytes(value), "Bandwidth"]}
           />
           <Area
             type="monotone"
@@ -282,12 +256,12 @@ const LoadingSkeleton: React.FC = () => (
   <div className="space-y-6 animate-pulse">
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {[...Array(4)].map((_, i) => (
-        <div key={i} className="bg-neutral-200 dark:bg-neutral-700 h-32 rounded-sm" />
+        <div key={i} className="neutral-background-alpha-weak h-32 rounded-sm" />
       ))}
     </div>
     <div className="grid gap-6 lg:grid-cols-2">
-      <div className="bg-neutral-200 dark:bg-neutral-700 h-96 rounded-sm" />
-      <div className="bg-neutral-200 dark:bg-neutral-700 h-96 rounded-sm" />
+      <div className="neutral-background-alpha-weak h-96 rounded-sm" />
+      <div className="neutral-background-alpha-weak h-96 rounded-sm" />
     </div>
   </div>
 );
@@ -317,7 +291,7 @@ const ErrorState: React.FC<{ message: string; onRetry?: () => void }> = ({ messa
  */
 export const MainMetrics: React.FC = () => {
   const { sdk } = useProjectStore((s) => s);
-  const [range, setRange] = React.useState<ProjectUsageRange>(ProjectUsageRange.SevenDays);
+  const [range, setRange] = React.useState<ProjectUsageRange>(ProjectUsageRange.ThirtyDays);
 
   const { data, isPending, error, refetch } = useQuery({
     queryKey: ["project-usage", range],
@@ -326,11 +300,8 @@ export const MainMetrics: React.FC = () => {
       let start = new Date();
 
       switch (range) {
-        case ProjectUsageRange.SevenDays:
-          start = new Date(end.getTime() - 7 * 24 * 60 * 60 * 1000);
-          break;
         case ProjectUsageRange.ThirtyDays:
-          start = new Date(end.getTime() - 30 * 24 * 60 * 60 * 1000);
+          start = new Date(end.getTime() - 29 * 24 * 60 * 60 * 1000);
           break;
         case ProjectUsageRange.NinetyDays:
           start = new Date(end.getTime() - 90 * 24 * 60 * 60 * 1000);
@@ -338,14 +309,12 @@ export const MainMetrics: React.FC = () => {
         default:
           start = new Date(end.getTime() - 24 * 60 * 60 * 1000);
       }
+      const period =
+        range === ProjectUsageRange.ThirtyDays || range === ProjectUsageRange.NinetyDays
+          ? UsageRange.OneDay
+          : UsageRange.OneHour;
 
-      return sdk.project.getUsage(
-        start.toISOString(),
-        end.toISOString(),
-        (range === ProjectUsageRange.OneHour
-          ? ProjectUsageRange.OneHour
-          : ProjectUsageRange.OneDay) as any,
-      );
+      return sdk.project.getUsage(start.toISOString(), end.toISOString(), period);
     },
     staleTime: 5 * 60 * 1000, // Consider data stale after 5 minutes
     gcTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
@@ -357,20 +326,10 @@ export const MainMetrics: React.FC = () => {
 
     const totalRequests = data.requests.reduce((sum, m) => sum + m.value, 0);
     const totalBandwidth = data.network.reduce((sum, m) => sum + m.value, 0);
-    const avgRequests = totalRequests / Math.max(data.requests.length, 1);
-    const peakRequests = Math.max(...data.requests.map((m) => m.value), 0);
-
-    // Calculate change (mock data - replace with actual comparison)
-    const requestsChange = 12.5;
-    const bandwidthChange = -3.2;
 
     return {
       totalRequests,
       totalBandwidth,
-      avgRequests,
-      peakRequests,
-      requestsChange,
-      bandwidthChange,
     };
   }, [data]);
 
@@ -386,35 +345,20 @@ export const MainMetrics: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-6">
+    <div className="container mx-auto px-4 pt-2 pb-8 space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">Analytics</h1>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1">
-            Monitor your project's performance and usage metrics
-          </p>
-        </div>
-
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4">
         {/* Range Selector */}
-        <div className="flex gap-2 bg-neutral-100 dark:bg-neutral-700 p-1 rounded-lg">
-          {ranges.map((r) => (
-            <Button
-              key={r.value}
-              size="s"
-              variant={range === r.value ? "secondary" : "tertiary"}
-              onClick={() => setRange(r.value)}
-              className={cn(
-                "rounded-md px-4 py-2 transition-all",
-                range === r.value
-                  ? "bg-white dark:bg-neutral-600 shadow-sm font-semibold"
-                  : "hover:bg-neutral-200 dark:hover:bg-neutral-600",
-              )}
-              title={r.description}
-            >
-              {r.label}
-            </Button>
-          ))}
+        <div className="flex gap-2 p-1 rounded-lg">
+          <SegmentedControl
+            buttons={ranges.map((r) => ({
+              label: r.label,
+              value: r.value,
+              title: r.description,
+            }))}
+            defaultValue={range}
+            onToggle={(v) => setRange(v as any)}
+          />
         </div>
       </div>
 
@@ -427,27 +371,27 @@ export const MainMetrics: React.FC = () => {
             <MetricCard
               title="Total Requests"
               value={formatNumber(summaryMetrics?.totalRequests || 0)}
-              change={summaryMetrics?.requestsChange}
-              icon={<Activity className="w-5 h-5 text-blue-600" />}
+              icon={Activity}
               loading={isPending}
             />
             <MetricCard
               title="Total Bandwidth"
               value={formatBytes(summaryMetrics?.totalBandwidth || 0)}
-              change={summaryMetrics?.bandwidthChange}
-              icon={<Wifi className="w-5 h-5 text-green-600" />}
+              icon={Wifi}
               loading={isPending}
             />
             <MetricCard
-              title="Avg Requests/Period"
-              value={formatNumber(Math.round(summaryMetrics?.avgRequests || 0))}
-              icon={<TrendingUp className="w-5 h-5 text-purple-600" />}
+              title="Storage"
+              value={formatBytes(data.filesStorageTotal)}
+              icon={"storage"}
+              label="storage"
               loading={isPending}
             />
             <MetricCard
-              title="Peak Requests"
-              value={formatNumber(summaryMetrics?.peakRequests || 0)}
-              icon={<Activity className="w-5 h-5 text-orange-600" />}
+              title="Auth"
+              label="users"
+              value={formatNumber(data.usersTotal)}
+              icon={"authentication"}
               loading={isPending}
             />
           </div>

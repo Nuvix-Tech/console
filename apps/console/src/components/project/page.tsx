@@ -18,7 +18,7 @@ export default function ProjectPage({ id }: ProjectPageProps) {
 
   return (
     <>
-      <PageContainer>
+      <PageContainer gap="0">
         <TopInfo />
         <MainMetrics />
       </PageContainer>
