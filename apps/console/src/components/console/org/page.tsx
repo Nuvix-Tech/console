@@ -72,23 +72,23 @@ export const OrganizationPage = ({ id }: Props) => {
               : "Create a project to start managing resources."
           }
           primary={
-            hasQuery
+            hasQuery || !vars["project:create"]
               ? undefined
               : {
                   label: "Create Project",
                   onClick: createProject,
                 }
           }
-          secondary={
-            hasQuery
-              ? undefined
-              : {
-                  label: "Learn more",
-                  onClick: () => {
-                    /* TODO: Add learn more link */
-                  },
-                }
-          }
+          // secondary={
+          //   hasQuery
+          //     ? undefined
+          //     : {
+          //         label: "Learn more",
+          //         onClick: () => {
+          //           /* TODO: Add learn more link */
+          //         },
+          //       }
+          // }
         />
 
         <GridWrapper>

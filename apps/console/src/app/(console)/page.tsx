@@ -3,55 +3,73 @@ import { sdkForConsole } from "@/lib/sdk";
 import { Row } from "@nuvix/ui/components";
 import { Models } from "@nuvix/console";
 import { useRouter } from "@bprogress/next";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useApp } from "@/lib/store";
 import LoadingUI from "@/components/loading";
 
 export default function Page() {
   const { user, setUser, setScopes } = useApp((state) => state);
   const { organizations, account } = sdkForConsole;
-
   const { replace } = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchUser() {
-      if (!user) return;
-      let org: Models.Organization<any> | null = null;
-
-      if (user?.prefs?.organization) {
-        try {
-          org = await organizations.get(user.prefs.organization);
-        } catch (e: any) {
-          // noop
-        }
+      if (!user) {
+        setIsLoading(false);
+        return;
       }
 
-      if (!org) {
-        const orgs = await organizations.list();
-        if (orgs.total === 0) {
-          replace("/create-organization");
-          return;
+      try {
+        let org: Models.Organization<any> | null = null;
+
+        if (user.prefs?.organization) {
+          try {
+            org = await organizations.get(user.prefs.organization);
+          } catch (error) {
+            console.warn("Failed to fetch organization:", error);
+          }
         }
 
-        setUser(
-          await account.updatePrefs({
+        if (!org) {
+          const orgs = await organizations.list();
+          if (orgs.total === 0) {
+            replace("/create-organization");
+            setIsLoading(false);
+            return;
+          }
+
+          const updatedUser = await account.updatePrefs({
             ...user.prefs,
             organization: orgs.teams?.[0]?.$id,
-          }),
-        );
-      } else {
-        const scopes = await organizations.getScopes(org?.$id!);
-        setScopes(scopes);
-        replace(`/organization/${org?.$id}`);
+          });
+          setUser(updatedUser);
+          org = await organizations.get(updatedUser.prefs.organization);
+        }
+
+        if (org) {
+          const scopes = await organizations.getScopes(org.$id);
+          setScopes(scopes);
+          replace(`/organization/${org.$id}`);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        // Handle error, e.g., show error message
+      } finally {
+        setIsLoading(false);
       }
     }
 
     fetchUser();
-  }, [user?.$id]);
+  }, [user, setUser, setScopes, replace, organizations, account]);
 
-  return (
-    <Row fill center>
-      <LoadingUI />
-    </Row>
-  );
+  if (isLoading) {
+    return (
+      <Row fill center>
+        <LoadingUI />
+      </Row>
+    );
+  }
+
+  return null; // Or a fallback UI if needed
 }
