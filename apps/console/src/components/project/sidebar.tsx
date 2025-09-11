@@ -153,6 +153,12 @@ export const FirstSidebar = ({ inMobile, onClose }: FirstSidebarProps) => {
       icon: "messaging",
       active: isIncludes("messaging"),
     },
+    {
+      name: "Logs",
+      href: href(`logs`),
+      icon: "logs",
+      active: isEqual("logs"),
+    },
   ];
 
   return (

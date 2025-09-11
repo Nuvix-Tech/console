@@ -6,7 +6,6 @@ import { getColumnDefaultWidth, internalAttributes } from "../../utils/gridColum
 import { useProjectStore } from "@/lib/store";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import { cn } from "@nuvix/sui/lib/utils";
-import { gridStyles } from "../grid/Grid";
 import { SkeletonText } from "@nuvix/cui/skeleton";
 import { Button } from "@chakra-ui/react";
 import { useParams } from "next/navigation";
@@ -14,6 +13,7 @@ import type { Models } from "@nuvix/console";
 import { useCollectionDocumentsQuery } from "@/data/collections";
 import { SmartLink } from "@nuvix/ui/components";
 import { Attributes } from "../../../SidePanelEditor/ColumnEditor/utils";
+import { gridStyles } from "@/components/grid/components/grid/Grid";
 
 interface ReferenceRecordPeekProps {
   collection: Models.Collection;

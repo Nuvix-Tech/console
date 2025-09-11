@@ -1,8 +1,7 @@
 import { Header } from "@/components/project/header";
 import { Stack } from "@chakra-ui/react";
 import { ProjectSidebar } from "@/components/project/sidebar";
-import React, { Suspense } from "react";
-import { SkeletonProject } from "@/components/skeletons";
+import React from "react";
 import { ResizablePanel, ResizableHandle } from "@nuvix/sui/components/resizable";
 import { Row } from "@nuvix/ui/components";
 import { MainArea, ProjectLayout, RightSidebar } from "@/components/project";
@@ -25,9 +24,7 @@ export default async function ({ children }: { children: React.ReactNode }) {
             <ProjectSidebar defaultSize={20} />
             <ResizableHandle withHandle className="opacity-5 hover:opacity-100 bg-transparent" />
             <ResizablePanel minSize={70} maxSize={100} id="main-area" order={2} defaultSize={80}>
-              <MainArea mlRounded>
-                <Suspense fallback={<SkeletonProject />}>{children}</Suspense>
-              </MainArea>
+              <MainArea mlRounded>{children}</MainArea>
             </ResizablePanel>
             <RightPanel />
             <RightSidebar />

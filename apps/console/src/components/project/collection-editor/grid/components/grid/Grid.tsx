@@ -14,6 +14,7 @@ import type { Models } from "@nuvix/console";
 import { useCollectionEditorStore } from "@/lib/store/collection-editor";
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 import { Attributes } from "../../../SidePanelEditor/ColumnEditor/utils";
+import { gridStyles2 } from "@/components/grid/components/grid/Grid";
 
 const rowKeyGetter = (row: Models.Document) => {
   return row?.$id ?? -1;
@@ -28,25 +29,6 @@ interface IGrid extends GridProps {
   filters: Filter[];
   onApplyFilters: (appliedFilters: Filter[]) => void;
 }
-
-export const gridStyles = {
-  ["--rdg-color" as any]: "var(--neutral-on-background-strong)",
-  ["--rdg-background-color" as any]: "var(--neutral-background-weak)",
-  ["--rdg-row-hover-background-color" as any]: "var(--neutral-background-medium)",
-  ["--rdg-border-color" as any]: "var(--neutral-border-medium)",
-  ["--rdg-header-background-color" as any]: "var(--neutral-background-medium)",
-  ["--rdg-row-selected-background-color" as any]: "var(--neutral-background-strong)",
-};
-
-export const gridStyles2 = {
-  ["--rdg-color" as any]: "var(--neutral-on-background-medium)",
-  ["--rdg-background-color" as any]: "var(--color-main-background)",
-  ["--rdg-row-hover-background-color" as any]: "var(--neutral-background-medium)",
-  ["--rdg-border-color" as any]: "var(--neutral-border-strong)",
-  ["--rdg-header-background-color" as any]: "var(--surface-background)",
-  ["--rdg-row-selected-background-color" as any]: "var(--neutral-background-medium)",
-  ["--rdg-row-selected-hover-background-color" as any]: "var(--neutral-background-weak)",
-};
 
 // Just for visibility this is causing some hook errors in the browser
 export const Grid = memo(
