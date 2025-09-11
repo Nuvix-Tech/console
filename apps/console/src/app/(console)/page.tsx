@@ -39,10 +39,11 @@ export default function Page() {
             organization: orgs.teams?.[0]?.$id,
           }),
         );
+      } else {
+        const scopes = await organizations.getScopes(org?.$id!);
+        setScopes(scopes);
+        replace(`/organization/${org?.$id}`);
       }
-      const scopes = await organizations.getScopes(org?.$id!);
-      setScopes(scopes);
-      replace(`/organization/${org?.$id}`);
     }
 
     fetchUser();
