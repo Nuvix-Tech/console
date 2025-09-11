@@ -72,7 +72,7 @@ const ForeignRowSelector = ({
     projectRef: project?.$id,
     sdk,
     id: relatedCollection!,
-    schema: selectedSchema,
+    schema: selectedSchema!,
   });
 
   const [{ sort: sorts, filter: filters }, setParams] = useState<{
@@ -115,7 +115,7 @@ const ForeignRowSelector = ({
       filters: formatFilterURLParams(filters),
       populate: [],
       page,
-      schema: selectedSchema,
+      schema: selectedSchema!,
       limit: rowsPerPage,
     },
     {
@@ -169,7 +169,7 @@ const ForeignRowSelector = ({
                 <div className="flex items-center justify-between my-2 mx-3">
                   <div className="flex items-center gap-4">
                     <RefreshButton
-                      schema={selectedSchema}
+                      schema={selectedSchema!}
                       collectionId={collection?.$id}
                       isRefetching={isRefetching}
                     />

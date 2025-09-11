@@ -48,7 +48,8 @@ const ColumnEditor = ({
   const [type, setType] = useState<Attributes | AttributeFormat | undefined>(initialType);
 
   const factory = useMemo(
-    () => new AttributeConfigFactory(sdk, { name: selectedSchema }, snap.collection, column as any),
+    () =>
+      new AttributeConfigFactory(sdk, { name: selectedSchema! }, snap.collection, column as any),
     [sdk, selectedSchema, snap.collection, column],
   );
 

@@ -236,13 +236,13 @@ const SidePanelEditor = ({
 
       await Promise.all([
         queryClient.invalidateQueries({
-          queryKey: collectionKeys.editor(project?.$id, selectedSchema, selectedCollection?.$id),
+          queryKey: collectionKeys.editor(project?.$id, selectedSchema!, selectedCollection?.$id),
         }),
         queryClient.invalidateQueries({ queryKey: collectionKeys.list(project?.$id) }),
         queryClient.invalidateQueries({
           queryKey: collectionKeys.attributes(
             project?.$id,
-            selectedSchema,
+            selectedSchema!,
             selectedCollection?.$id,
           ),
         }),
@@ -253,7 +253,7 @@ const SidePanelEditor = ({
       await queryClient.invalidateQueries({
         queryKey: collectionKeys.documentsCount(
           project?.$id,
-          selectedSchema,
+          selectedSchema!,
           selectedCollection?.$id,
         ),
       });
@@ -303,7 +303,7 @@ const SidePanelEditor = ({
     } else {
       await Promise.all([
         queryClient.invalidateQueries({
-          queryKey: collectionKeys.editor(project?.$id, selectedSchema, selectedCollection?.$id),
+          queryKey: collectionKeys.editor(project?.$id, selectedSchema!, selectedCollection?.$id),
         }),
         queryClient.invalidateQueries({ queryKey: collectionKeys.list(project?.$id) }),
       ]);
@@ -313,7 +313,7 @@ const SidePanelEditor = ({
       await queryClient.invalidateQueries({
         queryKey: collectionKeys.documentsCount(
           project?.$id,
-          selectedSchema,
+          selectedSchema!,
           selectedCollection?.$id,
         ),
       });
@@ -349,7 +349,7 @@ const SidePanelEditor = ({
           sdk,
           toastId,
           payload,
-          schema: selectedSchema,
+          schema: selectedSchema!,
         });
 
         await Promise.all([
@@ -370,7 +370,7 @@ const SidePanelEditor = ({
           sdk,
           toastId,
           payload,
-          schema: selectedSchema,
+          schema: selectedSchema!,
         });
 
         await Promise.all([
@@ -390,7 +390,7 @@ const SidePanelEditor = ({
           toastId,
           collectionId: configuration.collectionId!,
           payload,
-          schema: selectedSchema,
+          schema: selectedSchema!,
         });
 
         // if (isTableEditorTabsEnabled && ref && payload.name) {

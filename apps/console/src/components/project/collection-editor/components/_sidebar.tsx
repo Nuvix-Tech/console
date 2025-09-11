@@ -37,8 +37,11 @@ export const Sidebar = ({ href }: { href?: string }) => {
     {
       projectId: project?.$id,
       sdk,
-      schema: selectedSchema,
+      schema: selectedSchema!,
       search: searchText.trim() || undefined,
+    },
+    {
+      enabled: !!project?.$id && !!selectedSchema,
     },
     // {
     //   keepPreviousData: Boolean(searchText),
@@ -66,85 +69,95 @@ export const Sidebar = ({ href }: { href?: string }) => {
               onSelectCreateSchema={() => snap.onAddSchema()}
             />
 
-            <div className="flex gap-2 items-center">
-              <IconButton
-                title="Create a new collection"
-                disabled={!canCreateCollections}
-                size="m"
-                variant="secondary"
-                onClick={snap.onAddCollection}
-                tooltip={
-                  !canCreateCollections
-                    ? "You need additional permissions to create collection"
-                    : "Create a new collection"
-                }
-                icon="plus"
-              />
-              <Input
-                size={"xs"}
-                autoFocus={!isMobile}
-                name="search-collections"
-                value={searchText}
-                placeholder="Search collections..."
-                aria-labelledby="Search collections"
-                onChange={(e) => setSearchText(e.target.value)}
-              />
-            </div>
-          </div>
-          <div className="flex flex-auto flex-col gap-2 pb-4">
-            {isLoading && <EditorMenuListSkeleton />}
-
-            {isError && (
-              <div className="rounded-xs neutral-background-weak border">
-                <div className="flex flex-col gap-1 p-2">
-                  <Text as="h4" variant="label-default-m" onBackground="danger-weak">
-                    Failed to retrieve tables
-                  </Text>
-                  <Text as="p" variant="body-default-xs" onBackground="neutral-weak">
-                    {error?.message || "An unexpected error occurred"}
-                  </Text>
-                </div>
-                <Button size="s" variant="tertiary" onClick={() => window.location.reload()}>
-                  Retry
-                </Button>
+            {selectedSchema !== null && (
+              <div className="flex gap-2 items-center">
+                <IconButton
+                  title="Create a new collection"
+                  disabled={!canCreateCollections}
+                  size="m"
+                  variant="secondary"
+                  onClick={snap.onAddCollection}
+                  tooltip={
+                    !canCreateCollections
+                      ? "You need additional permissions to create collection"
+                      : "Create a new collection"
+                  }
+                  icon="plus"
+                />
+                <Input
+                  size={"xs"}
+                  autoFocus={!isMobile}
+                  name="search-collections"
+                  value={searchText}
+                  placeholder="Search collections..."
+                  aria-labelledby="Search collections"
+                  onChange={(e) => setSearchText(e.target.value)}
+                />
               </div>
             )}
-
-            {isSuccess && (
-              <>
-                {searchText.length === 0 && entityTypes.length === 0 && <TableMenuEmptyState />}
-                {searchText.length > 0 && entityTypes.length === 0 && (
-                  <InnerSideBarEmptyPanel
-                    className="h-auto"
-                    title="No results found"
-                    description={`Your search for "${searchText}" did not return any results`}
-                  />
-                )}
-                {entityTypes.length > 0 && (
-                  <div
-                    className="flex flex-1 flex-grow h-full min-h-24 -mx-2"
-                    data-testid="colections-list"
-                  >
-                    <InfiniteList
-                      items={entityTypes}
-                      // @ts-expect-error
-                      ItemComponent={CollectionListItem}
-                      itemProps={{
-                        projectRef: project?.$id!,
-                        id: collectionId,
-                        schema: selectedSchema,
-                        href,
-                      }}
-                      getItemSize={() => 28}
-                      hasNextPage={hasNextPage}
-                      isLoadingNextPage={isFetchingNextPage}
-                      onLoadNextPage={fetchNextPage}
-                    />
-                  </div>
-                )}
-              </>
-            )}
           </div>
+          {selectedSchema === null ? (
+            <InnerSideBarEmptyPanel
+              className="h-auto"
+              title="No schema selected"
+              description="Please select or create a schema to view its collections"
+            />
+          ) : (
+            <div className="flex flex-auto flex-col gap-2 pb-4">
+              {isLoading && <EditorMenuListSkeleton />}
+
+              {isError && (
+                <div className="rounded-xs neutral-background-weak border">
+                  <div className="flex flex-col gap-1 p-2">
+                    <Text as="h4" variant="label-default-m" onBackground="danger-weak">
+                      Failed to retrieve tables
+                    </Text>
+                    <Text as="p" variant="body-default-xs" onBackground="neutral-weak">
+                      {error?.message || "An unexpected error occurred"}
+                    </Text>
+                  </div>
+                  <Button size="s" variant="tertiary" onClick={() => window.location.reload()}>
+                    Retry
+                  </Button>
+                </div>
+              )}
+
+              {isSuccess && (
+                <>
+                  {searchText.length === 0 && entityTypes.length === 0 && <TableMenuEmptyState />}
+                  {searchText.length > 0 && entityTypes.length === 0 && (
+                    <InnerSideBarEmptyPanel
+                      className="h-auto"
+                      title="No results found"
+                      description={`Your search for "${searchText}" did not return any results`}
+                    />
+                  )}
+                  {entityTypes.length > 0 && (
+                    <div
+                      className="flex flex-1 flex-grow h-full min-h-24 -mx-2"
+                      data-testid="colections-list"
+                    >
+                      <InfiniteList
+                        items={entityTypes}
+                        // @ts-expect-error
+                        ItemComponent={CollectionListItem}
+                        itemProps={{
+                          projectRef: project?.$id!,
+                          id: collectionId,
+                          schema: selectedSchema,
+                          href,
+                        }}
+                        getItemSize={() => 28}
+                        hasNextPage={hasNextPage}
+                        isLoadingNextPage={isFetchingNextPage}
+                        onLoadNextPage={fetchNextPage}
+                      />
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </>

@@ -78,7 +78,7 @@ const TableEditor = ({
       visible={visible}
       header={
         <HeaderTitle
-          schema={selectedSchema}
+          schema={selectedSchema ?? ""}
           collection={collection}
           isDuplicating={isDuplicating}
         />

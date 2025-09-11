@@ -27,7 +27,7 @@ export const CollectionLayout: React.FC<Props> = ({ children, collectionId }) =>
     {
       projectRef: project.$id,
       sdk,
-      schema: selectedSchema,
+      schema: selectedSchema!,
       id: collectionId,
     },
     {

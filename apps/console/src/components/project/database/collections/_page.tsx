@@ -46,12 +46,12 @@ const CollectionsPage = () => {
   const fetcher = async () => {
     const queries: string[] = [];
     queries.push(Query.limit(limit), Query.offset((page - 1) * limit));
-    return await sdk.databases.listCollections(selectedSchema, queries, search ?? undefined);
+    return await sdk.databases.listCollections(selectedSchema!, queries, search ?? undefined);
   };
 
   const { data, isFetching, error, isPending } = useQuery({
     queryKey: collectionKeys.list(project?.$id, {
-      schema: selectedSchema,
+      schema: selectedSchema!,
       search,
       page,
       limit,
@@ -134,7 +134,7 @@ const CollectionsPage = () => {
         }),
       ).then(async (v) => {
         await queryClient.invalidateQueries({
-          queryKey: collectionKeys.list(project?.$id, { schema: selectedSchema }),
+          queryKey: collectionKeys.list(project?.$id, { schema: selectedSchema! }),
         });
         addToast({
           message: `Successfully deleted ${ids.length} collection(s)`,

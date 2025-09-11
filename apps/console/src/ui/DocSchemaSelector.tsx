@@ -23,7 +23,7 @@ interface SchemaSelectorProps {
   disabled?: boolean;
   size?: "s" | "m" | "l";
   showError?: boolean;
-  selectedSchemaName: string;
+  selectedSchemaName: string | null;
   supportSelectAll?: boolean;
   excludedSchemas?: string[];
   onSelectSchema: (name: string) => void;

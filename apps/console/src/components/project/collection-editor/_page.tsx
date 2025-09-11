@@ -22,12 +22,15 @@ export const CollectionEditor = () => {
     data: collection,
     isLoading,
     isError,
-  } = useCollectionEditorQuery({
-    projectRef: project?.$id,
-    sdk,
-    id: collectionId,
-    schema: selectedSchema,
-  });
+  } = useCollectionEditorQuery(
+    {
+      projectRef: project?.$id,
+      sdk,
+      id: collectionId,
+      schema: selectedSchema!,
+    },
+    { enabled: !!project?.$id && !!collectionId && !!selectedSchema },
+  );
 
   const onTableCreated = useCallback(
     (collection: { $id: string }) => {
