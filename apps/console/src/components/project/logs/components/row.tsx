@@ -1,25 +1,22 @@
 "use client";
 
 import { Badge } from "@nuvix/sui/components/badge";
-import { useState, useCallback } from "react";
-import type { Log } from "@/lib/store/logs";
+import { useLogsStore, type Log } from "@/lib/store/logs";
 import { TimestampInfo } from "@/components/editor/components/_timestamp_info";
+import { cn } from "@nuvix/sui/lib/utils";
 
 export const LogRow = ({ log }: { log: Log }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [copiedField, setCopiedField] = useState<string | null>(null);
-
-  const handleCopy = useCallback((field: string, value: string) => {
-    navigator.clipboard.writeText(value);
-    setCopiedField(field);
-    setTimeout(() => setCopiedField(null), 2000);
-  }, []);
+  const { setActiveLog, activeLog } = useLogsStore((state) => state);
 
   return (
-    <div className="hover:bg-(--neutral-alpha-weak) transition-colors mb-px rounded">
+    <div
+      className={cn("hover:bg-(--neutral-alpha-weak) transition-colors mb-px rounded", {
+        "bg-(--brand-alpha-weak)": activeLog?.id === log.id,
+      })}
+    >
       <div
         className="flex items-center gap-3 py-1 px-6 cursor-pointer"
-        onClick={() => setIsExpanded(!isExpanded)}
+        onClick={() => setActiveLog(log)}
       >
         <div className="text-xs neutral-on-background-weak tabular-nums">
           <TimestampInfo utcTimestamp={log.timestamp} className="uppercase" />

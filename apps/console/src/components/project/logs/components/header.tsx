@@ -1,22 +1,17 @@
-import { useLogsStore } from "@/lib/store/logs";
+import { useFilters, useLogsStore } from "@/lib/store/logs";
 import { Button, Icon, IconButton, Input } from "@nuvix/ui/components";
 import { Download, FilterX, Pause, Play, BarChart3, TrendingUp } from "lucide-react";
 import { useMemo, useState } from "react";
 import { TimelineChart } from "./chart";
 
 export const LogsHeader: React.FC = () => {
-  const {
-    filter: filters,
-    setFilter,
-    handleExport,
-    getLogs,
-    liveUpdate,
-    setLiveUpdate,
-    resetFilter,
-    ...state
-  } = useLogsStore((state) => state);
-  const filteredLogs = useMemo(() => getLogs(), [getLogs]);
+  const { handleExport, getLogs, liveUpdate, setLiveUpdate, ...state } = useLogsStore(
+    (state) => state,
+  );
+  const filteredLogs = getLogs();
   const [showChart, setShowChart] = useState(false);
+  const { filters, setFilter, resetFilter, hasActiveFilters } = useFilters();
+  const [searchTerm, setSearchTerm] = useState(filters.search || "");
 
   // Calculate summary stats
   const stats = useMemo(() => {
@@ -45,22 +40,22 @@ export const LogsHeader: React.FC = () => {
             variant="secondary"
             tooltip="Clear all filters"
             onClick={() => resetFilter()}
-            disabled={
-              !filters.search &&
-              filters.method === "ALL" &&
-              filters.status === "all" &&
-              filters.dateRange === "1h"
-            }
+            disabled={!hasActiveFilters}
           />
           <Input
             labelAsPlaceholder
             height="s"
             placeholder="Search by path..."
-            value={filters.search}
+            value={searchTerm}
             hasPrefix={<Icon size="s" name="search" />}
-            onChange={(e) => setFilter({ ...filters, search: e.target.value })}
+            onChange={(e) => setSearchTerm(e.target.value)}
             inputClass="!min-h-9 !h-9"
             className="max-w-sm flex-1 mr-auto"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setFilter({ search: searchTerm.trim() ? searchTerm : undefined });
+              }
+            }}
           />
 
           {/* Stats Summary */}

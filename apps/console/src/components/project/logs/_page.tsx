@@ -5,11 +5,12 @@ import { useProjectStore } from "@/lib/store";
 import { Button } from "@nuvix/sui/components/button";
 import { Skeleton } from "@nuvix/sui/components/skeleton";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { AlertCircle, Activity } from "lucide-react";
 import { LogRow } from "./components/row";
-import { useLogsStore, type Log } from "@/lib/store/logs";
+import { genrateFilterQuery, useFilters, useLogsStore, type Log } from "@/lib/store/logs";
 import { LogsHeader } from "./components/header";
+import { LogDetails } from "./components/_details";
 
 const LogSkeleton = () => (
   <div className="space-y-px">
@@ -27,46 +28,40 @@ const LogSkeleton = () => (
 
 export const ApiLogsPage = () => {
   const { sdk, project } = useProjectStore((state) => state);
-  const {
-    getLogs,
-    filter: filters,
-    handleExport,
-    setFilter,
-    setLogs,
-    liveUpdate,
-    ...state
-  } = useLogsStore((state) => state);
+  const { getLogs, handleExport, setLogs, liveUpdate, activeLog, ...state } = useLogsStore(
+    (state) => state,
+  );
+  const { filters, hasActiveFilters } = useFilters();
 
   const fetcher = useCallback((): Promise<Log[]> => {
     const url = new URL(sdk.client.config.endpoint + "/logs");
 
-    // Add date range filter to API call if supported
-    if (filters.dateRange !== "all") {
-      url.searchParams.append("range", filters.dateRange);
-    }
-
+    url.searchParams.append("filter", genrateFilterQuery(filters));
+    url.searchParams.append("order", "timestamp.desc");
+    url.searchParams.append("limit", filters.limit.toString());
     return sdk.client.call("GET", url);
-  }, [sdk?.client, filters?.dateRange]);
+  }, [sdk?.client, filters]);
 
   const { data, isPending, isError, error, refetch, isFetching } = useQuery({
-    queryKey: rootKeys.logs(project?.$id, { range: filters.dateRange }),
+    queryKey: rootKeys.logs(project?.$id, filters),
     queryFn: fetcher,
     enabled: !!project?.$id,
     refetchInterval: liveUpdate ? 5000 : false,
   });
 
-  useMemo(() => {
+  useEffect(() => {
     if (data) {
       setLogs(data);
     }
-    state.setIsFetching?.(isFetching);
     state.setOnRefresh?.(refetch);
-  }, [data, setLogs, isFetching]);
+  }, [data]);
 
-  const filteredLogs = getLogs();
+  useEffect(() => {
+    if (!isPending) state.setIsFetching?.(isFetching);
+  }, [isFetching]);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-[100vh_-_4rem]">
       <div className="space-y-4">
         {/* Header */}
         <LogsHeader />
@@ -86,26 +81,29 @@ export const ApiLogsPage = () => {
                 Try Again
               </Button>
             </div>
-          ) : filteredLogs.length === 0 ? (
+          ) : data.length === 0 ? (
             <div className="p-12 text-center">
               <Activity className="h-12 w-12 nrutral-on-background-medium mx-auto mb-4" />
               <h3 className="text-lg font-semibold neutral-on-background-medium mb-2">
                 No logs found
               </h3>
               <p className="text-sm neutral-on-background-weak">
-                {filters.search || filters.method !== "ALL" || filters.status !== "all"
-                  ? "Try adjusting your filters"
-                  : "Your API logs will appear here"}
+                {hasActiveFilters ? "Try adjusting your filters" : "Your API logs will appear here"}
               </p>
             </div>
           ) : (
             <div>
-              {filteredLogs.map((log) => (
+              {data.map((log) => (
                 <LogRow key={log.id} log={log} />
               ))}
             </div>
           )}
         </div>
+        {activeLog && (
+          <div className="absolute top-[53px] right-0 w-xs h-full surface-background">
+            <LogDetails log={activeLog} />
+          </div>
+        )}
       </div>
     </div>
   );

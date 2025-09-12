@@ -2,6 +2,7 @@
 
 import { useProjectStore } from "@/lib/store";
 import { useEffect } from "react";
+import { Sidebar } from "./components/_sidebar";
 
 export const ApiLogsLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { setSidebar } = useProjectStore((state) => state);
@@ -9,7 +10,7 @@ export const ApiLogsLayout: React.FC<React.PropsWithChildren> = ({ children }) =
   useEffect(() => {
     setSidebar({
       title: "API Logs",
-      first: null,
+      first: <Sidebar />,
       middle: null,
       last: null,
     });

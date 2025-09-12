@@ -1,7 +1,9 @@
 import { create } from "zustand";
 import { createSelectors } from "../utils";
+import { useSearchParams, useRouter } from "next/navigation";
 
 export interface Log {
+  [x: string]: any;
   id: number;
   method: string;
   path: string;
@@ -21,6 +23,8 @@ export interface FilterState {
   method: string;
   status: string;
   dateRange: string;
+  resource?: string;
+  limit: number;
 }
 
 export const STATUS_GROUPS = {
@@ -45,9 +49,6 @@ export interface LogsState {
   getLogs: () => Log[];
   _logs: Log[]; // For storing unfiltered logs if needed
   setLogs: (logs: Log[]) => void;
-  filter: FilterState;
-  setFilter: (filter: Partial<FilterState>) => void;
-  resetFilter: () => void;
   methods: string[];
   statusGroups: Record<string, string>;
   dateRanges: Record<string, string>;
@@ -58,54 +59,17 @@ export interface LogsState {
   setIsFetching?: (fetching: boolean) => void;
   onRefresh?: () => void;
   setOnRefresh?: (callback: () => void) => void;
+  activeLog: Log | null;
+  setActiveLog: (log: Log | null) => void;
 }
 
 export const logsStore = create<LogsState>((set, get) => ({
   getLogs: () => {
-    const { _logs, filter: filters } = get();
-
-    return _logs.filter((log) => {
-      // Search filter
-      if (filters.search && !log.path.toLowerCase().includes(filters.search.toLowerCase())) {
-        return false;
-      }
-
-      // Method filter
-      if (filters.method !== "ALL" && log.method !== filters.method) {
-        return false;
-      }
-
-      // Status filter
-      if (filters.status !== "all") {
-        if (filters.status === "success" && (log.status < 200 || log.status >= 300)) return false;
-        if (filters.status === "redirect" && (log.status < 300 || log.status >= 400)) return false;
-        if (filters.status === "client_error" && (log.status < 400 || log.status >= 500))
-          return false;
-        if (filters.status === "server_error" && log.status < 500) return false;
-      }
-
-      return true;
-    });
+    const { _logs } = get();
+    return _logs;
   },
   _logs: [],
   setLogs: (logs: Log[]) => set({ _logs: logs }),
-  filter: {
-    search: "",
-    method: "ALL",
-    status: "all",
-    dateRange: "1h",
-  },
-  setFilter: (filter: Partial<FilterState>) =>
-    set((state) => ({ filter: { ...state.filter, ...filter } })),
-  resetFilter: () =>
-    set({
-      filter: {
-        search: "",
-        method: "ALL",
-        status: "all",
-        dateRange: "1h",
-      },
-    }),
   methods: METHODS,
   statusGroups: STATUS_GROUPS,
   dateRanges: DATE_RANGES,
@@ -138,6 +102,108 @@ export const logsStore = create<LogsState>((set, get) => ({
   setLiveUpdate: (live: boolean) => set({ liveUpdate: live }),
   setIsFetching: (fetching: boolean) => set({ isFetching: fetching }),
   setOnRefresh: (callback: () => void) => set({ onRefresh: callback }),
+  activeLog: null,
+  setActiveLog: (log: Log | null) => set({ activeLog: log }),
 }));
 
 export const useLogsStore = createSelectors(logsStore);
+
+export const genrateFilterQuery = (filter: FilterState): string => {
+  const queries: string[] = [];
+  let timestamp;
+  const now = new Date();
+
+  switch (filter.dateRange) {
+    case "30m":
+      timestamp = new Date(now.getTime() - 30 * 60000).toISOString();
+      break;
+    case "1h":
+      timestamp = new Date(now.getTime() - 60 * 60000).toISOString();
+      break;
+    case "6h":
+      timestamp = new Date(now.getTime() - 6 * 60 * 60000).toISOString();
+      break;
+    case "12h":
+      timestamp = new Date(now.getTime() - 12 * 60 * 60000).toISOString();
+      break;
+    case "24h":
+      timestamp = new Date(now.getTime() - 24 * 60 * 60000).toISOString();
+      break;
+    case "7d":
+      timestamp = new Date(now.getTime() - 7 * 24 * 60 * 60000).toISOString();
+      break;
+    case "30d":
+      timestamp = new Date(now.getTime() - 30 * 24 * 60 * 60000).toISOString();
+      break;
+    case "all":
+      timestamp = null;
+      break;
+    default:
+      timestamp = new Date(now.getTime() - 30 * 60000).toISOString();
+  }
+
+  if (timestamp) {
+    queries.push(`timestamp.gte('${timestamp}')`);
+  }
+
+  if (filter.search) {
+    queries.push(`path.like('*${filter.search}*')`);
+  }
+
+  if (filter.method && filter.method !== "ALL") {
+    queries.push(`method.eq('${filter.method}')`);
+  }
+
+  if (filter.resource && filter.resource !== "all") {
+    queries.push(`resource.eq('${filter.resource}')`);
+  }
+
+  if (filter.status && filter.status !== "all") {
+    if (filter.status === "success") queries.push("status.between(200, 299)");
+    else if (filter.status === "redirect") queries.push("status.between(300, 399)");
+    else if (filter.status === "client_error") queries.push("status.between(400, 499)");
+    else if (filter.status === "server_error") queries.push("status.gte(500)");
+  }
+
+  return queries.join(",");
+};
+
+const getFilters = (params: URLSearchParams): FilterState => ({
+  search: params.get("search") || "",
+  method: params.get("method") || "ALL",
+  status: params.get("status") || "all",
+  dateRange: params.get("dateRange") || "30m",
+  resource: params.get("resource") || undefined,
+  limit: parseInt(params.get("limit") || "100", 10),
+});
+
+export const useFilters = (): {
+  filters: FilterState;
+  setFilter: (updates: Partial<FilterState>) => void;
+  resetFilter: () => void;
+  hasActiveFilters: boolean;
+} => {
+  const params = useSearchParams();
+  const { push } = useRouter();
+  const filters = getFilters(params);
+
+  const setFilter = (updates: Partial<FilterState>) => {
+    const newParams = new URLSearchParams(params.toString());
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value) newParams.set(key, value.toString());
+      else newParams.delete(key);
+    });
+    push(`?${newParams.toString()}`);
+  };
+
+  const resetFilter = () => {
+    push(window.location.pathname);
+  };
+
+  const hasActiveFilters = Object.entries(filters).some(([key, value]) => {
+    if (key === "limit") return value !== 100;
+    return value && value !== "all" && value !== "ALL" && value !== "30m";
+  });
+
+  return { filters, setFilter, resetFilter, hasActiveFilters };
+};
