@@ -272,7 +272,7 @@ export const ApiLogsPage = () => {
     }
 
     return sdk.client.call("GET", url);
-  }, [sdk.client, filters.dateRange]);
+  }, [sdk?.client, filters?.dateRange]);
 
   const { data, isPending, isError, error, refetch, isFetching } = useQuery({
     queryKey: rootKeys.logs(project?.$id, { range: filters.dateRange }),

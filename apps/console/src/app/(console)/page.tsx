@@ -1,6 +1,5 @@
 "use client";
 import { sdkForConsole } from "@/lib/sdk";
-import { Row } from "@nuvix/ui/components";
 import { Models } from "@nuvix/console";
 import { useRouter } from "@bprogress/next";
 import { useEffect, useState } from "react";
@@ -61,15 +60,11 @@ export default function Page() {
     }
 
     fetchUser();
-  }, [user, setUser, setScopes, replace, organizations, account]);
+  }, [user]);
 
   if (isLoading) {
-    return (
-      <Row fill center>
-        <LoadingUI />
-      </Row>
-    );
+    return <LoadingUI />;
   }
 
-  return null; // Or a fallback UI if needed
+  return null; // TODO: Show some fallback UI if needed
 }
