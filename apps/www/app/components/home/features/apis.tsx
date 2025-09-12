@@ -22,12 +22,13 @@ export const DataAPIs = () => {
               prefixIcon="table"
               variant="info"
               className="backdrop-blur !text-(--neutral-on-background-weak)"
+              zIndex={1}
             >
               {table.name}
             </Tag>
             {/* Animated line (center) */}
             <motion.div
-              className="flex-1 -mx-2 -z-1 relative h-[3px] rounded-full"
+              className="relative flex-1 -mx-2 z-0 h-[3px] rounded-full overflow-hidden"
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
               transition={{
@@ -39,8 +40,13 @@ export const DataAPIs = () => {
               }}
               style={{
                 originX: 0,
-                background: `linear-gradient(90deg, var(--neutral-alpha-weak) ${10 + idx * 10}%, var(--accent-alpha-strong) ${70 + idx * 5}%, transparent 100%)`,
-                opacity: 0.85 - idx * 0.1,
+                background: `linear-gradient(
+      90deg,
+      var(--neutral-alpha-weak) ${10 + idx * 10}%,
+      var(--accent-alpha-strong) ${70 + idx * 5}%,
+      transparent 100%
+    )`,
+                opacity: Math.max(0.3, 0.9 - idx * 0.1), // clamp for readability
               }}
             >
               <BorderBeam
@@ -49,14 +55,20 @@ export const DataAPIs = () => {
                 className="from-transparent via-(--brand-on-background-strong) to-transparent"
               />
               <BorderBeam
+                size={80 + idx * 10}
                 duration={2 + idx * 0.5}
                 delay={2 + idx}
-                size={80 + idx * 10}
                 className="from-transparent via-(--brand-alpha-strong) to-transparent"
               />
             </motion.div>
+
             {/* Endpoint (right) */}
-            <Tag textVariant="body-default-xs" variant="neutral" className="backdrop-blur">
+            <Tag
+              textVariant="body-default-xs"
+              variant="neutral"
+              className="backdrop-blur"
+              zIndex={1}
+            >
               <span className="!text-(--neutral-on-background-weak)">.../v1/</span>
               {table.endpoint}
             </Tag>

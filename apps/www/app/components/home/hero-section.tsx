@@ -1,6 +1,6 @@
-import { Fade, Icon } from "@nuvix/ui/components";
+import { Button, Fade, Icon } from "@nuvix/ui/components";
+import { ArrowRight } from "lucide-react";
 import { motion } from "motion/react";
-import { Link } from "react-router";
 import { Spotlight } from "~/ui/spotlight-new";
 
 export const HeroSection = () => {
@@ -16,8 +16,8 @@ export const HeroSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <span className="px-3 flex items-center gap-2 py-1 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-300 text-sm font-medium">
-              <Icon name="sparkle" size="s" /> Launched BETA version, try now (free)
+            <span className="px-3 flex items-center gap-2 py-1 rounded-full border accent-border-weak accent-background-alpha-weak accent-on-background-medium text-sm font-medium">
+              <Icon name="sparkle" size="s" /> Nuvix Beta is live — build your backend, your way.
             </span>
           </motion.div>
 
@@ -29,9 +29,9 @@ export const HeroSection = () => {
             className=""
           >
             <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-medium bg-clip-text text-transparent bg-gradient-to-b from-foreground to-orange-500 py-4">
-              You build the product.
+              Start simple.
               <br className="hidden sm:block" />
-              We power the rest.
+              Scale your way.
             </h1>
           </motion.div>
 
@@ -42,9 +42,9 @@ export const HeroSection = () => {
             transition={{ duration: 0.5, delay: 0.4 }}
             className="mt-4 text-base sm:text-lg neutral-on-background-medium max-w-2xl mx-auto leading-relaxed"
           >
-            Nuvix is a high-performance backend with Postgres at its core, offering ultimate data
-            flexibility for any data shape. Get powerful auth, storage, messaging, and APIs to
-            launch and scale effortlessly.
+            Nuvix is a flexible, Postgres-powered backend that adapts to any data shape. With
+            built-in auth, storage, messaging, and APIs, you can launch faster and scale
+            effortlessly.
           </motion.p>
 
           {/* CTA Buttons */}
@@ -54,19 +54,17 @@ export const HeroSection = () => {
             transition={{ duration: 0.5, delay: 0.6 }}
             className="mt-6 flex flex-col sm:flex-row gap-4 sm:gap-8 justify-center items-center"
           >
-            <Link to={{ hash: "waitlist" }}>
-              <button
-                className="relative overflow-hidden cursor-pointer rounded-xl px-8 py-2.5 font-medium 
-                       bg-gradient-to-r from-orange-500 to-amber-600 
-                       before:absolute before:inset-0 before:bg-gradient-to-r 
-                       before:from-amber-500 before:to-orange-600 before:opacity-0
-                       before:transition-opacity before:duration-300 hover:before:opacity-100
-                       shadow-[0_0_20px_rgba(246,173,85,0.3)] hover:shadow-[0_0_25px_rgba(246,173,85,0.5)]
-                       transition-all duration-300 hover:scale-105 text-white"
-              >
-                Join Waitlist
-              </button>
-            </Link>
+            <Button href="https://console.nuvix.in" target="_blank" size="l" variant="primary">
+              Get Started
+            </Button>
+            <Button
+              href="https://docs.nuvix.in"
+              size="l"
+              variant="secondary"
+              suffixIcon={ArrowRight}
+            >
+              Read the docs
+            </Button>
           </motion.div>
         </div>
       </div>

@@ -21,7 +21,7 @@ export function FeaturesSection() {
           area="col-span-1 md:col-span-6 md:row-span-1"
           icon="database"
           title="Postgres Database"
-          description="Every project comes with a fully managed Postgres database."
+          description="A fully managed PostgreSQL database, ready out of the box."
           wide
           extra={
             <Mask x={10} y={-200} radius={138} className="!hidden md:!block">
@@ -30,16 +30,14 @@ export function FeaturesSection() {
           }
           info={
             <Column className="mt-auto">
-              {["PostgreSQL at the Core", "Easy to extend", "Secure by Default with RLS & TLS"].map(
-                (feature) => (
-                  <Row key={feature} gap="8" vertical="center">
-                    <Icon name="check" size="xs" onBackground="neutral-medium" />
-                    <Text variant="body-default-s" onBackground="neutral-medium">
-                      {feature}
-                    </Text>
-                  </Row>
-                ),
-              )}
+              {["PostgreSQL at the core", "Easy to extend", "Secure by default"].map((feature) => (
+                <Row key={feature} gap="8" vertical="center">
+                  <Icon name="check" size="xs" onBackground="neutral-medium" />
+                  <Text variant="body-default-s" onBackground="neutral-medium">
+                    {feature}
+                  </Text>
+                </Row>
+              ))}
             </Column>
           }
           link="/products/postgres"
@@ -48,7 +46,7 @@ export function FeaturesSection() {
           area="col-span-1 md:col-span-4 md:row-span-1"
           icon="authentication"
           title="Authentication"
-          description="Secure user authentication with social logins, multi-factor auth, and custom auth flows."
+          description="Effortless, secure auth with social logins, multi-factor authentication, and custom flows."
           extra={<Authentication />}
           link="/products/auth"
         />
@@ -91,7 +89,7 @@ export function FeaturesSection() {
           area="col-span-1 md:col-span-4 md:row-start-3 md:row-span-1"
           icon={<Route className="size-4 neutral-on-background-weak" />}
           title="Data APIs"
-          description="Instant ready-to-use Restful APIs."
+          description="Instantly available RESTful APIs for your data."
           extra={<DataAPIs />}
           link="/docs"
         />
@@ -99,14 +97,14 @@ export function FeaturesSection() {
           area="col-span-1 md:col-span-3 md:row-start-3 md:row-span-1"
           icon="sparkle"
           title="Vector"
-          description="Integrate your favorite ML-models to store, index and search vector embeddings."
+          description="Power your AI features by storing, indexing, and searching vector embeddings seamlessly."
           extra={<Vector />}
           link="/products/vector"
         />
       </ul>
       <div className="mt-4 px-2">
         <Text as="h3" variant="heading-default-xl" onBackground="neutral-weak">
-          <Text onBackground="neutral-medium">Use what you need.</Text> Built to work better
+          <Text onBackground="neutral-medium">Use what you need.</Text> Everything works better
           together.
         </Text>
       </div>

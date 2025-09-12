@@ -12,6 +12,7 @@ import {
   navigationMenuTriggerStyle,
 } from "@nuvix/sui/components/navigation-menu";
 import { cn } from "@nuvix/sui/lib/utils";
+import { MegaMenu } from "@nuvix/ui/modules"
 
 const products = [
   {
@@ -52,56 +53,176 @@ const products = [
 
 export function NavMenu() {
   return (
-    <NavigationMenu>
-      <NavigationMenuList>
-        {/* <NavigationMenuItem>
-          <NavigationMenuTrigger className="bg-transparent">Products</NavigationMenuTrigger>
-          <NavigationMenuContent className="neutral-background-medium">
-            <ul className="grid gap-3 p-6 md:w-[500px] lg:w-[600px] lg:grid-cols-[.75fr_1fr]">
-              <li className="row-span-3">
-                <NavigationMenuLink asChild>
-                  <a
-                    className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-slate-900/80 to-slate-950 p-6 no-underline outline-none focus:shadow-md border border-slate-800"
-                    href="/"
-                  >
-                    <div className="mb-2 mt-4 text-lg font-medium text-white">
-                      Backend as a Service
-                    </div>
-                    <p className="text-sm leading-tight text-neutral-300">
-                      Nuvix provides all the backend services you need to build modern applications
-                      without infrastructure headaches.
-                    </p>
-                  </a>
-                </NavigationMenuLink>
-              </li>
-              <ListItem href="/products" title="Overview">
-                Explore all our backend services and how they work together
-              </ListItem>
-              <ListItem href="/pricing" title="Pricing">
-                Simple, transparent pricing with generous free tier
-              </ListItem>
-              <ListItem href="/customers" title="Case Studies">
-                See how companies are scaling with Nuvix
-              </ListItem>
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link to="/pricing">
-            <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "bg-transparent")}>
-              Pricing
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem> */}
-        <NavigationMenuItem>
-          <Link to="https://docs.nuvix.in">
-            <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "bg-transparent")}>
-              Documentation
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
-      </NavigationMenuList>
-    </NavigationMenu>
+    <>
+      <MegaMenu
+        menuGroups={[
+          {
+            id: "products",
+            label: "Products",
+            suffixIcon: "chevronDown",
+            sections: [
+              {
+                title: "Featured",
+                links: [
+                  {
+                    label: "Analytics",
+                    href: "/analytics",
+                    icon: "HiOutlineDocumentChartBar",
+                    description: "Get insights into your data",
+                  },
+                  {
+                    label: "Security",
+                    href: "/security",
+                    icon: "HiOutlineShieldCheck",
+                    description: "Protect your assets",
+                  },
+                ],
+              },
+              {
+                title: "Tools",
+                links: [
+                  {
+                    label: "Dashboard",
+                    href: "/dashboard",
+                    icon: "HiOutlineSquares2X2",
+                    description: "Monitor your metrics",
+                  },
+                  {
+                    label: "Settings",
+                    href: "/settings",
+                    icon: "HiCog8Tooth",
+                    description: "Configure your preferences",
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            id: "solutions",
+            label: "Solutions",
+            suffixIcon: "chevronDown",
+            sections: [
+              {
+                title: "By industry",
+                links: [
+                  {
+                    label: "Enterprise",
+                    href: "/enterprise",
+                    icon: "cube",
+                    description: "Solutions for large organizations",
+                  },
+                  {
+                    label: "Startups",
+                    href: "/startups",
+                    icon: "rocket",
+                    description: "Perfect for growing companies",
+                  },
+                ],
+              },
+              {
+                title: "By team",
+                links: [
+                  {
+                    label: "Developers",
+                    href: "/developers",
+                    icon: "code",
+                    description: "Tools and APIs",
+                  },
+                  {
+                    label: "Design teams",
+                    href: "/design",
+                    icon: "sparkle",
+                    description: "Creative solutions",
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            id: "resources",
+            label: "Resources",
+            suffixIcon: "chevronDown",
+            sections: [
+              {
+                title: "Documentation",
+                links: [
+                  {
+                    label: "Guides",
+                    href: "/guides",
+                    icon: "book",
+                    description: "Learn how to use our platform",
+                  },
+                  {
+                    label: "API reference",
+                    href: "/api",
+                    icon: "code",
+                    description: "Technical documentation",
+                  },
+                ],
+              },
+              {
+                title: "Support",
+                links: [
+                  {
+                    label: "Help center",
+                    href: "/help",
+                    icon: "infoCircle",
+                    description: "Get your questions answered",
+                  },
+                  {
+                    label: "Community",
+                    href: "/community",
+                    icon: "people",
+                    description: "Connect with other users",
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            id: "company",
+            label: "Company",
+            suffixIcon: "chevronDown",
+            sections: [
+              {
+                title: "About",
+                links: [
+                  {
+                    label: "Our story",
+                    href: "/about",
+                    icon: "book",
+                    description: "Learn about our journey",
+                  },
+                  {
+                    label: "Careers",
+                    href: "/careers",
+                    icon: "rocket",
+                    description: "Join our team",
+                  },
+                ],
+              },
+              {
+                title: "Connect",
+                links: [
+                  {
+                    label: "Blog",
+                    href: "/blog",
+                    icon: "document",
+                    description: "Latest updates and news",
+                  },
+                  {
+                    label: "Contact",
+                    href: "/contact",
+                    icon: "email",
+                    description: "Get in touch with us",
+                  },
+                ],
+              },
+            ],
+          },
+        ]}
+      />
+    </>
   );
 }
 
