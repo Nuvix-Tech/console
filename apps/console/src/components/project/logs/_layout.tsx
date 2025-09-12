@@ -9,7 +9,7 @@ export const ApiLogsLayout: React.FC<React.PropsWithChildren> = ({ children }) =
   useEffect(() => {
     setSidebar({
       title: "API Logs",
-      first: "hello",
+      first: null,
       middle: null,
       last: null,
     });

@@ -357,6 +357,7 @@ export const MainMetrics: React.FC = () => {
               title: r.description,
             }))}
             defaultValue={range}
+            selected={range}
             onToggle={(v) => setRange(v as any)}
           />
         </div>
