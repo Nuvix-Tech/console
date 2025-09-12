@@ -75,16 +75,16 @@ const DatbaseSidebar = () => {
       <SidebarGroup
         title="Security"
         items={[
-          {
-            label: "Access Control",
-            href: href("access-control"),
-            isSelected: isIncludes("access-control"),
-          },
-          {
-            label: "Roles",
-            href: href("roles"),
-            isSelected: isIncludes("roles"),
-          },
+          // {
+          //   label: "Access Control",
+          //   href: href("access-control"),
+          //   isSelected: isIncludes("access-control"),
+          // },
+          // {
+          //   label: "Roles",
+          //   href: href("roles"),
+          //   isSelected: isIncludes("roles"),
+          // },
           {
             label: "Policies",
             href: href("policies"),
@@ -93,9 +93,9 @@ const DatbaseSidebar = () => {
         ]}
       />
 
-      <Line fillWidth />
+      {/* <Line fillWidth /> */}
 
-      <SidebarGroup
+      {/* <SidebarGroup
         title="Tools"
         items={[
           {
@@ -124,7 +124,7 @@ const DatbaseSidebar = () => {
             isSelected: isIncludes("usage"),
           },
         ]}
-      />
+      /> */}
     </>
   );
 };

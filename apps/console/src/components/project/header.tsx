@@ -81,7 +81,7 @@ const DesktopHeader = () => {
                 <Button size="s" variant="tertiary">
                   Help
                 </Button>
-                <Button size="s" variant="tertiary">
+                <Button size="s" variant="tertiary" href="https://docs.nuvix.in" target="_blank">
                   Docs
                 </Button>
               </div>
