@@ -54,12 +54,12 @@ export const HeroSection = () => {
             transition={{ duration: 0.5, delay: 0.6 }}
             className="mt-6 flex flex-col sm:flex-row gap-4 sm:gap-8 justify-center items-center"
           >
-            <Button href="https://console.nuvix.in" target="_blank" size="l" variant="primary">
-              Get Started
+            <Button href="https://console.nuvix.in" target="_blank" size="s" variant="primary">
+              Start building
             </Button>
             <Button
               href="https://docs.nuvix.in"
-              size="l"
+              size="s"
               variant="secondary"
               suffixIcon={ArrowRight}
             >
@@ -73,7 +73,7 @@ export const HeroSection = () => {
           <Fade to="bottom" fill>
             <img
               src={"/images/dashboard/hero_dark.png"}
-              className="absolute min-w-3xl w-4xl right-0 z-50 bottom-0 -translate-y-30 translate-x-80 border-[8px] border-(--neutral-alpha-medium) rounded-md overflow-hidden"
+              className="absolute min-w-3xl w-4xl right-0 z-50 bottom-0 -translate-y-30 translate-x-80 border-[8px] border-(--neutral-alpha-medium) rounded-[8px] overflow-hidden"
             />
           </Fade>
         </Fade>

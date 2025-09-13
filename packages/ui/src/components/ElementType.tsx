@@ -1,4 +1,4 @@
-import React, { ReactNode, forwardRef } from "react";
+import React, { type ReactNode, forwardRef } from "react";
 import { Flex } from ".";
 import { useMeta } from "../contexts";
 
@@ -39,6 +39,7 @@ const ElementType = forwardRef<HTMLElement, ElementTypeProps>(
       return (
         <Link
           href={href}
+          to={href}
           ref={ref as React.Ref<HTMLAnchorElement>}
           className={className}
           style={style}

@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback, useMemo, ReactNode } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo, type ReactNode } from "react";
 import { Flex, Text, Icon, Column, Input, Option, Row } from "../../components";
 import { createPortal } from "react-dom";
-import { useRouter, usePathname } from "next/navigation";
 import styles from "./Kbar.module.scss";
+import { useMeta } from "@nuvix/ui/contexts";
 
 export interface KbarItem {
   id: string;
@@ -57,7 +57,8 @@ export const KbarContent: React.FC<KbarContentProps> = ({ isOpen, onClose, items
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const optionRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const router = useRouter();
+  const { useRouter } = useMeta();
+  const router = useRouter?.();
   const [isClosing, setIsClosing] = useState(false);
 
   const handleClose = useCallback(() => {
@@ -382,8 +383,9 @@ export interface KbarProps {
 
 export const Kbar: React.FC<KbarProps> = ({ items, children, ...rest }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter();
-  const pathname = usePathname();
+  const { useRouter, usePathname } = useMeta();
+  const router = useRouter?.();
+  const pathname = usePathname?.();
 
   const handleOpen = () => {
     setIsOpen(true);

@@ -19,6 +19,8 @@ import { MetaProvider } from "@nuvix/ui/contexts";
 import Link from "next/link";
 import Image from "next/image";
 import { COOKIES_KEYS } from "@nuvix/sui/lib/constants";
+import { usePathname } from "next/navigation";
+import { useRouter } from "@bprogress/next";
 
 /*
  */
@@ -107,7 +109,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
             }}
           />
         </head>
-        <MetaProvider link={Link} img={Image}>
+        <MetaProvider link={Link} img={Image} usePathname={usePathname} useRouter={useRouter}>
           <ToastProvider>
             <Column
               suppressHydrationWarning

@@ -15,6 +15,8 @@ import "@nuvix/sui/globals.css";
 import { MetaProvider } from "@nuvix/ui/contexts";
 import { Link } from "react-router";
 import { Provider } from "@nuvix/cui/provider";
+import { usePathname } from "./hooks/usePathname";
+import { useRouter } from "./hooks/useRouter";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -50,7 +52,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <MetaProvider link={Link} img="img">
+      <MetaProvider link={Link} img="img" usePathname={usePathname} useRouter={useRouter}>
         <body className="page-background">
           <Provider attribute={["class", "data-theme"]} defaultTheme="dark" enableSystem>
             {children}

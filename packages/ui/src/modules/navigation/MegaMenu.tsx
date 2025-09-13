@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useState, useRef, useEffect, ReactNode } from "react";
-import { usePathname } from "next/navigation";
-import { Flex, Row, Column, Text, Icon, ToggleButton } from "../../components";
+import React, { useState, useRef, useEffect, type ReactNode } from "react";
+import { Flex, Row, Column, Text, Icon, ToggleButton, type IconProps } from "../../components";
 import styles from "./MegaMenu.module.scss";
+import { useMeta } from "@nuvix/ui/contexts";
 
 export interface MenuLink {
   label: ReactNode;
   href: string;
-  icon?: string;
+  icon?: IconProps["name"];
   description?: ReactNode;
   selected?: boolean;
 }
@@ -16,12 +16,13 @@ export interface MenuLink {
 export interface MenuSection {
   title?: ReactNode;
   links: MenuLink[];
+  component?: ReactNode;
 }
 
 export interface MenuGroup {
   id: string;
   label: ReactNode;
-  suffixIcon?: string;
+  suffixIcon?: IconProps["name"];
   href?: string;
   selected?: boolean;
   sections?: MenuSection[];
@@ -33,7 +34,8 @@ export interface MegaMenuProps extends React.ComponentProps<typeof Flex> {
 }
 
 export const MegaMenu: React.FC<MegaMenuProps> = ({ menuGroups, className, ...rest }) => {
-  const pathname = usePathname();
+  const { usePathname } = useMeta();
+  const pathname = usePathname?.();
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ left: 0, width: 0 });
   const [isFirstAppearance, setIsFirstAppearance] = useState(true);
@@ -137,11 +139,12 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ menuGroups, className, ...re
           <ToggleButton
             selected={group.selected !== undefined ? group.selected : isSelected(group.href)}
             href={group.href}
+            suffixIcon={group.sections && group.suffixIcon && group.suffixIcon}
           >
             {group.label}
-            {group.sections && group.suffixIcon && (
+            {/* {group.sections && group.suffixIcon && (
               <Icon marginLeft="8" name={group.suffixIcon} size="xs" />
-            )}
+            )} */}
           </ToggleButton>
         </Row>
       ))}
@@ -153,7 +156,7 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ menuGroups, className, ...re
           position="absolute"
           pointerEvents="auto"
           opacity={100}
-          top="32"
+          top="48"
           className={isFirstAppearance ? styles.dropdown : ""}
           style={{
             left: `${dropdownPosition.left}px`,
@@ -170,7 +173,7 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ menuGroups, className, ...re
           }}
         >
           <Row
-            background="surface"
+            background="neutral-weak"
             radius="l"
             border="neutral-alpha-weak"
             shadow="xl"
@@ -234,6 +237,7 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ menuGroups, className, ...re
                             )}
                           </ToggleButton>
                         ))}
+                        {section.component && section.component}
                       </Column>
                     ))}
                   </Row>

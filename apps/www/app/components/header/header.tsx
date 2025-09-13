@@ -43,9 +43,23 @@ const Header: React.FC = () => {
               Go to Console
             </Button>
           ) : (
-            <Button onClick={() => (window.location.href = "https://console.nuvix.in/auth/login")}>
-              Sign In
-            </Button>
+            <div className="flex items-center">
+              <Button
+                variant="secondary"
+                size="s"
+                onClick={() => (window.location.href = "https://console.nuvix.in/auth/login")}
+              >
+                Sign In
+              </Button>
+              <Button
+                variant="primary"
+                size="s"
+                onClick={() => (window.location.href = "https://console.nuvix.in/auth/register")}
+                className="ml-2"
+              >
+                Start your project
+              </Button>
+            </div>
           )}
         </aside>
       </div>
