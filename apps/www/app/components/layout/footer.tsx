@@ -21,7 +21,7 @@ export const Footer = () => {
       </Row>
       <Row gap="8" vertical="center">
         <ThemeSelector />
-        {/* <ColorModeButton /> */}
+        <ColorModeButton />
 
         <Link to={"https://github.com/Nuvix-Tech"} target="_blank">
           <IconButton icon="github" variant="secondary" />
