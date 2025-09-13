@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { NavMenu } from "./navbar";
 import { nuvix } from "~/lib/sdk";
 import { Button } from "@nuvix/ui/components";
+import { DASHBOARD_URL, SERVER_URL } from "~/lib/constants";
 
 const Header: React.FC = () => {
   const [isLogged, setIsLogged] = useState(false);
@@ -21,13 +22,13 @@ const Header: React.FC = () => {
       <div className="flex items-center justify-between gap-2 w-full">
         <div className="flex items-center gap-2 flex-1">
           <img
-            src="https://server.nuvix.in/public/images/nuvix-logo-dark.svg"
+            src={`${SERVER_URL}/public/images/nuvix-logo-dark.svg`}
             width={100}
             alt="logo"
             className="hidden dark:block"
           />
           <img
-            src="https://server.nuvix.in/public/images/nuvix-logo-dark.svg"
+            src={`${SERVER_URL}/public/images/nuvix-logo-light.svg`}
             width={100}
             alt="logo"
             className="block dark:hidden"
@@ -38,7 +39,8 @@ const Header: React.FC = () => {
           {isLogged ? (
             <Button
               variant="secondary"
-              onClick={() => (window.location.href = "https://console.nuvix.in")}
+              size="s"
+              onClick={() => (window.location.href = DASHBOARD_URL)}
             >
               Go to Console
             </Button>
@@ -47,14 +49,14 @@ const Header: React.FC = () => {
               <Button
                 variant="secondary"
                 size="s"
-                onClick={() => (window.location.href = "https://console.nuvix.in/auth/login")}
+                onClick={() => (window.location.href = `${DASHBOARD_URL}/auth/login`)}
               >
                 Sign In
               </Button>
               <Button
                 variant="primary"
                 size="s"
-                onClick={() => (window.location.href = "https://console.nuvix.in/auth/register")}
+                onClick={() => (window.location.href = `${DASHBOARD_URL}/auth/register`)}
                 className="ml-2"
               >
                 Start your project

@@ -5,10 +5,10 @@ import { Spotlight } from "~/ui/spotlight-new";
 
 export const HeroSection = () => {
   return (
-    <div className="h-[40rem] mb-10 w-full rounded-md flex items-center justify-between antialiased bg-grid relative overflow-hidden px-12 ">
+    <div className="h-[40rem] mb-10 w-full rounded-md flex items-center justify-between antialiased bg-grid relative overflow-hidden px-4 lg:px-12 ">
       <Spotlight duration={0} translateY={-480} xOffset={280} smallWidth={459} />
 
-      <div className="relative max-w-3xl w-full flex justify-between">
+      <div className="relative lg:max-w-3xl w-full flex justify-between">
         <div className="flex flex-col items-start justify-start space-y-6">
           {/* Badge */}
           <motion.div
@@ -30,7 +30,7 @@ export const HeroSection = () => {
           >
             <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-medium bg-clip-text text-transparent bg-gradient-to-b from-foreground to-orange-500 py-4">
               Start simple.
-              <br className="hidden sm:block" />
+              <br className="block" />
               Scale your way.
             </h1>
           </motion.div>
@@ -52,7 +52,7 @@ export const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.6 }}
-            className="mt-6 flex flex-col sm:flex-row gap-4 sm:gap-8 justify-center items-center"
+            className="mt-6 flex flex-row gap-4 sm:gap-8 justify-center items-center"
           >
             <Button href="https://console.nuvix.in" target="_blank" size="s" variant="primary">
               Start building
@@ -68,7 +68,7 @@ export const HeroSection = () => {
           </motion.div>
         </div>
       </div>
-      <div className="h-full relative w-xl">
+      <div className="h-full relative w-xl hidden lg:flex items-center justify-center">
         <Fade to="right" fill>
           <Fade to="bottom" fill>
             <img
