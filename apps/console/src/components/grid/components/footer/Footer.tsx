@@ -46,9 +46,9 @@ const Footer = ({ isRefetching }: FooterProps) => {
       {selectedView === "data" && <Pagination />}
 
       <div className="ml-auto flex items-center gap-x-2">
-        {entity && selectedView === "data" && (
+        {/* {entity && selectedView === "data" && (
           <RefreshButton tableId={entity.id} isRefetching={isRefetching} />
-        )}
+        )} */}
 
         {(isViewSelected || isTableSelected) && (
           <TwoOptionToggle

@@ -15,12 +15,7 @@ import { Column, Flex, ToastProvider } from "@nuvix/ui/components";
 import { Toaster } from "@nuvix/sui/components/sonner";
 import { baseURL, meta, og, schema, social, getStyle } from "@nuvix/ui/resources/config";
 import { customFont, sourceCodePro } from "@nuvix/ui/fonts";
-import { MetaProvider } from "@nuvix/ui/contexts";
-import Link from "next/link";
-import Image from "next/image";
 import { COOKIES_KEYS } from "@nuvix/sui/lib/constants";
-import { usePathname } from "next/navigation";
-import { useRouter } from "@bprogress/next";
 
 /*
  */
@@ -109,23 +104,21 @@ export default async function Layout({ children }: { children: React.ReactNode }
             }}
           />
         </head>
-        <MetaProvider link={Link} img={Image} usePathname={usePathname} useRouter={useRouter}>
-          <ToastProvider>
-            <Column
-              suppressHydrationWarning
-              as="body"
-              fillWidth
-              margin="0"
-              padding="0"
-              background="page"
-            >
-              <Providers>
-                {children}
-                <Toaster position="top-center" />
-              </Providers>
-            </Column>
-          </ToastProvider>
-        </MetaProvider>
+        <ToastProvider>
+          <Column
+            suppressHydrationWarning
+            as="body"
+            fillWidth
+            margin="0"
+            padding="0"
+            background="page"
+          >
+            <Providers>
+              {children}
+              <Toaster position="top-right" closeButton />
+            </Providers>
+          </Column>
+        </ToastProvider>
       </Flex>
     </>
   );

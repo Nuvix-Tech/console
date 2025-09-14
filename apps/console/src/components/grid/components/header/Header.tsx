@@ -41,6 +41,7 @@ import { fetchAllTableRows, useTableRowsQuery } from "@/data/table-rows/table-ro
 import { useTableRowsCountQuery } from "@/data/table-rows/table-rows-count-query";
 import { toast } from "sonner";
 import { formatTableRowsToSQL } from "@/components/editor/TableEntity.utils";
+import { GridHeaderActions } from "@/components/editor/GridHeaderActions";
 // [Unkown] CSV exports require this guard as a fail-safe if the table is
 // just too large for a browser to keep all the rows in memory before
 // exporting. Either that or export as multiple CSV sheets with max n rows each
@@ -60,9 +61,10 @@ export type HeaderProps = {
   sorts: Sort[];
   filters: Filter[];
   customHeader: ReactNode;
+  isRefetching: boolean;
 };
 
-const Header = ({ sorts, filters, customHeader }: HeaderProps) => {
+const Header = ({ sorts, filters, customHeader, isRefetching }: HeaderProps) => {
   const snap = useTableEditorTableStateSnapshot();
 
   return (
@@ -79,7 +81,7 @@ const Header = ({ sorts, filters, customHeader }: HeaderProps) => {
             )}
           </>
         )}
-        {/* <GridHeaderActions table={snap.originalTable} /> */}
+        <GridHeaderActions table={snap.originalTable} isRefetching={isRefetching} />
       </div>
     </div>
   );

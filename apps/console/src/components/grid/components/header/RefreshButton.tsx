@@ -1,8 +1,9 @@
 import { useQueryClient } from "@tanstack/react-query";
 
 import { tableRowKeys } from "@/data/table-rows/keys";
-import { Button } from "@nuvix/ui/components";
+import { IconButton } from "@nuvix/ui/components";
 import { useParams } from "next/navigation";
+import { cn } from "@nuvix/sui/lib/utils";
 
 export type RefreshButtonProps = {
   tableId?: number;
@@ -19,16 +20,18 @@ const RefreshButton = ({ tableId, isRefetching }: RefreshButtonProps) => {
   }
 
   return (
-    <Button
+    <IconButton
       type="text"
-      size="s"
+      size="m"
       variant="secondary"
-      loading={isRefetching}
-      prefixIcon={"refresh"}
       onClick={() => onClick()}
-    >
-      Refresh
-    </Button>
+      icon={"refresh"}
+      className={cn({
+        "animate-spin": isRefetching,
+      })}
+      tooltipPosition="bottom"
+      tooltip="Refresh"
+    />
   );
 };
 export default RefreshButton;
