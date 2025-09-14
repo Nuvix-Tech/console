@@ -42,3 +42,9 @@ export interface SchemaView {
   comment?: string;
   columns: PostgresColumn[];
 }
+
+export enum PermissionAction {
+  TENANT_SQL_ADMIN_WRITE = "tenant:sql_admin:write",
+  TENANT_SQL_ADMIN_READ = "tenant:sql_admin:read",
+  TENANT_BILLING_WRITE = "tenant:billing:write",
+}

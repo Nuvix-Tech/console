@@ -26,8 +26,9 @@ const RefreshButton = ({ tableId, isRefetching }: RefreshButtonProps) => {
       variant="secondary"
       onClick={() => onClick()}
       icon={"refresh"}
+      disabled={isRefetching}
       className={cn({
-        "animate-spin": isRefetching,
+        "[&_svg]:animate-spin": isRefetching,
       })}
       tooltipPosition="bottom"
       tooltip="Refresh"

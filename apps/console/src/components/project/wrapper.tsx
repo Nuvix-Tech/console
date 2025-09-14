@@ -19,6 +19,7 @@ export default function ProjectWrapper({
   const setProject = useProjectStore.use.setProject();
   const setProjectScopes = useProjectStore.use.setScopes();
   const setUpdateFn = useProjectStore.use.setUpdateFn();
+  const fetchSchemas = useProjectStore.use.fetchSchemas();
 
   async function fetcher() {
     let project = await projects.get(id);
@@ -43,6 +44,7 @@ export default function ProjectWrapper({
       setProject(p);
     });
     setProjectScopes(scopes);
+    fetchSchemas();
   }, [data]);
 
   return (

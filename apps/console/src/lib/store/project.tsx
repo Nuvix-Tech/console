@@ -7,6 +7,7 @@ import { create } from "zustand";
 import { AppPermission } from "./app";
 import { createSelectors } from "../utils";
 import { StatHelpText } from "@chakra-ui/react";
+import type { ModelsX } from "../external-sdk";
 
 export interface ProjectContextData {
   project: Models.Project;
@@ -44,6 +45,7 @@ interface ProjectStore {
   project: Models.Project;
   sdk: typeof sdkForProject;
   scopes: Models.Roles;
+  schemas: ModelsX.Schema[];
   showSidebar: boolean;
   showSubSidebar: boolean;
   sidebarItems: (SidebarItemGroup | SidebarItem)[];
@@ -66,6 +68,7 @@ interface ProjectStore {
   };
   setPanel: (panel: ProjectStore["panel"]) => void;
   hidePanel: (id?: string) => void;
+  fetchSchemas: () => Promise<void>;
 }
 
 const useProject = create<ProjectStore>((set, get) => ({
@@ -81,6 +84,17 @@ const useProject = create<ProjectStore>((set, get) => ({
   },
   sdk: undefined as any,
   project: null as any,
+  schemas: [],
+  fetchSchemas: async () => {
+    const sdk = get().sdk;
+    if (!sdk) return;
+    try {
+      const data = await sdk.schema.list();
+      set({ schemas: data.schemas });
+    } catch (error) {
+      console.error("Error fetching schemas:", error);
+    }
+  },
   update: async () => {},
   setSdk: (sdk) => set({ sdk }),
   apiEndpoint: () => get().sdk?.client?.config?.endpoint,
