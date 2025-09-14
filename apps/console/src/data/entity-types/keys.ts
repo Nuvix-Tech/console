@@ -7,6 +7,7 @@ export const entityTypeKeys = {
       sort?: "alphabetical" | "grouped-alphabetical";
       limit?: number;
       filterTypes?: string[];
+      hidePermsTables?: boolean;
     },
   ) => ["projects", projectRef, "entity-types", ...(params ? [params] : [])] as const,
 };

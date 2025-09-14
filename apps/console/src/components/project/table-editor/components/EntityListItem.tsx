@@ -1,10 +1,9 @@
 import saveAs from "file-saver";
-import { Clipboard, Copy, Download, Edit, Lock, MoreHorizontal, Trash, Unlock } from "lucide-react";
+import { Copy, Download, Lock, MoreHorizontal, Unlock } from "lucide-react";
 import Link from "next/link";
 import Papa from "papaparse";
 import { toast } from "sonner";
-import { useSnapshot } from "valtio";
-import { cva, VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 
 import { IS_PLATFORM } from "@/lib/constants";
 import {
@@ -42,8 +41,9 @@ import { useProjectStore } from "@/lib/store";
 import { useTableEditorStateSnapshot } from "@/lib/store/table-editor";
 import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
 import { cn } from "@nuvix/sui/lib/utils";
-import { formatTableRowsToSQL } from "@/components/editor/TableEntity.utils";
+import { formatTableRowsToSQL, getEntityLintDetails } from "@/components/editor/TableEntity.utils";
 import { Icon, Text } from "@nuvix/ui/components";
+import { useProjectLintsQuery } from "@/data/lint/lint-query";
 
 export const TreeViewItemVariant = cva(
   // [Unkown Temp]: aria-selected:text-foreground not working as aria-selected property not rendered in DOM,
@@ -72,6 +72,7 @@ export interface EntityListItemProps {
   projectRef: string;
   isLocked: boolean;
   isActive?: boolean;
+  isManagedSchema?: boolean;
 }
 
 const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
@@ -80,6 +81,7 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
   item: entity,
   isLocked,
   isActive: _isActive,
+  isManagedSchema = false,
 }) => {
   const { project, sdk } = useProjectStore();
   const snap = useTableEditorStateSnapshot();
@@ -96,36 +98,33 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
   const isActive = Number(id) === entity.id;
   const canEdit = isActive && !isLocked;
 
-  // const { data: lints = [] } = useProjectLintsQuery({
-  //   projectRef: project?.$id,
-  // })
+  const { data: lints = [] } = useProjectLintsQuery({
+    projectRef: project?.$id,
+  });
 
-  const tableHasLints: boolean = false;
-  // getEntityLintDetails(
-  //   entity.name,
-  //   'rls_disabled_in_public',
-  //   ['ERROR'],
-  //   lints,
-  //   selectedSchema
-  // ).hasLint
+  const tableHasLints: boolean = getEntityLintDetails(
+    entity.name,
+    "rls_disabled_in_public",
+    ["ERROR"],
+    lints,
+    selectedSchema,
+  ).hasLint;
 
-  const viewHasLints: boolean = false;
-  // getEntityLintDetails(
-  //   entity.name,
-  //   'security_definer_view',
-  //   ['ERROR', 'WARN'],
-  //   lints,
-  //   selectedSchema
-  // ).hasLint
+  const viewHasLints: boolean = getEntityLintDetails(
+    entity.name,
+    "security_definer_view",
+    ["ERROR", "WARN"],
+    lints,
+    selectedSchema,
+  ).hasLint;
 
-  const materializedViewHasLints: boolean = false;
-  //  getEntityLintDetails(
-  //   entity.name,
-  //   'materialized_view_in_api',
-  //   ['ERROR', 'WARN'],
-  //   lints,
-  //   selectedSchema
-  // ).hasLint
+  const materializedViewHasLints: boolean = getEntityLintDetails(
+    entity.name,
+    "materialized_view_in_api",
+    ["ERROR", "WARN"],
+    lints,
+    selectedSchema,
+  ).hasLint;
 
   const formatTooltipText = (entityType: string) => {
     return Object.entries(ENTITY_TYPE)
@@ -240,6 +239,8 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
     }
   };
 
+  const isPermsTable = isManagedSchema && entity.name?.endsWith("_perms");
+
   return (
     <EditorTablePageLink
       title={entity.name}
@@ -320,37 +321,41 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
                 <>
                   <DropdownMenuSeparator />
 
-                  <DropdownMenuItem
-                    key="edit-table"
-                    className="space-x-2"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      snap.onEditTable();
-                    }}
-                  >
-                    <Icon name="edit" size="s" />
-                    <span>Edit table</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    key="duplicate-table"
-                    className="space-x-2"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      snap.onDuplicateTable();
-                    }}
-                  >
-                    <Icon name={Copy} size="s" />
-                    <span>Duplicate table</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem key="view-policies" className="space-x-2" asChild>
-                    <Link
-                      key="view-policies"
-                      href={`/project/${projectRef}/auth/policies?schema=${selectedSchema}&search=${entity.id}`}
-                    >
-                      <Icon name={Lock} size="s" />
-                      <span>View policies</span>
-                    </Link>
-                  </DropdownMenuItem>
+                  {!isPermsTable && (
+                    <>
+                      <DropdownMenuItem
+                        key="edit-table"
+                        className="space-x-2"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          snap.onEditTable();
+                        }}
+                      >
+                        <Icon name="edit" size="s" />
+                        <span>Edit table</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        key="duplicate-table"
+                        className="space-x-2"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          snap.onDuplicateTable();
+                        }}
+                      >
+                        <Icon name={Copy} size="s" />
+                        <span>Duplicate table</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem key="view-policies" className="space-x-2" asChild>
+                        <Link
+                          key="view-policies"
+                          href={`/project/${projectRef}/auth/policies?schema=${selectedSchema}&search=${entity.id}`}
+                        >
+                          <Icon name={Lock} size="s" />
+                          <span>View policies</span>
+                        </Link>
+                      </DropdownMenuItem>
+                    </>
+                  )}
 
                   <DropdownMenuSub>
                     <DropdownMenuSubTrigger className="gap-x-2 space-x-2">
@@ -381,18 +386,22 @@ const EntityListItem: ItemRenderer<Entity, EntityListItemProps> = ({
                     </DropdownMenuSubContent>
                   </DropdownMenuSub>
 
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    key="delete-table"
-                    className="space-x-2"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      snap.onDeleteTable();
-                    }}
-                  >
-                    <Icon name={"trash"} size="s" onBackground="danger-weak" />
-                    <Text onBackground="danger-weak">Delete table</Text>
-                  </DropdownMenuItem>
+                  {!isPermsTable && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        key="delete-table"
+                        className="space-x-2"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          snap.onDeleteTable();
+                        }}
+                      >
+                        <Icon name={"trash"} size="s" onBackground="danger-weak" />
+                        <Text onBackground="danger-weak">Delete table</Text>
+                      </DropdownMenuItem>
+                    </>
+                  )}
                 </>
               )}
             </DropdownMenuContent>

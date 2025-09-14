@@ -15,5 +15,16 @@ export const useCheckSchemaType = ({
 }) => {
   const schemas = useProjectStore((s) => s.schemas);
   let is = schemas.find((s) => s.name === schema && s.type === type);
-  return { isSchemaType: is };
+  return { isSchemaType: !!is };
+};
+
+export const useGetSchemaType = () => {
+  const schemas = useProjectStore((s) => s.schemas);
+  const get = (schema: string) => {
+    const found = schemas.find((s) => s.name === schema)?.type;
+    if (found) return found;
+    if (PROTECTED_SCHEMAS.includes(schema)) return "internal";
+    return "unmanaged";
+  };
+  return { getSchemaType: get };
 };

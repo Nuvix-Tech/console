@@ -3,14 +3,13 @@
  */
 export const PROTECTED_SCHEMAS = [
   "auth",
+  "core",
   "extensions",
   "information_schema",
   "net",
   "realtime",
-  "storage",
   "system",
-  "functions",
-  "messaging",
+  "vault",
 ];
 
 export const PROTECTED_SCHEMAS_WITHOUT_EXTENSIONS = PROTECTED_SCHEMAS.filter(

@@ -2,6 +2,7 @@ import { parseAsString, useQueryState } from "nuqs";
 import { useParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import { LOCAL_STORAGE_KEYS } from "../lib/constants";
+import { useCheckSchemaType } from "./useProtectedSchemas";
 
 /**
  * This hook wraps useQueryState because useQueryState imports app router for some reason which breaks the SSR in
@@ -40,6 +41,7 @@ export function useQuerySchemaState(type?: "doc" | undefined): any {
   // table on the wrong schema)
   const originalDefaultSchema = useMemo(() => defaultSchema, [ref]);
   const [schema, setSelectedSchema] = useIsomorphicUseQueryState(originalDefaultSchema, type);
+  const { isSchemaType } = useCheckSchemaType({ schema: schema ?? "", type: "document" });
 
   useEffect(() => {
     // Update the schema in local storage on every change
@@ -48,5 +50,8 @@ export function useQuerySchemaState(type?: "doc" | undefined): any {
     }
   }, [schema, ref]);
 
-  return { selectedSchema: schema, setSelectedSchema };
+  return {
+    selectedSchema: type === "doc" ? (schema && isSchemaType ? schema : null) : schema || "public",
+    setSelectedSchema,
+  };
 }

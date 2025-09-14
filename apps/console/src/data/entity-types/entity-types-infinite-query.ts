@@ -12,6 +12,7 @@ export type EntityTypesVariables = {
   page?: number;
   sort?: "alphabetical" | "grouped-alphabetical";
   filterTypes?: string[];
+  hidePermsTables?: boolean;
 } & Pick<ExecuteSqlVariables, "sdk">;
 
 export interface Entity {
@@ -40,6 +41,7 @@ export async function getEntityTypes(
     page = 0,
     sort = "alphabetical",
     filterTypes = Object.values(ENTITY_TYPE),
+    hidePermsTables = true,
   }: EntityTypesVariables,
   signal?: AbortSignal,
 ) {
@@ -79,6 +81,7 @@ export async function getEntityTypes(
         )
         and nc.nspname in (${schemas.map((x) => `'${x}'`)})
         ${search ? `and c.relname ilike '%${search}%'` : ""}
+        ${hidePermsTables ? `and not c.relname like '%_perms'` : ""}
       order by ${innerOrderBy}
       limit ${limit}
       offset ${page * limit}
@@ -126,6 +129,7 @@ export const useEntityTypesQuery = <TData = EntityTypesData>(
     limit = 100,
     sort,
     filterTypes,
+    hidePermsTables,
   }: Omit<EntityTypesVariables, "page">,
   {
     enabled = true,
@@ -136,7 +140,14 @@ export const useEntityTypesQuery = <TData = EntityTypesData>(
   > = {},
 ) => {
   return useInfiniteQuery<EntityTypesData, EntityTypesError, TData>({
-    queryKey: entityTypeKeys.list(projectRef, { schemas, search, sort, limit, filterTypes }),
+    queryKey: entityTypeKeys.list(projectRef, {
+      schemas,
+      search,
+      sort,
+      limit,
+      filterTypes,
+      hidePermsTables,
+    }),
     queryFn: ({ signal, pageParam }) =>
       getEntityTypes(
         {
@@ -148,6 +159,7 @@ export const useEntityTypesQuery = <TData = EntityTypesData>(
           page: pageParam as any,
           sort,
           filterTypes,
+          hidePermsTables,
         },
         signal,
       ),
@@ -178,10 +190,18 @@ export function prefetchEntityTypes(
     limit = 100,
     sort,
     filterTypes,
+    hidePermsTables,
   }: Omit<EntityTypesVariables, "page">,
 ) {
   return client.prefetchInfiniteQuery({
-    queryKey: entityTypeKeys.list(projectRef, { schemas, search, sort, limit, filterTypes }),
+    queryKey: entityTypeKeys.list(projectRef, {
+      schemas,
+      search,
+      sort,
+      limit,
+      filterTypes,
+      hidePermsTables,
+    }),
     queryFn: ({ signal, pageParam }) =>
       getEntityTypes(
         {
@@ -193,6 +213,7 @@ export function prefetchEntityTypes(
           page: pageParam,
           sort,
           filterTypes,
+          hidePermsTables,
         },
         signal,
       ),

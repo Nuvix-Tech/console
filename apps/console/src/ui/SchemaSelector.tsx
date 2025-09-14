@@ -19,6 +19,7 @@ import { ScrollArea } from "@nuvix/sui/components/scroll-area";
 import { Skeleton } from "@nuvix/sui/components/skeleton";
 import { useProjectStore } from "@/lib/store";
 import { Button } from "@nuvix/ui/components";
+import { useGetSchemaType } from "@/hooks/useProtectedSchemas";
 
 interface SchemaSelectorProps {
   className?: string;
@@ -45,6 +46,7 @@ const SchemaSelector = ({
 }: SchemaSelectorProps) => {
   const [open, setOpen] = useState(false);
   const canCreateSchemas = true; // useCheckPermissions(PermissionAction.TENANT_SQL_ADMIN_WRITE, 'schemas')
+  const { getSchemaType } = useGetSchemaType();
 
   const { project, sdk } = useProjectStore();
   const {
@@ -165,9 +167,12 @@ const SchemaSelector = ({
                         }}
                       >
                         <span>{schema.name}</span>
-                        {selectedSchemaName === schema.name && (
-                          <Check className="text-primary" strokeWidth={2} size={16} />
-                        )}
+                        <span className="text-[11px] ml-auto neutral-on-background-weak uppercase flex items-center gap-1 font-light">
+                          {selectedSchemaName === schema.name && (
+                            <Check className="brand-on-background-weak" strokeWidth={2} size={16} />
+                          )}
+                          {getSchemaType(schema.name)}
+                        </span>
                       </CommandItem>
                     ))}
                   </ScrollArea>

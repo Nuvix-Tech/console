@@ -32,9 +32,17 @@ import { useProjectStore } from "@/lib/store";
 import { Button, Checkbox, Feedback } from "@nuvix/ui/components";
 import EditorMenuListSkeleton from "./EditorMenuListSkeleton";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
-import { IconButton, Input, InputGroup, Stack, Button as ChakraButton } from "@chakra-ui/react";
+import {
+  IconButton,
+  Input,
+  InputGroup,
+  Stack,
+  Button as ChakraButton,
+  useBreakpoint,
+} from "@chakra-ui/react";
 import { InnerSideBarEmptyPanel } from "@/ui/InnerSideBarEmptyPanel";
 import { ProtectedSchemaModal } from "@/ui/ProtectedSchemaWarning";
+import { useCheckSchemaType } from "@/hooks/useProtectedSchemas";
 
 const TableEditorMenu = () => {
   const { id: ref, tableId: _id } = useParams();
@@ -42,15 +50,28 @@ const TableEditorMenu = () => {
   const snap = useTableEditorStateSnapshot();
   const { selectedSchema, setSelectedSchema } = useQuerySchemaState();
   // const isTableEditorTabsEnabled = useIsTableEditorTabsEnabled()
-  const isMobile = false; // useBreakpoint()
+  const breakpoint = useBreakpoint();
+  const isMobile = ["base", "sm", "md"].includes(breakpoint);
 
   const [showModal, setShowModal] = useState(false);
   const [searchText, setSearchText] = useState<string>("");
   const [visibleTypes, setVisibleTypes] = useState<string[]>(Object.values(ENTITY_TYPE));
+  const [hidePermsTables, setHidePermsTables] = useLocalStorage<boolean>(
+    "table-editor-hide-perms-tables",
+    true,
+  );
   const [sort, setSort] = useLocalStorage<"alphabetical" | "grouped-alphabetical">(
     "table-editor-sort",
     "alphabetical",
   );
+  const { isSchemaType: isManagedSchema } = useCheckSchemaType({
+    schema: selectedSchema,
+    type: "managed",
+  });
+  const { isSchemaType: isDocSchema } = useCheckSchemaType({
+    schema: selectedSchema,
+    type: "document",
+  });
 
   const { project, sdk } = useProjectStore();
   const {
@@ -70,6 +91,7 @@ const TableEditorMenu = () => {
       search: searchText.trim() || undefined,
       sort,
       filterTypes: visibleTypes,
+      hidePermsTables: hidePermsTables && (isManagedSchema || isDocSchema),
     },
     // {
     //   keepPreviousData: Boolean(searchText),
@@ -87,7 +109,7 @@ const TableEditorMenu = () => {
   });
 
   const schema = schemas?.find((schema) => schema.name === selectedSchema);
-  const canCreateTables = true; //useCheckPermissions(PermissionAction.TENANT_SQL_ADMIN_WRITE, 'tables')
+  const canCreateTables = !isDocSchema && true; //useCheckPermissions(PermissionAction.TENANT_SQL_ADMIN_WRITE, 'tables')
 
   const [protectedSchemas] = partition(
     (schemas ?? []).sort((a, b) => a.name.localeCompare(b.name)),
@@ -156,13 +178,18 @@ const TableEditorMenu = () => {
                 New table
               </Button>
             ) : (
-              <Alert>
+              <Alert className="rounded-xs">
                 <AlertTitle className="text-sm">Viewing protected schema</AlertTitle>
                 <AlertDescription className="text-xs">
                   <span className="!text-xs">
                     This schema is managed by Nuvix and is read-only through the table editor
                   </span>
-                  <Button size="xs" className="mt-1.5" onClick={() => setShowModal(true)}>
+                  <Button
+                    size="xs"
+                    variant="secondary"
+                    className="-mb-1 mt-2 -ml-1"
+                    onClick={() => setShowModal(true)}
+                  >
                     Learn more
                   </Button>
                 </AlertDescription>
@@ -215,6 +242,9 @@ const TableEditorMenu = () => {
               visibleTypes={visibleTypes}
               toggleType={handleToggleEntityType}
               selectOnlyType={handleSelectOnlyEntityType}
+              hidePermsTables={hidePermsTables}
+              setHidePermsTables={setHidePermsTables}
+              showHidePermsTables={isManagedSchema || isDocSchema}
             />
           </Stack>
 
@@ -256,6 +286,7 @@ const TableEditorMenu = () => {
                       projectRef: project?.$id!,
                       id: Number(id),
                       isLocked,
+                      isManagedSchema,
                     }}
                     getItemSize={() => 28}
                     hasNextPage={hasNextPage}
@@ -280,12 +311,18 @@ interface EntityTypeFilterProps {
   visibleTypes: string[];
   toggleType: (value: string) => void;
   selectOnlyType?: (value: string) => void;
+  showHidePermsTables?: boolean;
+  hidePermsTables: boolean;
+  setHidePermsTables: (value: boolean) => void;
 }
 
 export const EntityTypeFilter = ({
   visibleTypes,
   toggleType,
   selectOnlyType,
+  showHidePermsTables = false,
+  hidePermsTables,
+  setHidePermsTables,
 }: EntityTypeFilterProps) => (
   <Popover>
     <PopoverTrigger asChild>
@@ -325,6 +362,22 @@ export const EntityTypeFilter = ({
             </div>
           ))}
         </div>
+        {showHidePermsTables && (
+          <div className="mb-1 pt-2 border-t flex items-center gap-x-2">
+            <Checkbox
+              id="hide-perms-tables"
+              name="hide-perms-tables"
+              isChecked={hidePermsTables}
+              onToggle={() => setHidePermsTables(!hidePermsTables)}
+            />
+            <Label
+              htmlFor="hide-perms-tables"
+              className="capitalize !text-xs text-nowrap line-clamp-1"
+            >
+              Hide permission tables
+            </Label>
+          </div>
+        )}
       </div>
     </PopoverContent>
   </Popover>

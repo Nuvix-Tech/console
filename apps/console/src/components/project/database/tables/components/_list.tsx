@@ -50,6 +50,8 @@ import { cn } from "@nuvix/sui/lib/utils";
 import ProtectedSchemaWarning from "@/ui/ProtectedSchemaWarning";
 import { EntityTypeFilter } from "@/components/project/table-editor/components/TableEditorMenu";
 import { useRouter } from "@bprogress/next";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useCheckSchemaType } from "@/hooks/useProtectedSchemas";
 // import ProtectedSchemaWarning from '../ProtectedSchemaWarning'
 
 interface TableListProps {
@@ -75,7 +77,20 @@ const TablesList = ({
 
   const [filterString, setFilterString] = useState<string>("");
   const [visibleTypes, setVisibleTypes] = useState<string[]>(Object.values(ENTITY_TYPE));
-  const canUpdateTables = true; // useCheckPermissions(PermissionAction.TENANT_SQL_ADMIN_WRITE, 'tables')
+  const [hidePermsTables, setHidePermsTables] = useLocalStorage<boolean>(
+    "table-editor-hide-perms-tables",
+    true,
+  );
+  const { isSchemaType: isManagedSchema } = useCheckSchemaType({
+    schema: selectedSchema,
+    type: "managed",
+  });
+  const { isSchemaType: isDocSchema } = useCheckSchemaType({
+    schema: selectedSchema,
+    type: "document",
+  });
+
+  const canUpdateTables = !isDocSchema && true; // useCheckPermissions(PermissionAction.TENANT_SQL_ADMIN_WRITE, 'tables')
 
   const hasQuery = !!filterString;
 
@@ -423,6 +438,9 @@ const TablesList = ({
             visibleTypes={visibleTypes}
             toggleType={handleToggleEntityType}
             selectOnlyType={handleSelectOnlyEntityType}
+            hidePermsTables={hidePermsTables}
+            setHidePermsTables={setHidePermsTables}
+            showHidePermsTables={isManagedSchema || isDocSchema}
           />
         </div>
         <div className="flex flex-grow justify-between gap-2 items-center">
