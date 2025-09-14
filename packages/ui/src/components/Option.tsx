@@ -99,7 +99,11 @@ const Option = forwardRef<HTMLDivElement, OptionProps>(
         disabled={disabled}
         className="reset-button-styles fill-width"
         onLinkClick={onLinkClick}
-        onClick={() => onClick?.(value)}
+        onClick={(e: any) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onClick?.(value);
+        }}
         data-value={value}
         role="option"
         aria-selected={selected}

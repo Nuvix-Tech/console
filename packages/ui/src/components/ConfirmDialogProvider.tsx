@@ -1,88 +1,51 @@
 "use client";
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { ConfirmDialog } from "./ConfirmDialog";
-import { Button } from ".";
-
-export interface ConfirmDialogProps {
-  title?: React.ReactNode;
-  description?: React.ReactNode;
-  element?: React.ReactNode;
-  onClose?: VoidFunction;
-  cancel?: {
-    text?: string;
-    variant?: "danger" | "primary" | "secondary" | "tertiary";
-  };
-  confirm?: {
-    text?: string;
-    variant?: "danger" | "primary" | "secondary" | "tertiary";
-  };
-  button?: {
-    cancel?: React.ComponentProps<typeof Button>;
-    ok?: React.ComponentProps<typeof Button>;
-  };
-}
+import { ConfirmDialog, ConfirmDialogProps } from "./ConfirmDialog";
 
 interface ConfirmContextType {
-  confirm: (props: ConfirmDialogProps) => Promise<boolean>;
+  confirm: (
+    props: Omit<ConfirmDialogProps, "isOpen" | "onConfirm" | "onClose">,
+  ) => Promise<boolean | string>;
 }
 
 const ConfirmContext = createContext<ConfirmContextType | undefined>(undefined);
 
-export const useConfirm = (): ((props: ConfirmDialogProps) => Promise<boolean>) => {
-  const context = useContext(ConfirmContext);
-  if (!context) {
-    throw new Error("useConfirm must be used within a ConfirmProvider");
-  }
-  return context.confirm;
+export const useConfirm = () => {
+  const ctx = useContext(ConfirmContext);
+  if (!ctx) throw new Error("useConfirm must be used within ConfirmProvider");
+  return ctx.confirm;
 };
 
-interface ConfirmProviderProps {
-  children: ReactNode;
-}
+export const ConfirmProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [state, setState] = useState<{
+    props: Omit<ConfirmDialogProps, "isOpen" | "onConfirm" | "onClose">;
+    resolve: (result: boolean) => void;
+  } | null>(null);
 
-export const ConfirmProvider: React.FC<ConfirmProviderProps> = ({ children }) => {
-  const [confirmState, setConfirmState] = useState<
-    | (ConfirmDialogProps & {
-        resolve: (result: boolean) => void;
-      })
-    | null
-  >(null);
-
-  const confirm = (props: ConfirmDialogProps): Promise<boolean> => {
-    return new Promise((resolve) => {
-      setConfirmState({ ...props, resolve });
+  const confirm = (props: Omit<ConfirmDialogProps, "isOpen" | "onConfirm" | "onClose">) => {
+    return new Promise<boolean>((resolve) => {
+      setState({ props, resolve });
     });
   };
 
-  const handleConfirm = (result: boolean) => {
-    if (confirmState) {
-      confirmState.resolve(result);
-      setConfirmState(null);
+  const handleConfirm = async (result: boolean) => {
+    if (state) {
+      state.resolve(result);
+      setState(null);
     }
   };
-
-  const modal = (
-    <ConfirmDialog
-      isOpen={!!confirmState}
-      onClose={() => {
-        confirmState?.onClose?.();
-        setConfirmState(null);
-      }}
-      title={confirmState?.title}
-      description={confirmState?.description}
-      handleConfirm={handleConfirm}
-      node={confirmState?.element}
-      cancelText={confirmState?.cancel?.text}
-      cancelVariant={confirmState?.cancel?.variant}
-      confirmText={confirmState?.confirm?.text}
-      confirmVariant={confirmState?.confirm?.variant}
-    />
-  );
 
   return (
     <ConfirmContext.Provider value={{ confirm }}>
       {children}
-      {modal}
+      {state && (
+        <ConfirmDialog
+          {...state.props}
+          isOpen={true}
+          onConfirm={handleConfirm}
+          onClose={() => setState(null)}
+        />
+      )}
     </ConfirmContext.Provider>
   );
 };

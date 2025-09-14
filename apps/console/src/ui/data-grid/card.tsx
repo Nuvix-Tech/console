@@ -1,13 +1,15 @@
 import { SimpleGrid } from "@chakra-ui/react";
+import { cn } from "@nuvix/sui/lib/utils";
 import { Card, SmartLink } from "@nuvix/ui/components";
 import React from "react";
 
 export const GridCard = ({
   href,
+  className,
   ...props
 }: React.ComponentProps<typeof Card> & { href?: string }) => {
   return (
-    <SmartLink unstyled fillWidth href={href}>
+    <SmartLink unstyled fillWidth href={href} data-disable-progress={true}>
       <Card
         radius="l"
         direction="column"
@@ -15,7 +17,10 @@ export const GridCard = ({
         horizontal="start"
         padding="m"
         fillWidth
-        className="!bg-(--neutral-alpha-weak) dark:!bg-(--neutral-background-medium) hover:!bg-(--neutral-alpha-medium) dark:hover:!bg-(--neutral-alpha-medium)"
+        className={cn(
+          "!bg-(--neutral-alpha-weak) dark:!bg-(--neutral-background-medium) hover:!bg-(--neutral-alpha-medium) dark:hover:!bg-(--neutral-alpha-medium)",
+          className,
+        )}
         {...props}
       />
     </SmartLink>
