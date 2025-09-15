@@ -28,7 +28,7 @@ export const PolicyEditorPanelHeader = ({
       <div className="flex flex-row gap-3 max-w-[75%] items-start">
         <SheetClose
           className={cn(
-            "text-muted hover:text ring-offset-background transition-opacity hover:opacity-100",
+            "text-muted-foreground hover:text ring-offset-background transition-opacity hover:opacity-100",
             "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
             "transition disabled:pointer-events-none data-[state=open]:bg-secondary",
             "mt-1.5",
@@ -37,7 +37,7 @@ export const PolicyEditorPanelHeader = ({
           <X className="h-3 w-3" />
           <span className="sr-only">Close</span>
         </SheetClose>
-        <div className="h-[24px] w-[1px] bg-border-overlay" />
+        <div className="h-[24px] w-[1px] bg-muted" />
         <div>
           <SheetTitle className="truncate">
             {selectedPolicy !== undefined
@@ -52,7 +52,7 @@ export const PolicyEditorPanelHeader = ({
             >
               <CollapsibleTrigger className="group  font-normal p-0 [&[data-state=open]>div>svg]:!-rotate-180">
                 <div className="flex items-center gap-x-2 w-full">
-                  <p className="text-xs neutral-on-background-medium group-hover:text-foreground transition">
+                  <p className="!text-xs neutral-on-background-medium group-hover:text-foreground transition">
                     View policy details
                   </p>
                   <ChevronDown
@@ -65,27 +65,27 @@ export const PolicyEditorPanelHeader = ({
               <CollapsibleContent className="grid gap-1.5">
                 <div className="flex my-2">
                   <div>
-                    <div className="text-xs flex items-start space-x-2 border-b py-1.5">
+                    <div className="!text-xs flex items-start gap-2 border-b py-1.5">
                       <p className="w-[110px] neutral-on-background-medium">Name:</p>
                       <p className="pr-4">{selectedPolicy?.name}</p>
                     </div>
-                    <div className="text-xs flex items-start space-x-2 border-b py-1.5">
+                    <div className="!text-xs flex items-start gap-2 border-b py-1.5">
                       <p className="w-[110px] neutral-on-background-medium">Action:</p>
                       <p className="font-mono pr-4">{selectedPolicy?.action}</p>
                     </div>
-                    <div className="text-xs flex items-start space-x-2 border-b py-1.5">
+                    <div className="!text-xs flex items-start gap-2 border-b py-1.5">
                       <p className="w-[110px] neutral-on-background-medium">Command:</p>
                       <p className="font-mono pr-4">{selectedPolicy?.command}</p>
                     </div>
-                    <div className="text-xs flex items-start space-x-2 border-b py-1.5">
+                    <div className="!text-xs flex items-start gap-2 border-b py-1.5">
                       <p className="w-[110px] neutral-on-background-medium">Target roles:</p>
                       <p className="font-mono pr-4">{selectedPolicy?.roles.join(", ")}</p>
                     </div>
-                    <div className="text-xs flex items-start space-x-2 border-b py-1.5">
+                    <div className="!text-xs flex items-start gap-2 border-b py-1.5">
                       <p className="w-[110px] neutral-on-background-medium">USING expression:</p>
                       <p className="font-mono pr-4">{selectedPolicy?.definition}</p>
                     </div>
-                    <div className="text-xs flex items-start space-x-2 pt-1.5">
+                    <div className="!text-xs flex items-start gap-2 pt-1.5">
                       <p className="w-[110px] neutral-on-background-medium">CHECK expression:</p>
                       <p
                         className={`${selectedPolicy?.check ? "" : "neutral-on-background-medium"} font-mono pr-4`}

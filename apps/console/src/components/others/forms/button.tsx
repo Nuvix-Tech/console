@@ -8,14 +8,14 @@ type Props = ButtonProps & B;
 const SubmitButton = React.forwardRef<HTMLButtonElement, Props>((props, ref) => {
   const { loadingText, ...rest } = props;
   const { isSubmitting, isValid, dirty, errors } = useFormikContext();
-  console.log(errors);
+  console.log(JSON.stringify(errors));
   return (
     <Button
       ref={ref}
       size="s"
       {...rest}
       type="submit"
-      disabled={!isValid || !dirty || isSubmitting}
+      disabled={!isValid || !dirty || isSubmitting || props.disabled}
       loading={isSubmitting && isValid}
     />
   );

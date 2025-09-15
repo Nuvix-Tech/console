@@ -1,18 +1,15 @@
 import { initial, last } from "lodash";
 import { Dispatch, SetStateAction } from "react";
 
-import styles from "@ui/layout/ai-icon-animation/ai-icon-animation-style.module.css";
 import { QueryResponseError } from "@/data/sql/execute-sql-mutation";
 import { Alert, AlertTitle } from "@nuvix/sui/components/alert";
-// import {
-//   AlertTitle,
-//   Alert,
-//   Button,
-//   CollapsibleContent,
-//   CollapsibleTrigger,
-//   Collapsible,
-//   cn,
-// } from 'ui';
+import {
+  CollapsibleContent,
+  CollapsibleTrigger,
+  Collapsible,
+} from "@nuvix/sui/components/collapsible";
+import { Button } from "@nuvix/ui/components";
+import { cn } from "@/lib/utils";
 
 export const QueryError = ({
   error,
@@ -27,7 +24,7 @@ export const QueryError = ({
     (error?.formattedError?.split("\n") ?? [])?.filter((x: string) => x.length > 0) ?? [];
 
   return (
-    <div className="flex flex-col gap-y-3 px-5">
+    <div className="flex flex-col gap-y-3 px-5 mt-1">
       <Alert variant="destructive">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -43,10 +40,7 @@ export const QueryError = ({
         </svg>
         <div className="flex flex-col gap-3">
           <AlertTitle className="m-0">Error running SQL query</AlertTitle>
-          $$EDIT $$
-          apps/console/src/components/project/database/Policies/PolicyEditorPanel/QueryError.tsx
-          $$EDIT $$
-          {/* <Collapsible
+          <Collapsible
             defaultOpen
             className="flex flex-col gap-3"
             open={open}
@@ -54,12 +48,8 @@ export const QueryError = ({
           >
             <div className="flex gap-2">
               <CollapsibleTrigger asChild>
-                <Button
-                  size="tiny"
-                  type="outline"
-                  className={cn('group', styles['ai-icon__container--allow-hover-effect'])}
-                >
-                  {open ? 'Hide error details' : 'Show error details'}
+                <Button variant="secondary" size="xs" className={cn("group")}>
+                  {open ? "Hide error details" : "Show error details"}
                 </Button>
               </CollapsibleTrigger>
             </div>
@@ -68,17 +58,17 @@ export const QueryError = ({
                 formattedError.map((x: string, i: number) => (
                   <pre key={`error-${i}`} className="font-mono text-xs whitespace-pre-wrap">
                     {x
-                      .split(' ')
+                      .split(" ")
                       .reduce((arr, cur) => {
                         // Split the ERROR string so that it can be wrapped in a red span
                         const l = last(arr);
 
-                        if (l && l !== 'ERROR:') {
-                          return initial(arr).concat([[l, cur].join(' ')]);
+                        if (l && l !== "ERROR:") {
+                          return initial(arr).concat([[l, cur].join(" ")]);
                         }
 
-                        if (l === '') {
-                          return arr.concat([' ']);
+                        if (l === "") {
+                          return arr.concat([" "]);
                         }
 
                         return arr.concat([cur]);
@@ -87,7 +77,7 @@ export const QueryError = ({
                         return (
                           <span
                             key={index}
-                            className={cn('break-all', str === 'ERROR:' && 'text-destructive')}
+                            className={cn("break-all", str === "ERROR:" && "text-destructive")}
                           >
                             {str}
                           </span>
@@ -99,7 +89,7 @@ export const QueryError = ({
                 <p className="font-mono text-xs">{error.error}</p>
               )}
             </CollapsibleContent>
-          </Collapsible> */}
+          </Collapsible>
         </div>
       </Alert>
       <div className="overflow-x-auto"></div>

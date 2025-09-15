@@ -21,6 +21,7 @@ function RadioGroup({
 
 function RadioGroupItem({
   className,
+  children,
   ...props
 }: React.ComponentProps<typeof RadioGroupPrimitive.Item>) {
   return (
@@ -42,4 +43,31 @@ function RadioGroupItem({
   );
 }
 
-export { RadioGroup, RadioGroupItem };
+function RadioGroupLargeItem({
+  className,
+  label,
+  ...props
+}: React.ComponentProps<typeof RadioGroupPrimitive.Item> & { label: string }) {
+  return (
+    <label className="flex items-center gap-2 border neutral-border-medium rounded-sm px-2 py-2">
+      <RadioGroupPrimitive.Item
+        data-slot="radio-group-item"
+        className={cn(
+          "border-muted text-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive aspect-square size-4 shrink-0 rounded-full border shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50",
+          className,
+        )}
+        {...props}
+      >
+        <RadioGroupPrimitive.Indicator
+          data-slot="radio-group-indicator"
+          className="relative flex items-center justify-center"
+        >
+          <CircleIcon className="fill-primary absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2" />
+        </RadioGroupPrimitive.Indicator>
+      </RadioGroupPrimitive.Item>
+      <span className="select-none text-xs">{label}</span>
+    </label>
+  );
+}
+
+export { RadioGroup, RadioGroupItem, RadioGroupLargeItem };

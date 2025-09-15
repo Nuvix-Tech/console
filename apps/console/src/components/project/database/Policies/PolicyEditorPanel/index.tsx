@@ -29,7 +29,7 @@ import { ScrollArea } from "@nuvix/sui/components/scroll-area";
 import ConfirmationModal from "@/components/editor/components/_confim_dialog";
 import { Tabs } from "@chakra-ui/react";
 import { useFormik } from "formik";
-import { Form } from "@/components/others/forms";
+import { Form, SubmitButton } from "@/components/others/forms";
 import { PolicyDetailsV2 } from "./PolicyDetailsV2";
 
 interface PolicyEditorPanelProps {
@@ -48,7 +48,7 @@ const FormSchema = y.object({
   table: y.string().required(),
   behavior: y.string().required(),
   command: y.string().required(),
-  roles: y.string().required(),
+  roles: y.array().of(y.string().required()).optional().default([]),
 });
 
 export type PolicyFormValues = y.InferType<typeof FormSchema>;
@@ -98,26 +98,15 @@ export const PolicyEditorPanel = memo(function ({
   const [showTools, setShowTools] = useState<boolean>(false);
   const [isClosingPolicyEditorPanel, setIsClosingPolicyEditorPanel] = useState<boolean>(false);
 
-  const formId = "rls-editor";
-
   const defaultValues = {
     name: "",
     table: "",
     behavior: "permissive",
     command: "select",
-    roles: "",
+    roles: [],
   };
-  const form = useFormik<y.InferType<typeof FormSchema>>({
-    initialValues: defaultValues,
-    validationSchema: FormSchema,
-    onSubmit: () => {}, // we handle submission outside of formik
-  });
 
-  const { name, table, behavior, command, roles } = form.values;
-  const supportWithCheck = ["update", "all"].includes(command);
-  const isRenamingPolicy = selectedPolicy !== undefined && name !== selectedPolicy.name;
-
-  const { mutate: executeMutation, isPending: isExecuting } = useExecuteSqlMutation({
+  const { mutateAsync: executeMutation } = useExecuteSqlMutation({
     onSuccess: async () => {
       // refresh all policies
       await queryClient.invalidateQueries({ queryKey: databasePoliciesKeys.list(ref as string) });
@@ -127,12 +116,94 @@ export const PolicyEditorPanel = memo(function ({
     onError: (error) => setError(error),
   });
 
-  const { mutate: updatePolicy, isPending: isUpdating } = useDatabasePolicyUpdateMutation({
+  const { mutateAsync: updatePolicy } = useDatabasePolicyUpdateMutation({
     onSuccess: () => {
       toast.success("Successfully updated policy");
       onSelectCancel();
     },
   });
+
+  const form = useFormik<y.InferType<typeof FormSchema>>({
+    initialValues: defaultValues,
+    validationSchema: FormSchema,
+    validateOnBlur: true,
+    onSubmit: async (data) => {
+      const { name, table, behavior, command, roles } = data;
+      let using = editorOneRef.current?.getValue().trim() ?? undefined;
+      let check = editorTwoRef.current?.getValue().trim();
+
+      // [Terry] b/c editorOneRef will be the check statement in this scenario
+      if (command === "insert") {
+        check = using;
+      }
+
+      if (command === "insert" && (check === undefined || check.length === 0)) {
+        return setFieldError("Please provide a SQL expression for the WITH CHECK statement");
+      } else if (command !== "insert" && (using === undefined || using.length === 0)) {
+        return setFieldError("Please provide a SQL expression for the USING statement");
+      } else {
+        setFieldError(undefined);
+      }
+
+      if (selectedPolicy === undefined) {
+        const sql = generateCreatePolicyQuery({
+          name: name,
+          schema,
+          table,
+          behavior,
+          command,
+          roles: roles?.length === 0 ? "public" : roles.join(", "),
+          using: using ?? "",
+          check: command === "insert" ? (using ?? "") : (check ?? ""),
+        });
+
+        setError(undefined);
+        await executeMutation({
+          sql,
+          projectRef: selectedProject?.$id,
+          sdk,
+          handleError: (error) => {
+            throw error;
+          },
+        });
+      } else if (selectedProject !== undefined) {
+        const payload: {
+          name?: string;
+          definition?: string;
+          check?: string;
+          roles?: string[];
+        } = {};
+        const updatedRoles = roles.length === 0 ? ["public"] : roles;
+
+        if (name !== selectedPolicy.name) payload.name = name;
+        if (!isEqual(selectedPolicy.roles, updatedRoles)) payload.roles = updatedRoles;
+        if (selectedPolicy.definition !== null && selectedPolicy.definition !== using)
+          payload.definition = using;
+
+        if (selectedPolicy.command === "INSERT") {
+          // [Joshen] Cause editorOneRef will be the check statement in this scenario
+          if (selectedPolicy.check !== null && selectedPolicy.check !== using)
+            payload.check = using;
+        } else {
+          if (selectedPolicy.check !== null && selectedPolicy.check !== check)
+            payload.check = check;
+        }
+
+        if (Object.keys(payload).length === 0) return onSelectCancel();
+
+        await updatePolicy({
+          projectRef: selectedProject.$id,
+          sdk,
+          id: selectedPolicy?.id,
+          payload,
+        });
+      }
+    },
+  });
+
+  const { name, table, behavior, command, roles } = form.values;
+  const supportWithCheck = ["update", "all"].includes(command);
+  const isRenamingPolicy = selectedPolicy !== undefined && name !== selectedPolicy.name;
 
   const onClosingPanel = () => {
     const editorOneValue = editorOneRef.current?.getValue().trim() ?? null;
@@ -146,88 +217,17 @@ export const PolicyEditorPanel = memo(function ({
     const policyUpdateUnsaved =
       selectedPolicy !== undefined
         ? checkIfPolicyHasChanged(selectedPolicy, {
-          name,
-          roles: roles.length === 0 ? ["public"] : roles.split(", "),
-          definition: editorOneFormattedValue,
-          check: command === "INSERT" ? editorOneFormattedValue : editorTwoFormattedValue,
-        })
+            name,
+            roles: roles.length === 0 ? ["public"] : roles,
+            definition: editorOneFormattedValue,
+            check: command === "INSERT" ? editorOneFormattedValue : editorTwoFormattedValue,
+          })
         : false;
 
     if (policyCreateUnsaved || policyUpdateUnsaved) {
       setIsClosingPolicyEditorPanel(true);
     } else {
       onSelectCancel();
-    }
-  };
-
-  const onSubmit = (data: y.InferType<typeof FormSchema>) => {
-    const { name, table, behavior, command, roles } = data;
-    let using = editorOneRef.current?.getValue().trim() ?? undefined;
-    let check = editorTwoRef.current?.getValue().trim();
-
-    // [Terry] b/c editorOneRef will be the check statement in this scenario
-    if (command === "insert") {
-      check = using;
-    }
-
-    if (command === "insert" && (check === undefined || check.length === 0)) {
-      return setFieldError("Please provide a SQL expression for the WITH CHECK statement");
-    } else if (command !== "insert" && (using === undefined || using.length === 0)) {
-      return setFieldError("Please provide a SQL expression for the USING statement");
-    } else {
-      setFieldError(undefined);
-    }
-
-    if (selectedPolicy === undefined) {
-      const sql = generateCreatePolicyQuery({
-        name: name,
-        schema,
-        table,
-        behavior,
-        command,
-        roles: roles.length === 0 ? "public" : roles,
-        using: using ?? "",
-        check: command === "insert" ? (using ?? "") : (check ?? ""),
-      });
-
-      setError(undefined);
-      executeMutation({
-        sql,
-        projectRef: selectedProject?.$id,
-        sdk,
-        handleError: (error) => {
-          throw error;
-        },
-      });
-    } else if (selectedProject !== undefined) {
-      const payload: {
-        name?: string;
-        definition?: string;
-        check?: string;
-        roles?: string[];
-      } = {};
-      const updatedRoles = roles.length === 0 ? ["public"] : roles.split(", ");
-
-      if (name !== selectedPolicy.name) payload.name = name;
-      if (!isEqual(selectedPolicy.roles, updatedRoles)) payload.roles = updatedRoles;
-      if (selectedPolicy.definition !== null && selectedPolicy.definition !== using)
-        payload.definition = using;
-
-      if (selectedPolicy.command === "INSERT") {
-        // [Joshen] Cause editorOneRef will be the check statement in this scenario
-        if (selectedPolicy.check !== null && selectedPolicy.check !== using) payload.check = using;
-      } else {
-        if (selectedPolicy.check !== null && selectedPolicy.check !== check) payload.check = check;
-      }
-
-      if (Object.keys(payload).length === 0) return onSelectCancel();
-
-      updatePolicy({
-        projectRef: selectedProject.$id,
-        sdk,
-        id: selectedPolicy?.id,
-        payload,
-      });
     }
   };
 
@@ -258,7 +258,7 @@ export const PolicyEditorPanel = memo(function ({
             table,
             behavior: action.toLowerCase(),
             command: command.toLowerCase(),
-            roles: roles.length === 1 && roles[0] === "public" ? "" : roles.join(", "),
+            roles: roles.length === 1 && roles[0] === "public" ? [] : roles,
           },
         });
         if (selectedPolicy.definition) setUsing(`  ${selectedPolicy.definition}`);
@@ -320,7 +320,13 @@ export const PolicyEditorPanel = memo(function ({
                   <LockedCreateQuerySection
                     schema={schema}
                     selectedPolicy={selectedPolicy}
-                    formFields={{ name, table, behavior, command, roles }}
+                    formFields={{
+                      name,
+                      table,
+                      behavior,
+                      command,
+                      roles: roles?.join?.(", ") ?? "",
+                    }}
                   />
 
                   <div
@@ -356,7 +362,7 @@ export const PolicyEditorPanel = memo(function ({
                     />
                   </div>
 
-                  <div className="bg-surface-300 py-1">
+                  <div className="neutral-background-alpha-medium py-1">
                     <div className="flex items-center" style={{ fontSize: "14px" }}>
                       <div className="w-[57px]">
                         <p className="w-[31px] flex justify-end font-mono text-sm neutral-on-background-medium select-none">
@@ -469,27 +475,25 @@ export const PolicyEditorPanel = memo(function ({
                       type="default"
                       size="s"
                       variant="secondary"
-                      disabled={isExecuting || isUpdating}
+                      disabled={form.isSubmitting}
                       onClick={() => onClosingPanel()}
                     >
                       Cancel
                     </Button>
-
-                    <Button
-                      form={formId}
-                      type="submit"
+                    <SubmitButton
                       size="s"
-                      loading={isExecuting || isUpdating}
-                      disabled={!canUpdatePolicies || isExecuting || isUpdating}
                       tooltip={
                         !canUpdatePolicies
                           ? "You need additional permissions to update policies"
                           : undefined
                       }
+                      disabled={!canUpdatePolicies || form.isSubmitting}
                       tooltipPosition="top"
+                      onClick={() => form.submitForm()}
+                      loading={form.isSubmitting}
                     >
                       Save policy
-                    </Button>
+                    </SubmitButton>
                   </SheetFooter>
                 </div>
               </div>

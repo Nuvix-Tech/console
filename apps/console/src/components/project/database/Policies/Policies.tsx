@@ -5,16 +5,15 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { PolicyTableRow, PolicyTableRowProps } from "./PolicyTableRow";
-// import { ProtectedSchemaWarning } from 'components/interfaces/Database/ProtectedSchemaWarning';
-// import { NoSearchResults } from 'components/ui/NoSearchResults';
 import { useDatabasePolicyDeleteMutation } from "@/data/database-policies/database-policy-delete-mutation";
 import { useTableUpdateMutation } from "@/data/tables/table-update-mutation";
-// import { Button, Card, CardContent } from 'ui';
 import { useParams } from "next/navigation";
 import { useProjectStore } from "@/lib/store";
 import ProtectedSchemaWarning from "@/ui/ProtectedSchemaWarning";
 import { Card, CardContent } from "@nuvix/sui/components/card";
 import { Button } from "@nuvix/ui/components";
+import ConfirmationModal from "@/components/editor/components/_confim_dialog";
+import NoSearchResults from "@/ui/NoSearchResults";
 
 interface PoliciesProps {
   search?: string;
@@ -137,48 +136,49 @@ export const Policies = ({
     <>
       <div className="flex flex-col gap-y-4 pb-4">
         {isLocked && <ProtectedSchemaWarning schema={schema} entity="policies" />}
-        {tables.length > 0
-          ? tables.map((table) => (
-              <section key={table.id}>
-                <PolicyTableRow
-                  table={table}
-                  isLocked={schema === "realtime" ? true : isLocked}
-                  onSelectToggleRLS={onSelectToggleRLS}
-                  onSelectCreatePolicy={() => onSelectCreatePolicy(table.name)}
-                  onSelectEditPolicy={onSelectEditPolicy}
-                  onSelectDeletePolicy={onSelectDeletePolicy}
-                />
-              </section>
-            ))
-          : hasTables
-            ? // <NoSearchResults searchString={search ?? ''} onResetFilter={onResetSearch} />
-              "no results found $$EDIT$$"
-            : null}
+        {tables.length > 0 ? (
+          tables.map((table) => (
+            <section key={table.id}>
+              <PolicyTableRow
+                table={table}
+                isLocked={schema === "realtime" ? true : isLocked}
+                onSelectToggleRLS={onSelectToggleRLS}
+                onSelectCreatePolicy={() => onSelectCreatePolicy(table.name)}
+                onSelectEditPolicy={onSelectEditPolicy}
+                onSelectDeletePolicy={onSelectDeletePolicy}
+              />
+            </section>
+          ))
+        ) : hasTables ? (
+          <NoSearchResults searchString={search ?? ""} onResetFilter={onResetSearch} />
+        ) : null}
       </div>
 
-      {/* <ConfirmModal
-        danger
+      <ConfirmationModal
+        variant={"destructive"}
         visible={!isEmpty(selectedPolicyToDelete)}
         title="Confirm to delete policy"
         description={`This is permanent! Are you sure you want to delete the policy "${selectedPolicyToDelete.name}"`}
-        buttonLabel="Delete"
-        buttonLoadingLabel="Deleting"
-        onSelectCancel={closeConfirmModal}
-        onSelectConfirm={onDeletePolicy}
+        confirmLabel="Delete"
+        confirmLabelLoading="Deleting"
+        onCancel={closeConfirmModal}
+        onConfirm={onDeletePolicy}
       />
 
-      <ConfirmModal
-        danger={selectedTableToToggleRLS?.rls_enabled}
+      <ConfirmationModal
+        variant={selectedTableToToggleRLS?.rls_enabled ? "destructive" : "default"}
         visible={selectedTableToToggleRLS !== undefined}
-        title={`Confirm to ${selectedTableToToggleRLS?.rls_enabled ? 'disable' : 'enable'
-          } Row Level Security`}
-        description={`Are you sure you want to ${selectedTableToToggleRLS?.rls_enabled ? 'disable' : 'enable'
-          } Row Level Security for the table "${selectedTableToToggleRLS?.name}"?`}
-        buttonLabel="Confirm"
-        buttonLoadingLabel="Saving"
-        onSelectCancel={closeConfirmModal}
-        onSelectConfirm={onToggleRLS}
-      /> */}
+        title={`Confirm to ${
+          selectedTableToToggleRLS?.rls_enabled ? "disable" : "enable"
+        } Row Level Security`}
+        description={`Are you sure you want to ${
+          selectedTableToToggleRLS?.rls_enabled ? "disable" : "enable"
+        } Row Level Security for the table "${selectedTableToToggleRLS?.name}"?`}
+        confirmLabel="Confirm"
+        confirmLabelLoading="Saving"
+        onCancel={closeConfirmModal}
+        onConfirm={onToggleRLS}
+      />
     </>
   );
 };

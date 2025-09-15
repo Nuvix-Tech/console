@@ -16,7 +16,7 @@ export const LockedCreateQuerySection = ({
   const { name, table, behavior, command, roles } = formFields;
 
   return (
-    <div className="bg-surface-300 pt-2 pb-1">
+    <div className="neutral-background-alpha-medium pt-2 pb-1">
       <div className="flex items-center justify-between px-5 mb-1">
         <div className="flex items-center">
           <div className="pl-0.5 pr-5 flex items-center justify-center">
