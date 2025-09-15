@@ -1,25 +1,18 @@
 import { PostgresPolicy } from "@nuvix/pg-meta";
-import { Search } from "lucide-react";
 import { useState } from "react";
-// import { Badge, HoverCard, HoverCardContent, HoverCardTrigger, Input, cn } from 'ui';
-
-// import { Markdown } from 'components/interfaces/Markdown';
-// import { SimpleCodeBlock } from 'ui';
-// import CardButton from 'components/ui/CardButton';
-// import CopyButton from 'components/ui/CopyButton';
-// import NoSearchResults from 'components/ui/NoSearchResults';
 import {
   getGeneralPolicyTemplates,
   getQueuePolicyTemplates,
   getRealtimePolicyTemplates,
 } from "../PolicyEditorModal/PolicyEditorModal.constants";
-import { Input } from "@/components/others/ui";
-import { HoverCard } from "@chakra-ui/react";
+import { HoverCard, Portal } from "@chakra-ui/react";
 import { Markdown } from "@/components/others/markdown";
 import { CodeBlock } from "@nuvix/ui/modules";
 import CardButton from "@/ui/CardButton";
 import { cn } from "@nuvix/sui/lib/utils";
 import { Badge } from "@nuvix/sui/components/badge";
+import { Icon, Input } from "@nuvix/ui/components";
+import NoSearchResults from "@/ui/NoSearchResults";
 
 interface PolicyTemplatesProps {
   schema: string;
@@ -59,28 +52,34 @@ export const PolicyTemplates = ({
       : baseTemplates;
 
   return (
-    <div className="h-full flex flex-col gap-3 px-4">
+    <div className="h-full flex flex-col gap-3 px-4 pt-2 pb-12">
       <label className="sr-only" htmlFor="template-search">
         Search templates
       </label>
       <Input
-        // size="small"
+        labelAsPlaceholder
+        height="s"
         id="template-search"
-        hasPrefix={<Search size={16} className="text-foreground-muted" />}
+        hasPrefix={<Icon name="search" size="s" />}
         placeholder="Search templates"
         value={search}
         onChange={(event) => setSearch(event.target.value)}
       />
 
       {search.length > 0 && filteredTemplates.length === 0 && (
-        // <NoSearchResults searchString={search} className="min-w-full" />
-        <div className="p-4 text-sm text-foreground-muted">No search results</div>
+        <NoSearchResults searchString={search} className="min-w-full" />
       )}
 
       <div className="flex flex-col gap-1.5">
         {filteredTemplates.map((template) => {
           return (
-            <HoverCard.Root key={template.id} openDelay={100} closeDelay={100}>
+            <HoverCard.Root
+              size={"sm"}
+              key={template.id}
+              openDelay={100}
+              closeDelay={100}
+              positioning={{ placement: "right" }}
+            >
               <HoverCard.Trigger>
                 <CardButton
                   title={template.name}
@@ -88,7 +87,7 @@ export const PolicyTemplates = ({
                   className={cn(
                     "transition w-full",
                     template.id === selectedTemplate
-                      ? "!border-stronger bg-surface-200 hover:!border-stronger"
+                      ? "!border-(--accent-background-strong) !bg-(--neutral-alpha-medium) hover:!border-primary"
                       : "",
                   )}
                   key={template.id}
@@ -100,20 +99,18 @@ export const PolicyTemplates = ({
                       <Badge
                         className={cn(
                           "!rounded font-mono",
-                          template.command === "UPDATE"
-                            ? "bg-blue-400 text-blue-900 border border-blue-800"
-                            : "",
+                          template.command === "UPDATE" ? "bg-blue-400 text-blue-900" : "",
                         )}
                         variant={
                           template.command === "ALL"
                             ? "outline"
                             : template.command === "SELECT"
-                              ? "secondary"
+                              ? "success"
                               : template.command === "UPDATE"
                                 ? "default"
                                 : template.command === "DELETE"
                                   ? "destructive"
-                                  : "secondary"
+                                  : "warning"
                         }
                       >
                         {template.command}
@@ -121,20 +118,19 @@ export const PolicyTemplates = ({
                     </div>
                   }
                 >
-                  <Markdown content={template.description} className="[&>p]:m-0 space-y-2" />
+                  <Markdown content={template.description} className="[&>p]:!m-0" />
                 </CardButton>
               </HoverCard.Trigger>
-              <HoverCard.Content
-                // hideWhenDetached
-                // side="left"
-                // align="center"
-                className="w-[500px] flex !p-0"
-                // animate="slide-in"
-              >
-                <CodeBlock
-                  codeInstances={[{ language: "sql", code: template.statement, label: "SQL" }]}
-                />
-              </HoverCard.Content>
+              <Portal>
+                <HoverCard.Positioner>
+                  <HoverCard.Content maxWidth={"500px"} className="!p-0">
+                    <HoverCard.Arrow />
+                    <CodeBlock
+                      codeInstances={[{ language: "sql", code: template.statement, label: "SQL" }]}
+                    />
+                  </HoverCard.Content>
+                </HoverCard.Positioner>
+              </Portal>
             </HoverCard.Root>
           );
         })}

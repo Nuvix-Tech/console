@@ -1,12 +1,10 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Monaco } from "@monaco-editor/react";
 import type { PostgresPolicy } from "@nuvix/pg-meta";
 import { useQueryClient } from "@tanstack/react-query";
 import { isEqual } from "lodash";
 import { memo, useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import * as z from "zod";
+import * as y from "yup";
 
 import { useDatabasePolicyUpdateMutation } from "@/data/database-policies/database-policy-update-mutation";
 import { databasePoliciesKeys } from "@/data/database-policies/keys";
@@ -30,6 +28,9 @@ import { Button } from "@nuvix/ui/components";
 import { ScrollArea } from "@nuvix/sui/components/scroll-area";
 import ConfirmationModal from "@/components/editor/components/_confim_dialog";
 import { Tabs } from "@chakra-ui/react";
+import { useFormik } from "formik";
+import { Form } from "@/components/others/forms";
+import { PolicyDetailsV2 } from "./PolicyDetailsV2";
 
 interface PolicyEditorPanelProps {
   visible: boolean;
@@ -42,6 +43,15 @@ interface PolicyEditorPanelProps {
 }
 
 type IStandaloneCodeEditor = import("monaco-editor").editor.IStandaloneCodeEditor;
+const FormSchema = y.object({
+  name: y.string().required().min(1, "Please provide a name"),
+  table: y.string().required(),
+  behavior: y.string().required(),
+  command: y.string().required(),
+  roles: y.string().required(),
+});
+
+export type PolicyFormValues = y.InferType<typeof FormSchema>;
 
 /**
  * Using memo for this component because everything rerenders on window focus because of outside fetches
@@ -89,13 +99,7 @@ export const PolicyEditorPanel = memo(function ({
   const [isClosingPolicyEditorPanel, setIsClosingPolicyEditorPanel] = useState<boolean>(false);
 
   const formId = "rls-editor";
-  const FormSchema = z.object({
-    name: z.string().min(1, "Please provide a name"),
-    table: z.string(),
-    behavior: z.string(),
-    command: z.string(),
-    roles: z.string(),
-  });
+
   const defaultValues = {
     name: "",
     table: "",
@@ -103,14 +107,13 @@ export const PolicyEditorPanel = memo(function ({
     command: "select",
     roles: "",
   };
-  const form = useForm<z.infer<typeof FormSchema>>({
-    mode: "onBlur",
-    reValidateMode: "onBlur",
-    resolver: zodResolver(FormSchema),
-    defaultValues,
+  const form = useFormik<y.InferType<typeof FormSchema>>({
+    initialValues: defaultValues,
+    validationSchema: FormSchema,
+    onSubmit: () => {}, // we handle submission outside of formik
   });
 
-  const { name, table, behavior, command, roles } = form.watch();
+  const { name, table, behavior, command, roles } = form.values;
   const supportWithCheck = ["update", "all"].includes(command);
   const isRenamingPolicy = selectedPolicy !== undefined && name !== selectedPolicy.name;
 
@@ -143,11 +146,11 @@ export const PolicyEditorPanel = memo(function ({
     const policyUpdateUnsaved =
       selectedPolicy !== undefined
         ? checkIfPolicyHasChanged(selectedPolicy, {
-            name,
-            roles: roles.length === 0 ? ["public"] : roles.split(", "),
-            definition: editorOneFormattedValue,
-            check: command === "INSERT" ? editorOneFormattedValue : editorTwoFormattedValue,
-          })
+          name,
+          roles: roles.length === 0 ? ["public"] : roles.split(", "),
+          definition: editorOneFormattedValue,
+          check: command === "INSERT" ? editorOneFormattedValue : editorTwoFormattedValue,
+        })
         : false;
 
     if (policyCreateUnsaved || policyUpdateUnsaved) {
@@ -157,7 +160,7 @@ export const PolicyEditorPanel = memo(function ({
     }
   };
 
-  const onSubmit = (data: z.infer<typeof FormSchema>) => {
+  const onSubmit = (data: y.InferType<typeof FormSchema>) => {
     const { name, table, behavior, command, roles } = data;
     let using = editorOneRef.current?.getValue().trim() ?? undefined;
     let check = editorTwoRef.current?.getValue().trim();
@@ -244,17 +247,19 @@ export const PolicyEditorPanel = memo(function ({
       setShowCheckBlock(false);
       setFieldError(undefined);
 
-      form.reset(defaultValues);
+      form.resetForm({ values: defaultValues });
     } else {
       if (canUpdatePolicies) setShowTools(true);
       if (selectedPolicy !== undefined) {
         const { name, action, table, command, roles } = selectedPolicy;
-        form.reset({
-          name,
-          table,
-          behavior: action.toLowerCase(),
-          command: command.toLowerCase(),
-          roles: roles.length === 1 && roles[0] === "public" ? "" : roles.join(", "),
+        form.resetForm({
+          values: {
+            name,
+            table,
+            behavior: action.toLowerCase(),
+            command: command.toLowerCase(),
+            roles: roles.length === 1 && roles[0] === "public" ? "" : roles.join(", "),
+          },
         });
         if (selectedPolicy.definition) setUsing(`  ${selectedPolicy.definition}`);
         if (selectedPolicy.check) setCheck(`  ${selectedPolicy.check}`);
@@ -262,7 +267,7 @@ export const PolicyEditorPanel = memo(function ({
           setShowCheckBlock(true);
         }
       } else if (selectedTable !== undefined) {
-        form.reset({ ...defaultValues, table: selectedTable });
+        form.resetForm({ values: { ...defaultValues, table: selectedTable } });
       }
     }
   }, [visible]);
@@ -278,8 +283,7 @@ export const PolicyEditorPanel = memo(function ({
 
   return (
     <>
-      {/* <Form {...form}> */}
-      <form id={formId} onSubmit={form.handleSubmit(onSubmit)}>
+      <Form {...form}>
         <Sheet open={visible} onOpenChange={() => onClosingPanel()}>
           <SheetContent
             closeIcon={false}
@@ -297,12 +301,11 @@ export const PolicyEditorPanel = memo(function ({
               />
 
               <div className="flex flex-col h-full w-full justify-between overflow-y-auto">
-                {/* <PolicyDetailsV2
+                <PolicyDetailsV2
                   schema={schema}
                   searchString={searchString}
                   selectedTable={selectedTable}
                   isEditing={selectedPolicy !== undefined}
-                  form={form}
                   onUpdateCommand={(command: string) => {
                     setFieldError(undefined);
                     if (!["update", "all"].includes(command)) {
@@ -312,7 +315,7 @@ export const PolicyEditorPanel = memo(function ({
                     }
                   }}
                   authContext={authContext}
-                /> */}
+                />
                 <div className="h-full">
                   <LockedCreateQuerySection
                     schema={schema}
@@ -494,13 +497,16 @@ export const PolicyEditorPanel = memo(function ({
             {showTools && (
               <div
                 className={cn(
-                  "border-l shadow-[rgba(0,0,0,0.13)_-4px_0px_6px_0px] z-10",
+                  "border-l shadow-[rgba(0,0,0,0.13)_-4px_0px_6px_0px] y-10",
                   showTools && "w-[50%]",
-                  "neutral-background-alpha-weak overflow-auto",
+                  "neutral-background-alpha-weak",
                 )}
               >
-                <Tabs.Root defaultValue="templates" className="flex flex-col h-full w-full">
-                  <Tabs.List className="flex gap-4 px-content ">
+                <Tabs.Root
+                  defaultValue="templates"
+                  className="flex flex-col h-full w-full relative "
+                >
+                  <Tabs.List className="flex gap-4 px-content sticky top-0 y-10 border-b">
                     <Tabs.Trigger
                       key="templates"
                       value="templates"
@@ -513,7 +519,7 @@ export const PolicyEditorPanel = memo(function ({
                   <Tabs.Content
                     value="templates"
                     className={cn(
-                      "!mt-0 overflow-y-auto",
+                      "!mt-0 overflow-y-auto h-[calc(100vh-40px)]",
                       "data-[state=active]:flex data-[state=active]:grow",
                     )}
                   >
@@ -524,10 +530,10 @@ export const PolicyEditorPanel = memo(function ({
                         selectedPolicy={selectedPolicy}
                         selectedTemplate={selectedDiff}
                         onSelectTemplate={(value) => {
-                          form.setValue("name", value.name);
-                          form.setValue("behavior", "permissive");
-                          form.setValue("command", value.command.toLowerCase());
-                          form.setValue("roles", value.roles.join(", ") ?? "");
+                          form.setFieldValue("name", value.name);
+                          form.setFieldValue("behavior", "permissive");
+                          form.setFieldValue("command", value.command.toLowerCase());
+                          form.setFieldValue("roles", value.roles.join(", ") ?? "");
 
                           setUsing(`  ${value.definition}`);
                           setCheck(`  ${value.check}`);
@@ -551,8 +557,7 @@ export const PolicyEditorPanel = memo(function ({
             )}
           </SheetContent>
         </Sheet>
-      </form>
-      {/* </Form> */}
+      </Form>
 
       <ConfirmationModal
         visible={isClosingPolicyEditorPanel}

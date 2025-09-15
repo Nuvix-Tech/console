@@ -29,7 +29,13 @@ import { RadioGroup } from "@nuvix/sui/components/radio-group";
 import { PlusIcon } from "lucide-react";
 import { cn } from "@nuvix/sui/lib/utils";
 
-interface Props extends Omit<InputProps, "onChange" | "value" | "id"> {
+interface OverrideProps {
+  label?: React.ReactNode;
+}
+
+interface Props
+  extends Omit<InputProps, "onChange" | "value" | "id" | keyof OverrideProps>,
+    OverrideProps {
   name: string;
   descriptionSide?: "left" | "right";
 }
@@ -517,10 +523,10 @@ export const InputSelectField = ({
   description,
   nullable = false,
   ...props
-}: Omit<React.ComponentProps<typeof Select>, "onChange" | "value" | "id"> & {
+}: Omit<React.ComponentProps<typeof Select>, "onChange" | "value" | "id" | keyof OverrideProps> & {
   name: string;
   nullable?: boolean;
-}) => {
+} & OverrideProps) => {
   const { setFieldValue, values } = useFormikContext<Record<string, string | null>>();
   const value = values[name];
   const _onChange = (v: string) => {
