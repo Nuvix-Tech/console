@@ -106,7 +106,7 @@ export const PolicyTableRow = ({
         >
           <AlertDescription>
             {isPubliclyReadableWritable
-              ? "Anyone with your project's anonymous key can read, modify, or delete your data."
+              ? "Anyone can read, modify, or delete your data."
               : "No data will be selectable via Nuvix APIs because RLS is enabled but no policies have been created yet."}
           </AlertDescription>
         </Alert>

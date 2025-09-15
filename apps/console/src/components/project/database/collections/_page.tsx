@@ -52,7 +52,7 @@ const CollectionsPage = () => {
   const { data, isFetching, error, isPending } = useQuery({
     queryKey: collectionKeys.list(project?.$id, {
       schema: selectedSchema!,
-      search,
+      search: search,
       page,
       limit,
     }),

@@ -1,6 +1,5 @@
 "use client";
 import type { PostgresPolicy, PostgresTable } from "@nuvix/pg-meta";
-import { Search } from "lucide-react";
 import { useState } from "react";
 
 // import { useIsInlineEditorEnabled } from 'components/interfaces/App/FeaturePreview/FeaturePreviewContext'
@@ -34,7 +33,8 @@ import { Policies } from "./Policies";
 import AlertError from "@/components/others/ui/alert-error";
 import SchemaSelector from "@/ui/SchemaSelector";
 import { GenericSkeletonLoader } from "@/components/editor/components/GenericSkeleton";
-import { Input } from "@/components/others/ui";
+import { Input } from "@nuvix/ui/components";
+import { Search } from "@/ui/data-grid";
 // import { useAsyncCheckProjectPermissions } from 'hooks/misc/useCheckPermissions'
 // import { useSelectedProjectQuery } from 'hooks/misc/useSelectedProject'
 // import { useUrlState } from 'hooks/ui/useUrlState'
@@ -141,18 +141,16 @@ export const AuthPoliciesPage = () => {
       />
 
       <div className="mb-4 flex flex-row gap-2 justify-between">
-        <Input
-          // size="tiny"
+        <Search
           placeholder="Filter tables and policies"
-          className="block w-full lg:w-52"
-          // containerClassName="[&>div>svg]:-mt-0.5"
+          inputClass="!h-8 !min-h-8 max-w-64"
           value={searchString || ""}
           onChange={(e) => {
             const str = e.target.value;
             setParams({ ...params, search: str === "" ? undefined : str });
           }}
-          hasPrefix={<Search size={14} />}
         />
+
         <SchemaSelector
           className="w-full lg:w-[180px]"
           showError={false}
