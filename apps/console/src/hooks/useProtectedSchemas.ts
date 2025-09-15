@@ -1,7 +1,12 @@
 import { PROTECTED_SCHEMAS } from "@/lib/constants";
 import { useProjectStore } from "@/lib/store";
 
-export const useIsProtectedSchema = ({ schema }: { schema: string }) => {
+export const useIsProtectedSchema = ({
+  schema,
+}: {
+  schema: string;
+  excludedSchemas?: string[];
+}) => {
   const is = PROTECTED_SCHEMAS.includes(schema);
   return { isSchemaLocked: is };
 };
