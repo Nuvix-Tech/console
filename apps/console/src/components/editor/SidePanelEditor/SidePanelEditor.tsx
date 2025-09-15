@@ -21,7 +21,6 @@ import { tableKeys } from "@/data/tables/keys";
 import { getTables } from "@/data/tables/tables-query";
 // import { useGetImpersonatedRoleState } from "state/role-impersonation-state";
 // import { createTabId, updateTab } from "state/tabs";
-// import { SonnerProgress } from "ui";
 import ColumnEditor from "./ColumnEditor/ColumnEditor";
 import type { ForeignKey } from "./ForeignKeySelector/ForeignKeySelector.types";
 import ForeignRowSelector from "./RowEditor/ForeignRowSelector/ForeignRowSelector";

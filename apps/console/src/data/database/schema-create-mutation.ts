@@ -1,27 +1,27 @@
-import pgMeta from "@nuvix/pg-meta";
 import { useMutation, UseMutationOptions, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import { executeSql } from "@/data/sql/execute-sql-query";
 import type { ResponseError } from "@/types";
 import { invalidateSchemasQuery } from "./schemas-query";
 import { ProjectSdk } from "@/lib/sdk";
 
 export type SchemaCreateVariables = {
   name: string;
+  type?: "managed" | "unmanaged" | "document";
+  description?: string;
+  enabled?: boolean;
   projectRef?: string;
   sdk: ProjectSdk;
 };
 
-export async function createSchema({ name, projectRef, sdk }: SchemaCreateVariables) {
-  const sql = pgMeta.schemas.create({ name, owner: "postgres" }).sql;
-  const { result } = await executeSql({
-    projectRef,
-    sdk,
-    sql,
-    queryKey: ["schema", "create"],
-  });
-  return result;
+export async function createSchema({ name, projectRef, sdk, ...rest }: SchemaCreateVariables) {
+  if (projectRef === undefined) throw new Error("Project ref is required");
+
+  if (!["managed", "unmanaged", "document"].includes(rest.type ?? "managed")) {
+    throw new Error("Invalid schema type");
+  }
+
+  return sdk.schema.create(name, rest.type ?? "managed", rest.description, rest.enabled ?? true);
 }
 
 type SchemaCreateData = Awaited<ReturnType<typeof createSchema>>;

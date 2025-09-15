@@ -1,40 +1,43 @@
 "use client";
-import { Query } from "@nuvix/console";
 import React from "react";
 import { DataGridProvider, GridWrapper, Pagination, Search, SelectLimit } from "@/ui/data-grid";
 import { CreateButton, PageContainer, PageHeading } from "@/components/others";
 import { useProjectStore } from "@/lib/store";
 import { useSearchQuery } from "@/hooks/useQuery";
 import { EmptyState } from "@/components/_empty_state";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { HStack } from "@chakra-ui/react";
 import { DatabaseCard } from "../database/components";
 import { _Models } from "@/lib/external-sdk";
-import { CreateSchema } from "./components";
+import { useTableEditorStateSnapshot } from "@/lib/store/table-editor";
+import SchemaEditor from "@/components/editor/SidePanelEditor/SchemaEditor";
+import { useListSchemasQuery } from "@/data/database/schemas-query";
+import { ListPageSkeleton } from "@/components/skeletons";
 
 const DatabasePage = () => {
-  const sdk = useProjectStore.use.sdk?.();
+  const { sdk, project } = useProjectStore((s) => s);
   const permissions = useProjectStore.use.permissions();
   const { limit, page, search, hasQuery } = useSearchQuery();
   const { canCreateDatabases } = permissions();
+  const state = useTableEditorStateSnapshot();
 
-  const fetcher = async () => {
-    const queries: string[] = [];
-    queries.push(Query.limit(limit), Query.offset((page - 1) * limit));
-    return await sdk.schema.list();
-  };
-
-  const { data, isFetching, refetch } = useSuspenseQuery({
-    queryKey: ["databases", page, limit, search],
-    queryFn: fetcher,
-  });
+  const { data, isFetching, isPending } = useListSchemasQuery(
+    {
+      projectRef: project?.$id,
+      sdk,
+      limit,
+      page,
+      search,
+    },
+    {
+      enabled: !!project?.$id,
+    },
+  );
 
   const create = (
     <CreateButton
       hasPermission={canCreateDatabases}
       label="Create Schema"
-      component={CreateSchema}
-      extraProps={{ refetch }}
+      onClick={() => state.onAddSchema()}
     />
   );
 
@@ -48,26 +51,27 @@ const DatabasePage = () => {
 
       <DataGridProvider<_Models.Schema>
         columns={[]}
-        data={data.schemas ?? []}
+        data={data?.schemas ?? []}
         manualPagination
-        rowCount={data.total}
+        rowCount={data?.total}
         loading={isFetching}
         state={{
           pagination: { pageIndex: page, pageSize: limit },
         }}
       >
         <EmptyState
-          show={data.total === 0 && !isFetching && !hasQuery}
+          show={data?.total === 0 && !isFetching && !hasQuery}
           title="No Schemas"
           description="No schemas have been created yet."
           primaryComponent={create}
         />
 
-        {(data.total > 0 || hasQuery) && (
+        <Search placeholder="Search schemas by name" />
+        {isPending && <ListPageSkeleton />}
+        {((data && data.total > 0) || hasQuery) && (
           <>
-            <Search placeholder="Search schemas by name" />
             <GridWrapper>
-              {data.schemas.map((schema) => (
+              {data?.schemas.map((schema) => (
                 <DatabaseCard database={schema} key={schema.name} />
               ))}
             </GridWrapper>
@@ -78,6 +82,10 @@ const DatabasePage = () => {
           </>
         )}
       </DataGridProvider>
+      <SchemaEditor
+        visible={state.sidePanel?.type === "schema"}
+        closePanel={() => state.closeSidePanel()}
+      />
     </PageContainer>
   );
 };

@@ -1,46 +1,38 @@
-import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { useSchemaCreateMutation } from "@/data/database/schema-create-mutation";
 import ActionBar from "./ActionBar";
 import { SidePanel } from "@/ui/SidePanel";
-import { Input } from "@/components/others/ui";
 import { useProjectStore } from "@/lib/store";
+import * as y from "yup";
+import { Column } from "@nuvix/ui/components";
+import { InputField, InputSelectField } from "@/components/others/forms";
 
 interface SchemaEditorProps {
   visible: boolean;
   closePanel: () => void;
 }
 
+const schema = y.object({
+  name: y.string().required(),
+  type: y.string().oneOf(["managed", "unmanaged", "document"]).required(),
+  description: y.string().optional(),
+});
+
 const SchemaEditor = ({ visible, closePanel }: SchemaEditorProps) => {
   const { project, sdk } = useProjectStore();
+  const { mutateAsync: createSchema } = useSchemaCreateMutation();
 
-  const [errors, setErrors] = useState<{ name?: string }>({ name: undefined });
-  const [name, setName] = useState("");
-
-  const { mutate: createSchema } = useSchemaCreateMutation();
-
-  useEffect(() => {
-    if (visible) {
-      setName("");
-      setErrors({ name: undefined });
-    }
-  }, [visible]);
-
-  const onSaveChanges = (resolve: any) => {
-    const errors: any = {};
-    if (name.length === 0) errors.name = "Please provide a name for your schema";
-    if (Object.keys(errors).length > 0) {
-      resolve();
-      return setErrors(errors);
-    }
-
+  const onSaveChanges = (values: y.InferType<typeof schema>): any => {
     if (project === undefined) return console.error("Project is required");
-    createSchema(
-      { projectRef: project.$id, sdk, name },
+    const { name, type, description } = values;
+    if (!name) return toast.error("Name is required");
+    if (!type) return toast.error("Type is required");
+
+    return createSchema(
+      { projectRef: project.$id, sdk, name, type, description },
       {
         onSuccess: () => {
-          resolve();
           closePanel();
           toast.success(`Successfully created schema "${name}"`);
         },
@@ -50,33 +42,52 @@ const SchemaEditor = ({ visible, closePanel }: SchemaEditorProps) => {
 
   return (
     <SidePanel
-      size="large"
+      size="medium"
       key="SchemaEditor"
       visible={visible}
       header={"Create a new schema"}
       className="transition-all duration-100 ease-in"
       onCancel={closePanel}
-      onConfirm={() => (resolve: () => void) => onSaveChanges(resolve)}
       customFooter={
         <ActionBar
           backButtonLabel="Cancel"
           applyButtonLabel="Save"
           closePanel={closePanel}
-          applyFunction={(resolve: () => void) => onSaveChanges(resolve)}
+          isInForm
         />
       }
+      form={{
+        validationSchema: schema,
+        initialValues: {
+          name: "",
+          type: "managed",
+          description: "",
+        },
+        onSubmit: (values) => onSaveChanges(values),
+      }}
     >
       <>
         <SidePanel.Content>
-          <div className="space-y-10 py-6">
-            <Input
-              label="Name"
-              type="text"
-              errorText={errors?.name}
-              value={name}
-              onChange={(event: any) => setName(event.target.value)}
+          <Column paddingY="24" fillWidth gap="24">
+            <InputField name="name" label="Name" />
+            <InputSelectField
+              name="type"
+              label="Type"
+              portal={false}
+              options={[
+                { label: "Managed", value: "managed" },
+                { label: "Unmanaged", value: "unmanaged" },
+                { label: "Document", value: "document" },
+              ]}
+              placeholder="Select a type"
+              description="Managed schemas are automatically managed by the system. Unmanaged schemas are manually managed by the user."
             />
-          </div>
+            <InputField
+              name="description"
+              label="Description"
+              placeholder="A short description of the schema"
+            />
+          </Column>
         </SidePanel.Content>
       </>
     </SidePanel>

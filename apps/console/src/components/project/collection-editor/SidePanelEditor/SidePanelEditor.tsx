@@ -29,6 +29,7 @@ import { useDocumentUpdateMutation } from "@/data/collections/documents/document
 import IndexEditor from "./IndexEditor/IndexEditor";
 import PermissionEditor from "./RowEditor/PermissionEditor";
 import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
+import SchemaEditor from "@/components/editor/SidePanelEditor/SchemaEditor";
 
 export interface SidePanelEditorProps {
   editable?: boolean;
@@ -467,6 +468,7 @@ const SidePanelEditor = ({
           updateEditorDirty={() => setIsEdited(true)}
         />
       )}
+      <SchemaEditor visible={snap.sidePanel?.type === "schema"} closePanel={onClosePanel} />
       <TableEditor
         collection={
           snap.sidePanel?.type === "table" &&

@@ -6,6 +6,8 @@ import { executeSql, ExecuteSqlError } from "@/data/sql/execute-sql-query";
 import { databaseKeys } from "./keys";
 import { ProjectSdk } from "@/lib/sdk";
 import { QueryOptions } from "@/types";
+import type { ModelsX } from "@/lib/external-sdk";
+import { type NuvixException } from "@nuvix/console";
 
 export type SchemasVariables = {
   projectRef?: string;
@@ -45,7 +47,10 @@ export const useSchemasQuery = <TData = SchemasData>(
   });
 
 export function invalidateSchemasQuery(client: QueryClient, projectRef: string | undefined) {
-  return client.invalidateQueries({ queryKey: databaseKeys.schemas(projectRef) });
+  return Promise.all([
+    client.invalidateQueries({ queryKey: databaseKeys.schemas(projectRef) }),
+    client.invalidateQueries({ queryKey: databaseKeys.listSchemas(projectRef) }),
+  ]);
 }
 
 export function prefetchSchemas(client: QueryClient, { projectRef, sdk }: SchemasVariables) {
@@ -54,3 +59,27 @@ export function prefetchSchemas(client: QueryClient, { projectRef, sdk }: Schema
     queryFn: ({ signal }) => getSchemas({ projectRef, sdk }, signal),
   });
 }
+
+export async function getListSchemas(
+  { projectRef, sdk, limit, page, search }: ListSchemasVars,
+  signal?: AbortSignal,
+) {
+  return await sdk.schema.list(undefined, limit, page, search);
+}
+
+type ListSchemasVars = SchemasVariables & {
+  limit?: number;
+  page?: number;
+  search?: string;
+};
+
+export const useListSchemasQuery = <TData = ModelsX.SchemaList>(
+  { projectRef, sdk, ...rest }: ListSchemasVars,
+  { enabled = true, ...options }: QueryOptions<ModelsX.SchemaList, NuvixException, TData> = {},
+) =>
+  useQuery({
+    queryKey: databaseKeys.listSchemas(projectRef, rest),
+    queryFn: ({ signal }) => getListSchemas({ projectRef, sdk, ...rest }, signal),
+    enabled: enabled && typeof projectRef !== "undefined",
+    ...options,
+  });

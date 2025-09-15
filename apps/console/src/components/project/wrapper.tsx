@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useAppStore, useProjectStore } from "@/lib/store";
 import { UploadProvider } from "@/ui/uploader";
+import { useListSchemasQuery } from "@/data/database/schemas-query";
 
 export default function ProjectWrapper({
   children,
@@ -19,7 +20,18 @@ export default function ProjectWrapper({
   const setProject = useProjectStore.use.setProject();
   const setProjectScopes = useProjectStore.use.setScopes();
   const setUpdateFn = useProjectStore.use.setUpdateFn();
-  const fetchSchemas = useProjectStore.use.fetchSchemas();
+  const sdk = useProjectStore.use.sdk();
+  const setSchemas = useProjectStore.use.setSchemas();
+  const { data: schemas, isPending } = useListSchemasQuery(
+    {
+      projectRef: id,
+      sdk,
+    },
+    {
+      enabled: !!id && !!sdk,
+      staleTime: Infinity,
+    },
+  );
 
   async function fetcher() {
     let project = await projects.get(id);
@@ -44,8 +56,12 @@ export default function ProjectWrapper({
       setProject(p);
     });
     setProjectScopes(scopes);
-    fetchSchemas();
   }, [data]);
+
+  useEffect(() => {
+    if (!schemas) return;
+    setSchemas(schemas.schemas);
+  }, [schemas, isPending]);
 
   return (
     <>

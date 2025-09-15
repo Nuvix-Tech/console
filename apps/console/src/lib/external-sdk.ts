@@ -73,13 +73,22 @@ export class Schema {
     this.endpoint2 = client2.config.endpoint;
   }
 
-  async list(type?: string): Promise<Models.SchemaList> {
+  async list(
+    type?: string,
+    limit?: number,
+    page?: number,
+    search?: string,
+  ): Promise<Models.SchemaList> {
     const apiPath = this.namespace;
     const payload: Payload = {};
     const uri = new URL(this.endpoint + apiPath);
     if (type) {
       uri.searchParams.set("type", type);
     }
+
+    if (limit !== undefined) uri.searchParams.set("limit", limit.toString());
+    if (page !== undefined) uri.searchParams.set("page", page.toString());
+    if (search) uri.searchParams.set("search", search);
 
     const apiHeaders: { [header: string]: string } = {
       "content-type": "application/json",
@@ -114,6 +123,7 @@ export class Schema {
     name: string,
     type: "managed" | "unmanaged" | "document",
     description?: string,
+    enabled: boolean = true,
   ): Promise<Models.Schema> {
     const apiPath = this.namespace;
     const payload: Payload = {
