@@ -1,5 +1,5 @@
 import { NumberInputField, NumberInputRoot } from "@nuvix/cui/number-input";
-import { NumberInputValueChangeDetails } from "@chakra-ui/react";
+import React from "react";
 import type { RenderEditCellProps } from "react-data-grid";
 
 export function NumberEditor<TRow, TSummaryRow = unknown>({
@@ -9,28 +9,43 @@ export function NumberEditor<TRow, TSummaryRow = unknown>({
   onClose,
 }: RenderEditCellProps<TRow, TSummaryRow>) {
   const value = row[column.key as keyof TRow] as unknown as string;
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
-  function onChange(details: NumberInputValueChangeDetails) {
-    const _value = details.value;
-    if (_value === "") onRowChange({ ...row, [column.key]: null });
-    else onRowChange({ ...row, [column.key]: _value });
+  function handleValueChange(details: { value: string; valueAsNumber: number }) {
+    console.log("onValueChange fired:", details);
+
+    if (details.value === "") {
+      onRowChange({ ...row, [column.key]: null });
+    } else {
+      onRowChange({ ...row, [column.key]: details.value });
+    }
   }
 
-  function onBlur() {
+  function handleBlur() {
     onClose(true);
   }
 
+  React.useEffect(() => {
+    // Focus after everything is mounted
+    inputRef.current?.focus();
+    // Optionally select all content:
+    inputRef.current?.select?.();
+  }, []);
+
   return (
     <NumberInputRoot
-      onBlur={onBlur}
-      autoFocus
       value={value ?? ""}
-      onValueChange={onChange}
-      variant={"subtle"}
-      size={"xs"}
-      borderRadius={"none"}
+      onValueChange={handleValueChange}
+      onBlur={handleBlur}
+      step={1}
+      clampValueOnBlur
+      allowMouseWheel
+      focusInputOnChange={false}
+      variant="subtle"
+      size="xs"
+      borderRadius="none"
     >
-      <NumberInputField autoFocus className="nx-grid-number-editor" borderRadius={"none"} />
+      <NumberInputField ref={inputRef} className="nx-grid-number-editor" borderRadius="none" />
     </NumberInputRoot>
   );
 }
