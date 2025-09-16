@@ -114,7 +114,7 @@ export const PolicyRow = ({
                 <Icon name={"edit"} size="xs" />
                 <p>Edit policy</p>
               </DropdownMenuItem>
-              <DropdownMenuItem
+              {/* <DropdownMenuItem
                 className="gap-x-2 !text-xs"
                 onClick={() => {
                   const sql = generatePolicyUpdateSQL(policy);
@@ -145,7 +145,7 @@ export const PolicyRow = ({
               >
                 <Icon name={"edit"} size="xs" />
                 <p>Edit policy with Assistant</p>
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
               <DropdownMenuSeparator />
               <Tooltip>
                 <TooltipContent side="left" align="center">

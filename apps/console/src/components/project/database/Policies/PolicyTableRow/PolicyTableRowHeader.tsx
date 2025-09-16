@@ -104,7 +104,7 @@ export const PolicyTableRowHeader = ({
               Create policy
             </Button>
 
-            <IconButton
+            {/* <IconButton
               type="default"
               size="s"
               variant="secondary"
@@ -119,11 +119,11 @@ export const PolicyTableRowHeader = ({
               tooltip={
                 !canToggleRLS || !canCreatePolicies
                   ? "You need additional permissions to create RLS policies"
-                  : "Create with Supabase Assistant"
+                  : "Create with Nuvix Assistant"
               }
               tooltipPosition="bottom"
               icon="sparkle"
-            ></IconButton>
+            ></IconButton> */}
           </div>
         </div>
       )}
