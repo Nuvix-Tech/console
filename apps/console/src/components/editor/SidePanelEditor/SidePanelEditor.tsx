@@ -55,6 +55,8 @@ import { useParams } from "next/navigation";
 import { PostgresTable } from "@nuvix/pg-meta";
 import { SonnerProgress } from "@nuvix/sui/components/sooner-progress";
 import PermissionEditor from "./PermissionEditor";
+import { useUpdateTablePermissions } from "@/data/table-editor/table-permissions-create";
+import { useUpdateRowPermissions } from "@/data/table-rows/row-permissions-create";
 
 export interface SidePanelEditorProps {
   editable?: boolean;
@@ -109,6 +111,18 @@ const SidePanelEditor = ({
   const { mutateAsync: createPublication } = useDatabasePublicationCreateMutation();
   const { mutateAsync: updatePublication } = useDatabasePublicationUpdateMutation({
     onError: () => {},
+  });
+  const { mutateAsync: updateTablePermissions } = useUpdateTablePermissions({
+    onSuccess() {
+      toast.success("Permissions updated");
+      snap.closeSidePanel();
+    },
+  });
+  const { mutateAsync: updateRowPermissions } = useUpdateRowPermissions({
+    onSuccess() {
+      toast.success("Permissions updated");
+      snap.closeSidePanel();
+    },
   });
 
   const getImpersonatedRoleState = () => false; //useGetImpersonatedRoleState();
@@ -599,6 +613,34 @@ const SidePanelEditor = ({
     snap.closeSidePanel();
   };
 
+  const updatePermissions = async (
+    permissions: string[],
+    configuration: {
+      _id: number;
+      schema: string;
+      rowIdx?: number;
+    },
+  ) => {
+    if (snap.sidePanel?.type === "table_perms") {
+      await updateTablePermissions({
+        projectRef: project.$id,
+        sdk,
+        table: selectedTable!.name,
+        schema: selectedTable!.schema,
+        permissions,
+      });
+    } else if (snap.sidePanel?.type === "row_perms") {
+      await updateRowPermissions({
+        projectRef: project.$id,
+        sdk,
+        table: selectedTable!.name,
+        schema: selectedTable!.schema,
+        rowId: configuration._id,
+        permissions,
+      });
+    }
+  };
+
   const onClosePanel = () => {
     if (isEdited) {
       setIsClosingPanel(true);
@@ -635,7 +677,7 @@ const SidePanelEditor = ({
           table={selectedTable}
           visible={snap.sidePanel?.type === "table_perms" || snap.sidePanel?.type === "row_perms"}
           closePanel={onClosePanel}
-          saveChanges={(() => {}) as any}
+          saveChanges={updatePermissions}
           updateEditorDirty={() => setIsEdited(true)}
         />
       )}

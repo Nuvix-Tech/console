@@ -139,6 +139,63 @@ export class Schema {
     return await this.client.call("post", uri, apiHeaders, payload);
   }
 
+  async updateTablePermissions(
+    schema: string,
+    table: string,
+    permissions: any[],
+  ): Promise<string[]> {
+    const apiPath = "/schemas" + "/" + schema + "/tables/" + table + "/permissions";
+    const payload: Payload = {
+      permissions,
+    };
+    const uri = new URL(this.endpoint + apiPath);
+
+    const apiHeaders: { [header: string]: string } = {
+      "content-type": "application/json",
+    };
+    return await this.client.call("put", uri, apiHeaders, payload);
+  }
+
+  async updateTableRowPermissions(
+    schema: string,
+    table: string,
+    rowId: number,
+    permissions: any[],
+  ): Promise<string[]> {
+    const apiPath = "/schemas" + "/" + schema + "/tables/" + table + "/" + rowId + "/permissions";
+    const payload: Payload = {
+      permissions,
+    };
+    const uri = new URL(this.endpoint + apiPath);
+
+    const apiHeaders: { [header: string]: string } = {
+      "content-type": "application/json",
+    };
+    return await this.client.call("put", uri, apiHeaders, payload);
+  }
+
+  async getTablePermissions(schema: string, table: string): Promise<string[]> {
+    const apiPath = "/schemas" + "/" + schema + "/tables/" + table + "/permissions";
+    const payload: Payload = {};
+    const uri = new URL(this.endpoint + apiPath);
+
+    const apiHeaders: { [header: string]: string } = {
+      "content-type": "application/json",
+    };
+    return await this.client.call("get", uri, apiHeaders, payload);
+  }
+
+  async getTableRowPermissions(schema: string, table: string, rowId: number): Promise<string[]> {
+    const apiPath = "/schemas" + "/" + schema + "/tables/" + table + "/" + rowId + "/permissions";
+    const payload: Payload = {};
+    const uri = new URL(this.endpoint + apiPath);
+
+    const apiHeaders: { [header: string]: string } = {
+      "content-type": "application/json",
+    };
+    return await this.client.call("get", uri, apiHeaders, payload);
+  }
+
   async call({
     method,
     path,

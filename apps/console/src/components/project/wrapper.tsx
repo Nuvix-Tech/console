@@ -5,6 +5,8 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useAppStore, useProjectStore } from "@/lib/store";
 import { UploadProvider } from "@/ui/uploader";
 import { useListSchemasQuery } from "@/data/database/schemas-query";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useRouter } from "next/navigation";
 
 export default function ProjectWrapper({
   children,
@@ -14,7 +16,8 @@ export default function ProjectWrapper({
   id: string;
 }) {
   const { projects, organizations } = sdkForConsole;
-
+  const [orgId] = useLocalStorage<string | null>("org", null);
+  const { replace } = useRouter();
   const setOrganization = useAppStore.use.setOrganization();
   const setScopes = useAppStore.use.setScopes();
   const setProject = useProjectStore.use.setProject();
@@ -33,8 +36,12 @@ export default function ProjectWrapper({
     },
   );
 
+  if (!orgId) {
+    replace("/");
+  }
+
   async function fetcher() {
-    let project = await projects.get(id);
+    let project = await (projects as any).get(id, orgId);
     const org = await organizations.get(project.teamId);
     const scopes = await organizations.getScopes(project.teamId);
     return { project, org, scopes };

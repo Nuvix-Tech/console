@@ -19,4 +19,6 @@ export const tableRowKeys = {
     ["projects", projectRef, "table-rows", table?.id, "count", args] as const,
   tableRowsAndCount: (projectRef?: string, tableId?: number) =>
     ["projects", projectRef, "table-rows", tableId] as const,
+  tableRowPermissions: (projectRef: string, table: string, schema: string, rowId: number) =>
+    ["projects", projectRef, "table-rows", schema, table, "rows", rowId, "permissions"] as const,
 };

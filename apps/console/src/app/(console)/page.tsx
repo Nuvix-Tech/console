@@ -5,9 +5,11 @@ import { useRouter } from "@bprogress/next";
 import { useEffect, useState } from "react";
 import { useApp } from "@/lib/store";
 import LoadingUI from "@/components/loading";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 export default function Page() {
   const { user, setUser, setScopes } = useApp((state) => state);
+  const [org, setOrg] = useLocalStorage<string | null>("org", null);
   const { organizations, account } = sdkForConsole;
   const { replace } = useRouter();
   const [isLoading, setIsLoading] = useState(true);
@@ -47,6 +49,7 @@ export default function Page() {
         }
 
         if (org) {
+          setOrg(org.$id);
           const scopes = await organizations.getScopes(org.$id);
           setScopes(scopes);
           replace(`/organization/${org.$id}`);

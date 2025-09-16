@@ -139,6 +139,24 @@ projects.create = (async (
 
   return await projects.client.call("post", uri, apiHeaders, payload);
 }) as any;
+projects.get = (async (projectId: string, teamId: string): Promise<Models.Project> => {
+  if (typeof projectId === "undefined") {
+    throw new NuvixException('Missing required parameter: "projectId"');
+  }
+  if (typeof teamId === "undefined") {
+    throw new NuvixException('Missing required parameter: "teamId"');
+  }
+  const apiPath = "/projects/{projectId}".replace("{projectId}", projectId);
+  const payload: Payload = {};
+  const uri = new URL(projects.client.config.endpoint + apiPath);
+  uri.searchParams.append("teamId", teamId);
+
+  const apiHeaders: { [header: string]: string } = {
+    "content-type": "application/json",
+  };
+
+  return await projects.client.call("get", uri, apiHeaders, payload);
+}) as any;
 
 const sdkForConsole = {
   client: clientServer,
