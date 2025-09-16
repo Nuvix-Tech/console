@@ -133,6 +133,41 @@ const InputField = ({
     );
   }
 
+  const isArray = field?.format?.startsWith("_");
+  if (isArray) {
+    return (
+      <Input
+        data-testid={`${field.name}-input`}
+        orientation="horizontal"
+        value={field.value ?? ""}
+        label={field.name}
+        helperText={
+          <>
+            {field.comment && <p>{field.comment}</p>}
+            <p>Array columns are edited and displayed as json in the dashboard</p>
+          </>
+        }
+        optionalText={`${field.format.slice(1)}[]`}
+        disabled={!isEditable}
+        placeholder={field?.defaultValue ?? "NULL"}
+        errorText={errors[field.name]}
+        onChange={(event: any) => onUpdateField({ [field.name]: event.target.value })}
+        hasSuffix={
+          <Button
+            type="button"
+            size="s"
+            variant="secondary"
+            onClick={() => onEditJson({ column: field.name, value: field.value })}
+            prefixIcon={isEditable ? "edit" : "eye"}
+            className="!-mr-2"
+          >
+            {isEditable ? "Edit" : "View"}
+          </Button>
+        }
+      />
+    );
+  }
+
   if (includes(TEXT_TYPES, field.format)) {
     const isTruncated = isValueTruncated(field.value);
 

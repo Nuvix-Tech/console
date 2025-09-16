@@ -31,7 +31,7 @@ import { SortPopover } from "./sort";
 import { Filter, Sort } from "../../types";
 import { useAppStore, useProjectStore } from "@/lib/store";
 import { useParams } from "next/navigation";
-import { Button, useToast } from "@nuvix/ui/components";
+import { Button, IconButton, useToast } from "@nuvix/ui/components";
 import { cn } from "@nuvix/sui/lib/utils";
 import { Separator } from "@nuvix/sui/components/separator";
 import { useTableEditorFiltersSort } from "@/hooks/useTableEditorFilterSort";
@@ -61,6 +61,7 @@ export type HeaderProps = {
 
 const Header = ({ sorts, filters, customHeader }: HeaderProps) => {
   const snap = useCollectionEditorCollectionStateSnapshot();
+  const editor = useCollectionEditorStore();
 
   return (
     <div className="">
@@ -76,7 +77,16 @@ const Header = ({ sorts, filters, customHeader }: HeaderProps) => {
             )}
           </>
         )}
-        {/* <GridHeaderActions table={snap.originalTable} /> */}
+        {snap.selectedRows.size === 0 && (
+          <div className="mr-2">
+            <IconButton
+              type="default"
+              icon="key"
+              variant="secondary"
+              onClick={editor.onEditCollection}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

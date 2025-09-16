@@ -15,9 +15,9 @@ export default function NotFoundPage({ error }: ErrorProps) {
       <Heading as="h1" variant="display-strong-l" marginBottom="32">
         404
       </Heading>
-      <Heading variant="heading-default-m">Oops! Page Not Found</Heading>
+      <Heading variant="heading-default-m">Oops! Not Found</Heading>
       <Text variant="body-default-s" marginTop="4" onBackground="neutral-weak">
-        The page you are looking for does not exist or an error occurred.
+        {error.message || "The page you are looking for does not exist or an error occurred."}
       </Text>
       {error.digest && <p className="text-sm text-gray-500">Error ID: {error.digest}</p>}
       <div className="flex gap-4 mt-16 mb-2">

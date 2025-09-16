@@ -1,6 +1,6 @@
 import { ProjectSdk } from "@/lib/sdk";
 import { QueryOptions } from "@/types";
-import { Models } from "@nuvix/console";
+import { Models, type NuvixException } from "@nuvix/console";
 import { useQuery } from "@tanstack/react-query";
 import { collectionKeys } from "./keys";
 
@@ -13,7 +13,7 @@ type TableEditorVariables = {
 
 export const useCollectionEditorQuery = <TData = Models.Collection>(
   { projectRef, sdk, schema, id }: TableEditorVariables,
-  { enabled = true, ...options }: QueryOptions<Models.Collection, any, TData> = {},
+  { enabled = true, ...options }: QueryOptions<Models.Collection, NuvixException, TData> = {},
 ) =>
   useQuery({
     queryKey: collectionKeys.editor(projectRef, schema, id),

@@ -5,12 +5,14 @@ import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
 import { useProjectStore } from "@/lib/store";
 import { CollectionEditorCollectionStateContextProvider } from "@/lib/store/collection";
 import { useRouter } from "@bprogress/next";
-import { Loader2Icon } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useCallback } from "react";
 import { CollectionGrid } from "./grid";
 import SidePanelEditor from "./SidePanelEditor/SidePanelEditor";
 import DeleteConfirmationDialogs from "./components/_delete_confirmation_dialogs";
+import { SkeletonText } from "@nuvix/cui/skeleton";
+import NotFoundPage from "@/components/others/page-not-found";
+import ErrorPage from "@/components/others/page-error";
 
 export const CollectionEditor = () => {
   const { collectionId, id: projectRef } = useParams<{ id: string; collectionId: string }>();
@@ -20,8 +22,9 @@ export const CollectionEditor = () => {
 
   const {
     data: collection,
-    isLoading,
+    isPending: isLoading,
     isError,
+    error,
   } = useCollectionEditorQuery(
     {
       projectRef: project?.$id,
@@ -48,7 +51,7 @@ export const CollectionEditor = () => {
       // const nextUrl = nextTableId
       //   ? `/project/${projectRef}/editor/${nextTableId}`
       //   : `/project/${projectRef}/editor`;
-      // router.push(nextUrl);
+      router.push(`/project/${projectRef}/collections`);
     } catch (error) {
       console.error("Failed to fetch tables after deletion:", error);
       // Fallback redirect if fetching tables fails
@@ -70,11 +73,18 @@ export const CollectionEditor = () => {
   // --- Render Logic ---
 
   if (isLoading) {
-    return <Loader2Icon className="animate-spin" />;
+    return (
+      <div className="w-full p-4">
+        <SkeletonText noOfLines={4} />
+      </div>
+    );
   }
 
   if (isError || !collection) {
-    return <CollectionNotFound id={collectionId} />;
+    if (error.code === 404) {
+      return <NotFoundPage error={error} />;
+    }
+    return <ErrorPage error={error} />;
   }
 
   return (
@@ -100,8 +110,4 @@ export const CollectionEditor = () => {
       </CollectionEditorCollectionStateContextProvider>
     </>
   );
-};
-
-const CollectionNotFound = ({ id }: { id: string }) => {
-  return <>Collection {id} not found.</>;
 };

@@ -20,6 +20,8 @@ export type SidePanel =
   | { type: "row"; row?: Dictionary<any> }
   | { type: "column"; column?: Readonly<PostgresColumn> }
   | { type: "table"; mode: "new" | "edit" | "duplicate" }
+  | { type: "table_perms"; mode: "edit" }
+  | { type: "row_perms"; row: Dictionary<any>; permissions: string[] }
   | { type: "schema"; mode: "new" | "edit" }
   | { type: "json"; jsonValue: EditValue }
   | {
@@ -113,6 +115,12 @@ export const createTableEditorState = () => {
         confirmationDialog: { type: "table", isDeleteWithCascade: false },
       };
     },
+    onEditTablePermissions: () => {
+      state.ui = {
+        open: "side-panel",
+        sidePanel: { type: "table_perms", mode: "edit" },
+      };
+    },
 
     /* Columns */
     onAddColumn: () => {
@@ -159,6 +167,12 @@ export const createTableEditorState = () => {
       state.ui = {
         open: "confirmation-dialog",
         confirmationDialog: { type: "row", rows, numRows, allRowsSelected, callback },
+      };
+    },
+    onEditRowPermissions: (row: Dictionary<any>, permissions: string[]) => {
+      state.ui = {
+        open: "side-panel",
+        sidePanel: { type: "row_perms", row, permissions },
       };
     },
 

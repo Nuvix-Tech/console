@@ -1,5 +1,5 @@
 "use client";
-import { Field as ChakraField, Stack } from "@chakra-ui/react";
+import { Field as ChakraField, FieldErrorIcon, Stack } from "@chakra-ui/react";
 import {
   Input as Input_Cui,
   InputGroup,
@@ -52,6 +52,7 @@ export const Input = React.forwardRef<HTMLInputElement, RootInputProps & RootFie
         justifyContent="space-between"
         alignItems={isHoriz ? "flex-start" : undefined}
         required={rest.required}
+        invalid={!!errorText}
       >
         {label && (
           <ChakraField.Label
@@ -99,6 +100,7 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, RootTextareaProps 
         justifyContent="space-between"
         alignItems={isHoriz ? "flex-start" : undefined}
         required={rest.required}
+        invalid={!!errorText}
       >
         {label && (
           <ChakraField.Label
@@ -152,6 +154,7 @@ export const EditorArea = React.forwardRef<
         justifyContent="space-between"
         alignItems={isHoriz ? "flex-start" : undefined}
         required={required}
+        invalid={!!errorText}
       >
         {label && (
           <ChakraField.Label

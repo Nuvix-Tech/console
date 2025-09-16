@@ -124,6 +124,7 @@ const RowEditor = ({
     e.preventDefault();
 
     const errors = validateFields(rowFields);
+    console.log("Validation errors: ", errors);
     setErrors(errors);
     setLoading(true);
 

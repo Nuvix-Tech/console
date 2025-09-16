@@ -54,6 +54,7 @@ import ConfirmationModal from "../components/_confim_dialog";
 import { useParams } from "next/navigation";
 import { PostgresTable } from "@nuvix/pg-meta";
 import { SonnerProgress } from "@nuvix/sui/components/sooner-progress";
+import PermissionEditor from "./PermissionEditor";
 
 export interface SidePanelEditorProps {
   editable?: boolean;
@@ -626,6 +627,15 @@ const SidePanelEditor = ({
           visible={snap.sidePanel?.type === "column"}
           closePanel={onClosePanel}
           saveChanges={saveColumn}
+          updateEditorDirty={() => setIsEdited(true)}
+        />
+      )}
+      {!isUndefined(selectedTable) && (
+        <PermissionEditor
+          table={selectedTable}
+          visible={snap.sidePanel?.type === "table_perms" || snap.sidePanel?.type === "row_perms"}
+          closePanel={onClosePanel}
+          saveChanges={(() => {}) as any}
           updateEditorDirty={() => setIsEdited(true)}
         />
       )}
