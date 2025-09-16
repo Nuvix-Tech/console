@@ -1,4 +1,4 @@
-import { Clipboard, Edit } from "lucide-react";
+import { Clipboard } from "lucide-react";
 import { useCallback } from "react";
 import { Item, ItemParams, Menu } from "react-contexify";
 
@@ -53,6 +53,13 @@ const RowContextMenu = ({ rows }: RowContextMenuProps) => {
     [rows, snap.gridColumns, snap.selectedCellPosition],
   );
 
+  const onManagePermissions = (p: ItemParams) => {
+    const { props } = p;
+    const { rowIdx } = props;
+    const row = rows[rowIdx];
+    tableEditorSnap.onEditRowPermissions(row);
+  };
+
   const actions = [
     {
       label: "Copy cell content",
@@ -63,7 +70,13 @@ const RowContextMenu = ({ rows }: RowContextMenuProps) => {
       label: "Edit row",
       onClick: onEditRowClick,
       hidden: !snap.editable,
-      icon: Edit,
+      icon: "edit",
+    },
+    {
+      label: "Manage permissions",
+      onClick: onManagePermissions,
+      icon: "key",
+      hidden: !snap.editable,
     },
     {
       label: "Delete row",

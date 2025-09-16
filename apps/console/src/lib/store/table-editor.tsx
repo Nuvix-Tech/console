@@ -21,7 +21,7 @@ export type SidePanel =
   | { type: "column"; column?: Readonly<PostgresColumn> }
   | { type: "table"; mode: "new" | "edit" | "duplicate" }
   | { type: "table_perms"; mode: "edit" }
-  | { type: "row_perms"; row: Dictionary<any>; permissions: string[] }
+  | { type: "row_perms"; row: Dictionary<any> }
   | { type: "schema"; mode: "new" | "edit" }
   | { type: "json"; jsonValue: EditValue }
   | {
@@ -169,10 +169,10 @@ export const createTableEditorState = () => {
         confirmationDialog: { type: "row", rows, numRows, allRowsSelected, callback },
       };
     },
-    onEditRowPermissions: (row: Dictionary<any>, permissions: string[]) => {
+    onEditRowPermissions: (row: Dictionary<any>) => {
       state.ui = {
         open: "side-panel",
-        sidePanel: { type: "row_perms", row, permissions },
+        sidePanel: { type: "row_perms", row },
       };
     },
 

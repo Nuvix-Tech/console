@@ -8,6 +8,7 @@ export interface TableField {
   columns: ColumnField[];
   isRLSEnabled: boolean;
   isRealtimeEnabled: boolean;
+  permissions: string[];
 }
 
 export interface ImportContent {

@@ -15,7 +15,7 @@ const useIsomorphicUseQueryState = (defaultSchema: string | null, type?: "doc") 
     // eslint-disable-next-line react-hooks/rules-of-hooks
     return useQueryState(
       type === "doc" ? "docSchema" : "schema",
-      !defaultSchema ? {} : parseAsString.withDefault(defaultSchema!),
+      !defaultSchema ? {} : { ...parseAsString.withDefault(defaultSchema!), clearOnDefault: false },
     );
   }
 };

@@ -712,7 +712,9 @@ export const updateTable = async ({
           });
           if (res?.error) {
             hasError = true;
-            toast.error(`Failed to update column "${column.name}": ${res.error.message}`);
+            toast.error(`Failed to update column "${column.name}": ${res.error.message}`, {
+              id: toastId,
+            });
           }
         }
       }

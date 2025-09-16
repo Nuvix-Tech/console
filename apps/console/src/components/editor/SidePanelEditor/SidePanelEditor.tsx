@@ -425,6 +425,7 @@ const SidePanelEditor = ({
       isDuplicateRows: boolean;
       existingForeignKeyRelations: ForeignKeyConstraint[];
       primaryKey?: Constraint;
+      permissions?: string[];
     },
     resolve: any,
   ) => {
@@ -535,6 +536,16 @@ const SidePanelEditor = ({
 
     if (!saveTableError) {
       setIsEdited(false);
+      const permissions = configuration.permissions;
+      if (permissions && selectedTable && selectedTable.name && project) {
+        await updateTablePermissions({
+          projectRef: project.$id,
+          sdk,
+          table: payload.name,
+          schema: payload.schema,
+          permissions,
+        });
+      }
       snap.closeSidePanel();
     }
 
@@ -675,7 +686,8 @@ const SidePanelEditor = ({
       {!isUndefined(selectedTable) && (
         <PermissionEditor
           table={selectedTable}
-          visible={snap.sidePanel?.type === "table_perms" || snap.sidePanel?.type === "row_perms"}
+          visible={snap.sidePanel?.type === "row_perms" || snap.sidePanel?.type === "table_perms"}
+          row={snap.sidePanel?.type === "row_perms" ? snap.sidePanel.row : undefined}
           closePanel={onClosePanel}
           saveChanges={updatePermissions}
           updateEditorDirty={() => setIsEdited(true)}

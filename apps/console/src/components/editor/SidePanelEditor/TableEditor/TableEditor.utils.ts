@@ -32,6 +32,7 @@ export const generateTableField = (): TableField => {
     columns: DEFAULT_COLUMNS,
     isRLSEnabled: true,
     isRealtimeEnabled: false,
+    permissions: [],
   };
 };
 
@@ -50,6 +51,7 @@ export const generateTableFieldFromPostgresTable = (
     }),
     isRLSEnabled: table.rls_enabled,
     isRealtimeEnabled,
+    permissions: [],
   };
 };
 

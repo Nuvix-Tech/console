@@ -62,7 +62,7 @@ const PermissionEditor = ({
       sdk,
     },
     {
-      enabled: visible && !row?._id,
+      enabled: visible && !row,
     },
   );
   const {
