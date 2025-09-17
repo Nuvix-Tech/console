@@ -32,6 +32,7 @@ interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
     | "bottom-right"
     | "bottom-left";
   className?: string;
+  innerClassName?: string;
   hasPrefix?: ReactNode;
   hasSuffix?: ReactNode;
   labelAsPlaceholder?: boolean;
@@ -69,6 +70,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       isNull = false,
       maxLength,
       labelOptional,
+      innerClassName,
       ...props
     },
     ref,
@@ -187,6 +189,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             lines !== "auto" && styles.textareaBase,
             radius === "none" ? "radius-none" : radius ? `radius-l-${radius}` : "radius-l",
             isLikeInput && "after:!content-none",
+            innerClassName,
           )}
         >
           {hasPrefix && (

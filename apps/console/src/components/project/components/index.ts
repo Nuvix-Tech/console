@@ -8,3 +8,6 @@ export * from "./_header_org";
 export * from "./_header_project";
 export * from "./_main_top";
 export * from "./_main_top_left";
+export * from "./_header_feedback";
+export * from "./_header_help";
+export * from "./_header_connect";
