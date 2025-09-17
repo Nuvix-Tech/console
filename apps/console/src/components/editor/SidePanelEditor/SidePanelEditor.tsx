@@ -549,7 +549,7 @@ const SidePanelEditor = ({
     if (!saveTableError) {
       setIsEdited(false);
       const permissions = configuration.permissions;
-      if (permissions && selectedTable && selectedTable.name && project) {
+      if (permissions && project) {
         await updateTablePermissions({
           projectRef: project.$id,
           sdk,

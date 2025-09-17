@@ -70,7 +70,7 @@ export const DatabaseCard = ({ database }: DatabaseCardProps) => {
         <Tag variant="neutral">{database.type}</Tag>
       </Row>
 
-      <div className="flex items-center justify-between w-full mt-4">
+      {/* <div className="flex items-center justify-between w-full mt-4">
         <div onClick={(e) => e.preventDefault()} className="inline w-min">
           <IDChip id={database.name} hideIcon />
         </div>
@@ -99,7 +99,7 @@ export const DatabaseCard = ({ database }: DatabaseCardProps) => {
             </>
           }
         />
-      </div>
+      </div> */}
     </GridCard>
   );
 };

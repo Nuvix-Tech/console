@@ -24,12 +24,16 @@ export const validateFields = (field: TableField) => {
   return errors;
 };
 
-export const generateTableField = (): TableField => {
+export const generateTableField = (isManaged?: boolean): TableField => {
+  const columns = DEFAULT_COLUMNS;
+  if (isManaged) {
+    columns[0].name = "_id";
+  }
   return {
     id: 0,
     name: "",
     comment: "",
-    columns: DEFAULT_COLUMNS,
+    columns,
     isRLSEnabled: true,
     isRealtimeEnabled: false,
     permissions: [],

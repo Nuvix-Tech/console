@@ -1,4 +1,4 @@
-import { ChevronDown, Edit, Lock, Trash, Unlock } from "lucide-react";
+import { Lock, Unlock } from "lucide-react";
 import type { CalculatedColumn } from "react-data-grid";
 
 import { useTableEditorStore } from "@/lib/store/table-editor";
@@ -12,6 +12,8 @@ import {
 } from "@nuvix/sui/components/dropdown-menu";
 import { Separator } from "@nuvix/sui/components/separator";
 import { Icon, IconButton, Text } from "@nuvix/ui/components";
+import { useGetSchemaType } from "@/hooks/useProtectedSchemas";
+import { useMemo } from "react";
 
 interface ColumnMenuProps {
   column: CalculatedColumn<any, unknown>;
@@ -20,8 +22,16 @@ interface ColumnMenuProps {
 
 const ColumnMenu = ({ column, isEncrypted }: ColumnMenuProps) => {
   const tableEditorSnap = useTableEditorStore();
-
   const snap = useTableEditorTableStateSnapshot();
+  const { getSchemaType } = useGetSchemaType();
+
+  const isIDColumn = useMemo(() => {
+    const pgColumn = snap.originalTable.columns.find((c) => c.name === column.name);
+    if (pgColumn) {
+      return getSchemaType(pgColumn.schema) === "managed" && column.name === "_id";
+    }
+    return false;
+  }, [snap, column]);
 
   const columnKey = column.key;
 
@@ -79,7 +89,7 @@ const ColumnMenu = ({ column, isEncrypted }: ColumnMenuProps) => {
             </>
           )}
         </DropdownMenuItem>
-        {snap.editable && (
+        {snap.editable && !isIDColumn && (
           <>
             <Separator className="my-0.5" />
             <DropdownMenuItem className="space-x-2" onClick={onDeleteColumn}>

@@ -26,7 +26,7 @@ interface ExtensionCardProps {
 const ExtensionCard = ({ extension }: ExtensionCardProps) => {
   const { project, sdk } = useProjectStore((s) => s);
   const isOn = extension.installed_version !== null;
-  const isOrioleDb = false; //  useIsOrioleDb()
+  const isOrioleDb = true; //  useIsOrioleDb()
 
   const [isDisableModalOpen, setIsDisableModalOpen] = useState(false);
   const [showConfirmEnableModal, setShowConfirmEnableModal] = useState(false);
@@ -35,7 +35,7 @@ const ExtensionCard = ({ extension }: ExtensionCardProps) => {
   //     PermissionAction.TENANT_SQL_ADMIN_WRITE,
   //     'extensions'
   // )
-  const orioleDbCheck = false; // isOrioleDb && extension.name === 'orioledb'
+  const orioleDbCheck = isOrioleDb && extension.name === "orioledb";
   const disabled = !canUpdateExtensions || orioleDbCheck;
 
   const X_PADDING = "px-5";

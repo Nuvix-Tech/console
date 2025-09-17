@@ -27,6 +27,7 @@ export async function enableDatabaseExtension({
   cascade = false,
   createSchema = false,
 }: DatabaseExtensionEnableVariables) {
+  createSchema = false; //TODO: --------------
   const { sql } = pgMeta.extensions.create({ schema, name, version, cascade });
   const { result } = await executeSql({
     projectRef,

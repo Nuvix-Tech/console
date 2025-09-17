@@ -14,7 +14,7 @@ export type SchemaDeleteVariables = {
 export async function deleteSchema({ name, projectRef, sdk, ...rest }: SchemaDeleteVariables) {
   if (projectRef === undefined) throw new Error("Project ref is required");
 
-  return sdk.schema.delete(name);
+  return sdk.schema.delete(name); // TODO
 }
 
 type SchemaDeleteData = Awaited<ReturnType<typeof deleteSchema>>;

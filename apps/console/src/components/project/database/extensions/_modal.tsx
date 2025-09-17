@@ -26,7 +26,7 @@ interface EnableExtensionModalProps {
 
 const EnableExtensionModal = ({ visible, extension, onCancel }: EnableExtensionModalProps) => {
   const { project, sdk } = useProjectStore((s) => s);
-  const isOrioleDb = false; // useIsOrioleDb()
+  const isOrioleDb = true; // useIsOrioleDb()
   const [defaultSchema, setDefaultSchema] = useState();
   const [fetchingSchemaInfo, setFetchingSchemaInfo] = useState(false);
 

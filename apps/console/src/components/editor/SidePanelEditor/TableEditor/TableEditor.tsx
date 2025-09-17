@@ -308,7 +308,10 @@ const TableEditor = ({
   useEffect(() => {
     if (visible) {
       if (isNewRecord) {
-        const tableFields = generateTableField();
+        const tableFields = generateTableField(isManaged);
+        if (isManaged) {
+          tableFields.columns[0].schema = selectedSchema;
+        }
         updateEditorState({
           ...INITIAL_EDITOR_STATE,
           tableFields,
