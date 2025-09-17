@@ -18,7 +18,7 @@ import {
 } from "@nuvix/sui/components/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/tooltip";
 import { useProjectStore } from "@/lib/store";
-import { Button } from "@nuvix/ui/components";
+import { Button, Icon } from "@nuvix/ui/components";
 import { Input } from "@chakra-ui/react";
 import { SkeletonText } from "@nuvix/cui/skeleton";
 import { EmptyState } from "@/components/_empty_state";
@@ -47,10 +47,15 @@ const TriggersList = ({
 
   const canCreateTriggers = true; // useCheckPermissions(PermissionAction.TENANT_SQL_ADMIN_WRITE, 'triggers')
 
-  const { data: schemas } = useSchemasQuery({
-    projectRef: selectedProject.$id,
-    sdk,
-  });
+  const { data: schemas } = useSchemasQuery(
+    {
+      projectRef: selectedProject?.$id,
+      sdk,
+    },
+    {
+      enabled: !!selectedProject?.$id,
+    },
+  );
 
   const [protectedSchemas] = partition(schemas ?? [], (schema) =>
     PROTECTED_SCHEMAS.includes(schema?.name ?? ""),
@@ -58,10 +63,15 @@ const TriggersList = ({
   const foundSchema = schemas?.find((schema) => schema.name === selectedSchema);
   const isLocked = protectedSchemas.some((s) => s.id === foundSchema?.id);
 
-  const { data = [], isSuccess } = useTablesQuery({
-    projectRef: selectedProject.$id,
-    sdk,
-  });
+  const { data = [], isSuccess } = useTablesQuery(
+    {
+      projectRef: selectedProject?.$id,
+      sdk,
+    },
+    {
+      enabled: !!selectedProject?.$id,
+    },
+  );
   const hasTables = data.filter((a) => !PROTECTED_SCHEMAS.includes(a.schema)).length > 0;
 
   const {
@@ -70,10 +80,15 @@ const TriggersList = ({
     isLoading,
     isFetching,
     isError,
-  } = useDatabaseTriggersQuery({
-    projectRef: selectedProject.$id,
-    sdk,
-  });
+  } = useDatabaseTriggersQuery(
+    {
+      projectRef: selectedProject?.$id,
+      sdk,
+    },
+    {
+      enabled: !!selectedProject?.$id && isSuccess,
+    },
+  );
 
   const filteredTriggers = (triggers ?? []).filter((x: any) =>
     includes(x.name.toLowerCase(), filterString.toLowerCase()),
@@ -169,11 +184,11 @@ const TriggersList = ({
     {
       header: "Enabled",
       accessorKey: "enabled_mode",
-      minSize: 80,
+      minSize: 20,
       cell({ getValue }) {
         const enabledMode = getValue<string>();
         return (
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-center size-4.5">
             {enabledMode !== "DISABLED" ? (
               <Check strokeWidth={2} className="text-brand" />
             ) : (
@@ -183,109 +198,115 @@ const TriggersList = ({
         );
       },
     },
-    {
-      header: "",
-      accessorKey: "actions",
-      minSize: 60,
-      cell({ row }) {
-        const trigger = row.original;
-        return (
-          <div className="flex justify-end">
-            {!isLocked && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="secondary" size="s" className="px-1">
-                    <MoreVertical />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent side="bottom" align="end" className="w-52">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <DropdownMenuItem
-                        disabled={!canCreateTriggers}
-                        onClick={() => {
-                          const x = generateTriggerCreateSQL(trigger);
-                          editTrigger(x as any);
-                        }}
-                        className="space-x-2 !pointer-events-auto"
-                      >
-                        <Edit2 size={14} />
-                        <p>Edit trigger</p>
-                      </DropdownMenuItem>
-                    </TooltipTrigger>
-                    {!canCreateTriggers && (
-                      <TooltipContent side="bottom">
-                        Additional permissions required to edit trigger
-                      </TooltipContent>
-                    )}
-                  </Tooltip>
+    // {
+    //   header: "",
+    //   accessorKey: "actions",
+    //   minSize: 10,
+    //   cell({ row }) {
+    //     const trigger = row.original;
+    //     return (
+    //       <div className="flex justify-end">
+    //         {!isLocked && (
+    //           <DropdownMenu>
+    //             <DropdownMenuTrigger>
+    //               <Icon name={MoreVertical} />
+    //             </DropdownMenuTrigger>
+    //             <DropdownMenuContent side="bottom" align="end" className="w-52">
+    //               <Tooltip>
+    //                 <TooltipTrigger asChild>
+    //                   <DropdownMenuItem
+    //                     disabled={!canCreateTriggers}
+    //                     onClick={() => {
+    //                       const x = generateTriggerCreateSQL(trigger);
+    //                       editTrigger(x as any);
+    //                     }}
+    //                     className="space-x-2 !pointer-events-auto"
+    //                   >
+    //                     <Edit2 size={14} />
+    //                     <p>Edit trigger</p>
+    //                   </DropdownMenuItem>
+    //                 </TooltipTrigger>
+    //                 {!canCreateTriggers && (
+    //                   <TooltipContent side="bottom">
+    //                     Additional permissions required to edit trigger
+    //                   </TooltipContent>
+    //                 )}
+    //               </Tooltip>
 
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <DropdownMenuItem
-                        disabled={!canCreateTriggers}
-                        onClick={() => {
-                          // AI assistant functionality would go here
-                        }}
-                        className="space-x-2 !pointer-events-auto"
-                      >
-                        <Edit size={14} />
-                        <p>Edit with Assistant</p>
-                      </DropdownMenuItem>
-                    </TooltipTrigger>
-                    {!canCreateTriggers && (
-                      <TooltipContent side="bottom">
-                        Additional permissions required to edit trigger
-                      </TooltipContent>
-                    )}
-                  </Tooltip>
+    //               <Tooltip>
+    //                 <TooltipTrigger asChild>
+    //                   <DropdownMenuItem
+    //                     disabled={!canCreateTriggers}
+    //                     onClick={() => {
+    //                       // AI assistant functionality would go here
+    //                     }}
+    //                     className="space-x-2 !pointer-events-auto"
+    //                   >
+    //                     <Edit size={14} />
+    //                     <p>Edit with Assistant</p>
+    //                   </DropdownMenuItem>
+    //                 </TooltipTrigger>
+    //                 {!canCreateTriggers && (
+    //                   <TooltipContent side="bottom">
+    //                     Additional permissions required to edit trigger
+    //                   </TooltipContent>
+    //                 )}
+    //               </Tooltip>
 
-                  <DropdownMenuSeparator />
+    //               <DropdownMenuSeparator />
 
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <DropdownMenuItem
-                        disabled={!canCreateTriggers}
-                        onClick={() => deleteTrigger(trigger)}
-                        className="space-x-2 !pointer-events-auto"
-                      >
-                        <Trash size={14} className="text-destructive" />
-                        <p>Delete trigger</p>
-                      </DropdownMenuItem>
-                    </TooltipTrigger>
-                    {!canCreateTriggers && (
-                      <TooltipContent side="bottom">
-                        Additional permissions required to delete trigger
-                      </TooltipContent>
-                    )}
-                  </Tooltip>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
-          </div>
-        );
-      },
-    },
+    //               <Tooltip>
+    //                 <TooltipTrigger asChild>
+    //                   <DropdownMenuItem
+    //                     disabled={!canCreateTriggers}
+    //                     onClick={() => deleteTrigger(trigger)}
+    //                     className="space-x-2 !pointer-events-auto"
+    //                   >
+    //                     <Trash size={14} className="text-destructive" />
+    //                     <p>Delete trigger</p>
+    //                   </DropdownMenuItem>
+    //                 </TooltipTrigger>
+    //                 {!canCreateTriggers && (
+    //                   <TooltipContent side="bottom">
+    //                     Additional permissions required to delete trigger
+    //                   </TooltipContent>
+    //                 )}
+    //               </Tooltip>
+    //             </DropdownMenuContent>
+    //           </DropdownMenu>
+    //         )}
+    //       </div>
+    //     );
+    //   },
+    // },
   ];
 
   if (isLoading) return <SkeletonText noOfLines={4} />;
   if (isError) return <AlertError error={error} subject="Failed to retrieve database triggers" />;
 
   const create = (
-    <CreateButton
-      hasPermission={canCreateTriggers && !isLocked && hasTables}
-      onClick={() => createTrigger()}
-      size="s"
-      tooltip={
-        !hasTables
-          ? "Create a table first before creating triggers"
-          : !canCreateTriggers
-            ? "You need additional permissions to create triggers"
-            : undefined
-      }
-    >
-      Create a new trigger
-    </CreateButton>
+    <Tooltip>
+      <TooltipTrigger>
+        <CreateButton
+          hasPermission={canCreateTriggers && !isLocked && hasTables}
+          onClick={() => createTrigger()}
+          size="s"
+          disabled
+          tooltip={
+            !hasTables
+              ? "Create a table first before creating triggers"
+              : !canCreateTriggers
+                ? "You need additional permissions to create triggers"
+                : undefined
+          }
+        >
+          Create a new trigger
+        </CreateButton>
+      </TooltipTrigger>
+      <TooltipContent side="bottom">
+        Trigger creation is not available in database UI, use SQL editor instead
+      </TooltipContent>
+    </Tooltip>
   );
 
   return (
@@ -339,7 +360,7 @@ const TriggersList = ({
         </EmptyState>
 
         {(_triggers.length > 0 || hasQuery) && (
-          <Table noResults={_triggers.length === 0 && hasQuery} />
+          <Table noResults={_triggers.length === 0 && hasQuery} interactive={false} />
         )}
       </DataGridProvider>
     </div>

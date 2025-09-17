@@ -9,6 +9,7 @@
     "noEmit": true,
     "paths": {
       "@nuvix/ui/*": ["./src/*"],
+      "@nuvix/sui/*": ["../sui/src/*"],
       "react": ["./node_modules/@types/react"]
     }
   },

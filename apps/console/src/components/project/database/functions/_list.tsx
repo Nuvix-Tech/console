@@ -50,10 +50,15 @@ const FunctionsList = ({
   //     'functions'
   // )
 
-  const { data: schemas } = useSchemasQuery({
-    projectRef: selectedProject.$id,
-    sdk,
-  });
+  const { data: schemas } = useSchemasQuery(
+    {
+      projectRef: selectedProject?.$id,
+      sdk,
+    },
+    {
+      enabled: !!selectedProject?.$id,
+    },
+  );
 
   const [protectedSchemas] = partition(schemas ?? [], (schema) =>
     PROTECTED_SCHEMAS.includes(schema?.name ?? ""),
@@ -67,10 +72,15 @@ const FunctionsList = ({
     isLoading,
     isFetching,
     isError,
-  } = useDatabaseFunctionsQuery({
-    projectRef: selectedProject.$id,
-    sdk,
-  });
+  } = useDatabaseFunctionsQuery(
+    {
+      projectRef: selectedProject?.$id,
+      sdk,
+    },
+    {
+      enabled: !!selectedProject?.$id,
+    },
+  );
 
   const filteredFunctions = (functions ?? []).filter((x) =>
     includes(x.name.toLowerCase(), filterString.toLowerCase()),
@@ -80,7 +90,7 @@ const FunctionsList = ({
     (func) => func.name.toLocaleLowerCase(),
   );
 
-  const projectRef = selectedProject.$id;
+  const projectRef = selectedProject?.$id;
   const hasQuery = !!filterString;
 
   const tableColumns: ColumnDef<(typeof _functions)[number]>[] = [
@@ -248,16 +258,24 @@ const FunctionsList = ({
   if (isError) return <AlertError error={error} subject="Failed to retrieve database functions" />;
 
   const create = (
-    <CreateButton
-      hasPermission={canCreateFunctions && !isLocked}
-      onClick={() => createFunction()}
-      size="s"
-      tooltip={
-        !canCreateFunctions ? "You need additional permissions to create functions" : undefined
-      }
-    >
-      Create a new function
-    </CreateButton>
+    <Tooltip>
+      <TooltipTrigger>
+        <CreateButton
+          hasPermission={canCreateFunctions && !isLocked}
+          onClick={() => createFunction()}
+          size="s"
+          disabled
+          tooltip={
+            !canCreateFunctions ? "You need additional permissions to create functions" : undefined
+          }
+        >
+          Create a new function
+        </CreateButton>
+      </TooltipTrigger>
+      <TooltipContent side="bottom">
+        Function creation not yet supported in the UI. Please use SQL to create functions.
+      </TooltipContent>
+    </Tooltip>
   );
 
   return (

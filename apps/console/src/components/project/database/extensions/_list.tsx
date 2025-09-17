@@ -21,10 +21,15 @@ const Extensions = () => {
   const { project, sdk } = useProjectStore((s) => s);
   const [filterString, setFilterString] = useState<string>("");
 
-  const { data, isLoading } = useDatabaseExtensionsQuery({
-    projectRef: project.$id,
-    sdk,
-  });
+  const { data, isLoading } = useDatabaseExtensionsQuery(
+    {
+      projectRef: project?.$id,
+      sdk,
+    },
+    {
+      enabled: !!project,
+    },
+  );
 
   const extensions =
     filterString?.length === 0

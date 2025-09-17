@@ -14,6 +14,9 @@ import { _Models } from "@/lib/external-sdk";
 import { GridCard } from "@/ui/data-grid";
 import { MoreVertical } from "lucide-react";
 import React from "react";
+import { useSchemaDeleteMutation } from "@/data/database/schema-delete-mutation";
+import { useProjectStore } from "@/lib/store";
+import { toast } from "sonner";
 
 type DatabaseCardProps = {
   database: _Models.Schema;
@@ -23,6 +26,12 @@ export const DatabaseCard = ({ database }: DatabaseCardProps) => {
   const { id } = useParams();
 
   const confirm = useConfirm();
+  const { sdk } = useProjectStore((s) => s);
+  const { mutateAsync } = useSchemaDeleteMutation({
+    onSuccess: () => {
+      toast.success(`Schema '${database.name}' deleted successfully.`);
+    },
+  });
 
   const handleDelete = async (database: _Models.Schema) => {
     const ok = await confirm({
@@ -40,7 +49,7 @@ export const DatabaseCard = ({ database }: DatabaseCardProps) => {
     });
     if (!ok) return;
 
-    alert(`Schema ${database.name} deleted! (DEV)`); // Replace with actual delete logic
+    await mutateAsync({ name: database.name, projectRef: id as string, sdk });
   };
 
   return (

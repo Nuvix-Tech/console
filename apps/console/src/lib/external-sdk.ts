@@ -139,6 +139,17 @@ export class Schema {
     return await this.client.call("post", uri, apiHeaders, payload);
   }
 
+  async delete(name: string): Promise<void> {
+    const apiPath = this.namespace + "/" + name;
+    const payload: Payload = {};
+    const uri = new URL(this.endpoint + apiPath);
+
+    const apiHeaders: { [header: string]: string } = {
+      "content-type": "application/json",
+    };
+    return await this.client.call("delete", uri, apiHeaders, payload);
+  }
+
   async updateTablePermissions(
     schema: string,
     table: string,

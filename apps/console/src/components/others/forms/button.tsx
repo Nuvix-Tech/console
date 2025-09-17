@@ -3,19 +3,23 @@ import { ButtonProps as B } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 import React from "react";
 
-type Props = ButtonProps & B;
+type Props = ButtonProps &
+  B & {
+    dirtyCheck?: boolean;
+  };
 
 const SubmitButton = React.forwardRef<HTMLButtonElement, Props>((props, ref) => {
-  const { loadingText, ...rest } = props;
-  const { isSubmitting, isValid, dirty, errors } = useFormikContext();
-  console.log(JSON.stringify(errors));
+  const { loadingText, dirtyCheck = true, ...rest } = props;
+  const { isSubmitting, isValid, dirty } = useFormikContext();
+  const isDisabled = !isValid || (dirtyCheck && !dirty) || isSubmitting || props.disabled;
+
   return (
     <Button
       ref={ref}
       size="s"
       {...rest}
       type="submit"
-      disabled={!isValid || !dirty || isSubmitting || props.disabled}
+      disabled={isDisabled}
       loading={isSubmitting && isValid}
     />
   );

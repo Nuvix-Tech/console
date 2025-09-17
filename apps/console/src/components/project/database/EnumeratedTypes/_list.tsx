@@ -46,10 +46,15 @@ const EnumeratedTypes = ({ createType, editType, deleteType }: EnumeratedTypesPr
 
   const canCreateTypes = true; // Add your permission check here
 
-  const { data: schemas } = useSchemasQuery({
-    projectRef: selectedProject.$id,
-    sdk,
-  });
+  const { data: schemas } = useSchemasQuery(
+    {
+      projectRef: selectedProject?.$id,
+      sdk,
+    },
+    {
+      enabled: !!selectedProject,
+    },
+  );
 
   const protectedSchemas = (schemas ?? []).filter((schema) =>
     PROTECTED_SCHEMAS.includes(schema?.name ?? ""),
@@ -57,10 +62,15 @@ const EnumeratedTypes = ({ createType, editType, deleteType }: EnumeratedTypesPr
   const foundSchema = schemas?.find((schema) => schema.name === selectedSchema);
   const isLocked = protectedSchemas.some((s) => s.id === foundSchema?.id);
 
-  const { data, error, isLoading, isFetching, isError } = useEnumeratedTypesQuery({
-    projectRef: selectedProject.$id,
-    sdk,
-  });
+  const { data, error, isLoading, isFetching, isError } = useEnumeratedTypesQuery(
+    {
+      projectRef: selectedProject?.$id,
+      sdk,
+    },
+    {
+      enabled: !!selectedProject,
+    },
+  );
 
   const enumeratedTypes = (data ?? []).filter((type: any) => type.enums.length > 0);
   const filteredEnumeratedTypes = enumeratedTypes

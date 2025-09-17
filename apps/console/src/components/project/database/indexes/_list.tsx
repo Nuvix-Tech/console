@@ -40,20 +40,30 @@ const Indexes = () => {
     error: indexesError,
     isLoading: isLoadingIndexes,
     isError: isErrorIndexes,
-  } = useIndexesQuery({
-    schema: selectedSchema,
-    projectRef: selectedProject.$id,
-    sdk,
-  });
+  } = useIndexesQuery(
+    {
+      schema: selectedSchema,
+      projectRef: selectedProject?.$id,
+      sdk,
+    },
+    {
+      enabled: !!selectedProject,
+    },
+  );
 
   const {
     data: schemas,
     isLoading: isLoadingSchemas,
     isError: isErrorSchemas,
-  } = useSchemasQuery({
-    projectRef: selectedProject.$id,
-    sdk,
-  });
+  } = useSchemasQuery(
+    {
+      projectRef: selectedProject?.$id,
+      sdk,
+    },
+    {
+      enabled: !!selectedProject,
+    },
+  );
 
   const { mutate: deleteIndex, isPending: isExecuting } = useDatabaseIndexDeleteMutation({
     onSuccess: async () => {
@@ -78,7 +88,7 @@ const Indexes = () => {
     if (!selectedProject) return console.error("Project is required");
 
     deleteIndex({
-      projectRef: selectedProject.$id,
+      projectRef: selectedProject?.$id,
       sdk,
       name: index.name,
     });

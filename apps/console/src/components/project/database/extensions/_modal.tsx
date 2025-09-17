@@ -9,13 +9,12 @@ import { executeSql } from "@/data/sql/execute-sql-query";
 import { AlertDescription, AlertTitle, Alert } from "@nuvix/sui/components/alert";
 import { Button } from "@nuvix/sui/components/button";
 import { useProjectStore } from "@/lib/store";
-import { SidePanel } from "@/ui/SidePanel";
 import { Admonition } from "@/ui/admonition";
 import { DocsButton } from "@/ui/DocsButton";
 import { SkeletonText } from "@nuvix/cui/skeleton";
-import { Input } from "@nuvix/ui/components";
+import { Icon, Input } from "@nuvix/ui/components";
 import { useFormik } from "formik";
-import { InputField, SubmitButton } from "@/components/others/forms";
+import { FormDialog, InputField, InputSelectField, SubmitButton } from "@/components/others/forms";
 
 const orioleExtCallOuts = ["vector", "postgis"];
 
@@ -113,34 +112,38 @@ const EnableExtensionModal = ({ visible, extension, onCancel }: EnableExtensionM
       name: extension.name, // Name of new schema, if creating new
       schema: "extensions",
     },
-    onSubmit,
+    enableReinitialize: true,
+    validateOnBlur: true,
+    validateOnChange: false,
     validate,
+    onSubmit,
   });
 
   return (
-    <SidePanel
-      visible={visible}
-      onCancel={onCancel}
-      size="medium"
-      header={
-        <div className="flex items-baseline gap-2">
-          <h5 className="text-sm text-foreground">Confirm to enable</h5>
-          <code className="text-xs">{extension.name}</code>
-        </div>
-      }
-      customFooter={
-        <div className="flex items-center justify-end space-x-2">
-          <Button variant={"ghost"} size={"sm"} disabled={isEnabling} onClick={() => onCancel()}>
-            Cancel
-          </Button>
-          <SubmitButton disabled={isEnabling} loading={isEnabling}>
-            Enable extension
-          </SubmitButton>
-        </div>
-      }
-      form={form}
+    <FormDialog
+      dialog={{
+        isOpen: visible,
+        onClose: onCancel,
+        title: (
+          <div className="flex items-baseline gap-2">
+            <h5 className="text-sm text-foreground">Confirm to enable</h5>
+            <code className="text-xs">{extension.name}</code>
+          </div>
+        ),
+        footer: (
+          <div className="flex items-center justify-end space-x-2">
+            <Button variant={"ghost"} size={"sm"} disabled={isEnabling} onClick={() => onCancel()}>
+              Cancel
+            </Button>
+            <SubmitButton disabled={isEnabling} loading={isEnabling} dirtyCheck={false}>
+              Enable extension
+            </SubmitButton>
+          </div>
+        ),
+      }}
+      form={form as any}
     >
-      <SidePanel.Content className="flex flex-col gap-y-2">
+      <div className="flex flex-col gap-y-2">
         {isOrioleDb && orioleExtCallOuts.includes(extension.name) && (
           <Admonition type="default" title="Extension is limited by OrioleDB">
             <span className="block">
@@ -167,47 +170,35 @@ const EnableExtensionModal = ({ visible, extension, onCancel }: EnableExtensionM
             description={`Extension must be installed in ${defaultSchema}.`}
           />
         ) : (
-          // <Select
-          //     size="small"
-          //     name="schema"
-          //     label="Select a schema to enable the extension for"
-          // >
-          //     <Listbox.Option
-          //         key="custom"
-          //         id="custom"
-          //         label={`Create a new schema "${extension.name}"`}
-          //         value="custom"
-          //         addOnBefore={() => <Plus size={16} strokeWidth={1.5} />}
-          //     >
-          //         Create a new schema "{extension.name}"
-          //     </Listbox.Option>
-          //     <SidePanel.Separator />
-          //     {schemas?.map((schema) => {
-          //         return (
-          //             <Listbox.Option
-          //                 key={schema.id}
-          //                 id={schema.name}
-          //                 label={schema.name}
-          //                 value={schema.name}
-          //                 addOnBefore={() => <Database size={16} strokeWidth={1.5} />}
-          //             >
-          //                 {schema.name}
-          //             </Listbox.Option>
-          //         )
-          //     })}
-          // </Listbox>
-          <></>
+          <InputSelectField
+            name="schema"
+            label="Select a schema to enable the extension for"
+            height="s"
+            options={[
+              {
+                label: "Create a new schema",
+                value: "custom",
+                hasPrefix: <Icon name="plus" size="s" />,
+              },
+              ...(schemas
+                ? schemas.map((schema) => ({
+                    label: schema.name,
+                    value: schema.name,
+                  }))
+                : []),
+            ]}
+          />
         )}
-      </SidePanel.Content>
+      </div>
 
       {form.values.schema === "custom" && (
-        <SidePanel.Content>
+        <div>
           <InputField name="name" label="Schema name" />
-        </SidePanel.Content>
+        </div>
       )}
 
       {/* {extension.name === 'pg_cron' && project?.cloud_provider === 'FLY' && (
-                <SidePanel.Content>
+                <div>
                     <Alert variant="warning">
                         <TriangleAlertIcon />
                         <AlertTitle>
@@ -235,9 +226,9 @@ const EnableExtensionModal = ({ visible, extension, onCancel }: EnableExtensionM
                             </Button>
                         </AlertDescription>
                     </Alert>
-                </SidePanel.Content>
+                </div>
             )} */}
-    </SidePanel>
+    </FormDialog>
   );
 };
 

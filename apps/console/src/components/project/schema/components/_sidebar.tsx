@@ -62,11 +62,11 @@ const DatbaseSidebar = () => {
             href: href("indexes"),
             isSelected: isIncludes("indexes"),
           },
-          {
-            label: "Publications",
-            href: href("publications"),
-            isSelected: isIncludes("publications"),
-          },
+          // {
+          //   label: "Publications",
+          //   href: href("publications"),
+          //   isSelected: isIncludes("publications"),
+          // },
         ]}
       />
 
