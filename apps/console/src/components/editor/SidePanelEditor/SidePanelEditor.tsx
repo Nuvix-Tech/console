@@ -57,6 +57,7 @@ import { SonnerProgress } from "@nuvix/sui/components/sooner-progress";
 import PermissionEditor from "./PermissionEditor";
 import { useUpdateTablePermissions } from "@/data/table-editor/table-permissions-create";
 import { useUpdateRowPermissions } from "@/data/table-rows/row-permissions-create";
+import { useGetSchemaType } from "@/hooks/useProtectedSchemas";
 
 export interface SidePanelEditorProps {
   editable?: boolean;
@@ -126,6 +127,7 @@ const SidePanelEditor = ({
   });
 
   const getImpersonatedRoleState = () => false; //useGetImpersonatedRoleState();
+  const { getSchemaType } = useGetSchemaType();
 
   const saveRow = async (
     payload: any,
@@ -439,6 +441,7 @@ const SidePanelEditor = ({
       existingForeignKeyRelations,
       primaryKey,
     } = configuration;
+    const isManagedSchema = getSchemaType(payload.schema) === "managed";
 
     try {
       if (
@@ -456,7 +459,9 @@ const SidePanelEditor = ({
           duplicateTable: tableToDuplicate,
           foreignKeyRelations,
         });
-        if (isRealtimeEnabled) await updateTableRealtime(table, isRealtimeEnabled);
+
+        // TODO: we might want to enable this in future
+        // if (isRealtimeEnabled) await updateTableRealtime(table, isRealtimeEnabled);
 
         await Promise.all([
           queryClient.invalidateQueries({
@@ -482,8 +487,11 @@ const SidePanelEditor = ({
           foreignKeyRelations,
           isRLSEnabled,
           importContent,
+          isManagedSchema,
         });
-        if (isRealtimeEnabled) await updateTableRealtime(table, true);
+
+        // TODO: we might want to enable this in future
+        // if (isRealtimeEnabled) await updateTableRealtime(table, true);
 
         await Promise.all([
           queryClient.invalidateQueries({
@@ -507,18 +515,21 @@ const SidePanelEditor = ({
           foreignKeyRelations,
           existingForeignKeyRelations,
           primaryKey,
+          isManagedSchema,
         });
 
         if (table === undefined) {
           return toast.error("Failed to update table");
         }
-        if (isTableLike(table)) {
-          await updateTableRealtime(table, isRealtimeEnabled);
-        }
+
+        // if (isTableLike(table)) {
+        //   await updateTableRealtime(table, isRealtimeEnabled);
+        // }
 
         if (hasError) {
           toast.warning(
             `Table ${table.name} has been updated but there were some errors. Please check these errors separately.`,
+            { id: toastId },
           );
         } else {
           // if (isTableEditorTabsEnabled && ref && payload.name) {

@@ -2,14 +2,15 @@ import Link from "next/link";
 import { PropsWithChildren } from "react";
 
 import { AlertDescription, AlertTitle, Alert } from "@nuvix/sui/components/alert";
-import { Button } from "@nuvix/sui/components/button";
 import { TriangleAlertIcon } from "lucide-react";
+import { Button } from "@nuvix/ui/components";
 
 export interface AlertErrorProps {
   projectRef?: string;
   subject?: string;
   error?: { message: string } | null;
   className?: string;
+  showSupportLink?: boolean;
   showIcon?: boolean;
 }
 
@@ -19,6 +20,7 @@ const AlertError = ({
   error,
   className,
   showIcon = true,
+  showSupportLink = true,
   children,
 }: PropsWithChildren<AlertErrorProps>) => {
   const subjectString = subject?.replace(/ /g, "%20");
@@ -39,15 +41,19 @@ const AlertError = ({
       <AlertDescription className="flex flex-col gap-3 break-words">
         <div>
           {error?.message && <p className="text-left">Error: {formattedErrorMessage}</p>}
-          <p className="text-left">
-            Try refreshing your browser, but if the issue persists for more than a few minutes,
-            please reach out to us via support.
-          </p>
+          {showSupportLink && (
+            <p className="text-left">
+              Try refreshing your browser, but if the issue persists for more than a few minutes,
+              please reach out to us via support.
+            </p>
+          )}
         </div>
         {children}
-        <Button asChild size={"sm"} className="w-min">
-          <Link href={href}>Contact support</Link>
-        </Button>
+        {showSupportLink && (
+          <Button size={"s"} variant="secondary" className="w-min" href={href}>
+            Contact support
+          </Button>
+        )}
       </AlertDescription>
     </Alert>
   );

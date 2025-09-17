@@ -25,6 +25,7 @@ import { cn } from "@nuvix/sui/lib/utils";
 import { Checkbox } from "@nuvix/cui/checkbox";
 import { Input } from "@/components/others/ui";
 import { Code } from "@chakra-ui/react";
+import { useCheckSchemaType } from "@/hooks/useProtectedSchemas";
 
 /**
  * For context:
@@ -75,6 +76,11 @@ const Column = ({
   const { project, sdk } = useProjectStore();
   const [open, setOpen] = useState(false);
   const suggestions: Suggestion[] = typeExpressionSuggestions?.[column.format] ?? [];
+  const { isSchemaType: isManagedSchema } = useCheckSchemaType({
+    schema: column.schema,
+    type: "managed",
+  });
+  const isIDColumn = column.name === "_id" && isManagedSchema;
 
   const settingsCount = [
     column.isNullable ? 1 : 0,
@@ -121,6 +127,7 @@ const Column = ({
             disabled={hasImportContent}
             placeholder="column_name"
             size="xs"
+            readOnly={isIDColumn}
             className={cn(
               hasImportContent ? "opacity-50" : "",
               "!border-r-0 !rounded-r-none !outline-none",
@@ -231,9 +238,13 @@ const Column = ({
             enumTypes={enumTypes}
             showLabel={false}
             className="table-editor-column-type lg:gap-0 "
-            disabled={hasForeignKeys}
+            disabled={hasForeignKeys || isIDColumn}
             description={
-              hasForeignKeys ? "Column type cannot be changed as it has a foreign key relation" : ""
+              hasForeignKeys
+                ? "Column type cannot be changed as it has a foreign key relation"
+                : isIDColumn
+                  ? "Column type for _id column in managed schema cannot be changed"
+                  : undefined
             }
             onOptionSelect={(format: string) => {
               const defaultValue = format === "uuid" ? "gen_random_uuid()" : null;
@@ -253,7 +264,7 @@ const Column = ({
             }
             size="xs"
             value={column.defaultValue ?? ""}
-            disabled={column.format.includes("int") && column.isIdentity}
+            disabled={(column.format.includes("int") && column.isIdentity) || isIDColumn}
             className={`rounded bg-surface-100 lg:gap-0 ${
               column.format.includes("int") && column.isIdentity ? "opacity-50" : ""
             }`}
@@ -282,7 +293,7 @@ const Column = ({
       </div>
       <div className={`${hasImportContent ? "w-[10%]" : "w-[0%]"}`} />
       <div className="flex w-[5%] justify-end">
-        {(!column.isPrimaryKey || column.format.includes("int")) && (
+        {(!column.isPrimaryKey || column.format.includes("int")) && !isIDColumn && (
           <Popover>
             <PopoverTrigger
               data-testid={`${column.name}-extra-options`}
@@ -356,6 +367,7 @@ const Column = ({
           <IconButton
             variant="ghost"
             size="s"
+            disabled={isIDColumn}
             className="cursor-pointer"
             onClick={() => onRemoveColumn()}
           >

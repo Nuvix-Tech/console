@@ -24,6 +24,9 @@ import type { ImportContent, TableField } from "./TableEditor.types";
 import { useParams } from "next/navigation";
 import { Button, Icon } from "@nuvix/ui/components";
 import { Admonition } from "@/ui/admonition";
+import { useCheckSchemaType } from "@/hooks/useProtectedSchemas";
+import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
+import AlertError from "@/components/others/ui/alert-error";
 
 interface ColumnManagementProps {
   table: TableField;
@@ -56,6 +59,11 @@ const ColumnManagement = ({
   const [open, setOpen] = useState(false);
   const [selectedColumn, setSelectedColumn] = useState<ColumnField>();
   const [selectedFk, setSelectedFk] = useState<ForeignKey>();
+  const { selectedSchema } = useQuerySchemaState();
+  const { isSchemaType: isManagedSchema } = useCheckSchemaType({
+    schema: selectedSchema,
+    type: "managed",
+  });
 
   // const { mutate: sendEvent } = useSendEventMutation();
 
@@ -210,14 +218,24 @@ const ColumnManagement = ({
           />
         )}
 
-        {primaryKeyColumns.length > 1 && (
-          <InformationBox
-            block
-            icon={Key}
-            title="Composite primary key selected"
-            description="The columns that you've selected will be grouped as a primary key, and will serve as the unique identifier for the rows in your table"
-          />
-        )}
+        {primaryKeyColumns.length > 1 &&
+          (isManagedSchema && primaryKeyColumns.some((col) => col.name === "_id") ? (
+            <AlertError
+              subject="Error: can not use '_id' column in composite primary key"
+              error={{
+                message:
+                  "In managed schemas, the '_id' column is reserved and cannot be used as part of a composite primary key. Please select different columns for the primary key.",
+              }}
+              showSupportLink={false}
+            />
+          ) : (
+            <InformationBox
+              block
+              icon={Key}
+              title="Composite primary key selected"
+              description="The columns that you've selected will be grouped as a primary key, and will serve as the unique identifier for the rows in your table"
+            />
+          ))}
 
         <div className="space-y-2">
           {/* Headers */}

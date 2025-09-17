@@ -63,6 +63,21 @@ export const addPrimaryKey = async (
   });
 };
 
+export const makeIdPrimary = async (
+  projectRef: string,
+  sdk: ProjectSdk,
+  schema: string,
+  table: string,
+) => {
+  const query = `SELECT system.set_id_primary('${schema}.${table}', true)`;
+  return await executeSql({
+    projectRef: projectRef,
+    sdk,
+    sql: query,
+    queryKey: ["primary-keys"],
+  });
+};
+
 export const dropConstraint = async (
   projectRef: string,
   sdk: ProjectSdk,
@@ -341,6 +356,58 @@ export const updateColumn = async ({
   }
 };
 
+export const updateIdColumn = async ({
+  projectRef,
+  sdk,
+  id,
+  is_primary_key: isPrimaryKey,
+  selectedTable,
+  primaryKey,
+  skipPKCreation,
+  skipSuccessMessage = false,
+}: {
+  projectRef: string;
+  sdk: ProjectSdk;
+  id: string;
+  is_primary_key: boolean;
+  selectedTable: PostgresTable;
+  primaryKey?: Constraint;
+  skipPKCreation?: boolean;
+  skipSuccessMessage?: boolean;
+}) => {
+  try {
+    const column = {
+      id,
+      name: "_id",
+      schema: selectedTable.schema,
+      table: selectedTable.name,
+    };
+    if (!skipPKCreation && isPrimaryKey !== undefined) {
+      const existingPrimaryKeys = selectedTable.primary_keys.map((x) => x.name);
+
+      // Primary key is getting updated for the column
+      if (existingPrimaryKeys.length > 0 && primaryKey !== undefined) {
+        await dropConstraint(projectRef, sdk, column.schema, column.table, primaryKey.name);
+      }
+
+      const primaryKeyColumns = isPrimaryKey
+        ? existingPrimaryKeys.concat([column.name])
+        : existingPrimaryKeys.filter((x) => x !== column.name);
+
+      if (primaryKeyColumns.length) {
+        if (primaryKeyColumns.length > 1) {
+          throw new Error("Composite primary keys are not supported for the _id column");
+        }
+        await makeIdPrimary(projectRef, sdk, column.schema, column.table);
+      }
+    }
+
+    if (!skipSuccessMessage) toast.success(`Successfully updated column "${column.name}"`);
+  } catch (error: any) {
+    return { error };
+  }
+};
+
 export const duplicateTable = async (
   projectRef: string,
   sdk: ProjectSdk,
@@ -430,6 +497,7 @@ export const createTable = async ({
   foreignKeyRelations,
   isRLSEnabled,
   importContent,
+  isManagedSchema,
 }: {
   projectRef: string;
   sdk: ProjectSdk;
@@ -443,6 +511,7 @@ export const createTable = async ({
   foreignKeyRelations: ForeignKey[];
   isRLSEnabled: boolean;
   importContent?: ImportContent;
+  isManagedSchema: boolean;
 }) => {
   const queryClient = getQueryClient();
 
@@ -459,7 +528,7 @@ export const createTable = async ({
   // the table side panel editor conveniently
   try {
     // Toggle RLS if configured to be
-    if (isRLSEnabled) {
+    if (isRLSEnabled && !isManagedSchema) {
       await updateTableMutation({
         projectRef,
         sdk,
@@ -475,6 +544,9 @@ export const createTable = async ({
     toast.loading(`Adding ${columns.length} columns to ${table.name}...`, { id: toastId });
 
     for (const column of columns) {
+      if (isManagedSchema && column.name === "_id") {
+        continue;
+      }
       // We create all columns without primary keys first
       const columnPayload = generateCreateColumnPayload(table.id, {
         ...column,
@@ -492,7 +564,28 @@ export const createTable = async ({
       .filter((column) => column.isPrimaryKey)
       .map((column) => column.name);
     if (primaryKeyColumns.length > 0) {
-      await addPrimaryKey(projectRef, sdk, table.schema, table.name, primaryKeyColumns);
+      if (
+        isManagedSchema &&
+        primaryKeyColumns.some((col) => col.toLowerCase() === "_id") &&
+        primaryKeyColumns.length > 1
+      ) {
+        toast.error("Composite primary keys are not supported for the _id column");
+        await addPrimaryKey(
+          projectRef,
+          sdk,
+          table.schema,
+          table.name,
+          primaryKeyColumns.filter((col) => col.toLowerCase() !== "_id"),
+        );
+      } else if (
+        isManagedSchema &&
+        primaryKeyColumns.some((col) => col.toLowerCase() === "_id") &&
+        primaryKeyColumns.length === 1
+      ) {
+        await makeIdPrimary(projectRef, sdk, table.schema, table.name);
+      } else {
+        await addPrimaryKey(projectRef, sdk, table.schema, table.name, primaryKeyColumns);
+      }
     }
 
     // Then add the foreign key constraints here
@@ -620,6 +713,7 @@ export const updateTable = async ({
   foreignKeyRelations,
   existingForeignKeyRelations,
   primaryKey,
+  isManagedSchema = false,
 }: {
   projectRef: string;
   sdk: ProjectSdk;
@@ -630,6 +724,7 @@ export const updateTable = async ({
   foreignKeyRelations: ForeignKey[];
   existingForeignKeyRelations: ForeignKeyConstraint[];
   primaryKey?: Constraint;
+  isManagedSchema: boolean;
 }) => {
   // Prepare a check to see if primary keys to the tables were updated or not
   const primaryKeyColumns = columns
@@ -676,6 +771,9 @@ export const updateTable = async ({
   let hasError = false;
   for (const column of columns) {
     if (!column.id.includes(table.id.toString())) {
+      if (isManagedSchema && column.name === "_id") {
+        continue;
+      }
       toast.loading(`Adding column ${column.name} to ${updatedTable.name}`, { id: toastId });
       // Ensure that columns do not created as primary key first, cause the primary key will
       // be added later on further down in the code
@@ -701,20 +799,31 @@ export const updateTable = async ({
             id: toastId,
           });
 
-          const res = await updateColumn({
-            projectRef: projectRef,
-            sdk,
-            id: column.id,
-            payload: columnPayload,
-            selectedTable: updatedTable,
-            skipPKCreation: true,
-            skipSuccessMessage: true,
-          });
+          let res;
+          if (isManagedSchema && originalColumn.name === "_id") {
+            res = await updateIdColumn({
+              projectRef: projectRef,
+              sdk,
+              id: column.id,
+              is_primary_key: column.isPrimaryKey,
+              selectedTable: updatedTable,
+              skipPKCreation: true,
+              skipSuccessMessage: true,
+            });
+          } else {
+            res = await updateColumn({
+              projectRef: projectRef,
+              sdk,
+              id: column.id,
+              payload: columnPayload,
+              selectedTable: updatedTable,
+              skipPKCreation: true,
+              skipSuccessMessage: true,
+            });
+          }
           if (res?.error) {
             hasError = true;
-            toast.error(`Failed to update column "${column.name}": ${res.error.message}`, {
-              id: toastId,
-            });
+            toast.error(`Failed to update column "${column.name}": ${res.error.message}`);
           }
         }
       }
@@ -723,7 +832,34 @@ export const updateTable = async ({
 
   // Then add back the primary keys again
   if (isPrimaryKeyUpdated && primaryKeyColumns.length > 0) {
-    await addPrimaryKey(projectRef, sdk, updatedTable.schema, updatedTable.name, primaryKeyColumns);
+    if (
+      primaryKeyColumns.some((col) => col.toLowerCase() === "_id") &&
+      isManagedSchema &&
+      primaryKeyColumns.length > 1
+    ) {
+      toast.error("Composite primary keys are not supported for the _id column");
+      await addPrimaryKey(
+        projectRef,
+        sdk,
+        updatedTable.schema,
+        updatedTable.name,
+        primaryKeyColumns.filter((col) => col.toLowerCase() !== "_id"),
+      );
+    } else if (
+      primaryKeyColumns.some((col) => col.toLowerCase() === "_id") &&
+      isManagedSchema &&
+      primaryKeyColumns.length === 1
+    ) {
+      await makeIdPrimary(projectRef, sdk, updatedTable.schema, updatedTable.name);
+    } else {
+      await addPrimaryKey(
+        projectRef,
+        sdk,
+        updatedTable.schema,
+        updatedTable.name,
+        primaryKeyColumns,
+      );
+    }
   }
 
   // Foreign keys will get updated here accordingly
