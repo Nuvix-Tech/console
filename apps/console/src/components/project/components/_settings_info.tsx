@@ -12,6 +12,7 @@ import { useRouter } from "@bprogress/next";
 import React from "react";
 import { LuExternalLink } from "react-icons/lu";
 import { useProjectStore } from "@/lib/store";
+import { Icon } from "@nuvix/ui/components";
 
 export const ProjectInfo: React.FC = () => {
   const project = useProjectStore.use.project?.();
@@ -30,10 +31,11 @@ export const ProjectInfo: React.FC = () => {
               variant="surface"
               alignSelf="flex-start"
               mt="auto"
-              onClick={() => push(`/project/${project?.$id}/apis`)}
+              size={"xs"}
+              onClick={() => push(`/project/${project?.$id}/s/keys`)}
             >
               API Keys
-              <LuExternalLink />
+              <Icon name={LuExternalLink} size="xs" />
             </Button>
           </CardBoxItem>
           <CardBoxItem direction="column" gap="8">

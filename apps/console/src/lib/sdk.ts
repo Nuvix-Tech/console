@@ -143,9 +143,9 @@ projects.get = (async (projectId: string, teamId: string): Promise<Models.Projec
   if (typeof projectId === "undefined") {
     throw new NuvixException('Missing required parameter: "projectId"');
   }
-  if (typeof teamId === "undefined") {
-    throw new NuvixException('Missing required parameter: "teamId"');
-  }
+  // if (typeof teamId === "undefined") {
+  //   throw new NuvixException('Missing required parameter: "teamId"');
+  // }
   const apiPath = "/projects/{projectId}".replace("{projectId}", projectId);
   const payload: Payload = {};
   const uri = new URL(projects.client.config.endpoint + apiPath);

@@ -189,9 +189,12 @@ const TableEditor = ({
   );
 
   // State update helper
-  const updateEditorState = useCallback((updates: Partial<EditorState>) => {
-    setEditorState((prev) => ({ ...prev, ...updates }));
-  }, []);
+  const updateEditorState = useCallback(
+    (updates: Partial<EditorState>) => {
+      setEditorState((prev) => ({ ...prev, ...updates }));
+    },
+    [selectedSchema],
+  );
 
   // Table field update handler
   const onUpdateField = useCallback(
@@ -308,13 +311,20 @@ const TableEditor = ({
   useEffect(() => {
     if (visible) {
       if (isNewRecord) {
-        const tableFields = generateTableField(isManaged);
+        const tableFields = generateTableField();
+        let columns = tableFields.columns.map((col) => ({ ...col })); // deep clone objects
+
         if (isManaged) {
-          tableFields.columns[0].schema = selectedSchema;
+          columns[0] = {
+            ...columns[0],
+            name: "_id",
+            schema: selectedSchema,
+          };
         }
+
         updateEditorState({
           ...INITIAL_EDITOR_STATE,
-          tableFields,
+          tableFields: { ...tableFields, columns },
           fkRelations: [],
         });
       } else {
@@ -334,6 +344,7 @@ const TableEditor = ({
     visible,
     isNewRecord,
     table,
+    selectedSchema,
     foreignKeyMeta,
     isDuplicating,
     isRealtimeEnabled,

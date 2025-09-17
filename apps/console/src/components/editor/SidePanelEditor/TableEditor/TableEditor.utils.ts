@@ -24,11 +24,8 @@ export const validateFields = (field: TableField) => {
   return errors;
 };
 
-export const generateTableField = (isManaged?: boolean): TableField => {
-  const columns = DEFAULT_COLUMNS;
-  if (isManaged) {
-    columns[0].name = "_id";
-  }
+export const generateTableField = (): TableField => {
+  const columns = [...DEFAULT_COLUMNS];
   return {
     id: 0,
     name: "",
