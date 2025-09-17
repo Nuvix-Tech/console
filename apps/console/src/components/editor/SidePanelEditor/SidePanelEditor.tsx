@@ -281,6 +281,7 @@ const SidePanelEditor = ({
           primaryKey,
           foreignKeyRelations,
           existingForeignKeyRelations,
+          isManagedSchema: getSchemaType(selectedTable.schema) === "managed",
         });
 
     if (response?.error) {
@@ -701,7 +702,7 @@ const SidePanelEditor = ({
           row={snap.sidePanel?.type === "row_perms" ? snap.sidePanel.row : undefined}
           closePanel={onClosePanel}
           saveChanges={updatePermissions}
-          updateEditorDirty={() => setIsEdited(true)}
+          updateEditorDirty={(is: boolean) => setIsEdited(is)}
         />
       )}
       <TableEditor

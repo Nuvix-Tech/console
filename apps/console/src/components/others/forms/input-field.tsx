@@ -170,8 +170,10 @@ export const InputTextareaField = (props: Props & TextareaProps) => {
   );
 };
 
-export const InputSwitchField = (props: Omit<SwitchProps, "onToggle" | "isChecked"> & Props) => {
-  const { name, label, placeholder, layout, description, ...rest } = props;
+export const InputSwitchField = (
+  props: Omit<SwitchProps, "onToggle" | "isChecked"> & Props & { innerDesc?: boolean },
+) => {
+  const { name, label, placeholder, layout, innerDesc, description, ...rest } = props;
   const { values, handleBlur, setFieldValue } = useFormikContext<Record<string, boolean>>();
 
   return (
@@ -179,13 +181,14 @@ export const InputSwitchField = (props: Omit<SwitchProps, "onToggle" | "isChecke
       {...rest}
       layout={layout}
       label={layout === "horizontal" ? label : ""}
-      description={description}
       name={name}
+      description={innerDesc ? undefined : description}
       labelClass="mt-1.5"
     >
       <Switch
         label={layout === "horizontal" ? undefined : label}
         onBlur={handleBlur}
+        description={!innerDesc ? undefined : description}
         isChecked={values[name]}
         onToggle={(() => setFieldValue(name, !values[name])) as any}
         {...rest}

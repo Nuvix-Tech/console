@@ -1,7 +1,6 @@
 import type { PostgresColumn, PostgresTable } from "@nuvix/pg-meta";
 import { isEmpty, noop } from "lodash";
 import { ExternalLink, Plus } from "lucide-react";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { FormSection, FormSectionContent, FormSectionLabel } from "@/ui/Forms/FormSection";
@@ -43,6 +42,7 @@ import { useParams } from "next/navigation";
 import { SidePanel } from "@/ui/SidePanel";
 import { Button, Checkbox, Switch } from "@nuvix/ui/components";
 import { Input } from "@/components/others/ui";
+import { useCheckSchemaType } from "@/hooks/useProtectedSchemas";
 
 export interface ColumnEditorProps {
   column?: Readonly<PostgresColumn>;
@@ -80,6 +80,11 @@ const ColumnEditor = ({
   const [placeholder, setPlaceholder] = useState(
     getPlaceholderText(columnFields?.format, columnFields?.name),
   );
+  const { isSchemaType: isManagedSchema } = useCheckSchemaType({
+    schema: selectedTable.schema,
+    type: "managed",
+  });
+  const isIDColumn = column?.name === "_id" && isManagedSchema;
 
   const { data: types } = useEnumeratedTypesQuery({
     projectRef: project?.$id,
@@ -220,6 +225,7 @@ const ColumnEditor = ({
             helperText="Recommended to use lowercase and use an underscore to separate words e.g. column_name"
             placeholder="column_name"
             errorText={errors.name}
+            disabled={isIDColumn}
             value={columnFields?.name ?? ""}
             onChange={(event) => onUpdateField({ name: event.target.value })}
           />
@@ -227,99 +233,107 @@ const ColumnEditor = ({
             label="Description"
             optionalText="Optional"
             type="text"
+            placeholder="A short description of the column"
+            disabled={isIDColumn}
             value={columnFields?.comment ?? ""}
             onChange={(event) => onUpdateField({ comment: event.target.value })}
           />
         </FormSectionContent>
       </FormSection>
       <SidePanel.Separator />
-      <FormSection
-        header={
-          <FormSectionLabel
-            className="lg:!col-span-4"
-            description={
-              <div className="space-y-2">
-                <Button
-                  variant="secondary"
-                  size="s"
-                  prefixIcon={<Plus size={14} strokeWidth={2} />}
-                  href={`/project/${ref}/database/types`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Create enum types
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="s"
-                  prefixIcon={<ExternalLink size={14} strokeWidth={2} />}
-                  href="https://nuvix.in/docs/guides/database/tables#data-types"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  About data types
-                </Button>
+      {!isIDColumn && (
+        <FormSection
+          header={
+            <FormSectionLabel
+              className="lg:!col-span-4"
+              description={
+                <div className="space-y-2">
+                  <Button
+                    variant="secondary"
+                    size="s"
+                    prefixIcon={<Plus size={14} strokeWidth={2} />}
+                    href={`/project/${ref}/database/types`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Create enum types
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="s"
+                    prefixIcon={<ExternalLink size={14} strokeWidth={2} />}
+                    href="https://nuvix.in/docs/guides/database/tables#data-types"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    About data types
+                  </Button>
+                </div>
+              }
+            >
+              Data Type
+            </FormSectionLabel>
+          }
+        >
+          <FormSectionContent loading={false} className="lg:!col-span-8">
+            <ColumnType
+              showRecommendation
+              value={columnFields?.format ?? ""}
+              layout="vertical"
+              enumTypes={enumTypes}
+              error={errors.format}
+              description={
+                lockColumnType
+                  ? "Column type cannot be changed as it has a foreign key relation"
+                  : isIDColumn
+                    ? "Can not modify the type of the _id column in a managed schema."
+                    : ""
+              }
+              disabled={lockColumnType}
+              onOptionSelect={(format: string) => onUpdateField({ format, defaultValue: null })}
+            />
+            {columnFields.foreignKey === undefined && !isIDColumn && (
+              <div className="space-y-4">
+                {columnFields.format.includes("int") && (
+                  <div className="w-full">
+                    <Checkbox
+                      label="Is Identity"
+                      description="Automatically assign a sequential unique number to the column"
+                      isChecked={columnFields.isIdentity}
+                      onToggle={() => {
+                        const isIdentity = !columnFields.isIdentity;
+                        const isArray = isIdentity ? false : columnFields.isArray;
+                        onUpdateField({ isIdentity, isArray });
+                      }}
+                    />
+                  </div>
+                )}
+                {!columnFields.isPrimaryKey && !isIDColumn && (
+                  <div className="w-full">
+                    <Checkbox
+                      label="Define as Array"
+                      description="Allow column to be defined as variable-length multidimensional arrays"
+                      isChecked={columnFields.isArray}
+                      onToggle={() => {
+                        const isArray = !columnFields.isArray;
+                        const isIdentity = isArray ? false : columnFields.isIdentity;
+                        onUpdateField({ isArray, isIdentity });
+                      }}
+                    />
+                  </div>
+                )}
               </div>
-            }
-          >
-            Data Type
-          </FormSectionLabel>
-        }
-      >
-        <FormSectionContent loading={false} className="lg:!col-span-8">
-          <ColumnType
-            showRecommendation
-            value={columnFields?.format ?? ""}
-            layout="vertical"
-            enumTypes={enumTypes}
-            error={errors.format}
-            description={
-              lockColumnType ? "Column type cannot be changed as it has a foreign key relation" : ""
-            }
-            disabled={lockColumnType}
-            onOptionSelect={(format: string) => onUpdateField({ format, defaultValue: null })}
-          />
-          {columnFields.foreignKey === undefined && (
-            <div className="space-y-4">
-              {columnFields.format.includes("int") && (
-                <div className="w-full">
-                  <Checkbox
-                    label="Is Identity"
-                    description="Automatically assign a sequential unique number to the column"
-                    isChecked={columnFields.isIdentity}
-                    onToggle={() => {
-                      const isIdentity = !columnFields.isIdentity;
-                      const isArray = isIdentity ? false : columnFields.isArray;
-                      onUpdateField({ isIdentity, isArray });
-                    }}
-                  />
-                </div>
-              )}
-              {!columnFields.isPrimaryKey && (
-                <div className="w-full">
-                  <Checkbox
-                    label="Define as Array"
-                    description="Allow column to be defined as variable-length multidimensional arrays"
-                    isChecked={columnFields.isArray}
-                    onToggle={() => {
-                      const isArray = !columnFields.isArray;
-                      const isIdentity = isArray ? false : columnFields.isIdentity;
-                      onUpdateField({ isArray, isIdentity });
-                    }}
-                  />
-                </div>
-              )}
-            </div>
-          )}
-          <ColumnDefaultValue
-            columnFields={columnFields}
-            enumTypes={enumTypes}
-            onUpdateField={onUpdateField}
-          />
-        </FormSectionContent>
-      </FormSection>
+            )}
+            <ColumnDefaultValue
+              columnFields={columnFields}
+              enumTypes={enumTypes}
+              onUpdateField={onUpdateField}
+            />
+          </FormSectionContent>
+        </FormSection>
+      )}
 
-      <SidePanel.Separator />
+      {!isIDColumn && <SidePanel.Separator />}
 
       <FormSection
         header={<FormSectionLabel className="lg:!col-span-4">Foreign Keys</FormSectionLabel>}
@@ -356,12 +370,14 @@ const ColumnEditor = ({
             label="Allow Nullable"
             description="Allow the column to assume a NULL value if no value is provided"
             reverse
+            disabled={isIDColumn}
             isChecked={columnFields.isNullable}
             onToggle={() => onUpdateField({ isNullable: !columnFields.isNullable })}
           />
           <Switch
             label="Is Unique"
             reverse
+            disabled={isIDColumn}
             description="Enforce values in the column to be unique across rows"
             isChecked={columnFields.isUnique}
             onToggle={() => onUpdateField({ isUnique: !columnFields.isUnique })}
@@ -371,6 +387,7 @@ const ColumnEditor = ({
             optionalText="Optional"
             placeholder={placeholder}
             type="text"
+            disabled={isIDColumn}
             value={columnFields?.check ?? ""}
             onChange={(event: any) => onUpdateField({ check: event.target.value })}
             className="[&_input]:font-mono"

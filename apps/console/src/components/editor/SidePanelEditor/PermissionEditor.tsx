@@ -8,7 +8,7 @@ import * as Yup from "yup";
 import { IDChip } from "@/components/others";
 import { PermissionField } from "@/components/others/permissions";
 import { useProjectStore } from "@/lib/store";
-import { Row } from "@nuvix/ui/components";
+import { Row, Switch } from "@nuvix/ui/components";
 import InformationBox from "@/ui/InformationBox";
 import type { PostgresTable } from "@nuvix/pg-meta";
 import type { Dictionary } from "./SidePanelEditor.types";
@@ -16,6 +16,8 @@ import { useTablePermissionsQuery } from "@/data/table-editor/table-permissions-
 import { useRowPermissionsQuery } from "@/data/table-rows/row-permissions-query";
 import { SkeletonText } from "@nuvix/cui/skeleton";
 import AlertError from "@/components/others/ui/alert-error";
+import { useSecurityInfoQuery } from "@/data/database-policies/managed-schema-policies";
+import { useMutateSecurity } from "@/data/database-policies/managed-schema-policies-mutation";
 
 export interface PermsEditorProps {
   row?: Readonly<Dictionary<any>>;
@@ -31,7 +33,7 @@ export interface PermsEditorProps {
       rowIdx?: number;
     },
   ) => Promise<void>;
-  updateEditorDirty: () => void;
+  updateEditorDirty: (is: boolean) => void;
 }
 
 const schema = Yup.object().shape({
@@ -48,10 +50,11 @@ const PermissionEditor = ({
   updateEditorDirty = noop,
 }: PermsEditorProps) => {
   const { sdk, project } = useProjectStore();
+  const isRowMode = !!row?._id;
+
   const {
     data: tablePermissions,
     isLoading: isTpLoading,
-    isPending: isTpPending,
     isError: isTError,
     error: terror,
   } = useTablePermissionsQuery(
@@ -62,13 +65,13 @@ const PermissionEditor = ({
       sdk,
     },
     {
-      enabled: visible && !row,
+      enabled: visible && !isRowMode,
     },
   );
+
   const {
     data: rowPermissions,
     isLoading: isRpLoading,
-    isPending: isRpPending,
     isError: isRError,
     error: rerror,
   } = useRowPermissionsQuery(
@@ -80,38 +83,81 @@ const PermissionEditor = ({
       sdk,
     },
     {
-      enabled: visible && !!row?._id,
+      enabled: visible && isRowMode,
     },
   );
 
+  const { data: securityInfo, isLoading: isSecurityLoading } = useSecurityInfoQuery(
+    {
+      projectRef: project.$id,
+      sdk,
+      id: table.id,
+      schema: table.schema,
+    },
+    { enabled: visible && !!table.id },
+  );
+
+  const { mutate: updateSecurity, isPending: isSecurityPending } = useMutateSecurity(
+    project.$id,
+    table.schema,
+    table.id,
+  );
+
+  // Determine current permissions and loading state
+  const currentPermissions = isRowMode ? rowPermissions : tablePermissions;
+  const isPermissionsLoading = isRowMode ? isRpLoading : isTpLoading;
+  const isPermissionsError = isRowMode ? isRError : isTError;
+  const permissionsError = isRowMode ? rerror : terror;
+
+  // Overall loading state
+  const isLoading = isPermissionsLoading || isSecurityLoading;
+  const hasError = isPermissionsError;
+
   const formik = useFormik({
     initialValues: {
-      permissions: row ? rowPermissions || [] : tablePermissions || [],
+      permissions: currentPermissions || [],
     },
     enableReinitialize: true,
     validationSchema: schema,
     async onSubmit(values) {
-      const configuration = { rowIdx: -1 } as any;
-      configuration._id = row?._id;
-      configuration.rowIdx = row?.idx;
-      configuration.schema = table.schema;
+      const configuration = {
+        _id: row?._id || table.id,
+        schema: table.schema,
+        ...(isRowMode && { rowIdx: row?.idx }),
+      };
       await saveChanges(values.permissions, configuration);
     },
   });
 
   useEffect(() => {
-    if (visible) {
+    if (visible && currentPermissions) {
       formik.resetForm({
         values: {
-          permissions: row ? rowPermissions || [] : tablePermissions || [],
+          permissions: currentPermissions,
         },
       });
     }
-  }, [visible, row, tablePermissions, rowPermissions]);
+  }, [visible, currentPermissions, securityInfo?.tableEnabled, securityInfo?.rowEnabled]);
 
   useEffect(() => {
-    if (formik.dirty) updateEditorDirty();
-  }, [formik.dirty, row]);
+    updateEditorDirty(formik.dirty);
+  }, [formik.dirty, updateEditorDirty]);
+
+  function handleToggleRow(enable: boolean) {
+    updateSecurity({
+      sdk,
+      table: table.name,
+      enableRow: enable,
+    });
+  }
+
+  function handleToggleTable(enable: boolean) {
+    updateSecurity({
+      sdk,
+      table: table.name,
+      enableTable: enable,
+    });
+  }
 
   return (
     <SidePanel
@@ -120,7 +166,7 @@ const PermissionEditor = ({
       visible={visible}
       header={
         <Row vertical="center" gap="s">
-          {row ? (
+          {isRowMode ? (
             <>
               Manage Permissions for Row <IDChip id={row?._id} hideIcon />
             </>
@@ -131,7 +177,7 @@ const PermissionEditor = ({
           )}
         </Row>
       }
-      className={`transition-all duration-100 ease-in`}
+      className="transition-all duration-100 ease-in"
       onCancel={closePanel}
       form={formik}
       customFooter={
@@ -144,31 +190,63 @@ const PermissionEditor = ({
         />
       }
     >
-      <SidePanel.Content className="px-6 space-y-6 py-6">
-        {(isTpLoading || isRpLoading) && <SkeletonText />}
-        {(isTError || isRError) && (
-          <AlertError error={terror || rerror} subject="Failed to fetch permissions" />
-        )}
-        {!(isTpLoading || isRpLoading) && !editable && (
+      <SidePanel.Content className="px-6 space-y-6 py-3">
+        {isLoading && <SkeletonText />}
+
+        {hasError && <AlertError error={permissionsError} subject="Failed to fetch permissions" />}
+
+        {!isLoading && !editable && (
           <InformationBox
-            icon={"info"}
+            icon="info"
             title="Read-Only Mode"
             description="You do not have the necessary permissions to edit these settings."
           />
         )}
-        {!(isTpPending && isRpPending) && !(isTError || isRError) && (
-          <>
+      </SidePanel.Content>
+
+      {!isLoading && !hasError && (
+        <>
+          <SidePanel.Content className="px-6 pb-6 space-y-6">
+            <Switch
+              name="tls"
+              reverse
+              loading={isSecurityPending}
+              isChecked={securityInfo?.tableEnabled || securityInfo?.rowEnabled || false}
+              onToggle={() => handleToggleTable(!securityInfo?.tableEnabled)}
+              label="Table Level Permissions (TLP)"
+              description="When enabled, all access to this table will be restricted based on defined permissions."
+              disabled={
+                !editable || isSecurityLoading || isSecurityPending || securityInfo?.rowEnabled
+              }
+            />
+
+            <Switch
+              name="rls"
+              label="Row Level Permissions (RLP)"
+              reverse
+              loading={isSecurityPending}
+              isChecked={securityInfo?.rowEnabled || false}
+              onToggle={() => handleToggleRow(!securityInfo?.rowEnabled)}
+              description="When enabled, either table level permissions or row level permissions are required to access rows in this table."
+              disabled={!editable || isSecurityLoading || isSecurityPending}
+            />
+          </SidePanel.Content>
+
+          <SidePanel.Separator />
+
+          <SidePanel.Content className="px-6 py-6 space-y-6">
             <InformationBox
-              icon={"key"}
+              icon="key"
               title="About Permissions"
-              description={`Database permissions allow you to control access to your data at a granular level. You can assign permissions to users or roles, specifying what actions they can perform on specific tables or rows.`}
+              description="Database permissions allow you to control access to your data at a granular level. You can assign permissions to users or roles, specifying what actions they can perform on specific tables or rows."
               urlLabel="Learn more about database permissions"
               url="https://nuvix.com/docs/permissions"
             />
-            <PermissionField sdk={sdk} name="permissions" withCreate={!row || !row?._id} />
-          </>
-        )}
-      </SidePanel.Content>
+
+            <PermissionField sdk={sdk} name="permissions" withCreate={!isRowMode} />
+          </SidePanel.Content>
+        </>
+      )}
     </SidePanel>
   );
 };
