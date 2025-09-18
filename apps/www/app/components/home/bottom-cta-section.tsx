@@ -4,9 +4,9 @@ import { DASHBOARD_URL, DOCS_URL } from "~/lib/constants"
 export const BottomCtaSection = () => {
 
     return (
-        <Column className="py-12 bg-(--brand-alpha-weak)/30 relative min-h-96" >
+        <Column className="py-12 relative min-h-96 rounded-sm container mx-auto my-8 bg-(--brand-alpha-weak) dark:bg-(--neutral-alpha-weak)" >
             <div className="mx-auto max-w-3xl text-center my-auto">
-                <Text variant="display-strong-xs" as="h2" onBackground="brand-weak">
+                <Text variant="display-strong-s" as="h2" onBackground="neutral-strong">
                     Try Nuvix for Free
                 </Text>
                 <Text onBackground="neutral-weak" as="p">
