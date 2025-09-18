@@ -84,6 +84,12 @@ import {
   TbBrandUnity,
   TbUser,
   TbLogout,
+  TbBrandNextjs,
+  TbBrandNuxt,
+  TbBrandSvelte,
+  TbBrandReact,
+  TbBrandVue,
+  TbBrandSolidjs,
 } from "react-icons/tb";
 import { Edit3, ExternalLink, Trash2 } from "lucide-react";
 import { CgArrowLongRightC, CgArrowsH } from "react-icons/cg";
@@ -185,6 +191,14 @@ export const iconMap = {
   account: TbUser,
   team: TbUsersGroup,
   logout: TbLogout,
+
+  // brands
+  nextjs: TbBrandNextjs,
+  nuxt: TbBrandNuxt,
+  svelte: TbBrandSvelte,
+  reactjs: TbBrandReact,
+  vue: TbBrandVue,
+  solidjs: TbBrandSolidjs,
 } as const;
 
 export type IconName = keyof typeof iconMap;
