@@ -5,3 +5,4 @@ export * from "./trusted-by-section";
 export * from "./pricing-section";
 export * from "./cta-section";
 export * from "./schemas-section";
+export * from "./bottom-cta-section";

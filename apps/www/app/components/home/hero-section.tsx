@@ -16,7 +16,7 @@ export const HeroSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <span className="px-3 flex items-center gap-2 py-1 rounded-full border accent-border-weak accent-background-alpha-weak accent-on-background-medium text-sm font-medium">
+            <span className="px-3 flex items-center gap-2 py-1 rounded-full border brand-border-medium brand-background-alpha-weak brand-on-background-strong text-sm font-medium">
               <Icon name="sparkle" size="s" /> Nuvix Beta is live — build your backend, your way.
             </span>
           </motion.div>
