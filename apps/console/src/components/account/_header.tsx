@@ -2,6 +2,7 @@
 import { Logo, Row, Button } from "@nuvix/ui/components";
 import type React from "react";
 import { UserProfile } from "../_profile";
+import { FeedbackButton, HelpButton } from "../project/components";
 
 const AccountHeader: React.FC = () => {
   return (
@@ -37,12 +38,12 @@ const AccountHeader: React.FC = () => {
         <Row fillWidth vertical="center" horizontal="space-between" marginLeft={"80"}>
           <Row fillWidth vertical="center" horizontal="end" gap="12">
             <div className="flex items-center gap-3">
-              <Button variant="secondary" className="bg-transparent">
-                Feedback
-              </Button>
+              <FeedbackButton />
               <div className="flex items-center gap-0.5">
-                <Button variant="tertiary">Help</Button>
-                <Button variant="tertiary">Docs</Button>
+                <HelpButton />
+                <Button size="s" variant="tertiary" href="https://docs.nuvix.in" target="_blank">
+                  Docs
+                </Button>
               </div>
             </div>
             <UserProfile />

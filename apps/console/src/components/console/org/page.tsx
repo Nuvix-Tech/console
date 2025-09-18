@@ -43,7 +43,7 @@ export const OrganizationPage = ({ id }: Props) => {
           <Button
             prefixIcon="plus"
             size="s"
-            disabled={!vars["project:create"]}
+            // disabled={!vars["project:create"]}
             onClick={createProject}
             data-cy="create-project-button"
             tooltip="Create a new project"

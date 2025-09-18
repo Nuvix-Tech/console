@@ -15,6 +15,7 @@ export const useQuery = ({ limit: defaultLimit }: QueryParams = {}) => {
     limit: parseAsInteger.withDefault(defaultLimit ?? 12),
     page: parseAsInteger.withDefault(1),
     search: parseAsString,
+    view: parseAsString,
   });
 
   const createQueryCopy = useCallback(() => {
@@ -86,6 +87,7 @@ export const useQuery = ({ limit: defaultLimit }: QueryParams = {}) => {
         limit: defaultLimit ?? 12,
         page: 1,
         search: undefined,
+        view: undefined,
       };
       setQueryState({ [key]: defaults[key] });
     },

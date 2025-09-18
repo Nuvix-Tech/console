@@ -118,8 +118,15 @@ export const CreatePlatform: React.FC<CreatePlatformProps> = ({ children, type, 
           <Dialog.Backdrop />
           <Dialog.Positioner>
             <Dialog.Content>
-              <Dialog.Body h="full" gap={10} p={12} display="flex" alignItems="center">
-                <Box flex="1" h="full" ml={10} display={{ base: "none", md: "block" }}>
+              <Dialog.Body
+                h="full"
+                gap={10}
+                p={12}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
+                {/* <Box flex="1" h="full" ml={10} display={{ base: "none", md: "block" }}>
                   <Image
                     src="https://img.freepik.com/free-vector/business-teamwork-concept-teamwork-leadership-effort-hard-work-team-strategy-concept-brainstorm-workshop-management-skills-vector-cartoon-illustration-flat-design_1150-56223.jpg?t=st=1741944634~exp=1741948234~hmac=a8809da68f5bcdb67d8616d53467b3b475fdf51020c728f1a1a1a00874fd875e&w=996"
                     alt="Platform Preview"
@@ -128,7 +135,7 @@ export const CreatePlatform: React.FC<CreatePlatformProps> = ({ children, type, 
                     shadow="md"
                     height="80%"
                   />
-                </Box>
+                </Box> */}
 
                 <Box flex="1" h="full" justifyContent={"center"} maxW="500px">
                   <Flex alignItems="center" justifyContent="space-between" mb={6}>

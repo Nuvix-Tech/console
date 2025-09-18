@@ -18,13 +18,14 @@ import { PROTECTED_SCHEMAS } from "@/lib/constants";
 import { useGetTables } from "@/data/tables/tables-query";
 import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
 import { useTableEditorQuery } from "@/data/table-editor/table-editor-query";
-import { Feedback } from "@nuvix/ui/components";
+import { Feedback, Text } from "@nuvix/ui/components";
 import SidePanelEditor from "./SidePanelEditor/SidePanelEditor";
 import { useSearchQuery } from "@/hooks/useQuery";
 import { TableParam } from "@/types";
 import DeleteConfirmationDialogs from "./components/_delete_dialog";
 import { Code } from "@chakra-ui/react";
 import { Loader } from "lucide-react";
+import { TableDefinition } from "../grid/TableDefination";
 
 // Placeholder component for loading state
 const LoadingState = () => (
@@ -161,19 +162,19 @@ export const TableEditor = () => {
           gridProps={{ height: "100%" }}
           customHeader={
             (isViewSelected || isTableSelected) && selectedView === "definition" ? (
-              <div className="flex items-center space-x-2">
-                <p>
+              <div className="flex items-center mx-2">
+                <Text as={"p"} variant="label-strong-m" className="!mr-2">
                   SQL Definition of <Code className="text-sm">{table.name}</Code>
-                </p>
+                </Text>
                 <p className="text-muted-foreground text-sm">(Read only)</p>
               </div>
             ) : null
           }
         >
           {/* Conditional rendering for table definition can be added here if needed */}
-          {/* {(isViewSelected || isTableSelected) && selectedView === 'definition' && (
-              <TableDefinition entity={table} />
-            )} */}
+          {(isViewSelected || isTableSelected) && selectedView === "definition" && (
+            <TableDefinition entity={table} />
+          )}
         </NuvixGrid>
 
         <SidePanelEditor

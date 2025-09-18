@@ -45,7 +45,7 @@ export const BottomPanel = () => {
           </Button>
         </Row>
         <div className="flex-1 h-full max-h-[calc(100%_-_80px)] overflow-y-auto">
-          <Results rows={Array.isArray(result) ? result : []} panel />
+          {result !== undefined && <Results rows={Array.isArray(result) ? result : []} panel />}
         </div>
         {result !== undefined && !isExecuting && (
           <Row

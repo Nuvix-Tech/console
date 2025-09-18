@@ -7,7 +7,7 @@ import * as y from "yup";
 import { sdkForConsole } from "@/lib/sdk";
 import { ID } from "@nuvix/console";
 import { useRouter } from "@bprogress/next";
-import { useToast } from "@nuvix/ui/components";
+import { Button, useToast } from "@nuvix/ui/components";
 import { useAppStore } from "@/lib/store";
 
 type CreateProjectProps = {
@@ -59,14 +59,14 @@ export const CreateProject: React.FC<CreateProjectProps> = ({ children, ...props
             <Dialog.Content>
               <Dialog.Body h="full" gap={10} p={12} display="flex" alignItems="center">
                 <Box flex="1" h="full" justifyContent={"center"}>
-                  <Text fontSize="4xl" fontWeight="bold" mb={6}>
+                  {/* <Text fontSize="4xl" fontWeight="bold" mb={6}>
                     Let's Create Your Next Project
                   </Text>
 
                   <Text fontSize="2xl" color="fg.muted" mb={10}>
                     Provide a project name to get started.
-                  </Text>
-                  <Form
+                  </Text> */}
+                  {/* <Form
                     initialValues={{
                       name: "",
                       id: "",
@@ -85,23 +85,34 @@ export const CreateProject: React.FC<CreateProjectProps> = ({ children, ...props
                     </div>
 
                     <Flex justify="flex-end" mt={6}>
-                      <SubmitButton>Create</SubmitButton>
-                      {/* <Button type="submit">
+                      <SubmitButton>Create</SubmitButton> */}
+                  {/* <Button type="submit">
                         Continue
                       </Button> */}
-                    </Flex>
-                  </Form>
+                  {/* </Flex>
+                  </Form> */}
+
+                  <Text fontSize="4xl" fontWeight="bold" mb={6}>
+                    Project Creation Only Available on CLI
+                  </Text>
+                  <Text fontSize="2xl" color="fg.muted" mb={10}>
+                    Please use our CLI tool to create a new project. Visit our documentation for
+                    more details.
+                  </Text>
+                  <Button href="https://docs.nuvix.in/getting-started/installation">
+                    Documentation
+                  </Button>
                 </Box>
                 <Box flex="1" h="full">
-                  <Dialog.Trigger>
+                  <Dialog.Trigger asChild>
                     <CloseButton position="absolute" top={4} right={4} />
                   </Dialog.Trigger>
-                  <Image
+                  {/* <Image
                     src="https://img.freepik.com/free-vector/business-teamwork-concept-teamwork-leadership-effort-hard-work-team-strategy-concept-brainstorm-workshop-management-skills-vector-cartoon-illustration-flat-design_1150-56223.jpg?t=st=1741944634~exp=1741948234~hmac=a8809da68f5bcdb67d8616d53467b3b475fdf51020c728f1a1a1a00874fd875e&w=996"
                     alt="Project Preview"
                     objectFit="cover"
                     borderRadius="md"
-                  />
+                  /> */}
                 </Box>
               </Dialog.Body>
             </Dialog.Content>

@@ -9,14 +9,22 @@ import { BottomPanel } from "./components";
 import { useSqlEditorStateSnapshot } from "@/lib/store/sql-runner";
 import { useProjectStore } from "@/lib/store";
 import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 export const SqlEditor = () => {
   const { resolvedTheme } = useTheme();
   const intellisenseEnabled = true;
   const { sql, setSql } = useSqlEditorStateSnapshot();
   const { setSidebarNull } = useProjectStore((s) => s);
-
+  const params = useSearchParams();
+  const content = params.get("content");
   useEffect(setSidebarNull, []);
+
+  useEffect(() => {
+    if (content) {
+      setSql(decodeURIComponent(content));
+    }
+  }, [content, setSql]);
 
   return (
     <>

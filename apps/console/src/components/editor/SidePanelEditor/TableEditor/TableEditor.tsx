@@ -364,7 +364,7 @@ const TableEditor = ({
       const importedColumns = formatImportedContentToColumnFields(editorState.importContent);
       onUpdateField({ columns: importedColumns });
     }
-  }, [editorState.importContent, onUpdateField]);
+  }, [editorState.importContent]);
 
   if (!editorState.tableFields) return null;
 

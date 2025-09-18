@@ -9,7 +9,7 @@ import {
   DrawerContent,
   DrawerRoot,
 } from "@nuvix/cui/drawer";
-import { HeaderOrganization } from "../project/components";
+import { FeedbackButton, HeaderOrganization, HelpButton } from "../project/components";
 import { UserProfile } from "../_profile";
 import { useAppStore } from "@/lib/store";
 import { ConsoleSidebar } from "@/ui/layout/ConsoleSidebar";
@@ -74,15 +74,11 @@ const DesktopHeader = () => {
           </Row>
           <Row fillWidth vertical="center" horizontal="end" gap="12">
             <div className="flex items-center gap-3">
-              {organization?.billingPlan === "tier-0" ? <Button size="s">Upgrade</Button> : null}
-              <Button size="s" variant="secondary" className="bg-transparent">
-                Feedback
-              </Button>
+              {/* {organization?.billingPlan === "tier-0" ? <Button size="s">Upgrade</Button> : null} */}
+              <FeedbackButton />
               <div className="flex items-center gap-0.5">
-                <Button size="s" variant="tertiary">
-                  Help
-                </Button>
-                <Button size="s" variant="tertiary">
+                <HelpButton />
+                <Button size="s" variant="tertiary" href="https://docs.nuvix.in" target="_blank">
                   Docs
                 </Button>
               </div>
