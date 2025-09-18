@@ -145,7 +145,7 @@ export const Grid = memo(
               {isLoading && <GenericSkeletonLoader />}
 
               {isError && (
-                <Alert>
+                <Alert className="pointer-events-auto">
                   <AlertTitle>Failed to retrieve rows from table</AlertTitle>
                   <p className="text-sm neutral-on-background-weak">Error: {error?.message}</p>
                   {filters.length > 0 && (
@@ -164,7 +164,7 @@ export const Grid = memo(
                       <p className="text-sm neutral-on-background-medium mt-1">
                         Add rows to your table to get started.
                       </p>
-                      <div className="flex items-center space-x-2 mt-4">
+                      <div className="flex items-center space-x-2 mt-4 pointer-events-auto">
                         {
                           <Button
                             type="default"
@@ -191,7 +191,7 @@ export const Grid = memo(
                       <p className="text-sm neutral-on-background-weak">
                         The filters applied have returned no results from this table
                       </p>
-                      <div className="flex items-center space-x-2 mt-4">
+                      <div className="flex items-center space-x-2 mt-4 pointer-events-auto">
                         <Button size="s" onClick={() => removeAllFilters()}>
                           Remove all filters
                         </Button>

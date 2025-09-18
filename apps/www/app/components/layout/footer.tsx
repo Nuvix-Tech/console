@@ -14,8 +14,8 @@ export const Footer = () => {
         { label: "Database", to: "/products/database" },
         { label: "Auth", to: "/products/auth" },
         { label: "Storage", to: "/products/storage" },
-        { label: "Messaging", to: "/products/messaging" }
-      ]
+        { label: "Messaging", to: "/products/messaging" },
+      ],
     },
     {
       title: "Resources",
@@ -23,8 +23,8 @@ export const Footer = () => {
         { label: "Documentation", to: DOCS_URL },
         { label: "Blog", to: "/blog" },
         { label: "Support", to: "/support" },
-        { label: "Community", to: "/community" }
-      ]
+        { label: "Community", to: "/community" },
+      ],
     },
     {
       title: "Company",
@@ -32,19 +32,29 @@ export const Footer = () => {
         { label: "About", to: "/about" },
         { label: "Careers", to: "/careers" },
         { label: "Contact", to: "/contact" },
-        { label: "Privacy", to: "/privacy" }
-      ]
-    }
+        { label: "Privacy", to: "/privacy" },
+      ],
+    },
   ];
 
   return (
-    <div className="bg-surface border-t border-border">
+    <div className="surface-background border-t border-border/40">
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="space-y-4">
-            <Logo icon={false} wordmark wordmarkSrc="/trademark/type_light.svg" className="dark:!hidden !block" />
-            <Logo icon={false} wordmark wordmarkSrc="/trademark/type_dark.svg" className="!hidden dark:!block" />
+            <Logo
+              icon={false}
+              wordmark
+              wordmarkSrc="/trademark/type_light.svg"
+              className="dark:!hidden !block"
+            />
+            <Logo
+              icon={false}
+              wordmark
+              wordmarkSrc="/trademark/type_dark.svg"
+              className="!hidden dark:!block"
+            />
             <div className="flex items-center gap-3">
               <IconButton icon="github" variant="secondary" href="https://github.com/Nuvix-Tech" />
               <IconButton icon="discord" variant="secondary" href="https://github.com/Nuvix-Tech" />

@@ -104,12 +104,12 @@ export const Grid = memo(
           {(rows ?? []).length === 0 && (
             <div
               style={{ height: `calc(100% - 45px)` }}
-              className="absolute top-9 z-[2] p-2 w-full"
+              className="absolute top-9 z-[2] p-2 w-full pointer-events-none"
             >
               {isLoading && <GenericSkeletonLoader />}
 
               {isError && (
-                <Alert>
+                <Alert className="pointer-events-auto">
                   <AlertTitle>Failed to retrieve rows from table</AlertTitle>
                   {filters.length > 0 && (
                     <AlertDescription>
@@ -154,7 +154,7 @@ export const Grid = memo(
                       <p className="text-sm neutral-on-background-weak">
                         The filters applied have returned no results from this collection
                       </p>
-                      <div className="flex items-center space-x-2 mt-4">
+                      <div className="flex items-center space-x-2 mt-4 pointer-events-auto">
                         <Button size="s" onClick={() => removeAllFilters()}>
                           Remove all filters
                         </Button>
