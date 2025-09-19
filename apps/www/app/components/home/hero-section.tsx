@@ -16,7 +16,7 @@ export const HeroSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <span className="px-3 flex items-center gap-2 py-1 rounded-full border brand-border-medium brand-background-alpha-weak brand-on-background-strong text-sm font-medium">
+            <span className="px-3 flex items-center gap-2 py-1 rounded-full border accent-border-medium accent-background-alpha-weak accent-on-background-strong text-sm font-medium">
               <Icon name="sparkle" size="s" /> Nuvix Beta is live — build your backend, your way.
             </span>
           </motion.div>
@@ -28,7 +28,7 @@ export const HeroSection = () => {
             transition={{ duration: 0.7, delay: 0.2 }}
             className=""
           >
-            <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-medium bg-clip-text text-transparent bg-gradient-to-b from-foreground to-orange-500 py-4">
+            <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-medium bg-clip-text text-transparent bg-gradient-to-b from-foreground to-(--brand-solid-medium) py-4">
               Start simple.
               <br className="block" />
               Scale your way.

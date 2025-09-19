@@ -46,13 +46,13 @@ export const Footer = () => {
             <Logo
               icon={false}
               wordmark
-              wordmarkSrc="/trademark/type_light.svg"
+              wordmarkSrc="/trademark/logo-light.svg"
               className="dark:!hidden !block"
             />
             <Logo
               icon={false}
               wordmark
-              wordmarkSrc="/trademark/type_dark.svg"
+              wordmarkSrc="/trademark/logo-dark.svg"
               className="!hidden dark:!block"
             />
             <div className="flex items-center gap-3">

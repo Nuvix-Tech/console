@@ -40,7 +40,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       data-brand={"custom"}
       data-accent={"custom"}
       data-border={"rounded"}
-      data-solid={"contrast"}
+      data-solid={"color"}
       data-solid-style={"flat"}
       data-surface={"translucent"}
       data-transition={"all"}

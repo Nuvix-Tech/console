@@ -24,13 +24,13 @@ const Header: React.FC = () => {
         <div className="flex items-center gap-2 flex-1">
           <Link to={"/"}>
             <img
-              src={`${SERVER_URL}/public/images/nuvix-logo-dark.svg`}
+              src={`/trademark/logo-dark.png`}
               width={100}
               alt="logo"
               className="hidden dark:block"
             />
             <img
-              src={`${SERVER_URL}/public/images/nuvix-logo-light.svg`}
+              src={`/trademark/logo-light.png`}
               width={100}
               alt="logo"
               className="block dark:hidden"

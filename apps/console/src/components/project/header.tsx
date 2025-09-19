@@ -66,7 +66,7 @@ const DesktopHeader = () => {
           height={"48"}
           as={"span"}
         >
-          <Logo wordmark={false} size="m" iconSrc="/trademark/nuvix.svg" />
+          <Logo wordmark={false} size="m" iconSrc="/trademark/icon.svg" />
         </Row>
 
         <Row fillWidth vertical="center" horizontal="space-between" className="ml:pl-14">
@@ -122,13 +122,13 @@ const MobileHeader = () => {
               icon={false}
               size="l"
               className="is-only-dark"
-              wordmarkSrc="/trademark/nuvix-logo-dark.svg"
+              wordmarkSrc="/trademark/logo-dark.svg"
             />
             <Logo
               icon={false}
               size="l"
               className="is-only-light"
-              wordmarkSrc="/trademark/nuvix-logo-light.svg"
+              wordmarkSrc="/trademark/logo-light.svg"
             />{" "}
           </Row>
           <Row fillWidth vertical="center" horizontal="end">
