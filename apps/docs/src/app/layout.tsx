@@ -88,7 +88,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
         data-brand={style.brand}
         data-accent={style.accent}
         data-border={style.border}
-        data-solid={"contrast"}
+        data-solid={"color"}
         data-solid-style={style.solidStyle}
         data-surface={style.surface}
         data-transition={style.transition}
