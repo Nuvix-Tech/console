@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 
 export const SchemasSection = () => {
   return (
-    <section className="py-12 container mx-auto flex flex-col my-16 px-4 gap-12">
+    <section className="py-12 container mx-auto flex flex-col my-16 px-4 gap-20">
       <div className="flex flex-col justify-center">
         <Text className="text-center" variant="display-strong-xs" as="h2">
           <span className="neutral-on-background-medium">Schema Management,</span> Reimagined
@@ -46,7 +46,13 @@ export const SchemasSection = () => {
             </div>
           ))}
         </div>
-        <SmartImage src="/images/services/demo_table_editor.png" className="max-w-3xl rounded" />
+        <div className="max-w-3xl rounded relative">
+          <div
+            className="brand-solid-medium w-full h-full radius-s relative shadow-2xl"
+          >
+            <SmartImage objectFit="cover" src="/images/services/demo_table_editor.png" className="absolute top-20 left-20 radius-s border-2 accent-border-weak rotate-5" />
+          </div>
+        </div>
       </div>
 
       {/* Manage Permissions */}
@@ -77,7 +83,13 @@ export const SchemasSection = () => {
             </div>
           ))}
         </div>
-        <SmartImage src="/images/services/demo_permissions.png" className="max-w-3xl rounded" />
+        <div className="max-w-3xl rounded relative">
+          <div
+            className="accent-solid-medium w-full h-full rounded-sm relative shadow-2xl"
+          >
+            <SmartImage objectFit="cover" src="/images/services/demo_permissions.png" className="absolute top-20 right-20 rounded-sm border-2 brand-border-weak -rotate-5" />
+          </div>
+        </div>
       </div>
 
       {/* Flexible Security (RLS) */}
@@ -108,7 +120,13 @@ export const SchemasSection = () => {
             </div>
           ))}
         </div>
-        <SmartImage src="/images/services/demo_rls.png" className="max-w-3xl rounded" />
+         <div className="max-w-3xl rounded relative">
+          <div
+            className="warning-solid-medium w-full h-full rounded-sm relative shadow-2xl"
+          >
+            <SmartImage objectFit="cover" src="/images/services/demo_rls.png" className="absolute top-20 left-20 rounded-sm border-2 brand-border-weak rotate-5" />
+          </div>
+        </div>
       </div>
 
       {/* Schema Flexibility (unique to Nuvix) */}
