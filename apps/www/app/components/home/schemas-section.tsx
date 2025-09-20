@@ -47,10 +47,12 @@ export const SchemasSection = () => {
           ))}
         </div>
         <div className="max-w-3xl rounded relative">
-          <div
-            className="brand-solid-medium w-full h-full radius-s relative shadow-2xl"
-          >
-            <SmartImage objectFit="cover" src="/images/services/demo_table_editor.png" className="absolute top-20 left-20 radius-s border-2 accent-border-weak rotate-5" />
+          <div className="brand-solid-medium w-full h-full radius-s relative shadow-2xl">
+            <SmartImage
+              objectFit="cover"
+              src="/images/services/demo_table_editor.png"
+              className="absolute top-20 left-20 radius-s border-2 accent-border-weak rotate-5"
+            />
           </div>
         </div>
       </div>
@@ -84,10 +86,12 @@ export const SchemasSection = () => {
           ))}
         </div>
         <div className="max-w-3xl rounded relative">
-          <div
-            className="accent-solid-medium w-full h-full rounded-sm relative shadow-2xl"
-          >
-            <SmartImage objectFit="cover" src="/images/services/demo_permissions.png" className="absolute top-20 right-20 rounded-sm border-2 brand-border-weak -rotate-5" />
+          <div className="accent-solid-medium w-full h-full rounded-sm relative shadow-2xl">
+            <SmartImage
+              objectFit="cover"
+              src="/images/services/demo_permissions.png"
+              className="absolute top-20 right-20 rounded-sm border-2 brand-border-weak -rotate-5"
+            />
           </div>
         </div>
       </div>
@@ -120,11 +124,13 @@ export const SchemasSection = () => {
             </div>
           ))}
         </div>
-         <div className="max-w-3xl rounded relative">
-          <div
-            className="warning-solid-medium w-full h-full rounded-sm relative shadow-2xl"
-          >
-            <SmartImage objectFit="cover" src="/images/services/demo_rls.png" className="absolute top-20 left-20 rounded-sm border-2 brand-border-weak rotate-5" />
+        <div className="max-w-3xl rounded relative">
+          <div className="warning-solid-medium w-full h-full rounded-sm relative shadow-2xl">
+            <SmartImage
+              objectFit="cover"
+              src="/images/services/demo_rls.png"
+              className="absolute top-20 left-20 rounded-sm border-2 brand-border-weak rotate-5"
+            />
           </div>
         </div>
       </div>

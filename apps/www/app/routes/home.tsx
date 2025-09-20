@@ -1,19 +1,13 @@
 import type { Route } from "./+types/home";
-import {
-  HeroSection,
-  SchemasSection,
-  FeaturesSection,
-  BottomCtaSection,
-  UseWithSection,
-} from "~/components/home";
+import { HeroSection, FeaturesSection, BottomCtaSection, UseWithSection } from "~/components/home";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Nuvix - Backend as a Service for Modern Applications" },
+    { title: "Nuvix - Open Source Backend for Modern Applications" },
     {
       name: "description",
       content:
-        "Nuvix is a powerful Backend as a Service (BaaS) platform that helps developers build scalable applications without managing infrastructure. Get started for free.",
+        "Nuvix is a powerful Open Source Backend platform that helps developers build modern applications with ease. It offers a range of features including authentication, database management, and real-time capabilities.",
     },
   ];
 }
@@ -24,7 +18,6 @@ export default function Home() {
       <HeroSection />
       <FeaturesSection />
       <UseWithSection />
-      <SchemasSection />
       <BottomCtaSection />
     </>
   );

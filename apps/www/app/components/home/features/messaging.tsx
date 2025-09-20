@@ -41,7 +41,7 @@ export function Messaging({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "relative flex h-48 w-full items-center justify-center overflow-hidden p-10 ",
+        "relative flex h-48 w-full items-center justify-center overflow-hidden px-2 py-10 lg:px-10 ",
         className,
       )}
       ref={containerRef}

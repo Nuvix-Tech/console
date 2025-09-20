@@ -1,27 +1,29 @@
-import React, { useEffect, useState } from "react";
-import { NavMenu } from "./navbar";
-import { nuvix } from "~/lib/sdk";
+import React, { useEffect } from "react";
 import { Button } from "@nuvix/ui/components";
-import { DASHBOARD_URL, SERVER_URL } from "~/lib/constants";
+import { DOCS_URL } from "~/lib/constants";
 import { Link } from "react-router";
 
 const Header: React.FC = () => {
-  const [isLogged, setIsLogged] = useState(false);
+  const [stars, setStars] = React.useState<number | null>(null);
 
   useEffect(() => {
-    async function check() {
+    const fetchStars = async () => {
       try {
-        await nuvix.account.get();
-        setIsLogged(true);
-      } catch {}
-    }
-    check();
+        const response = await fetch("https://api.github.com/repos/nuvix-tech/nuvix");
+        const data = await response.json();
+        setStars(data.stargazers_count);
+      } catch (error) {
+        console.error("Error fetching GitHub stars:", error);
+      }
+    };
+
+    fetchStars();
   }, []);
 
   return (
     <header className="h-18 fixed top-0 left-0 flex w-full border-b justify-between items-center bg-background/10 backdrop-blur-lg px-4 py-2 z-[999]">
-      <div className="flex items-center justify-between gap-2 w-full">
-        <div className="flex items-center gap-2 flex-1">
+      <div className="flex items-center justify-between gap-2 w-full container mx-auto px-4">
+        <div className="flex items-center gap-4 flex-1">
           <Link to={"/"}>
             <img
               src={`/trademark/logo-dark.png`}
@@ -36,36 +38,26 @@ const Header: React.FC = () => {
               className="block dark:hidden"
             />
           </Link>
-          <NavMenu />
+          <Button
+            href={DOCS_URL}
+            label="Documentation"
+            size="s"
+            variant="tertiary"
+            className="!hidden sm:!flex"
+          />
         </div>
         <aside>
-          {isLogged ? (
+          <div className="flex items-center">
             <Button
               variant="secondary"
               size="s"
-              onClick={() => (window.location.href = DASHBOARD_URL)}
+              className="ml-2"
+              prefixIcon={"github"}
+              suffixIcon={<span>{stars !== null ? stars.toLocaleString() : "..."}</span>}
             >
-              Go to Console
+              Star on Github
             </Button>
-          ) : (
-            <div className="flex items-center">
-              <Button
-                variant="secondary"
-                size="s"
-                onClick={() => (window.location.href = `${DASHBOARD_URL}/auth/login`)}
-              >
-                Sign In
-              </Button>
-              <Button
-                variant="primary"
-                size="s"
-                onClick={() => (window.location.href = `${DASHBOARD_URL}/auth/register`)}
-                className="ml-2"
-              >
-                Start your project
-              </Button>
-            </div>
-          )}
+          </div>
         </aside>
       </div>
     </header>

@@ -15,17 +15,17 @@ export const UseWithSection = () => {
 
   return (
     <div className="py-5 container mx-auto px-4">
-      <Row fillWidth>
+      <Row fillWidth className="!flex-col lg:!flex-row">
         <Text variant="display-strong-xs" as="h2" onBackground="neutral-medium">
           Use Nuvix <br />
-          With Your <span className="text-(--neutral-on-background-strong)">Favorite Tools</span>
+          With Your <i className="text-(--neutral-on-background-strong)">Favorite Tools</i>
         </Text>
-        <div className="flex flex-1 gap-6 mt-6 flex-wrap items-center md:justify-end">
+        <div className="flex flex-1 gap-1 md:gap-6 mt-6 flex-wrap items-center md:justify-end">
           {icons.map((e, i) => (
             <IconButton
               variant="ghost"
               size="l"
-              className="[&_svg]:!size-10 !size-14 !text-(--neutral-alpha-strong) hover:!text-(--neutral-on-background-medium) transition-colors"
+              className="[&_svg]:!size-10 !size-14 !text-(--neutral-alpha-strong) hover:!text-(--accent-on-background-medium) transition-colors"
               icon={e.icon}
               key={i}
               tooltipOffset={40}

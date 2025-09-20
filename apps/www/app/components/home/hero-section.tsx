@@ -1,82 +1,54 @@
-import { Button, Fade, Icon } from "@nuvix/ui/components";
-import { ArrowRight } from "lucide-react";
-import { motion } from "motion/react";
+import { Button, Fade } from "@nuvix/ui/components";
 import { Spotlight } from "~/ui/spotlight-new";
 
 export const HeroSection = () => {
   return (
-    <div className="h-[40rem] mb-10 w-full rounded-md flex items-center justify-between antialiased bg-grid relative overflow-hidden px-4 lg:px-12 ">
-      <Spotlight duration={0} translateY={-480} xOffset={280} smallWidth={459} />
+    <div className="relative overflow-hidden">
+      <div className="h-[40rem] mb-10 w-full rounded-md container mx-auto flex items-center justify-between antialiased overflow-hidden px-4">
+        <Spotlight duration={0} translateY={-480} xOffset={280} smallWidth={459} />
 
-      <div className="relative lg:max-w-3xl w-full flex justify-between">
-        <div className="flex flex-col items-start justify-start space-y-6">
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <span className="px-3 flex items-center gap-2 py-1 rounded-full border accent-border-medium accent-background-alpha-weak accent-on-background-strong text-sm font-medium">
-              <Icon name="sparkle" size="s" /> Nuvix Beta is live — build your backend, your way.
+        <div className="relative lg:max-w-2xl w-full flex justify-between">
+          <div className="flex flex-col items-start justify-start space-y-6">
+            <span className="px-3 flex items-center gap-2 py-1 rounded-full border neutral-border-medium neutral-background-alpha-weak neutral-on-background-strong text-sm font-medium">
+              <span className="w-2 h-2 rounded-full bg-(--brand-solid-medium) animate-pulse" />
+              New: Nuvix is now open source!
             </span>
-          </motion.div>
 
-          {/* Heading */}
-          <motion.div
-            initial={{ opacity: 0.1 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className=""
-          >
             <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-medium bg-clip-text text-transparent bg-gradient-to-b from-foreground to-(--brand-solid-medium) py-4">
               Start simple.
               <br className="block" />
               Scale your way.
             </h1>
-          </motion.div>
 
-          {/* Description */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="mt-4 text-base sm:text-lg neutral-on-background-medium max-w-2xl mx-auto leading-relaxed"
-          >
-            Nuvix is a flexible, Postgres-powered backend that adapts to any data shape. With
-            built-in auth, storage, messaging, and APIs, you can launch faster and scale
-            effortlessly.
-          </motion.p>
+            <p className="mt-4 text-base sm:text-lg neutral-on-background-medium max-w-2xl mx-auto leading-relaxed">
+              Nuvix is a flexible, Postgres-powered{" "}
+              <strong className="accent-on-background-weak">open source</strong> backend that adapts
+              to any data shape. With built-in auth, storage, messaging, and APIs, you can launch
+              faster and scale effortlessly.
+            </p>
 
-          {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-            className="mt-6 flex flex-row gap-4 sm:gap-8 justify-center items-center"
-          >
-            <Button href="https://console.nuvix.in" target="_blank" size="s" variant="primary">
-              Start building
-            </Button>
-            <Button
-              href="https://docs.nuvix.in"
-              size="s"
-              variant="secondary"
-              suffixIcon={ArrowRight}
-            >
-              Read the docs
-            </Button>
-          </motion.div>
+            <div className="mt-6 flex flex-row gap-4 sm:gap-8 justify-center items-center">
+              <Button
+                href="https://github.com/Nuvix-Tech/nuvix"
+                target="_blank"
+                size="s"
+                variant="primary"
+              >
+                Get Started
+              </Button>
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="h-full relative w-xl hidden lg:flex items-center justify-center">
-        <Fade to="right" fill>
-          <Fade to="bottom" fill>
-            <img
-              src={"/images/dashboard/hero_dark.png"}
-              className="absolute min-w-3xl w-4xl right-0 z-50 bottom-0 -translate-y-30 translate-x-80 border-[8px] border-(--neutral-alpha-medium) rounded-[8px] overflow-hidden"
-            />
+        <div className="h-full relative flex-1 hidden lg:flex items-center justify-center">
+          <Fade to="right" fill blur={0.1}>
+            <Fade to="bottom" fill blur={0.3}>
+              <img
+                src={"/images/dashboard/hero_dark.png"}
+                className="absolute min-w-3xl w-4xl right-0 z-50 bottom-0 -translate-y-30 translate-x-60 border-[8px] border-(--neutral-alpha-medium) rounded-[8px] overflow-hidden"
+              />
+            </Fade>
           </Fade>
-        </Fade>
+        </div>
       </div>
     </div>
   );
