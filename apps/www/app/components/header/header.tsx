@@ -53,7 +53,7 @@ const Header: React.FC = () => {
               size="s"
               className="ml-2"
               prefixIcon={"github"}
-              suffixIcon={<span>{stars !== null ? stars.toLocaleString() : "..."}</span>}
+              suffixIcon={<span>{stars !== null ? stars?.toString() : "..."}</span>}
             >
               Star on Github
             </Button>
