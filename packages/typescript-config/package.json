@@ -2,7 +2,7 @@
   "name": "@nuvix/typescript-config",
   "version": "0.0.0",
   "private": true,
-  "license": "PROPRIETARY",
+  "license": "BSD-3-Clause",
   "publishConfig": {
     "access": "public"
   }
