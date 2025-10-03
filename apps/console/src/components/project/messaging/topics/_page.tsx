@@ -142,7 +142,7 @@ const TopicsPage: React.FC<TopicsPageProps> = () => {
 
       <DataGridProvider<Models.Topic>
         columns={columns}
-        data={data.topics ?? []}
+        data={data.data ?? []}
         manualPagination
         rowCount={data.total}
         loading={isFetching}

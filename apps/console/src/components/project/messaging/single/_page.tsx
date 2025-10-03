@@ -37,7 +37,7 @@ export const MessageSinglePage = ({ messageId }: { messageId: string }) => {
 
     const targetsById: Record<string, Models.Target> = {};
     const targetsPromise = sdk.messaging.listTargets(messageId).then((response) => {
-      response.targets.forEach((target) => {
+      response.data.forEach((target) => {
         targetsById[target.$id] = target;
       });
     });

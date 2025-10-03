@@ -32,7 +32,7 @@ export function HeaderProject(props: React.ComponentProps<typeof Button>) {
   React.useEffect(() => {
     async function getAll() {
       const all = await projects.list();
-      setList(all.projects);
+      setList(all.data);
     }
     getAll();
   }, []);

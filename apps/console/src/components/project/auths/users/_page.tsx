@@ -158,7 +158,7 @@ const UsersPage = () => {
 
       <DataGridProvider<Models.User<any>>
         columns={columns}
-        data={data.users ?? []}
+        data={data.data ?? []}
         manualPagination
         rowCount={data.total}
         loading={isFetching}

@@ -19,7 +19,7 @@ export const Topics = ({ add, sdk, onClose, groups, type }: TopicsProps) => {
     const queries = [];
     queries.push(Query.limit(limit), Query.offset(offset));
     const res = await sdk.messaging.listTopics(queries, search);
-    return { data: res.topics, total: res.total };
+    return { data: res.data, total: res.total };
   };
 
   const { selected, toggleSelected, setSelected, ...rest } = usePaginatedSelector<

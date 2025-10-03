@@ -117,7 +117,7 @@ export const ReferenceRecordPeek = ({ collection, column, value }: ReferenceReco
       <DataGrid
         className="!h-32 rounded-b border-0"
         columns={columns}
-        rows={data?.documents ?? []}
+        rows={data?.data ?? []}
         onCellDoubleClick={(_, e) => {
           e.preventDefault();
           e.stopPropagation();

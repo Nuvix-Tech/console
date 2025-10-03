@@ -152,7 +152,7 @@ const MembersPage = () => {
 
       <DataGridProvider<Models.Membership>
         columns={columns}
-        data={data.memberships}
+        data={data.data}
         manualPagination
         rowCount={data.total}
         loading={isFetching}

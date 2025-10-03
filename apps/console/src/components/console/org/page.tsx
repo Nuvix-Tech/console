@@ -55,7 +55,7 @@ export const OrganizationPage = ({ id }: Props) => {
 
       <DataGridProvider
         columns={[]}
-        data={data?.projects || []}
+        data={data?.data || []}
         manualPagination
         rowCount={data?.total || 0}
         loading={isPending}
@@ -64,7 +64,7 @@ export const OrganizationPage = ({ id }: Props) => {
         <Search placeholder="Search for a project" />
 
         <EmptyState
-          show={!isPending && !data?.projects.length}
+          show={!isPending && !data?.data.length}
           title={hasQuery ? "No Matching Projects" : "No Projects Available"}
           description={
             hasQuery
@@ -95,7 +95,7 @@ export const OrganizationPage = ({ id }: Props) => {
           {isPending || !data ? (
             <GridSkeleton limit={3} />
           ) : (
-            data.projects.map((project) => <ProjectCard key={project.$id} project={project} />)
+            data.data.map((project) => <ProjectCard key={project.$id} project={project} />)
           )}
         </GridWrapper>
 

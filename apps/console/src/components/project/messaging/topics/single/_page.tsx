@@ -93,7 +93,7 @@ export const TopicSinglePage = ({ topicId }: { topicId: string }) => {
       hasPermission={canCreateSubscribers}
       component={CreateSubscribers}
       size="s"
-      extraProps={{ refetch, subscribers: data.subscribers }}
+      extraProps={{ refetch, subscribers: data.data }}
     />
   );
   const onDelete = async (values: Models.Subscriber[]) => {
@@ -143,7 +143,7 @@ export const TopicSinglePage = ({ topicId }: { topicId: string }) => {
 
       <DataGridProvider<Models.Subscriber>
         columns={columns}
-        data={data.subscribers}
+        data={data.data}
         manualPagination
         rowCount={data.total}
         loading={isFetching}
@@ -159,7 +159,7 @@ export const TopicSinglePage = ({ topicId }: { topicId: string }) => {
           primaryComponent={create}
         />
 
-        {(data.subscribers.length > 0 || hasQuery) && (
+        {(data.data.length > 0 || hasQuery) && (
           <>
             <HStack justifyContent="space-between" alignItems="center">
               <Search placeholder="Search subscribers by type or ID" height="s" />

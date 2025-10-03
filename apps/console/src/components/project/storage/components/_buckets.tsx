@@ -38,7 +38,7 @@ export const BucketsList = () => {
           New Bucket
         </Button>
 
-        {data?.buckets.map((bucket) => (
+        {data?.data.map((bucket) => (
           <div key={bucket.$id}>
             <ToggleButton
               fillWidth

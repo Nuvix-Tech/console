@@ -22,7 +22,7 @@ export const Files = ({ mimeType }: { mimeType?: string[] }) => {
   const { canCreateFiles } = permissions();
 
   const fetcher = async () => {
-    if (!bucket?.$id) return { files: [], total: 0 };
+    if (!bucket?.$id) return { data: [], total: 0 };
 
     const queries = [];
     if (mimeType?.length) {
@@ -151,7 +151,7 @@ export const Files = ({ mimeType }: { mimeType?: string[] }) => {
       <div className="space-y-4 mt-2">
         <DataGridProvider<Models.File>
           columns={columns}
-          data={data?.files ?? []}
+          data={data?.data ?? []}
           manualPagination
           rowCount={data?.total}
           loading={isFetching}

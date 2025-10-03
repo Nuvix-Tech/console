@@ -42,7 +42,7 @@ export default function Page() {
 
           const updatedUser = await account.updatePrefs({
             ...user.prefs,
-            organization: orgs.teams?.[0]?.$id,
+            organization: orgs.data?.[0]?.$id,
           });
           setUser(updatedUser);
           org = await organizations.get(updatedUser.prefs.organization);

@@ -190,7 +190,7 @@ const CollectionsPage = () => {
       {!error && (
         <DataGridProvider<Models.Collection>
           columns={columns}
-          data={data?.collections || []}
+          data={data?.data || []}
           manualPagination
           rowCount={data?.total}
           loading={isFetching}

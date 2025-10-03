@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { createSelectors } from "../utils";
-import { ModelsX } from "../external-sdk";
+import { ModelsX, SchemaType } from "../external-sdk";
 
 interface SchemaStore {
   schema?: ModelsX.Schema;
@@ -10,15 +10,21 @@ interface SchemaStore {
   setRefetch: (refetch: () => Promise<void>) => void;
 }
 
+/**
+ * @deprecated use `useSchemaQueryState` instead
+ */
 const useSchema = create<SchemaStore>((set) => ({
   schema: {
     $id: "public",
     name: "public",
-    type: "managed",
+    type: SchemaType.Managed,
   },
   setSchema: (schema) => set({ schema }),
   refetch: async () => {},
   setRefetch: (refetch) => set({ refetch }),
 }));
 
+/**
+ * @deprecated use `useSchemaQueryState` instead
+ */
 export const useSchemaStore = createSelectors(useSchema);

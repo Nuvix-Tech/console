@@ -34,13 +34,13 @@ export const ApiLogsPage = () => {
   const { filters, hasActiveFilters } = useFilters();
 
   const fetcher = useCallback((): Promise<Log[]> => {
-    const url = new URL(sdk.client.config.endpoint + "/logs");
+    const url = new URL(sdk.platform.config.endpoint + "/project/logs");
 
     url.searchParams.append("filter", genrateFilterQuery(filters));
     url.searchParams.append("order", "timestamp.desc");
     url.searchParams.append("limit", filters.limit.toString());
-    return sdk.client.call("GET", url);
-  }, [sdk?.client, filters]);
+    return sdk.platform.call("GET", url);
+  }, [sdk?.platform, filters]);
 
   const { data, isPending, isError, error, refetch, isFetching } = useQuery({
     queryKey: rootKeys.logs(project?.$id, filters),

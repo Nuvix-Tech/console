@@ -84,7 +84,7 @@ const SessionPage = () => {
 
       <DataGridProvider<Models.Session>
         columns={columns}
-        data={data.sessions}
+        data={data.data}
         rowCount={data.total}
         loading={isFetching}
       >

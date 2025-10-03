@@ -108,7 +108,7 @@ export const CollectionGrid = ({
     if (!mounted) setMounted(true);
   }, []);
 
-  const rows = data?.documents ?? EMPTY_ARR;
+  const rows = data?.data ?? EMPTY_ARR;
   snap.setCountDocuments(data?.total ?? 0);
 
   return (

@@ -180,7 +180,7 @@ const MessagingPage: React.FC<MessagingPageProps> = () => {
 
       <DataGridProvider<Models.Message>
         columns={columns}
-        data={data.messages ?? []}
+        data={data.data ?? []}
         manualPagination
         rowCount={data.total}
         loading={isFetching}

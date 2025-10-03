@@ -188,7 +188,7 @@ const ForeignRowSelector = ({
                       page={page}
                       setPage={setPage}
                       rowsPerPage={rowsPerPage}
-                      currentPageRowsCount={data?.documents.length || 0}
+                      currentPageRowsCount={data?.data.length || 0}
                       isLoading={isRefetching}
                     />
                     {attribute && !isSelectMany(attribute) ? (
@@ -209,16 +209,16 @@ const ForeignRowSelector = ({
                         <UpdateButton
                           onSelect={onSelect}
                           relationship={relationship}
-                          documents={data.documents}
+                          documents={data.data}
                         />
                       </div>
                     )}
                   </div>
                 </div>
 
-                {data.documents.length > 0 ? (
+                {data.data.length > 0 ? (
                   <SelectorGrid
-                    rows={data.documents}
+                    rows={data.data}
                     onRowSelect={(row) => {
                       if (isSelectMany(attribute!)) return;
                       onSelect(row.$id);

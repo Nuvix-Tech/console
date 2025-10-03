@@ -85,7 +85,7 @@ const Page = () => {
 
       <DataGridProvider<Models.Team<any>>
         columns={columns}
-        data={data.teams}
+        data={data.data}
         manualPagination
         rowCount={data.total}
         loading={isFetching}

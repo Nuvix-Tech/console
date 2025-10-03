@@ -29,7 +29,7 @@ export function HeaderOrganization(props: React.ComponentProps<typeof Button>) {
   React.useEffect(() => {
     async function getAll() {
       const orgs = await orgApi.list<any>();
-      setOrgs(orgs.teams);
+      setOrgs(orgs.data);
     }
     getAll();
   }, []);

@@ -160,7 +160,7 @@ export const AttributesPage: React.FC<Props> = ({ collectionId }) => {
 
       <DataGridProvider<any>
         columns={columns}
-        data={data.attributes}
+        data={data.data}
         rowCount={data.total}
         loading={isFetching}
       >

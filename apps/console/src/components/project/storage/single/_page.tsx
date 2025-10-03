@@ -149,7 +149,7 @@ export const StorageSinglePage: FC<Props> = ({}) => {
 
       <DataGridProvider<Models.File>
         columns={columns}
-        data={data.files}
+        data={data.data}
         manualPagination
         rowCount={data.total}
         loading={isFetching}

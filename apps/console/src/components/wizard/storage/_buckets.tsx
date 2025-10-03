@@ -14,19 +14,19 @@ export const Buckets = () => {
   });
 
   useEffect(() => {
-    setBucket(data.buckets[0]);
-  }, [data.buckets, setBucket]);
+    setBucket(data.data[0]);
+  }, [data.data, setBucket]);
 
   return (
     <div className="w-full py-2">
       <Text variant="label-strong-s">Storage Buckets</Text>
       <div className="flex flex-col w-full gap-2 mt-2">
-        {data.buckets?.length === 0 ? (
+        {data.data?.length === 0 ? (
           <Text variant="body-default-s" align="center" className="text-muted-foreground py-4">
             No storage buckets available. Create a bucket to get started.
           </Text>
         ) : (
-          data.buckets?.map((b) => (
+          data.data?.map((b) => (
             <ToggleButton
               key={b.$id}
               selected={b.$id === bucket?.$id}

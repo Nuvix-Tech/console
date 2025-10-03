@@ -833,15 +833,15 @@ const RelationshipAttributeFormFields: React.FC<{
   const { data, isLoading } = useQuery({
     queryKey: ["collections", schema],
     queryFn: async () => {
-      if (!schema) return { collections: [] };
+      if (!schema) return { data: [] };
       return await sdk.databases.listCollections(schema);
     },
     enabled: !!schema,
   });
 
   const relatedCollectionName = useMemo(
-    () => data?.collections.find((c: any) => c.$id === values.relatedCollection)?.name,
-    [data?.collections, values.relatedCollection],
+    () => data?.data.find((c: any) => c.$id === values.relatedCollection)?.name,
+    [data?.data, values.relatedCollection],
   );
 
   const relationshipDescriptions = useMemo(() => {
@@ -889,7 +889,7 @@ const RelationshipAttributeFormFields: React.FC<{
     setFieldValue("relatedCollection", collectionId);
 
     if (!values.key) {
-      const selectedCollection = data?.collections.find((c: any) => c.$id === collectionId);
+      const selectedCollection = data?.data.find((c: any) => c.$id === collectionId);
       const generatedKey =
         selectedCollection?.name?.replace(/[^a-zA-Z0-9]/g, "").toLowerCase() || "";
       setFieldValue("key", generatedKey);
@@ -898,13 +898,13 @@ const RelationshipAttributeFormFields: React.FC<{
 
   const collectionOptions = useMemo(
     () =>
-      data?.collections
+      data?.data
         .filter((c: any) => c.$id !== collection?.$id)
         .map((c: any) => ({
           value: c.$id,
           label: `${c.name} (${c.$id})`,
         })) ?? [],
-    [data?.collections, collection?.$id],
+    [data?.data, collection?.$id],
   );
 
   return (

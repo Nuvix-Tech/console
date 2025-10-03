@@ -42,7 +42,7 @@ export const OrganizationsPage = () => {
 
       <DataGridProvider<Models.Organization<any>>
         columns={[]}
-        data={data.teams ?? []}
+        data={data.data ?? []}
         manualPagination
         rowCount={data.total}
         loading={isFetching}
@@ -60,7 +60,7 @@ export const OrganizationsPage = () => {
         {(data.total > 0 || hasQuery) && (
           <>
             <GridWrapper>
-              {data.teams.map((team) => (
+              {data.data.map((team) => (
                 <OrgCard org={team} key={team.name} />
               ))}
             </GridWrapper>

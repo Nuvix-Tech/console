@@ -47,7 +47,7 @@ const IdentityPage = () => {
 
       <DataGridProvider<Models.Identity>
         columns={columns}
-        data={data.identities ?? []}
+        data={data.data ?? []}
         rowCount={data.total}
         loading={isFetching}
       >

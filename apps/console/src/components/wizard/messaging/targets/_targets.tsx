@@ -22,7 +22,7 @@ export const Targets = ({ add, sdk, onClose, groups, type, title, description }:
     const queries = [];
     queries.push(Query.limit(limit), Query.offset(offset));
     const res = await sdk.users.list(queries, search);
-    return { data: res.users, total: res.total };
+    return { data: res.data, total: res.total };
   };
 
   const { selected, toggleSelected, setSelected, ...rest } = usePaginatedSelector<

@@ -140,7 +140,7 @@ export const ProvidersPage = () => {
 
       <DataGridProvider<Models.Provider>
         columns={columns}
-        data={data.providers ?? []}
+        data={data.data ?? []}
         manualPagination
         rowCount={data.total}
         loading={isFetching}

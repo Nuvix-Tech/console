@@ -1,5 +1,4 @@
 // import * as Sentry from '@sentry/nextjs'
-import { API_ENDPOINT } from "@/lib/constants";
 import { ProjectSdk } from "@/lib/sdk";
 // import { uuidv4 } from '@/lib/helpers'
 // import createClient from 'openapi-fetch'
@@ -10,7 +9,6 @@ const DEFAULT_HEADERS = {
   Accept: "application/json",
 };
 
-// This file will eventually replace what we currently have in lib/fetchWrapper, but will be currently unused until we get to that refactor
 type Options = {
   query?: Record<string, string | boolean | number | undefined>;
   headers?: Record<string, string>;
@@ -25,12 +23,100 @@ const createClient = async (
   options?: Options,
 ) => {
   try {
-    const data = await sdk.schema.call({
+    const url = new URL(sdk.client.config.endpoint + path);
+
+    // Prepare headers
+    let headers: Record<string, any> = { ...DEFAULT_HEADERS, ...options?.headers };
+
+    // Add cookie fallback if available
+    if (typeof window !== "undefined" && window.localStorage) {
+      const cookieFallback = window.localStorage.getItem("cookieFallback");
+      if (cookieFallback) {
+        headers["X-Fallback-Cookies"] = cookieFallback;
+      }
+    }
+
+    let body: string | FormData | undefined;
+
+    // Handle query parameters for GET requests
+    if (options?.query) {
+      for (const [key, value] of Object.entries(options.query)) {
+        if (value !== undefined) {
+          url.searchParams.append(key, String(value));
+        }
+      }
+    }
+
+    // Handle payload for non-GET requests
+    if (method !== "GET" && options?.payload) {
+      const contentType = headers["content-type"] || headers["Content-Type"];
+
+      switch (contentType) {
+        case "multipart/form-data":
+          const formData = new FormData();
+          for (const [key, value] of Object.entries(options.payload)) {
+            if (value instanceof File) {
+              formData.append(key, value, value.name);
+            } else if (Array.isArray(value)) {
+              for (const nestedValue of value) {
+                formData.append(`${key}[]`, String(nestedValue));
+              }
+            } else if (value !== undefined) {
+              formData.append(key, String(value));
+            }
+          }
+          body = formData;
+          delete headers["content-type"];
+          delete headers["Content-Type"];
+          break;
+        default:
+          body = JSON.stringify(options.payload);
+          if (!contentType) {
+            headers["Content-Type"] = "application/json";
+          }
+          break;
+      }
+    }
+
+    const response = await fetch(url, {
       method,
-      path,
-      ...options,
+      headers,
+      credentials: "include",
+      signal: options?.signal,
+      body,
     });
-    return { data, error: null }; // returning the data received from the SDK call
+
+    const warnings = response.headers.get("x-nuvix-warning");
+    if (warnings) {
+      warnings.split(";").forEach((warning) => console.warn("Warning: " + warning));
+    }
+
+    let data = null;
+    if (response.headers.get("content-type")?.includes("application/json")) {
+      data = await response.json();
+    } else {
+      data = {
+        message: await response.text(),
+      };
+    }
+
+    if (400 <= response.status) {
+      throw new ResponseError(
+        data?.message,
+        response.status,
+        response.headers.get("x-request-id") || undefined,
+      );
+    }
+
+    const cookieFallback = response.headers.get("X-Fallback-Cookies");
+    if (typeof window !== "undefined" && window.localStorage && cookieFallback) {
+      window.console.warn(
+        "Nuvix is using localStorage for session management. Increase your security by adding a custom domain as your API endpoint.",
+      );
+      window.localStorage.setItem("cookieFallback", cookieFallback);
+    }
+
+    return { data, error: null };
   } catch (error) {
     return { data: null, error };
   }

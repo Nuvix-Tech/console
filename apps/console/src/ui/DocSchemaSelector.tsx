@@ -58,7 +58,7 @@ const DocSchemaSelector = ({
     enabled: !!project?.$id && !!sdk,
   });
 
-  const schemas = data?.schemas || [];
+  const schemas = data?.data || [];
 
   return (
     <div className={className}>

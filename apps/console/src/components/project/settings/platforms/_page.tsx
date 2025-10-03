@@ -82,7 +82,7 @@ const PlatformsPage: React.FC = () => {
       />
       <DataGridProvider<Models.Platform>
         columns={columns}
-        data={data?.platforms ?? []}
+        data={data?.data ?? []}
         loading={isFetching}
       >
         <EmptyState

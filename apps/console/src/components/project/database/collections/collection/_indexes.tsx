@@ -126,7 +126,7 @@ export const IndexesPage: React.FC<Props> = ({ collectionId }) => {
 
       <DataGridProvider<Models.Index>
         columns={columns}
-        data={data?.indexes || []}
+        data={data?.data || []}
         rowCount={data?.total || 0}
         loading={isFetching}
       >

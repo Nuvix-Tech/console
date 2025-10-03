@@ -67,7 +67,7 @@ export default function ProjectWrapper({
 
   useEffect(() => {
     if (!schemas) return;
-    setSchemas(schemas.schemas);
+    setSchemas(schemas.data);
   }, [schemas, isPending]);
 
   return (

@@ -25,8 +25,8 @@ import {
   Teams,
   Users,
   Vcs,
+  Schemas,
 } from "@nuvix/console";
-import { Schema } from "./external-sdk";
 
 const API_URL =
   process.env.NEXT_PUBLIC_NUVIX_ENDPOINT ?? process.env.NUVIX_ENDPOINT ?? "https://api.nuvix.in/v1";
@@ -41,6 +41,7 @@ const clientServerProject = new Client().setEndpoint(SERVER_URL).setMode("admin"
 
 const sdkForProject = {
   client: clientProject,
+  platform: clientServerProject,
   account: new Account(clientProject),
   avatars: new Avatars(clientProject),
   // backups: new Backups(clientProject),
@@ -57,7 +58,7 @@ const sdkForProject = {
   vcs: new Vcs(clientProject),
   proxy: new Proxy(clientProject),
   migrations: new Migrations(clientProject),
-  schema: new Schema(clientProject, clientServerProject),
+  schema: new Schemas(clientProject),
 };
 
 const projects = new Projects(clientServer);

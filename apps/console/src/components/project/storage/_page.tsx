@@ -46,7 +46,7 @@ export const StoragePage: FunctionComponent = () => {
 
       <DataGridProvider<Models.Bucket>
         columns={[]}
-        data={data.buckets ?? []}
+        data={data.data ?? []}
         manualPagination
         rowCount={data.total}
         loading={isFetching}
@@ -65,7 +65,7 @@ export const StoragePage: FunctionComponent = () => {
           <>
             <Search placeholder="Search by ID" />
             <GridWrapper>
-              {data.buckets.map((bucket) => (
+              {data.data.map((bucket) => (
                 <StorageCard bucket={bucket} key={bucket.name} />
               ))}
             </GridWrapper>

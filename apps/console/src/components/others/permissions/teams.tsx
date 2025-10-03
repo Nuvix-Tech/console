@@ -19,7 +19,7 @@ export const TeamRole = ({ addRole, sdk, onClose, groups }: TeamRoleProps) => {
     let queris = [];
     queris.push(Query.limit(limit), Query.offset(offset));
     const res = await sdk.teams.list(queris, search);
-    return { data: res.teams, total: res.total };
+    return { data: res.data, total: res.total };
   };
 
   const { ...rest } = usePaginatedSelector({ fetchFunction: fetchTeams, limit: 10 });

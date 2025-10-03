@@ -19,7 +19,7 @@ export const UserRole = ({ addRole, sdk, onClose, groups }: UserRoleProps) => {
     let queris = [];
     queris.push(Query.limit(limit), Query.offset(offset));
     const res = await sdk.users.list(queris, search);
-    return { data: res.users, total: res.total };
+    return { data: res.data, total: res.total };
   };
 
   const { ...rest } = usePaginatedSelector({ fetchFunction: fetchUsers, limit: 10 });

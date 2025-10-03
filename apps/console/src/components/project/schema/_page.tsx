@@ -51,7 +51,7 @@ const DatabasePage = () => {
 
       <DataGridProvider<_Models.Schema>
         columns={[]}
-        data={data?.schemas ?? []}
+        data={data?.data ?? []}
         manualPagination
         rowCount={data?.total}
         loading={isFetching}
@@ -71,7 +71,7 @@ const DatabasePage = () => {
         {((data && data.total > 0) || hasQuery) && (
           <>
             <GridWrapper>
-              {data?.schemas.map((schema) => (
+              {data?.data.map((schema) => (
                 <DatabaseCard database={schema} key={schema.name} />
               ))}
             </GridWrapper>

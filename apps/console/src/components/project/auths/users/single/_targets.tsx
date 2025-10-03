@@ -62,7 +62,7 @@ const TargetPage = () => {
 
       <DataGridProvider<Models.Target>
         columns={columns}
-        data={data.targets}
+        data={data.data}
         rowCount={data.total}
         loading={isFetching}
       >
