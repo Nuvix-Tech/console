@@ -1,16 +1,17 @@
 export const IS_PLATFORM = process.env.NEXT_PUBLIC_IS_PLATFORM === "true";
+export const isPlatform = IS_PLATFORM;
 
-export const API_URL = (() => {
-  //  If running in platform, use API_URL from the env var
-  if (IS_PLATFORM) return process.env.NEXT_PUBLIC_API_URL!;
-  // If running in browser, let it add the host
-  if (typeof window !== "undefined") return "/api";
-  // If running self-hosted Vercel preview, use VERCEL_URL
-  if (!!process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}/api`;
-  // If running on self-hosted, use NEXT_PUBLIC_SITE_URL
-  if (!!process.env.NEXT_PUBLIC_SITE_URL) return `${process.env.NEXT_PUBLIC_SITE_URL}/api`;
-  return "/api";
-})();
+// export const API_URL = (() => {
+//   //  If running in platform, use API_URL from the env var
+//   if (IS_PLATFORM) return process.env.NEXT_PUBLIC_API_URL!;
+//   // If running in browser, let it add the host
+//   if (typeof window !== "undefined") return "/api";
+//   // If running self-hosted Vercel preview, use VERCEL_URL
+//   if (!!process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}/api`;
+//   // If running on self-hosted, use NEXT_PUBLIC_SITE_URL
+//   if (!!process.env.NEXT_PUBLIC_SITE_URL) return `${process.env.NEXT_PUBLIC_SITE_URL}/api`;
+//   return "/api";
+// })();
 
 export const PG_META_URL = IS_PLATFORM
   ? process.env.PLATFORM_PG_META_URL

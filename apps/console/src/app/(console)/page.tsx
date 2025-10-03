@@ -6,13 +6,16 @@ import { useEffect, useState } from "react";
 import { useApp } from "@/lib/store";
 import LoadingUI from "@/components/loading";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { isPlatform } from "@/lib/constants";
+import ErrorPage from "@/components/others/page-error";
 
 export default function Page() {
   const { user, setUser, setScopes } = useApp((state) => state);
-  const [org, setOrg] = useLocalStorage<string | null>("org", null);
+  const [_, setOrg] = useLocalStorage<string | null>("org", null);
   const { organizations, account } = sdkForConsole;
   const { replace } = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchUser() {
@@ -38,25 +41,27 @@ export default function Page() {
             replace("/create-organization");
             setIsLoading(false);
             return;
+          } else {
+            const updatedUser = await account.updatePrefs({
+              ...user.prefs,
+              organization: orgs.data?.[0]?.$id,
+            });
+            setUser(updatedUser);
+            org = await organizations.get(updatedUser.prefs.organization);
           }
-
-          const updatedUser = await account.updatePrefs({
-            ...user.prefs,
-            organization: orgs.data?.[0]?.$id,
-          });
-          setUser(updatedUser);
-          org = await organizations.get(updatedUser.prefs.organization);
         }
 
         if (org) {
           setOrg(org.$id);
-          const scopes = await organizations.getScopes(org.$id);
-          setScopes(scopes);
+          if (isPlatform) {
+            const scopes = await organizations.getScopes(org.$id);
+            setScopes(scopes);
+          }
           replace(`/organization/${org.$id}`);
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
-        // Handle error, e.g., show error message
+        setError("An error occurred while fetching user data.");
       } finally {
         setIsLoading(false);
       }
@@ -69,5 +74,7 @@ export default function Page() {
     return <LoadingUI />;
   }
 
-  return null; // TODO: Show some fallback UI if needed
+  return error ? (
+    <ErrorPage error={new Error(error)} reset={() => window.location.reload()} />
+  ) : null;
 }
