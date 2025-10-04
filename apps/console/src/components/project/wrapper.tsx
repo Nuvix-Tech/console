@@ -7,6 +7,8 @@ import { UploadProvider } from "@/ui/uploader";
 import { useListSchemasQuery } from "@/data/database/schemas-query";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useRouter } from "next/navigation";
+import { isPlatform } from "@/lib/constants";
+import { Models } from "@nuvix/console";
 
 export default function ProjectWrapper({
   children,
@@ -43,7 +45,10 @@ export default function ProjectWrapper({
   async function fetcher() {
     let project = await (projects as any).get(id, orgId);
     const org = await organizations.get(project.teamId);
-    const scopes = await organizations.getScopes(project.teamId);
+    let scopes: Models.Roles = { scopes: [], roles: [] };
+    if (isPlatform) {
+      scopes = await organizations.getScopes(project.teamId);
+    }
     return { project, org, scopes };
   }
 

@@ -24,5 +24,4 @@ export const baseMdxComponents: MDXComponents = {
   //     <Box as="pre" bg="bg.muted" rounded="md" p="4" overflowX="auto" fontSize="sm" {...props} />
   // ),
   Text,
-  // textDecoration="underline"
 };

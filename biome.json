@@ -20,7 +20,8 @@
       "!**/.vscode/**",
       "!**/.DS_Store",
       "!**/.next/**",
-      "!**/.turbo/**"
+      "!**/.turbo/**",
+      "!apps/docs/src/content/docs/api"
     ]
   },
   "formatter": {

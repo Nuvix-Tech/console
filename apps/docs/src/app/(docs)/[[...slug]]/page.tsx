@@ -14,22 +14,6 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
   return (
     <>
       <DocsPage toc={page.data.toc} full={page.data.full} tableOfContent={{ style: "clerk" }}>
-        <Column
-          as="div"
-          fillWidth
-          className="mb-4 text-center !inline-block brand-on-background-weak p-3 border border-border rounded-full"
-        >
-          Docs are not ready yet. Visit the main site at{" "}
-          <a
-            href="https://nuvix.in"
-            target="_blank"
-            rel="noreferrer"
-            className="!underline !underline-offset-4 font-medium inline accent-on-background-weak"
-          >
-            nuvix.in
-          </a>
-          .
-        </Column>
         <DocsTitle>{page.data.title}</DocsTitle>
         <DocsDescription>{page.data.description}</DocsDescription>
         <DocsBody>

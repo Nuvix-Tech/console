@@ -11,12 +11,15 @@ import { HeadingLink } from "@nuvix/ui/modules";
 import { MDXComponents } from "mdx/types";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import { CodeBlock, Pre } from "fumadocs-ui/components/codeblock";
+import { APIPage } from "fumadocs-openapi/ui";
+import { openapi3 } from "./lib/openapi";
 
 const Callout = defaultMdxComponents.Callout;
 
 export function mdxComponents(components?: MDXComponents): MDXComponents {
   return {
     ...defaultMdxComponents,
+    APIPage: (props) => <APIPage {...openapi3.getAPIPageProps(props)} />,
     ...components,
     Callout: ({ className, ...props }) => {
       return (
