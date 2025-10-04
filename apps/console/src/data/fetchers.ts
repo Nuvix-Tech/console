@@ -26,7 +26,7 @@ const createClient = async (
     const url = new URL(SERVER_URL + "/database" + path);
 
     // Prepare headers
-    let headers: Record<string, any> = { ...DEFAULT_HEADERS, ...options?.headers };
+    let headers: Record<string, any> = { ...DEFAULT_HEADERS, ...options?.headers, ...sdk.client.headers };
 
     // Add cookie fallback if available
     if (typeof window !== "undefined" && window.localStorage) {
