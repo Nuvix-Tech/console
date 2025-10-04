@@ -1,7 +1,7 @@
 import "@nuvix/ui/styles/index.scss";
 import "@nuvix/ui/tokens/index.scss";
-// import "@/styles/main.scss";
-// import "@nuvix/sui/globals.css";
+import "@/styles/main.scss";
+import "@nuvix/sui/globals.css";
 
 import type { Metadata } from "next";
 import { headers, cookies } from "next/headers";
@@ -87,8 +87,8 @@ export default async function Layout({ children }: { children: React.ReactNode }
         data-neutral={style.neutral}
         data-brand={style.brand}
         data-accent={style.accent}
-        data-border={"conservative"}
-        data-solid={"color"}
+        data-border={style.border}
+        data-solid={style.solid}
         data-solid-style={style.solidStyle}
         data-surface={style.surface}
         data-transition={style.transition}

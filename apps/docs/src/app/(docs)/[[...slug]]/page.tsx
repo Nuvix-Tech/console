@@ -2,7 +2,6 @@ import { source } from "@/lib/source";
 import { notFound } from "next/navigation";
 import { mdxComponents } from "@/mdx-components";
 import { DocsBody, DocsDescription, DocsPage, DocsTitle } from "fumadocs-ui/page";
-import { Column } from "@nuvix/ui/components";
 
 export default async function Page(props: { params: Promise<{ slug?: string[] }> }) {
   const params = await props.params;

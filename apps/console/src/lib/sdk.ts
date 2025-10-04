@@ -28,10 +28,10 @@ import {
   Schemas,
 } from "@nuvix/console";
 
-const API_URL =
+export const API_URL =
   process.env.NEXT_PUBLIC_NUVIX_ENDPOINT ?? process.env.NUVIX_ENDPOINT ?? "https://api.nuvix.in/v1";
 
-const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_ENDPOINT ?? "https://server.nuvix.in";
+export const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_ENDPOINT ?? "https://server.nuvix.in";
 
 const clientConsole = new Client().setEndpoint(API_URL).setProject("console");
 const clientServer = new Client().setEndpoint(SERVER_URL).setProject("console");

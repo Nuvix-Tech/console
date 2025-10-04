@@ -1,5 +1,5 @@
 // import * as Sentry from '@sentry/nextjs'
-import { ProjectSdk } from "@/lib/sdk";
+import { ProjectSdk, SERVER_URL } from "@/lib/sdk";
 // import { uuidv4 } from '@/lib/helpers'
 // import createClient from 'openapi-fetch'
 import { ResponseError } from "@/types";
@@ -23,7 +23,7 @@ const createClient = async (
   options?: Options,
 ) => {
   try {
-    const url = new URL(sdk.client.config.endpoint + path);
+    const url = new URL(SERVER_URL + path);
 
     // Prepare headers
     let headers: Record<string, any> = { ...DEFAULT_HEADERS, ...options?.headers };
