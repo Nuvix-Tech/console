@@ -23,7 +23,7 @@ const createClient = async (
   options?: Options,
 ) => {
   try {
-    const url = new URL(SERVER_URL + path);
+    const url = new URL(SERVER_URL + "/database" + path);
 
     // Prepare headers
     let headers: Record<string, any> = { ...DEFAULT_HEADERS, ...options?.headers };

@@ -49,7 +49,7 @@ export const Sidebar = ({ href }: { href?: string }) => {
   );
 
   const entityTypes = useMemo(
-    () => (data as any)?.pages.flatMap((page: any) => page.collections) || [],
+    () => (data as any)?.pages.flatMap((page: any) => page.data) || [],
     [(data as any)?.pages],
   );
 
