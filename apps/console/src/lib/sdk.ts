@@ -25,8 +25,8 @@ import {
   Teams,
   Users,
   Vcs,
-  Schemas,
 } from "@nuvix/console";
+import { Schemas } from "./external-sdk";
 
 export const API_URL =
   process.env.NEXT_PUBLIC_NUVIX_ENDPOINT ?? process.env.NUVIX_ENDPOINT ?? "https://api.nuvix.in/v1";

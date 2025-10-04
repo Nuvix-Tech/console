@@ -1,3 +1,6 @@
+// NOTE: This component is deprecated.
+// Schema Creation is now handled in SidepanelEditor component.
+// This will be removed in future releases.
 import { CustomID } from "@/components/_custom_id";
 import { FormDialog, InputField, SubmitButton } from "@/components/others/forms";
 import { useProjectStore } from "@/lib/store";
@@ -16,6 +19,9 @@ const schema = y.object({
   id: y.string().optional(),
 });
 
+/**
+ * @deprecated
+ */
 export const CreateDatabase = ({ onClose, isOpen }: CreateDatabaseProps) => {
   const sdk = useProjectStore.use.sdk();
   const { addToast } = useToast();
