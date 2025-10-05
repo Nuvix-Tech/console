@@ -27,6 +27,7 @@ import {
   Vcs,
 } from "@nuvix/console";
 import { Schemas } from "./external-sdk";
+import { PLATFORM_URL } from "./constants";
 
 export const API_URL =
   process.env.NEXT_PUBLIC_NUVIX_ENDPOINT ?? process.env.NUVIX_ENDPOINT ?? "https://api.nuvix.in/v1";
@@ -184,3 +185,5 @@ export type ProjectSdk = typeof sdkForProject;
 
 export { sdkForConsole, getProjectSdk };
 export type { sdkForProject };
+
+export const platformClient = new Client().setEndpoint(PLATFORM_URL).setProject("console");

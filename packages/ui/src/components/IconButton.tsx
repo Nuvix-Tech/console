@@ -103,7 +103,7 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps | AnchorProps>(
 
     const content = (
       <>
-        {children ? children : <Icon name={icon} size={size} />}
+        {children ? children : <Icon name={icon} size={size === "l" ? "m" : "s"} />}
         {tooltip &&
           isTooltipVisible &&
           coords &&

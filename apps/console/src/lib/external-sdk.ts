@@ -98,6 +98,7 @@ export class Schemas extends BaseSchemas {
       }
     }
     const apiHeaders: { [header: string]: string } = {
+      ...this.client.headers,
       "content-type": "application/json",
       ...headers,
     };

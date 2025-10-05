@@ -108,3 +108,5 @@ export const KB = 1024;
 
 export * from "./cookies";
 export * from "./schemas";
+
+export const PLATFORM_URL = process.env.NEXT_PUBLIC_PLATFORM_URL || "https://server.nuvix.in";

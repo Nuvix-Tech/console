@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocalStorageQuery } from "@/hooks/useLocalStorage";
-import { sdkForConsole } from "@/lib/sdk";
+import { platformClient } from "@/lib/sdk";
 import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/popover";
 import { Button, Icon, Text, Textarea } from "@nuvix/ui/components";
 
@@ -10,7 +10,6 @@ interface FeedbackResponse {
 }
 
 export const FeedbackButton = () => {
-  const { client } = sdkForConsole;
   const [lastAttempt, setLastAttempt] = useLocalStorageQuery<number>("nx_last_feedback_prompt", 0);
 
   const [feedback, setFeedback] = useState("");
@@ -40,7 +39,7 @@ export const FeedbackButton = () => {
     setError(null);
 
     try {
-      const url = new URL(client.config.endpoint + "/internal/feedback");
+      const url = new URL(platformClient.config.endpoint + "/internal/feedback");
 
       const headers = {
         "content-type": "application/json",
@@ -50,7 +49,7 @@ export const FeedbackButton = () => {
         content: feedback.trim(),
       };
 
-      const res = (await client.call("post", url, headers, payload)) as FeedbackResponse;
+      const res = (await platformClient.call("post", url, headers, payload)) as FeedbackResponse;
 
       if (res.success) {
         setSuccess(true);
