@@ -39,7 +39,7 @@ export const CreateUser = ({ onClose, isOpen }: CreateUserProps) => {
         description: "Add a new user to your project",
         isOpen,
         onClose,
-        footer: <SubmitButton label="Create" />,
+        footer: <SubmitButton label="Create" dirtyCheck={false} />,
       }}
       form={{
         validationSchema: schema,
