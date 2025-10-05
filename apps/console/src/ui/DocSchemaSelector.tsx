@@ -16,7 +16,8 @@ import { ScrollArea } from "@nuvix/sui/components/scroll-area";
 import { Skeleton } from "@nuvix/sui/components/skeleton";
 import { useProjectStore } from "@/lib/store";
 import { Button } from "@nuvix/ui/components";
-import { useQuery } from "@tanstack/react-query";
+import { useListSchemasQuery } from "@/data/database/schemas-query";
+import { SchemaType } from "@/lib/external-sdk";
 
 interface SchemaSelectorProps {
   className?: string;
@@ -52,11 +53,16 @@ const DocSchemaSelector = ({
     isError: isSchemasError,
     error: schemasError,
     refetch: refetchSchemas,
-  } = useQuery({
-    queryKey: ["doc-schemas", project?.$id],
-    queryFn: () => sdk.schema.list("document"),
-    enabled: !!project?.$id && !!sdk,
-  });
+  } = useListSchemasQuery(
+    {
+      projectRef: project?.$id,
+      sdk: sdk,
+      type: SchemaType.Document,
+    },
+    {
+      enabled: !!project?.$id && !!sdk,
+    },
+  );
 
   const schemas = data?.data || [];
 

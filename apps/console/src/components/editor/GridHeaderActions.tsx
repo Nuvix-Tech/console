@@ -78,14 +78,19 @@ export const GridHeaderActions = ({ table, isRefetching }: GridHeaderActionsProp
   const snap = useTableEditorTableStateSnapshot();
   const editor = useTableEditorStateSnapshot();
   const showHeaderActions = snap.selectedRows.size === 0;
-  const isManaged = useCheckSchemaType({ schema: table.schema, type: "managed" });
+  const { isSchemaType: isManaged } = useCheckSchemaType({ schema: table.schema, type: "managed" });
   const isPermsTable = isManaged && table.name.endsWith("_perms") && isTable;
 
   const projectRef = project?.$id;
-  const { data } = useDatabasePoliciesQuery({
-    projectRef,
-    sdk,
-  });
+  const { data } = useDatabasePoliciesQuery(
+    {
+      projectRef,
+      sdk,
+    },
+    {
+      enabled: isTable && !isSchemaLocked && !isPermsTable,
+    },
+  );
   const policies = (data ?? []).filter(
     (policy: any) => policy.schema === table.schema && policy.table === table.name,
   );
@@ -232,7 +237,7 @@ export const GridHeaderActions = ({ table, isRefetching }: GridHeaderActionsProp
                       "RLS is enabled for this table, but no policies are set. Select queries may return 0 results."
                     }
                     tooltipPosition="left"
-                    href={`/project/${projectRef}/auth/policies?search=${table.id}&schema=${table.schema}`}
+                    href={`/project/${projectRef}/database/policies?search=${table.id}&schema=${table.schema}`}
                   >
                     Add RLS policy
                   </Button>

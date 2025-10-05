@@ -23,100 +23,12 @@ const createClient = async (
   options?: Options,
 ) => {
   try {
-    const url = new URL(SERVER_URL + "/database" + path);
-
-    // Prepare headers
-    let headers: Record<string, any> = { ...DEFAULT_HEADERS, ...options?.headers, ...sdk.client.headers };
-
-    // Add cookie fallback if available
-    if (typeof window !== "undefined" && window.localStorage) {
-      const cookieFallback = window.localStorage.getItem("cookieFallback");
-      if (cookieFallback) {
-        headers["X-Fallback-Cookies"] = cookieFallback;
-      }
-    }
-
-    let body: string | FormData | undefined;
-
-    // Handle query parameters for GET requests
-    if (options?.query) {
-      for (const [key, value] of Object.entries(options.query)) {
-        if (value !== undefined) {
-          url.searchParams.append(key, String(value));
-        }
-      }
-    }
-
-    // Handle payload for non-GET requests
-    if (method !== "GET" && options?.payload) {
-      const contentType = headers["content-type"] || headers["Content-Type"];
-
-      switch (contentType) {
-        case "multipart/form-data":
-          const formData = new FormData();
-          for (const [key, value] of Object.entries(options.payload)) {
-            if (value instanceof File) {
-              formData.append(key, value, value.name);
-            } else if (Array.isArray(value)) {
-              for (const nestedValue of value) {
-                formData.append(`${key}[]`, String(nestedValue));
-              }
-            } else if (value !== undefined) {
-              formData.append(key, String(value));
-            }
-          }
-          body = formData;
-          delete headers["content-type"];
-          delete headers["Content-Type"];
-          break;
-        default:
-          body = JSON.stringify(options.payload);
-          if (!contentType) {
-            headers["Content-Type"] = "application/json";
-          }
-          break;
-      }
-    }
-
-    const response = await fetch(url, {
+    const data = await sdk.schema.call({
       method,
-      headers,
-      credentials: "include",
-      signal: options?.signal,
-      body,
+      path,
+      ...options,
     });
-
-    const warnings = response.headers.get("x-nuvix-warning");
-    if (warnings) {
-      warnings.split(";").forEach((warning) => console.warn("Warning: " + warning));
-    }
-
-    let data = null;
-    if (response.headers.get("content-type")?.includes("application/json")) {
-      data = await response.json();
-    } else {
-      data = {
-        message: await response.text(),
-      };
-    }
-
-    if (400 <= response.status) {
-      throw new ResponseError(
-        data?.message,
-        response.status,
-        response.headers.get("x-request-id") || undefined,
-      );
-    }
-
-    const cookieFallback = response.headers.get("X-Fallback-Cookies");
-    if (typeof window !== "undefined" && window.localStorage && cookieFallback) {
-      window.console.warn(
-        "Nuvix is using localStorage for session management. Increase your security by adding a custom domain as your API endpoint.",
-      );
-      window.localStorage.setItem("cookieFallback", cookieFallback);
-    }
-
-    return { data, error: null };
+    return { data, error: null }; // returning the data received from the SDK call
   } catch (error) {
     return { data: null, error };
   }

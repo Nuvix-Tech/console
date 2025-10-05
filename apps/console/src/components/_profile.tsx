@@ -41,7 +41,7 @@ export function UserProfile(props: Partial<React.ComponentProps<typeof UserMenu>
         avatarProps={{
           ...props.avatarProps,
           empty: !user,
-          src: avatars.getInitials(user.name, 100, 100),
+          src: avatars.getInitials(user?.name, 100, 100),
         }}
         loading={!user}
         dropClass="!z-[999]"
@@ -49,7 +49,7 @@ export function UserProfile(props: Partial<React.ComponentProps<typeof UserMenu>
         dropdown={
           <>
             <div className="px-4 py-2 border-b mb-2">
-              <Text onBackground="neutral-medium">{user.email}</Text>
+              <Text onBackground="neutral-medium">{user?.email}</Text>
             </div>
             <Option
               label="Account"

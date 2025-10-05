@@ -6,7 +6,7 @@ import { executeSql, ExecuteSqlError } from "@/data/sql/execute-sql-query";
 import { databaseKeys } from "./keys";
 import { ProjectSdk } from "@/lib/sdk";
 import { QueryOptions } from "@/types";
-import type { ModelsX } from "@/lib/external-sdk";
+import type { ModelsX, SchemaType } from "@/lib/external-sdk";
 import { type NuvixException } from "@nuvix/console";
 
 export type SchemasVariables = {
@@ -61,16 +61,17 @@ export function prefetchSchemas(client: QueryClient, { projectRef, sdk }: Schema
 }
 
 export async function getListSchemas(
-  { projectRef, sdk, limit, page, search }: ListSchemasVars,
+  { projectRef, sdk, limit, page, search, type }: ListSchemasVars,
   signal?: AbortSignal,
 ) {
-  return await sdk.schema.list(undefined, limit, page, search);
+  return await sdk.schema.list(type, limit, page, search);
 }
 
 type ListSchemasVars = SchemasVariables & {
   limit?: number;
   page?: number;
   search?: string;
+  type?: SchemaType;
 };
 
 export const useListSchemasQuery = <TData = ModelsX.SchemaList>(
