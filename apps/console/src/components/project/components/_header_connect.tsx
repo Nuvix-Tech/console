@@ -9,8 +9,11 @@ import {
   // DrawerTitle,
   DrawerTrigger,
 } from "@nuvix/sui/components/drawer";
+import { IS_PLATFORM } from "@/lib/constants";
 
 export const ConnectButton = () => {
+  if (!IS_PLATFORM) return null;
+
   return (
     <Drawer modal>
       <DrawerTrigger asChild>

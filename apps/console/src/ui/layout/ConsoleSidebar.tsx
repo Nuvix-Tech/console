@@ -1,5 +1,6 @@
 "use client";
 
+import { IS_PLATFORM } from "@/lib/constants";
 import { cn } from "@nuvix/sui/lib/utils";
 import { Column, IconProps, Tag, ToggleButton } from "@nuvix/ui/components";
 import { useParams, usePathname } from "next/navigation";
@@ -44,21 +45,25 @@ const ConsoleSidebar: React.FC<Props> = ({ inMobile, onClose }) => {
           href={href("members")}
           onClose={onClose}
         />
-        <SidebarItem
-          label="Usage"
-          icon="usage"
-          selected={isSelected("usage")}
-          href={href("usage")}
-          onClose={onClose}
-        />
+        {IS_PLATFORM && (
+          <>
+            <SidebarItem
+              label="Usage"
+              icon="usage"
+              selected={isSelected("usage")}
+              href={href("usage")}
+              onClose={onClose}
+            />
 
-        <SidebarItem
-          label="Billing"
-          icon="billing"
-          selected={isSelected("billing")}
-          href={href("billing")}
-          onClose={onClose}
-        />
+            <SidebarItem
+              label="Billing"
+              icon="billing"
+              selected={isSelected("billing")}
+              href={href("billing")}
+              onClose={onClose}
+            />
+          </>
+        )}
         <SidebarItem
           label="Settings"
           icon="settings"
@@ -71,7 +76,6 @@ const ConsoleSidebar: React.FC<Props> = ({ inMobile, onClose }) => {
   );
 };
 
-// Reusable Sidebar Item Component
 type SidebarItemProps = {
   label: string;
   icon?: IconProps["name"];

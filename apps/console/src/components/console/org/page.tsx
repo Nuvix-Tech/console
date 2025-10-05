@@ -11,6 +11,8 @@ import { useSearchQuery } from "@/hooks/useQuery";
 import { useWizard } from "@/hooks/useWizard";
 import { useQuery } from "@tanstack/react-query";
 import { useAppStore } from "@/lib/store";
+import { IS_PLATFORM } from "@/lib/constants";
+import React from "react";
 
 type Props = {
   id: string;
@@ -40,16 +42,18 @@ export const OrganizationPage = ({ id }: Props) => {
       <PageHeading
         heading="Projects"
         right={
-          <Button
-            prefixIcon="plus"
-            size="s"
-            // disabled={!vars["project:create"]}
-            onClick={createProject}
-            data-cy="create-project-button"
-            tooltip="Create a new project"
-          >
-            New project
-          </Button>
+          IS_PLATFORM && (
+            <Button
+              prefixIcon="plus"
+              size="s"
+              // disabled={!vars["project:create"]}
+              onClick={createProject}
+              data-cy="create-project-button"
+              tooltip="Create a new project"
+            >
+              New project
+            </Button>
+          )
         }
       />
 

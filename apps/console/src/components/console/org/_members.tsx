@@ -16,6 +16,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { InviteMember } from "./components/_invite_member";
 import { sdkForConsole } from "@/lib/sdk";
 import { Status } from "@nuvix/cui/status";
+import { IS_PLATFORM } from "@/lib/constants";
 
 const OrgMembersPage = () => {
   const { organization, permissions } = useAppStore((s) => s);
@@ -134,14 +135,14 @@ const OrgMembersPage = () => {
     },
   ];
 
-  const create = (
+  const create = IS_PLATFORM ? (
     <CreateButton
       hasPermission={true}
       label="Invite Member"
       component={InviteMember}
       extraProps={{ refetch }}
     />
-  );
+  ) : undefined;
 
   return (
     <PageContainer>

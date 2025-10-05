@@ -1,3 +1,4 @@
+import { IS_PLATFORM } from "@/lib/constants";
 import { Popover, PopoverTrigger, PopoverContent } from "@nuvix/sui/components/popover";
 import { Button, Icon, Text } from "@nuvix/ui/components";
 
@@ -37,7 +38,7 @@ export const HelpButton = () => {
             </a>
 
             <a
-              href="https://github.com/orgs/Nuvix-Tech/discussions"
+              href="https://github.com/Nuvix-Tech/nuvix/issues/new"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-3 p-3 rounded-xs border hover:bg-muted transition-colors group"
@@ -53,18 +54,20 @@ export const HelpButton = () => {
               </div>
             </a>
 
-            <a
-              href="mailto:support@nuvix.in"
-              className="flex items-center gap-3 p-3 rounded-xs border hover:bg-muted transition-colors group"
-            >
-              <Icon name="mail" />
-              <div>
-                <div className="font-medium text-(--neutral-on-background-medium) hover:text-(--neutral-on-background-strong)">
-                  Contact Support
+            {IS_PLATFORM && (
+              <a
+                href="mailto:support@nuvix.in"
+                className="flex items-center gap-3 p-3 rounded-xs border hover:bg-muted transition-colors group"
+              >
+                <Icon name="mail" />
+                <div>
+                  <div className="font-medium text-(--neutral-on-background-medium) hover:text-(--neutral-on-background-strong)">
+                    Contact Support
+                  </div>
+                  <div className="text-sm neutral-on-background-weak">Get help from our team</div>
                 </div>
-                <div className="text-sm neutral-on-background-weak">Get help from our team</div>
-              </div>
-            </a>
+              </a>
+            )}
           </div>
         </div>
       </PopoverContent>

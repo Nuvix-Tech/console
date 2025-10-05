@@ -47,22 +47,22 @@ const DesktopHeader = () => {
         position="relative"
       >
         <Row
-          className="absolute left-0 -z-1 hidden md:block items-center"
+          className="absolute left-0 -z-1 hidden md:block items-center !top-0 border-b border-dotted !border-(--neutral-alpha-weak)"
           background="surface"
           width={14}
           height={"48"}
           as={"span"}
         >
-          <Row marginLeft="8" marginRight="16">
+          <Row marginLeft="16" marginRight="16" className="!-mt-1">
             <Logo
               icon={false}
-              size="m"
+              size="s"
               className="is-only-dark"
               wordmarkSrc="/trademark/logo-dark.svg"
             />
             <Logo
               icon={false}
-              size="m"
+              size="s"
               className="is-only-light"
               wordmarkSrc="/trademark/logo-light.svg"
             />
