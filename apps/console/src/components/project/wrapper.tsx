@@ -27,13 +27,14 @@ export default function ProjectWrapper({
   const setUpdateFn = useProjectStore.use.setUpdateFn();
   const sdk = useProjectStore.use.sdk();
   const setSchemas = useProjectStore.use.setSchemas();
+  const project = useProjectStore.use.project?.();
   const { data: schemas, isPending } = useListSchemasQuery(
     {
-      projectRef: id,
+      projectRef: project?.$id,
       sdk,
     },
     {
-      enabled: !!id && !!sdk,
+      enabled: !!id && !!sdk && !!project,
       staleTime: Infinity,
     },
   );
@@ -52,7 +53,7 @@ export default function ProjectWrapper({
     return { project, org, scopes };
   }
 
-  const { data } = useSuspenseQuery({
+  const { data, error, isError } = useSuspenseQuery({
     queryKey: ["project", id],
     queryFn: fetcher,
   });
@@ -74,6 +75,12 @@ export default function ProjectWrapper({
     if (!schemas) return;
     setSchemas(schemas.data);
   }, [schemas, isPending]);
+
+  useEffect(() => {
+    if (isError) {
+      replace("/");
+    }
+  }, [isError, error]);
 
   return (
     <>

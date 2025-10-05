@@ -59,13 +59,13 @@ const PermissionEditor = ({
     error: terror,
   } = useTablePermissionsQuery(
     {
-      projectRef: project.$id,
+      projectRef: project?.$id,
       table: table.name,
       schema: table.schema,
       sdk,
     },
     {
-      enabled: visible && !isRowMode,
+      enabled: visible && !isRowMode && !!project?.$id,
     },
   );
 
@@ -76,7 +76,7 @@ const PermissionEditor = ({
     error: rerror,
   } = useRowPermissionsQuery(
     {
-      projectRef: project.$id,
+      projectRef: project?.$id,
       table: table.name,
       schema: table.schema,
       rowId: row?._id,
@@ -89,7 +89,7 @@ const PermissionEditor = ({
 
   const { data: securityInfo, isLoading: isSecurityLoading } = useSecurityInfoQuery(
     {
-      projectRef: project.$id,
+      projectRef: project?.$id,
       sdk,
       id: table.id,
       schema: table.schema,
@@ -98,7 +98,7 @@ const PermissionEditor = ({
   );
 
   const { mutate: updateSecurity, isPending: isSecurityPending } = useMutateSecurity(
-    project.$id,
+    project?.$id!,
     table.schema,
     table.id,
   );

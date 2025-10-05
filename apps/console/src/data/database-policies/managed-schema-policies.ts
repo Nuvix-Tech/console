@@ -5,7 +5,7 @@ import type { QueryOptions } from "@/types";
 import { databasePoliciesKeys } from "./keys";
 
 interface SecurityInfoVariables {
-  projectRef: string;
+  projectRef?: string;
   sdk: ProjectSdk;
   id: number;
   schema?: string;

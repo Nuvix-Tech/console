@@ -172,7 +172,7 @@ export const GridHeaderActions = ({ table, isRefetching }: GridHeaderActionsProp
     // });
 
     updatePublications({
-      projectRef,
+      projectRef: project?.$id!,
       sdk,
       id: realtimePublication.id,
       tables,
@@ -196,7 +196,7 @@ export const GridHeaderActions = ({ table, isRefetching }: GridHeaderActionsProp
     };
 
     updateTable({
-      projectRef,
+      projectRef: project?.$id!,
       sdk,
       id: table.id,
       // name: table.name,

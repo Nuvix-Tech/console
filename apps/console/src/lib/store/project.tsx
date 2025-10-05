@@ -83,7 +83,7 @@ const useProject = create<ProjectStore>((set, get) => ({
     last: null,
   },
   sdk: undefined as any,
-  project: null as any,
+  project: undefined as any,
   schemas: [],
   setSchemas: (schemas: ModelsX.Schema[]) => set({ schemas }),
   update: async () => {},

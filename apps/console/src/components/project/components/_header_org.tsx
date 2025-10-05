@@ -16,8 +16,9 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/popover";
 import { sdkForConsole } from "@/lib/sdk";
 import { useRouter } from "@bprogress/next";
-import { Models } from "@nuvix/console";
+import { BillingPlan, Models } from "@nuvix/console";
 import { useAppStore } from "@/lib/store";
+import { IS_PLATFORM } from "@/lib/constants";
 
 export function HeaderOrganization(props: React.ComponentProps<typeof Button>) {
   const organization = useAppStore.use.organization?.();
@@ -53,9 +54,11 @@ export function HeaderOrganization(props: React.ComponentProps<typeof Button>) {
               ? orgs.find((org) => org.$id === organization.$id)?.name
               : "Select organization..."}
           </span>
-          <span className="ml-2 bg-[var(--neutral-alpha-weak)] text-sm font-thin px-2 py-0.5 rounded-md">
-            Free
-          </span>
+          {IS_PLATFORM && organization.billingPlan === BillingPlan.Tier0 && (
+            <span className="ml-2 bg-[var(--neutral-alpha-weak)] text-sm font-thin px-2 py-0.5 rounded-md">
+              Free
+            </span>
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
@@ -83,21 +86,25 @@ export function HeaderOrganization(props: React.ComponentProps<typeof Button>) {
                 </CommandItem>
               ))}
             </CommandGroup>
-            <CommandSeparator />
-            <CommandGroup>
-              <CommandItem
-                className="cursor-pointer flex items-center gap-x-2 w-full"
-                onSelect={() => {
-                  setOpen(false);
-                }}
-                onClick={() => {
-                  setOpen(false);
-                }}
-              >
-                <PlusIcon size={12} />
-                Create Organization
-              </CommandItem>
-            </CommandGroup>
+            {IS_PLATFORM && (
+              <>
+                <CommandSeparator />
+                <CommandGroup>
+                  <CommandItem
+                    className="cursor-pointer flex items-center gap-x-2 w-full"
+                    onSelect={() => {
+                      setOpen(false);
+                    }}
+                    onClick={() => {
+                      setOpen(false);
+                    }}
+                  >
+                    <PlusIcon size={12} />
+                    Create Organization
+                  </CommandItem>
+                </CommandGroup>
+              </>
+            )}
           </CommandList>
         </Command>
       </PopoverContent>

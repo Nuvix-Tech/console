@@ -19,6 +19,7 @@ import { useRouter } from "@bprogress/next";
 import { Models } from "@nuvix/console";
 import { useParams } from "next/navigation";
 import { useWizard } from "@/hooks/useWizard";
+import { IS_PLATFORM } from "@/lib/constants";
 
 export function HeaderProject(props: React.ComponentProps<typeof Button>) {
   const { id: projectId } = useParams();
@@ -92,23 +93,27 @@ export function HeaderProject(props: React.ComponentProps<typeof Button>) {
                 </CommandItem>
               ))}
             </CommandGroup>
-            <CommandSeparator />
-            <CommandGroup>
-              <CommandItem
-                className="cursor-pointer flex items-center gap-x-2 w-full"
-                onSelect={() => {
-                  createProject();
-                  setOpen(false);
-                }}
-                onClick={() => {
-                  createProject();
-                  setOpen(false);
-                }}
-              >
-                <PlusIcon size={12} />
-                Create Project
-              </CommandItem>
-            </CommandGroup>
+            {IS_PLATFORM && (
+              <>
+                <CommandSeparator />
+                <CommandGroup>
+                  <CommandItem
+                    className="cursor-pointer flex items-center gap-x-2 w-full"
+                    onSelect={() => {
+                      createProject();
+                      setOpen(false);
+                    }}
+                    onClick={() => {
+                      createProject();
+                      setOpen(false);
+                    }}
+                  >
+                    <PlusIcon size={12} />
+                    Create Project
+                  </CommandItem>
+                </CommandGroup>
+              </>
+            )}
           </CommandList>
         </Command>
       </PopoverContent>

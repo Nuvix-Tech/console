@@ -646,7 +646,7 @@ const SidePanelEditor = ({
   ) => {
     if (snap.sidePanel?.type === "table_perms") {
       await updateTablePermissions({
-        projectRef: project.$id,
+        projectRef: project?.$id!,
         sdk,
         table: selectedTable!.name,
         schema: selectedTable!.schema,
@@ -654,7 +654,7 @@ const SidePanelEditor = ({
       });
     } else if (snap.sidePanel?.type === "row_perms") {
       await updateRowPermissions({
-        projectRef: project.$id,
+        projectRef: project?.$id!,
         sdk,
         table: selectedTable!.name,
         schema: selectedTable!.schema,

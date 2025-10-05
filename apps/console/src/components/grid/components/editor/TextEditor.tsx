@@ -42,7 +42,7 @@ export const TextEditor = <TRow, TSummaryRow = unknown>({
   const { tableId } = useParams<TableParam>();
 
   const { data: selectedTable } = useTableEditorQuery({
-    projectRef: project.$id,
+    projectRef: project?.$id,
     sdk,
     id: Number(tableId),
   });
@@ -77,7 +77,7 @@ export const TextEditor = <TRow, TSummaryRow = unknown>({
         table: { schema: selectedTable.schema, name: selectedTable.name },
         column: column.name as string,
         pkMatch,
-        projectRef: project?.$id,
+        projectRef: project?.$id!,
         sdk,
       },
       { onSuccess: (data) => setValue(data) },
