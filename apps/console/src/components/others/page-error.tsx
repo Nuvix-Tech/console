@@ -5,9 +5,10 @@ import { Button, Heading, Text } from "@nuvix/ui/components";
 import { CodeBlock } from "@nuvix/ui/modules";
 import { useRouter } from "next/navigation";
 import type React from "react";
+import NotFoundPage from "./page-not-found";
 
 interface ErrorProps {
-  error: Error & { digest?: string };
+  error: Error & { digest?: string; code?: number };
   reset?: () => void;
 }
 
@@ -26,6 +27,10 @@ export default function ErrorPage({
     message = "A network error occurred. Please check your connection and try again.";
   } else if (message.toLowerCase().includes("timeout")) {
     message = "The request timed out. Please try again later.";
+  }
+
+  if (error.code === 404) {
+    return <NotFoundPage error={error} />;
   }
 
   return (

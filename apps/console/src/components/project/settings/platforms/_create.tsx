@@ -2,8 +2,11 @@ import { Popover, PopoverTrigger, PopoverContent } from "@nuvix/sui/components/p
 import { availablePlatforms, platformConfig } from "../../components/_utils";
 import { CreatePlatform } from "@/components/wizard";
 import { Button } from "@nuvix/ui/components";
+import React from "react";
 
 export const CreatePlatformButton: React.FC = () => {
+  const [open, setOpen] = React.useState(false);
+
   return (
     <>
       <Popover>
@@ -16,7 +19,13 @@ export const CreatePlatformButton: React.FC = () => {
           {availablePlatforms.map((platform) => {
             const config = platformConfig[platform as keyof typeof platformConfig];
             return (
-              <CreatePlatform key={platform} type={config.type}>
+              <CreatePlatform
+                key={platform}
+                type={config.type}
+                open={open}
+                onOpenChange={({ open }) => setOpen(open)}
+                onClose={() => setOpen(false)}
+              >
                 <Button
                   variant="tertiary"
                   size="s"

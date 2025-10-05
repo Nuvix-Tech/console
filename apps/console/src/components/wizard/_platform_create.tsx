@@ -8,6 +8,8 @@ import { PlatformType } from "@nuvix/console";
 import { Chip, useToast } from "@nuvix/ui/components";
 import { useProjectStore } from "@/lib/store";
 import { useFormikContext } from "formik";
+import { useQueryClient } from "@tanstack/react-query";
+import { rootKeys } from "@/lib/keys";
 
 // Define validation schema for platform creation form
 const schema = y.object().shape({
@@ -78,15 +80,27 @@ type CreatePlatformProps = {
 
 type SubmitValues = y.InferType<typeof schema>;
 
-export const CreatePlatform: React.FC<CreatePlatformProps> = ({ children, type, ...props }) => {
+export const CreatePlatform: React.FC<CreatePlatformProps> = ({
+  children,
+  type,
+  onClose,
+  ...props
+}) => {
   const { projects } = sdkForConsole;
   const { project } = useProjectStore();
   const { addToast } = useToast();
+  const queryClient = useQueryClient();
+
+  const refresh = async () => {
+    await queryClient.invalidateQueries({
+      queryKey: rootKeys.platforms(project?.$id!),
+    });
+  };
 
   async function onSubmit(values: SubmitValues, resetForm: any) {
     const { name, key, store, hostname } = values;
     try {
-      const platform = await projects.createPlatform(
+      await projects.createPlatform(
         project!.$id,
         values.type,
         name,
@@ -101,7 +115,8 @@ export const CreatePlatform: React.FC<CreatePlatformProps> = ({ children, type, 
       });
 
       resetForm();
-      props.onClose?.();
+      await refresh();
+      onClose?.();
     } catch (e: any) {
       addToast({
         variant: "danger",

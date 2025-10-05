@@ -2,8 +2,8 @@ import { Column, Row } from "@nuvix/ui/components";
 import { Heading, Stack, Text } from "@chakra-ui/react";
 
 type PageHeadingProps = {
-  heading: string;
-  description?: string;
+  heading: string | React.ReactNode;
+  description?: string | React.ReactNode;
   right?: React.ReactNode;
 };
 

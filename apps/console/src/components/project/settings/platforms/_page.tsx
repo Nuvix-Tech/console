@@ -91,7 +91,7 @@ const PlatformsPage: React.FC = () => {
           description="Add your project platforms to start integrating with various services."
           primaryComponent={create}
         />
-        <Table />
+        {data?.total! > 0 && !isFetching && <Table />}
       </DataGridProvider>
     </PageContainer>
   );

@@ -25,7 +25,7 @@ const SettingsSidebar = () => {
             isSelected: resolveIsSelected("webhooks"),
           },
           {
-            label: "Apps",
+            label: "Platforms",
             href: resolveHref("apps"),
             isSelected: resolveIsSelected("apps"),
           },
