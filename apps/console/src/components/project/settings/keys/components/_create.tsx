@@ -1,5 +1,5 @@
 import ActionBar from "@/components/editor/SidePanelEditor/ActionBar";
-import { InputField } from "@/components/others/forms";
+import { FieldWrapper, InputField } from "@/components/others/forms";
 import { SidePanel } from "@/ui/SidePanel";
 import { Button } from "@nuvix/ui/components";
 import { useFormik } from "formik";
@@ -81,7 +81,14 @@ export const CreateKeyButton: React.FC = () => {
         <SidePanel.Content className="space-y-6 py-6">
           <InputField name="name" label="Name" placeholder="Enter key name" layout="horizontal" />
           <ExpirySelector />
-          <ScopesSelector />
+          <FieldWrapper
+            name="scopes"
+            label="Scopes"
+            description="Choose which permission scopes to grant your application. It is best practice to allow only the permissions you need to meet your project goals."
+            layout="horizontal"
+          >
+            <ScopesSelector />
+          </FieldWrapper>
         </SidePanel.Content>
       </SidePanel>
     </>

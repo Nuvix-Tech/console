@@ -1,4 +1,3 @@
-import { FieldWrapper } from "@/components/others/forms";
 import { scopes } from "@/lib/constants";
 import { Accordion, Button, Checkbox, Tag, Text } from "@nuvix/ui/components";
 import { useFormikContext } from "formik";
@@ -67,83 +66,76 @@ export const ScopesSelector = () => {
   const totalScopes = filteredScopes.length;
 
   return (
-    <FieldWrapper
-      name="scopes"
-      label="Scopes"
-      description="Choose which permission scopes to grant your application. It is best practice to allow only the permissions you need to meet your project goals."
-      layout="horizontal"
-    >
-      <div className="flex flex-col gap-4">
-        {/* Global Header */}
-        <div className="flex gap-3 items-center">
-          <Button
-            size="s"
-            variant="tertiary"
-            onClick={() => setFieldValue("scopes", filteredScopes.map((s) => s.scope).sort())}
-            disabled={values.scopes.length === totalScopes}
-          >
-            Select All
-          </Button>
-          <div className="w-px h-6 neutral-background-alpha-medium" />
-          <Button
-            size="s"
-            variant="tertiary"
-            onClick={() => setFieldValue("scopes", [])}
-            disabled={values.scopes.length === 0}
-          >
-            Deselect All
-          </Button>
-        </div>
-
-        {/* Categories */}
-        <div className="neutral-background-alpha-weak radius-s overflow-hidden">
-          {categories.map((category) => {
-            const categoryScopes = selectedCategoryScopes(category);
-            if (categoryScopes.length === 0) return null;
-
-            const { selectedCount, totalCount, allSelected, partiallySelected } =
-              getSelectionStats(category);
-
-            return (
-              <Accordion
-                key={category}
-                title={
-                  <div className="flex items-center justify-between w-full gap-4">
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        label={<Text variant="label-strong-s">{category}</Text>}
-                        isChecked={allSelected}
-                        isIndeterminate={partiallySelected}
-                        onToggle={() => toggleAllInCategory(category)}
-                        onClick={(e) => e.stopPropagation()}
-                      />
-                    </div>
-                    <Tag variant={selectedCount > 0 ? "gradient" : "neutral"}>
-                      {selectedCount}/{totalCount}
-                    </Tag>
-                  </div>
-                }
-                headingProps={{
-                  variant: "label-strong-s",
-                }}
-                gap="4"
-              >
-                <div className="flex flex-col gap-4 ml-8">
-                  {categoryScopes.map((item) => (
-                    <Checkbox
-                      key={item.scope}
-                      label={item.scope}
-                      description={item.description}
-                      isChecked={isScopeSelected(item.scope)}
-                      onToggle={() => onToggleScope(item.scope)}
-                    />
-                  ))}
-                </div>
-              </Accordion>
-            );
-          })}
-        </div>
+    <div className="flex flex-col gap-4">
+      {/* Global Header */}
+      <div className="flex gap-3 items-center">
+        <Button
+          size="s"
+          variant="tertiary"
+          onClick={() => setFieldValue("scopes", filteredScopes.map((s) => s.scope).sort())}
+          disabled={values.scopes.length === totalScopes}
+        >
+          Select All
+        </Button>
+        <div className="w-px h-6 neutral-background-alpha-medium" />
+        <Button
+          size="s"
+          variant="tertiary"
+          onClick={() => setFieldValue("scopes", [])}
+          disabled={values.scopes.length === 0}
+        >
+          Deselect All
+        </Button>
       </div>
-    </FieldWrapper>
+
+      {/* Categories */}
+      <div className="neutral-background-alpha-weak radius-s overflow-hidden">
+        {categories.map((category) => {
+          const categoryScopes = selectedCategoryScopes(category);
+          if (categoryScopes.length === 0) return null;
+
+          const { selectedCount, totalCount, allSelected, partiallySelected } =
+            getSelectionStats(category);
+
+          return (
+            <Accordion
+              key={category}
+              title={
+                <div className="flex items-center justify-between w-full gap-4">
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      label={<Text variant="label-strong-s">{category}</Text>}
+                      isChecked={allSelected}
+                      isIndeterminate={partiallySelected}
+                      onToggle={() => toggleAllInCategory(category)}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  </div>
+                  <Tag variant={selectedCount > 0 ? "gradient" : "neutral"}>
+                    {selectedCount}/{totalCount}
+                  </Tag>
+                </div>
+              }
+              headingProps={{
+                variant: "label-strong-s",
+              }}
+              gap="4"
+            >
+              <div className="flex flex-col gap-4 ml-8">
+                {categoryScopes.map((item) => (
+                  <Checkbox
+                    key={item.scope}
+                    label={item.scope}
+                    description={item.description}
+                    isChecked={isScopeSelected(item.scope)}
+                    onToggle={() => onToggleScope(item.scope)}
+                  />
+                ))}
+              </div>
+            </Accordion>
+          );
+        })}
+      </div>
+    </div>
   );
 };

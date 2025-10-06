@@ -1,10 +1,10 @@
 import { FieldWrapper } from "@/components/others/forms";
-import { DateInput, Select, Text } from "@nuvix/ui/components";
+import { DateInput, Select } from "@nuvix/ui/components";
 import { useFormikContext } from "formik";
 import React, { useMemo } from "react";
 import { addDays, format } from "date-fns";
 
-export const ExpirySelector = () => {
+export const ExpirySelector = ({ isVertical }: { isVertical?: boolean }) => {
   const { values, setFieldValue } = useFormikContext<{ expire: Date | null }>();
 
   // Define options
@@ -75,9 +75,9 @@ export const ExpirySelector = () => {
         expirationDescription ??
         "Select how long this key remains valid. Choose 'Custom' to set a specific date."
       }
-      layout="horizontal"
+      layout={isVertical ? "vertical" : "horizontal"}
     >
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 flex-1">
         {/* Expiry preset select */}
         <Select
           id="expire-select"
@@ -88,6 +88,7 @@ export const ExpirySelector = () => {
           value={selectedOption}
           onSelect={handleSelect}
           portal={false}
+          fillWidth
         />
 
         {/* Custom date picker only if 'custom' is selected */}
