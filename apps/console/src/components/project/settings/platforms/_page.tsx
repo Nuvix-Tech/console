@@ -44,8 +44,8 @@ const PlatformsPage: React.FC = () => {
       cell({ getValue }) {
         const type = getValue<PlatformType>();
         return (
-          <div className="capitalize flex items-center">
-            <Icon name={platformIcon(type)} className="inline mr-2" />
+          <div className="capitalize flex items-center neutral-on-background-medium">
+            <Icon name={platformIcon(type)} className="inline mr-2" onBackground="brand-medium" />
             {type}
           </div>
         );

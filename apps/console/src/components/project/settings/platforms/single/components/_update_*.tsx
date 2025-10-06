@@ -15,7 +15,24 @@ import { rootKeys } from "@/lib/keys";
 import { sdkForConsole } from "@/lib/sdk";
 
 const schema = y.object({
-  name: y.string().max(256),
+  type: y.string(),
+  key: y.string().when("type", {
+    is: (type: string) =>
+      [
+        PlatformType.Appleios,
+        PlatformType.Android,
+        PlatformType.Reactnativeios,
+        PlatformType.Reactnativeandroid,
+      ].includes(type as PlatformType),
+    then: (schema) => schema.required("Platform key is required for mobile platforms"),
+    otherwise: (schema) => schema.nullable(),
+  }),
+  hostname: y.string().when("type", {
+    is: (type: string) =>
+      [PlatformType.Web, PlatformType.Flutterweb].includes(type as PlatformType),
+    then: (schema) => schema.required("Hostname is required for web platforms"),
+    otherwise: (schema) => schema.nullable(),
+  }),
 });
 
 export const UpdatePlatform = ({ platform }: { platform?: Models.Platform }) => {
@@ -37,7 +54,9 @@ export const UpdatePlatform = ({ platform }: { platform?: Models.Platform }) => 
     <>
       <Form
         initialValues={{
-          name: platform?.name,
+          type: platform?.type,
+          hostname: platform?.hostname,
+          key: platform?.key,
         }}
         enableReinitialize
         validationSchema={schema}
@@ -46,7 +65,10 @@ export const UpdatePlatform = ({ platform }: { platform?: Models.Platform }) => 
             await sdkForConsole.projects.updatePlatform(
               project?.$id!,
               platform?.$id!,
-              values.name!,
+              platform?.name!,
+              values.key,
+              undefined,
+              values.hostname,
             );
             addToast({
               variant: "success",

@@ -37,7 +37,7 @@ interface CustomProps<T extends FormikValues = any> {
   className?: string;
   children?: React.ReactNode;
   header?: string | React.ReactNode;
-  visible: boolean;
+  visible?: boolean;
   size?: "medium" | "large" | "xlarge" | "xxlarge" | "xxxlarge" | "xxxxlarge";
   loading?: boolean;
   align?: "right" | "left";
@@ -121,7 +121,7 @@ const SidePanel = ({
       if (onCancel) onCancel();
     } else {
       // un-controlled component behaviour
-      // setOpen(open)
+      props.onOpenChange?.(open);
     }
   }
 
@@ -129,11 +129,7 @@ const SidePanel = ({
 
   return (
     <Sheet open={open} onOpenChange={handleOpenChange} defaultOpen={defaultOpen}>
-      {triggerElement && (
-        <SheetTrigger asChild className={styles["nxui-sidepanel__trigger"]}>
-          {triggerElement}
-        </SheetTrigger>
-      )}
+      {triggerElement && <SheetTrigger asChild>{triggerElement}</SheetTrigger>}
 
       <SheetContent
         className={classNames(getSize(size), className, "sm:max-w-[inherit] h-full gap-0")}

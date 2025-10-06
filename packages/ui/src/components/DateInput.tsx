@@ -15,6 +15,7 @@ interface DateInputProps extends Omit<React.ComponentProps<typeof Input>, "onCha
   timePicker?: boolean;
   minDate?: Date;
   maxDate?: Date;
+  portal?: boolean;
 }
 
 const formatDate = (date: Date, timePicker: boolean) => {
@@ -45,6 +46,7 @@ export const DateInput: React.FC<DateInputProps> = ({
   timePicker = false,
   minDate,
   maxDate,
+  portal,
   ...rest
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -117,6 +119,7 @@ export const DateInput: React.FC<DateInputProps> = ({
       disableTriggerClick={true}
       style={{ ...style }}
       handleArrowNavigation={false}
+      portal={portal}
     />
   );
 };

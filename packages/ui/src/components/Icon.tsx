@@ -46,6 +46,7 @@ const Icon = forwardRef<HTMLDivElement, IconProps>(
       tooltipPosition = "top",
       iconWidth,
       iconHeight,
+      className,
       ...rest
     },
     ref,
@@ -98,7 +99,7 @@ const Icon = forwardRef<HTMLDivElement, IconProps>(
         position="relative"
         as="span"
         ref={ref}
-        className={classNames(colorClass, styles.icon, styles[size])}
+        className={classNames(colorClass, styles.icon, styles[size], className)}
         role={decorative ? "presentation" : undefined}
         aria-hidden={decorative ? "true" : undefined}
         aria-label={decorative ? undefined : "icon"}
