@@ -110,3 +110,338 @@ export * from "./cookies";
 export * from "./schemas";
 
 export const PLATFORM_URL = process.env.NEXT_PUBLIC_PLATFORM_URL || "https://server.nuvix.in";
+
+export const scopes = [
+  { scope: "account", description: "Access to your account", category: "Auth" },
+
+  // Sessions
+  { scope: "sessions.create", description: "Access to create user sessions", category: "Auth" },
+  { scope: "sessions.update", description: "Access to update user sessions", category: "Auth" },
+  { scope: "sessions.delete", description: "Access to delete user sessions", category: "Auth" },
+
+  // Users
+  { scope: "users.read", description: "Access to read your project's users", category: "Auth" },
+  { scope: "users.create", description: "Access to create your project's users", category: "Auth" },
+  { scope: "users.update", description: "Access to update your project's users", category: "Auth" },
+  { scope: "users.delete", description: "Access to delete your project's users", category: "Auth" },
+
+  // Teams
+  { scope: "teams.read", description: "Access to read your project's teams", category: "Auth" },
+  { scope: "teams.create", description: "Access to create your project's teams", category: "Auth" },
+  { scope: "teams.update", description: "Access to update your project's teams", category: "Auth" },
+  { scope: "teams.delete", description: "Access to delete your project's teams", category: "Auth" },
+
+  // Collections
+  {
+    scope: "collections.read",
+    description: "Access to read your project's database collections",
+    category: "Database",
+  },
+  {
+    scope: "collections.create",
+    description: "Access to create your project's database collections",
+    category: "Database",
+  },
+  {
+    scope: "collections.update",
+    description: "Access to update your project's database collections",
+    category: "Database",
+  },
+  {
+    scope: "collections.delete",
+    description: "Access to delete your project's database collections",
+    category: "Database",
+  },
+
+  // Attributes
+  {
+    scope: "attributes.read",
+    description: "Access to read your project's database collection's attributes",
+    category: "Database",
+  },
+  {
+    scope: "attributes.create",
+    description: "Access to create your project's database collection's attributes",
+    category: "Database",
+  },
+  {
+    scope: "attributes.update",
+    description: "Access to update your project's database collection's attributes",
+    category: "Database",
+  },
+  {
+    scope: "attributes.delete",
+    description: "Access to delete your project's database collection's attributes",
+    category: "Database",
+  },
+
+  // Indexes
+  {
+    scope: "indexes.read",
+    description: "Access to read your project's database collection's indexes",
+    category: "Database",
+  },
+  {
+    scope: "indexes.create",
+    description: "Access to create your project's database collection's indexes",
+    category: "Database",
+  },
+  {
+    scope: "indexes.update",
+    description: "Access to update your project's database collection's indexes",
+    category: "Database",
+  },
+  {
+    scope: "indexes.delete",
+    description: "Access to delete your project's database collection's indexes",
+    category: "Database",
+  },
+
+  // Documents
+  {
+    scope: "documents.read",
+    description: "Access to read your project's database documents",
+    category: "Database",
+  },
+  {
+    scope: "documents.create",
+    description: "Access to create your project's database documents",
+    category: "Database",
+  },
+  {
+    scope: "documents.update",
+    description: "Access to update your project's database documents",
+    category: "Database",
+  },
+  {
+    scope: "documents.delete",
+    description: "Access to delete your project's database documents",
+    category: "Database",
+  },
+
+  // Files
+  {
+    scope: "files.read",
+    description: "Access to read your project's storage files and preview images",
+    category: "Storage",
+  },
+  {
+    scope: "files.create",
+    description: "Access to create your project's storage files",
+    category: "Storage",
+  },
+  {
+    scope: "files.update",
+    description: "Access to update your project's storage files",
+    category: "Storage",
+  },
+  {
+    scope: "files.delete",
+    description: "Access to delete your project's storage files",
+    category: "Storage",
+  },
+
+  // Buckets
+  {
+    scope: "buckets.read",
+    description: "Access to read your project's storage buckets",
+    category: "Storage",
+  },
+  {
+    scope: "buckets.create",
+    description: "Access to create your project's storage buckets",
+    category: "Storage",
+  },
+  {
+    scope: "buckets.update",
+    description: "Access to update your project's storage buckets",
+    category: "Storage",
+  },
+  {
+    scope: "buckets.delete",
+    description: "Access to delete your project's storage buckets",
+    category: "Storage",
+  },
+
+  // Functions
+  // {
+  //   scope: "functions.read",
+  //   description: "Access to read your project's functions and code deployments",
+  //   category: "Functions",
+  // },
+  // {
+  //   scope: "functions.create",
+  //   description: "Access to create your project's functions and code deployments",
+  //   category: "Functions",
+  // },
+  // {
+  //   scope: "functions.update",
+  //   description: "Access to update your project's functions and code deployments",
+  //   category: "Functions",
+  // },
+  // {
+  //   scope: "functions.delete",
+  //   description: "Access to delete your project's functions and code deployments",
+  //   category: "Functions",
+  // },
+
+  // {
+  //   scope: "execution.read",
+  //   description: "Access to read your project's execution logs",
+  //   category: "Functions",
+  // },
+  // {
+  //   scope: "execution.create",
+  //   description: "Access to execute your project's functions",
+  //   category: "Functions",
+  // },
+
+  // Messaging
+  {
+    scope: "targets.read",
+    description: "Access to read your project's targets",
+    category: "Messaging",
+  },
+  {
+    scope: "targets.create",
+    description: "Access to create your project's targets",
+    category: "Messaging",
+  },
+  {
+    scope: "targets.update",
+    description: "Access to update your project's targets",
+    category: "Messaging",
+  },
+  {
+    scope: "targets.delete",
+    description: "Access to delete your project's targets",
+    category: "Messaging",
+  },
+
+  {
+    scope: "providers.read",
+    description: "Access to read your project's providers",
+    category: "Messaging",
+  },
+  {
+    scope: "providers.create",
+    description: "Access to create your project's providers",
+    category: "Messaging",
+  },
+  {
+    scope: "providers.update",
+    description: "Access to update your project's providers",
+    category: "Messaging",
+  },
+  {
+    scope: "providers.delete",
+    description: "Access to delete your project's providers",
+    category: "Messaging",
+  },
+
+  {
+    scope: "messages.read",
+    description: "Access to read your project's messages",
+    category: "Messaging",
+  },
+  {
+    scope: "messages.create",
+    description: "Access to create your project's messages",
+    category: "Messaging",
+  },
+  {
+    scope: "messages.update",
+    description: "Access to update your project's messages",
+    category: "Messaging",
+  },
+  {
+    scope: "messages.delete",
+    description: "Access to delete your project's messages",
+    category: "Messaging",
+  },
+
+  {
+    scope: "topics.read",
+    description: "Access to read your project's topics",
+    category: "Messaging",
+  },
+  {
+    scope: "topics.create",
+    description: "Access to create your project's topics",
+    category: "Messaging",
+  },
+  {
+    scope: "topics.update",
+    description: "Access to update your project's topics",
+    category: "Messaging",
+  },
+  {
+    scope: "topics.delete",
+    description: "Access to delete your project's topics",
+    category: "Messaging",
+  },
+
+  {
+    scope: "subscribers.read",
+    description: "Access to read your project's subscribers",
+    category: "Messaging",
+  },
+  {
+    scope: "subscribers.create",
+    description: "Access to create your project's subscribers",
+    category: "Messaging",
+  },
+  {
+    scope: "subscribers.update",
+    description: "Access to update your project's subscribers",
+    category: "Messaging",
+  },
+  {
+    scope: "subscribers.delete",
+    description: "Access to delete your project's subscribers",
+    category: "Messaging",
+  },
+
+  // Other
+  {
+    scope: "locale.read",
+    description: "Access to access your project's Locale service",
+    category: "Other",
+  },
+  {
+    scope: "avatars.read",
+    description: "Access to access your project's Avatars service",
+    category: "Other",
+  },
+  {
+    scope: "health.read",
+    description: "Access to read your project's health status",
+    category: "Other",
+  },
+
+  // Schema
+  { scope: "schemas.create", description: "Access to create a schema", category: "Database" },
+  { scope: "schemas.update", description: "Access to update a schema", category: "Database" },
+  { scope: "schemas.delete", description: "Access to delete a schema", category: "Database" },
+  { scope: "schemas.read", description: "Access to read a schema", category: "Database" },
+  {
+    scope: "schemas.tables.read",
+    description: "Access to read a schema tables",
+    category: "Database",
+  },
+  {
+    scope: "schemas.tables.create",
+    description: "Access to create a schema tables",
+    category: "Database",
+  },
+  {
+    scope: "schemas.tables.update",
+    description: "Access to update a schema tables",
+    category: "Database",
+  },
+  {
+    scope: "schemas.tables.delete",
+    description: "Access to delete a schema tables",
+    category: "Database",
+  },
+];

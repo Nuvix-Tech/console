@@ -8,7 +8,7 @@ import { DataGridProvider, DateTimeColumn, Table } from "@/ui/data-grid";
 import { Models } from "@nuvix/console";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
-import { CreateKeyButton } from "./_create";
+import { CreateKeyButton } from "./components/_create";
 
 export const KeysPage: React.FC = () => {
   const { project } = useProjectStore((state) => state);

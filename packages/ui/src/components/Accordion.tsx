@@ -21,6 +21,7 @@ interface AccordionProps extends Omit<React.ComponentProps<typeof Flex>, "title"
   open?: boolean;
   className?: string;
   style?: React.CSSProperties;
+  headingProps?: React.ComponentProps<typeof Text>;
 }
 
 const Accordion = forwardRef<AccordionHandle, AccordionProps>(
@@ -35,6 +36,7 @@ const Accordion = forwardRef<AccordionHandle, AccordionProps>(
       size = "m",
       className,
       style,
+      headingProps,
       ...rest
     },
     ref,
@@ -83,7 +85,9 @@ const Accordion = forwardRef<AccordionHandle, AccordionProps>(
           radius={radius}
           role="button"
         >
-          <Text variant="heading-strong-s">{title}</Text>
+          <Text variant="heading-strong-s" {...headingProps}>
+            {title}
+          </Text>
           <Icon
             name={icon}
             size={size === "s" ? "xs" : "s"}

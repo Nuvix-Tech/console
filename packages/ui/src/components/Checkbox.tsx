@@ -27,6 +27,7 @@ const Checkbox: React.FC<CheckboxProps> = forwardRef<HTMLInputElement, CheckboxP
       isIndeterminate = false,
       onToggle,
       disabled,
+      onClick,
       ...props
     },
     ref,
@@ -65,6 +66,7 @@ const Checkbox: React.FC<CheckboxProps> = forwardRef<HTMLInputElement, CheckboxP
           [styles.disabled]: disabled,
         })}
         style={style}
+        onClick={onClick}
       >
         <input
           type="checkbox"
