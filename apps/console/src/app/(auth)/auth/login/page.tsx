@@ -1,5 +1,5 @@
 "use client";
-import { APP_NAME } from "@/lib/constants";
+import { IS_PLATFORM } from "@/lib/constants";
 import { sdkForConsole } from "@/lib/sdk";
 import {
   Button,
@@ -18,7 +18,6 @@ import {
 import { useRouter } from "@bprogress/next";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { Alert, AlertDescription } from "@nuvix/sui/components/alert";
 
 export default function Login() {
@@ -69,18 +68,25 @@ export default function Login() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="flex flex-col items-center size-full gap-5 justigy-center md:border md:p-4 rounded-sm"
+      className="flex flex-col items-center size-full gap-5 justigy-center md:p-4 rounded-sm"
     >
       <Logo size="l" wordmark={false} iconSrc="/favicon.ico" />
-      <Heading as="h3" variant="display-default-xs" align="center">
-        Welcome back
-      </Heading>
-      <Text onBackground="neutral-weak">
-        Sign in to your account or{" "}
-        <SmartLink className="neutral-on-background-medium" href="/auth/register">
-          sign up
-        </SmartLink>
-      </Text>
+      <div className="flex flex-col items-center">
+        <Heading as="h3" variant="display-default-xs" align="center">
+          Welcome back
+        </Heading>
+        <Text onBackground="neutral-weak">
+          Sign in to your account
+          {IS_PLATFORM && (
+            <>
+              or{" "}
+              <SmartLink className="neutral-on-background-medium" href="/auth/register">
+                sign up
+              </SmartLink>
+            </>
+          )}
+        </Text>
+      </div>
 
       {error && (
         <Alert variant="destructive" title="Error">
@@ -125,25 +131,27 @@ export default function Login() {
         className="hover:shadow-lg hover:bg-opacity-90"
       />
 
-      <Row fillWidth paddingY="8" vertical="center" gap="8">
-        <Line />
-        <Text onBackground="neutral-weak">OR</Text>
-        <Line />
-      </Row>
+      {IS_PLATFORM && (
+        <>
+          <Row fillWidth paddingY="8" vertical="center" gap="8">
+            <Line />
+            <Text onBackground="neutral-weak">OR</Text>
+            <Line />
+          </Row>
 
-      <Button
-        label="Continue with GitHub"
-        fillWidth
-        variant="secondary"
-        weight="default"
-        prefixIcon="github"
-        disabled={true}
-        tooltip="Only email-password login available."
-        size="l"
-        onClick={() => {
-          /* GitHub auth logic here */
-        }}
-      />
+          <Button
+            label="Continue with GitHub"
+            fillWidth
+            variant="secondary"
+            weight="default"
+            prefixIcon="github"
+            disabled={true}
+            tooltip="Only email-password login available."
+            size="l"
+            onClick={() => {}}
+          />
+        </>
+      )}
     </motion.div>
   );
 }

@@ -10,7 +10,7 @@ export const RegisterPage = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="flex flex-col items-center size-full gap-5 justigy-center md:border md:p-4 rounded-sm"
+      className="flex flex-col items-center size-full gap-5 justigy-center md:p-4 rounded-sm"
     >
       <Logo size="l" wordmark={false} iconSrc="/favicon.ico" />
       <div>
