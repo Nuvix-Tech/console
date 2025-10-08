@@ -30,6 +30,7 @@ import IndexEditor from "./IndexEditor/IndexEditor";
 import PermissionEditor from "./RowEditor/PermissionEditor";
 import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
 import SchemaEditor from "@/components/editor/SidePanelEditor/SchemaEditor";
+import { Attributes } from "./ColumnEditor/utils";
 
 export interface SidePanelEditorProps {
   editable?: boolean;
@@ -249,6 +250,20 @@ const SidePanelEditor = ({
         }),
       ]);
 
+      if (column?.type === Attributes.Relationship) {
+        const relatedCollectionId = (column as unknown as Models.AttributeRelationship)
+          .relatedCollection;
+
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: collectionKeys.editor(project?.$id, selectedSchema!, relatedCollectionId),
+          }),
+          queryClient.invalidateQueries({
+            queryKey: collectionKeys.attributes(project?.$id, selectedSchema!, relatedCollectionId),
+          }),
+        ]);
+      }
+
       // // We need to invalidate tableRowsAndCount after tableEditor
       // // to ensure the query sent is correct
       await queryClient.invalidateQueries({
@@ -393,6 +408,13 @@ const SidePanelEditor = ({
           payload,
           schema: selectedSchema!,
         });
+
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: collectionKeys.editor(project?.$id, selectedSchema!, selectedCollection?.$id),
+          }),
+          queryClient.invalidateQueries({ queryKey: collectionKeys.list(project?.$id) }),
+        ]);
 
         // if (isTableEditorTabsEnabled && ref && payload.name) {
         //   // [Unkown] Only table entities can be updated via the dashboard

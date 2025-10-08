@@ -13,6 +13,7 @@ import { DropdownMenu, DropdownMenuItem } from "@/components/others/dropdown-men
 import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collection";
 import { useCollectionEditorStore } from "@/lib/store/collection-editor";
 import { LogsDialog } from "@/components/others/ui";
+import { collectionKeys } from "@/data/collections";
 
 type Props = {
   collectionId: string;
@@ -20,13 +21,14 @@ type Props = {
 
 export const IndexesPage: React.FC<Props> = ({ collectionId }) => {
   const sdk = useProjectStore.use.sdk();
+  const project = useProjectStore.use.project();
   const state = useCollectionEditorCollectionStateSnapshot();
   const editor = useCollectionEditorStore();
   const collection = state.collection;
   const databaseId = collection.$schema;
 
   const { data, isFetching } = useSuspenseQuery({
-    queryKey: ["indexes", databaseId, collectionId],
+    queryKey: collectionKeys.indexes(project.$id, databaseId, collectionId),
     queryFn: async () => sdk?.databases.listIndexes(databaseId, collectionId),
   });
 

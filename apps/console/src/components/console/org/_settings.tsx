@@ -3,6 +3,7 @@ import { PageContainer, PageHeading } from "@/components/others";
 import { Column } from "@nuvix/ui/components";
 import { UpdateName } from "./components/_update_name";
 import { DeleteOrg } from "./components/_delete_org";
+import { IS_PLATFORM } from "@/lib/constants";
 
 export const SettingsPage = () => {
   return (
@@ -12,7 +13,7 @@ export const SettingsPage = () => {
 
         <Column fillWidth gap="16">
           <UpdateName />
-          <DeleteOrg />
+          {IS_PLATFORM && <DeleteOrg />}
         </Column>
       </PageContainer>
     </>

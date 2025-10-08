@@ -14,6 +14,7 @@ import { useCollectionEditorCollectionStateSnapshot } from "@/lib/store/collecti
 import { useCollectionEditorStore } from "@/lib/store/collection-editor";
 import { AttributeIcon } from "@/components/project/collection-editor/SidePanelEditor/ColumnEditor/ColumnIcon";
 import { LogsDialog } from "@/components/others/ui";
+import { collectionKeys } from "@/data/collections";
 
 type Props = {
   collectionId: string;
@@ -21,6 +22,7 @@ type Props = {
 
 export const AttributesPage: React.FC<Props> = ({ collectionId }) => {
   const sdk = useProjectStore.use.sdk();
+  const project = useProjectStore.use.project();
   const state = useCollectionEditorCollectionStateSnapshot();
   const editor = useCollectionEditorStore();
   const collection = state.collection;
@@ -31,7 +33,7 @@ export const AttributesPage: React.FC<Props> = ({ collectionId }) => {
   }, [sdk, databaseId, collectionId]);
 
   const { data, isFetching } = useSuspenseQuery({
-    queryKey: ["attributes", databaseId, collectionId],
+    queryKey: collectionKeys.attributes(project.$id, databaseId, collectionId),
     queryFn: fetcher,
     staleTime: 30000, // 30 seconds
   });
