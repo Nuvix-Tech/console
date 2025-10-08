@@ -5,7 +5,7 @@ import { Button } from "@nuvix/ui/components";
 import React from "react";
 
 export const CreatePlatformButton: React.FC = () => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState<string | null>(null);
 
   return (
     <>
@@ -22,9 +22,9 @@ export const CreatePlatformButton: React.FC = () => {
               <CreatePlatform
                 key={platform}
                 type={config.type}
-                open={open}
-                onOpenChange={({ open }) => setOpen(open)}
-                onClose={() => setOpen(false)}
+                open={open === config.type}
+                onOpenChange={({ open }) => setOpen(open === false ? null : config.type)}
+                onClose={() => setOpen(null)}
               >
                 <Button
                   variant="tertiary"

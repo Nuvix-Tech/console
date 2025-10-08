@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Box, CloseButton, Dialog, Flex, Image, Portal, Text } from "@chakra-ui/react";
+import { Box, CloseButton, Dialog, Flex, Portal, Text } from "@chakra-ui/react";
 import { Form, InputField, SubmitButton } from "../others/forms";
 import * as y from "yup";
 import { sdkForConsole } from "@/lib/sdk";
@@ -10,6 +10,7 @@ import { useProjectStore } from "@/lib/store";
 import { useFormikContext } from "formik";
 import { useQueryClient } from "@tanstack/react-query";
 import { rootKeys } from "@/lib/keys";
+import { platformConfig } from "../project/components/_utils";
 
 // Define validation schema for platform creation form
 const schema = y.object().shape({
@@ -117,6 +118,7 @@ export const CreatePlatform: React.FC<CreatePlatformProps> = ({
       resetForm();
       await refresh();
       onClose?.();
+      props.onOpenChange?.({ open: false });
     } catch (e: any) {
       addToast({
         variant: "danger",
@@ -141,17 +143,6 @@ export const CreatePlatform: React.FC<CreatePlatformProps> = ({
                 alignItems="center"
                 justifyContent="center"
               >
-                {/* <Box flex="1" h="full" ml={10} display={{ base: "none", md: "block" }}>
-                  <Image
-                    src="https://img.freepik.com/free-vector/business-teamwork-concept-teamwork-leadership-effort-hard-work-team-strategy-concept-brainstorm-workshop-management-skills-vector-cartoon-illustration-flat-design_1150-56223.jpg?t=st=1741944634~exp=1741948234~hmac=a8809da68f5bcdb67d8616d53467b3b475fdf51020c728f1a1a1a00874fd875e&w=996"
-                    alt="Platform Preview"
-                    objectFit="cover"
-                    borderRadius="lg"
-                    shadow="md"
-                    height="80%"
-                  />
-                </Box> */}
-
                 <Box flex="1" h="full" justifyContent={"center"} maxW="500px">
                   <Flex alignItems="center" justifyContent="space-between" mb={6}>
                     <Text fontSize="3xl" fontWeight="bold">
@@ -163,7 +154,7 @@ export const CreatePlatform: React.FC<CreatePlatformProps> = ({
                   </Flex>
 
                   <Text fontSize="lg" color="fg.muted" mb={8}>
-                    Configure your {type} platform settings.
+                    Configure your {platformConfig[type]?.label} platform settings.
                   </Text>
 
                   <Form

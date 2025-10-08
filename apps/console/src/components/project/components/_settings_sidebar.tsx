@@ -19,11 +19,11 @@ const SettingsSidebar = () => {
             href: resolveHref("general"),
             isSelected: resolveIsSelected("general"),
           },
-          {
-            label: "Webhooks",
-            href: resolveHref("webhooks"),
-            isSelected: resolveIsSelected("webhooks"),
-          },
+          // {
+          //   label: "Webhooks",
+          //   href: resolveHref("webhooks"),
+          //   isSelected: resolveIsSelected("webhooks"),
+          // },
           {
             label: "Platforms",
             href: resolveHref("apps"),
@@ -40,11 +40,11 @@ const SettingsSidebar = () => {
       <SidebarGroup
         title="Configuration"
         items={[
-          {
-            label: "Custom Domains",
-            href: resolveHref("domains"),
-            isSelected: resolveIsSelected("domains"),
-          },
+          // {
+          //   label: "Custom Domains",
+          //   href: resolveHref("domains"),
+          //   isSelected: resolveIsSelected("domains"),
+          // },
           {
             label: "Smtp",
             href: resolveHref("smtp"),
@@ -52,7 +52,7 @@ const SettingsSidebar = () => {
           },
         ]}
       />
-      <Line />
+      {/* <Line />
       <SidebarGroup
         title="OTHER"
         items={[
@@ -67,7 +67,7 @@ const SettingsSidebar = () => {
             isSelected: resolveIsSelected("usage"),
           },
         ]}
-      />
+      /> */}
     </>
   );
 };
