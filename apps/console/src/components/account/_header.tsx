@@ -24,13 +24,13 @@ const AccountHeader: React.FC = () => {
         <Row marginLeft="8" marginRight="16">
           <Logo
             icon={false}
-            size="l"
+            size="m"
             className="is-only-dark"
             wordmarkSrc="/trademark/logo-dark.svg"
           />
           <Logo
             icon={false}
-            size="l"
+            size="m"
             className="is-only-light"
             wordmarkSrc="/trademark/logo-light.svg"
           />

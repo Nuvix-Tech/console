@@ -6,7 +6,7 @@ import { Chip, Row, Text, Button, useConfirm } from "@nuvix/ui/components";
 import { DataGridProvider, Table } from "@/ui/data-grid";
 import { EmptyState } from "@/components/_empty_state";
 import { PageContainer, PageHeading } from "@/components/others";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { sdkForConsole } from "@/lib/sdk";
 import { toast } from "sonner";
 import { useRouter } from "@bprogress/next";
@@ -18,7 +18,7 @@ const SessionPage = () => {
   const confirm = useConfirm();
   const { replace } = useRouter();
 
-  const { data, isFetching, refetch } = useSuspenseQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ["account:sessions"],
     queryFn: fetcher,
   });
@@ -126,20 +126,18 @@ const SessionPage = () => {
 
       <DataGridProvider<Models.Session>
         columns={columns}
-        data={data.data}
-        rowCount={data.total}
-        loading={isFetching}
+        data={data?.data ?? (data as any)?.sessions ?? []}
+        rowCount={data?.total}
+        loading={isLoading}
       >
         <EmptyState
-          show={data.total === 0 && !isFetching}
+          show={data?.total === 0 && !isLoading}
           title="No Active Sessions"
           description="There are currently no active sessions."
         />
 
-        {data.total > 0 && (
-          <>
-            <Table interactive={false} />
-          </>
+        {((data?.data ?? (data as any)?.sessions)?.length ?? 0 > 0) && (
+          <Table interactive={false} />
         )}
       </DataGridProvider>
     </PageContainer>

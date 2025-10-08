@@ -9,6 +9,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { HStack } from "@chakra-ui/react";
 import { sdkForConsole } from "@/lib/sdk";
 import { Row, Text, Button, Tag } from "@nuvix/ui/components";
+import { IS_PLATFORM } from "@/lib/constants";
 
 export const OrganizationsPage = () => {
   const { limit, page, search, hasQuery } = useSearchQuery({ limit: 6 });
@@ -24,7 +25,7 @@ export const OrganizationsPage = () => {
     queryFn: fetcher,
   });
 
-  const create = (
+  const create = IS_PLATFORM ? (
     <CreateButton
       hasPermission={true}
       label="Create Org"
@@ -34,7 +35,7 @@ export const OrganizationsPage = () => {
         </Button>
       )}
     />
-  );
+  ) : undefined;
 
   return (
     <PageContainer>

@@ -1,3 +1,4 @@
+import { IS_PLATFORM } from "@/lib/constants";
 import { sdkForConsole } from "@/lib/sdk";
 import { useAppStore } from "@/lib/store";
 import { ThemeSwitcher } from "@/ui/ThemeSwitcher";
@@ -57,12 +58,14 @@ export function UserProfile(props: Partial<React.ComponentProps<typeof UserMenu>
               hasPrefix={<Icon name="account" size="s" />}
               href="/account"
             />
-            <Option
-              label="Create Organization"
-              value="2"
-              hasPrefix={<Icon name="team" size="s" />}
-              href="/create-organization"
-            />
+            {IS_PLATFORM && (
+              <Option
+                label="Create Organization"
+                value="2"
+                hasPrefix={<Icon name="team" size="s" />}
+                href="/create-organization"
+              />
+            )}
             <Option
               label="Sign out"
               hasPrefix={<Icon name="logout" size="s" />}

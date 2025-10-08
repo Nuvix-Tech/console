@@ -23,7 +23,7 @@ export default function NotFoundPage({ error }: ErrorProps) {
       </Text>
       {error.digest && <p className="text-sm text-gray-500">Error ID: {error.digest}</p>}
       <div className="flex gap-4 mt-16 mb-2">
-        <Button variant="secondary" onClick={() => router.back()}>
+        <Button size="s" variant="secondary" onClick={() => router.back()}>
           Go Back
         </Button>
       </div>

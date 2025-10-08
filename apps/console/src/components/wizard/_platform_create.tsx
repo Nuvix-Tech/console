@@ -93,9 +93,14 @@ export const CreatePlatform: React.FC<CreatePlatformProps> = ({
   const queryClient = useQueryClient();
 
   const refresh = async () => {
-    await queryClient.invalidateQueries({
-      queryKey: rootKeys.platforms(project?.$id!),
-    });
+    await Promise.all([
+      await queryClient.invalidateQueries({
+        queryKey: rootKeys.platforms(project?.$id!),
+      }),
+      await queryClient.invalidateQueries({
+        queryKey: rootKeys.project(project.$id),
+      }),
+    ]);
   };
 
   async function onSubmit(values: SubmitValues, resetForm: any) {

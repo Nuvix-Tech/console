@@ -29,7 +29,7 @@ export default function ErrorPage({
     message = "The request timed out. Please try again later.";
   }
 
-  if (error.code === 404) {
+  if (error?.code === 404) {
     return <NotFoundPage error={error} />;
   }
 
@@ -43,11 +43,11 @@ export default function ErrorPage({
       {error.digest && <p className="text-sm text-gray-500">Error ID: {error.digest}</p>}
       <div className="flex gap-4">
         {reset && (
-          <Button onClick={reset} variant="primary">
+          <Button size="s" onClick={reset} variant="primary">
             Try again
           </Button>
         )}
-        <Button variant="secondary" onClick={() => router.back()}>
+        <Button size="s" variant="secondary" onClick={() => router.back()}>
           Go Back
         </Button>
       </div>

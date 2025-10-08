@@ -1,4 +1,10 @@
 export const rootKeys = {
+  projects() {
+    return ["projects"] as const;
+  },
+  project(projectId: string) {
+    return ["projects", projectId] as const;
+  },
   platforms(projectId: string) {
     return ["projects", projectId, "platforms"] as const;
   },
@@ -13,5 +19,12 @@ export const rootKeys = {
   },
   key(projectId: string, keyId: string) {
     return ["projects", projectId, "keys", keyId] as const;
+  },
+
+  organization(teamId?: string) {
+    return ["organizations", teamId] as const;
+  },
+  scopes(teamId?: string) {
+    return ["organizations", teamId, "scopes"] as const;
   },
 };

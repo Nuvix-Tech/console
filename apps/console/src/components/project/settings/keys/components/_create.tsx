@@ -43,9 +43,14 @@ export const CreateKeyButton: React.FC = () => {
           values.expire ?? undefined,
         );
 
-        await queryClient.invalidateQueries({
-          queryKey: rootKeys.keys(project.$id),
-        });
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: rootKeys.keys(project.$id),
+          }),
+          await queryClient.invalidateQueries({
+            queryKey: rootKeys.project(project.$id),
+          }),
+        ]);
 
         toast.success("API key created successfully.");
         setOpen(false);
