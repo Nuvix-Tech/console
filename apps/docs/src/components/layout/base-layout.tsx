@@ -1,6 +1,5 @@
 import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
 import { ThemeSwitch } from "./theme-switch";
-import { NavBar } from "./nav-bar";
 import { Header } from "../header";
 
 export const layoutProps = (): BaseLayoutProps => {
@@ -8,11 +7,11 @@ export const layoutProps = (): BaseLayoutProps => {
     nav: {
       enabled: true,
       title: <Header />,
-      children: <NavBar />,
     },
     themeSwitch: {
-      enabled: false,
+      enabled: true,
       component: <ThemeSwitch />,
     },
+    githubUrl: "https://github.com/Nuvix-Tech/nuvix",
   };
 };

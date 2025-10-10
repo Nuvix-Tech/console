@@ -1,7 +1,7 @@
 import { source } from "@/lib/source";
 import { notFound } from "next/navigation";
 import { mdxComponents } from "@/mdx-components";
-import { DocsBody, DocsDescription, DocsPage, DocsTitle } from "fumadocs-ui/page";
+import { DocsBody, DocsDescription, DocsPage, DocsTitle, EditOnGitHub } from "fumadocs-ui/page";
 
 export default async function Page(props: { params: Promise<{ slug?: string[] }> }) {
   const params = await props.params;
@@ -18,6 +18,7 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
         <DocsBody>
           <MDX components={mdxComponents()} />
         </DocsBody>
+        {/* <EditOnGitHub /> */}
       </DocsPage>
     </>
   );
