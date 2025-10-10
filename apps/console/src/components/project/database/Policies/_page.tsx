@@ -3,20 +3,8 @@ import type { PostgresPolicy, PostgresTable } from "@nuvix/pg-meta";
 import { useState } from "react";
 
 // import { useIsInlineEditorEnabled } from 'components/interfaces/App/FeaturePreview/FeaturePreviewContext'
-// import { Policies } from 'components/interfaces/Auth/Policies/Policies'
-// import { getGeneralPolicyTemplates } from 'components/interfaces/Auth/Policies/PolicyEditorModal/PolicyEditorModal.constants'
-// import { PolicyEditorPanel } from 'components/interfaces/Auth/Policies/PolicyEditorPanel'
-// import { generatePolicyUpdateSQL } from 'components/interfaces/Auth/Policies/PolicyTableRow/PolicyTableRow.utils'
-// import AuthLayout from 'components/layouts/AuthLayout/AuthLayout'
-// import DefaultLayout from 'components/layouts/DefaultLayout'
-// import { PageLayout } from 'components/layouts/PageLayout/PageLayout'
-// import { ScaffoldContainer, ScaffoldSection } from 'components/layouts/Scaffold'
-// import AlertError from 'components/ui/AlertError'
-// import { DocsButton } from 'components/ui/DocsButton'
 // import { EditorPanel } from 'components/ui/EditorPanel/EditorPanel'
 // import NoPermission from 'components/ui/NoPermission'
-// import SchemaSelector from 'components/ui/SchemaSelector'
-// import { GenericSkeletonLoader } from 'components/ui/ShimmeringLoader'
 import { useDatabasePoliciesQuery } from "@/data/database-policies/database-policies-query";
 import { useTablesQuery } from "@/data/tables/tables-query";
 import { useSearchQuery } from "@/hooks/useQuery";
@@ -39,8 +27,6 @@ import { Search } from "@/ui/data-grid";
 // import { useSelectedProjectQuery } from 'hooks/misc/useSelectedProject'
 // import { useUrlState } from 'hooks/ui/useUrlState'
 // import { useIsProtectedSchema } from 'hooks/useProtectedSchemas'
-// import type { NextPageWithLayout } from 'types'
-// import { Input } from 'ui-patterns/DataInputs/Input'
 
 /**
  * Filter tables by table name and policy name
@@ -80,11 +66,15 @@ const onFilterTables = (
 };
 
 export const AuthPoliciesPage = () => {
-  const { params, setQueryParam } = useSearchQuery();
+  const { params, setQueryParam, getQueryCopy } = useSearchQuery();
+  const query = getQueryCopy();
   const schema = params.get("schema") || "public";
   const searchString = params.get("search") || "";
   const setParams = (newParams: { schema?: string; search?: string }) => {
-    setQueryParam("schema", newParams.schema);
+    if (newParams.schema) {
+      query.set("schema", newParams.schema);
+      query.commit();
+    }
     setQueryParam("search", newParams.search);
   };
   const { project, sdk } = useProjectStore();

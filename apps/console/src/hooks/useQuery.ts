@@ -4,13 +4,23 @@ import { useSearchParams } from "next/navigation";
 import { parseAsInteger, parseAsString, useQueryStates } from "nuqs";
 import { useCallback, useMemo } from "react";
 
-type QueryParams = {
-  limit?: number;
-};
+type QueryValue = string | number | null | undefined;
+type QueryRecord = Record<string, QueryValue>;
 
-export const useQuery = ({ limit: defaultLimit }: QueryParams = {}) => {
+interface QueryParams {
+  limit?: number;
+}
+
+/**
+ * Universal, dynamic query hook
+ * Handles both known and unknown query params
+ */
+export const useQuery = <T extends QueryRecord = QueryRecord>({
+  limit: defaultLimit,
+}: QueryParams = {}) => {
   const searchParams = useSearchParams();
 
+  // Known query params
   const [queryState, setQueryState] = useQueryStates({
     limit: parseAsInteger.withDefault(defaultLimit ?? 12),
     page: parseAsInteger.withDefault(1),
@@ -18,50 +28,51 @@ export const useQuery = ({ limit: defaultLimit }: QueryParams = {}) => {
     view: parseAsString,
   });
 
+  // --- Utilities ---
+
+  /** Create a mutable copy of current params */
   const createQueryCopy = useCallback(() => {
-    const copy = new URLSearchParams(searchParams.toString());
-    return copy;
+    return new URLSearchParams(searchParams.toString());
   }, [searchParams]);
 
+  /** Set a single or multiple query params */
   const setQueryParam = useCallback(
-    (key: string | Record<string, any>, value?: string | number | null) => {
+    (key: string | QueryRecord, value?: QueryValue) => {
       if (typeof key === "object") {
-        // Batch update multiple params
-        const updates = Object.entries(key).reduce(
-          (acc, [k, v]) => {
-            acc[k] = v === undefined || v === null ? null : v;
-            return acc;
-          },
-          {} as Record<string, any>,
-        );
-
+        const updates = Object.entries(key).reduce<Record<string, QueryValue>>((acc, [k, v]) => {
+          acc[k] = v ?? null;
+          return acc;
+        }, {});
         setQueryState(updates);
       } else {
-        // Single param update
-        setQueryState({ [key]: value === undefined ? null : value });
+        setQueryState({ [key]: value ?? null });
       }
     },
     [setQueryState],
   );
 
+  /** Replace current query entirely or partially */
   const setQuery = useCallback(
-    (params: URLSearchParams | Record<string, string | number | null>) => {
+    (params: URLSearchParams | QueryRecord) => {
+      const updates: QueryRecord = {};
+
       if (params instanceof URLSearchParams) {
-        const updates: Record<string, string | number | null> = {};
         params.forEach((value, key) => {
           updates[key] = value;
         });
-        setQueryState(updates);
       } else {
-        setQueryState(params);
+        Object.assign(updates, params);
       }
+
+      setQueryState(updates);
     },
     [setQueryState],
   );
 
-  // Utility to get a working copy of current params
+  /** Get a working, mutable query object */
   const getQueryCopy = useCallback(() => {
     const copy = createQueryCopy();
+
     return {
       params: copy,
       set: (key: string, value: string | number) => copy.set(key, value.toString()),
@@ -71,19 +82,19 @@ export const useQuery = ({ limit: defaultLimit }: QueryParams = {}) => {
     };
   }, [createQueryCopy, setQuery]);
 
-  // Clear all query params
+  /** Clear all params to default */
   const clearQuery = useCallback(() => {
-    setQueryState({
+    const defaults = {
       limit: defaultLimit ?? 12,
       page: 1,
-      search: undefined,
-    });
+    };
+    setQueryState(defaults);
   }, [setQueryState, defaultLimit]);
 
-  // Reset specific param to default
+  /** Reset one param to its default (if known) */
   const resetParam = useCallback(
-    (key: keyof typeof queryState) => {
-      const defaults = {
+    (key: string) => {
+      const defaults: QueryRecord = {
         limit: defaultLimit ?? 12,
         page: 1,
         search: undefined,
@@ -94,32 +105,32 @@ export const useQuery = ({ limit: defaultLimit }: QueryParams = {}) => {
     [setQueryState, defaultLimit],
   );
 
+  /** Check if any query other than defaults is active */
   const hasQuery = useMemo(() => {
+    const { limit, page, search } = queryState;
     return (
-      queryState.limit !== (defaultLimit ?? 12) || queryState.page !== 1 || !!queryState.search
+      limit !== (defaultLimit ?? 12) ||
+      page !== 1 ||
+      !!search ||
+      Array.from(searchParams.keys()).length > 0
     );
-  }, [queryState, defaultLimit]);
+  }, [queryState, searchParams, defaultLimit]);
 
   return {
-    // Current values from nuqs state
-    limit: queryState.limit,
-    page: queryState.page,
-    search: queryState.search ?? undefined,
-
-    // State management
-    hasQuery,
+    /** Current known params */
+    ...queryState,
+    /** All raw search params */
     params: searchParams,
 
-    // Enhanced setters
+    /** Utility & state management */
+    hasQuery,
     setQueryParam,
     setQuery,
-
-    // Utility functions
     getQueryCopy,
     clearQuery,
     resetParam,
 
-    // Raw nuqs state and setter for advanced usage
+    /** For advanced usage */
     queryState,
     setQueryState,
   };

@@ -240,7 +240,11 @@ export const CreateMessage: React.FC<CreateMessageProps> = ({
                     <Schedule />
                   </Column>
                   <Flex justify="flex-end" mt={6} gap="4">
-                    <Button variant="tertiary" onClick={() => handleClose({ open: false })}>
+                    <Button
+                      size="s"
+                      variant="tertiary"
+                      onClick={() => handleClose({ open: false })}
+                    >
                       Cancel
                     </Button>
                     <DraftButton />
@@ -270,6 +274,7 @@ const DraftButton = () => {
 
   return (
     <Button
+      size="s"
       onClick={() => {
         setFieldValue("draft", true);
         submitForm();

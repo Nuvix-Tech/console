@@ -19,6 +19,7 @@ export const Schedule = () => {
               { label: "Now", value: "now" },
               { label: "Schedule", value: "schedule" },
             ]}
+            portal={false}
           />
           <InputField type="date" name="date" label="Date" disabled={disabled} />
           <InputField
