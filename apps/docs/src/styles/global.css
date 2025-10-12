@@ -2,7 +2,7 @@
 
 :root {
   --radius: 0.625rem !important;
-  --card: var(--neutral-background-weak);
+  --card: var(--neutral-alpha-weak);
   --card-foreground: var(--neutral-on-background-medium);
   --popover: var(--surface-background);
   --popover-foreground: var(--neutral-on-background-strong);

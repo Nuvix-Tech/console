@@ -31,17 +31,17 @@ img {
 }
 
 /* LINK */
-a:not(.button) {
-    // color: var(--brand-on-background-medium);
-    text-decoration: none;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.25em;
-    text-decoration-color: var(--neutral-border-strong) !important;
+// a:not(.button) {
+//     // color: var(--brand-on-background-medium);
+//     text-decoration: none;
+//     text-decoration-thickness: 1px;
+//     text-underline-offset: 0.25em;
+//     text-decoration-color: var(--neutral-border-strong);
 
-    // &:hover {
-    //     text-decoration-line: underline;
-    // }
-}
+//     &:hover {
+//         text-decoration-line: underline;
+//     }
+// }
 
 /* SCROLLBAR */
 ::-webkit-scrollbar {

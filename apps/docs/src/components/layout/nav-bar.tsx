@@ -2,6 +2,7 @@
 import { Button, Row } from "@nuvix/ui/components";
 import { ThemeSwitch } from "./theme-switch";
 import { useEffect, useState } from "react";
+import { Logo } from "@nuvix/ui/components";
 
 export const NavBar = () => {
   const [stars, setStars] = useState<number | null>(null);
@@ -21,7 +22,21 @@ export const NavBar = () => {
   }, []);
 
   return (
-    <Row className="gap-2" id="nav_bar">
+    <Row className="gap-2 h-12 w-full flex px-4 items-center" id="nav_bar">
+      <div className="">
+        <Logo
+          icon={false}
+          size="s"
+          className="dark:!hidden !block"
+          wordmarkSrc="/trademark/logo-light.svg"
+        />
+        <Logo
+          icon={false}
+          size="s"
+          className="!hidden dark:!block"
+          wordmarkSrc="/trademark/logo-dark.svg"
+        />
+      </div>
       <ThemeSwitch />
       <div className="flex gap-2 items-center">
         <Button

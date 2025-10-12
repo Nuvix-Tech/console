@@ -26,6 +26,7 @@ import { BaseLinkItem, getLinks, LinkItemType } from "fumadocs-ui/layouts/links"
 import { SidebarIcon } from "lucide-react";
 import { RootToggle } from "fumadocs-ui/components/layout/root-toggle";
 import { LayoutBody } from "fumadocs-ui/layouts/docs-client";
+import { NavBar } from "@/components/layout/nav-bar";
 
 const sidebarVariables = cn("md:[--fd-sidebar-width:268px] lg:[--fd-sidebar-width:286px]");
 
@@ -110,7 +111,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     );
 
     const content = (
-      <SidebarContent {...rest}>
+      <SidebarContent {...rest} className="!bg-transparent border-none !mt-12">
         {/* <SidebarHeader>
           <div className="flex">
             <Link
@@ -200,8 +201,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <TreeContextProvider tree={source.pageTree}>
-        <NavProvider transparentMode={"top"}>
-          {/* {nav.enabled !== false &&
+        {/* <NavProvider transparentMode={"top"}> */}
+        {/* {nav.enabled !== false &&
             (nav.component ?? (
               <Navbar className="h-(--fd-nav-height) on-root:[--fd-nav-height:56px] md:on-root:[--fd-nav-height:0px] md:hidden">
                 <Link
@@ -230,27 +231,28 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 )}
               </Navbar>
             ))} */}
-          <LayoutBody
-            // {...props.containerProps}
-            className={cn(
-              // 'md:[&_#nd-page_article]:pt-12 xl:[&_#nd-page_article]:px-8',
-              sidebarVariables,
-            )}
-          >
-            {sidebar()}
-            {/* {tabMode === 'top' && tabs.length > 0 && (
+        <NavBar />
+        <LayoutBody
+          // {...props.containerProps}
+          className={cn(
+            // 'md:[&_#nd-page_article]:pt-12 xl:[&_#nd-page_article]:px-8',
+            sidebarVariables,
+          )}
+        >
+          {sidebar()}
+          {/* {tabMode === 'top' && tabs.length > 0 && (
               <LayoutTabs
                 options={tabs}
                 className="sticky top-[calc(var(--fd-nav-height)+var(--fd-tocnav-height))] z-10 bg-fd-background border-b px-6 pt-3 xl:px-8 max-md:hidden"
               />
             )} */}
-            <div className="pb-3 px-3 mt-12">
-              <div className="bg-(--main-background) rounded-md max-h-[calc(100vh_-_60px)] overflow-y-auto overflow-x-hidden">
-                {children}
-              </div>
+          <div className="pb-3 px-3">
+            <div className="bg-(--brand-alpha-weak)/15 border border-(--brand-border-weak)/30 dark:border-(--brand-border-weak) rounded-lg max-h-[calc(100vh_-_60px)] overflow-y-auto overflow-x-hidden">
+              {children}
             </div>
-          </LayoutBody>
-        </NavProvider>
+          </div>
+        </LayoutBody>
+        {/* </NavProvider> */}
       </TreeContextProvider>
     </>
   );

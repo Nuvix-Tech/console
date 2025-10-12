@@ -71,7 +71,7 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
           <PageFooter />
         </PageArticle>
 
-        <PageTOC className="mt-4">
+        <PageTOC className="mt-12 mr-6">
           <PageTOCTitle />
           <PageTOCItems variant={"clerk"} />
         </PageTOC>

@@ -1,4 +1,5 @@
 import "@nuvix/sui/globals.css";
+import "@nuvix/ui/styles/index.scss";
 import "@nuvix/ui/tokens/index.scss";
 import "@/styles/main.scss";
 import "@/styles/global.css";
