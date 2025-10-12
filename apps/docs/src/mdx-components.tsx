@@ -369,11 +369,11 @@ export const mdxComponents = {
   Expandable,
   // Mermaid,
   // API documentation components
-  // ParamField,
-  // ResponseField,
-  // Embed,
-  // File,
-  // Audio,
-  // NotionIcon,
-  // Video,
+  ParamField,
+  ResponseField,
+  Embed,
+  File,
+  Audio,
+  NotionIcon,
+  Video,
 };

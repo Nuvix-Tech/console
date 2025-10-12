@@ -100,6 +100,12 @@ const config = defineConfig({
           subtle: { value: "var(--neutral-on-background-weak)" },
           muted: { value: "var(--neutral-on-background-weak)" },
           emphasized: { value: "var(--neutral-on-background-strong)" },
+          solid: {
+            value: {
+              _light: "var(--brand-on-solid-medium)",
+              _dark: "var(--brand-on-solid-medium)",
+            },
+          },
         },
         gray: {
           subtle: { value: "var(--neutral-background-medium)" },
