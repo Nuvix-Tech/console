@@ -1,4 +1,3 @@
-import "@/styles/global.css";
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
 import { source } from "@/lib/source";
 import { layoutProps } from "@/components/layout/base-layout";

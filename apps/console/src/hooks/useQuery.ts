@@ -119,6 +119,7 @@ export const useQuery = <T extends QueryRecord = QueryRecord>({
   return {
     /** Current known params */
     ...queryState,
+    search: queryState.search ?? undefined,
     /** All raw search params */
     params: searchParams,
 

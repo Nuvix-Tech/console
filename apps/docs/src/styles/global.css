@@ -1,3 +1,26 @@
 @import "@nuvix/sui/globals.css";
+
+:root {
+  --radius: 0.625rem !important;
+  --card: var(--neutral-background-weak);
+  --card-foreground: var(--neutral-on-background-medium);
+  --popover: var(--surface-background);
+  --popover-foreground: var(--neutral-on-background-strong);
+  --primary: var(--neutral-solid-strong);
+  --primary-foreground: var(--neutral-on-solid-strong);
+  --secondary: var(--neutral-background-medium);
+  --secondary-foreground: var(--neutral-on-background-medium);
+  --muted: var(--neutral-alpha-weak);
+  --muted-foreground: var(--neutral-on-background-weak);
+  --accent: var(--brand-alpha-weak);
+  --accent-foreground: var(--brand-on-background-medium);
+  --destructive: var(--danger-background-medium);
+  --border: var(--neutral-border-medium);
+}
+
+.dark {
+  --card: var(--surface-background);
+}
+
 @import "fumadocs-ui/css/shadcn.css";
 @import "fumadocs-ui/css/preset.css";

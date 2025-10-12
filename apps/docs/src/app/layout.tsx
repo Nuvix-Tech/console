@@ -1,7 +1,7 @@
-import "@nuvix/ui/styles/index.scss";
+import "@nuvix/sui/globals.css";
 import "@nuvix/ui/tokens/index.scss";
 import "@/styles/main.scss";
-import "@nuvix/sui/globals.css";
+import "@/styles/global.css";
 
 import type { Metadata } from "next";
 import { headers, cookies } from "next/headers";

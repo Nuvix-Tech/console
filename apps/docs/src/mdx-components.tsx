@@ -1,173 +1,379 @@
-import * as React from "react";
-import Image from "next/image";
-import Link from "next/link";
+import * as FilesComponents from "fumadocs-ui/components/files";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+import { Callout } from "fumadocs-ui/components/callout";
+import * as CardsComponents from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
 
-import { Alert, AlertDescription, AlertTitle } from "@nuvix/sui/components/alert";
-import { Button } from "@nuvix/sui/components/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@nuvix/sui/components/tabs";
+import { Latex } from "./components/math";
+import { CSSProperties } from "react";
+import fumadocsComponents from "fumadocs-ui/mdx";
+import { DynamicIcon } from "./lib/icon";
+import React from "react";
+import { Expandable } from "./components/expandable";
+import { ShowMore } from "./components/show-more";
 import { cn } from "@nuvix/sui/lib/utils";
-import { InlineCode, Line, SmartLink, Text } from "@nuvix/ui/components";
-import { HeadingLink } from "@nuvix/ui/modules";
-import { MDXComponents } from "mdx/types";
-import defaultMdxComponents from "fumadocs-ui/mdx";
-import { CodeBlock, Pre } from "fumadocs-ui/components/codeblock";
+import {
+  ContextAwareCodeBlock,
+  ContextAwareCodeBlockTab,
+  ContextAwareCodeBlockTabs,
+  Tab,
+  Tabs,
+} from "./components/mdx";
 
-const Callout = defaultMdxComponents.Callout;
+// const Mermaid = React.lazy(() => import('./mermaid'))
 
-export function mdxComponents(components?: MDXComponents): MDXComponents {
-  return {
-    ...defaultMdxComponents,
-    ...components,
-    Callout: ({ className, ...props }) => {
-      return (
-        <Callout
-          className={cn("[&>*:first-child]:w-1 [&>*:first-child]:-ml-1 overflow-hidden", className)}
-          {...props}
-        />
-      );
-    },
-    h1: ({ className, ...props }: React.ComponentProps<typeof Text>) => (
-      <Text
-        className={cn("font-heading mt-2 scroll-m-28 text-3xl font-bold tracking-tight", className)}
-        {...props}
+function TodoItem({
+  checked,
+  onChange,
+  children,
+  className,
+  style,
+}: {
+  checked?: boolean;
+  onChange?: (checked: boolean) => void;
+  children?: React.ReactNode;
+  className?: string;
+  style?: CSSProperties;
+}) {
+  return (
+    <div className={cn("flex items-center my-2", className)} style={style}>
+      <input
+        type="checkbox"
+        checked={checked}
+        // onChange={(e) => onChange?.(e.target.checked)}
+        className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2"
       />
-    ),
-    h2: ({ className, ...props }) => {
-      return (
-        <HeadingLink
-          as="h2"
-          marginTop="16"
-          id={
-            props.children
-              ?.toString()
-              .replace(/ /g, "-")
-              .replace(/'/g, "")
-              .replace(/\?/g, "")
-              .toLowerCase() as string
-          }
-          className={cn("scroll-m-28 first:mt-0 [&+p]:!mt-4 *:[code]:text-2xl", className)}
-          {...props}
-        />
-      );
-    },
-    // h3: ({ className, ...props }) => (
-    //   <Text
-    //     as="h3"
-    //     variant="heading-default-m"
-    //     className={cn(
-    //       // "font-heading mt-8 scroll-m-28 *:[code]:text-xl",
-    //       className,
-    //     )}
-    //     {...props}
-    //   />
-    // ),
-    // h4: ({ className, ...props }: React.ComponentProps<"h4">) => (
-    //   <h4
-    //     className={cn("font-heading mt-8 scroll-m-28 text-lg font-medium tracking-tight", className)}
-    //     {...props}
-    //   />
-    // ),
-    // h5: ({ className, ...props }: React.ComponentProps<"h5">) => (
-    //   <h5
-    //     className={cn("mt-8 scroll-m-28 text-lg font-medium tracking-tight", className)}
-    //     {...props}
-    //   />
-    // ),
-    // h6: ({ className, ...props }: React.ComponentProps<"h6">) => (
-    //   <h6
-    //     className={cn("mt-8 scroll-m-28 text-base font-medium tracking-tight", className)}
-    //     {...props}
-    //   />
-    // ),
-    // a: ({ className, ...props }) => (
-    //   <SmartLink className={cn("font-medium !underline !underline-offset-4", className)} unstyled {...props} />
-    // ),
-    // p: ({ className, ...props }) => (
-    //   <Text variant="body-default-s" className={cn("[&:not(:first-child)]:mt-6", className)} {...props} />
-    // ),
-    hr: ({ ...props }) => <Line className="my-4 md:my-8" {...props} />,
-    pre: ({ ref: _ref, ...props }) => (
-      <CodeBlock {...props}>
-        <Pre>{props.children}</Pre>
-      </CodeBlock>
-    ),
-    code: ({ className, ...props }) => {
-      const languageMatch = className?.match(/language-(\w+)/);
-      const language = languageMatch ? languageMatch[1] : undefined;
-      // Inline Code.
-      if (typeof props.children === "string" && !language) {
-        return <InlineCode {...props} />;
-      }
-
-      return <code className={className} {...props} />;
-    },
-    Step: ({ className, ...props }: React.ComponentProps<"h3">) => (
-      <h3
-        className={cn(
-          "font-heading mt-8 scroll-m-32 text-xl font-medium tracking-tight",
-          className,
-        )}
-        {...props}
-      />
-    ),
-    Steps: ({ ...props }) => (
-      <div className="[&>h3]:step steps mb-12 [counter-reset:step] *:[h3]:first:!mt-0" {...props} />
-    ),
-    Image: ({ src, className, width, height, alt, ...props }: React.ComponentProps<"img">) => (
-      <Image
-        className={cn("mt-6 rounded-md border", className)}
-        src={src || ""}
-        width={Number(width)}
-        height={Number(height)}
-        alt={alt || ""}
-        {...props}
-      />
-    ),
-    Tabs: ({ className, ...props }: React.ComponentProps<typeof Tabs>) => {
-      return <Tabs className={cn("relative mt-6 w-full", className)} {...props} />;
-    },
-    TabsList: ({ className, ...props }: React.ComponentProps<typeof TabsList>) => (
-      <TabsList
-        className={cn("justify-start gap-4 rounded-none bg-transparent px-2 md:px-0", className)}
-        {...props}
-      />
-    ),
-    TabsTrigger: ({ className, ...props }: React.ComponentProps<typeof TabsTrigger>) => (
-      <TabsTrigger
-        className={cn(
-          "text-muted-foreground data-[state=active]:text-foreground px-0 text-base data-[state=active]:shadow-none dark:data-[state=active]:border-transparent dark:data-[state=active]:bg-transparent",
-          className,
-        )}
-        {...props}
-      />
-    ),
-    TabsContent: ({ className, ...props }: React.ComponentProps<typeof TabsContent>) => (
-      <TabsContent
-        className={cn(
-          "relative [&_h3.font-heading]:text-base [&_h3.font-heading]:font-medium *:[figure]:first:mt-0 [&>.steps]:mt-6",
-          className,
-        )}
-        {...props}
-      />
-    ),
-    Tab: ({ className, ...props }: React.ComponentProps<"div">) => (
-      <div className={cn(className)} {...props} />
-    ),
-    Button,
-    Alert,
-    AlertTitle,
-    AlertDescription,
-    Link: ({ className, ...props }: React.ComponentProps<typeof SmartLink>) => (
-      <SmartLink className={cn(className)} {...props} unstyled={false} />
-    ),
-    LinkedCard: ({ className, ...props }: React.ComponentProps<typeof Link>) => (
-      <Link
-        className={cn(
-          "bg-surface text-surface-foreground hover:bg-surface/80 flex w-full flex-col items-center rounded-xl p-6 transition-colors sm:p-10",
-          className,
-        )}
-        {...props}
-      />
-    ),
-  };
+      <div className={cn(checked && "line-through text-gray-500")}>{children}</div>
+    </div>
+  );
 }
+
+function Columns({ children, cols = 2 }: { children?: React.ReactNode; cols?: number }) {
+  return (
+    <div
+      className={`grid gap-4 my-4`}
+      style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function Column({ children }: { children?: React.ReactNode }) {
+  return <div className="flex flex-col gap-4 p-2 flex-1">{children}</div>;
+}
+
+function Embed({ src, children }: { src: string; children?: string }) {
+  const caption = children || "Embedded Content";
+  return (
+    <div className="my-4 p-4 border border-gray-200 rounded-md bg-gray-50">
+      <iframe src={src} title={caption} className="w-full h-[400px] border-none" allowFullScreen />
+      <div className="mt-2 text-sm text-gray-500 text-center">{caption}</div>
+    </div>
+  );
+}
+
+function File({ url, name, children }: { url: string; name?: string; children?: string }) {
+  const displayText = children || name || "Download File";
+  return (
+    <div className="my-4 p-4 border border-gray-200 rounded-md bg-gray-50">
+      <a
+        href={url}
+        download={name || true}
+        className="block no-underline text-blue-500 font-medium"
+      >
+        {displayText}
+      </a>
+      {name && children && name !== children && (
+        <div className="mt-2 text-sm text-gray-500">{name}</div>
+      )}
+    </div>
+  );
+}
+
+function Audio({ src, children }: { src: string; children?: string }) {
+  return (
+    <div className="my-4 p-4 border border-gray-200 rounded-md bg-gray-50">
+      <audio controls className="w-full">
+        <source src={src} />
+        Your browser does not support the audio element.
+      </audio>
+      {children && <div className="mt-2 text-sm text-gray-500 text-center">{children}</div>}
+    </div>
+  );
+}
+
+function NotionIcon({ url }: { url: string }) {
+  if (!url) {
+    return null;
+  }
+
+  return <img src={url} className="w-4 h-4" alt="" />;
+}
+
+function Video({ src, children }: { src: string; children?: string }) {
+  return (
+    <div className="relative pb-[56.25%] h-0 overflow-hidden max-w-full my-4">
+      <iframe
+        src={src}
+        title={children || "Video"}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        className="absolute top-0 left-0 w-full h-full border-0"
+      />
+      {children && <div className="text-center text-sm text-gray-500 mt-2">{children}</div>}
+    </div>
+  );
+}
+
+// Mintlify-style callout components using fumadocs Callout
+function Note({ children }: { children: React.ReactNode }) {
+  return <Callout type="info">{children}</Callout>;
+}
+
+function Warning({ children }: { children: React.ReactNode }) {
+  return <Callout type="warn">{children}</Callout>;
+}
+
+function Info({ children }: { children: React.ReactNode }) {
+  return <Callout type="info">{children}</Callout>;
+}
+
+function Tip({ children }: { children: React.ReactNode }) {
+  return <Callout>{children}</Callout>;
+}
+
+function Check({ children }: { children: React.ReactNode }) {
+  return <Callout type="success">{children}</Callout>;
+}
+
+// Mintlify-style Card component with correct props
+function MintlifyCard({
+  title,
+  icon,
+  iconType,
+  color,
+  href,
+  horizontal,
+  img,
+  cta,
+  arrow,
+  children,
+}: {
+  title: string;
+  icon?: string;
+  iconType?: "regular" | "solid" | "light" | "thin" | "sharp-solid" | "duotone" | "brands";
+  color?: string;
+  href?: string;
+  horizontal?: boolean;
+  img?: string;
+  cta?: string;
+  arrow?: boolean;
+  children?: React.ReactNode;
+}) {
+  // Use fumadocs Card as base but with Mintlify prop mapping
+  return (
+    <CardsComponents.Card
+      title={title}
+      children={children}
+      href={href}
+      icon={typeof icon === "string" ? <DynamicIcon icon={icon} /> : icon}
+      {...(img && { image: img })}
+    />
+  );
+}
+
+// API documentation components
+function ParamField({
+  path,
+  body,
+  query,
+  header,
+  type,
+  required,
+  deprecated,
+  default: defaultValue,
+  initialValue,
+  placeholder,
+  children,
+}: {
+  path?: string;
+  body?: string;
+  query?: string;
+  header?: string;
+  type?: string;
+  required?: boolean;
+  deprecated?: boolean;
+  default?: string;
+  initialValue?: any;
+  placeholder?: string;
+  children?: React.ReactNode;
+}) {
+  const paramName = path || body || query || header || "parameter";
+  const paramType = type || "string";
+  const location = path
+    ? "path"
+    : body
+      ? "body"
+      : query
+        ? "query"
+        : header
+          ? "header"
+          : "parameter";
+
+  return (
+    <div className="border border-border rounded-lg p-4 mb-4">
+      <div className="flex items-center gap-2 mb-2">
+        <code className="text-sm font-mono bg-muted px-2 py-1 rounded">{paramName}</code>
+        <span className="text-xs text-muted-foreground">{location}</span>
+        {required && (
+          <span className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded">required</span>
+        )}
+        {deprecated && (
+          <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
+            deprecated
+          </span>
+        )}
+        <span className="text-xs text-muted-foreground">{paramType}</span>
+        {defaultValue && (
+          <span className="text-xs text-muted-foreground">default: {defaultValue}</span>
+        )}
+      </div>
+      {children && <div className="text-sm text-muted-foreground">{children}</div>}
+    </div>
+  );
+}
+
+function ResponseField({
+  name,
+  type,
+  required,
+  deprecated,
+  default: defaultValue,
+  pre,
+  post,
+  children,
+}: {
+  name: string;
+  type: string;
+  required?: boolean;
+  deprecated?: boolean;
+  default?: string;
+  pre?: string[];
+  post?: string[];
+  children?: React.ReactNode;
+}) {
+  return (
+    <div className="border-l-4 border-green-200 pl-4 mb-3">
+      <div className="flex items-center gap-2 mb-1">
+        {pre &&
+          pre.map((label, i) => (
+            <span key={i} className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+              {label}
+            </span>
+          ))}
+        <code className="text-sm font-mono">{name}</code>
+        {required && (
+          <span className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded">required</span>
+        )}
+        {deprecated && (
+          <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
+            deprecated
+          </span>
+        )}
+        <span className="text-xs text-muted-foreground">{type}</span>
+        {defaultValue && (
+          <span className="text-xs text-muted-foreground">default: {defaultValue}</span>
+        )}
+        {post &&
+          post.map((label, i) => (
+            <span key={i} className="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded">
+              {label}
+            </span>
+          ))}
+      </div>
+      {children && <div className="text-sm text-muted-foreground">{children}</div>}
+    </div>
+  );
+}
+
+function Frame({
+  caption,
+  children,
+  style,
+}: {
+  caption?: React.ReactNode;
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+}) {
+  return (
+    <div
+      data-name="frame"
+      className={cn(
+        "frame p-2 not-prose relative bg-gray-50/50 rounded-2xl overflow-hidden dark:bg-gray-800/25",
+      )}
+      style={style}
+    >
+      <div className="relative rounded-xl overflow-hidden flex justify-center">{children}</div>
+      {caption && (
+        <div className="relative rounded-2xl flex justify-center mt-3 pt-0 px-8 pb-2 text-sm text-gray-700 dark:text-gray-400">
+          {typeof caption === "string" ? <p>{caption}</p> : caption}
+        </div>
+      )}
+      <div className="absolute inset-0 pointer-events-none border border-black/5 rounded-2xl dark:border-white/5"></div>
+    </div>
+  );
+}
+
+export const mdxComponents = {
+  CodeBlockTab: ContextAwareCodeBlockTab,
+  CodeBlockTabs: ContextAwareCodeBlockTabs,
+  figcaption: "figcaption",
+  pre: ContextAwareCodeBlock,
+  ShowMore,
+  a: fumadocsComponents.a,
+  img: fumadocsComponents.img,
+  h1: fumadocsComponents.h1,
+  h2: fumadocsComponents.h2,
+  h3: fumadocsComponents.h3,
+  h4: fumadocsComponents.h4,
+  h5: fumadocsComponents.h5,
+  h6: fumadocsComponents.h6,
+  table: fumadocsComponents.table,
+  Callout: fumadocsComponents.Callout,
+  summary: "summary",
+  details: "details",
+  Latex: Latex,
+  // TodoItem,
+  Columns,
+  Column,
+  Tabs: Tabs,
+  Tab: Tab,
+  Accordion,
+  Accordions,
+  AccordionGroup: Accordions,
+  // Mintlify-style callout components
+  Note,
+  Warning,
+  Info,
+  Tip,
+  Check,
+  // Mintlify-style other components
+  Card: MintlifyCard,
+  Cards: CardsComponents.Cards,
+  CardGroup: CardsComponents.Cards,
+  Steps,
+  Step,
+  CodeGroup: Tabs,
+  Frame,
+  Expandable,
+  // Mermaid,
+  // API documentation components
+  // ParamField,
+  // ResponseField,
+  // Embed,
+  // File,
+  // Audio,
+  // NotionIcon,
+  // Video,
+};
