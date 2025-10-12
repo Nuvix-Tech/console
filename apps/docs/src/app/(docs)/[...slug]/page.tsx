@@ -32,6 +32,7 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
         toc={{
           toc: page.data.toc,
         }}
+        className="mx-0"
       >
         {page.data.toc?.length > 0 && (
           <PageTOCPopover>
@@ -41,7 +42,7 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
             </PageTOCPopoverContent>
           </PageTOCPopover>
         )}
-        <PageArticle className="docs-page-article">
+        <PageArticle className="docs-page-article lg:max-w-2xl">
           <PageBreadcrumb />
           <h1 className="text-3xl font-semibold">{page.data.title}</h1>
           <p className="text-lg text-fd-muted-foreground">{page.data.description}</p>
@@ -70,7 +71,7 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
           <PageFooter />
         </PageArticle>
 
-        <PageTOC>
+        <PageTOC className="mt-4">
           <PageTOCTitle />
           <PageTOCItems variant={"clerk"} />
         </PageTOC>

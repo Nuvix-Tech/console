@@ -1,5 +1,6 @@
 body {
     font-family: var(--font-custom);
+    --fd-toc-width: 286px;
 }
 
 #nd-subnav {
@@ -8,4 +9,32 @@ body {
 
 #nd-sidebar #nav_bar {
     display: none   !important;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar {
+    background: var(--static-transparent);
+    width: var(--static-space-8);
+    height: var(--static-space-8);
+}
+
+::-webkit-scrollbar-track {
+    background: var(--static-transparent);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--neutral-alpha-medium);
+    transition: var(--transition-micro-medium);
+
+    &:hover {
+        background: var(--neutral-alpha-strong);
+    }
+}
+
+::-webkit-scrollbar-corner {
+    background-color: var(--static-transparent);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
 }
