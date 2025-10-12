@@ -1,0 +1,176 @@
+---
+title: Preferences Storage
+description: Store and manage user preferences with Nuvix's Account API and Teams API for individual and shared settings.
+---
+
+Store user settings that persist across sessions. Nuvix makes it simple to save themes, languages, notifications, and any custom preferences for both individual users and teams.
+
+## User preferences
+
+Store personal settings that follow users across devices. Perfect for themes, language choices, notification preferences, or any user-specific configuration.
+
+Preferences are stored as JSON objects with a 64kB size limit. Store anything from simple boolean flags to complex nested configurations.
+
+### Update user preferences
+
+Use the `updatePrefs` method to store user preferences as a JSON object.
+
+```javascript
+import { Client } from 'nuvix';
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const account = new Account(client);
+
+// Store user preferences
+const prefs = await account.updatePrefs({
+    darkTheme: true,
+    language: 'en',
+    notifications: {
+        email: true,
+        push: false
+    }
+});
+
+console.log('Preferences updated:', prefs);
+```
+
+### Get user preferences
+
+Retrieve stored preferences with the `getPrefs` method.
+
+```javascript
+import { Client } from 'nuvix';
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const account = new Account(client);
+
+// Get current user preferences
+const preferences = await account.getPrefs();
+console.log('User preferences:', preferences);
+
+// Use preferences in your app
+if (preferences.darkTheme) {
+    document.body.classList.add('dark-mode');
+}
+```
+
+## Team preferences
+
+Team preferences let you store settings that apply to an entire team of users. Perfect for collaborative features like team-wide themes, notification preferences, or feature toggles.
+
+All team members can access these shared preferences, making it easy to maintain consistency across your organization.
+
+### Update team preferences
+
+Store team-wide settings using the `updatePrefs` method with a team ID.
+
+```javascript
+import { Client } from 'nuvix';
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const teams = new Teams(client);
+
+// Update team preferences
+const teamPrefs = await teams.updatePrefs('<TEAM_ID>', {
+    theme: 'corporate',
+    notificationsEnabled: true,
+    defaultView: 'kanban',
+    features: {
+        analytics: true,
+        exports: false
+    }
+});
+
+console.log('Team preferences updated:', teamPrefs);
+```
+
+### Get team preferences
+
+Fetch team preferences by passing a team ID to the `getPrefs` method.
+
+```javascript
+import { Client } from 'nuvix';
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const teams = new Teams(client);
+
+// Get team preferences
+const teamPreferences = await teams.getPrefs('<TEAM_ID>');
+console.log('Team preferences:', teamPreferences);
+
+// Apply team settings
+if (teamPreferences.theme === 'corporate') {
+    applyCorporateTheme();
+}
+```
+
+<Note>
+Team preferences are accessible to all team members. Use them for shared settings that should be consistent across your team.
+</Note>
+
+## Best practices
+
+### Keep preferences lightweight
+
+Preferences are designed for small configuration data. For larger datasets, consider using Nuvix's database features instead.
+
+### Use consistent naming
+
+Establish a naming convention for your preference keys. Consider using camelCase and grouping related settings:
+
+```javascript
+{
+    // Theme settings
+    theme: 'dark',
+    themeColor: 'blue',
+    
+    // Notification settings
+    notificationsEmail: true,
+    notificationsPush: false,
+    
+    // Feature flags
+    features: {
+        analytics: true,
+        betaFeatures: false
+    }
+}
+```
+
+### Handle preferences gracefully
+
+Always check if preferences exist before using them, and provide sensible defaults:
+
+```javascript
+const loadUserPreferences = async () => {
+    try {
+        const prefs = await account.getPrefs();
+        
+        // Apply preferences with fallbacks
+        applyTheme(prefs.theme || 'light');
+        setLanguage(prefs.language || 'en');
+        configureNotifications(prefs.notifications || {});
+        
+    } catch (error) {
+        // Use defaults if preferences fail to load
+        console.log('Using default preferences');
+        applyTheme('light');
+        setLanguage('en');
+    }
+};
+```
+
+<Card title="Next: Multi-tenancy with Teams" href="/products/auth/multi-tenancy" icon="users">
+Learn how to organize users into teams for collaborative features and shared resources.
+</Card>

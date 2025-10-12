@@ -1,0 +1,242 @@
+---
+title: Teams
+description: Master team management in Nuvix. Explore team-related functions, permissions, and multi-tenant architectures.
+---
+
+Teams allow users to share access to resources. Build collaborative applications where users can create teams, invite members, and manage permissions together.
+
+For example, in a project management app, a user can create a team for their project and invite team members to collaborate. You can assign specific roles to control access to different parts of your application.
+
+<Card title="Multi-tenancy with Teams" href="/products/auth/multi-tenancy" icon="users">
+Learn how to use Teams for building multi-tenant SaaS applications
+</Card>
+
+## Create team
+
+Create teams with custom roles to organize your users. For example, create a `developers` team with roles like `frontend`, `backend`, `devops`, and `qa`.
+
+The creator automatically gets the `owner` role. **Only owners can invite and remove members**.
+
+```javascript
+import { Client, Teams } from 'nuvix';
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const teams = new Teams(client);
+
+const team = await teams.create(
+    'developers',
+    'Development Team',
+    ['frontend', 'backend', 'devops', 'qa']
+);
+
+console.log('Team created:', team);
+```
+
+## Invite team members
+
+Invite members to a team by creating team memberships. Assign roles to control what each member can access.
+
+```javascript
+// Invite a team member with specific roles
+const membership = await teams.createMembership(
+    'developers',
+    ['frontend', 'qa'],
+    'sarah@example.com',
+    'https://yourapp.com/accept-invite'
+);
+
+console.log('Invitation sent:', membership);
+```
+
+<Info>
+Invitations are sent via email with a secure link. Users can accept the invitation to join the team immediately.
+</Info>
+
+## Manage team permissions
+
+Control access to your application's resources using team-based permissions. Grant permissions to all team members or specific roles within a team.
+
+### Team-wide permissions
+
+Grant access to all team members:
+
+```javascript
+// Allow all team members to access project documents
+await databases.createDocument(
+    'projects',
+    'project123',
+    { name: 'New Project' },
+    [Permission.read(Role.team('developers'))]
+);
+```
+
+### Role-specific permissions
+
+Grant access to specific roles within a team:
+
+```javascript
+// Only frontend developers can edit UI components
+await databases.createDocument(
+    'components',
+    'button123',
+    { type: 'button', label: 'Submit' },
+    [
+        Permission.read(Role.team('developers')),
+        Permission.update(Role.team('developers', ['frontend']))
+    ]
+);
+```
+
+## List team memberships
+
+Get all members of a team and their roles:
+
+```javascript
+// Get team memberships
+const memberships = await teams.listMemberships('developers');
+
+memberships.memberships.forEach(membership => {
+    console.log(`User: ${ membership.userName }`);
+    console.log(`Roles: ${ membership.roles.join(', ') }`);
+    console.log(`Status: ${ membership.confirm ? 'Active' : 'Pending' }`);
+});
+```
+
+## Update member roles
+
+Change team member roles as your project needs evolve:
+
+```javascript
+// Update member roles
+await teams.updateMembership(
+    'developers',
+    'membership123',
+    ['backend', 'devops']
+);
+```
+
+## Remove team members
+
+Remove members when they no longer need access:
+
+```javascript
+await teams.deleteMembership('developers', 'membership123');
+```
+
+## Privacy controls
+
+Protect team members' personal information by configuring privacy settings. Navigate to **Auth** > **Security** > **Memberships Privacy** to make these details private:
+
+- `userName` - Member's name
+- `userEmail` - Member's email address  
+- `mfa` - Whether member has enabled multi-factor authentication
+
+<Warning>
+Privacy settings apply globally to all teams. Consider your application's privacy requirements when configuring these settings.
+</Warning>
+
+## Best practices
+
+### Team structure
+
+**Organize teams by function:**
+```javascript
+// Development teams
+developers: ['frontend', 'backend', 'devops', 'qa']
+
+// Business teams  
+sales: ['manager', 'representative', 'analyst']
+marketing: ['content', 'design', 'social']
+```
+
+**Organize teams by project:**
+```javascript
+// Project-based teams
+projectAlpha: ['lead', 'developer', 'designer']
+projectBeta: ['lead', 'developer', 'tester']
+```
+
+### Role naming conventions
+
+Use clear, descriptive role names:
+```javascript
+// Good
+['owner', 'admin', 'editor', 'viewer']
+
+// Avoid
+['level1', 'level2', 'user', 'poweruser']
+```
+
+### Security considerations
+
+```javascript
+// Validate team operations
+const validateTeamOperation = async (userId, teamId, requiredRole) => {
+    const memberships = await teams.listMemberships(teamId);
+    const membership = memberships.memberships.find(m => m.userId === userId);
+    
+    if (!membership) {
+        throw new Error('User is not a team member');
+    }
+    
+    if (!membership.roles.includes(requiredRole) && !membership.roles.includes('owner')) {
+        throw new Error('Insufficient permissions');
+    }
+    
+    return true;
+};
+```
+
+## Common patterns
+
+### Multi-tenant SaaS
+
+Use teams to separate customer data:
+```javascript
+// Each customer gets their own team
+customerTeam = await teams.create(
+    'customer-123',
+    'Acme Corp',
+    ['admin', 'user', 'viewer']
+);
+
+// Customer data is isolated by team permissions
+database.createDocument('todos', 'todo123', data, [
+    Permission.read(Role.team('customer-123')),
+    Permission.update(Role.team('customer-123', ['admin']))
+]);
+```
+
+### Collaborative workspaces
+
+Enable real-time collaboration:
+```javascript
+// Workspace team with different access levels
+workspaceTeam = await teams.create(
+    'workspace-alpha',
+    'Alpha Workspace', 
+    ['owner', 'editor', 'commenter', 'viewer']
+);
+
+// Grant permissions based on workspace membership
+storage.createFile('documents', 'doc123', file, [
+    Permission.read(Role.team('workspace-alpha')),
+    Permission.update(Role.team('workspace-alpha', ['owner', 'editor']))
+]);
+```
+
+<CardGroup cols={2}>
+<Card title="Team Invitations" href="/products/auth/team-invites" icon="mail">
+    Learn how to invite members with email or custom flows
+</Card>
+<Card title="Permissions Guide" href="/docs/advanced/permissions" icon="shield">
+    Master role-based access control with teams
+</Card>
+</CardGroup>
+
+<Check>
+Teams are the foundation of collaborative applications. Start with simple role structures and expand as your application grows.
+</Check>

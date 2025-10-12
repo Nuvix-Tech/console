@@ -1,0 +1,53 @@
+---
+title: Manage users
+description: Handle user profiles, settings, and admin tasks with Nuvix's server-side user management tools.
+---
+
+The Users API is your admin dashboard in code form. Create users, update profiles, check activity logs, and manage accounts - all from your backend.
+
+## When to use this
+
+**Client apps** → Use the Account API for user-facing features like login and profile updates.
+
+**Server/backend** → Use the Users API for admin tasks like bulk imports, user analytics, and account management.
+
+## What you can build
+
+- **User management systems** - Create, update, and delete user accounts
+- **Admin dashboards** - View user activity and manage profiles  
+- **Import tools** - Bulk migrate users from other platforms
+- **Analytics** - Track user behavior and audit logs
+- **Automation** - Use with Nuvix Functions for serverless user workflows
+
+## Key differences
+
+| Feature | Account API (Client) | Users API (Server) |
+|---------|---------------------|-------------------|
+| Who uses it | Your app users | Your backend/admin |
+| Authentication | User sessions | API keys |
+| Permissions | Respects user permissions | Bypasses permissions |
+| Use cases | Login, profile updates | Admin tasks, bulk operations |
+
+## Getting started
+
+Use the Server SDK with an API key that has appropriate scopes:
+
+```javascript
+import { Client, Users } from "nuvix";
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>')
+    .setKey('<API_KEY>'); // Server-side API key
+
+const users = new Users(client);
+
+// List all users
+const userList = await users.list();
+
+// Create a new user
+const newUser = await users.create(
+    ID.unique(),
+    'email@example.com',
+    '+1234567890',
+    '

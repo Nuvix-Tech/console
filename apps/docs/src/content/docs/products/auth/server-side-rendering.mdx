@@ -1,0 +1,254 @@
+---
+title: Server-Side Rendering
+description: Implement SSR authentication with Nuvix for Next.js, SvelteKit, Nuxt, and other SSR frameworks.
+---
+
+Server-side rendering (SSR) is fully supported with Nuvix. Build authenticated applications with Next.js, SvelteKit, Nuxt, Astro, and any SSR framework.
+
+SSR renders pages on the server and sends fully rendered HTML to the browser, improving performance and SEO compared to client-side rendering (CSR).
+
+## SSR authentication flow
+
+In client-side apps, authentication happens directly in the browser. With SSR, your server handles authentication and manages sessions through secure cookies.
+
+### How it works
+
+1. User enters credentials in their browser
+2. Browser sends credentials to your server
+3. Server uses Nuvix SDK to authenticate the user
+4. Server creates a session cookie for the client
+5. Browser automatically includes the cookie with future requests
+6. Server uses the cookie to make authenticated requests to Nuvix
+
+<Info>
+SSR requires server-side SDK usage. The server manages authentication state and passes it to the client through secure cookies.
+</Info>
+
+## Initialize clients
+
+You'll need two Nuvix clients for SSR applications:
+
+### Admin client
+
+Use the admin client for operations that bypass permissions or rate limits. Requires an API key with proper scopes.
+
+```javascript
+import { Client } from 'nuvix';
+
+const adminClient = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>')
+    .setKey('<YOUR_API_KEY>'); // Server-side API key
+```
+
+<Warning>
+Admin clients bypass permissions and rate limits. Use them carefully and only for server-side operations.
+</Warning>
+
+### Session client
+
+Create a new session client for each request. Never share clients between requests.
+
+```javascript
+import { Client } from 'nuvix';
+
+function createSessionClient(req) {
+    const sessionClient = new Client()
+        .setEndpoint('https://api.nuvix.in/v1')
+        .setProject('<PROJECT_ID>');
+    
+    // Get session from cookie
+    const session = req.cookies['a_session_<PROJECT_ID>'];
+    if (session) {
+        sessionClient.setSession(session);
+    }
+    
+    return sessionClient;
+}
+```
+
+## Creating email/password sessions
+
+Create a login endpoint that accepts credentials and returns a session cookie.
+
+```javascript
+import express from 'express';
+import { Client, Account } from 'nuvix';
+
+const app = express();
+
+// Initialize admin client
+const adminClient = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>')
+    .setKey('<YOUR_API_KEY>');
+
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+    const account = new Account(adminClient);
+    
+    try {
+        // Create session with Nuvix
+        const session = await account.createEmailPasswordSession(email, password);
+        
+        // Set secure session cookie
+        res.cookie('a_session_<PROJECT_ID>', session.secret, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+            expires: new Date(session.expire),
+            path: '/'
+        });
+        
+        res.json({ success: true });
+    } catch (error) {
+        res.status(401).json({ 
+            success: false, 
+            error: 'Invalid credentials' 
+        });
+    }
+});
+```
+
+<Check>
+Always use `httpOnly`, `secure`, and `sameSite` cookie options to prevent XSS attacks and ensure cookies are only sent over HTTPS.
+</Check>
+
+## Making authenticated requests
+
+Use the session cookie to make authenticated requests on behalf of the user.
+
+```javascript
+app.get('/user', async (req, res) => {
+    // Get session from cookie
+    const session = req.cookies['a_session_<PROJECT_ID>'];
+    
+    if (!session) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+    
+    // Create session client
+    const sessionClient = new Client()
+        .setEndpoint('https://api.nuvix.in/v1')
+        .setProject('<PROJECT_ID>')
+        .setSession(session);
+    
+    const account = new Account(sessionClient);
+    
+    try {
+        const user = await account.get();
+        res.json({ success: true, user });
+    } catch (error) {
+        res.status(401).json({ error: 'Session invalid' });
+    }
+});
+```
+
+## Unauthenticated requests
+
+Handle requests from users who aren't logged in using guest sessions or admin clients.
+
+### Guest sessions
+
+Create anonymous sessions for users who haven't authenticated:
+
+```javascript
+app.post('/guest-session', async (req, res) => {
+    const account = new Account(adminClient);
+    
+    try {
+        const session = await account.createAnonymousSession();
+        
+        res.cookie('a_session_<PROJECT_ID>', session.secret, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+            expires: new Date(session.expire),
+            path: '/'
+        });
+        
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to create guest session' });
+    }
+});
+```
+
+## OAuth2 with SSR
+
+Implement OAuth2 authentication with two server endpoints:
+
+### 1. Redirect to OAuth provider
+
+```javascript
+app.get('/oauth', async (req, res) => {
+    const account = new Account(adminClient);
+    
+    const redirectUrl = await account.createOAuth2Token({
+        provider: 'github',
+        success: 'https://yourapp.com/oauth/success',
+        failure: 'https://yourapp.com/oauth/failure'
+    });
+    
+    res.redirect(redirectUrl);
+});
+```
+
+### 2. Handle OAuth callback
+
+```javascript
+app.get('/oauth/success', async (req, res) => {
+    const { userId, secret } = req.query;
+    const account = new Account(adminClient);
+    
+    try {
+        const session = await account.createSession(userId, secret);
+        
+        res.cookie('a_session_<PROJECT_ID>', session.secret, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+            expires: new Date(session.expire),
+            path: '/'
+        });
+        
+        res.redirect('/dashboard');
+    } catch (error) {
+        res.redirect('/login?error=oauth_failed');
+    }
+});
+```
+
+## Rate limits and security
+
+### Handling rate limits
+
+Unauthenticated requests from your server share the same rate limit. Use authenticated requests or admin clients to bypass limits:
+
+```javascript
+// Rate limited - all server requests share the same limit
+const publicData = await databases.listDocuments('public', 'posts');
+
+// Bypasses rate limits - uses API key
+const adminData = await adminDatabases.listDocuments('admin', 'users');
+```
+
+### Security headers
+
+Set forwarded user agent for security tracking:
+
+```javascript
+// Set the end user's user agent
+sessionClient.setForwardedUserAgent(req.headers['user-agent']);
+```
+
+## Framework examples
+
+<CardGroup cols={2}>
+<Card title="Next.js SSR" href="/docs/tutorials/nextjs-ssr-auth" icon="react">
+    Complete Next.js authentication with SSR
+</Card>
+<Card title="SvelteKit SSR" href="/docs/tutorials/sveltekit-ssr-auth" icon="svelte">
+    SvelteKit authentication with server-side rendering
+</Card>
+</CardGroup>

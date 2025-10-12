@@ -1,0 +1,143 @@
+---
+title: Multi-tenancy with Teams
+description: Learn how to implement multi-tenancy in your applications using Nuvix Teams.
+---
+
+Nuvix Teams provides an effective way to implement multi-tenancy in your applications. Create a team for each tenant to handle multi-tenant apps with built-in data isolation.
+
+<Card title="Learn more about Teams" href="/products/auth/teams" icon="users" />
+
+## What is multi-tenancy?
+
+Multi-tenancy is a design pattern where a single instance of software serves multiple user groups (tenants). With Nuvix Teams, you can:
+
+- Create a team for each tenant in your application
+- Control access to resources using team-based permissions
+- Define different roles within each tenant
+- Scale to unlimited tenants without code changes
+
+## Common use cases
+
+- **SaaS applications**: Organizations that need isolated data and users
+- **Collaborative tools**: Projects with different access levels
+- **Educational platforms**: Schools with teachers and students
+- **Business software**: Companies with department-based access control
+
+## Create teams for tenants
+
+When a new tenant signs up, create a dedicated team that serves as their isolated environment.
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+import { Client, Teams, ID } from "nuvix";
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const teams = new Teams(client);
+
+// Create team for a new tenant
+const tenantTeam = await teams.create(
+    'example_corp', // Team ID for tenant
+    'Example Corp',   // Tenant name
+    ['owner', 'admin', 'member'] // Tenant roles
+);
+```
+</CodeGroup>
+
+## Add members to tenants
+
+Invite users to join a tenant using team memberships. Each member can be assigned different roles for access control.
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+import { Client, Teams } from "nuvix";
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const teams = new Teams(client);
+
+// Invite a member to the tenant
+const membership = await teams.createMembership(
+    'example_corp',      // Team/tenant ID
+    ['admin'],           // Member's role in the tenant
+    'user@example.com',  // User's email
+    undefined,           // userId (optional)
+    undefined,           // phone (optional)
+    'https://example.com/accept-invite' // Redirect URL after accepting
+);
+```
+</CodeGroup>
+
+## Secure resources with team permissions
+
+Control access to rows and resources using team-based permissions. This ensures data isolation between tenants.
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+import { Client, Databases, ID, Permission, Role } from "nuvix";
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const databases = new Databases(client);
+
+// Create a document that only members of "Example Corp" tenant can access
+const document = await databases.createDocument(
+    'invoices_db',
+    'invoices',
+    ID.unique(),
+    {
+        title: 'Q2 Invoice',
+        amount: 2500.00,
+        customer: 'Example Customer',
+        status: 'pending',
+        tenant_id: 'example_corp'
+    },
+    [
+        // All Example Corp team members can read
+        Permission.read(Role.team('example_corp')),
+
+        // Only admins can update
+        Permission.update(Role.team('example_corp', ['admin']))
+    ]
+);
+```
+</CodeGroup>
+
+## Query tenant data
+
+When querying data, users will automatically only see documents they have permission to access based on their team memberships.
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+import { Client, Databases, Query } from "nuvix";
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const databases = new Databases(client);
+
+// Current user will only see invoices they have access to
+const documents = await databases.listDocuments(
+    'invoices_db',
+    'invoices'
+);
+
+// For specific tenant data, you can add a query filter
+const tenantDocuments = await databases.listDocuments(
+    'invoices_db',
+    'invoices',
+    [
+        Query.equal('tenant_id', 'example_corp')
+    ]
+);
+```
+</CodeGroup>
+
+<Card title="Learn how to manage team invitations" href="/products/auth/teams" icon="users" />

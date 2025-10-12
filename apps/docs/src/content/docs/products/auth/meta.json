@@ -1,0 +1,30 @@
+{
+  "title": "Authentication",
+  "pages": [
+    "index",
+    "quick-start",
+    "---Authentication Methods---",
+    "email-password",
+    "phone-sms",
+    "magic-url",
+    "email-otp",
+    "oauth2",
+    "anonymous",
+    "jwt",
+    "custom-token",
+    "---User Management---",
+    "accounts",
+    "users",
+    "identities",
+    "---Advanced Features---",
+    "mfa",
+    "multi-tenancy",
+    "preferences",
+    "preferences-storage",
+    "checking-auth-status",
+    "labels",
+    "server-side-rendering",
+    "security",
+    "..."
+  ]
+}

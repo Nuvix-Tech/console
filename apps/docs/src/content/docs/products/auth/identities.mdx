@@ -1,0 +1,134 @@
+---
+title: Identities
+description: Link multiple login methods to one user account - let users connect Google, GitHub, Facebook and more to a single profile.
+---
+
+One user, multiple ways to log in. Identities let users connect their Google, GitHub, Facebook, and other accounts to a single Nuvix profile. They can sign in with any connected provider and access the same account.
+
+## How identities work
+
+- **One user account** - Same user ID, same data, same permissions
+- **Multiple login methods** - Google today, GitHub tomorrow, email next week
+- **Automatic linking** - OAuth2 logins create identities automatically
+- **Unified experience** - Same account regardless of sign-in method
+
+## When to use identities
+
+**Social login setup** - User logs in with Google, creates account with Google identity
+**Add more providers** - User connects GitHub to existing account  
+**Account consolidation** - Multiple social accounts merge into one profile
+**Provider switching** - User can disable Facebook, keep Google access
+
+## Creating identities
+
+Identities are created automatically when users authenticate with OAuth2 providers:
+
+```javascript
+// User logs in with Google
+const session = await account.createOAuth2Session({
+    provider: 'google',
+    success: 'https://yourapp.com/success',
+    failure: 'https://yourapp.com/failure'
+});
+
+// Google identity created and linked automatically
+```
+
+## Managing multiple providers
+
+Users can connect additional providers to their existing account:
+
+<Steps>
+## 1. User must be logged in
+
+They need an active session to add new identities:
+
+```javascript
+// Check current user
+const user = await account.get();
+```
+
+## 2. Connect new provider
+
+Initiate OAuth2 flow for additional provider:
+
+```javascript
+// Add GitHub to existing account
+await account.createOAuth2Session({
+    provider: 'github',
+    success: 'https://yourapp.com/connected',
+    failure: 'https://yourapp.com/failed'
+});
+```
+
+## 3. Identity linked automatically
+
+New GitHub identity connects to existing user account.
+</Steps>
+
+## Email address management
+
+Each email address must be unique across all users and identities:
+
+- User signs up with `joe@example.com` → Email reserved
+- User adds Google identity with `joe@gmail.com` → Gmail also reserved  
+- No other user can use either email for new accounts or identities
+- Prevents duplicate accounts and identity confusion
+
+## List and manage identities
+
+Check connected providers and remove access:
+
+```javascript
+// List all identities for current user
+const identities = await account.listIdentities();
+
+// Remove a specific identity (disconnect provider)
+await account.deleteIdentity('<IDENTITY_ID>');
+```
+
+**Identity data includes:**
+- Provider name (google, github, facebook, etc.)
+- Provider user ID
+- Email address from provider
+- Creation date
+- Identity ID
+
+## Identity cleanup
+
+When you delete a user account:
+
+- All associated identities removed automatically
+- Background job handles cleanup (may be delayed)
+- For testing: Manually delete identities before removing user
+- Email addresses become available for reuse
+
+## Common patterns
+
+**Check provider connections:**
+```javascript
+const identities = await account.listIdentities();
+const hasGoogle = identities.identities.some(id => id.provider === 'google');
+const hasGithub = identities.identities.some(id => id.provider === 'github');
+```
+
+**Provider-specific features:**
+```javascript
+// Use GitHub identity for developer features
+const githubIdentity = identities.identities.find(id => id.provider === 'github');
+if (githubIdentity) {
+    enableDeveloperTools();
+}
+```
+
+**Account migration:**
+```javascript
+// Help users find existing accounts
+const email = 'user@example.com';
+const existing = await account.getIdentityByEmail(email);
+if (existing) {
+    suggestAccountRecovery();
+}
+```
+
+Identities simplify user management. One account, many doors - let users choose how they want to log in.

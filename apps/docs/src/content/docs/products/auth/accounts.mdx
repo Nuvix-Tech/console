@@ -1,0 +1,41 @@
+---
+title: Accounts
+description: Manage users like a pro - Nuvix's Account API handles signup, login, and permissions without the headaches.
+---
+
+The Account API is your Swiss Army knife for user management. Create accounts, handle authentication, and control who can access what - all from your client app.
+
+## What you can do
+
+- **Create user accounts** with email, phone, social login, or magic links
+- **Authenticate users** and keep them logged in
+- **Organize users** into teams with shared permissions
+- **Label users** for fine-grained access control
+- **Manage permissions** dynamically without touching your backend
+
+## Authentication methods
+
+Pick your flavor. All roads lead to the same account:
+
+- **Email & password** - Classic and reliable
+- **Phone verification** - Passwordless convenience  
+- **Magic links** - One-click wonder
+- **Social login** - GitHub, Google, Facebook, and more
+- **Anonymous access** - Try before you buy
+
+## Permission shortcuts
+
+Grant access with built-in roles. No complex setup required:
+
+| Who gets access | Role |
+|---------------|------|
+| All verified users | `Role.users('verified')` |
+| All unverified users | `Role.users('unverified')` |
+| Specific verified user | `Role.user(<USER_ID>, 'verified')` |
+| Specific unverified user | `Role.user(<USER_ID>, 'unverified')` |
+
+<Card title="Dive deeper into permissions" href="/advanced/platform/permissions" icon="shield" />
+
+## Ready to build?
+
+Start with quick start to get users signing up in minutes, then explore specific authentication methods as your app grows.

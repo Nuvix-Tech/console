@@ -1,0 +1,55 @@
+---
+title: Anonymous login
+description: Create temporary user sessions without email or personal information - perfect for guest access that converts to real accounts.
+---
+
+Anonymous sessions let you create user accounts without requiring email, phone, or any personal information. They're regular user accounts that just lack identity credentials.
+
+## How it works
+
+Anonymous users are identical to regular users except:
+- No email address
+- No phone number  
+- No personal identity information
+- Same permissions and capabilities as regular users (based on your setup)
+- Can be converted to regular accounts anytime
+
+## Create anonymous session
+
+One method call creates a user account without identity data:
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+import { Client, Account } from "nuvix";
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const account = new Account(client);
+
+// Create anonymous session
+const session = await account.createAnonymousSession();
+```
+</CodeGroup>
+
+## Convert to regular account
+
+When users provide identity information (email, phone, etc.), convert their anonymous account to a regular user account using any authentication method.
+
+The conversion process:
+1. User provides identity (email, phone, social login)
+2. Anonymous account gets identity attached
+3. Same user ID, now with credentials
+4. Session continues uninterrupted
+
+## Common use cases
+
+- **Guest checkout** - Let users shop without signup friction
+- **Try before buy** - Demo features before requiring registration  
+- **Progressive onboarding** - Collect identity after user sees value
+- **Reduced friction** - Lower barrier to entry for new users
+
+## Implementation notes
+
+Anonymous sessions follow the same permission rules as regular users. Their capabilities depend entirely on your app's permission configuration, not on their anonymous status.

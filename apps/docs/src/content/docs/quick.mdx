@@ -1,89 +1,70 @@
 ---
 title: Getting Started
-description: Nuvix - Open source BaaS platform combining Appwrite simplicity with Supabase flexibility. Fast, scalable, developer-first backend APIs.
-prompt: Created main landing page for Nuvix documentation site
----
+description: Nuvix — high-performance BaaS for fast, scalable, and developer-first backend APIs.
+------------------------------------------------------------------------------------------------
 
-Build backend APIs that just work. Nuvix combines the simplicity of Appwrite with the flexibility of Supabase, giving you the fastest way to add authentication, databases, and backend services to your applications.
+Nuvix delivers a production-ready backend so you can focus on building your application, not infrastructure. It provides authentication, managed databases with real-time capabilities, file storage, and serverless functions — all accessible via consistent, type-safe SDKs and extensible APIs.
 
 ## Quick Start
 
-Get up and running in minutes with our comprehensive guides.
+Spin up a project in minutes with the steps below.
 
 <CardGroup cols={2}>
 <Card title="Authentication" href="/products/auth" icon="shield">
-    Secure user authentication with multiple login methods
+    Secure, extensible user authentication with email/password, OAuth, and passwordless flows — fully integrated with role-based access control.
 </Card>
 <Card title="Database" href="/products/database" icon="database">
-    Scalable database with real-time queries
+    Scalable, real-time database with fine-grained permissions, computed fields, and flexible query APIs for complex workflows.
 </Card>
 <Card title="Storage" href="/products/storage" icon="folder">
-    File storage with automatic optimization
+    Reliable file storage with direct and chunked uploads, resumable transfers, and optional processing pipelines.
 </Card>
 <Card title="Functions" href="/products/functions" icon="code">
-    Serverless functions for custom backend logic
+    Serverless functions for custom backend logic, third-party integrations, and event-driven automation.
 </Card>
 </CardGroup>
 
 ## Why Nuvix?
 
-### 🚀 Developer First
-Built by developers, for developers. Clean APIs, comprehensive SDKs, and extensive documentation.
+### Developer-first
 
-### 🔒 Security Built-in
-Enterprise-grade security with Argon2 password hashing, JWT tokens, and fine-grained permissions.
+Type-safe, modular SDKs and consistent APIs make building and extending your application effortless. Hooks and event-driven architecture allow customization without touching core logic.
 
-### 📱 Multi-platform
-Native SDKs for JavaScript, React Native, Flutter, and more. Build for web, mobile, and server.
+### Secure by Design
 
-### ⚡ Performance
-Optimized for speed with edge caching, connection pooling, and efficient query execution.
+Industry-standard practices including Argon2 password hashing, JWT authentication, role-based access control, and row/column-level security.
+
+### Multi-platform
+
+Support for web, mobile, and server environments with native SDKs and portable APIs that scale across platforms.
+
+### Performance & Scalability
+
+Optimized for low-latency and high throughput with connection pooling, edge-friendly routing, caching layers, and efficient query execution.
 
 ## Get Started
 
 <Steps>
 ## 1. Create Project
 
-Sign up at [nuvix.in](https://www.nuvix.in) and create your first project.
+Sign up at [nuvix.in](https://www.nuvix.in) and create a new project to obtain your project ID and API endpoint.
 
 ## 2. Install SDK
 
 ```bash
-npm install nuvix
+npm install @nuvix/sdk
 ```
 
 ## 3. Initialize Client
 
-```javascript
-import { Client } from 'nuvix';
+```ts
+import { NuvixClient } from '@nuvix/sdk';
 
-const client = new Client()
-    .setEndpoint('https://api.nuvix.in/v1')
-    .setProject('<PROJECT_ID>');
+const client = new NuvixClient({
+  projectId: 'YOUR_PROJECT_ID',
+  endpoint: 'https://api.nuvix.in'
+});
 ```
 
-## 4. Add Authentication
-
-```javascript
-import { Account } from 'nuvix';
-
-const account = new Account(client);
-
-// Create user
-await account.create('user@example.com', 'password', 'User Name');
-
-// Login
-await account.createEmailPasswordSession('user@example.com', 'password');
-```
+Now you’re ready to start building with Nuvix!
 </Steps>
-
-<Check>
-You're ready to build! Check out our [authentication guide](/products/auth) to learn about all available login methods.
-</Check>
-
-## Need Help?
-
-- 📖 **Documentation**: Browse our comprehensive guides
-- 💬 **Community**: Join our Discord for support
-- 🐛 **Issues**: Report bugs on GitHub
-- 📧 **Email**: Contact us at support@nuvix.in

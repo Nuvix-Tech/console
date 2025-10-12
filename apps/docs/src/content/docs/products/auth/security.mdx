@@ -1,0 +1,147 @@
+---
+title: Security
+description: Prioritize security in your applications with Nuvix. Discover best practices, security features, and guidelines to protect user data and ensure authentication integrity.
+---
+
+Nuvix provides comprehensive security features to keep both your project and your users' information secure. Built with security-first principles, Nuvix handles the complex parts so you can focus on building great applications.
+
+## Session persistence
+
+Nuvix handles session persistence consistently across all platforms. After authenticating, the session persists so users won't need to log in again when they return to your app.
+
+<Info>
+Best Practice: Only keep user sessions active as long as needed and maintain exactly **one** instance of the Client SDK in your app to avoid conflicting session data.
+</Info>
+
+### Platform-specific storage
+
+| Platform | Storage Method |
+|----------|----------------|
+| **Web** | Uses secure session cookies with localStorage fallback |
+| **Mobile** | Uses secure native storage (Keychain/Keystore) |
+| **Server** | Session tokens with configurable expiration |
+
+## Session limits
+
+Control the number of active sessions per user to prevent accumulation of unused sessions. When the limit is reached, the oldest session is automatically removed.
+
+Configure session limits in your Nuvix Console under **Auth** > **Security** > **Session Limits**. Default limit is 10 sessions per user, with a maximum of 100.
+
+## Permissions system
+
+Nuvix uses a robust permissions model coupled with user sessions to ensure users have correct permissions to access resources. Access is granted at the collection, bucket, document, or file level.
+
+Permissions are enforced for client SDKs and server SDKs when using JWT, but are ignored when using server SDKs with API keys.
+
+<Card title="Learn about permissions" href="/docs/advanced/permissions" icon="shield">
+Understand Nuvix's permission system for fine-grained access control
+</Card>
+
+## Password security
+
+### Password history
+
+Prevent users from reusing recent passwords. This protects accounts by enforcing new passwords on every change.
+
+Enable password history in your Nuvix Console under **Auth** > **Security** > **Password History**. Choose how many previous passwords to remember (up to 20).
+
+### Password dictionary
+
+Protect users from using common passwords. Nuvix compares passwords against the 10,000 most common passwords and rejects matches.
+
+Enable this feature in **Auth** > **Security** > **Password Dictionary**. Combined with rate limiting, this significantly reduces brute force attacks.
+
+### Password hashing
+
+Nuvix uses the [Argon2](https://github.com/P-H-C/phc-winner-argon2) password-hashing algorithm - the winner of the Password Hashing Competition. Argon2 combines:
+
+- **Salting**: Unique salt for each password
+- **Adjustable work factors**: Configurable computational cost
+- **Memory hardness**: Resistant to GPU attacks
+
+If users are imported with different hash formats, passwords are automatically re-hashed with Argon2 on first successful login.
+
+### Personal data protection
+
+Encourage strong passwords by preventing users from choosing passwords containing personal information like name, email, or phone number.
+
+Enable this in **Auth** > **Security** > **Personal Data Protection**.
+
+## Session security
+
+### Session alerts
+
+Enable email alerts so users are notified when new sessions are created for their account. This helps users detect unauthorized access quickly.
+
+Configure session alerts in **Auth** > **Security** > **Session Alerts**.
+
+<Note>
+No alerts are sent for Magic URL, Email OTP, or OAuth2 logins since these methods already verify user access to their systems.
+</Note>
+
+### Multi-factor authentication
+
+Add an extra layer of security with MFA. Require users to provide a second factor beyond their password for sensitive operations.
+
+<Card title="Set up MFA" href="/products/auth/mfa" icon="key">
+Learn how to implement multi-factor authentication for enhanced security
+</Card>
+
+## Privacy controls
+
+### Membership privacy
+
+Protect team members' personal information by marking specific membership details as private. This is crucial for apps where privacy is paramount.
+
+Make these details private in **Auth** > **Security** > **Memberships Privacy**:
+
+- `userName` - Member's name
+- `userEmail` - Member's email address  
+- `mfa` - Whether member has enabled MFA
+
+### Rate limiting
+
+Nuvix implements intelligent rate limiting to prevent abuse and protect your application from attacks. Rate limits are automatically applied to:
+
+- Authentication attempts
+- API requests
+- Password reset requests
+- Session creation
+
+## Development security
+
+### Mock phone numbers
+
+Test SMS authentication without real phone numbers. Create mock numbers with predefined OTP codes for development and testing.
+
+Set up mock numbers in **Auth** > **Security** > **Mock Phone Numbers**.
+
+<Warning>
+Only use mock numbers in development environments. Never enable in production.
+</Warning>
+
+## Security best practices
+
+### 1. Use HTTPS always
+Ensure all communications with Nuvix use HTTPS. The Nuvix client enforces this by default.
+
+### 2. Validate input
+Always validate and sanitize user input on both client and server sides.
+
+### 3. Implement proper error handling
+Don't expose sensitive information in error messages. Use generic error messages for users.
+
+### 4. Regular security reviews
+Periodically review your security settings and update them based on your application's needs.
+
+### 5. Monitor authentication events
+Use Nuvix's logging and monitoring features to track authentication events and detect suspicious activity.
+
+<CardGroup cols={2}>
+<Card title="Rate limiting guide" href="/docs/advanced/rate-limits" icon="clock">
+    Understand Nuvix's rate limiting to protect your application
+</Card>
+<Card title="API security" href="/docs/advanced/api-security" icon="shield">
+    Best practices for securing your API endpoints
+</Card>
+</CardGroup>

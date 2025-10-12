@@ -1,0 +1,99 @@
+---
+title: Preferences
+description: Store and manage user preferences in Nuvix using Account API and Teams API for individual and shared settings.
+---
+
+Preferences allow you to store settings like theme choice, language selection, or notification preferences that are specific to individual users or shared across teams.
+
+## User preferences
+
+You can store user preferences on a user's account using Nuvix's update preferences endpoint.
+
+Preferences are stored as a key-value JSON object. The maximum allowed size for preferences is 64kB, and an error will be thrown if this limit is exceeded.
+
+### Update user preferences
+
+Use the `updatePrefs` method to store user preferences as a JSON object.
+
+```javascript
+import { Client, Account } from 'nuvix';
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const account = new Account(client);
+
+const prefs = await account.updatePrefs({
+    darkTheme: true,
+    language: 'en'
+});
+
+console.log('Preferences updated:', prefs);
+```
+
+### Get user preferences
+
+Retrieve stored preferences with the `getPrefs` method.
+
+```javascript
+import { Client, Account } from 'nuvix';
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const account = new Account(client);
+
+const preferences = await account.getPrefs();
+console.log('User preferences:', preferences);
+```
+
+## Team preferences
+
+Team preferences let you store settings that apply to an entire team of users. They are well-suited for collaborative features like team-wide themes, notification preferences, or feature toggles.
+
+Team preferences are stored as a JSON object in the team row and are limited to 64kB of data. All team members can access these shared preferences.
+
+### Update team preferences
+
+Store team-wide settings using the `updatePrefs` method with a team ID.
+
+```javascript
+import { Client, Teams } from 'nuvix';
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const teams = new Teams(client);
+
+const team = await teams.updatePrefs('<TEAM_ID>', {
+    theme: 'corporate',
+    notificationsEnabled: true,
+    defaultView: 'kanban'
+});
+
+console.log('Team preferences updated:', team);
+```
+
+### Get team preferences
+
+Fetch team preferences by passing a team ID to the `getPrefs` method.
+
+```javascript
+import { Client, Teams } from 'nuvix';
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const teams = new Teams(client);
+
+const teamPreferences = await teams.getPrefs('<TEAM_ID>');
+console.log('Team preferences:', teamPreferences);
+```
+
+<Card title="Learn more about Teams" href="/products/auth/multi-tenancy" icon="users">
+Discover how to organize users into teams for collaborative features and shared resources.
+</Card>

@@ -1,0 +1,138 @@
+---
+title: Email OTP
+description: Passwordless login with 6-digit codes sent to email - no passwords, no redirects, just simple authentication.
+---
+
+Email OTP sends a 6-digit code to your user's inbox. They enter the code, they're logged in. No passwords to forget, no links to click, no redirects that break your app flow.
+
+## How it works
+
+1. **Request code** - App sends email address to Nuvix
+2. **User gets code** - 6-digit code arrives in their inbox  
+3. **Enter code** - User types the code into your app
+4. **Authenticated** - Code verified, session created
+
+## Send the code
+
+Start the flow by requesting an email token:
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+import { Client, Account, ID } from "nuvix";
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const account = new Account(client);
+
+// Request OTP for email
+const token = await account.createEmailToken({
+    userId: ID.unique(),
+    email: 'user@example.com'
+});
+
+// Store userId for the next step
+const userId = token.userId;
+```
+</CodeGroup>
+
+**What happens:**
+- New email → Creates account automatically
+- Existing email → Ignores userId, uses existing account
+- Email sent → 6-digit code delivered to inbox
+
+## Verify the code
+
+User enters the code, you verify it:
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+// User enters 6-digit code
+const userCode = '123456'; // From your UI
+
+// Verify code and create session
+const session = await account.createSession({
+    userId: userId,        // From previous step
+    secret: userCode     // Code user entered
+});
+
+// User is now authenticated
+```
+</CodeGroup>
+
+## Email OTP vs Magic URL
+
+Both are passwordless, but work differently:
+
+| Email OTP | Magic URL |
+|-----------|-----------|
+| 6-digit code | Clickable link |
+| Manual entry | Automatic redirect |
+| Works offline | Requires browser |
+| Faster on mobile | Can break app flow |
+
+**Pick Email OTP when:**
+- Users might not be logged into email on device
+- You want to avoid redirects
+- Building mobile apps without deep linking
+- Need consistent cross-platform experience
+
+## Add security phrase
+
+Protect against phishing with a random phrase users must verify:
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+// Enable security phrase
+const token = await account.createEmailToken({
+    userId: ID.unique(),
+    email: 'user@example.com',
+    phrase: true  // Enable security phrase
+});
+
+// Display phrase to user
+console.log('Security phrase:', token.phrase);
+// User should verify this matches their email
+```
+</CodeGroup>
+
+**Security phrase flow:**
+1. App shows random phrase to user
+2. Email includes same phrase  
+3. User confirms phrases match
+4. Prevents phishing attacks
+
+## Implementation tips
+
+**Code input UX**
+- Auto-focus next digit after entry
+- Allow paste for convenience
+- Show clear error for wrong codes
+- Add resend button after 30 seconds
+
+**Error handling**
+```javascript
+try {
+    const session = await account.createSession({
+        userId: userId,
+        secret: code
+    });
+} catch (error) {
+    if (error.code === 401) {
+        // Invalid code
+        showError('Invalid code. Try again.');
+    } else if (error.code === 429) {
+        // Too many attempts  
+        showError('Too many attempts. Wait before retry.');
+    }
+}
+```
+
+**Session management**
+- Store userId securely between steps
+- Handle app backgrounding during email check
+- Clear sensitive data after authentication
+- Consider code expiry (usually 15 minutes)
+
+Email OTP: Simple, secure, and works everywhere your users are.

@@ -1,0 +1,156 @@
+---
+title: Custom token login
+description: Build your own authentication flows and integrate external providers using Nuvix's flexible token system.
+---
+
+Need something different than email/password or social login? Custom tokens let you build authentication that fits your exact requirements - whether that's username login, biometric auth, or integrating with external providers like Auth0.
+
+## How custom tokens work
+
+1. **Server creates token** - Your backend generates a secure token using the Server SDK
+2. **Token reaches client** - You deliver the token to your app (email, SMS, custom flow)
+3. **Client exchanges token** - App converts token into a user session
+4. **User gets authenticated** - Standard Nuvix session, no special handling needed
+
+## Create a token
+
+Use the Server SDK to generate tokens from your backend:
+
+<CodeGroup>
+```javascript Node.js
+import { Client, Users } from "nuvix";
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>')
+    .setKey('<API_KEY>');
+
+const users = new Users(client);
+
+// Generate token for existing user
+const token = await users.createToken({
+    userId: '<USER_ID>'
+});
+
+const secret = token.secret; // 6-character hex string
+```
+</CodeGroup>
+
+## Token configuration
+
+Control how tokens work:
+
+- **Length**: Default 6 characters, configurable
+- **Expiry**: Set custom expiration time  
+- **One-time use**: Tokens are consumed after exchange
+- **Secure delivery**: You control how tokens reach users
+
+## Exchange token for session
+
+Client SDK converts the token into a user session:
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+import { Client, Account } from "nuvix";
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const account = new Account(client);
+
+// Exchange token for session
+const session = await account.createSession({
+    userId: '<USER_ID>',
+    secret: '<TOKEN_SECRET>'
+});
+
+// User is now authenticated
+```
+</CodeGroup>
+
+## Common use cases
+
+**Username/password login**
+```javascript
+// Server: Validate credentials, generate token
+const token = await users.createToken({ userId: userId });
+sendTokenToUser(token.secret);
+```
+
+**Biometric authentication**  
+```javascript
+// Server: Verify biometric, generate token
+const token = await users.createToken({ userId: userId });
+```
+
+**External provider integration**
+```javascript
+// Server: Validate with Auth0/TypingDNA/etc, generate token
+const token = await users.createToken({ userId: userId });
+```
+
+**Captcha-protected login**
+```javascript
+// Server: Verify captcha, generate token
+const token = await users.createToken({ userId: userId });
+```
+
+## Implementation flow
+
+<Steps>
+## 1. Set up authentication endpoint
+
+Create a server endpoint that validates your custom auth method:
+
+```javascript
+app.post('/auth/custom', async (req, res) => {
+    // Validate your custom authentication
+    const isValid = await validateCustomAuth(req.body);
+    
+    if (isValid) {
+        const token = await users.createToken({ 
+            userId: req.body.userId 
+        });
+        res.json({ token: token.secret });
+    }
+});
+```
+
+## 2. Client requests authentication
+
+Your app sends credentials to your custom endpoint:
+
+```javascript
+const response = await fetch('/auth/custom', {
+    method: 'POST',
+    body: JSON.stringify({ 
+        username: username, 
+        password: password 
+    })
+});
+
+const { token } = await response.json();
+```
+
+## 3. Exchange for session
+
+Convert the token to a Nuvix session:
+
+```javascript
+const session = await account.createSession({
+    userId: userId,
+    secret: token
+});
+```
+</Steps>
+
+## Security considerations
+
+- **Validate first** - Always verify authentication before creating tokens
+- **Secure delivery** - Use HTTPS and encrypt token transmission  
+- **Token expiry** - Set appropriate expiration times
+- **User ID handling** - Return user ID to client if needed for token exchange
+- **Rate limiting** - Protect your auth endpoints from abuse
+
+Custom tokens give you authentication freedom. Build what your users need, integrate what your business requires.

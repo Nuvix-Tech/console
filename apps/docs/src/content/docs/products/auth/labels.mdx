@@ -1,0 +1,156 @@
+---
+title: Labels
+description: Tag users for custom permissions - create VIP tiers, subscription levels, beta groups, or any access control system you need.
+---
+
+Labels are tags you attach to users to grant them special permissions. Create a `subscriber` label for paying users, `beta-tester` for early access, `moderator` for content managers - any access control system you can imagine.
+
+## How labels work
+
+- **Simple tags** - Just strings like `"subscriber"`, `"vip"`, `"beta-user"`
+- **Permission-based** - Grant access using `Role.label('subscriber')`
+- **Multiple labels** - Users can have many labels at once
+- **Server-managed** - Only backend can add/remove labels
+- **Instant access** - Label changes take effect immediately
+
+## Add labels to users
+
+Use the Server SDK to tag users:
+
+<CodeGroup>
+```javascript Node.js
+import { Client, Users } from "nuvix";
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>')
+    .setKey('<API_KEY>');
+
+const users = new Users(client);
+
+// Tag user as subscriber
+await users.updateLabels('<USER_ID>', ['subscriber']);
+
+// Add multiple labels
+await users.updateLabels('<USER_ID>', ['vip', 'beta-tester', 'moderator']);
+
+// Remove all labels (empty array)
+await users.updateLabels('<USER_ID>', []);
+```
+</CodeGroup>
+
+## Use labels in permissions
+
+Control access based on user labels:
+
+```javascript
+// Only subscribers can read premium content
+const premiumPermissions = [
+    Permission.read(Role.label('subscriber'))
+];
+
+// VIP users get full access to special features
+const vipPermissions = [
+    Permission.read(Role.label('vip')),
+    Permission.write(Role.label('vip')),
+    Permission.update(Role.label('vip')),
+    Permission.delete(Role.label('vip'))
+];
+
+// Beta testers can access new features
+const betaPermissions = [
+    Permission.read(Role.label('beta-tester'))
+];
+```
+
+## Common label systems
+
+**Subscription tiers:**
+```javascript
+// Free, Pro, Enterprise access levels
+await users.updateLabels(userId, ['free']);
+await users.updateLabels(userId, ['pro']);  
+await users.updateLabels(userId, ['enterprise']);
+```
+
+**User roles:**
+```javascript
+// Content management roles
+await users.updateLabels(userId, ['moderator']);
+await users.updateLabels(userId, ['admin']);
+await users.updateLabels(userId, ['super-admin']);
+```
+
+**Feature access:**
+```javascript
+// Beta features and early access
+await users.updateLabels(userId, ['beta-tester']);
+await users.updateLabels(userId, ['early-access']);
+await users.updateLabels(userId, ['feature-flags']);
+```
+
+**Content tiers:**
+```javascript
+// Different content access levels
+await users.updateLabels(userId, ['basic']);
+await users.updateLabels(userId, ['premium']);
+await users.updateLabels(userId, ['exclusive']);
+```
+
+## Implementation examples
+
+**Check user labels:**
+```javascript
+// Get current user with labels
+const user = await account.get();
+const hasSubscription = user.labels.includes('subscriber');
+const isVip = user.labels.includes('vip');
+
+// Show appropriate UI based on labels
+if (hasSubscription) {
+    showPremiumContent();
+}
+```
+
+**Restrict API access:**
+```javascript
+// Middleware to check labels
+function requireLabel(label) {
+    return async (req, res, next) => {
+        const user = await account.get();
+        if (user.labels.includes(label)) {
+            next();
+        } else {
+            res.status(403).json({ error: 'Insufficient permissions' });
+        }
+    };
+}
+
+// Protect premium endpoints
+app.get('/api/premium', requireLabel('subscriber'), handlePremiumRequest);
+```
+
+**Progressive access:**
+```javascript
+// Upgrade user access over time
+await users.updateLabels(userId, ['new-user']);     // Day 1
+await users.updateLabels(userId, ['active-user']);  // Day 30  
+await users.updateLabels(userId, ['power-user']);   // Day 90
+```
+
+## Label best practices
+
+**Keep labels simple** - Use clear, descriptive names like `"subscriber"` not `"sub"`
+**Be consistent** - Establish naming conventions and stick to them
+**Document permissions** - Map out what each label can access
+**Use sparingly** - Too many labels become hard to manage
+**Plan for growth** - Design your label system to scale with features
+
+**Common label patterns:**
+- `free`, `pro`, `enterprise` - Subscription levels
+- `moderator`, `admin` - User roles  
+- `beta-tester`, `early-access` - Feature access
+- `verified`, `trusted` - Trust levels
+- `mobile`, `desktop` - Platform access
+
+Labels give you fine-grained control over who can access what. Build any permission system you need with simple tags and role-based access control.

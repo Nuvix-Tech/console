@@ -1,0 +1,94 @@
+---
+title: Checking auth status
+description: Determine if a user is logged in and handle authentication states properly in your Nuvix application.
+---
+
+Your app needs to know: is someone logged in or not? This simple check determines everything - which screens to show, what data to load, and how to handle user interactions.
+
+## The auth check pattern
+
+Use `account.get()` to test authentication status. It either returns user data (logged in) or throws an error (not logged in).
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+import { Client, Account } from "nuvix";
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const account = new Account(client);
+
+async function checkAuthStatus() {
+    try {
+        const user = await account.get();
+        console.log("User logged in:", user.name);
+        return { authenticated: true, user };
+    } catch (error) {
+        console.log("Not logged in");
+        return { authenticated: false, user: null };
+    }
+}
+
+// Run on app startup
+checkAuthStatus();
+```
+</CodeGroup>
+
+## Understanding the error
+
+When `account.get()` fails, you'll see something like:
+
+```
+User (role: guests) missing scope (account)
+```
+
+This means:
+- Current user is unauthenticated (guest role)
+- Guest users can't access account data
+- This is expected behavior, not a bug
+
+## Authentication flow
+
+**Typical app logic:**
+
+1. App starts → Call `account.get()`
+2. Success → User logged in → Load main interface
+3. Error → User not logged in → Show login screen
+
+## Implementation tips
+
+**Call it early** - Check auth status before rendering main UI
+**Handle both states** - Prepare components for logged in/out scenarios  
+**Show loading** - Display spinner while checking authentication
+**Cache the result** - Store auth state to avoid repeated checks
+**Handle errors gracefully** - Don't show technical errors to users
+
+## Common patterns
+
+**Protected routes:**
+```javascript
+// Redirect if not authenticated
+const auth = await checkAuthStatus();
+if (!auth.authenticated) {
+    redirect('/login');
+}
+```
+
+**Conditional rendering:**
+```javascript
+const { authenticated } = await checkAuthStatus();
+return authenticated ? <Dashboard /> : <LoginPage />;
+```
+
+**Auto-login check:**
+```javascript
+// On app load
+const authStatus = await checkAuthStatus();
+if (authStatus.authenticated) {
+    // Skip login screen, go straight to app
+    showMainInterface(authStatus.user);
+}
+```
+
+That's the entire authentication check pattern. One method call tells you everything you need to know about your user's login status.

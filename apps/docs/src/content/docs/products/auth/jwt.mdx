@@ -1,0 +1,180 @@
+---
+title: JWT login
+description: Let your backend act on behalf of authenticated users while respecting their permissions - perfect for custom APIs and server-side logic.
+---
+
+Your client app is authenticated, but your backend needs to access user data too. JWT lets your server act as the user, with the same permissions and restrictions they'd have on the client.
+
+## Why JWT matters
+
+**API Key Problem**: Server SDK with API key sees everything - all users, all data, all permissions ignored.
+
+**JWT Solution**: Server SDK with JWT sees only what the user can see - same permissions, same restrictions, same security.
+
+## How JWT works
+
+1. **User authenticates** - Client app creates session with Nuvix
+2. **Generate JWT** - Client requests JWT token (expires in 15 minutes)
+3. **Send to backend** - Client includes JWT in API requests  
+4. **Server acts as user** - Backend uses JWT to access user-permitted resources only
+5. **Token expires** - JWT automatically invalidates after 15 minutes or when session ends
+
+## Generate JWT on client
+
+User must be authenticated first:
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+import { Client, Account } from "nuvix";
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const account = new Account(client);
+
+// User must be logged in first
+const jwt = await account.createJWT();
+
+// Send to your backend
+await fetch('/api/user-data', {
+    headers: { 'Authorization': `Bearer ${jwt.jwt}` }
+});
+```
+</CodeGroup>
+
+## Use JWT on server
+
+Backend acts with user permissions:
+
+<CodeGroup>
+```javascript Node.js
+import { Client, Users, Databases } from "nuvix";
+
+// Create client with user's JWT
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>')
+    .setJWT(userJWT); // User's JWT from client
+
+// Now server acts with user permissions
+const databases = new Databases(client);
+
+// Only returns data user can access
+const documents = await databases.listDocuments(
+    'database-id',
+    'collection-id'
+);
+```
+</CodeGroup>
+
+## JWT vs API Key comparison
+
+**Same request, different results:**
+
+| Authentication | User A sees | User B sees | User C sees |
+|----------------|-------------|-------------|-------------|
+| **JWT** | Only their data | Only their data | Only their data |
+| **API Key** | Everything | Everything | Everything |
+
+## Real example: User's personal data
+
+Database with birthday records, each with different user permissions:
+
+| Document | Name | Birthday | Permissions |
+|----------|------|----------|-------------|
+| doc1 | Kevin | 2012-02-03 | read("user:user-a") |
+| doc2 | Laura | 1999-09-22 | read("user:user-b") |
+| doc3 | Bob | 1982-05-11 | read("user:user-c") |
+
+**With JWT (user-a authenticated):**
+```javascript
+const client = new Client().setJWT(userAJWT);
+const docs = await databases.listDocuments('db', 'birthdays');
+// Returns: [Kevin's document only]
+```
+
+**With API Key:**
+```javascript
+const client = new Client().setKey(apiKey);
+const docs = await databases.listDocuments('db', 'birthdays');
+// Returns: [Kevin, Laura, Bob documents] - Privacy violation!
+```
+
+## When to use JWT
+
+**Use JWT when your backend needs to:**
+- Access user-specific data only
+- Respect the same permissions as the client
+- Build user-focused APIs that behave like Appwrite endpoints
+- Process user data without exposing other users' information
+
+**Use API Key when your backend needs to:**
+- Access all data across all users
+- Perform admin operations
+- Run system-wide queries or reports
+- Bypass user permissions for legitimate reasons
+
+## Implementation pattern
+
+<Steps>
+## 1. Client authenticates
+
+User logs in normally through your app:
+
+```javascript
+const session = await account.createEmailPasswordSession({
+    email: 'user@example.com',
+    password: 'password'
+});
+```
+
+## 2. Request JWT token
+
+Generate JWT for server communication:
+
+```javascript
+const jwt = await account.createJWT();
+```
+
+## 3. Send to backend
+
+Include JWT in API requests:
+
+```javascript
+const response = await fetch('/api/user-profile', {
+    headers: {
+        'Authorization': `Bearer ${jwt.jwt}`
+    }
+});
+```
+
+## 4. Server uses JWT
+
+Backend acts with user permissions:
+
+```javascript
+// Extract JWT from request
+const userJWT = req.headers.authorization?.replace('Bearer ', '');
+
+// Create client with user permissions
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>')
+    .setJWT(userJWT);
+
+// Access user data only
+const userData = await users.get();
+const userDocs = await databases.listDocuments('db', 'user-data');
+```
+</Steps>
+
+## Security notes
+
+- **15-minute expiry** - JWT expires automatically for security
+- **Session-bound** - JWT invalidates when user session ends  
+- **Permission-restricted** - Server can only access what user can access
+- **One-time use** - Generate new JWT for each server request
+- **Secure transmission** - Always use HTTPS for JWT exchange
+
+JWT authentication: Your backend becomes an extension of your user, not a backdoor to their data.

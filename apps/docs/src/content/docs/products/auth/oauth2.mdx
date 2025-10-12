@@ -1,0 +1,126 @@
+---
+title: OAuth 2 login
+description: Integrate OAuth2 authentication seamlessly with Nuvix. Learn how to connect your application with third-party OAuth2 providers for secure user login and access.
+---
+
+OAuth authentication allows users to log in using accounts from other popular services. This can be convenient for users because they can start using your app without creating a new account. It can also be more secure, because the user has one less password that could become vulnerable.
+
+When using OAuth to authenticate, the authentication request is initiated from the client application. The user is then redirected to an OAuth 2 provider to complete the authentication step, and finally, the user is redirected back to the client application.
+
+<Info>
+OAuth2 login creates an **identity** in Nuvix, allowing users to connect multiple providers to a single account. Learn more in [Identities](/products/auth/identities).
+</Info>
+
+## Configure OAuth 2 login
+
+Before using OAuth 2 login, you need to enable and configure an OAuth 2 login provider.
+
+1. Navigate to your Nuvix project.
+2. Navigate to **Auth** > **Settings**.
+3. Find and open the OAuth provider.
+4. In the OAuth 2 settings modal, use the toggle to enable the provider.
+5. Create an OAuth 2 app on the provider's developer platform.
+6. Copy information from your OAuth2 provider's developer platform to fill the **OAuth2 Settings** modal in the Nuvix Console.
+7. Configure redirect URL in your OAuth 2 provider's developer platform. Set it to URL provided to you by **OAuth2 Settings** modal in Nuvix Console.
+
+## Initialize OAuth 2 login
+
+To initialize the OAuth 2 login process, use the Create OAuth 2 Session route.
+
+OAuth2 sessions allow you to specify the scope of the access you want to request from the OAuth2 provider.
+The requested scopes describe which resources a session can access.
+
+You can pass the scopes to request through the `scopes` parameter when creating a session.
+The scope is provider-specific and can be found in the provider's documentation.
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+import { Client, Account } from "nuvix";
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1') // Your API Endpoint
+    .setProject('<PROJECT_ID>');                 // Your project ID
+
+const account = new Account(client);
+
+// Go to OAuth provider login page
+account.createOAuth2Session({
+    provider: 'github',
+    success: 'https://example.com/success', // redirect here on success
+    failure: 'https://example.com/failed', // redirect here on failure
+    scopes: ['repo', 'user'] // scopes (optional)
+});
+```
+</CodeGroup>
+
+You'll be redirected to the OAuth 2 provider's login page to log in. Once complete, your user will be redirected back to your app.
+
+You can optionally configure `success` or `failure` redirect links on web to handle success and failure scenarios.
+
+## OAuth 2 profile
+
+After authenticating a user through their OAuth 2 provider, you can fetch their profile information such as their avatar image or name. To do this you can use the access token from the OAuth 2 provider and make API calls to the provider.
+
+After creating an OAuth 2 session, you can fetch the session to get information about the provider.
+
+<Info>
+Replace `[SESSION_ID]` with either `"current"` to get or update the active session, or with a specific session ID.
+</Info>
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+import { Client, Account } from "nuvix";
+
+const client = new Client();
+
+const account = new Account(client);
+
+const session = await account.getSession({
+    sessionId: 'current'
+});
+
+// Provider information
+console.log(session.provider);
+console.log(session.providerUid);
+console.log(session.providerAccessToken);
+```
+</CodeGroup>
+
+An OAuth 2 session will have the following properties:
+
+| Property                   | Description                                                                                               |
+| -------------------------- | --------------------------------------------------------------------------------------------------------- |
+| provider                   | The OAuth2 Provider.                                                                                       |
+| providerUid                | User ID from the OAuth 2 Provider.                                                                         |
+| providerAccessToken        | Access token from the OAuth 2 provider. Use this to **make requests to the OAuth 2 provider** to fetch personal data. |
+| providerAccessTokenExpiry  | Check this value to know if an access token is about to expire.                                            |
+
+You can use the `providerAccessToken` to make requests to your OAuth 2 provider. Refer to the docs for the OAuth 2 provider you're using to learn about making API calls with the access token.
+
+## Refresh tokens
+
+OAuth 2 sessions expire to protect from security risks.
+This means the OAuth 2 session with a provider may expire, even when a Nuvix session remains active.
+OAuth 2 sessions should be refreshed periodically so access tokens don't expire.
+
+Check the value of `providerAccessTokenExpiry` to know if the token is expired or is about to expire.
+You can refresh the provider session by calling the Update OAuth Session endpoint whenever your user visits your app.
+Avoid refreshing before every request, which might cause rate limit problems.
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+const promise = account.updateSession({
+    sessionId: '[SESSION_ID]'
+});
+
+promise.then(function (response) {
+    console.log(response); // Success
+}, function (error) {
+    console.log(error); // Failure
+});
+```
+</CodeGroup>
+
+<Info>
+OAuth 2 is not available through the GraphQL API. You can use the REST API or any Client SDK instead.
+</Info>

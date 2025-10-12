@@ -1,0 +1,89 @@
+---
+title: Quick start
+description: Add authentication to your apps in minutes with Nuvix - simple signup & login that just works.
+---
+
+Get authentication running in your app faster than making coffee. Here's the essentials.
+
+## 1. Create user accounts
+
+Install the Nuvix SDK and create accounts with email and password.
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+import { Client, Account, ID } from "nuvix";
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const account = new Account(client);
+
+const user = await account.create({
+    userId: ID.unique(), 
+    email: 'email@example.com', 
+    password: 'password'
+});
+```
+</CodeGroup>
+
+## 2. Let them log in
+
+Once they have an account, sign them in with their credentials.
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+const session = await account.createEmailPasswordSession({
+    email: email, 
+    password: password
+});
+```
+</CodeGroup>
+
+## 3. Check who's logged in
+
+Nuvix SDKs are stateless - you manage the session. Check auth status anytime.
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+try {
+    const user = await account.get();
+    // User is logged in
+} catch (err) {
+    // Not logged in - send to login
+}
+```
+</CodeGroup>
+
+## 4. Protect your routes
+
+Check authentication before showing protected content. Here's a React example:
+
+<CodeGroup>
+```javascript React Router
+import { account } from "./lib/nuvix";
+import { redirect } from "react-router-dom";
+
+export async function requireAuth() {
+  try {
+    const user = await account.get();
+    return user;
+  } catch {
+    throw redirect('/login');
+  }
+}
+
+// In your router
+{
+  path: "/dashboard",
+  loader: requireAuth,
+  element: <Dashboard />
+}
+```
+</CodeGroup>
+
+That's it. You now have working authentication.
+
+<Check>
+Need more auth methods? Check out [email verification](/products/auth/email-otp), [phone auth](/products/auth/phone-sms), or [social login](/products/auth/oauth2).
+</Check>

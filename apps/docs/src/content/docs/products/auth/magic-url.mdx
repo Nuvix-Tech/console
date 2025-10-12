@@ -1,0 +1,166 @@
+---
+title: Magic URL login
+description: One-click login sent to email - users click a link and they're authenticated, no passwords, no codes, just magic.
+---
+
+Magic URL sends a login link to your user's email. They click the link, they're logged in. No passwords to forget, no codes to type, just instant authentication that feels like magic.
+
+## How it works
+
+1. **Request link** - User enters email address
+2. **Email arrives** - Login link delivered to inbox  
+3. **Click link** - User clicks the magic link
+4. **Authenticated** - Link verifies, session created automatically
+
+## Send the magic link
+
+Start the flow by creating a magic URL token:
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+import { Client, Account, ID } from "nuvix";
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const account = new Account(client);
+
+// Create magic URL token
+const token = await account.createMagicURLToken(
+    ID.unique(),                    // User ID
+    'user@example.com',            // Email address
+    'https://yourapp.com/verify'   // Redirect URL
+);
+
+// User will receive email with login link
+```
+</CodeGroup>
+
+**What happens:**
+- New email → Creates account automatically
+- Existing email → Sends login link to existing account
+- Link generated → Secure token created for authentication
+
+## Handle the redirect
+
+User clicks email link, gets redirected to your app with auth data:
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+// On your redirect page (https://yourapp.com/verify)
+const urlParams = new URLSearchParams(window.location.search);
+const secret = urlParams.get('secret');
+const userId = urlParams.get('userId');
+
+// Create session from magic link data
+const session = await account.createSession({
+    userId: userId,
+    secret: secret
+});
+
+// User is now authenticated - redirect to app
+window.location.href = '/dashboard';
+```
+</CodeGroup>
+
+## Magic URL vs Email OTP
+
+Both are passwordless, but work differently:
+
+| Magic URL | Email OTP |
+|-----------|-----------|
+| Clickable link | 6-digit code |
+| Automatic redirect | Manual code entry |
+| Requires browser/email | Works offline |
+| Can break app flow | Consistent experience |
+
+**Pick Magic URL when:**
+- Users are on devices with email access
+- You want the smoothest possible experience
+- Building web apps with reliable redirects
+- Prioritizing ease of use over control
+
+## Implementation tips
+
+**Redirect URL setup:**
+```javascript
+// Use a dedicated verification page
+const redirectUrl = 'https://yourapp.com/auth/verify';
+
+// Handle both success and failure
+const token = await account.createMagicURLToken(
+    ID.unique(),
+    email,
+    redirectUrl
+);
+```
+
+**Handle verification states:**
+```javascript
+// On your verify page
+async function handleMagicLink() {
+    try {
+        const session = await account.createSession({
+            userId: userId,
+            secret: secret
+        });
+        
+        // Success: redirect to app
+        window.location.href = '/dashboard';
+        
+    } catch (error) {
+        // Handle expired or invalid links
+        showError('This login link has expired. Please request a new one.');
+        redirectToLogin();
+    }
+}
+```
+
+**Email template considerations:**
+- Link expires after 1 hour for security
+- Include app name and branding
+- Add "Not you?" security notice
+- Provide fallback login options
+
+**Mobile app handling:**
+```javascript
+// Deep link configuration for mobile
+const redirectUrl = Platform.OS === 'ios' 
+    ? 'myapp://auth/verify'
+    : 'myapp://auth/verify';
+```
+
+## Common patterns
+
+**Auto-redirect after verification:**
+```javascript
+// Immediately redirect after successful auth
+const session = await account.createSession({...});
+window.location.href = '/dashboard';
+```
+
+**Fallback for expired links:**
+```javascript
+// Detect expired links and offer alternatives
+try {
+    await account.createSession({...});
+} catch (error) {
+    if (error.code === 'user_invalid_token') {
+        showLoginForm();
+        showMessage('Login link expired. Please log in again.');
+    }
+}
+```
+
+**Track magic link usage:**
+```javascript
+// Add analytics to track email login success
+const session = await account.createSession({...});
+analytics.track('magic_link_login_success', {
+    userId: session.userId,
+    timestamp: new Date().toISOString()
+});
+```
+
+Magic URL: The authentication method that feels like actual magic - users click, they're in, no friction, no fuss.

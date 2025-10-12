@@ -59,7 +59,7 @@ const TableEditor = ({
   useEffect(() => {
     if (params.get("create") === "collection" && snap.ui.open === "none") {
       snap.onAddCollection();
-      setQueryParam({ ...params, create: undefined });
+      setQueryParam({ ...Object.fromEntries(params.entries()), create: undefined });
     }
   }, [snap, params, setQueryParam]);
 

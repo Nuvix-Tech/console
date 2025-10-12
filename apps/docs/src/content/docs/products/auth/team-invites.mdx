@@ -1,0 +1,255 @@
+---
+title: Team Invites
+description: Learn how to manage team invites in Nuvix. Implement both client-side email invites and server-side custom flows for team memberships.
+---
+
+Nuvix provides two approaches for adding members to teams: client-side email invites and server-side custom flows. Each approach serves different use cases and offers unique benefits.
+
+## Client-side email invites
+
+Client-side email invites are perfect for user-to-user invitations. When creating a membership, Nuvix:
+
+1. Creates a new user account if one doesn't exist for the email address
+2. Sends an automated email invitation to the user  
+3. Creates a pending membership
+4. Activates the membership when the user accepts
+
+This approach is ideal when you want a simple, automated process that lets your users manage their own team invitations. Nuvix handles email delivery with built-in templates and localization support.
+
+### Create email invitation
+
+```javascript
+import { Client, Teams } from 'nuvix';
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const teams = new Teams(client);
+
+// Create membership with email invite
+const membership = await teams.createMembership(
+    '<TEAM_ID>',
+    ['developer'],     // roles
+    'user@example.com', // email
+    'https://yourapp.com/accept-invite' // redirect after email click
+);
+
+console.log('Invitation sent:', membership);
+```
+
+### Accept invitations
+
+Users must accept the invitation to join the team. The acceptance flow:
+
+1. User receives an email with an invitation link containing a secret token
+2. Clicking the link redirects to your app
+3. Your app calls the acceptance endpoint
+4. Upon success, the user gains immediate access
+
+```javascript
+import { Client, Teams } from 'nuvix';
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const teams = new Teams(client);
+
+// Accept the invitation using the membership ID and secret
+const response = await teams.updateMembershipStatus(
+    '<TEAM_ID>',
+    '<MEMBERSHIP_ID>',
+    '<USER_ID>',
+    '<SECRET>'
+);
+
+console.log('Invitation accepted:', response);
+```
+
+## Server-side custom flows
+
+Server-side membership creation bypasses the email invitation process, allowing direct member addition. This approach:
+
+1. Creates an active membership immediately
+2. Doesn't require user acceptance
+3. Gives you complete control over the invitation workflow
+
+Perfect for scenarios requiring custom workflows, such as bulk user management, automated team assignments, or integration with external systems.
+
+### Create membership directly
+
+```javascript
+import { Client, Teams } from 'nuvix';
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>')
+    .setKey('<API_KEY>'); // Server-side API key
+
+const teams = new Teams(client);
+
+// Create membership directly with userId
+const membership = await teams.createMembership(
+    '<TEAM_ID>',
+    ['developer'],
+    '<USER_ID>',
+    'John Doe'  // optional name
+);
+
+console.log('Member added:', membership);
+```
+
+## Manage memberships
+
+Once team memberships are created, manage their lifecycle by checking status, updating roles, and removing members.
+
+### Check membership status
+
+Verify a user's current status within a team:
+
+```javascript
+import { Client, Teams } from 'nuvix';
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const teams = new Teams(client);
+
+// Get list of teams the user is part of
+const teamsList = await teams.list();
+
+// For a specific team, get all memberships
+const response = await teams.listMemberships('<TEAM_ID>');
+
+// Find membership for specific user
+const userMembership = response.memberships.find(
+    membership => membership.userId === '<USER_ID>'
+);
+
+if (userMembership) {
+    console.log('Status:', userMembership.confirm ? 'joined' : 'invited');
+    console.log('Roles:', userMembership.roles);
+    console.log('Joined at:', userMembership.joined);
+}
+```
+
+### Remove members
+
+Team owners can remove members or users can leave teams:
+
+```javascript
+await teams.deleteMembership(
+    '<TEAM_ID>',
+    '<MEMBERSHIP_ID>'
+);
+```
+
+## Manage team permissions
+
+Teams use a role-based access control (RBAC) system. Each team member can be assigned one or more roles that define their permissions within the team.
+
+### Update roles
+
+Assign roles when creating a membership or update them later. Only team members with the owner role can update other members' roles:
+
+```javascript
+// Update member roles
+await teams.updateMembership(
+    '<TEAM_ID>',
+    '<MEMBERSHIP_ID>',
+    ['admin', 'developer']
+);
+```
+
+### Check role access
+
+Verify if a user has specific roles:
+
+```javascript
+// Get team memberships
+const response = await teams.listMemberships('<TEAM_ID>');
+
+// Check if user has specific role
+const membership = response.memberships.find(m => m.userId === '<USER_ID>');
+const isAdmin = membership?.roles.includes('admin') ?? false;
+
+if (isAdmin) {
+    console.log('User is an admin');
+    // Allow admin actions
+}
+```
+
+## Best practices
+
+### Choose the right approach
+
+**Use client-side invites when:**
+- Users should invite other users
+- You want automated email delivery
+- You need built-in acceptance flows
+- You want localization support
+
+**Use server-side flows when:**
+- You need immediate access without acceptance
+- You're doing bulk user management
+- You have custom invitation workflows
+- You're integrating with external systems
+
+### Handle invitations gracefully
+
+```javascript
+// Check if user has pending invitations
+const checkPendingInvites = async (userId) => {
+    const teamsList = await teams.list();
+    
+    for (const team of teamsList.teams) {
+        const memberships = await teams.listMemberships(team.$id);
+        
+        const pendingInvite = memberships.memberships.find(
+            m => m.userId === userId && !m.confirm
+        );
+        
+        if (pendingInvite) {
+            console.log(`Pending invite to ${team.name}`);
+            // Show accept/decline options to user
+        }
+    }
+};
+```
+
+### Secure your invitations
+
+```javascript
+// Validate invitation data
+const validateInvitation = (email, roles) => {
+    // Validate email format
+    if (!isValidEmail(email)) {
+        throw new Error('Invalid email format');
+    }
+    
+    // Validate roles exist
+    const validRoles = ['owner', 'admin', 'developer', 'viewer'];
+    const invalidRoles = roles.filter(role => !validRoles.includes(role));
+    
+    if (invalidRoles.length > 0) {
+        throw new Error(`Invalid roles: ${invalidRoles.join(', ')}`);
+    }
+    
+    return true;
+};
+```
+
+<CardGroup cols={2}>
+<Card title="Team Management" href="/products/auth/multi-tenancy" icon="users">
+    Learn more about organizing users into teams
+</Card>
+<Card title="Permissions Guide" href="/docs/advanced/permissions" icon="shield">
+    Understand role-based access control
+</Card>
+</CardGroup>
+
+<Note>
+Team invitations are perfect for building collaborative applications. Choose the approach that best fits your use case and user experience requirements.
+</Note>
