@@ -1,29 +1,13 @@
-"use client";
-import { Button, Row } from "@nuvix/ui/components";
+import { Row } from "@nuvix/ui/components";
+import { GithubButton } from "@nuvix/ui/modules";
 import { ThemeSwitch } from "./theme-switch";
-import { useEffect, useState } from "react";
 import { Logo } from "@nuvix/ui/components";
+import Link from "next/link";
 
 export const NavBar = () => {
-  const [stars, setStars] = useState<number | null>(null);
-
-  useEffect(() => {
-    const fetchStars = async () => {
-      try {
-        const response = await fetch("https://api.github.com/repos/nuvix-tech/nuvix");
-        const data = await response.json();
-        setStars(data.stargazers_count);
-      } catch (error) {
-        console.error("Error fetching GitHub stars:", error);
-      }
-    };
-
-    fetchStars();
-  }, []);
-
   return (
     <Row className="gap-2 h-12 w-full flex px-4 items-center" id="nav_bar">
-      <div className="">
+      <Link href={"/"}>
         <Logo
           icon={false}
           size="s"
@@ -36,18 +20,10 @@ export const NavBar = () => {
           className="!hidden dark:!block"
           wordmarkSrc="/trademark/logo-dark.svg"
         />
-      </div>
+      </Link>
       <ThemeSwitch />
       <div className="flex gap-2 items-center">
-        <Button
-          variant="secondary"
-          size="s"
-          className="ml-2"
-          prefixIcon={"github"}
-          suffixIcon={<span>{stars !== null ? stars?.toString() : "..."}</span>}
-        >
-          Star on Github
-        </Button>
+        <GithubButton />
       </div>
     </Row>
   );
