@@ -84,6 +84,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
         as="html"
         lang="en"
         fillHeight
+        data-theme={"dark"}
         background="page"
         data-neutral={style.neutral}
         data-brand={style.brand}

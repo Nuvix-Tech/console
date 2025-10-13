@@ -2,12 +2,12 @@
 
 :root {
   --radius: 0.625rem !important;
-  --card: var(--neutral-alpha-weak);
-  --card-foreground: var(--neutral-on-background-medium);
+  --card: var(--page-background);
+  --card-foreground: var(--neutral-on-background-strong);
   --popover: var(--surface-background);
   --popover-foreground: var(--neutral-on-background-strong);
-  --primary: var(--neutral-solid-strong);
-  --primary-foreground: var(--neutral-on-solid-strong);
+  --primary: var(--brand-solid-strong);
+  --primary-foreground: var(--brand-on-solid-strong);
   --secondary: var(--neutral-background-medium);
   --secondary-foreground: var(--neutral-on-background-medium);
   --muted: var(--neutral-alpha-weak);
@@ -16,11 +16,26 @@
   --accent-foreground: var(--brand-on-background-medium);
   --destructive: var(--danger-background-medium);
   --border: var(--neutral-border-medium);
+  --tw-shadow-color: transparent;
 }
 
 .dark {
   --card: var(--surface-background);
+  --card-foreground: var(--neutral-on-background-medium);
+  --border: var(--neutral-border-weak);
 }
 
 @import "fumadocs-ui/css/shadcn.css";
 @import "fumadocs-ui/css/preset.css";
+
+[class*="shadow"] {
+  box-shadow: none !important;
+}
+
+.prose :where(a:not([data-card])):not(.not-prose, .not-prose *) {
+  text-decoration-thickness: 0.5px !important;
+}
+
+.prose :where(a:not([data-card])):not(.not-prose, .not-prose *):hover {
+  text-decoration-thickness: 1.5px !important;
+}

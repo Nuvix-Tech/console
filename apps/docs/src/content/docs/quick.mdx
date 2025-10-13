@@ -44,7 +44,7 @@ Optimized for low-latency and high throughput with connection pooling, edge-frie
 
 ## Get Started
 
-<Steps>
+
 ## 1. Create Project
 
 Sign up at [nuvix.in](https://www.nuvix.in) and create a new project to obtain your project ID and API endpoint.
@@ -52,19 +52,19 @@ Sign up at [nuvix.in](https://www.nuvix.in) and create a new project to obtain y
 ## 2. Install SDK
 
 ```bash
-npm install @nuvix/sdk
+npm install nuvix
 ```
 
 ## 3. Initialize Client
 
 ```ts
-import { NuvixClient } from '@nuvix/sdk';
+import { Client } from 'nuvix';
 
-const client = new NuvixClient({
+const client = new Client({
   projectId: 'YOUR_PROJECT_ID',
   endpoint: 'https://api.nuvix.in'
 });
 ```
 
 Now you’re ready to start building with Nuvix!
-</Steps>
+

@@ -247,7 +247,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               />
             )} */}
           <div className="pb-3 px-3">
-            <div className="bg-(--brand-alpha-weak)/15 border border-(--brand-border-weak)/30 dark:border-(--brand-border-weak) rounded-lg max-h-[calc(100vh_-_60px)] overflow-y-auto overflow-x-hidden">
+            <div className="surface-background border surface-border radius-xs-4 max-h-[calc(100vh_-_60px)] overflow-y-auto overflow-x-hidden">
               {children}
             </div>
           </div>
