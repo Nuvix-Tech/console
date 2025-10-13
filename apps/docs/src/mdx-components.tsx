@@ -344,7 +344,7 @@ export const mdxComponents = {
   summary: "summary",
   details: "details",
   Latex: Latex,
-  // TodoItem,
+  TodoItem,
   Columns,
   Column,
   Tabs: Tabs,

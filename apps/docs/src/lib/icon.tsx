@@ -4,6 +4,8 @@ import React, { lazy, Suspense } from "react";
 import { prefetchDNS, preconnect } from "react-dom";
 import { lucideVersion } from "./utils";
 import { useHydrated } from "./hooks";
+import { iconLibrary } from "@nuvix/ui/icons";
+import { Icon } from "@nuvix/ui/components";
 
 // simple in-memory cache so every icon is fetched only once
 const cache: Record<string, React.ComponentType<any>> = {};
@@ -70,7 +72,8 @@ export function DynamicIconInner({ icon: name, ...rest }: DynamicIconProps) {
   }
 
   // Handle Lucide icon
-  const Icon =
+  const IconComp =
+    iconLibrary[name as keyof typeof iconLibrary] ||
     cache[name] ||
     (cache[name] = lazy(() =>
       import(
@@ -79,10 +82,10 @@ export function DynamicIconInner({ icon: name, ...rest }: DynamicIconProps) {
       ).catch((e) => ({ default: EmptyIcon })),
     ));
 
-  if (!Icon || EmptyIcon === Icon) {
+  if (!IconComp || EmptyIcon === IconComp) {
     return null;
   }
-  return <Icon {...rest} className={(rest.className ?? "") + " w-full"} />;
+  return <IconComp {...rest} className={(rest.className ?? "") + " w-full"} />;
 }
 
 function EmptyIcon() {

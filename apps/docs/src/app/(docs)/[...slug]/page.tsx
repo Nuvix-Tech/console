@@ -46,14 +46,14 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
           <PageBreadcrumb />
           <h1 className="text-3xl font-semibold">{page.data.title}</h1>
           <p className="text-lg text-fd-muted-foreground">{page.data.description}</p>
-          <div className="flex flex-row gap-2 items-center border-b pb-6">
-            {/* <LLMCopyButton slug={slugs} contextual={docsJson?.contextual} /> */}
-            {/* <ViewOptions
+          {/* <div className="flex flex-row gap-2 items-center border-b pb-6"> */}
+          {/* <LLMCopyButton slug={slugs} contextual={docsJson?.contextual} /> */}
+          {/* <ViewOptions
             markdownUrl={`${slug}.mdx`}
             githubUrl={owner && repo ? `https://github.com/${owner}/${repo}/blob/${githubBranch}/${githubPath}` : undefined}
             contextual={docsJson?.contextual}
           /> */}
-          </div>
+          {/* </div> */}
 
           <div className="prose flex-1 text-fd-foreground/80">
             <MDX components={mdxComponents} />
