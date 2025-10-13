@@ -237,7 +237,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <NavBar />
         <LayoutBody className={cn(sidebarVariables)}>
           {sidebar()}
-          <div className="pb-3 px-3">
+          <div className="pb-1 px-1 md:pb-3 md:px-3 main-container">
             <div className="bg-(--surface-background) border border-(--neutral-border-medium) dark:border-(--neutral-border-weak) radius-xs-4 max-h-[calc(100vh_-_60px)] overflow-y-auto overflow-x-hidden">
               {children}
             </div>

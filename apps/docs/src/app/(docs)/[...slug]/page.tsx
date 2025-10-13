@@ -35,7 +35,7 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
         }}
       >
         {page.data.toc?.length > 0 && (
-          <PageTOCPopover>
+          <PageTOCPopover className="mt-12">
             <PageTOCPopoverTrigger />
             <PageTOCPopoverContent>
               <PageTOCPopoverItems />
@@ -44,7 +44,7 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
         )}
         <PageArticle className="docs-page-article lg:max-w-2xl">
           <PageBreadcrumb />
-          <div className="flex flex-row gap-2 items-start pb-6">
+          <div className="flex flex-col lg:flex-row gap-2 items-start pb-6">
             <div className="flex flex-col gap-3">
               <h1 className="text-3xl font-semibold">{page.data.title}</h1>
               <p className="text-lg text-fd-muted-foreground">{page.data.description}</p>

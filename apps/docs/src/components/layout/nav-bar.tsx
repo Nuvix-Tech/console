@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export const NavBar = () => {
   return (
-    <Row className="gap-2 h-12 w-full flex px-4 items-center" id="nav_bar">
+    <Row className="gap-2 h-12 min-h-12 w-full flex px-4 items-center" id="nav_bar">
       <Link href={"/"}>
         <Logo
           icon={false}

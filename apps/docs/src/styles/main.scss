@@ -1,6 +1,17 @@
 body {
     font-family: var(--font-custom);
-    --fd-toc-width: 286px;
+}
+
+@media (min-width: 1024px) {
+    :root {
+        --fd-toc-width: 286px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .main-container {
+        position: relative;
+    }
 }
 
 #nd-subnav {
@@ -8,7 +19,7 @@ body {
 }
 
 #nd-sidebar #nav_bar {
-    display: none   !important;
+    display: none !important;
 }
 
 /* SCROLLBAR */
