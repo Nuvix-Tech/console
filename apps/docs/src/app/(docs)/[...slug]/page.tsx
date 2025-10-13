@@ -49,10 +49,9 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
               <h1 className="text-3xl font-semibold">{page.data.title}</h1>
               <p className="text-lg text-fd-muted-foreground">{page.data.description}</p>
             </div>
-            {/* <LLMCopyButton slug={slugs} /> */}
             <ViewOptions
               markdownUrl={page.url}
-              // githubUrl={owner && repo ? `https://github.com/${owner}/${repo}/blob/${githubBranch}/${githubPath}` : undefined}
+              githubUrl={`https://github.com/Nuvix-Tech/console/blob/main/apps/docs/src/content/docs/${page.path}`}
             />
           </div>
 
@@ -72,7 +71,7 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
           <PageFooter />
         </PageArticle>
 
-        <PageTOC className="mr-6 !bottom-auto !top-0">
+        <PageTOC className="mr-6 mt-8">
           <PageTOCTitle />
           <PageTOCItems variant={"clerk"} />
         </PageTOC>

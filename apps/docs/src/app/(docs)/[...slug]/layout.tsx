@@ -20,6 +20,7 @@ import {
   SidebarTrigger,
   SidebarViewport,
 } from "fumadocs-ui/components/layout/sidebar";
+import { LargeSearchToggle } from "fumadocs-ui/components/layout/search-toggle";
 import { cn } from "@nuvix/sui/lib/utils";
 import { buttonVariants } from "fumadocs-ui/components/ui/button";
 import { BaseLinkItem, getLinks, LinkItemType } from "fumadocs-ui/layouts/links";
@@ -137,13 +138,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </div>
           {searchToggle.enabled !== false &&
             (searchToggle.components?.lg ?? (
-              <LargeSearchToggle hideIfDisabled />
-            ))}
-          {tabs.length > 0 && tabMode === 'auto' && (
-            <RootToggle options={tabs} />
-          )}
-          {banner}
-        </SidebarHeader> */}
+              ))}
+              {tabs.length > 0 && tabMode === 'auto' && (
+                <RootToggle options={tabs} />
+                )}
+                {banner}
+                </SidebarHeader> */}
+        <SidebarHeader className="pt-2 my-0">
+          <LargeSearchToggle hideIfDisabled />
+        </SidebarHeader>
         {viewport}
         {/* {(i18n ||
           iconLinks.length > 0 ||
@@ -232,27 +235,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </Navbar>
             ))} */}
         <NavBar />
-        <LayoutBody
-          // {...props.containerProps}
-          className={cn(
-            // 'md:[&_#nd-page_article]:pt-12 xl:[&_#nd-page_article]:px-8',
-            sidebarVariables,
-          )}
-        >
+        <LayoutBody className={cn(sidebarVariables)}>
           {sidebar()}
-          {/* {tabMode === 'top' && tabs.length > 0 && (
-              <LayoutTabs
-                options={tabs}
-                className="sticky top-[calc(var(--fd-nav-height)+var(--fd-tocnav-height))] z-10 bg-fd-background border-b px-6 pt-3 xl:px-8 max-md:hidden"
-              />
-            )} */}
           <div className="pb-3 px-3">
-            <div className="surface-background border border-(--neutral-border-medium) dark:border-(--neutral-border-weak) radius-xs-4 max-h-[calc(100vh_-_60px)] overflow-y-auto overflow-x-hidden">
+            <div className="bg-(--surface-background) border border-(--neutral-border-medium) dark:border-(--neutral-border-weak) radius-xs-4 max-h-[calc(100vh_-_60px)] overflow-y-auto overflow-x-hidden">
               {children}
             </div>
           </div>
         </LayoutBody>
-        {/* </NavProvider> */}
       </TreeContextProvider>
     </>
   );
