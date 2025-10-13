@@ -17,6 +17,7 @@ import {
 } from "fumadocs-ui/layouts/docs/page";
 import { Rate } from "@/components/rate";
 import { Icon } from "@nuvix/ui/components";
+import { ViewOptions } from "@/components/llm";
 
 export default async function Page(props: { params: Promise<{ slug?: string[] }> }) {
   const params = await props.params;
@@ -32,7 +33,6 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
         toc={{
           toc: page.data.toc,
         }}
-        className="mx-0"
       >
         {page.data.toc?.length > 0 && (
           <PageTOCPopover>
@@ -44,16 +44,17 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
         )}
         <PageArticle className="docs-page-article lg:max-w-2xl">
           <PageBreadcrumb />
-          <h1 className="text-3xl font-semibold">{page.data.title}</h1>
-          <p className="text-lg text-fd-muted-foreground">{page.data.description}</p>
-          {/* <div className="flex flex-row gap-2 items-center border-b pb-6"> */}
-          {/* <LLMCopyButton slug={slugs} contextual={docsJson?.contextual} /> */}
-          {/* <ViewOptions
-            markdownUrl={`${slug}.mdx`}
-            githubUrl={owner && repo ? `https://github.com/${owner}/${repo}/blob/${githubBranch}/${githubPath}` : undefined}
-            contextual={docsJson?.contextual}
-          /> */}
-          {/* </div> */}
+          <div className="flex flex-row gap-2 items-start pb-6">
+            <div className="flex flex-col gap-3">
+              <h1 className="text-3xl font-semibold">{page.data.title}</h1>
+              <p className="text-lg text-fd-muted-foreground">{page.data.description}</p>
+            </div>
+            {/* <LLMCopyButton slug={slugs} /> */}
+            <ViewOptions
+              markdownUrl={page.url}
+              // githubUrl={owner && repo ? `https://github.com/${owner}/${repo}/blob/${githubBranch}/${githubPath}` : undefined}
+            />
+          </div>
 
           <div className="prose flex-1 text-fd-foreground/80">
             <MDX components={mdxComponents} />
@@ -71,7 +72,7 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
           <PageFooter />
         </PageArticle>
 
-        <PageTOC className="mt-12 mr-6">
+        <PageTOC className="mr-6 !bottom-auto !top-0">
           <PageTOCTitle />
           <PageTOCItems variant={"clerk"} />
         </PageTOC>
@@ -114,7 +115,7 @@ function Footer({ footer }: { footer?: any }): any {
               : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6";
 
   return (
-    <div className="flex flex-col gap-4 border-t pt-4">
+    <div className="flex flex-col gap-4 pt-4">
       {/* Social Links */}
       {footer.socials && (
         <div className="flex gap-3">

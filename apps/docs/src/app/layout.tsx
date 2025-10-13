@@ -99,14 +99,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
       >
         <MetaProvider link={Link} img={Image}>
           <ToastProvider>
-            <Column
-              suppressHydrationWarning
-              as="body"
-              fillWidth
-              margin="0"
-              position="relative"
-              padding="0"
-            >
+            <Column suppressHydrationWarning as="body" fillWidth margin="0" padding="0">
               <Providers>{children}</Providers>
               <Toaster />
             </Column>

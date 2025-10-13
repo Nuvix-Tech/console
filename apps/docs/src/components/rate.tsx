@@ -94,10 +94,10 @@ export function Rate({
       onOpenChange={(v) => {
         if (!v) setOpinion(null);
       }}
-      className="border-y py-3"
+      className="py-3"
     >
       <div className="flex flex-row items-center gap-2">
-        <p className="text-sm font-medium pe-2">How is this guide?</p>
+        <p className="text-sm font-medium pe-2 flex-1">How is this guide?</p>
         <button
           disabled={previous !== null}
           className={cn(
