@@ -1,0 +1,117 @@
+---
+title: Apple Push Notification service
+description: Send push notifications to apps on Apple devices through Apple Push Notification service (APNs) using Nuvix Messaging.
+---
+
+# Apple Push Notification service
+
+Apple Push Notification service (APNs) lets you send push notifications to Apple devices like macOS, iOS, tvOS, iPadOS, and watchOS devices.
+
+APNs is a best-effort service, and will attempt to deliver your messages to your device when it's online and available again. APNs will save the last message for 30 days or less and attempt delivery as soon as it's online.
+
+## 1. Add provider
+
+To add APNs as a provider, navigate to **Messaging** > **Providers** > **Create provider** > **Push notification**.
+
+<Frame>
+<img src="/images/docs/messaging/providers/apns/provider.png" alt="Add APNs provider configuration" />
+</Frame>
+
+Give your provider a name > choose **APNS** > click **Save and continue**. The provider will be saved to your project, but not enabled until you complete its configuration.
+
+## 2. Configure provider
+
+In the **Configure** step, you will need to provide details from your Apple developer account to connect your Nuvix project with your Apple developer account.
+
+You will need to provide the following information from the **Apple Developer Member Center**.
+
+<AccordionGroup>
+<Accordion title="Team ID">
+Head to **Apple Developer Member Center** > **Membership details** > **Team ID**
+
+<Frame>
+<img src="/images/docs/messaging/providers/apns/team-id.png" alt="Apple Developer Team ID location" />
+</Frame>
+</Accordion>
+
+<Accordion title="Bundle ID">
+Head to **Apple Developer Member Center** > **Program resources** > **Certificates, Identifiers & Profiles** > **Identifiers**
+
+<Frame>
+<img src="/images/docs/messaging/providers/apns/bundle-id.png" alt="Apple Bundle ID configuration" />
+</Frame>
+</Accordion>
+
+<Accordion title="Authentication key ID">
+Head to **Apple Developer Member Center** > **Program resources** > **Certificates, Identifiers & Profiles** > **Keys**. Click on your key to view details. The key needs **Apple Push Notification Service** enabled.
+
+<Frame>
+<img src="/images/docs/messaging/providers/apns/key-id.png" alt="Apple authentication key ID" />
+</Frame>
+</Accordion>
+
+<Accordion title="Authentication key (.p8 file)">
+Head to **Apple Developer Member Center** > **Program resources** > **Certificates, Identifiers & Profiles** > **Keys**. Create a key and give it a name. Enable the Apple Push Notifications service (APNS), and register your key. The key needs **Apple Push Notification Service** enabled.
+
+<Frame>
+<img src="/images/docs/messaging/providers/apns/authentication-key.png" alt="Apple authentication key configuration" />
+</Frame>
+</Accordion>
+
+<Accordion title="Sandbox">
+Enable sandbox mode for testing on apps signed with development provisioning profiles. APNs offers two environments, **Development** (sandbox) and **Production**. Development builds on XCode signed with a development provisioning profile will use the development environment. Production builds signed with a production provisioning profile will use the production environment.
+</Accordion>
+</AccordionGroup>
+
+After adding the following details, click **Save and continue** to enable the provider.
+
+## 3. Configure app
+
+Some additional configuration is required to enable push notifications in your iOS app.
+
+Add push notification capability to your app by clicking your root-level app in XCode > **Signing & Capabilities** > **Capabilities** > Search for **Push Notifications**.
+
+<Frame>
+<img src="/images/docs/messaging/providers/apns/xcode-enable-pn.png" alt="Enable push notifications in Xcode" />
+</Frame>
+
+## 4. Test provider
+
+Push notification requires special handling on the client side. Follow the [Send push notification](/products/messaging/send-push-notifications) flow to test your provider.
+
+## 5. Manage provider
+
+<Tabs>
+<Tab title="Console">
+You can update or delete a provider in the Nuvix Console.
+
+Navigate to **Messaging** > **Providers** > click your provider. In the settings, you can update a provider's configuration or delete the provider.
+</Tab>
+
+<Tab title="Server SDK">
+To update or delete providers programmatically, use the Nuvix Server SDK.
+
+<CodeGroup>
+```javascript
+import { Client, Messaging } from 'nuvix';
+
+const client = new Client()
+  .setEndpoint('https://api.nuvix.in/v1')
+  .setProject('<PROJECT_ID>')
+  .setKey('<API_KEY>');
+
+const messaging = new Messaging(client);
+
+const provider = await messaging.updateApnsProvider(
+  '<PROVIDER_ID>',
+  '<NAME>',           // optional
+  false,              // optional
+  '<AUTH_KEY>',       // optional
+  '<AUTH_KEY_ID>',    // optional
+  '<TEAM_ID>',        // optional
+  '<BUNDLE_ID>'       // optional
+);
+```
+</CodeGroup>
+</Tab>
+</Tabs>

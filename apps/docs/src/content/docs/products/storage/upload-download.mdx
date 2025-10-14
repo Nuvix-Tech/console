@@ -1,0 +1,271 @@
+---
+title: Upload and download
+description: Effortlessly upload and download files with Nuvix Storage. Learn how to handle file uploads, manage file versions, and ensure secure downloads in your applications.
+---
+
+You can upload and download files both programmatically using SDKs or through the Nuvix Console.
+
+## Create file
+
+After you create a bucket or have navigated to bucket details, you can access the **Files** tab so you can upload, view, delete and update files in the bucket using the Nuvix project's dashboard. You can also perform all those operations from Nuvix's client SDK, server SDKs, and REST APIs as long as you have the proper permission.
+
+When you are in the **Files** tab, you can click **Add File** and select a file to upload. If the bucket is configured to accept the file type and size you are uploading, your file will be uploaded, and you will see the file in the list of files.
+
+You can also upload files programmatically using our SDKs:
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+import { Client, Storage, ID } from "nuvix";
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const storage = new Storage(client);
+
+// Upload file from file input
+const file = document.getElementById('uploader').files[0];
+const response = await storage.createFile({
+    bucketId: '<BUCKET_ID>',
+    fileId: ID.unique(),
+    file: file
+});
+
+console.log(response); // Success
+```
+
+```javascript Node.js
+import { Client, Storage, ID, InputFile } from "nuvix";
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>')
+    .setKey('<API_KEY>');
+
+const storage = new Storage(client);
+
+// Upload from file path
+const file = InputFile.fromPath('/path/to/file.jpg', 'file.jpg');
+const response = await storage.createFile({
+    bucketId: '<BUCKET_ID>',
+    fileId: ID.unique(),
+    file: file
+});
+
+console.log(response); // Success
+```
+</CodeGroup>
+
+## Large files
+
+When you are trying to upload any files above 5MB, you will need to upload them in chunks for better reliability and performance.
+If you're using a Nuvix SDK, this is handled automatically.
+If you're not using an SDK, you can learn more about REST API file handling in the API documentation.
+
+## InputFile
+
+Every language and platform handles file inputs differently. This section shows the expected input type of each SDK. Where applicable, Nuvix provides an `InputFile` class to accept multiple file sources, like paths, buffers, or plain text.
+
+### Client SDKs
+
+<Tabs>
+<Tab title="Web">
+The Nuvix Web SDK expects a [File](https://developer.mozilla.org/en-US/docs/Web/API/File) object for file creation. This is most commonly associated with DOM file inputs.
+
+For example, for the input tag `<input type="file" id="uploader">`, you would call create file like this:
+
+```javascript
+const response = await storage.createFile({
+    bucketId: '<BUCKET_ID>',
+    fileId: ID.unique(),
+    file: document.getElementById('uploader').files[0]
+});
+```
+</Tab>
+
+<Tab title="React Native">
+The Nuvix React Native SDK expects a file object with the following properties for file inputs:
+
+| Property | Description |
+| -------- | ----------- |
+| `name` | The name of the file. |
+| `type` | The MIME type of the file. |
+| `size` | The size of the file in bytes. |
+| `uri` | The URI of the file on the device. |
+
+This object structure aligns with what is typically returned from image picker libraries such as `react-native-image-picker`:
+
+```javascript
+// Example with react-native-image-picker
+import { launchImageLibrary } from 'react-native-image-picker';
+
+const pickImage = async () => {
+  const result = await launchImageLibrary({
+    mediaType: 'photo',
+  });
+
+  if (result.assets && result.assets[0]) {
+    const fileInfo = result.assets[0];
+
+    return {
+      name: fileInfo.fileName,
+      type: fileInfo.type,
+      size: fileInfo.fileSize,
+      uri: fileInfo.uri,
+    };
+  }
+};
+```
+</Tab>
+</Tabs>
+
+### Server SDKs
+
+<Tabs>
+<Tab title="Node.js">
+In browser environments, you can use the `File` object directly. For Node.js environments, import the `InputFile` class from 'nuvix/file'.
+
+When using `InputFile`, the following methods are available:
+
+| Method | Description |
+| ------ | ----------- |
+| `InputFile.fromPath(filePath, filename)` | Used to upload files from a provided path. |
+| `InputFile.fromBuffer(buffer, filename)` | Used to upload files from a [Buffer](https://nodejs.org/api/buffer.html#buffer) or [Blob](https://developer.mozilla.org/en-US/docs/Web/API/Blob) object. |
+| `InputFile.fromPlainText(content, filename)` | Used to upload files in plain text. Expects a string encoded in UTF-8. |
+</Tab>
+
+<Tab title="Deno">
+The Nuvix Deno SDK expects an `InputFile` class for file inputs.
+
+| Method | Description |
+| ------ | ----------- |
+| `InputFile.fromPath(filePath, filename)` | Used to upload files from a provided path. |
+| `InputFile.fromBuffer(buffer, filename)` | Used to upload files from a [Uint8Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array) object. |
+| `InputFile.fromPlainText(content, filename)` | Used to upload files in plain text. Expects a string encoded in UTF-8. |
+</Tab>
+</Tabs>
+
+## Get file
+
+To get metadata about a file, use the `getFile` method.
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+import { Client, Storage } from "nuvix";
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const storage = new Storage(client);
+
+const file = await storage.getFile({
+    bucketId: '<BUCKET_ID>',
+    fileId: '<FILE_ID>'
+});
+
+console.log(file); // File metadata
+```
+</CodeGroup>
+
+## Download file
+
+To download a file, use the `getFileDownload` method.
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+import { Client, Storage } from "nuvix";
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const storage = new Storage(client);
+
+// Download file data
+const fileData = await storage.getFileDownload({
+    bucketId: '<BUCKET_ID>',
+    fileId: '<FILE_ID>'
+});
+
+console.log(fileData); // File data as ArrayBuffer
+
+// Get download URL without downloading
+const downloadUrl = storage.getFileDownloadURL({
+    bucketId: '<BUCKET_ID>',
+    fileId: '<FILE_ID>'
+});
+
+console.log(downloadUrl); // URL object
+```
+</CodeGroup>
+
+## Get File Preview
+
+To get a file preview image, use the `getFilePreview` method.
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+import { Client, Storage } from "nuvix";
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const storage = new Storage(client);
+
+// Get preview image data
+const previewData = await storage.getFilePreview({
+    bucketId: '<BUCKET_ID>',
+    fileId: '<FILE_ID>',
+    width: 200,
+    height: 200,
+    quality: 90
+});
+
+console.log(previewData); // Image data as ArrayBuffer
+
+// Get preview URL without downloading
+const previewUrl = storage.getFilePreviewURL({
+    bucketId: '<BUCKET_ID>',
+    fileId: '<FILE_ID>',
+    width: 200,
+    height: 200,
+    quality: 90
+});
+
+console.log(previewUrl); // URL object
+```
+</CodeGroup>
+
+## View File
+
+To view a file, use the `getFileView` method.
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+import { Client, Storage } from "nuvix";
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const storage = new Storage(client);
+
+// Get file data
+const fileData = await storage.getFileView({
+    bucketId: '<BUCKET_ID>',
+    fileId: '<FILE_ID>'
+});
+
+console.log(fileData); // File data as ArrayBuffer
+
+// Get view URL without downloading
+const viewUrl = storage.getFileViewURL({
+    bucketId: '<BUCKET_ID>',
+    fileId: '<FILE_ID>'
+});
+
+console.log(viewUrl); // URL object
+```
+</CodeGroup>

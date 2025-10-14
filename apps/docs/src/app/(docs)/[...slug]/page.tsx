@@ -60,10 +60,10 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
           </div>
           <div className="grow"></div>
           <Rate />
-          {lastEditedAt && (
+          {lastEditedAt && !isNaN(new Date(lastEditedAt).getTime()) && (
             <div className="flex items-center gap-2">
               <PageLastUpdate date={lastEditedAt} />
-              <div className="grow"></div>
+              <div className="grow" />
             </div>
           )}
 

@@ -1,0 +1,140 @@
+---
+title: Send SMS Messages
+description: Send SMS messages to your users using Nuvix Messaging.
+---
+
+# Send SMS messages
+
+You can send custom SMS messages to your app's users using Nuvix Messaging and a connected SMS service. This guide takes you through the implementation path of adding SMS messaging to your app.
+
+## Add a provider
+
+Nuvix supports [Twilio](/products/messaging/twilio), [MSG91](/products/messaging/msg91), [Telesign](/products/messaging/telesign), [Textmagic](/products/messaging/textmagic), and [Vonage](/products/messaging/vonage) as SMS providers. You must configure one of them as a provider.
+
+<Frame>
+<img src="/images/docs/messaging/providers/twilio/provider.png" alt="Add SMS provider configuration" />
+</Frame>
+
+To add a new provider navigate to **Messaging** > **Providers** > **Add provider** > **SMS** and follow the wizard. You can find more details about configuring in the provider guides for [Twilio](/products/messaging/twilio), [MSG91](/products/messaging/msg91), [Telesign](/products/messaging/telesign), [Textmagic](/products/messaging/textmagic), and [Vonage](/products/messaging/vonage).
+
+## Add targets
+
+In Nuvix Messaging, each user has **targets** like their email, phone number, and devices with your app installed. You can deliver messages to users through their **targets**.
+
+<Frame>
+<img src="/images/docs/messaging/targets/target-overview.png" alt="Target overview showing user contact methods" />
+</Frame>
+
+If the user signed up with phone (SMS) authentication, their account would already have a phone number as a target. During development, you can add targets to existing accounts by navigating to **Authentication** > **Users** > **Select a user** > **Targets** > **Add a subscriber**.
+
+<Frame>
+<img src="/images/docs/messaging/targets/add-targets.png" alt="Add target interface for user" />
+</Frame>
+
+You can also implement forms in your app to collect contact information and add it as a target with the createTarget endpoint.
+
+<CodeGroup>
+```javascript
+import { Client, Users } from 'nuvix';
+
+const client = new Client()
+  .setEndpoint('https://api.nuvix.in/v1')
+  .setProject('<PROJECT_ID>')
+  .setKey('<API_KEY>');
+
+const users = new Users(client);
+
+const target = await users.createTarget(
+  '<USER_ID>',
+  '<TARGET_ID>',
+  'phone',
+  '<IDENTIFIER>',
+  '<PROVIDER_ID>',
+  '<NAME>'
+);
+```
+</CodeGroup>
+
+## Create topics (optional)
+
+You can use topics to organize targets that should receive the same messages, so you can send SMS messages to groups of targets instead of one at time. This step is optional if you plan to only send SMS messages to individual targets.
+
+To create a topic in the Nuvix Console, navigate to **Messaging** > **Topics** > **Create topic**.
+
+<Frame>
+<img src="/images/docs/messaging/topics/create-topics.png" alt="Create topic interface" />
+</Frame>
+
+You can also create topics programmatically using the Nuvix Server SDK.
+
+<CodeGroup>
+```javascript
+import { Client, Messaging } from 'nuvix';
+
+const client = new Client()
+  .setEndpoint('https://api.nuvix.in/v1')
+  .setProject('<PROJECT_ID>')
+  .setKey('<API_KEY>');
+
+const messaging = new Messaging(client);
+
+const topic = await messaging.createTopic(
+  '<TOPIC_ID>',
+  '<NAME>'
+);
+```
+</CodeGroup>
+
+## Send SMS messages
+
+You can send SMS messages using the Server SDK. To send an SMS messages immediately, you can call the `createSms` endpoint without passing either the `draft` or `scheduledAt` parameters.
+
+<CodeGroup>
+```javascript
+import { Client, Messaging } from 'nuvix';
+
+const client = new Client()
+  .setEndpoint('https://api.nuvix.in/v1')
+  .setProject('<PROJECT_ID>')
+  .setKey('<API_KEY>');
+
+const messaging = new Messaging(client);
+
+const message = await messaging.createSms(
+  '<MESSAGE_ID>',
+  '<CONTENT>',
+  [],
+  [],
+  [],
+  false,
+  ''
+);
+```
+</CodeGroup>
+
+## Schedule SMS message
+
+To send an scheduled SMS message, you can call the `createSms` endpoint with `scheduledAt` as an ISO 8601 date time string for the scheduled time.
+
+<CodeGroup>
+```javascript
+import { Client, Messaging } from 'nuvix';
+
+const client = new Client()
+  .setEndpoint('https://api.nuvix.in/v1')
+  .setProject('<PROJECT_ID>')
+  .setKey('<API_KEY>');
+
+const messaging = new Messaging(client);
+
+const message = await messaging.createSms(
+  '<MESSAGE_ID>',
+  '<CONTENT>',
+  [],
+  [],
+  [],
+  false,
+  '2025-02-13T22:01:00+0000'
+);
+```
+</CodeGroup>

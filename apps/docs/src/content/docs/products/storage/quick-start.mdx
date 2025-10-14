@@ -1,0 +1,123 @@
+---
+title: Start with Storage
+description: Get started quickly with Nuvix Storage. Follow step-by-step instructions to set up storage, upload files, and integrate cloud storage into your projects
+difficulty: beginner
+readtime: 5
+---
+
+You can create your first bucket, upload, and download your first file in minutes.
+
+## Create bucket
+
+You can create a bucket in the Nuvix Console by navigating to **Storage** > **Create bucket**.
+
+In your bucket, navigate to **Settings** > **Permissions**, then add a new **Any** role with **CREATE** and **READ** permissions.
+This allows anyone to create and read files in this bucket.
+
+## Create file
+
+To upload a file, add this to your app. For web apps, you can use the File object directly. For Node.js apps, use the InputFile class.
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+import { Client, Storage, ID } from "nuvix";
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const storage = new Storage(client);
+
+// Upload file from file input
+const file = document.getElementById('uploader').files[0];
+const response = await storage.createFile({
+    bucketId: '<BUCKET_ID>',
+    fileId: ID.unique(),
+    file: file
+});
+
+console.log(response); // Success
+```
+
+```javascript Node.js
+import { Client, Storage, ID, InputFile } from "nuvix";
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const storage = new Storage(client);
+
+// Upload from file path
+const file = InputFile.fromPath('/path/to/file.jpg', 'file.jpg');
+const response = await storage.createFile({
+    bucketId: '<BUCKET_ID>',
+    fileId: ID.unique(),
+    file: file
+});
+
+console.log(response); // Success
+```
+</CodeGroup>
+
+## Download file
+
+To download a file, use the `getFileDownload` method.
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+import { Client, Storage } from "nuvix";
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const storage = new Storage(client);
+
+// Download file
+const result = await storage.getFileDownload({
+    bucketId: '<BUCKET_ID>',
+    fileId: '<FILE_ID>'
+});
+
+console.log(result); // File data or URL
+```
+
+```javascript React
+import { useState, useEffect } from 'react';
+import { Client, Storage } from "nuvix";
+
+function FileViewer({ bucketId, fileId }) {
+    const [fileUrl, setFileUrl] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const client = new Client()
+            .setEndpoint('https://api.nuvix.in/v1')
+            .setProject('<PROJECT_ID>');
+
+        const storage = new Storage(client);
+
+        storage.getFileDownload({
+            bucketId: bucketId,
+            fileId: fileId
+        }).then((url) => {
+            setFileUrl(url);
+            setLoading(false);
+        }).catch((error) => {
+            console.error('Error downloading file:', error);
+            setLoading(false);
+        });
+    }, [bucketId, fileId]);
+
+    if (loading) return <div>Loading...</div>;
+    if (!fileUrl) return <div>File not found</div>;
+
+    return <img src={fileUrl} alt="Downloaded file" />;
+}
+```
+</CodeGroup>
+
+<Check>
+That's it! You now have working file storage. Check out our [storage security guide](/products/storage/security) to learn about permissions and access control.
+</Check>

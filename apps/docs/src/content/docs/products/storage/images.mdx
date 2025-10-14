@@ -1,0 +1,113 @@
+---
+title: Image transformations
+description: Optimize image storage and processing with Nuvix. Explore image resizing, transformations, and manipulation to deliver rich media experiences in your apps.
+---
+
+Nuvix provides utilities to manipulate images for previewing images in your apps.
+
+Nuvix Storage's preview endpoint let you manipulate resolution, add borders and the border-radius, add background-color, set the opacity for the image, and get the image in the appropriate output format.
+
+You can manipulate images resolution to display appropriately on responsive websites. You can also adjust the image border, background color, and border-radius to match the theming of your application.
+The Nuvix Storage also allows you to change the format and compression of your images for network transfer optimization and to help you speed your application. You can do all that without caring about how the image was originally uploaded.
+
+<Info>
+When manipulating images in Nuvix, the resulting images are cached by Nuvix and your browser.
+When you repeatedly use the same transformed images, the performance impact will be minimal.
+</Info>
+
+## Options
+
+Below you can find all the different parameters offered by the preview endpoint to manipulate the image.
+
+| Parameter     | Description                                                                                                     |
+| --------------| --------------------------------------------------------------------------------------------------------------- |
+| width         | Set the width of the output image in pixels, the image will be resized keeping the aspect ratio intact. Accepts integer between `0-4000`  |
+| height        | Set the height of the output image in pixels, the image will be resized keeping the aspect ratio intact. Accepts integer between `0-4000` |
+| gravity       | The gravity while cropping the image providing either width, height, or both. Accepts any of: `center`, `top-left`, `top`, `top-right`, `left`, `right`, `bottom-left`, `bottom`, `bottom-right`. |
+| quality       | Set the quality of the output image. Accepts integer between `0-100`, where `100` is the highest quality.          |
+| borderWidth   | Set a border with the given width in pixels to the output image. Accepts integer between `0-100`.               |
+| borderColor   | Set a border-color for the output image. Accepts any valid hex color value without the leading `#`.            |
+| borderRadius  | Set a border-radius in pixels. Accepts an integer between `0-4000`.                                             |
+| opacity       | Set opacity for the output image. Accepts a float value between `0-1`, where `0` makes it transparent. Only works with output formats supporting alpha channels like `png`. |
+| rotation      | Rotate the output image by a degree. Accepts an integer between `-360` to `360`.                                  |
+| background    | Set a background-color. Accepts any valid hex color value without the leading `#`. Only works with output formats supporting alpha channels like `png`. |
+| output        | Set the output image format. If not provided, will use the original image's format. Supported formats are: `jpg`, `jpeg`, `png`, `gif`, `webp`, `avif`, and `heic` |
+
+## Examples
+
+Here are some examples using Client SDKs.
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+import { Client, Storage } from "nuvix";
+
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1') // Your API Endpoint
+    .setProject('<PROJECT_ID>'); // Your project ID
+
+const storage = new Storage(client);
+
+const previewUrl = storage.getFilePreview({
+    bucketId: 'photos',
+    fileId: 'sunset.png',
+    width: 1800,
+    gravity: 'center',
+    quality: 90,
+    borderWidth: 5,
+    borderColor: 'CDCA30',
+    borderRadius: 15,
+    background: 'FFFFFF'
+});
+
+console.log(previewUrl.href);
+```
+
+```javascript React
+import { useState, useEffect } from 'react';
+import { Client, Storage } from "nuvix";
+
+function ImagePreview({ bucketId, fileId }) {
+    const [imageUrl, setImageUrl] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const client = new Client()
+            .setEndpoint('https://api.nuvix.in/v1')
+            .setProject('<PROJECT_ID>');
+
+        const storage = new Storage(client);
+
+        // Get image with transformations
+        const url = storage.getFilePreview({
+            bucketId: bucketId,
+            fileId: fileId,
+            width: 1800,
+            height: 0,
+            gravity: 'center',
+            quality: 90,
+            borderWidth: 5,
+            borderColor: 'CDCA30',
+            borderRadius: 15,
+            opacity: 1,
+            rotation: 0,
+            background: 'FFFFFF',
+            output: 'jpg'
+        });
+
+        setImageUrl(url.toString());
+        setLoading(false);
+    }, [bucketId, fileId]);
+
+    if (loading) return <div>Loading...</div>;
+    if (!imageUrl) return <div>Image not found</div>;
+
+    return (
+        <img 
+            src={imageUrl} 
+            alt="Transformed preview" 
+            style={{ maxWidth: '100%', height: 'auto' }}
+        />
+    );
+}
+```
+</CodeGroup>

@@ -1,0 +1,115 @@
+---
+title: Telesign
+description: Send SMS messages to your Nuvix users using Telesign and Nuvix Messaging.
+---
+
+# Telesign
+
+Telesign lets you send customized SMS messages to your users.
+These SMS messages can be sent immediately or scheduled.
+You can send SMS messages for purposes like reminders, promotions, announcements, and even custom authentication flows.
+
+## 1. Add provider
+
+To add Telesign as a provider, navigate to **Messaging** > **Providers** > **Add provider** > **SMS**.
+
+Give your provider a name > choose **Telesign** > click **Save and continue**.
+The provider will be saved to your project, but not enabled until you complete its configuration.
+
+## 2. Configure provider
+
+In the **Configure** step, you will need to provide details from your Telesign dashboard to connect your Nuvix project.
+
+You will need to provide the following information from your **Telesign dashboard**:
+
+| Field name | Description |
+|------------|-------------|
+| **Customer ID** | Head to **Telesign portal** > **Profile** > **Customer ID**. |
+| **API Key** | Head to **Telesign portal** > **Profile** > **API Keys**. |
+| **Sender number** | The number from which the SMS will be sent. You may need to first purchase a number from Telesign. |
+
+After adding the following details, click **Save and continue** to enable the provider.
+
+## 3. Test provider
+
+Before sending your first message, make sure you've configured [a topic](/products/messaging/topics) and [a target](/products/messaging/targets) to send messages to.
+
+<Tabs>
+<Tab title="Console">
+To send a test message, navigate to **Messaging** > **Messages** > **Create message** > **SMS**.
+
+Add your message and in the targets step, select one of your test targets. Set the schedule to **Now** and click **Send**.
+
+Verify that you can receive the message on your phone. If not, check for logs in the Nuvix Console or in your provider's logs.
+</Tab>
+
+<Tab title="Server SDK">
+To send a message programmatically, use the Nuvix Server SDK.
+
+<CodeGroup>
+```javascript
+import { Client, Messaging } from 'nuvix';
+
+const client = new Client()
+  .setEndpoint('https://api.nuvix.in/v1')
+  .setProject('<PROJECT_ID>')
+  .setKey('<API_KEY>');
+
+const messaging = new Messaging(client);
+
+const message = await messaging.createSms({
+  messageId: '<MESSAGE_ID>',
+  content: '<CONTENT>',
+  topics: [],                                   // optional
+  users: [],                                    // optional
+  targets: [],                                  // optional
+  draft: false,                                 // optional
+  scheduledAt: ''                               // optional
+});
+```
+</CodeGroup>
+</Tab>
+</Tabs>
+
+You can follow the [Send SMS messages](/products/messaging/send-sms-messages) journey to send your first SMS and test your provider.
+
+## 4. Manage provider
+
+<Tabs>
+<Tab title="Console">
+You can update or delete a provider in the Nuvix Console.
+
+Navigate to **Messaging** > **Providers** > click your provider.
+In the settings, you can update a provider's configuration or delete the provider.
+</Tab>
+
+<Tab title="Server SDK">
+To update or delete providers programmatically, use the Nuvix Server SDK.
+
+<CodeGroup>
+```javascript
+import { Client, Messaging } from 'nuvix';
+
+const client = new Client()
+  .setEndpoint('https://api.nuvix.in/v1')
+  .setProject('<PROJECT_ID>')
+  .setKey('<API_KEY>');
+
+const messaging = new Messaging(client);
+
+// update Telesign provider
+const provider = await messaging.updateTelesignProvider(
+  '<PROVIDER_ID>',
+  '<NAME>',                    // name (optional)
+  false,                       // enabled (optional)
+  '<CUSTOMER_ID>',            // customerId (optional)
+  '<API_KEY>',                 // apiKey (optional)
+  '<SENDER_NUMBER>'            // from (optional)
+);
+
+// delete provider
+await messaging.deleteProvider('<PROVIDER_ID>');
+```
+</CodeGroup>
+</Tab>
+</Tabs>

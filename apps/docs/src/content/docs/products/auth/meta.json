@@ -27,8 +27,7 @@
     "jwt",
     "custom-token",
     "anonymous",
-    "email-otp",
-    "custom-token"
+    "email-otp"
   ],
-  "defaultOpen": true
+  "defaultOpen": false
 }

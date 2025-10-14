@@ -1,0 +1,118 @@
+---
+title: Topics
+description: Allow groups of users to subscribe to a common topic and receive the same notifications.
+---
+
+# Topics
+
+In Nuvix Messaging, you can use topics to deliver messages to groups of users at once.
+
+<Frame caption="Topics overview">
+  <img src="/images/docs/messaging/topics/topics.png" alt="Add a target" />
+</Frame>
+
+## Topics and targets
+
+A user can have multiple targets, such as emails, phone numbers, and devices with your app installed.
+These targets can subscribe to a topic, so when messages are published to a topic, all subscribed targets receive the message.
+
+<Card title="Learn more about targets" href="/products/messaging/targets">
+  Understand how targets work with topics to deliver messages
+</Card>
+
+## Organizing topics
+
+A topic should have semantic meaning.
+For example, a topic can represent a group of customers that receiving a common announcement or publishing public updates.
+It's important to keep privacy in mind when using topics.
+Prefer sending private information like chat messages by addressing individual targets attached to a user.
+
+Topics are optimized for delivering the same message to large groups of users.
+If you need to deliver messages to **all devices of the same user**, you can find a user's targets by calling `account.get()`.
+
+## Create a topic
+
+You can create topics
+
+<Tabs>
+<Tab title="Console">
+<Frame caption="Add a topic">
+  <img src="/images/docs/messaging/topics/create-topics.png" alt="Add a topic" />
+</Frame>
+
+Navigate to your Nuvix Console > **Messaging** > **Topics** > **Create topic**.
+</Tab>
+
+<Tab title="Server SDK">
+<CodeGroup>
+```javascript
+import { Client, Messaging } from 'nuvix';
+
+const client = new Client()
+  .setEndpoint('https://api.nuvix.in/v1')
+  .setProject('<PROJECT_ID>')
+  .setKey('<API_KEY>');
+
+const messaging = new Messaging(client);
+
+const topic = await messaging.createTopic({
+  topicId: '<TOPIC_ID>',
+  name: '<NAME>',
+  subscribe: ['<ROLES>']  // permission roles for who can subscribe
+});
+```
+</CodeGroup>
+</Tab>
+
+<Tab title="CLI">
+<Note>
+CLI functionality is coming soon to Nuvix. For now, please use the Console or Server SDK methods described above.
+</Note>
+</Tab>
+</Tabs>
+
+## Permissions
+
+Before you can subscribe to a topic, a user needs the appropriate permission.
+You can set permission by navigating to **Messaging** > **Topics** > select a topic to configure > **Subscription access**.
+
+<Card title="Learn more about permission roles" href="/products/auth/permissions">
+  Understand how permission roles work in Nuvix
+</Card>
+
+## Subscribe targets to a topic
+
+<Tabs>
+<Tab title="Console">
+During development, you can subscribe targets to a topic for testing right in the Nuvix console.
+
+<Frame caption="Add a subscriber">
+  <img src="/images/docs/messaging/topics/add-subscriber.png" alt="Add a topic" />
+</Frame>
+
+Navigate to your Nuvix Console > **Messaging** > **Topics** > click on your topic > **Subscribers** > **Create topic** > **Add subscriber**.
+
+If you can't find the targets you'd like to add, see the [targets page](/products/messaging/targets).
+</Tab>
+
+<Tab title="Server SDK">
+<CodeGroup>
+```javascript
+import { Client, Messaging } from 'nuvix';
+
+const client = new Client()
+  .setEndpoint('https://api.nuvix.in/v1')
+  .setProject('<PROJECT_ID>')
+  .setJWT('<JWT_TOKEN>');  // Your secret JSON Web Token
+
+const messaging = new Messaging(client);
+
+const subscriber = await messaging.createSubscriber({
+  topicId: '<TOPIC_ID>',
+  subscriberId: '<SUBSCRIBER_ID>',
+  targetId: '<TARGET_ID>'
+});
+```
+</CodeGroup>
+</Tab>
+</Tabs>

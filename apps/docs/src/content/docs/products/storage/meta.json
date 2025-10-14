@@ -1,0 +1,15 @@
+{
+  "title": "Storage",
+  "icon": "storage",
+  "pages": [
+    "index",
+    "---Concepts---",
+    "buckets",
+    "permissions",
+    "---Guides---",
+    "quick-start",
+    "upload-download",
+    "images",
+    "..."
+  ]
+}

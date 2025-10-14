@@ -1,0 +1,148 @@
+---
+title: Send Email Messages
+description: Send email messages to your users using Nuvix Messaging.
+---
+
+# Send email messages
+
+You can send custom email messages to your app's users using Nuvix Messaging and a connected SMTP service. This guide takes you through the implementation path of adding email messaging to your app.
+
+## Add a provider
+
+Nuvix supports [Mailgun](/products/messaging/mailgun) and [SendGrid](/products/messaging/sendgrid) as SMTP providers. You must configure one of them as a provider.
+
+<Frame>
+<img src="/images/docs/messaging/providers/mailgun/add-mailgun.png" alt="Add SMTP provider configuration" />
+</Frame>
+
+To add a new provider navigate to **Messaging** > **Providers** > **Add provider** > **Email** and follow the wizard. You can find more details about configuring in the provider guides for [Mailgun](/products/messaging/mailgun#configure-provider) and [SendGrid](/products/messaging/sendgrid#configure-provider).
+
+## Add targets
+
+In Nuvix Messaging, each user has **targets** like their email, phone number, and devices with your app installed. You can deliver messages to users through their **targets**.
+
+<Frame>
+<img src="/images/docs/messaging/targets/target-overview.png" alt="Target overview showing user contact methods" />
+</Frame>
+
+If the user signed up with email and password, their account would already have email as a target. During development, you can add targets to existing accounts by navigating to **Authentication** > **Users** > **Select a user** > **Targets** > **Add a subscriber**.
+
+<Frame>
+<img src="/images/docs/messaging/targets/add-targets.png" alt="Add target interface for user" />
+</Frame>
+
+You can also implement forms in your app to collect contact information and add it as a target with the createTarget endpoint.
+
+<CodeGroup>
+```javascript
+import { Client, Users } from 'nuvix';
+
+const client = new Client()
+  .setEndpoint('https://api.nuvix.in/v1')
+  .setProject('<PROJECT_ID>')
+  .setKey('<API_KEY>');
+
+const users = new Users(client);
+
+const target = await users.createTarget(
+  '<USER_ID>',
+  '<TARGET_ID>',
+  'email',
+  '<IDENTIFIER>',
+  '<PROVIDER_ID>',
+  '<NAME>'
+);
+```
+</CodeGroup>
+
+## Create topics (optional)
+
+You can use topics to organize targets that should receive the same messages, so you can send emails to groups of targets instead of one at time. This step is optional if you plan to only send emails to individual targets.
+
+To create a topic in the Nuvix Console, navigate to **Messaging** > **Topics** > **Create topic**.
+
+<Frame>
+<img src="/images/docs/messaging/topics/create-topics.png" alt="Create topic interface" />
+</Frame>
+
+You can also create topics programmatically using the Nuvix Server SDK.
+
+<CodeGroup>
+```javascript
+import { Client, Messaging } from 'nuvix';
+
+const client = new Client()
+  .setEndpoint('https://api.nuvix.in/v1')
+  .setProject('<PROJECT_ID>')
+  .setKey('<API_KEY>');
+
+const messaging = new Messaging(client);
+
+const topic = await messaging.createTopic(
+  '<TOPIC_ID>',
+  '<NAME>'
+);
+```
+</CodeGroup>
+
+## Send emails
+
+You can send emails using the Server SDK. To send an email immediately, you can call the `createEmail` endpoint with `schedule` left empty.
+
+<CodeGroup>
+```javascript
+import { Client, Messaging } from 'nuvix';
+
+const client = new Client()
+  .setEndpoint('https://api.nuvix.in/v1')
+  .setProject('<PROJECT_ID>')
+  .setKey('<API_KEY>');
+
+const messaging = new Messaging(client);
+
+const message = await messaging.createEmail(
+  '<MESSAGE_ID>',
+  '<SUBJECT>',
+  '<CONTENT>',
+  [],
+  [],
+  [],
+  [],
+  [],
+  false,
+  false,
+  ''
+);
+```
+</CodeGroup>
+
+## Schedule emails
+
+To send a scheduled email, you can call the `createEmail` endpoint with `status` set to `'scheduled'` and `schedule` as an ISO 8601 date time string for the scheduled time.
+
+<CodeGroup>
+```javascript
+import { Client, Messaging } from 'nuvix';
+
+const client = new Client()
+  .setEndpoint('https://api.nuvix.in/v1')
+  .setProject('<PROJECT_ID>')
+  .setKey('<API_KEY>');
+
+const messaging = new Messaging(client);
+
+const message = await messaging.createEmail(
+  '<MESSAGE_ID>',
+  '<SUBJECT>',
+  '<CONTENT>',
+  [],
+  [],
+  [],
+  [],
+  [],
+  false,
+  false,
+  '2025-02-13T22:01:00+0000'
+);
+```
+</CodeGroup>

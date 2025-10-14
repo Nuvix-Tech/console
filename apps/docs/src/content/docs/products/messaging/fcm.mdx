@@ -1,0 +1,139 @@
+---
+title: Firebase Cloud Messaging
+description: Send push notifications to Android, Apple, or Web app with Firebase Cloud Messaging (FCM).
+---
+
+# Firebase Cloud Messaging
+
+Firebase Cloud Messaging (FCM) lets you send push notifications to your iOS, Android, and web apps through Nuvix Messaging. Before you can deliver messages, you must connect to a messaging provider.
+
+## 1. Add provider
+
+To add FCM as a provider, navigate to **Messaging** > **Providers** > **Add provider** > **Push notification**.
+
+<Frame>
+<img src="/images/docs/messaging/providers/fcm/provider.png" alt="Add FCM provider configuration" />
+</Frame>
+
+Give your provider a name > choose **FCM** > click **Save and continue**. The provider will be saved to your project, but not enabled until you complete its configuration.
+
+## 2. Configure provider
+
+In the **Configure** step, you will need to provide details from your Firebase console to connect your Nuvix project.
+
+<Info>
+**Enable FCM**
+
+FCM must be enabled on your Firebase project.
+
+Head to Firebase console -> Settings -> Project settings -> Cloud Messaging. If FCM is disabled, click the three-dots menu and open the link. On the following page, click **Enable** (it might take a few minutes for the action to complete).
+</Info>
+
+Head to **Project settings** > **Service accounts** > **Generate new private key**.
+
+<Frame>
+<img src="/images/docs/messaging/providers/fcm/admin-key.png" alt="FCM admin key configuration" />
+</Frame>
+
+After all the relevant details are provided, you can enable the provider.
+
+## 3. Configure app
+
+Some additional configuration is required to enable push notifications in your mobile app.
+
+<Tabs>
+<Tab title="Android with FCM">
+1. Install the `com.google.firebase:firebase-messaging` Firebase SDK.
+2. In your Firebase console, navigate to **Settings** > **General** > **Your apps** > add an **Android** app.
+3. Register and download your `google-services.json` config file.
+4. Add `google-services.json` at the root of your project.
+5. Add Google Services class path to your app-level Gradle dependencies block `"com.google.gms:google-services:4.4.0"`.
+6. Add Google Services plugin to your app-level Gradle in the plugins block as `"com.google.gms.google-services"`.
+7. Add notification handler service to `AndroidManifest.xml` inside the application tag, alongside other activities. Find an example of this service in the [Send push notification](/products/messaging/send-push-notifications) journey.
+
+```xml
+<service android:name="<YOUR_NOTIFICATION_HANDLER_SERVICE>" android:exported="false">
+    <intent-filter>
+        <action android:name="com.google.firebase.MESSAGING_EVENT" />
+    </intent-filter>
+</service>
+```
+</Tab>
+
+<Tab title="iOS with FCM">
+1. In your Firebase console, navigate to **Settings** > **General** > **Your apps** > add an **iOS** app.
+2. Register and download your `GoogleService-Info.plist` and add it to the root of your project.
+3. Head to **Apple Developer Member Center** > **Program resources** > **Certificates, Identifiers & Profiles** > **Keys**. The key needs **Apple Push Notification Service** enabled.
+4. Create a new key, note down the key ID and download your key.
+5. In Firebase console, go to **Settings** > **Cloud Messaging** > **APNs authentication key** > click **Upload**. Upload your key here.
+6. Add push notification capability to your app by clicking your root-level app in XCode > **Signing & Capabilities** > **Capabilities** > Search for **Push Notifications**.
+7. If using SwiftUI, disable swizzling by setting `FirebaseAppDelegateProxyEnabled` to `NO` in your `Info.plist`.
+</Tab>
+
+<Tab title="Flutter with FCM">
+1. Install the [Firebase CLI](https://firebase.google.com/docs/cli) and [FlutterFire CLI](https://pub.dev/packages/flutterfire_cli).
+2. From your Flutter project directory, configure Firebase by running `flutterfire configure`.
+3. Add the Firebase messaging plugin to your Flutter project with `flutter pub add firebase_messaging`.
+4. Add the Firebase core plugin if not already added with `flutter pub add firebase_core`.
+5. Initialize Firebase in your `lib/main.dart` file:
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(MyApp());
+}
+```
+
+6. **For iOS**:
+   - Enable push notifications and background modes in XCode by opening `ios/Runner.xcworkspace` and adding the **Push Notifications** capability and **Background Modes** (Background fetch and Remote notifications)
+   - Upload your APNs authentication key to Firebase console under **Cloud Messaging** settings
+   - Request notification permission at runtime using `FirebaseMessaging.instance.requestPermission()`
+7. **For Android**: FCM requires devices running Android 5.0 or higher with Google Play services installed.
+8. **For Web**: Add a `firebase-messaging-sw.js` file in your `web/` directory that imports the Firebase messaging SDK and handles background messages.
+</Tab>
+</Tabs>
+
+## 4. Test provider
+
+Push notification requires special handling on the client side. Follow the [Send push notification](/products/messaging/send-push-notifications) flow to test your provider.
+
+## 5. Manage provider
+
+<Tabs>
+<Tab title="Console">
+You can update or delete a provider in the Nuvix Console.
+
+Navigate to **Messaging** > **Providers** > click your provider. In the settings, you can update a provider's configuration or delete the provider.
+</Tab>
+
+<Tab title="Server SDK">
+To update or delete providers programmatically, use the Nuvix Server SDK.
+
+<CodeGroup>
+```javascript
+import { Client, Messaging } from 'nuvix';
+
+const client = new Client()
+  .setEndpoint('https://api.nuvix.in/v1')
+  .setProject('<PROJECT_ID>')
+  .setKey('<API_KEY>');
+
+const messaging = new Messaging(client);
+
+const provider = await messaging.updateFCMProvider(
+  '<PROVIDER_ID>',
+  '<NAME>',           // optional
+  false,              // optional
+  {}                  // serviceAccountJSON (optional)
+);
+```
+</CodeGroup>
+</Tab>
+</Tabs>

@@ -1,0 +1,30 @@
+{
+  "title": "Messaging",
+  "icon": "messaging",
+  "description": "Send emails, SMS, and push notifications to your users",
+  "pages": [
+    "index",
+    "---Core Concepts---",
+    "topics",
+    "targets",
+    "messages",
+    "providers",
+    "---Email Providers---",
+    "sendgrid",
+    "smtp",
+    "mailgun",
+    "---SMS Providers---",
+    "twilio",
+    "vonage",
+    "telesign",
+    "textmagic",
+    "msg91",
+    "---Push Providers---",
+    "apns",
+    "fcm",
+    "---Implementation Guides---",
+    "send-email-messages",
+    "send-sms-messages",
+    "send-push-notifications"
+  ]
+}

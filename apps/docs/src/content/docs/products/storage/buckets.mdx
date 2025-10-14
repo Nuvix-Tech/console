@@ -1,0 +1,82 @@
+---
+title: Buckets
+description: Organize and manage your files effectively with Nuvix Storage Buckets. Explore how to create, configure, and use storage buckets for seamless file organization.
+---
+
+Storage buckets are a group of files, similar to tables in Nuvix Databases.
+Buckets let you limit file size and extensions, whether or not to encrypt the files, and more.
+
+## Create Bucket
+
+You can create your bucket from the Nuvix Console, a [Server SDK](/docs/sdks#server), or the [CLI](/docs/tooling/command-line/buckets).
+
+<Tabs>
+<Tab title="Console">
+You can create a bucket by heading to the **Storage** page and clicking **Create bucket**.
+
+<Frame>
+<img src="/images/docs/storage/create-bucket.png" alt="Create bucket on console" />
+</Frame>
+</Tab>
+
+<Tab title="Server SDK">
+You can also create tables programmatically using a [Server SDK](/docs/sdks#server). Nuvix [Server SDKs](/docs/sdks#server) require an [API key](/docs/advanced/platform/api-keys).
+
+<CodeGroup>
+```javascript Node.js
+import { Client, Storage, ID } from 'nuvix';
+
+// Init SDK
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1') // Your API Endpoint
+    .setProject('<PROJECT_ID>') // Your project ID
+    .setKey('919c2d18fb5d4...a2ae413da83346ad2'); // Your secret API key
+
+const storage = new Storage(client);
+
+const bucket = await storage.createBucket({
+    bucketId: ID.unique(),
+    name: '<NAME>'
+});
+
+console.log(bucket);
+```
+
+```javascript Deno
+import { Client, Storage, ID } from "npm:nuvix";
+
+// Init SDK
+const client = new Client()
+    .setEndpoint('https://api.nuvix.in/v1') // Your API Endpoint
+    .setProject('<PROJECT_ID>') // Your project ID
+    .setKey('919c2d18fb5d4...a2ae413da83346ad2'); // Your secret API key
+
+const storage = new Storage(client);
+
+const bucket = await storage.createBucket({
+    bucketId: ID.unique(),
+    name: '<NAME>'
+});
+
+console.log(bucket);
+```
+</CodeGroup>
+
+You can also configure permission, file size and extension restrictions, and more in the `createBucket` method, learn more about the `createBucket` in the [API references](/docs/references/cloud/server-nodejs/storage#createBucket).
+</Tab>
+
+<Tab title="CLI">
+Create a bucket using the CLI command `nuvix init buckets`.
+
+```bash
+nuvix init buckets
+```
+
+This will initialize your bucket in your `nuvix.config.json` file. To push your initialized bucket, use the `nuvix push buckets`.
+
+```bash
+nuvix push buckets
+```
+</Tab>
+
+</Tabs>
