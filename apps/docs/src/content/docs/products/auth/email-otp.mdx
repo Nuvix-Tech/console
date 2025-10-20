@@ -18,16 +18,14 @@ Start the flow by requesting an email token:
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-import { Client, Account, ID } from "nuvix";
+import { Client, ID } from "@nuvix/client";
 
 const client = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>');
 
-const account = new Account(client);
-
 // Request OTP for email
-const token = await account.createEmailToken({
+const token = await client.account.createEmailToken({
     userId: ID.unique(),
     email: 'user@example.com'
 });
@@ -52,7 +50,7 @@ User enters the code, you verify it:
 const userCode = '123456'; // From your UI
 
 // Verify code and create session
-const session = await account.createSession({
+const session = await client.account.createSession({
     userId: userId,        // From previous step
     secret: userCode     // Code user entered
 });
@@ -85,7 +83,7 @@ Protect against phishing with a random phrase users must verify:
 <CodeGroup>
 ```javascript JavaScript/TypeScript
 // Enable security phrase
-const token = await account.createEmailToken({
+const token = await client.account.createEmailToken({
     userId: ID.unique(),
     email: 'user@example.com',
     phrase: true  // Enable security phrase
@@ -114,7 +112,7 @@ console.log('Security phrase:', token.phrase);
 **Error handling**
 ```javascript
 try {
-    const session = await account.createSession({
+    const session = await client.account.createSession({
         userId: userId,
         secret: code
     });

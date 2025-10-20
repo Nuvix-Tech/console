@@ -18,17 +18,15 @@ Use the Server SDK to generate tokens from your backend:
 
 <CodeGroup>
 ```javascript Node.js
-import { Client, Users } from "nuvix";
+import { Client } from "@nuvix/client";
 
 const client = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>')
     .setKey('<API_KEY>');
 
-const users = new Users(client);
-
 // Generate token for existing user
-const token = await users.createToken({
+const token = await client.users.createToken({
     userId: '<USER_ID>'
 });
 
@@ -51,16 +49,14 @@ Client SDK converts the token into a user session:
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-import { Client, Account } from "nuvix";
+import { Client } from "@nuvix/client";
 
 const client = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>');
 
-const account = new Account(client);
-
 // Exchange token for session
-const session = await account.createSession({
+const session = await client.account.createSession({
     userId: '<USER_ID>',
     secret: '<TOKEN_SECRET>'
 });
@@ -74,26 +70,26 @@ const session = await account.createSession({
 **Username/password login**
 ```javascript
 // Server: Validate credentials, generate token
-const token = await users.createToken({ userId: userId });
+const token = await client.users.createToken({ userId: userId });
 sendTokenToUser(token.secret);
 ```
 
 **Biometric authentication**  
 ```javascript
 // Server: Verify biometric, generate token
-const token = await users.createToken({ userId: userId });
+const token = await client.users.createToken({ userId: userId });
 ```
 
 **External provider integration**
 ```javascript
 // Server: Validate with Auth0/TypingDNA/etc, generate token
-const token = await users.createToken({ userId: userId });
+const token = await client.users.createToken({ userId: userId });
 ```
 
 **Captcha-protected login**
 ```javascript
 // Server: Verify captcha, generate token
-const token = await users.createToken({ userId: userId });
+const token = await client.users.createToken({ userId: userId });
 ```
 
 ## Implementation flow
@@ -138,7 +134,7 @@ const { token } = await response.json();
 Convert the token to a Nuvix session:
 
 ```javascript
-const session = await account.createSession({
+const session = await client.account.createSession({
     userId: userId,
     secret: token
 });

@@ -19,14 +19,14 @@ Use the Server SDK to tag users:
 
 <CodeGroup>
 ```javascript Node.js
-import { Client, Users } from "nuvix";
+import { Client } from "@nuvix/client";
 
 const client = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>')
     .setKey('<API_KEY>');
 
-const users = new Users(client);
+const users = client.users;
 
 // Tag user as subscriber
 await users.updateLabels('<USER_ID>', ['subscriber']);

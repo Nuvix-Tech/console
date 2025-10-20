@@ -20,7 +20,7 @@ To upload a file, add this to your app. For web apps, you can use the File objec
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-import { Client, Storage, ID } from "nuvix";
+import { Client, Storage, ID } from "@nuvix/client";
 
 const client = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
@@ -40,7 +40,7 @@ console.log(response); // Success
 ```
 
 ```javascript Node.js
-import { Client, Storage, ID, InputFile } from "nuvix";
+import { Client, Storage, ID, InputFile } from "@nuvix/client";
 
 const client = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
@@ -66,7 +66,7 @@ To download a file, use the `getFileDownload` method.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-import { Client, Storage } from "nuvix";
+import { Client, Storage } from "@nuvix/client";
 
 const client = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
@@ -85,7 +85,7 @@ console.log(result); // File data or URL
 
 ```javascript React
 import { useState, useEffect } from 'react';
-import { Client, Storage } from "nuvix";
+import { Client, Storage } from "@nuvix/client";
 
 function FileViewer({ bucketId, fileId }) {
     const [fileUrl, setFileUrl] = useState(null);

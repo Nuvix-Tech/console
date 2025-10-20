@@ -18,13 +18,13 @@ Start the flow by creating a magic URL token:
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-import { Client, Account, ID } from "nuvix";
+import { Client, ID } from "@nuvix/client";
 
 const client = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>');
 
-const account = new Account(client);
+const account = client.account;
 
 // Create magic URL token
 const token = await account.createMagicURLToken(

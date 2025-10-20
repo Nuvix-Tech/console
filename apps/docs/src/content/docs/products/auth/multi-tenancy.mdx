@@ -29,13 +29,13 @@ When a new tenant signs up, create a dedicated team that serves as their isolate
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-import { Client, Teams, ID } from "nuvix";
+import { Client, Teams, ID } from "@nuvix/client";
 
 const client = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>');
 
-const teams = new Teams(client);
+const teams = client.teams;
 
 // Create team for a new tenant
 const tenantTeam = await teams.create(
@@ -52,13 +52,13 @@ Invite users to join a tenant using team memberships. Each member can be assigne
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-import { Client, Teams } from "nuvix";
+import { Client, Teams } from "@nuvix/client";
 
 const client = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>');
 
-const teams = new Teams(client);
+const teams = client.teams;
 
 // Invite a member to the tenant
 const membership = await teams.createMembership(
@@ -78,7 +78,7 @@ Control access to rows and resources using team-based permissions. This ensures 
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-import { Client, Databases, ID, Permission, Role } from "nuvix";
+import { Client, Databases, ID, Permission, Role } from "@nuvix/client";
 
 const client = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
@@ -115,7 +115,7 @@ When querying data, users will automatically only see documents they have permis
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-import { Client, Databases, Query } from "nuvix";
+import { Client, Databases, Query } from "@nuvix/client";
 
 const client = new Client()
     .setEndpoint('https://api.nuvix.in/v1')

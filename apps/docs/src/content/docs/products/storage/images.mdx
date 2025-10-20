@@ -39,7 +39,7 @@ Here are some examples using Client SDKs.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-import { Client, Storage } from "nuvix";
+import { Client, Storage } from "@nuvix/client";
 
 const client = new Client()
     .setEndpoint('https://api.nuvix.in/v1') // Your API Endpoint
@@ -64,7 +64,7 @@ console.log(previewUrl.href);
 
 ```javascript React
 import { useState, useEffect } from 'react';
-import { Client, Storage } from "nuvix";
+import { Client, Storage } from "@nuvix/client";
 
 function ImagePreview({ bucketId, fileId }) {
     const [imageUrl, setImageUrl] = useState(null);

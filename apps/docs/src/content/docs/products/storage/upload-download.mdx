@@ -15,7 +15,7 @@ You can also upload files programmatically using our SDKs:
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-import { Client, Storage, ID } from "nuvix";
+import { Client, Storage, ID } from "@nuvix/client";
 
 const client = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
@@ -35,7 +35,7 @@ console.log(response); // Success
 ```
 
 ```javascript Node.js
-import { Client, Storage, ID, InputFile } from "nuvix";
+import { Client, Storage, ID, InputFile } from "@nuvix/client";
 
 const client = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
@@ -151,7 +151,7 @@ To get metadata about a file, use the `getFile` method.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-import { Client, Storage } from "nuvix";
+import { Client, Storage } from "@nuvix/client";
 
 const client = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
@@ -174,7 +174,7 @@ To download a file, use the `getFileDownload` method.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-import { Client, Storage } from "nuvix";
+import { Client, Storage } from "@nuvix/client";
 
 const client = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
@@ -206,7 +206,7 @@ To get a file preview image, use the `getFilePreview` method.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-import { Client, Storage } from "nuvix";
+import { Client, Storage } from "@nuvix/client";
 
 const client = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
@@ -244,7 +244,7 @@ To view a file, use the `getFileView` method.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-import { Client, Storage } from "nuvix";
+import { Client, Storage } from "@nuvix/client";
 
 const client = new Client()
     .setEndpoint('https://api.nuvix.in/v1')

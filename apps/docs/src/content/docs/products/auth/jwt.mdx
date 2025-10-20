@@ -25,16 +25,14 @@ User must be authenticated first:
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-import { Client, Account } from "nuvix";
+import { Client, Account } from "@nuvix/client";
 
 const client = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>');
 
-const account = new Account(client);
-
 // User must be logged in first
-const jwt = await account.createJWT();
+const jwt = await client.account.createJWT();
 
 // Send to your backend
 await fetch('/api/user-data', {
@@ -49,7 +47,7 @@ Backend acts with user permissions:
 
 <CodeGroup>
 ```javascript Node.js
-import { Client, Users, Databases } from "nuvix";
+import { Client } from "@nuvix/client";
 
 // Create client with user's JWT
 const client = new Client()
@@ -58,13 +56,10 @@ const client = new Client()
     .setJWT(userJWT); // User's JWT from client
 
 // Now server acts with user permissions
-const databases = new Databases(client);
-
 // Only returns data user can access
-const documents = await databases.listDocuments(
-    'database-id',
+const documents = await client.schema('default').collection(
     'collection-id'
-);
+).find();
 ```
 </CodeGroup>
 
@@ -90,14 +85,14 @@ Database with birthday records, each with different user permissions:
 **With JWT (user-a authenticated):**
 ```javascript
 const client = new Client().setJWT(userAJWT);
-const docs = await databases.listDocuments('db', 'birthdays');
+const docs = await client.schema('db').collection('birthdays').find();
 // Returns: [Kevin's document only]
 ```
 
 **With API Key:**
 ```javascript
 const client = new Client().setKey(apiKey);
-const docs = await databases.listDocuments('db', 'birthdays');
+const docs = await client.schema('db').collection('birthdays').find();
 // Returns: [Kevin, Laura, Bob documents] - Privacy violation!
 ```
 
@@ -123,7 +118,7 @@ const docs = await databases.listDocuments('db', 'birthdays');
 User logs in normally through your app:
 
 ```javascript
-const session = await account.createEmailPasswordSession({
+const session = await client.account.createEmailPasswordSession({
     email: 'user@example.com',
     password: 'password'
 });
@@ -134,7 +129,7 @@ const session = await account.createEmailPasswordSession({
 Generate JWT for server communication:
 
 ```javascript
-const jwt = await account.createJWT();
+const jwt = await client.account.createJWT();
 ```
 
 ## 3. Send to backend
@@ -164,8 +159,8 @@ const client = new Client()
     .setJWT(userJWT);
 
 // Access user data only
-const userData = await users.get();
-const userDocs = await databases.listDocuments('db', 'user-data');
+const userData = await client.users.get();
+const userDocs = await client.schema('db').collection('user-data').find();
 ```
 </Steps>
 

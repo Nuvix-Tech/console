@@ -23,12 +23,12 @@ You'll use Avatars API to generate a QR code for the TOTP authenticator app, you
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-import { Client, Account, Avatars } from "nuvix";
+import { Client, Avatars } from "@nuvix/client";
 
 const client = new Client();
 
-const account = new Account(client);
-const avatars = new Avatars(client);
+const account = client.account;
+const avatars = client.avatars;
 
 client
     .setEndpoint('https://api.nuvix.in/v1') // Your API Endpoint
