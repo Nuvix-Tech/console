@@ -277,7 +277,7 @@ function SidebarLinkItem({
       </SidebarFolder>
     );
 
-  if (item.type === "custom") return <div {...props}>{item.children}</div>;
+  if (item.type === "custom") return <div {...props}>{item.children as any}</div>;
 
   return (
     <SidebarItem href={item.url} icon={item.icon} external={item.external} {...props}>

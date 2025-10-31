@@ -3,7 +3,7 @@ import { NextResponse, NextRequest } from "next/server";
 const devSecret = process.env.DEV_PASS;
 const devProtectionEnabled = process.env.ENABLE_DEV_PROTECTION === "1";
 
-export default function middleware(request: NextRequest) {
+export default function proxy(request: NextRequest) {
   if (devProtectionEnabled) {
     const secret = request.cookies.get("dev_secret");
     if (secret?.value !== devSecret)

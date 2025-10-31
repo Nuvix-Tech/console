@@ -97,14 +97,14 @@ export default async function Layout({ children }: { children: React.ReactNode }
         data-scaling={style.scaling}
         className={cn(customFont.variable, sourceCodePro.variable)}
       >
-        <MetaProvider link={Link} img={Image}>
-          <ToastProvider>
-            <Column suppressHydrationWarning as="body" fillWidth margin="0" padding="0">
-              <Providers>{children}</Providers>
+        <Column suppressHydrationWarning as="body" fillWidth margin="0" padding="0">
+          <Providers>
+            <ToastProvider>
+              {children}
               <Toaster />
-            </Column>
-          </ToastProvider>
-        </MetaProvider>
+            </ToastProvider>
+          </Providers>
+        </Column>
       </Flex>
     </>
   );
