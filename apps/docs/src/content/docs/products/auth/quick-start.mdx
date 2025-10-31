@@ -11,15 +11,13 @@ Install the Nuvix SDK and create accounts with email and password.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-import { Client, Account, ID } from "@nuvix/client";
+import { Client, ID } from "@nuvix/client";
 
-const client = new Client()
+const nx = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>');
 
-const account = new Account(client);
-
-const user = await account.create({
+const user = await nx.account.create({
     userId: ID.unique(), 
     email: 'email@example.com', 
     password: 'password'
@@ -33,7 +31,7 @@ Once they have an account, sign them in with their credentials.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-const session = await account.createEmailPasswordSession({
+const session = await nx.account.createEmailPasswordSession({
     email: email, 
     password: password
 });
@@ -47,7 +45,7 @@ Nuvix SDKs are stateless - you manage the session. Check auth status anytime.
 <CodeGroup>
 ```javascript JavaScript/TypeScript
 try {
-    const user = await account.get();
+    const user = await nx.account.get();
     // User is logged in
 } catch (err) {
     // Not logged in - send to login
@@ -66,7 +64,7 @@ import { redirect } from "react-router-dom";
 
 export async function requireAuth() {
   try {
-    const user = await account.get();
+    const user = await nx.account.get();
     return user;
   } catch {
     throw redirect('/login');

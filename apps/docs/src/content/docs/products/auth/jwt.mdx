@@ -25,14 +25,14 @@ User must be authenticated first:
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-import { Client, Account } from "@nuvix/client";
+import { Client } from "@nuvix/client";
 
-const client = new Client()
+const nx = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>');
 
 // User must be logged in first
-const jwt = await client.account.createJWT();
+const jwt = await nx.account.createJWT();
 
 // Send to your backend
 await fetch('/api/user-data', {
@@ -50,7 +50,7 @@ Backend acts with user permissions:
 import { Client } from "@nuvix/client";
 
 // Create client with user's JWT
-const client = new Client()
+const nx = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>')
     .setJWT(userJWT); // User's JWT from client
@@ -84,14 +84,14 @@ Database with birthday records, each with different user permissions:
 
 **With JWT (user-a authenticated):**
 ```javascript
-const client = new Client().setJWT(userAJWT);
+const nx = new Client().setJWT(userAJWT);
 const docs = await client.schema('db').collection('birthdays').find();
 // Returns: [Kevin's document only]
 ```
 
 **With API Key:**
 ```javascript
-const client = new Client().setKey(apiKey);
+const nx = new Client().setKey(apiKey);
 const docs = await client.schema('db').collection('birthdays').find();
 // Returns: [Kevin, Laura, Bob documents] - Privacy violation!
 ```
@@ -118,7 +118,7 @@ const docs = await client.schema('db').collection('birthdays').find();
 User logs in normally through your app:
 
 ```javascript
-const session = await client.account.createEmailPasswordSession({
+const session = await nx.account.createEmailPasswordSession({
     email: 'user@example.com',
     password: 'password'
 });
@@ -129,7 +129,7 @@ const session = await client.account.createEmailPasswordSession({
 Generate JWT for server communication:
 
 ```javascript
-const jwt = await client.account.createJWT();
+const jwt = await nx.account.createJWT();
 ```
 
 ## 3. Send to backend
@@ -153,7 +153,7 @@ Backend acts with user permissions:
 const userJWT = req.headers.authorization?.replace('Bearer ', '');
 
 // Create client with user permissions
-const client = new Client()
+const nx = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>')
     .setJWT(userJWT);

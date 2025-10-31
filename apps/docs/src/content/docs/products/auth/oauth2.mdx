@@ -35,16 +35,16 @@ The scope is provider-specific and can be found in the provider's documentation.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-import { Client, Account } from "@nuvix/client";
+import { Client } from "@nuvix/client";
 
-const client = new Client()
+const nx = new Client()
     .setEndpoint('https://api.nuvix.in/v1') // Your API Endpoint
     .setProject('<PROJECT_ID>');                 // Your project ID
 
-const account = new Account(client);
+
 
 // Go to OAuth provider login page
-account.createOAuth2Session({
+nx.account.createOAuth2Session({
     provider: 'github',
     success: 'https://example.com/success', // redirect here on success
     failure: 'https://example.com/failed', // redirect here on failure
@@ -69,13 +69,13 @@ Replace `[SESSION_ID]` with either `"current"` to get or update the active sessi
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-import { Client, Account } from "@nuvix/client";
+import { Client } from "@nuvix/client";
 
-const client = new Client();
+const nx = new Client();
 
-const account = new Account(client);
 
-const session = await account.getSession({
+
+const session = await nx.account.getSession({
     sessionId: 'current'
 });
 
@@ -109,7 +109,7 @@ Avoid refreshing before every request, which might cause rate limit problems.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-const promise = account.updateSession({
+const promise = nx.account.updateSession({
     sessionId: '[SESSION_ID]'
 });
 

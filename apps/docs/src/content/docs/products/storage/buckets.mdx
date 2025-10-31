@@ -24,17 +24,15 @@ You can also create tables programmatically using a [Server SDK](/docs/sdks#serv
 
 <CodeGroup>
 ```javascript Node.js
-import { Client, Storage, ID } from 'nuvix';
+import { Client, ID } from '@nuvix/client';
 
 // Init SDK
-const client = new Client()
+const nx = new Client()
     .setEndpoint('https://api.nuvix.in/v1') // Your API Endpoint
     .setProject('<PROJECT_ID>') // Your project ID
     .setKey('919c2d18fb5d4...a2ae413da83346ad2'); // Your secret API key
 
-const storage = new Storage(client);
-
-const bucket = await storage.createBucket({
+const bucket = await nx.storage.createBucket({
     bucketId: ID.unique(),
     name: '<NAME>'
 });
@@ -43,17 +41,16 @@ console.log(bucket);
 ```
 
 ```javascript Deno
-import { Client, Storage, ID } from "npm:nuvix";
+import { Client, ID } from "npm:nuvix";
 
 // Init SDK
-const client = new Client()
+const nx = new Client()
     .setEndpoint('https://api.nuvix.in/v1') // Your API Endpoint
     .setProject('<PROJECT_ID>') // Your project ID
     .setKey('919c2d18fb5d4...a2ae413da83346ad2'); // Your secret API key
 
-const storage = new Storage(client);
 
-const bucket = await storage.createBucket({
+const bucket = await nx.storage.createBucket({
     bucketId: ID.unique(),
     name: '<NAME>'
 });

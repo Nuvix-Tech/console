@@ -33,7 +33,7 @@ You'll need two Nuvix clients for SSR applications:
 Use the admin client for operations that bypass permissions or rate limits. Requires an API key with proper scopes.
 
 ```javascript
-import { Client } from 'nuvix';
+import { Client } from '@nuvix/client';
 
 const adminClient = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
@@ -50,7 +50,7 @@ Admin clients bypass permissions and rate limits. Use them carefully and only fo
 Create a new session client for each request. Never share clients between requests.
 
 ```javascript
-import { Client } from 'nuvix';
+import { Client } from '@nuvix/client';
 
 function createSessionClient(req) {
     const sessionClient = new Client()
@@ -73,7 +73,7 @@ Create a login endpoint that accepts credentials and returns a session cookie.
 
 ```javascript
 import express from 'express';
-import { Client, Account } from 'nuvix';
+import { Client } from '@nuvix/client';
 
 const app = express();
 
@@ -89,7 +89,7 @@ app.post('/login', async (req, res) => {
     
     try {
         // Create session with Nuvix
-        const session = await account.createEmailPasswordSession(email, password);
+        const session = await nx.account.createEmailPasswordSession(email, password);
         
         // Set secure session cookie
         res.cookie('a_session_<PROJECT_ID>', session.secret, {
@@ -136,7 +136,7 @@ app.get('/user', async (req, res) => {
     const account = new Account(sessionClient);
     
     try {
-        const user = await account.get();
+        const user = await nx.account.get();
         res.json({ success: true, user });
     } catch (error) {
         res.status(401).json({ error: 'Session invalid' });
@@ -157,7 +157,7 @@ app.post('/guest-session', async (req, res) => {
     const account = new Account(adminClient);
     
     try {
-        const session = await account.createAnonymousSession();
+        const session = await nx.account.createAnonymousSession();
         
         res.cookie('a_session_<PROJECT_ID>', session.secret, {
             httpOnly: true,
@@ -184,7 +184,7 @@ Implement OAuth2 authentication with two server endpoints:
 app.get('/oauth', async (req, res) => {
     const account = new Account(adminClient);
     
-    const redirectUrl = await account.createOAuth2Token({
+    const redirectUrl = await nx.account.createOAuth2Token({
         provider: 'github',
         success: 'https://yourapp.com/oauth/success',
         failure: 'https://yourapp.com/oauth/failure'
@@ -202,7 +202,7 @@ app.get('/oauth/success', async (req, res) => {
     const account = new Account(adminClient);
     
     try {
-        const session = await account.createSession(userId, secret);
+        const session = await nx.account.createSession(userId, secret);
         
         res.cookie('a_session_<PROJECT_ID>', session.secret, {
             httpOnly: true,

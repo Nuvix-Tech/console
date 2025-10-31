@@ -7,19 +7,19 @@ Your app needs to know: is someone logged in or not? This simple check determine
 
 ## The auth check pattern
 
-Use `account.get()` to test authentication status. It either returns user data (logged in) or throws an error (not logged in).
+Use `nx.account.get()` to test authentication status. It either returns user data (logged in) or throws an error (not logged in).
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
 import { Client } from "@nuvix/client";
 
-const client = new Client()
+const nx = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>');
 
 async function checkAuthStatus() {
     try {
-        const user = await client.account.get();
+        const user = await nx.account.get();
         console.log("User logged in:", user.name);
         return { authenticated: true, user };
     } catch (error) {
@@ -35,7 +35,7 @@ checkAuthStatus();
 
 ## Understanding the error
 
-When `account.get()` fails, you'll see something like:
+When `nx.account.get()` fails, you'll see something like:
 
 ```
 User (role: guests) missing scope (account)
@@ -50,7 +50,7 @@ This means:
 
 **Typical app logic:**
 
-1. App starts → Call `account.get()`
+1. App starts → Call `nx.account.get()`
 2. Success → User logged in → Load main interface
 3. Error → User not logged in → Show login screen
 

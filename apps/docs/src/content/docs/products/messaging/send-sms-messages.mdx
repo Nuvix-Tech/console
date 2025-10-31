@@ -35,9 +35,9 @@ You can also implement forms in your app to collect contact information and add 
 
 <CodeGroup>
 ```javascript
-import { Client, Users } from 'nuvix';
+import { Client, Users } from '@nuvix/client';
 
-const client = new Client()
+const nx = new Client()
   .setEndpoint('https://api.nuvix.in/v1')
   .setProject('<PROJECT_ID>')
   .setKey('<API_KEY>');
@@ -69,16 +69,14 @@ You can also create topics programmatically using the Nuvix Server SDK.
 
 <CodeGroup>
 ```javascript
-import { Client, Messaging } from 'nuvix';
+import { Client } from '@nuvix/client';
 
-const client = new Client()
+const nx = new Client()
   .setEndpoint('https://api.nuvix.in/v1')
   .setProject('<PROJECT_ID>')
   .setKey('<API_KEY>');
 
-const messaging = new Messaging(client);
-
-const topic = await messaging.createTopic(
+const topic = await nx.messaging.createTopic(
   '<TOPIC_ID>',
   '<NAME>'
 );
@@ -91,16 +89,14 @@ You can send SMS messages using the Server SDK. To send an SMS messages immediat
 
 <CodeGroup>
 ```javascript
-import { Client, Messaging } from 'nuvix';
+import { Client } from '@nuvix/client';
 
-const client = new Client()
+const nx = new Client()
   .setEndpoint('https://api.nuvix.in/v1')
   .setProject('<PROJECT_ID>')
   .setKey('<API_KEY>');
 
-const messaging = new Messaging(client);
-
-const message = await messaging.createSms(
+const message = await nx.messaging.createSms(
   '<MESSAGE_ID>',
   '<CONTENT>',
   [],
@@ -118,16 +114,14 @@ To send an scheduled SMS message, you can call the `createSms` endpoint with `sc
 
 <CodeGroup>
 ```javascript
-import { Client, Messaging } from 'nuvix';
+import { Client } from '@nuvix/client';
 
-const client = new Client()
+const nx = new Client()
   .setEndpoint('https://api.nuvix.in/v1')
   .setProject('<PROJECT_ID>')
   .setKey('<API_KEY>');
 
-const messaging = new Messaging(client);
-
-const message = await messaging.createSms(
+const message = await nx.messaging.createSms(
   '<MESSAGE_ID>',
   '<CONTENT>',
   [],

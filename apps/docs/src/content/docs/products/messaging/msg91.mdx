@@ -53,16 +53,14 @@ To send a message programmatically, use the Nuvix Server SDK.
 
 <CodeGroup>
 ```javascript
-import { Client, Messaging } from 'nuvix';
+import { Client } from '@nuvix/client';
 
-const client = new Client()
+const nx = new Client()
   .setEndpoint('https://api.nuvix.in/v1')
   .setProject('<PROJECT_ID>')
   .setKey('<API_KEY>');
 
-const messaging = new Messaging(client);
-
-const message = await messaging.createSms(
+const message = await nx.messaging.createSms(
   '<MESSAGE_ID>',
   '<CONTENT>',
   [],
@@ -92,17 +90,15 @@ To update or delete providers programmatically, use the Nuvix Server SDK.
 
 <CodeGroup>
 ```javascript
-import { Client, Messaging } from 'nuvix';
+import { Client } from '@nuvix/client';
 
-const client = new Client()
+const nx = new Client()
   .setEndpoint('https://api.nuvix.in/v1')
   .setProject('<PROJECT_ID>')
   .setKey('<API_KEY>');
 
-const messaging = new Messaging(client);
-
 // update provider
-const provider = await messaging.updateMsg91Provider(
+const provider = await nx.messaging.updateMsg91Provider(
   '<PROVIDER_ID>',
   '<NAME>',
   false,
@@ -112,7 +108,7 @@ const provider = await messaging.updateMsg91Provider(
 );
 
 // delete provider
-await messaging.deleteProvider('<PROVIDER_ID>');
+await nx.messaging.deleteProvider('<PROVIDER_ID>');
 ```
 </CodeGroup>
 </Tab>

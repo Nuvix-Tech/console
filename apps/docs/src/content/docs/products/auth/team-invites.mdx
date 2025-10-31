@@ -19,16 +19,14 @@ This approach is ideal when you want a simple, automated process that lets your 
 ### Create email invitation
 
 ```javascript
-import { Client, Teams } from 'nuvix';
+import { Client } from '@nuvix/client';
 
-const client = new Client()
+const nx = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>');
 
-const teams = new Teams(client);
-
 // Create membership with email invite
-const membership = await teams.createMembership(
+const membership = await nx.teams.createMembership(
     '<TEAM_ID>',
     ['developer'],     // roles
     'user@example.com', // email
@@ -48,16 +46,14 @@ Users must accept the invitation to join the team. The acceptance flow:
 4. Upon success, the user gains immediate access
 
 ```javascript
-import { Client, Teams } from 'nuvix';
+import { Client } from '@nuvix/client';
 
-const client = new Client()
+const nx = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>');
 
-const teams = new Teams(client);
-
 // Accept the invitation using the membership ID and secret
-const response = await teams.updateMembershipStatus(
+const response = await nx.teams.updateMembershipStatus(
     '<TEAM_ID>',
     '<MEMBERSHIP_ID>',
     '<USER_ID>',
@@ -80,17 +76,17 @@ Perfect for scenarios requiring custom workflows, such as bulk user management, 
 ### Create membership directly
 
 ```javascript
-import { Client, Teams } from 'nuvix';
+import { Client } from '@nuvix/client';
 
-const client = new Client()
+const nx = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>')
     .setKey('<API_KEY>'); // Server-side API key
 
-const teams = new Teams(client);
+
 
 // Create membership directly with userId
-const membership = await teams.createMembership(
+const membership = await nx.teams.createMembership(
     '<TEAM_ID>',
     ['developer'],
     '<USER_ID>',
@@ -109,19 +105,17 @@ Once team memberships are created, manage their lifecycle by checking status, up
 Verify a user's current status within a team:
 
 ```javascript
-import { Client, Teams } from 'nuvix';
+import { Client } from '@nuvix/client';
 
-const client = new Client()
+const nx = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>');
 
-const teams = new Teams(client);
-
 // Get list of teams the user is part of
-const teamsList = await teams.list();
+const teamsList = await nx.teams.list();
 
 // For a specific team, get all memberships
-const response = await teams.listMemberships('<TEAM_ID>');
+const response = await nx.teams.listMemberships('<TEAM_ID>');
 
 // Find membership for specific user
 const userMembership = response.memberships.find(
@@ -140,7 +134,7 @@ if (userMembership) {
 Team owners can remove members or users can leave teams:
 
 ```javascript
-await teams.deleteMembership(
+await nx.teams.deleteMembership(
     '<TEAM_ID>',
     '<MEMBERSHIP_ID>'
 );
@@ -156,7 +150,7 @@ Assign roles when creating a membership or update them later. Only team members 
 
 ```javascript
 // Update member roles
-await teams.updateMembership(
+await nx.teams.updateMembership(
     '<TEAM_ID>',
     '<MEMBERSHIP_ID>',
     ['admin', 'developer']
@@ -169,7 +163,7 @@ Verify if a user has specific roles:
 
 ```javascript
 // Get team memberships
-const response = await teams.listMemberships('<TEAM_ID>');
+const response = await nx.teams.listMemberships('<TEAM_ID>');
 
 // Check if user has specific role
 const membership = response.memberships.find(m => m.userId === '<USER_ID>');
@@ -202,10 +196,10 @@ if (isAdmin) {
 ```javascript
 // Check if user has pending invitations
 const checkPendingInvites = async (userId) => {
-    const teamsList = await teams.list();
+    const teamsList = await nx.teams.list();
     
     for (const team of teamsList.teams) {
-        const memberships = await teams.listMemberships(team.$id);
+        const memberships = await nx.teams.listMemberships(team.$id);
         
         const pendingInvite = memberships.memberships.find(
             m => m.userId === userId && !m.confirm

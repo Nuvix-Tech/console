@@ -25,7 +25,7 @@ Identities are created automatically when users authenticate with OAuth2 provide
 
 ```javascript
 // User logs in with Google
-const session = await account.createOAuth2Session({
+const session = await nx.account.createOAuth2Session({
     provider: 'google',
     success: 'https://yourapp.com/success',
     failure: 'https://yourapp.com/failure'
@@ -45,7 +45,7 @@ They need an active session to add new identities:
 
 ```javascript
 // Check current user
-const user = await account.get();
+const user = await nx.account.get();
 ```
 
 ## 2. Connect new provider
@@ -54,7 +54,7 @@ Initiate OAuth2 flow for additional provider:
 
 ```javascript
 // Add GitHub to existing account
-await account.createOAuth2Session({
+await nx.account.createOAuth2Session({
     provider: 'github',
     success: 'https://yourapp.com/connected',
     failure: 'https://yourapp.com/failed'
@@ -81,10 +81,10 @@ Check connected providers and remove access:
 
 ```javascript
 // List all identities for current user
-const identities = await account.listIdentities();
+const identities = await nx.account.listIdentities();
 
 // Remove a specific identity (disconnect provider)
-await account.deleteIdentity('<IDENTITY_ID>');
+await nx.account.deleteIdentity('<IDENTITY_ID>');
 ```
 
 **Identity data includes:**
@@ -107,7 +107,7 @@ When you delete a user account:
 
 **Check provider connections:**
 ```javascript
-const identities = await account.listIdentities();
+const identities = await nx.account.listIdentities();
 const hasGoogle = identities.identities.some(id => id.provider === 'google');
 const hasGithub = identities.identities.some(id => id.provider === 'github');
 ```
@@ -125,7 +125,7 @@ if (githubIdentity) {
 ```javascript
 // Help users find existing accounts
 const email = 'user@example.com';
-const existing = await account.getIdentityByEmail(email);
+const existing = await nx.account.getIdentityByEmail(email);
 if (existing) {
     suggestAccountRecovery();
 }

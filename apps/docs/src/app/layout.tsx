@@ -14,9 +14,6 @@ import { baseURL, meta, og, schema, social, getStyle } from "@nuvix/ui/resources
 import { customFont, sourceCodePro } from "@nuvix/ui/fonts";
 import { COOKIES_KEYS } from "@nuvix/sui/lib/constants";
 import { cn } from "@nuvix/sui/lib/utils";
-import { MetaProvider } from "@nuvix/ui/contexts";
-import Link from "next/link";
-import Image from "next/image";
 
 /*
  */

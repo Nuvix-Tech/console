@@ -3,7 +3,7 @@ title: Preferences
 description: Store and manage user preferences in Nuvix using Account API and Teams API for individual and shared settings.
 ---
 
-Preferences allow you to store settings like theme choice, language selection, or notification preferences that are specific to individual users or shared across teams.
+Preferences allow you to store settings like theme choice, language selection, or notification preferences that are specific to individual users or shared across nx.teams.
 
 ## User preferences
 
@@ -16,15 +16,13 @@ Preferences are stored as a key-value JSON object. The maximum allowed size for 
 Use the `updatePrefs` method to store user preferences as a JSON object.
 
 ```javascript
-import { Client, Account } from 'nuvix';
+import { Client } from '@nuvix/client';
 
-const client = new Client()
+const nx = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>');
 
-const account = new Account(client);
-
-const prefs = await account.updatePrefs({
+const prefs = await nx.account.updatePrefs({
     darkTheme: true,
     language: 'en'
 });
@@ -37,15 +35,13 @@ console.log('Preferences updated:', prefs);
 Retrieve stored preferences with the `getPrefs` method.
 
 ```javascript
-import { Client, Account } from 'nuvix';
+import { Client } from '@nuvix/client';
 
-const client = new Client()
+const nx = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>');
 
-const account = new Account(client);
-
-const preferences = await account.getPrefs();
+const preferences = await nx.account.getPrefs();
 console.log('User preferences:', preferences);
 ```
 
@@ -60,15 +56,13 @@ Team preferences are stored as a JSON object in the team row and are limited to 
 Store team-wide settings using the `updatePrefs` method with a team ID.
 
 ```javascript
-import { Client, Teams } from 'nuvix';
+import { Client } from '@nuvix/client';
 
-const client = new Client()
+const nx = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>');
 
-const teams = new Teams(client);
-
-const team = await teams.updatePrefs('<TEAM_ID>', {
+const team = await nx.teams.updatePrefs('<TEAM_ID>', {
     theme: 'corporate',
     notificationsEnabled: true,
     defaultView: 'kanban'
@@ -82,15 +76,13 @@ console.log('Team preferences updated:', team);
 Fetch team preferences by passing a team ID to the `getPrefs` method.
 
 ```javascript
-import { Client, Teams } from 'nuvix';
+import { Client } from '@nuvix/client';
 
-const client = new Client()
+const nx = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>');
 
-const teams = new Teams(client);
-
-const teamPreferences = await teams.getPrefs('<TEAM_ID>');
+const teamPreferences = await nx.teams.getPrefs('<TEAM_ID>');
 console.log('Team preferences:', teamPreferences);
 ```
 

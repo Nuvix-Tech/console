@@ -15,17 +15,16 @@ You can also upload files programmatically using our SDKs:
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-import { Client, Storage, ID } from "@nuvix/client";
+import { Client, ID } from "@nuvix/client";
 
-const client = new Client()
+const nx = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>');
 
-const storage = new Storage(client);
 
 // Upload file from file input
 const file = document.getElementById('uploader').files[0];
-const response = await storage.createFile({
+const response = await nx.storage.createFile({
     bucketId: '<BUCKET_ID>',
     fileId: ID.unique(),
     file: file
@@ -35,18 +34,17 @@ console.log(response); // Success
 ```
 
 ```javascript Node.js
-import { Client, Storage, ID, InputFile } from "@nuvix/client";
+import { Client, ID, InputFile } from "@nuvix/client";
 
-const client = new Client()
+const nx = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>')
     .setKey('<API_KEY>');
 
-const storage = new Storage(client);
 
 // Upload from file path
 const file = InputFile.fromPath('/path/to/file.jpg', 'file.jpg');
-const response = await storage.createFile({
+const response = await nx.storage.createFile({
     bucketId: '<BUCKET_ID>',
     fileId: ID.unique(),
     file: file
@@ -75,7 +73,7 @@ The Nuvix Web SDK expects a [File](https://developer.mozilla.org/en-US/docs/Web/
 For example, for the input tag `<input type="file" id="uploader">`, you would call create file like this:
 
 ```javascript
-const response = await storage.createFile({
+const response = await nx.storage.createFile({
     bucketId: '<BUCKET_ID>',
     fileId: ID.unique(),
     file: document.getElementById('uploader').files[0]
@@ -151,15 +149,14 @@ To get metadata about a file, use the `getFile` method.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-import { Client, Storage } from "@nuvix/client";
+import { Client } from "@nuvix/client";
 
-const client = new Client()
+const nx = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>');
 
-const storage = new Storage(client);
 
-const file = await storage.getFile({
+const file = await nx.storage.getFile({
     bucketId: '<BUCKET_ID>',
     fileId: '<FILE_ID>'
 });
@@ -174,16 +171,15 @@ To download a file, use the `getFileDownload` method.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-import { Client, Storage } from "@nuvix/client";
+import { Client } from "@nuvix/client";
 
-const client = new Client()
+const nx = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>');
 
-const storage = new Storage(client);
 
 // Download file data
-const fileData = await storage.getFileDownload({
+const fileData = await nx.storage.getFileDownload({
     bucketId: '<BUCKET_ID>',
     fileId: '<FILE_ID>'
 });
@@ -191,7 +187,7 @@ const fileData = await storage.getFileDownload({
 console.log(fileData); // File data as ArrayBuffer
 
 // Get download URL without downloading
-const downloadUrl = storage.getFileDownloadURL({
+const downloadUrl = nx.storage.getFileDownloadURL({
     bucketId: '<BUCKET_ID>',
     fileId: '<FILE_ID>'
 });
@@ -206,16 +202,15 @@ To get a file preview image, use the `getFilePreview` method.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-import { Client, Storage } from "@nuvix/client";
+import { Client } from "@nuvix/client";
 
-const client = new Client()
+const nx = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>');
 
-const storage = new Storage(client);
 
 // Get preview image data
-const previewData = await storage.getFilePreview({
+const previewData = await nx.storage.getFilePreview({
     bucketId: '<BUCKET_ID>',
     fileId: '<FILE_ID>',
     width: 200,
@@ -226,7 +221,7 @@ const previewData = await storage.getFilePreview({
 console.log(previewData); // Image data as ArrayBuffer
 
 // Get preview URL without downloading
-const previewUrl = storage.getFilePreviewURL({
+const previewUrl = nx.storage.getFilePreviewURL({
     bucketId: '<BUCKET_ID>',
     fileId: '<FILE_ID>',
     width: 200,
@@ -244,16 +239,15 @@ To view a file, use the `getFileView` method.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-import { Client, Storage } from "@nuvix/client";
+import { Client } from "@nuvix/client";
 
-const client = new Client()
+const nx = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>');
 
-const storage = new Storage(client);
 
 // Get file data
-const fileData = await storage.getFileView({
+const fileData = await nx.storage.getFileView({
     bucketId: '<BUCKET_ID>',
     fileId: '<FILE_ID>'
 });
@@ -261,7 +255,7 @@ const fileData = await storage.getFileView({
 console.log(fileData); // File data as ArrayBuffer
 
 // Get view URL without downloading
-const viewUrl = storage.getFileViewURL({
+const viewUrl = nx.storage.getFileViewURL({
     bucketId: '<BUCKET_ID>',
     fileId: '<FILE_ID>'
 });

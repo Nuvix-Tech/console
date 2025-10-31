@@ -48,16 +48,14 @@ To send a message programmatically, use the Nuvix Server SDK.
 
 <CodeGroup>
 ```javascript
-import { Client, Messaging } from 'nuvix';
+import { Client } from '@nuvix/client';
 
-const client = new Client()
+const nx = new Client()
   .setEndpoint('https://api.nuvix.in/v1')
   .setProject('<PROJECT_ID>')
   .setKey('<API_KEY>');
 
-const messaging = new Messaging(client);
-
-const message = await messaging.createSms({
+const message = await nx.messaging.createSms({
   messageId: '<MESSAGE_ID>',
   content: '<CONTENT>',
   topics: [],                                   // optional
@@ -88,17 +86,15 @@ To update or delete providers programmatically, use the Nuvix Server SDK.
 
 <CodeGroup>
 ```javascript
-import { Client, Messaging } from 'nuvix';
+import { Client } from '@nuvix/client';
 
-const client = new Client()
+const nx = new Client()
   .setEndpoint('https://api.nuvix.in/v1')
   .setProject('<PROJECT_ID>')
   .setKey('<API_KEY>');
 
-const messaging = new Messaging(client);
-
 // update Telesign provider
-const provider = await messaging.updateTelesignProvider(
+const provider = await nx.messaging.updateTelesignProvider(
   '<PROVIDER_ID>',
   '<NAME>',                    // name (optional)
   false,                       // enabled (optional)
@@ -108,7 +104,7 @@ const provider = await messaging.updateTelesignProvider(
 );
 
 // delete provider
-await messaging.deleteProvider('<PROVIDER_ID>');
+await nx.messaging.deleteProvider('<PROVIDER_ID>');
 ```
 </CodeGroup>
 </Tab>

@@ -28,7 +28,7 @@ It's important to keep privacy in mind when using topics.
 Prefer sending private information like chat messages by addressing individual targets attached to a user.
 
 Topics are optimized for delivering the same message to large groups of users.
-If you need to deliver messages to **all devices of the same user**, you can find a user's targets by calling `account.get()`.
+If you need to deliver messages to **all devices of the same user**, you can find a user's targets by calling `nx.account.get()`.
 
 ## Create a topic
 
@@ -46,16 +46,14 @@ Navigate to your Nuvix Console > **Messaging** > **Topics** > **Create topic**.
 <Tab title="Server SDK">
 <CodeGroup>
 ```javascript
-import { Client, Messaging } from 'nuvix';
+import { Client } from '@nuvix/client';
 
-const client = new Client()
+const nx = new Client()
   .setEndpoint('https://api.nuvix.in/v1')
   .setProject('<PROJECT_ID>')
   .setKey('<API_KEY>');
 
-const messaging = new Messaging(client);
-
-const topic = await messaging.createTopic({
+const topic = await nx.messaging.createTopic({
   topicId: '<TOPIC_ID>',
   name: '<NAME>',
   subscribe: ['<ROLES>']  // permission roles for who can subscribe
@@ -98,16 +96,16 @@ If you can't find the targets you'd like to add, see the [targets page](/product
 <Tab title="Server SDK">
 <CodeGroup>
 ```javascript
-import { Client, Messaging } from 'nuvix';
+import { Client } from '@nuvix/client';
 
-const client = new Client()
+const nx = new Client()
   .setEndpoint('https://api.nuvix.in/v1')
   .setProject('<PROJECT_ID>')
   .setJWT('<JWT_TOKEN>');  // Your secret JSON Web Token
 
-const messaging = new Messaging(client);
 
-const subscriber = await messaging.createSubscriber({
+
+const subscriber = await nx.messaging.createSubscriber({
   topicId: '<TOPIC_ID>',
   subscriberId: '<SUBSCRIBER_ID>',
   targetId: '<TARGET_ID>'

@@ -22,12 +22,12 @@ One method call creates a user account without identity data:
 ```javascript JavaScript/TypeScript
 import { Client } from "@nuvix/client";
 
-const client = new Client()
+const nx = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>');
 
 // Create anonymous session
-const session = await client.account.createAnonymousSession();
+const session = await nx.account.createAnonymousSession();
 ```
 </CodeGroup>
 

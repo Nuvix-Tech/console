@@ -25,9 +25,9 @@ You'll use Avatars API to generate a QR code for the TOTP authenticator app, you
 ```javascript JavaScript/TypeScript
 import { Client, Avatars } from "@nuvix/client";
 
-const client = new Client();
+const nx = new Client();
 
-const account = client.account;
+const account = nx.account;
 const avatars = client.avatars;
 
 client
@@ -56,11 +56,11 @@ The code will look like this, display them to the user and remind them to save t
 ```
 
 These codes can be used to complete the [Complete challenge](#complete-challenge) step if the user loses access to their MFA factors.
-Generate the recovery codes by calling `account.createMfaRecoveryCodes()`.
+Generate the recovery codes by calling `nx.account.createMfaRecoveryCodes()`.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-const response = await account.createMfaRecoveryCodes();
+const response = await nx.account.createMfaRecoveryCodes();
 console.log(response.recoveryCodes);
 ```
 </CodeGroup>
@@ -76,20 +76,20 @@ First, set your user's email if they haven't already.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-const response = await account.updateEmail({
+const response = await nx.account.updateEmail({
     email: 'email@example.com',
     password: 'password'
 });
 ```
 </CodeGroup>
 
-Then, initiate verification for the email by calling `account.createEmailVerification()`.
+Then, initiate verification for the email by calling `nx.account.createEmailVerification()`.
 Calling `createEmailVerification` will send a verification email to the user's email address
 with a link with the query parameter `userId` and `secret`.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-const res = await account.createVerification({
+const res = await nx.account.createVerification({
     url: 'https://example.com/verify-email'
 });
 ```
@@ -98,11 +98,11 @@ const res = await account.createVerification({
 After the user clicks the link in the email, they will be redirected to your site with the query parameters `userId` and `secret`.
 If you're on a mobile platform, you will need to create the appropriate deep link to handle the verification.
 
-Finally, verify the email by calling `account.updateVerification()` with `userId` and `secret`.
+Finally, verify the email by calling `nx.account.updateVerification()` with `userId` and `secret`.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-const response = await account.updateVerification({
+const response = await nx.account.updateVerification({
     userId: '<USER_ID>',
     secret: '<SECRET>'
 });
@@ -116,26 +116,26 @@ First, set your user's phone number if they haven't already.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-const response = await account.updatePhone({
+const response = await nx.account.updatePhone({
     phone: '+12065550100',
     password: 'password'
 });
 ```
 </CodeGroup>
 
-Then, initiate verification for the phone number by calling `account.createPhoneVerification()`.
+Then, initiate verification for the phone number by calling `nx.account.createPhoneVerification()`.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-const response = await account.createPhoneVerification();
+const response = await nx.account.createPhoneVerification();
 ```
 </CodeGroup>
 
-After the user receives the verification code, they can verify their phone number by calling `account.updatePhoneVerification()`.
+After the user receives the verification code, they can verify their phone number by calling `nx.account.updatePhoneVerification()`.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-const response = await account.updatePhoneVerification({
+const response = await nx.account.updatePhoneVerification({
     userId: '<USER_ID>',
     secret: '<SECRET>'
 });
@@ -145,11 +145,11 @@ const response = await account.updatePhoneVerification({
 </Tab>
 
 <Tab title="Authenticator">
-First, add a TOTP authenticator to the user's account by calling `account.addAuthenticator()`.
+First, add a TOTP authenticator to the user's account by calling `nx.account.addAuthenticator()`.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-const { secret, uri } = await account.createMfaAuthenticator({
+const { secret, uri } = await nx.account.createMfaAuthenticator({
     type: 'totp'
 });
 ```
@@ -176,7 +176,7 @@ console.log(result); // Resource URL
 If the user is unable to scan QR codes, you can display the `secret` to the user.
 
 Finally prompt the user to enter a TOTP from their authenticator app, then
-verify the authenticator by calling `account.verifyMfaAuthenticator()`.
+verify the authenticator by calling `nx.account.verifyMfaAuthenticator()`.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
@@ -192,13 +192,13 @@ const promise = account.updateMfaAuthenticator({
 
 ## 3. Enable MFA on an account
 
-You can enable MFA on your account by calling `account.updateMFA()`.
+You can enable MFA on your account by calling `nx.account.updateMFA()`.
 You will need to have added more than 1 factors of authentication to an account before
 the MFA is enforced.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-const result = await account.updateMFA({
+const result = await nx.account.updateMFA({
     enabled: true
 });
 ```
@@ -210,7 +210,7 @@ Begin your login flow with the default authentication method used by your app, f
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-const session = await account.createEmailPasswordSession({
+const session = await nx.account.createEmailPasswordSession({
     email: 'email@example.com',
     password: 'password'
 });
@@ -219,14 +219,14 @@ const session = await account.createEmailPasswordSession({
 
 ## 5. Check for multi-factor
 
-Upon successful login in the first authentication step, check the status of the login by calling `account.get()`.
+Upon successful login in the first authentication step, check the status of the login by calling `nx.account.get()`.
 If more than one factors are required, you will receive the error `user_more_factors_required`.
 Redirect the user in your app to perform the MFA challenge.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
 try {
-    const response = await account.get();
+    const response = await nx.account.get();
     console.log(response);
 } catch (error) {
     console.log(error);
@@ -242,7 +242,7 @@ try {
 
 ## 6. List factors
 
-You can check which factors are enabled for an account using `account.listMfaFactors()`.
+You can check which factors are enabled for an account using `nx.account.listMfaFactors()`.
 The returned object will be formatted like this.
 
 ```javascript
@@ -255,7 +255,7 @@ The returned object will be formatted like this.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-const factors = await account.listMfaFactors();
+const factors = await nx.account.listMfaFactors();
 // redirect based on factors returned.
 ```
 </CodeGroup>
@@ -273,7 +273,7 @@ Note that this is only valid as a second factor if the user did not initialize t
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-const challenge = await account.createMfaChallenge({
+const challenge = await nx.account.createMfaChallenge({
     factor: 'email'
 });
 
@@ -290,7 +290,7 @@ You cannot use this method if the user initialized their login with phone OTP.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-const challenge = await account.createMfaChallenge({
+const challenge = await nx.account.createMfaChallenge({
     factor: 'phone'
 });
 
@@ -307,7 +307,7 @@ Initiate a challenge for users to complete using an authenticator app.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-const challenge = await account.createMfaChallenge({
+const challenge = await nx.account.createMfaChallenge({
     factor: 'totp'
 });
 
@@ -325,7 +325,7 @@ Once the user receives the challenge code, you can pass the code back to Nuvix t
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-const response = await account.updateMfaChallenge({
+const response = await nx.account.updateMfaChallenge({
     challengeId: '<CHALLENGE_ID>',
     otp: '<OTP>'
 });
@@ -333,16 +333,16 @@ const response = await account.updateMfaChallenge({
 </CodeGroup>
 
 After completing the challenge, the user is now authenticated and all requests will be authorized.
-You can confirm this by running `account.get()`
+You can confirm this by running `nx.account.get()`
 
 ## 9. Recovery
 
 In case your user needs to recover their account, they can use the recovery codes generated in the first step with the
-recovery code factor. Initialize the challenge by calling `account.createMfaChallenge()` with the factor `recoverycode`.
+recovery code factor. Initialize the challenge by calling `nx.account.createMfaChallenge()` with the factor `recoverycode`.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-const challenge = await account.createMfaChallenge({
+const challenge = await nx.account.createMfaChallenge({
     factor: 'recoverycode'
 });
 
@@ -351,11 +351,11 @@ const challengeId = challenge.$id;
 ```
 </CodeGroup>
 
-Then complete the challenge by calling `account.updateMfaChallenge()` with the challenge ID and the recovery code.
+Then complete the challenge by calling `nx.account.updateMfaChallenge()` with the challenge ID and the recovery code.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-const response = await account.updateMfaChallenge({
+const response = await nx.account.updateMfaChallenge({
     challengeId: '<CHALLENGE_ID>',
     otp: '<RECOVERY_CODE>'
 });
