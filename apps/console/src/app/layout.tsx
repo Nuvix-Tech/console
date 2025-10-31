@@ -104,21 +104,21 @@ export default async function Layout({ children }: { children: React.ReactNode }
             }}
           />
         </head>
-        <ToastProvider>
-          <Column
-            suppressHydrationWarning
-            as="body"
-            fillWidth
-            margin="0"
-            padding="0"
-            background="page"
-          >
-            <Providers>
+        <Column
+          suppressHydrationWarning
+          as="body"
+          fillWidth
+          margin="0"
+          padding="0"
+          background="page"
+        >
+          <Providers>
+            <ToastProvider>
               {children}
               <Toaster position="top-right" closeButton />
-            </Providers>
-          </Column>
-        </ToastProvider>
+            </ToastProvider>
+          </Providers>
+        </Column>
       </Flex>
     </>
   );
