@@ -5,8 +5,8 @@
   "compilerOptions": {
     "plugins": [{ "name": "next" }],
     "module": "ESNext",
-    "target": "es2023",
-    "moduleResolution": "Bundler",
+    "target": "es2024",
+    "moduleResolution": "bundler",
     "allowJs": true,
     "jsx": "preserve",
     "noEmit": true

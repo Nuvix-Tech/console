@@ -1,3 +1,10 @@
 {
-  "pages": ["...", "!products", "products/auth", "products/messaging", "products/storage"]
+  "pages": [
+    "...",
+    "!products",
+    "products/auth",
+    "products/messaging",
+    "products/storage",
+    "products/database"
+  ]
 }

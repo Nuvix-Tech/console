@@ -8,10 +8,10 @@
     "isolatedModules": true,
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "module": "NodeNext",
-    "moduleResolution": "NodeNext",
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "ES2017"
+    "target": "es2024",
+    "jsx": "react-jsx"
   }
 }

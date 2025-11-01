@@ -1,3 +1,4 @@
+"use client";
 import { cn } from "@nuvix/sui/lib/utils";
 import React from "react";
 

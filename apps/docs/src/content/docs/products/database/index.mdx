@@ -1,0 +1,119 @@
+---
+title: Database
+description: Explore how Nuvix Database unifies structured and unstructured data with PostgreSQL-backed schemas and fine-grained access control.
+---
+
+Nuvix provides a **multi-schema data architecture** built on PostgreSQL, combining the flexibility of NoSQL with the robustness and performance of SQL — all exposed through a unified API layer.
+
+<Callout type="info">
+Every Nuvix schema is a PostgreSQL schema under the hood.  
+You can create unlimited schemas of any type and expose them securely through the Nuvix API.
+</Callout>
+
+---
+
+## Overview
+
+The **Nuvix Database** forms the foundation of your application’s data layer.  
+It offers:
+- **Unified APIs** for querying and managing data across schema types.  
+- **Built-in permission enforcement** through ACLs and RLS.  
+- **Schema-driven modeling** for both NoSQL and SQL users.  
+- **API-driven governance** without direct SQL connections.  
+
+---
+
+## Schema Types
+
+Nuvix supports three types of schemas. Each type offers a different balance between structure, control, and flexibility — yet all share the same API design philosophy.
+
+<Cards>
+  <Card title="Document Schemas" href="/docs/database/document-schemas" icon="notion">
+    NoSQL-style collections with defined attributes, indexes, and ACLs. SQL access is read-only.
+  </Card>
+
+  <Card title="Managed Schemas" href="/docs/database/managed-schemas" icon="database">
+    SQL tables with automation — RLS, policies, and permission tables generated automatically.
+  </Card>
+
+  <Card title="Unmanaged Schemas" href="/docs/database/unmanaged-schemas" icon="terminal">
+    Full SQL freedom with manual control, still managed and exposed via Nuvix API.
+  </Card>
+</Cards>
+
+---
+
+## Key Features
+
+<Tabs>
+  <Tab title="Unified API Access">
+    All schema types are accessible through the same API endpoints and SDK methods, simplifying data operations across different models.
+  </Tab>
+
+  <Tab title="Permission Enforcement">
+    Document Schemas use ACL-based control, while Managed Schemas rely on PostgreSQL RLS and generated permission tables.
+  </Tab>
+
+  <Tab title="Schema Flexibility">
+    Mix NoSQL-style collections with fully relational tables — each schema is isolated yet shareable under one PostgreSQL instance.
+  </Tab>
+
+  <Tab title="API-First Governance">
+    Schemas, tables, and permissions are managed entirely through the Nuvix API or Console. No direct SQL connections are required.
+  </Tab>
+</Tabs>
+
+---
+
+## Choosing the Right Schema
+
+| Schema Type | SQL Access | Best For | Permission Model | Flexibility | Governance |
+|--------------|-------------|-----------|------------------|--------------|-------------|
+| **Document** | ❌ Read-only | Rapid prototyping, unstructured data | ACL (Collection / Document level) | ⭐⭐⭐⭐ | API-driven |
+| **Managed** | ✅ Full | Structured app data | RLS + `_perms` + Policies | ⭐⭐⭐ | API-driven |
+| **Unmanaged** | ✅ Full | Custom SQL, integrations | Manual (user-defined) | ⭐⭐ | API-driven |
+
+<Tip>
+Choose **Document Schemas** for flexible and fast development, and **Managed Schemas** when you need structure, relations, and strong access control.
+</Tip>
+
+---
+
+## How It Works
+
+<Steps>
+  <Step title="1. Create a Schema">
+    Use the Console or API to create a schema of any type — Document, Managed, or Unmanaged.
+  </Step>
+
+  <Step title="2. Define Structure">
+    In Document Schemas, define attributes and indexes.  
+    In Managed/Unmanaged, define SQL tables and relations.
+  </Step>
+
+  <Step title="3. Configure Permissions">
+    Apply ACL rules (Document) or enable RLS (Managed) to protect your data.
+  </Step>
+
+  <Step title="4. Access Through API">
+    Query and mutate data using the unified REST or SDK interfaces.
+  </Step>
+</Steps>
+
+---
+
+## Learn More
+
+<Cards>
+  <Card title="Document Schemas" href="/docs/database/document-schemas">
+    NoSQL-style, schema-defined collections with ACL-based access control.
+  </Card>
+
+  <Card title="Managed Schemas" href="/docs/database/managed-schemas">
+    PostgreSQL tables with automation, RLS policies, and unified APIs.
+  </Card>
+
+  <Card title="Unmanaged Schemas" href="/docs/database/unmanaged-schemas">
+    Custom PostgreSQL schemas for advanced data control.
+  </Card>
+</Cards>
