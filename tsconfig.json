@@ -1,4 +1,3 @@
 {
-  "extends": "@nuvix/typescript-config/base.json",
-  "exclude": ["node_modules", "dist", "build"]
+  "extends": "@nuvix/typescript-config/base.json"
 }

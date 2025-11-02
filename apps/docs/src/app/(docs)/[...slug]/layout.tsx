@@ -219,21 +219,21 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   (searchToggle.components?.sm ?? (
                     <SearchToggle className="p-2" hideIfDisabled />
                   ))}
-                {sidebarEnabled && (
-                  <SidebarTrigger
-                    className={cn(
-                      buttonVariants({
-                        color: 'ghost',
-                        size: 'icon-sm',
-                        className: 'p-2',
-                      }),
-                    )}
-                  >
-                    <SidebarIcon />
-                  </SidebarTrigger>
-                )}
+                {sidebarEnabled && ( */}
+        {/* <SidebarTrigger
+          className={cn(
+            buttonVariants({
+              color: "ghost",
+              size: "icon-sm",
+              className: "p-2",
+            }),
+          )}
+        >
+          <SidebarIcon />
+        </SidebarTrigger> */}
+        {/* )}
               </Navbar>
-            ))} */}
+            ))}  */}
         <NavBar />
         <LayoutBody className={cn(sidebarVariables)}>
           {sidebar()}
