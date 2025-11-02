@@ -1,5 +1,6 @@
 {
   "title": "Database",
   "icon": "database",
+  "pages": ["schema-types"],
   "defaultOpen": false
 }

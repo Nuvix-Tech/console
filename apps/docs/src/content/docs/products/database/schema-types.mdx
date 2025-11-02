@@ -1,0 +1,113 @@
+---
+title: 'Schema Types'
+description: 'Learn about Document, Managed, and Unmanaged schema types in Nuvix Database'
+---
+
+Nuvix Database provides three schema types, each optimized for different use cases and levels of control. Use this guide to choose the right approach for your application.
+
+## Document Schema
+
+A NoSQL-style abstraction over PostgreSQL designed for rapid prototyping and developer-friendly use. Document schemas do not require SQL and expose document-based APIs for simplicity and speed.
+
+### Key features
+- **NoSQL interface**: JSON-based document CRUD operations
+- **Collection-based**: Data organized into collections with user-defined attributes
+- **Query operators**: Rich filtering and search capabilities
+- **ACL permissions**: Custom access control at collection and document levels
+
+### API structure
+```http
+/v1/schemas/:schema/collections/:collection/documents
+```
+
+### Common use cases
+- Rapid prototyping without SQL knowledge
+- Dynamic, flexible data models
+- NoSQL-style applications
+- Mobile and web app backends
+
+### Data definition
+- Collections defined via API
+- Attributes declared per collection
+- Indexes for performance optimization
+- No direct SQL table management required
+
+<Note>
+Document schemas offer read-only SQL access. Use the API layer for any data modifications.
+</Note>
+
+## Managed Schema
+
+A PostgreSQL schema governed by Nuvix automation. Managed schemas generate metadata, permission tables, and RLS policies automatically. This approach balances control and convenience.
+
+### Key features
+- **Full SQL support**: Complete PostgreSQL querying capabilities
+- **Automatic RLS**: Row Level Security policies generated automatically
+- **Permission automation**: Automatic creation of permission tables
+- **Nuvix governance**: Simplified management with built-in best practices
+
+### Built-in automation
+- Automatic `_id` column for each table
+- Automatic `[table]_perms` table for permissions
+- RLS enabled with CRUD policies generated
+- DDL triggers handle policy generation
+
+### API structure
+```http
+/v1/schemas/:schema/tables/:table
+```
+
+### Common use cases
+- Production-grade relational applications
+- Multi-tenant systems
+- Enterprise apps requiring structured data governance
+- Applications needing both SQL and API access
+
+<Check>
+Managed schemas provide the best of both worlds: PostgreSQL power with Nuvix automation.
+</Check>
+
+## Unmanaged Schema
+
+A raw PostgreSQL schema exposed through the Nuvix API without automation. You get complete control over schema design, SQL queries, and access policies.
+
+### Key features
+- **Full PostgreSQL control**: Complete schema and permission management
+- **No automation**: No automatic RLS or permission tables
+- **Manual governance**: User-defined access controls and policies
+- **Maximum flexibility**: Custom constraints, indexes, and relationships
+
+### API structure
+```http
+/v1/schemas/:schema/tables/:table
+```
+
+### Common use cases
+- Advanced SQL workloads
+- Legacy database migrations
+- Custom governance systems
+- Complex relational designs
+
+<Warning>
+Unmanaged schemas require manual setup of permissions and RLS policies. Choose this option only if you need complete control.
+</Warning>
+
+## Choosing the right schema type
+
+| Use case | Recommended type | Reason |
+| --- | --- | --- |
+| Quick prototyping | Document | No SQL required, fastest setup |
+| Production app with SQL | Managed | Automated security with full SQL access |
+| Legacy migration | Unmanaged | Complete control over existing schema |
+| Complex relationships | Managed/Unmanaged | Full PostgreSQL feature support |
+| NoSQL-style app | Document | Document-based API simplicity |
+
+<CardGroup cols={2}>
+<Card title="API System" icon="code" href="/products/database/api-system">
+  Learn about REST APIs and the NuvQL query language
+</Card>
+
+<Card title="Permissions" icon="shield" href="/products/database/permissions">
+  Understand permission models for each schema type
+</Card>
+</CardGroup>
