@@ -288,7 +288,11 @@ export const CreateProvider: React.FC<CreateProviderProps> = ({
                     <ProviderComponent />
                   </Column>
                   <Flex justify="flex-end" mt={6} gap="4">
-                    <Button variant="tertiary" onClick={() => handleClose({ open: false })}>
+                    <Button
+                      size="s"
+                      variant="tertiary"
+                      onClick={() => handleClose({ open: false })}
+                    >
                       Cancel
                     </Button>
                     <SubmitButton>Create {getProviderTypeLabel(type)}</SubmitButton>

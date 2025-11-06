@@ -3,7 +3,6 @@ import { CardBox, CardBoxDesc, CardBoxTitle } from "@/components/others/card";
 import { InputField, InputSwitchField, InputSelectField } from "@/components/others/forms";
 import { Column } from "@nuvix/ui/components";
 import { useFormikContext } from "formik";
-import React from "react";
 import { PushProviderFormData, ProviderName } from "./_types";
 import { MessagingProviderType } from "@nuvix/console";
 import { EditorField } from "@/components/others/ui";
@@ -71,6 +70,7 @@ export const CreateProviderTypePush = () => {
             label="Provider Type"
             options={pushProviderOptions}
             required
+            portal={false}
           />
 
           <CustomID label="Provider ID" name="providerId" />

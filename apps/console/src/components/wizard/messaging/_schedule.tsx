@@ -1,7 +1,6 @@
 import { CardBox } from "@/components/others/card";
 import { InputField, InputSelectField } from "@/components/others/forms";
 import { useFormikContext } from "formik";
-import React from "react";
 import { BaseMessageFormData } from "./_types";
 
 export const Schedule = () => {

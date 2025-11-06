@@ -29,8 +29,8 @@ const SubmitButton = React.forwardRef<HTMLButtonElement, Props>((props, ref) => 
           <TooltipTrigger asChild className="cursor-pointer">
             <Icon name="infoCircle" size="m" onBackground="accent-weak" />
           </TooltipTrigger>
-          <TooltipContent side="top">
-            <ul className="list-disc ml-4">
+          <TooltipContent side="top" portal={false} className="max-w-xs !rounded-xs">
+            <ul className="list-disc ml-4 ">
               {Object.values(errors).map((error: any, index) => (
                 <li key={index}>{error}</li>
               ))}

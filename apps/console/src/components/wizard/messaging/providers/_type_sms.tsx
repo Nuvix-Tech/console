@@ -3,7 +3,6 @@ import { CardBox, CardBoxDesc, CardBoxTitle } from "@/components/others/card";
 import { InputField, InputSwitchField, InputSelectField } from "@/components/others/forms";
 import { Column } from "@nuvix/ui/components";
 import { useFormikContext } from "formik";
-import React from "react";
 import { SmsProviderFormData, ProviderName } from "./_types";
 import { MessagingProviderType } from "@nuvix/console";
 
@@ -137,6 +136,7 @@ export const CreateProviderTypeSms = () => {
             label="Provider Type"
             options={smsProviderOptions}
             required
+            portal={false}
           />
 
           <CustomID label="Provider ID" name="providerId" />

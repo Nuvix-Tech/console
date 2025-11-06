@@ -174,6 +174,7 @@ const EnableExtensionModal = ({ visible, extension, onCancel }: EnableExtensionM
             name="schema"
             label="Select a schema to enable the extension for"
             height="s"
+            portal={false}
             options={[
               {
                 label: "Create a new schema",

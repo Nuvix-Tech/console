@@ -3,7 +3,6 @@ import { CardBox, CardBoxDesc, CardBoxTitle } from "@/components/others/card";
 import { InputField, InputSwitchField, InputSelectField } from "@/components/others/forms";
 import { Column } from "@nuvix/ui/components";
 import { useFormikContext } from "formik";
-import React from "react";
 import { EmailProviderFormData, ProviderName } from "./_types";
 import { MessagingProviderType } from "@nuvix/console";
 
@@ -97,6 +96,7 @@ export const renderEmailProviderFields = (providerType: string) => {
               { value: "ssl", label: "SSL" },
               { value: "none", label: "None" },
             ]}
+            portal={false}
           />
           <InputSwitchField
             name="autoTLS"
@@ -141,6 +141,7 @@ export const CreateProviderTypeEmail = () => {
             name="providerType"
             label="Provider Type"
             options={emailProviderOptions}
+            portal={false}
             required
           />
 

@@ -1,7 +1,7 @@
 "use client";
 import React, { Suspense, useState } from "react";
-import { Box, Dialog, Portal, Text, HStack, VStack } from "@chakra-ui/react";
-import { Button, Line } from "@nuvix/ui/components";
+import { Box, Dialog, Portal, HStack, VStack } from "@chakra-ui/react";
+import { Button, Line, Text } from "@nuvix/ui/components";
 import { Buckets } from "./_buckets";
 import { Files } from "./_files";
 import { useBucketSelector } from "./_store";
@@ -74,11 +74,9 @@ export const SelectFiles: React.FC<SelectFilesProps> = ({
           <Dialog.Content gap={0}>
             <Dialog.Header py={"2"}>
               <VStack align="flex-start" gap={0.5}>
-                <Text fontSize="xl" fontWeight="bold">
-                  Select a File
-                </Text>
+                <Text variant="label-strong-l">Select a File</Text>
                 {(mimeType || maxSize) && (
-                  <Text fontSize="sm" color="gray.600">
+                  <Text variant="body-default-s" onBackground="neutral-weak">
                     {mimeType && `Allowed types: ${mimeType.join(", ")}`}
                     {mimeType && maxSize && " • "}
                     {maxSize && `Max size: ${formatFileSize(maxSize)}`}
@@ -111,14 +109,12 @@ export const SelectFiles: React.FC<SelectFilesProps> = ({
 
             {file && (
               <Box px={4} py={2} bg="bg.muted" borderTopWidth={1}>
-                <Text fontSize="sm" fontWeight="medium">
-                  Selected:
-                </Text>
+                <Text variant="label-strong-l">Selected:</Text>
                 <HStack justify="space-between">
-                  <Text fontSize="sm" color="fg.subtle" truncate>
+                  <Text variant="body-default-s" onBackground="neutral-weak" truncate>
                     {file.name}
                   </Text>
-                  <Text fontSize="xs" color="fg.muted">
+                  <Text variant="body-default-xs" onBackground="neutral-medium">
                     {formatFileSize(file.sizeOriginal)}
                   </Text>
                 </HStack>
@@ -127,11 +123,12 @@ export const SelectFiles: React.FC<SelectFilesProps> = ({
 
             <Dialog.Footer>
               <Dialog.Trigger asChild>
-                <Button variant="tertiary" type="button">
+                <Button size="s" variant="tertiary" type="button">
                   Cancel
                 </Button>
               </Dialog.Trigger>
               <Button
+                size="s"
                 variant="primary"
                 disabled={!bucket || !file}
                 onClick={handleSelect}
@@ -192,7 +189,7 @@ export const FilesSelector = ({
           open={open}
           onOpenChange={({ open }) => {
             setOpen(open);
-            if (!open) setError(undefined);
+            // if (!open) setError(undefined);
           }}
           onSelect={(b, f) => {
             setSelectedFile(f);
@@ -204,23 +201,23 @@ export const FilesSelector = ({
 
         {selectedFile ? (
           <VStack gap={2} align="center">
-            <Text fontSize="2xl">{getFileIcon(selectedFile.mimeType)}</Text>
+            <Text variant="heading-default-l">{getFileIcon(selectedFile.mimeType)}</Text>
             <VStack gap={1} align="center">
-              <Text fontWeight="medium" textAlign="center" lineClamp={2}>
+              <Text variant="label-default-s" className="text-center line-clamp-2">
                 {selectedFile.name}
               </Text>
               <HStack gap={2} color="fg.subtle" fontSize="sm">
-                <Text>{formatFileSize(selectedFile.sizeOriginal)}</Text>
+                <Text onBackground="neutral-weak">{formatFileSize(selectedFile.sizeOriginal)}</Text>
                 <Text>•</Text>
-                <Text>{selectedFile.mimeType}</Text>
+                <Text onBackground="neutral-weak">{selectedFile.mimeType}</Text>
               </HStack>
             </VStack>
             {!disabled ? (
               <HStack gap={2}>
-                <Button onClick={() => setOpen(true)} variant="tertiary" size="s" type="button">
+                <Button onClick={() => setOpen(true)} variant="tertiary" size="xs" type="button">
                   Change File
                 </Button>
-                <Button onClick={handleClear} variant="tertiary" size="s" type="button">
+                <Button onClick={handleClear} variant="tertiary" size="xs" type="button">
                   Remove File
                 </Button>
               </HStack>
@@ -228,12 +225,12 @@ export const FilesSelector = ({
           </VStack>
         ) : (
           <VStack gap={2} align="center">
-            <Text fontSize="2xl">📁</Text>
-            <Text color="fg.muted" textAlign="center">
+            <Text variant="heading-default-l">📁</Text>
+            <Text onBackground="neutral-weak" className="text-center">
               No file selected
             </Text>
             {!disabled ? (
-              <Button onClick={() => setOpen(true)} variant="secondary">
+              <Button type="button" size="s" onClick={() => setOpen(true)} variant="secondary">
                 Choose File
               </Button>
             ) : null}
@@ -242,13 +239,13 @@ export const FilesSelector = ({
       </div>
 
       {error && (
-        <Text color="red.500" fontSize="sm" textAlign="center">
+        <Text variant="body-default-s" onBackground="danger-weak">
           {error}
         </Text>
       )}
 
       {(mimeType || maxSize) && !selectedFile && (
-        <Text fontSize="xs" color="fg.muted" textAlign="center">
+        <Text variant="body-default-xs" onBackground="neutral-medium" className="text-center">
           {mimeType && `Supported: ${mimeType.join(", ")}`}
           {mimeType && maxSize && " • "}
           {maxSize && `Max size: ${formatFileSize(maxSize)}`}

@@ -53,13 +53,13 @@ Sign up at [nuvix.in](https://www.nuvix.in) and create a new project to obtain y
 
 <CodeGroup>
 ```shell npm
-npm install @nuvix/nuvix
+npm install @nuvix/client
 ```
 ```shell bun
-bun install @nuvix/nuvix
+bun install @nuvix/client
 ```
 ```shell pnpm
-pnpm install @nuvix/nuvix
+pnpm install @nuvix/client
 ```
 </CodeGroup>
 
@@ -69,10 +69,9 @@ pnpm install @nuvix/nuvix
 import { Client } from '@nuvix/client';
 
 const nx = new Client({
-  projectId: 'YOUR_PROJECT_ID',
-  endpoint: 'https://api.nuvix.in'
+  projectId: 'YOUR_PROJECT_ID', // Your project ID
+  endpoint: 'https://api.nuvix.in/v1' // Your API endpoint
 });
 ```
 
 Now you’re ready to start building with Nuvix!
-

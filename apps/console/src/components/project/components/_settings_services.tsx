@@ -105,14 +105,10 @@ export const UpdateServices = () => {
             <VStack justifyContent={"start"} alignItems="flex-start" flex="1" gap="3">
               {renderSwitch("Account", ApiService.Account, project?.serviceStatusForAccount)}
               {renderSwitch("Avatars", ApiService.Avatars, project?.serviceStatusForAvatars)}
-              {renderSwitch("Schemas", "schemas" as any, (project as any)?.serviceStatusForSchemas)}
-              {renderSwitch("Functions", ApiService.Functions, project?.serviceStatusForFunctions)}
+              {renderSwitch("Schemas", ApiService.Schemas, project?.serviceStatusForSchemas)}
+              {/* {renderSwitch("Functions", ApiService.Functions, project?.serviceStatusForFunctions)} */}
               {renderSwitch("Health", ApiService.Health, project?.serviceStatusForHealth)}
-              {renderSwitch(
-                "Database",
-                "database" as any,
-                (project as any)?.serviceStatusForDatabase,
-              )}
+              {renderSwitch("Database", ApiService.Database, project?.serviceStatusForDatabase)}
             </VStack>
             <VStack justifyContent={"start"} alignItems="flex-start" flex="1" gap="3">
               {renderSwitch("Locale", ApiService.Locale, project?.serviceStatusForLocale)}

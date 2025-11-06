@@ -75,6 +75,7 @@ export const InviteMember = ({ onClose, isOpen, refetch }: InviteMemberProps) =>
             { label: "Editor", value: "editor" },
             { label: "Billing", value: "billing" },
           ]}
+          portal={false}
         />
       </Column>
     </FormDialog>

@@ -324,11 +324,10 @@ const Uploader: React.FC<UploaderProps> = ({
                               {formatBytes(upload.file.size)}
 
                               {(upload.status === "completed" || upload.status === "error") && (
-                                <IconButton
-                                  icon="close"
+                                <Icon
+                                  name="close"
                                   size="s"
-                                  variant="ghost"
-                                  className="!hidden group-hover/uploader:!block transition-all"
+                                  className="!hidden group-hover/uploader:!flex transition-all ml-1 hover:!text-destructive-foreground cursor-pointer"
                                   aria-label="Remove"
                                   onClick={(e: React.MouseEvent) => {
                                     e.stopPropagation();

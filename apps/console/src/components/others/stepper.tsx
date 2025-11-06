@@ -95,12 +95,16 @@ const Footer = ({ comp }: { comp: React.ReactNode }) => {
     <>
       {hasPrevStep && (
         <Steps.PrevTrigger asChild>
-          <Button>Prev</Button>
+          <Button size="s" variant="secondary">
+            Prev
+          </Button>
         </Steps.PrevTrigger>
       )}
       {hasNextStep && (
         <Steps.NextTrigger asChild>
-          <Button>Next</Button>
+          <Button size="s" variant="primary">
+            Next
+          </Button>
         </Steps.NextTrigger>
       )}
       {count === value && comp}
