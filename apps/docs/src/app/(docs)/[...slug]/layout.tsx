@@ -28,6 +28,8 @@ import { SidebarIcon } from "lucide-react";
 import { RootToggle } from "fumadocs-ui/components/layout/root-toggle";
 import { LayoutBody } from "fumadocs-ui/layouts/docs-client";
 import { NavBar } from "@/components/layout/nav-bar";
+import { SidebarGroup } from "@/components/layout";
+import { RenderNodes } from "@/components/sidebar";
 
 const sidebarVariables = cn("md:[--fd-sidebar-width:268px] lg:[--fd-sidebar-width:286px]");
 
@@ -47,15 +49,22 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
     const links = getLinks();
     const iconLinks = links.filter((item) => item.type === "icon");
+    const rawItems = source.pageTree?.children || [];
 
     const viewport = (
       <SidebarViewport>
-        {links
+        <RenderNodes
+          nodes={[
+            { type: "page", name: "Home", url: "/home", icon: "house" },
+            { type: "separator" },
+            ...rawItems,
+          ]}
+        />
+        {/* {links
           .filter((v) => v.type !== "icon")
           .map((item, i, list) => (
             <SidebarLinkItem key={i} item={item} className={cn(i === list.length - 1 && "mb-4")} />
-          ))}
-        <SidebarPageTree components={components} />
+          ))} */}
       </SidebarViewport>
     );
 
