@@ -35,7 +35,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en"
-      data-theme="dark"
+      data-theme="light"
       data-neutral="gray"
       data-brand={"custom"}
       data-accent={"custom"}
@@ -54,7 +54,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <MetaProvider link={Link} img="img" usePathname={usePathname} useRouter={useRouter}>
         <body className="page-background">
-          <Provider attribute={["class", "data-theme"]} defaultTheme="dark" enableSystem>
+          <Provider attribute={[]} defaultTheme="light" enableSystem={false} forcedTheme="light">
             {children}
           </Provider>
           <ScrollRestoration />
