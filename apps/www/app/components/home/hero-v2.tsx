@@ -23,19 +23,27 @@ export const HeroV2 = () => {
   ] as const;
 
   return (
-    <div className="container mx-auto my-2">
-      <Column solid="accent-weak" radius="xs" padding="20" onSolid="accent-weak" vertical="stretch">
+    <div data-theme="dark" className="container mx-auto my-2">
+      <Column
+        background="accent-weak"
+        radius="xs"
+        padding="20"
+        onBackground="accent-weak"
+        vertical="stretch"
+      >
         <Row gap="8" marginTop="48" paddingTop="24" paddingX="12" fill>
-          <Column className="max-w-xs" fillHeight>
-            <Text variant="display-strong-s" onSolid="neutral-strong">
-              Start simple.
-              <br />
-              Scale your way.
-            </Text>
-            <Button variant="secondary" size="m" className="mt-8">
-              Get Started
-            </Button>
-            <div className="mt-10 flex flex-col divide-y divide-(--accent-alpha-medium)">
+          <Column className="max-w-xs" fillHeight vertical="space-between" gap="24">
+            <div className="flex-grow">
+              <Text variant="display-strong-s" onSolid="neutral-strong">
+                Start simple.
+                <br />
+                Scale your way.
+              </Text>
+              <Button variant="secondary" size="m" className="mt-8">
+                Get Started
+              </Button>
+            </div>
+            <div className="mt-auto flex-shrink flex flex-col divide-y divide-(--accent-alpha-medium)">
               {tabs.map((tab) => (
                 <Accordion
                   key={tab.value}
@@ -62,7 +70,7 @@ export const HeroV2 = () => {
               ))}
             </div>
           </Column>
-          <Column className="max-w-lg" fillHeight>
+          <Column className="flex-grow" fill fillHeight>
             {openTab === "01" && <O1 />}
             {openTab === "02" && <O2 />}
             {openTab === "03" && <O3 />}
