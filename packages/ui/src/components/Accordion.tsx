@@ -22,6 +22,7 @@ interface AccordionProps extends Omit<React.ComponentProps<typeof Flex>, "title"
   className?: string;
   style?: React.CSSProperties;
   headingProps?: React.ComponentProps<typeof Text>;
+  toggleAccordion?: () => void;
 }
 
 const Accordion = forwardRef<AccordionHandle, AccordionProps>(
@@ -37,6 +38,7 @@ const Accordion = forwardRef<AccordionHandle, AccordionProps>(
       className,
       style,
       headingProps,
+      toggleAccordion,
       ...rest
     },
     ref,
@@ -47,7 +49,7 @@ const Accordion = forwardRef<AccordionHandle, AccordionProps>(
       setIsOpen(open);
     }, [open]);
 
-    const toggleAccordion = useCallback(() => {
+    toggleAccordion ??= useCallback(() => {
       setIsOpen((prev) => !prev);
     }, []);
 
