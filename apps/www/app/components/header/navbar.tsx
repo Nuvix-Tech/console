@@ -1,6 +1,7 @@
 "use client";
 import { Text, ToggleButton } from "@nuvix/ui/components";
 import { MegaMenu } from "@nuvix/ui/modules";
+import { DOCS_URL } from "~/lib/constants";
 
 export function NavMenu() {
   return (
@@ -9,7 +10,7 @@ export function NavMenu() {
         menuGroups={[
           {
             id: "products",
-            label: "Products",
+            label: labelx("Products"),
             suffixIcon: "chevronDown",
             sections: [
               {
@@ -74,49 +75,8 @@ export function NavMenu() {
             ],
           },
           {
-            id: "solutions",
-            label: "Solutions",
-            suffixIcon: "chevronDown",
-            sections: [
-              {
-                title: "By Use Case",
-                links: [
-                  {
-                    label: "SaaS Apps",
-                    href: "/solutions/saas",
-                    icon: "layers",
-                    description: "Scalable backend for SaaS platforms.",
-                  },
-                  {
-                    label: "Mobile Apps",
-                    href: "/solutions/mobile",
-                    icon: "devicePhoneMobile",
-                    description: "Backend for iOS & Android apps.",
-                  },
-                ],
-              },
-              {
-                title: "By Industry",
-                links: [
-                  {
-                    label: "Startups",
-                    href: "/solutions/startups",
-                    icon: "rocketLaunch",
-                    description: "Launch fast with low cost.",
-                  },
-                  {
-                    label: "Enterprise",
-                    href: "/solutions/enterprise",
-                    icon: "buildingOffice",
-                    description: "Compliance, scale, and integrations.",
-                  },
-                ],
-              },
-            ],
-          },
-          {
             id: "resources",
-            label: "Resources",
+            label: labelx("Resources"),
             suffixIcon: "chevronDown",
             sections: [
               {
@@ -156,17 +116,29 @@ export function NavMenu() {
             ],
           },
           {
-            id: "pricing",
-            label: "Pricing",
-            href: "/pricing",
+            id: "blog",
+            label: labelx("Blog"),
+            href: "https://stack.nuvix.in",
           },
           {
             id: "docs",
-            label: "Docs",
-            href: "https://docs.nuvix.in",
+            label: labelx("Docs"),
+            href: DOCS_URL,
+          },
+          // {
+          //   id: "pricing",
+          //   label: "Pricing",
+          //   href: "/pricing",
+          // },
+          {
+            id: "cloud",
+            label: labelx("Cloud"),
+            href: "/cloud",
           },
         ]}
       />
     </>
   );
 }
+
+const labelx = (s: string) => <Text variant="label-strong-l">{s}</Text>;
