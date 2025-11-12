@@ -22,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const metadataBase = host ? new URL(`https://${host}`) : undefined;
 
   return {
-    title: meta.title,
+    title: { default: meta.title, template: "%s | Nuvix Developer Hub" },
     description: meta.description,
     openGraph: {
       title: og.title,

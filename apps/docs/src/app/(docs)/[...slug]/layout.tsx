@@ -30,10 +30,21 @@ import { LayoutBody } from "fumadocs-ui/layouts/docs-client";
 import { NavBar } from "@/components/layout/nav-bar";
 import { SidebarGroup } from "@/components/layout";
 import { RenderNodes } from "@/components/sidebar";
+import { notFound } from "next/navigation";
 
 const sidebarVariables = cn("md:[--fd-sidebar-width:268px] lg:[--fd-sidebar-width:286px]");
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<{ slug?: string[] }>;
+}) {
+  const { slug } = await params;
+  const page = source.getPage(slug);
+  if (!page) notFound();
+
   function sidebar() {
     const {
       footer,
@@ -54,11 +65,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     const viewport = (
       <SidebarViewport>
         <RenderNodes
-          nodes={[
-            { type: "page", name: "Home", url: "/home", icon: "house" },
-            { type: "separator" },
-            ...rawItems,
-          ]}
+          nodes={[{ type: "page", name: "Home", url: "/home", icon: "house" }, ...rawItems]}
         />
         {/* {links
           .filter((v) => v.type !== "icon")
@@ -209,6 +216,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       />
     );
   }
+  const isArticleLayout = page.data.layout === "article";
 
   return (
     <>
@@ -244,10 +252,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </Navbar>
             ))}  */}
         <NavBar />
-        <LayoutBody className={cn(sidebarVariables)}>
+        <LayoutBody
+          className={cn(sidebarVariables, isArticleLayout && "lg:on-root:[--fd-toc-width:286px]")}
+        >
           {sidebar()}
           <div className="pb-1 px-1 md:pb-3 md:px-3 main-container">
-            <div className="bg-(--surface-background) border border-(--neutral-border-medium) dark:border-(--neutral-border-weak) radius-xs-4 max-h-[calc(100vh_-_60px)] overflow-y-auto overflow-x-hidden">
+            <div className="bg-(--surface-background) border border-(--neutral-border-medium) dark:border-(--neutral-border-weak) radius-xs-4 min-h-[calc(100vh_-_60px)] max-h-[calc(100vh_-_60px)] overflow-y-auto overflow-x-hidden">
               {children}
             </div>
           </div>

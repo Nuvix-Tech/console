@@ -26,6 +26,7 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
 
   const MDX = page.data.body;
   const lastEditedAt = page.data.lastModified;
+  const isArticleLayout = page.data.layout === "article";
 
   return (
     <>
@@ -42,24 +43,26 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
             </PageTOCPopoverContent>
           </PageTOCPopover>
         )}
-        <PageArticle className="docs-page-article lg:max-w-2xl">
+        <PageArticle className="docs-page-article lg:max-w-3xl">
           <PageBreadcrumb />
           <div className="flex flex-col lg:flex-row gap-2 items-start pb-6 justify-between">
             <div className="flex flex-col gap-3">
               <h1 className="text-3xl font-semibold">{page.data.title}</h1>
               <p className="text-lg text-fd-muted-foreground">{page.data.description}</p>
             </div>
-            <ViewOptions
-              markdownUrl={page.url}
-              githubUrl={`https://github.com/Nuvix-Tech/console/blob/main/apps/docs/src/content/docs/${page.path}`}
-            />
+            {isArticleLayout && (
+              <ViewOptions
+                markdownUrl={page.url}
+                githubUrl={`https://github.com/Nuvix-Tech/console/blob/main/apps/docs/src/content/docs/${page.path}`}
+              />
+            )}
           </div>
 
           <div className="prose flex-1 text-fd-foreground/80">
             <MDX components={mdxComponents} />
           </div>
           <div className="grow"></div>
-          <Rate />
+          {isArticleLayout && <Rate />}
           {lastEditedAt && !isNaN(new Date(lastEditedAt).getTime()) && (
             <div className="flex items-center gap-2">
               <PageLastUpdate date={lastEditedAt} />
@@ -71,10 +74,12 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
           <PageFooter />
         </PageArticle>
 
-        <PageTOC className="mr-6 mt-8">
-          <PageTOCTitle />
-          <PageTOCItems variant={"clerk"} />
-        </PageTOC>
+        {isArticleLayout && (
+          <PageTOC className="mr-6 mt-8">
+            <PageTOCTitle />
+            <PageTOCItems variant={"clerk"} />
+          </PageTOC>
+        )}
       </PageRoot>
     </>
   );
@@ -90,7 +95,7 @@ export async function generateMetadata(props: { params: Promise<{ slug?: string[
   if (!page) notFound();
 
   return {
-    title: page.data.title,
+    title: { default: page.data.title },
     description: page.data.description,
   };
 }

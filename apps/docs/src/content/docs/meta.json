@@ -1,11 +1,14 @@
 {
   "pages": [
     "!home",
+    "---Get Started---",
     "...",
     "!products",
+    "---Products---",
     "products/auth",
     "products/messaging",
     "products/storage",
-    "products/database"
+    "products/database",
+    "---Tools---"
   ]
 }

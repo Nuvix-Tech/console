@@ -98,6 +98,7 @@ export const docs = defineDocs({
   docs: {
     schema: frontmatterSchema.extend({
       index: z.boolean().default(false),
+      layout: z.enum(["article", "overview"]).optional().default("article"),
     }),
   },
   meta: {
