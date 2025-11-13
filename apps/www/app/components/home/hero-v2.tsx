@@ -23,15 +23,15 @@ export const HeroV2 = () => {
   ] as const;
 
   return (
-    <div data-theme="dark" className="container mx-auto my-2">
+    <div data-theme="dark" className="w-full cont my-2 px-2.5 -mt-16">
       <Column
         background="accent-weak"
         radius="xs"
-        padding="20"
+        padding="12"
         onBackground="accent-weak"
         vertical="stretch"
       >
-        <Row gap="8" marginTop="48" paddingTop="24" paddingX="12" fill>
+        <Row gap="12" marginTop="48" paddingTop="24" paddingX="12" fill>
           <Column className="max-w-xs" fillHeight vertical="space-between" gap="24">
             <div className="flex-grow">
               <Text variant="display-strong-s" onSolid="neutral-strong">

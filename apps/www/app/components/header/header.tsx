@@ -18,9 +18,9 @@ const Header: React.FC = () => {
 
   return (
     <header
-      className={`h-18 fixed top-0 left-0 flex w-full justify-between items-center px-4 py-2 z-[999] transition-colors ${isScrolled ? "page-background border-b" : ""}`}
+      className={`h-18 sticky top-0 left-0 flex w-full justify-between items-center px-4 py-2 z-[999] transition-colors ${isScrolled ? "page-background border-b" : ""}`}
     >
-      <div className="flex items-center justify-between gap-2 w-full container mx-auto px-8">
+      <div className="flex items-center justify-between gap-2 w-full cont px-2.5 md:px-5">
         <div
           data-theme={isScrolled ? undefined : "dark"}
           className={cn("flex items-center gap-4 flex-1")}
