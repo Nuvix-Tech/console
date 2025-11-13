@@ -48,15 +48,15 @@ export const O2 = () => {
   const canUserCreate = getPermissions("User").includes("CREATE");
 
   return (
-    <div className="p-2.5 size-full flex-grow flex gap-6 relative min-h-[500px]">
+    <div className="p-2.5 size-full flex-grow flex gap-6 relative min-h-[500px] flex-col lg:flex-row">
       {/* LEFT SIDE */}
-      <div className="relative w-1/2 h-full flex items-center justify-start pl-4">
+      <div className="relative lg:w-1/2 h-full flex items-center justify-start pl-4">
         {/* TOP — JSON DOCUMENT CARD */}
         <motion.div
           initial={{ opacity: 0, y: -10, rotate: -3 }}
           animate={{ opacity: 1, y: 150, rotate: -3 }}
           transition={{ duration: 0.35 }}
-          className="absolute bg-(--surface-background) radius-xs border border-(--surface-border)/40 p-4 w-72"
+          className="lg:absolute bg-(--surface-background) radius-xs border border-(--surface-border)/40 p-4 w-72"
           style={{ zIndex: 20 }}
         >
           <pre className="font-mono text-[11px] leading-5 overflow-auto max-h-60">
@@ -103,7 +103,7 @@ export const O2 = () => {
           initial={{ opacity: 0, y: 40, rotate: 4 }}
           animate={{ opacity: 1, y: 320, rotate: 4 }}
           transition={{ duration: 0.4 }}
-          className="absolute left-28 bg-(--neutral-background-medium) radius-xs border border-(--surface-border)/30 w-80 overflow-hidden"
+          className="lg:absolute lg:left-28 bg-(--neutral-background-medium) radius-xs border border-(--surface-border)/30 w-80 overflow-hidden"
           style={{ zIndex: 10 }}
         >
           <Row gap="12" vertical="center" paddingX="12" paddingY="8" borderBottom="neutral-weak">
@@ -151,7 +151,7 @@ export const O2 = () => {
       </div>
 
       {/* RIGHT SIDE PREVIEWS */}
-      <div className="w-1/2 flex flex-col gap-4 justify-center pr-2">
+      <div className="lg:w-1/2 flex flex-row lg:!flex-col gap-4 justify-center pr-2">
         {/* PUBLIC PREVIEW */}
         <PreviewCard title="Public Preview">
           {canPublicRead ? (

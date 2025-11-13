@@ -32,7 +32,7 @@ export const HeroV2 = () => {
         vertical="stretch"
       >
         <Row gap="12" marginTop="48" paddingTop="24" paddingX="12" fill>
-          <Column className="max-w-xs" fillHeight vertical="space-between" gap="24">
+          <Column className="md:max-w-xs" fillHeight vertical="space-between" gap="24">
             <div className="flex-grow">
               <Text variant="display-strong-s" onSolid="neutral-strong">
                 Start simple.
@@ -74,7 +74,7 @@ export const HeroV2 = () => {
               ))}
             </div>
           </Column>
-          <Column className="flex-grow" fill fillHeight>
+          <Column className="flex-grow !hidden md:!flex" fill fillHeight>
             {openTab === "01" && <O1 />}
             {openTab === "02" && <O2 />}
             {openTab === "03" && <O3 />}

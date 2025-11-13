@@ -6,7 +6,7 @@ export const O1 = () => {
   return (
     <div className="p-2.5 bg-(--surface-background) radius-xs size-full flex-grow flex gap-2">
       {/* LEFT SIDE TERMINAL */}
-      <div className="bg-(--page-background) radius-xs size-full flex-grow min-h-[500px] p-4">
+      <div className="bg-(--page-background) radius-xs size-full hidden md:flex lg:w-3/4 xl:8/12 min-h-[500px] p-4">
         <Terminal className="bg-transparent border-0">
           {/* JSON TITLE */}
           <TypingAnimation>Start with simple JSON…</TypingAnimation>
@@ -93,7 +93,7 @@ export const O1 = () => {
       </div>
 
       {/* RIGHT SIDE PREVIEWS */}
-      <div className="flex gap-2 w-full flex-col">
+      <div className="gap-2 w-1/4 flex-col hidden lg:flex xl:w-4/12 ">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}

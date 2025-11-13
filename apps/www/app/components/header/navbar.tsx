@@ -7,6 +7,7 @@ export function NavMenu() {
   return (
     <>
       <MegaMenu
+        className="!hidden md:!flex"
         menuGroups={[
           {
             id: "products",
