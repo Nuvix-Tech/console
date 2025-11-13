@@ -64,13 +64,16 @@ export const O2 = () => {
             <br />
             &nbsp;&nbsp;<span className="text-green-400">"id"</span>
             <span className="text-blue-400">: </span>
-            <span className="text-yellow-400">"post_123"</span>,<br />
+            <span className="neutral-on-background-medium">"post_123"</span>,<br />
             &nbsp;&nbsp;<span className="text-green-400">"author"</span>
             <span className="text-blue-400">: </span>
-            <span className="text-yellow-400">"john_doe"</span>,<br />
+            <span className="neutral-on-background-medium">"john_doe"</span>,<br />
             &nbsp;&nbsp;<span className="text-green-400">"content"</span>
             <span className="text-blue-400">: </span>
-            <span className="text-yellow-400">"Excited to launch a new feature today!"</span>,<br />
+            <span className="neutral-on-background-medium">
+              "Excited to launch a new feature today!"
+            </span>
+            ,<br />
             &nbsp;&nbsp;<span className="text-green-400">"tags"</span>
             <span className="text-blue-400">: [</span>
             <span className="text-orange-400">"launch"</span>,

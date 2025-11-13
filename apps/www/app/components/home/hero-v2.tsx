@@ -25,10 +25,10 @@ export const HeroV2 = () => {
   return (
     <div data-theme="dark" className="w-full cont my-2 px-2.5 -mt-16">
       <Column
-        background="accent-weak"
+        background="accent-medium"
         radius="xs"
         padding="12"
-        onBackground="accent-weak"
+        onBackground="accent-medium"
         vertical="stretch"
       >
         <Row gap="12" marginTop="48" paddingTop="24" paddingX="12" fill>
@@ -39,7 +39,11 @@ export const HeroV2 = () => {
                 <br />
                 Scale your way.
               </Text>
-              <Button variant="secondary" size="m" className="mt-8">
+              <Button
+                variant="secondary"
+                size="m"
+                className="mt-8 !border-(--accent-border-medium) !bg-(--accent-background-weak) hover:!bg-(--accent-background-medium)"
+              >
                 Get Started
               </Button>
             </div>
