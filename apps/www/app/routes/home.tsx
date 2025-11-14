@@ -16,8 +16,8 @@ export default function Home() {
   return (
     <>
       <HeroV2 />
-      <FeaturesSection />
       <UseWithSection />
+      <FeaturesSection />
       <BottomCtaSection />
     </>
   );

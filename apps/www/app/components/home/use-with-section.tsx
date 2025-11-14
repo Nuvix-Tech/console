@@ -1,4 +1,4 @@
-import { IconButton, Row, Text } from "@nuvix/ui/components";
+import { Icon, Row, Text } from "@nuvix/ui/components";
 import type { IconName } from "@nuvix/ui/icons";
 
 export const UseWithSection = () => {
@@ -14,23 +14,24 @@ export const UseWithSection = () => {
   ];
 
   return (
-    <div className="py-5 container mx-auto px-4">
-      <Row fillWidth className="!flex-col lg:!flex-row">
+    <div className="py-5 container mx-auto px-4 h-96">
+      <Row fillWidth className="!flex-col lg:!flex-row h-full items-center justify-between">
         <Text variant="display-strong-xs" as="h2" onBackground="neutral-medium">
-          Use Nuvix <br />
-          With Your <i className="text-(--neutral-on-background-strong)">Favorite Tools</i>
+          Bring your own framework <br />
+          <i className="text-(--neutral-on-background-strong)">it just works.</i>
         </Text>
-        <div className="flex flex-1 gap-1 md:gap-6 mt-6 flex-wrap items-center md:justify-end">
+        <div className="grid grid-cols-3 flex-1 gap-1 md:gap-6 mt-6 flex-wrap items-center md:justify-end max-w-md">
           {icons.map((e, i) => (
-            <IconButton
-              variant="ghost"
-              size="l"
-              className="[&_svg]:!size-10 !size-14 !text-(--neutral-alpha-strong) hover:!text-(--accent-on-background-medium) transition-colors"
-              icon={e.icon}
-              key={i}
-              tooltipOffset={40}
-              tooltip={e.label}
-            />
+            <div key={i} className="flex items-center gap-2 p-2">
+              <Icon
+                size="l"
+                className="!text-(--neutral-on-background-medium) hover:!text-(--brand-on-background-medium) transition-colors [&>_svg]:!size-10"
+                name={e.icon}
+              />
+              <Text variant="label-strong-m" className="hidden md:inline-block">
+                {e.label}
+              </Text>
+            </div>
           ))}
         </div>
       </Row>

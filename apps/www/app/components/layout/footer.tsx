@@ -5,7 +5,12 @@ export const Footer = () => {
   const year = new Date().getFullYear();
 
   return (
-    <div className="surface-background border-t border-border/40">
+    <div data-theme="dark" className="page-background border-t border-border/40 h-96">
+      <div className="flex gap-4">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
       <Row
         vertical="center"
         horizontal="space-between"
@@ -28,3 +33,5 @@ export const Footer = () => {
     </div>
   );
 };
+
+const FooterMenu = () => {};

@@ -49,23 +49,23 @@ export function Messaging({ className }: { className?: string }) {
       <div className="flex size-full max-w-lg flex-row items-stretch justify-between gap-10">
         <div className="flex flex-col justify-center">
           <Circle ref={div7Ref}>
-            <Icon name="person" />
+            <Icon name="person" onBackground="neutral-medium" />
           </Circle>
         </div>
         <div className="flex flex-col justify-center">
           <Circle ref={div6Ref} className="size-16">
-            <Icon name="messaging" />
+            <Icon name="messaging" onBackground="neutral-medium" />
           </Circle>
         </div>
         <div className="flex flex-col justify-center gap-2">
           <Circle ref={div1Ref}>
-            <Icon name="mail" />
+            <Icon name="mail" onBackground="neutral-medium" />
           </Circle>
           <Circle ref={div2Ref}>
-            <Icon name="sms" />
+            <Icon name="sms" onBackground="neutral-medium" />
           </Circle>
           <Circle ref={div3Ref}>
-            <Icon name="push" />
+            <Icon name="push" onBackground="neutral-medium" />
           </Circle>
         </div>
       </div>
