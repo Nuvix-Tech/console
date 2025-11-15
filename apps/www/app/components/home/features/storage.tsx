@@ -41,7 +41,7 @@ export const Storage = () => (
             center
             className="shadow-lg"
           >
-            <Icon name={item.name} />
+            <Icon name={item.name} onBackground="neutral-medium" />
           </Column>
         </motion.div>
       ))}
