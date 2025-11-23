@@ -1,6 +1,7 @@
-import { Column, Row, Text, Button, Accordion } from "@nuvix/ui/components";
+import { Column, Row, Text, Button, Accordion, Background } from "@nuvix/ui/components";
 import { useState } from "react";
 import { O1, O2, O3 } from "./hero_v2";
+
 export const HeroV2 = () => {
   const [openTab, setOpenTab] = useState("01");
 
@@ -25,12 +26,41 @@ export const HeroV2 = () => {
   return (
     <div data-theme="dark" className="w-full cont my-2 px-2.5 -mt-16">
       <Column
-        background="accent-medium"
+        // background="danger-weak"
         radius="xs"
         padding="12"
         onBackground="accent-medium"
         vertical="stretch"
+        className="overflow-hidden z-5"
+        position="relative"
       >
+        <Background
+          fill
+          className="-z-5"
+          // height="16"
+          gradient={{
+            display: true,
+            opacity: 100,
+            x: 5,
+            y: 0,
+            colorEnd: "accent-background-weak",
+            colorStart: "static-transparent",
+          }}
+          lines={{
+            display: false,
+            opacity: 100,
+            size: "16",
+            thickness: 1,
+            angle: 90,
+            color: "accent-background-strong",
+          }}
+          dots={{
+            display: false,
+            opacity: 100,
+            size: "4",
+            color: "page-background",
+          }}
+        />
         <Row gap="12" marginTop="48" paddingTop="24" paddingX="12" fill>
           <Column className="md:max-w-xs" fillHeight vertical="space-between" gap="24">
             <div className="flex-grow">
@@ -39,11 +69,7 @@ export const HeroV2 = () => {
                 <br />
                 Scale your way.
               </Text>
-              <Button
-                variant="secondary"
-                size="m"
-                className="mt-8 !border-(--accent-border-medium) !bg-(--accent-background-weak) hover:!bg-(--accent-background-medium)"
-              >
+              <Button data-solid="inverse" variant="primary" size="m" className="mt-8 ">
                 Get Started
               </Button>
             </div>

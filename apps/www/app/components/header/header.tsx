@@ -22,21 +22,21 @@ const Header: React.FC = () => {
     >
       <div className="flex items-center justify-between gap-2 w-full cont px-2.5 md:px-5">
         <div
-          data-theme={isScrolled ? undefined : "dark"}
+          // data-theme={isScrolled ? undefined : "dark"}
           className={cn("flex items-center gap-4 flex-1")}
         >
           <Link to={"/"}>
-            <img
+            {/* <img
               src={`/trademark/logo-dark.png`}
               width={100}
               alt="logo"
               className={cn(!isScrolled ? "block" : "hidden", "transition-all")}
-            />
+            /> */}
             <img
               src={`/trademark/logo-light.png`}
               width={100}
               alt="logo"
-              className={cn(isScrolled ? "block" : "hidden", "transition-all")}
+              // className={cn(isScrolled ? "block" : "hidden", "transition-all")}
             />
           </Link>
           <NavMenu />
