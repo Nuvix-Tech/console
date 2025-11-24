@@ -38,7 +38,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       data-theme="light"
       data-neutral="gray"
       data-brand={"custom"}
-      data-accent={"custom"}
+      data-accent={"aqua"}
       data-border={"rounded"}
       data-solid={"color"}
       data-solid-style={"flat"}

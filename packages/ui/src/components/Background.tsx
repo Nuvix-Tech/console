@@ -1,17 +1,17 @@
 "use client";
 
-import React, { CSSProperties, forwardRef, useEffect, useRef, useState } from "react";
-import { SpacingToken } from "../types";
-import { Flex } from "./Flex";
-import { DisplayProps } from "../interfaces";
+import React, { forwardRef, useEffect, useRef } from "react";
+import { Flex, Mask } from ".";
 import styles from "./Background.module.scss";
 import classNames from "classnames";
+import { DisplayProps } from "../interfaces";
+import { SpacingToken } from "../types";
 
 function setRef<T>(ref: React.Ref<T> | undefined, value: T | null) {
   if (typeof ref === "function") {
     ref(value);
   } else if (ref && "current" in ref) {
-    (ref as React.MutableRefObject<T | null>).current = value;
+    (ref as React.RefObject<T | null>).current = value;
   }
 }
 
@@ -71,95 +71,17 @@ interface BackgroundProps extends React.ComponentProps<typeof Flex> {
 
 const Background = forwardRef<HTMLDivElement, BackgroundProps>(
   (
-    {
-      gradient = {},
-      dots = {},
-      grid = {},
-      lines = {},
-      mask = {},
-      children,
-      className,
-      style,
-      ...rest
-    },
+    { gradient = {}, dots = {}, grid = {}, lines = {}, mask, children, className, style, ...rest },
     forwardedRef,
   ) => {
     const dotsColor = dots.color ?? "brand-on-background-weak";
     const dotsSize = "var(--static-space-" + (dots.size ?? "24") + ")";
 
-    const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
-    const [smoothPosition, setSmoothPosition] = useState({ x: 0, y: 0 });
     const backgroundRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
       setRef(forwardedRef, backgroundRef.current);
     }, [forwardedRef]);
-
-    useEffect(() => {
-      const handleMouseMove = (event: MouseEvent) => {
-        if (backgroundRef.current) {
-          const rect = backgroundRef.current.getBoundingClientRect();
-          setCursorPosition({
-            x: event.clientX - rect.left,
-            y: event.clientY - rect.top,
-          });
-        }
-      };
-
-      document.addEventListener("mousemove", handleMouseMove);
-
-      return () => {
-        document.removeEventListener("mousemove", handleMouseMove);
-      };
-    }, []);
-
-    useEffect(() => {
-      let animationFrameId: number;
-
-      const updateSmoothPosition = () => {
-        setSmoothPosition((prev) => {
-          const dx = cursorPosition.x - prev.x;
-          const dy = cursorPosition.y - prev.y;
-          const easingFactor = 0.05;
-
-          return {
-            x: Math.round(prev.x + dx * easingFactor),
-            y: Math.round(prev.y + dy * easingFactor),
-          };
-        });
-        animationFrameId = requestAnimationFrame(updateSmoothPosition);
-      };
-
-      if (mask.cursor) {
-        animationFrameId = requestAnimationFrame(updateSmoothPosition);
-      }
-
-      return () => {
-        cancelAnimationFrame(animationFrameId);
-      };
-    }, [cursorPosition, mask]);
-
-    const maskStyle = (): CSSProperties => {
-      if (!mask) return {};
-
-      if (mask.cursor) {
-        return {
-          "--mask-position-x": `${smoothPosition.x}px`,
-          "--mask-position-y": `${smoothPosition.y}px`,
-          "--mask-radius": `${mask.radius || 50}vh`,
-        } as CSSProperties;
-      }
-
-      if (mask.x != null && mask.y != null) {
-        return {
-          "--mask-position-x": `${mask.x}%`,
-          "--mask-position-y": `${mask.y}%`,
-          "--mask-radius": `${mask.radius || 50}vh`,
-        } as CSSProperties;
-      }
-
-      return {};
-    };
 
     const remap = (
       value: number,
@@ -174,22 +96,8 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(
     const adjustedX = gradient.x != null ? remap(gradient.x, 0, 100, 37.5, 62.5) : 50;
     const adjustedY = gradient.y != null ? remap(gradient.y, 0, 100, 37.5, 62.5) : 50;
 
-    return (
-      <Flex
-        ref={backgroundRef}
-        fill
-        className={classNames(mask && styles.mask, className)}
-        top="0"
-        left="0"
-        zIndex={0}
-        position="relative"
-        overflow="hidden"
-        style={{
-          ...maskStyle(),
-          ...style,
-        }}
-        {...rest}
-      >
+    const renderContent = () => (
+      <>
         {gradient.display && (
           <Flex
             position="absolute"
@@ -206,10 +114,10 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(
               ["--gradient-tilt" as string]: gradient.tilt != null ? `${gradient.tilt}deg` : "0deg",
               ["--gradient-color-start" as string]: gradient.colorStart
                 ? `var(--${gradient.colorStart})`
-                : "var(--brand-solid-strong)",
+                : "var(--brand-background-strong)",
               ["--gradient-color-end" as string]: gradient.colorEnd
                 ? `var(--${gradient.colorEnd})`
-                : "var(--brand-solid-weak)",
+                : "var(--static-transparent)",
             }}
           />
         )}
@@ -230,34 +138,44 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(
             }
           />
         )}
-        {lines.display && (
-          <Flex
-            position="absolute"
-            top="0"
-            left="0"
-            fill
-            pointerEvents="none"
-            className={styles.lines}
-            opacity={lines.opacity}
-            style={
-              {
-                "--lines-angle": `${lines.angle ?? 45}deg`,
-                "--lines-color": `var(--${lines.color ?? "brand-on-background-weak"})`,
-                "--lines-thickness": `${lines.thickness ?? 0.5}px`,
-                "--lines-spacing": `var(--static-space-${lines.size ?? "24"})`,
-                background: `
-                repeating-linear-gradient(
-                  var(--lines-angle),
-                  var(--static-transparent),
-                  var(--static-transparent) calc(var(--lines-spacing) - var(--lines-thickness)),
-                  var(--lines-color) calc(var(--lines-spacing) - var(--lines-thickness)),
-                  var(--lines-color) var(--lines-spacing)
-                )
-              `,
-              } as React.CSSProperties
-            }
-          />
-        )}
+        {lines.display &&
+          (() => {
+            const angle = lines.angle ?? -45;
+            const angleRad = (angle * Math.PI) / 180;
+            // Adjust spacing to maintain uniform perpendicular distance
+            // For diagonal lines, multiply by the secant of the angle
+            const adjustmentFactor = 1 / Math.cos(angleRad);
+            const baseSpacing = lines.size ?? "8";
+
+            return (
+              <Flex
+                position="absolute"
+                top="0"
+                left="0"
+                fill
+                pointerEvents="none"
+                className={styles.lines}
+                opacity={lines.opacity}
+                style={
+                  {
+                    "--lines-angle": `${angle}deg`,
+                    "--lines-color": `var(--${lines.color ?? "brand-on-background-weak"})`,
+                    "--lines-thickness": `${lines.thickness ?? 1}px`,
+                    "--lines-spacing": `calc(var(--static-space-${baseSpacing}) * ${adjustmentFactor})`,
+                    background: `
+                  repeating-linear-gradient(
+                    var(--lines-angle),
+                    var(--static-transparent),
+                    var(--static-transparent) calc(var(--lines-spacing) - var(--lines-thickness)),
+                    var(--lines-color) calc(var(--lines-spacing) - var(--lines-thickness)),
+                    var(--lines-color) var(--lines-spacing)
+                  )
+                `,
+                  } as React.CSSProperties
+                }
+              />
+            );
+          })()}
         {grid.display && (
           <Flex
             position="absolute"
@@ -265,38 +183,45 @@ const Background = forwardRef<HTMLDivElement, BackgroundProps>(
             left="0"
             fill
             pointerEvents="none"
-            className={styles.grid}
             opacity={grid.opacity}
             style={{
-              backgroundSize: `
-                ${grid.width || "var(--static-space-32)"}
-                ${grid.height || "var(--static-space-32)"}`,
-              backgroundPosition: "0 0",
-              backgroundImage: `
-                linear-gradient(
-                  90deg,
-                  var(--${grid.color || "brand-on-background-weak"}) 0,
-                  var(--${grid.color || "brand-on-background-weak"}) 1px,
-                  var(--static-transparent) 1px,
-                  var(--static-transparent) ${grid.width || "var(--static-space-32)"}
-                ),
-                linear-gradient(
-                  0deg,
-                  var(--${grid.color || "brand-on-background-weak"}) 0,
-                  var(--${grid.color || "brand-on-background-weak"}) 1px,
-                  var(--static-transparent) 1px,
-                  var(--static-transparent) ${grid.height || "var(--static-space-32)"}
-                )
-              `,
+              backgroundImage: `linear-gradient(to right, var(--${grid.color ?? "brand-on-background-weak"}) 1px, transparent 1px), linear-gradient(to bottom, var(--${grid.color ?? "brand-on-background-weak"}) 1px, transparent 1px)`,
+              backgroundSize: `${grid.width ?? "80px"} ${grid.height ?? "80px"}`,
             }}
           />
         )}
         {children}
+      </>
+    );
+
+    return (
+      <Flex
+        ref={backgroundRef}
+        fill
+        className={classNames(className)}
+        zIndex={0}
+        overflow="hidden"
+        style={style}
+        {...rest}
+      >
+        {mask ? (
+          <Mask
+            fill
+            position="absolute"
+            cursor={mask.cursor}
+            radius={mask.radius}
+            x={mask.x}
+            y={mask.y}
+          >
+            {renderContent()}
+          </Mask>
+        ) : (
+          renderContent()
+        )}
       </Flex>
     );
   },
 );
 
 Background.displayName = "Background";
-
 export { Background };

@@ -93,7 +93,7 @@ export const O1 = () => {
       </div>
 
       {/* RIGHT SIDE PREVIEWS */}
-      <div className="gap-2 w-1/4 flex-col hidden lg:flex xl:w-4/12 ">
+      <div className="https://github.com/Nuvix-Techap-2 w-1/4 flex-col hidden lg:flex xl:w-4/12 gap-2">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
