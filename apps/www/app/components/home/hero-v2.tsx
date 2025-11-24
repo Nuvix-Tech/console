@@ -29,7 +29,7 @@ export const HeroV2 = () => {
         // background="danger-weak"
         radius="xs"
         padding="12"
-        onBackground="accent-medium"
+        onBackground="neutral-medium"
         vertical="stretch"
         className="overflow-hidden z-5"
         position="relative"
@@ -37,14 +37,14 @@ export const HeroV2 = () => {
         <Background
           fill
           className="-z-5"
-          // height="16"
           gradient={{
             display: true,
             opacity: 100,
-            x: 5,
-            y: 0,
-            colorEnd: "accent-background-weak",
-            colorStart: "static-transparent",
+            x: 10,
+            y: 5,
+            tilt: -1,
+            colorEnd: "neutral-background-medium",
+            colorStart: "neutral-background-weak",
           }}
           lines={{
             display: false,
@@ -52,28 +52,28 @@ export const HeroV2 = () => {
             size: "16",
             thickness: 1,
             angle: 90,
-            color: "accent-background-strong",
+            color: "brand-background-strong",
           }}
           dots={{
             display: false,
-            opacity: 100,
+            opacity: 10,
             size: "4",
-            color: "page-background",
+            color: "brand-background-strong",
           }}
         />
         <Row gap="12" marginTop="48" paddingTop="24" paddingX="12" fill>
           <Column className="md:max-w-xs" fillHeight vertical="space-between" gap="24">
             <div className="flex-grow">
-              <Text variant="display-strong-s" onSolid="neutral-strong">
+              <Text variant="display-strong-s" onSolid="neutral-strong" className="">
                 Start simple.
                 <br />
                 Scale your way.
               </Text>
-              <Button data-solid="inverse" variant="primary" size="m" className="mt-8 ">
+              <Button variant="primary" size="m" className="mt-8 ">
                 Get Started
               </Button>
             </div>
-            <div className="mt-auto flex-shrink flex flex-col divide-y divide-(--accent-alpha-medium)">
+            <div className="mt-auto flex-shrink flex flex-col divide-y divide-(--brand-alpha-weak)">
               {tabs.map((tab) => (
                 <Accordion
                   key={tab.value}
@@ -90,10 +90,10 @@ export const HeroV2 = () => {
                   radius="xs"
                   icon=""
                 >
-                  <Text variant="body-default-s" onSolid="accent-weak">
+                  <Text variant="body-default-s" onBackground="neutral-weak">
                     {tab.desc}
                   </Text>
-                  <Text variant="body-strong-xs" onSolid="accent-medium">
+                  <Text variant="body-strong-xs" onSolid="accent-weak">
                     {tab.value}
                   </Text>
                 </Accordion>
