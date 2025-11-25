@@ -1,3 +1,4 @@
+import StickyStackCards from "~/components/home/stack-cards";
 import type { Route } from "./+types/home";
 import { HeroV2, FeaturesSection, BottomCtaSection, UseWithSection } from "~/components/home";
 
@@ -18,6 +19,7 @@ export default function Home() {
       <HeroV2 />
       <UseWithSection />
       <FeaturesSection />
+      <StickyStackCards />
       {/* <BottomCtaSection /> */}
     </>
   );
