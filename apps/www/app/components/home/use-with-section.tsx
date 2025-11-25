@@ -14,21 +14,40 @@ export const UseWithSection = () => {
   ];
 
   return (
-    <div className="py-5 container mx-auto px-4 h-96">
-      <Row fillWidth className="!flex-col lg:!flex-row h-full items-center justify-between">
-        <Text variant="display-strong-xs" as="h2" onBackground="neutral-medium">
-          Bring your own framework <br />
-          <i className="text-(--neutral-on-background-strong)">it just works.</i>
-        </Text>
-        <div className="grid grid-cols-3 flex-1 gap-1 md:gap-6 mt-6 flex-wrap items-center md:justify-end max-w-md">
-          {icons.map((e, i) => (
-            <div key={i} className="flex items-center gap-2 p-2">
+    <div className="py-12 md:py-16 container mx-auto px-4">
+      <Row
+        fillWidth
+        className="!flex-col md:!flex-row gap-8 md:gap-12 items-center justify-between"
+      >
+        <div className="flex-1">
+          <Text variant="display-strong-xs" as="h2" onBackground="neutral-medium" className="mb-2">
+            Works with your framework
+          </Text>
+          <Text
+            variant="body-strong-m"
+            as="p"
+            onBackground="neutral-strong"
+            className="text-(--neutral-on-background-medium) italic"
+          >
+            No switching required.
+          </Text>
+        </div>
+        <div className="grid grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4 flex-1 w-full max-w-2xl">
+          {icons.map((e) => (
+            <div
+              key={e.icon}
+              className="flex flex-col items-center justify-center gap-3 p-4 group/usewith border border-transparent rounded-lg bg-(--neutral-background) hover:border-(--brand-border-medium) hover:bg-(--neutral-background-strong) transition-all duration-200 cursor-pointer"
+            >
               <Icon
                 size="l"
-                className="!text-(--neutral-on-background-medium) hover:!text-(--brand-on-background-medium) transition-colors [&>_svg]:!size-10"
+                className="!text-(--neutral-on-background-medium) group-hover/usewith:!text-(--brand-on-background-medium) transition-colors [&>_svg]:!size-8"
                 name={e.icon}
               />
-              <Text variant="label-strong-m" className="hidden md:inline-block">
+              <Text
+                variant="label-strong-s"
+                as="span"
+                className="text-center text-xs md:text-sm font-medium group-hover/usewith:text-(--brand-on-background-medium) transition-colors"
+              >
                 {e.label}
               </Text>
             </div>

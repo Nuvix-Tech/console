@@ -18,7 +18,7 @@ export default function Home() {
       <HeroV2 />
       <UseWithSection />
       <FeaturesSection />
-      <BottomCtaSection />
+      {/* <BottomCtaSection /> */}
     </>
   );
 }

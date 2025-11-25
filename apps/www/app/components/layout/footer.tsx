@@ -1,7 +1,15 @@
-import { Column, IconButton, Row, Text, ToggleButton } from "@nuvix/ui/components";
-import { ColorModeButton } from "@nuvix/cui/color-mode";
+import {
+  Background,
+  Button,
+  Column,
+  IconButton,
+  Row,
+  Text,
+  ToggleButton,
+} from "@nuvix/ui/components";
 import { StripedPattern } from "components/magicui/striped-pattern";
 import { Link } from "react-router";
+import { DOCS_URL } from "~/lib/constants";
 
 export const Footer = () => {
   const year = new Date().getFullYear();
@@ -9,18 +17,50 @@ export const Footer = () => {
   return (
     <div
       data-theme="dark"
-      className="page-background border-t border-border/40 relative !text-(--neutral-alpha-medium)"
+      className="page-background border-t border-border/40 !text-(--neutral-alpha-medium)"
     >
-      {/* <StripedPattern className="stroke-[0.3] [stroke-dasharray:8,4]" /> */}
-      <div className="grid grid-cols-4 gap-4 cont p-4">
+      <div className="h-96 cont overflow-hidden px-4 py-10">
+        <div className="relative flex z-[1] items-center justify-center size-full overflow-hidden rounded-sm border border-(--neutral-border-weak)">
+          <StripedPattern className="stroke-[0.3] [stroke-dasharray:7,1]" />
+          <Background
+            position="absolute"
+            fill
+            gradient={{
+              display: true,
+              colorEnd: "neutral-background-medium",
+              colorStart: "static-transparent",
+            }}
+            className="-z-[1]"
+          />
+          <div className="flex flex-col gap-8">
+            <Text
+              as="p"
+              variant="display-strong-m"
+              onBackground="neutral-strong"
+              className="!text-center"
+            >
+              Start Simple. <br /> Scale your way.
+            </Text>
+            <div className="flex gap-8 items-center justify-center">
+              <Button variant="primary" size="m">
+                Start building
+              </Button>
+              <Button variant="secondary" size="m" href={DOCS_URL}>
+                Learn more
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="grid grid-cols-4 gap-4 cont px-4 lg:px-7">
         <div>
           <Link to={"/"}>
-            <img src={`/trademark/logo-dark.png`} width={100} alt="logo" />
+            <img src={`/trademark/logo-dark.png`} width={120} alt="logo" />
           </Link>
         </div>
         <div>
           <FooterMenu
-            title="Products"
+            title="Product"
             items={[
               { label: "Database", href: "/products/database", prefixIcon: "database" },
               {
@@ -30,6 +70,7 @@ export const Footer = () => {
               },
               { label: "Storage", href: "/products/storage", prefixIcon: "storage" },
               { label: "Messaging", href: "/products/messaging", prefixIcon: "messaging" },
+              { label: "Open source", href: "/opensource", prefixIcon: "code" },
             ]}
           />
         </div>
@@ -59,21 +100,21 @@ export const Footer = () => {
       <Row
         vertical="center"
         horizontal="space-between"
-        className="flex-col md:flex-row gap-4 !container !mx-auto py-4"
+        className="flex-col md:flex-row gap-4 cont py-4 px-7"
       >
         <Row gap="4" vertical="center">
-          <Text size="s" onBackground="neutral-weak">
+          <Text size="s" onBackground="neutral-medium">
             © {year} Nuvix. All rights reserved.
           </Text>
         </Row>
-        <Row gap="8" vertical="center">
+        {/* <Row gap="8" vertical="center">
           <ColorModeButton />
           <IconButton
             icon="github"
             variant="secondary"
             href="https://github.com/Nuvix-Tech/nuvix"
           />
-        </Row>
+        </Row> */}
       </Row>
     </div>
   );

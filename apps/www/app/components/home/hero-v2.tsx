@@ -69,8 +69,8 @@ export const HeroV2 = () => {
                 <br />
                 Scale your way.
               </Text>
-              <Button variant="primary" size="m" className="mt-8 ">
-                Get Started
+              <Button variant="primary" size="s" className="mt-8 ">
+                Start building
               </Button>
             </div>
             <div className="mt-auto flex-shrink flex flex-col divide-y divide-(--brand-alpha-weak)">
