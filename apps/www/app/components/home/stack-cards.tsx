@@ -152,7 +152,7 @@ function Card3() {
         description="A unified permission engine that handles users, guests, teams, and labels effortlessly.
 Every rule is enforced consistently across data models, storage, and operations without writing a single SQL policy."
         descriptionOnBackground="neutral-medium"
-        imageSrc="/images/dashboard/security.png"
+        imageSrc="/images/dashboard/secure-perms.png"
         imageAlt="Security Overview"
         imageHeight="h-88"
       />
