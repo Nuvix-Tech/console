@@ -35,7 +35,11 @@ const CardContent = ({
         <Icon
           name={icon}
           decorative
-          className={cn(iconBackground, "border neutral-border-strong rounded-full size-5 p-2")}
+          className={cn(
+            iconBackground,
+            "border neutral-border-strong rounded-full size-5 p-2",
+            "!hidden md:!block",
+          )}
           onBackground={iconOnBackground}
         />
         <Text as="h3" variant="display-strong-xs" onBackground={titleOnBackground}>
@@ -52,7 +56,11 @@ const CardContent = ({
       </div>
       <div className="mt-auto -mr-6 -mb-6">
         <div className="bg-(--neutral-alpha-medium) border neutral-border-medium rounded-tl-sm p-2">
-          <img src={imageSrc} alt={imageAlt} className={cn(imageHeight, "rounded-tl-xs")} />
+          <img
+            src={imageSrc}
+            alt={imageAlt}
+            className={cn(imageHeight, "rounded-tl-xs", "max-sm:!h-auto")}
+          />
         </div>
       </div>
     </>
