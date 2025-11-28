@@ -24,7 +24,12 @@ export const HeroV2 = () => {
   ] as const;
 
   return (
-    <div data-theme="dark" className="w-full cont my-2 px-2.5 -mt-16">
+    <section
+      data-theme="dark"
+      data-header-bg="static-transparent"
+      data-header-theme="dark"
+      className="w-full cont my-2 px-2.5 -mt-16"
+    >
       <Column
         // background="danger-weak"
         radius="xs"
@@ -61,7 +66,15 @@ export const HeroV2 = () => {
             color: "brand-background-strong",
           }}
         />
-        <Row gap="12" marginTop="48" paddingTop="24" paddingX="12" fill>
+        <Row
+          gap="12"
+          marginTop="48"
+          paddingTop="24"
+          paddingX="12"
+          fill
+          data-header-bg="neutral-background-medium"
+          data-header-theme="light"
+        >
           <Column className="md:max-w-xs" fillHeight vertical="space-between" gap="24">
             <div className="flex-grow">
               <Text variant="display-strong-s" onSolid="neutral-strong" className="">
@@ -107,6 +120,6 @@ export const HeroV2 = () => {
           </Column>
         </Row>
       </Column>
-    </div>
+    </section>
   );
 };

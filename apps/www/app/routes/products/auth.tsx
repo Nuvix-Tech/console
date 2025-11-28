@@ -1,4 +1,4 @@
-import { Button, Chip, Column, Icon, IconButton, Row, Text } from "@nuvix/ui/components";
+import { Button, Column, IconButton, Row, Text } from "@nuvix/ui/components";
 import type { Route } from "../+types/home";
 import { DASHBOARD_URL, DOCS_URL } from "~/lib/constants";
 import { CustomerIdentity } from "~/components/products/auth";
@@ -15,7 +15,7 @@ export function meta({}: Route.MetaArgs) {
 
 export default function AuthPage() {
   return (
-    <div className="flex flex-col gap-20">
+    <div className="flex flex-col gap-20 z-5">
       <div className="max-w-7xl mx-auto p-4 py-20 flex items-center">
         <Column gap="12" className="max-w-2xl">
           <Row gap={"8"} vertical="center">

@@ -4,13 +4,15 @@ import { GithubButton } from "@nuvix/ui/modules";
 import { cn } from "@nuvix/sui/lib/utils";
 import { NavMenu } from "./navbar";
 
-const Header: React.FC = () => {
-  const [isScrolled, setIsScrolled] = React.useState(false);
+const Header: React.FC<{ defaultTransBg?: boolean }> = ({ defaultTransBg = true }) => {
+  const [isScrolled, setIsScrolled] = React.useState(defaultTransBg ? false : true);
 
   React.useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
+    const handleScroll = defaultTransBg
+      ? () => {
+          setIsScrolled(window.scrollY > 50);
+        }
+      : () => {};
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
