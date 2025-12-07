@@ -11,3 +11,4 @@ export * from "./_main_top_left";
 export * from "./_header_feedback";
 export * from "./_header_help";
 export * from "./_header_connect";
+export * from "./_settings_schemas";
