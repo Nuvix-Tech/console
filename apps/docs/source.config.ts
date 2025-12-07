@@ -93,8 +93,8 @@ export default defineConfig({
 });
 
 export const docs = defineDocs({
-  // @ts-ignore
-  dir: ["content/docs", "src/content/docs", "apps/docs/src/content/docs"],
+  // dir: ["content/docs", "src/content/docs", "apps/docs/src/content/docs"],
+  dir: "apps/docs/content/docs",
   docs: {
     schema: frontmatterSchema.extend({
       index: z.boolean().default(false),
