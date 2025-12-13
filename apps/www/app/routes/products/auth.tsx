@@ -1,7 +1,7 @@
 import { Background, Button, Column, IconButton, Row, Text } from "@nuvix/ui/components";
 import type { Route } from "../+types/home";
 import { DASHBOARD_URL, DOCS_URL } from "~/lib/constants";
-import { CustomerIdentity } from "~/components/products/auth";
+import { AuthExample, CustomerIdentity } from "~/components/products/auth";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -59,6 +59,7 @@ export default function AuthPage() {
       </div>
 
       <CustomerIdentity />
+      <AuthExample />
     </section>
   );
 }
