@@ -238,7 +238,7 @@ export function DocsLayout({
       <LayoutContextProvider navTransparentMode={transparentMode}>
         <Sidebar defaultOpenLevel={defaultOpenLevel} prefetch={prefetch}>
           <NavBar />
-          <LayouttRoot className="main-container px-1 md:px-3">
+          <LayoutRoot className="main-container px-1 md:px-3">
             {sidebarEnabled && sidebar()}
             <LayoutBody
               {...props.containerProps}
