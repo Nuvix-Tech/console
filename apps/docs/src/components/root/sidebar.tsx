@@ -5,10 +5,10 @@ import { cva } from "class-variance-authority";
 import { createPageTreeRenderer } from "fumadocs-ui/components/sidebar/page-tree";
 import { createLinkItemRenderer } from "fumadocs-ui/components/sidebar/link-item";
 import { buttonVariants } from "fumadocs-ui/components/ui/button";
-// import { SearchToggle } from 'fumadocs-ui/layouts/shared/search-toggle';
 import { Sidebar as SidebarIcon } from "lucide-react";
 import { mergeRefs } from "fumadocs-ui/utils/merge-refs";
 import { cn } from "@nuvix/sui/lib/utils";
+import { SearchToggle } from "./search-toggle";
 
 const itemVariants = cva(
   "relative flex flex-row items-center gap-2 rounded-lg p-2 text-start text-fd-muted-foreground wrap-anywhere [&_svg]:size-4 [&_svg]:shrink-0",
@@ -97,7 +97,7 @@ export function SidebarContent({
             >
               <SidebarIcon />
             </SidebarCollapseTrigger>
-            {/* <SearchToggle className="rounded-lg" hideIfDisabled /> */}
+            <SearchToggle className="rounded-lg" hideIfDisabled />
           </div>
         </>
       )}
@@ -153,7 +153,7 @@ export function SidebarItem({
 
   return (
     <Base.SidebarItem
-      className={cn(itemVariants({ variant: "link", highlight: depth >= 1 }), className)}
+      className={cn(itemVariants({ variant: "link", highlight: depth >= 1 }), "!m-0", className)}
       style={{
         paddingInlineStart: getItemOffset(depth),
         ...style,

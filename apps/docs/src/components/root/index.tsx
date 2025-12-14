@@ -32,6 +32,7 @@ import {
 import { cn } from "@nuvix/sui/lib/utils";
 import { NavBar } from "../layout/nav-bar";
 import { RenderNodes } from "../sidebar";
+import { LargeSearchToggle, SearchToggle } from "./search-toggle";
 
 export interface DocsLayoutProps extends BaseLayoutProps {
   tree: PageTree.Root;
@@ -108,15 +109,13 @@ export function DocsLayout({
     const rawItems = tree?.children || [];
 
     const viewport = (
-      <SidebarViewport>
+      <SidebarViewport className="[&>div]:pl-0">
         {links
           .filter((v) => v.type !== "icon")
           .map((item, i, list) => (
             <SidebarLinkItem key={i} item={item} className={cn(i === list.length - 1 && "mb-4")} />
           ))}
-        <RenderNodes
-          nodes={[{ type: "page", name: "Home", url: "/home", icon: "house" }, ...rawItems]}
-        />
+        <SidebarPageTree />
       </SidebarViewport>
     );
 
@@ -146,8 +145,12 @@ export function DocsLayout({
                 </SidebarCollapseTrigger>
               )}
             </div> */}
-          {/* {searchToggle.enabled !== false &&
-              (searchToggle.components?.lg ?? <LargeSearchToggle hideIfDisabled />)} */}
+          {searchToggle.enabled !== false &&
+            (searchToggle.components?.lg ?? (
+              <div className="inline-flex pr-4 mt-2">
+                <LargeSearchToggle hideIfDisabled className="w-full" />
+              </div>
+            ))}
           {/* {tabs.length > 0 && tabMode === "auto" && <SidebarTabsDropdown options={tabs} />}
             {banner}
           </div> */}
@@ -235,7 +238,7 @@ export function DocsLayout({
       <LayoutContextProvider navTransparentMode={transparentMode}>
         <Sidebar defaultOpenLevel={defaultOpenLevel} prefetch={prefetch}>
           <NavBar />
-          <LayoutRoot className="main-container px-1 md:px-3">
+          <LayouttRoot className="main-container px-1 md:px-3">
             {sidebarEnabled && sidebar()}
             <LayoutBody
               {...props.containerProps}
@@ -254,10 +257,8 @@ export function DocsLayout({
               {nav.title}
             </Link>
             <div className="flex-1">{nav.children}</div> */}
-              {/* {searchToggle.enabled !== false &&
-                    (searchToggle.components?.sm ?? (
-                      <SearchToggle className="p-2" hideIfDisabled />
-                    ))} */}
+              {searchToggle.enabled !== false &&
+                (searchToggle.components?.sm ?? <SearchToggle className="p-2" hideIfDisabled />)}
               {/* {sidebarEnabled && (
                     <SidebarTrigger
                       className={cn(

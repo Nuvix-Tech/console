@@ -1,10 +1,10 @@
 {
   "pages": [
     "!home",
-    "---Get Started---",
+    "---[rocket]Get Started---",
     "...",
     "!products",
-    "---Products---",
+    "---[Boxes]Products---",
     "products/auth",
     "products/messaging",
     "products/storage",
