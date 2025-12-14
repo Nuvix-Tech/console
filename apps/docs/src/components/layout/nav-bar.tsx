@@ -3,7 +3,7 @@ import { GithubButton } from "@nuvix/ui/modules";
 import { ThemeSwitch } from "./theme-switch";
 import { Logo } from "@nuvix/ui/components";
 import Link from "next/link";
-import { SidebarTrigger } from "fumadocs-ui/components/layout/sidebar";
+import { SidebarTrigger } from "@/components/root/sidebar";
 import { cn } from "@nuvix/sui/lib/utils";
 import { buttonVariants } from "fumadocs-ui/components/ui/button";
 import { SidebarIcon } from "lucide-react";

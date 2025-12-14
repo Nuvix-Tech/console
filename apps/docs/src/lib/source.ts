@@ -1,5 +1,5 @@
 import { iconLibrary } from "@nuvix/ui/icons";
-import { docs } from "../../.source";
+import { docs } from "../../.source/server";
 import { loader } from "fumadocs-core/source";
 import { icons } from "lucide-react";
 import { createElement } from "react";
