@@ -1,23 +1,17 @@
 import { source } from "@/lib/source";
 import { notFound } from "next/navigation";
 import { mdxComponents } from "@/mdx-components";
-import {
-  PageArticle,
-  PageBreadcrumb,
-  PageFooter,
-  PageLastUpdate,
-  PageRoot,
-  PageTOC,
-  PageTOCItems,
-  PageTOCPopover,
-  PageTOCPopoverContent,
-  PageTOCPopoverItems,
-  PageTOCPopoverTrigger,
-  PageTOCTitle,
-} from "fumadocs-ui/layouts/docs/page";
 import { Rate } from "@/components/rate";
 import { Icon } from "@nuvix/ui/components";
 import { ViewOptions } from "@/components/llm";
+import {
+  DocsBody,
+  DocsDescription,
+  DocsPage,
+  DocsTitle,
+  PageLastUpdate,
+} from "@/components/root/page";
+import { Metadata } from "next";
 
 export default async function Page(props: { params: Promise<{ slug?: string[] }> }) {
   const params = await props.params;
@@ -30,57 +24,41 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
 
   return (
     <>
-      <PageRoot
-        toc={{
-          toc: page.data.toc,
+      <DocsPage
+        breadcrumb={{ enabled: true }}
+        toc={page.data.toc}
+        tableOfContent={{
+          enabled: isArticleLayout,
+          style: "clerk",
         }}
       >
-        {page.data.toc?.length > 0 && (
-          <PageTOCPopover className="mt-12">
-            <PageTOCPopoverTrigger />
-            <PageTOCPopoverContent>
-              <PageTOCPopoverItems />
-            </PageTOCPopoverContent>
-          </PageTOCPopover>
-        )}
-        <PageArticle className="docs-page-article lg:max-w-3xl">
-          <PageBreadcrumb />
-          <div className="flex flex-col lg:flex-row gap-2 items-start pb-6 justify-between">
-            <div className="flex flex-col gap-3">
-              <h1 className="text-3xl font-semibold">{page.data.title}</h1>
-              <p className="text-lg text-fd-muted-foreground">{page.data.description}</p>
-            </div>
-            {isArticleLayout && (
-              <ViewOptions
-                markdownUrl={page.url}
-                githubUrl={`https://github.com/Nuvix-Tech/console/blob/main/apps/docs/src/content/docs/${page.path}`}
-              />
-            )}
+        <div className="flex flex-col lg:flex-row gap-2 items-start pb-6 justify-between">
+          <div className="flex flex-col gap-3">
+            <DocsTitle>{page.data.title}</DocsTitle>
+            <DocsDescription>{page.data.description}</DocsDescription>
           </div>
-
-          <div className="prose flex-1 text-fd-foreground/80">
-            <MDX components={mdxComponents} />
-          </div>
-          <div className="grow"></div>
-          {isArticleLayout && <Rate />}
-          {lastEditedAt && !isNaN(new Date(lastEditedAt).getTime()) && (
-            <div className="flex items-center gap-2">
-              <PageLastUpdate date={lastEditedAt} />
-              <div className="grow" />
-            </div>
+          {isArticleLayout && (
+            <ViewOptions
+              markdownUrl={page.url}
+              githubUrl={`https://github.com/Nuvix-Tech/console/blob/main/apps/docs/src/content/docs/${page.path}`}
+            />
           )}
+        </div>
 
-          <Footer footer={{}} />
-          <PageFooter />
-        </PageArticle>
+        <DocsBody>
+          <MDX components={mdxComponents} />
+        </DocsBody>
 
-        {isArticleLayout && (
-          <PageTOC className="mr-6 mt-8">
-            <PageTOCTitle />
-            <PageTOCItems variant={"clerk"} />
-          </PageTOC>
+        <div className="grow"></div>
+        {isArticleLayout && <Rate />}
+        {lastEditedAt && !isNaN(new Date(lastEditedAt).getTime()) && (
+          <div className="flex items-center gap-2">
+            <PageLastUpdate date={lastEditedAt} />
+            <div className="grow" />
+          </div>
         )}
-      </PageRoot>
+        <Footer footer={{}} />
+      </DocsPage>
     </>
   );
 }
@@ -89,13 +67,15 @@ export async function generateStaticParams() {
   return source.generateParams();
 }
 
-export async function generateMetadata(props: { params: Promise<{ slug?: string[] }> }) {
+export async function generateMetadata(props: {
+  params: Promise<{ slug?: string[] }>;
+}): Promise<Metadata> {
   const params = await props.params;
   const page = source.getPage(params.slug);
   if (!page) notFound();
 
   return {
-    title: { default: page.data.title },
+    title: page.data.title,
     description: page.data.description,
   };
 }

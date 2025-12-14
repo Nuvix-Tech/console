@@ -46,10 +46,10 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
           width={{ base: "full" }}
           direction={{ base: "row" }}
         >
-          <Row fill hide="m" position="relative">
-            {/* <Fade to="right">
+          {/* <Row fill hide="m" position="relative">
+            <Fade to="right">
               <SmartImage src="/images/login_bg.png" alt="Preview image" sizes="560px" />
-            </Fade> */}
+            </Fade>
             <div className="absolute bottom-32 left-10 bg-(--neutral-alpha-weak) p-4 backdrop-blur rounded-sm">
               <Text
                 variant="display-strong-l"
@@ -58,7 +58,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
                 Start simple, <br /> Scale your way
               </Text>
             </div>
-          </Row>
+          </Row> */}
           <Column fill center gap="20" padding="32" position="relative" data-theme={resolvedTheme}>
             <Column
               horizontal="center"

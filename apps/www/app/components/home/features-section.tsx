@@ -156,6 +156,7 @@ const GridItem = ({ area, icon, title, info, link, description, wide, extra }: G
           disabled={false}
           proximity={64}
           inactiveZone={0.01}
+          className="hidden sm:block"
         />
         <div className="border-0.75 relative flex h-full flex-col justify-between gap-6 overflow-hidden rounded-lg p-6 md:p-6 neutral-background-alpha-weak">
           <div

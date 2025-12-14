@@ -39,3 +39,37 @@
 .prose :where(a:not([data-card])):not(.not-prose, .not-prose *):hover {
   text-decoration-thickness: 1.5px !important;
 }
+
+:is(#nx-root-layout:has(.layout\:\[--fd-header-height\:--spacing\(14\)\])) {
+  --fd-header-height: calc(var(--spacing) * 14);
+}
+
+@media (max-width: 79.999rem) {
+  :is(#nx-root-layout:has(.max-xl\:layout\:\[--fd-toc-popover-height\:--spacing\(10\)\])) {
+    --fd-toc-popover-height: calc(var(--spacing) * 10);
+  }
+}
+
+@media (max-width: 47.999rem) {
+  :is(#nx-root-layout:has(.max-md\:layout\:\[--fd-header-height\:--spacing\(14\)\])) {
+    --fd-header-height: calc(var(--spacing) * 14);
+  }
+}
+
+@media (min-width: 48rem) {
+  :is(#nx-root-layout:has(.md\:layout\:\[--fd-sidebar-width\:268px\])) {
+    --fd-sidebar-width: 268px;
+  }
+}
+
+@media (min-width: 64rem) {
+  :is(#nx-root-layout:has(.lg\:layout\:\[--fd-header-height\:--spacing\(24\)\])) {
+    --fd-header-height: calc(var(--spacing) * 24);
+  }
+}
+
+@media (min-width: 80rem) {
+  :is(#nx-root-layout:has(.xl\:layout\:\[--fd-toc-width\:268px\])) {
+    --fd-toc-width: 268px;
+  }
+}

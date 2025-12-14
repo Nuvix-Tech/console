@@ -1,6 +1,12 @@
 "use client";
 import React from "react";
-import { DeleteProject, ProjectInfo, UpdateName, UpdateServices } from "./components";
+import {
+  DeleteProject,
+  ProjectInfo,
+  UpdateName,
+  UpdateServices,
+  ManageExposedSchemas,
+} from "./components";
 import { PageContainer, PageHeading } from "../others";
 import { IS_PLATFORM } from "@/lib/constants";
 
@@ -12,6 +18,7 @@ const ProjectSettings: React.FC = () => {
       <ProjectInfo />
       <UpdateName />
       <UpdateServices />
+      <ManageExposedSchemas />
       {IS_PLATFORM && <DeleteProject />}
     </PageContainer>
   );

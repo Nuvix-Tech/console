@@ -3,7 +3,7 @@
 import { Provider } from "@nuvix/cui/provider";
 import { ConfirmProvider } from "@nuvix/ui/components";
 import { MetaProvider } from "@nuvix/ui/contexts";
-import { RootProvider } from "fumadocs-ui/provider";
+import { RootProvider } from "fumadocs-ui/provider/next";
 import Link from "next/link";
 import Image from "next/image";
 import SearchDialog from "./search";

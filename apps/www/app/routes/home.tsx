@@ -1,6 +1,6 @@
 import StickyStackCards from "~/components/home/stack-cards";
 import type { Route } from "./+types/home";
-import { HeroV2, FeaturesSection, BottomCtaSection, UseWithSection } from "~/components/home";
+import { HeroV2, FeaturesSection, UseWithSection } from "~/components/home";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -20,7 +20,6 @@ export default function Home() {
       <UseWithSection />
       <FeaturesSection />
       <StickyStackCards />
-      {/* <BottomCtaSection /> */}
     </>
   );
 }

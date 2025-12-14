@@ -1,7 +1,7 @@
-import { Button, Chip, Column, Icon, IconButton, Row, Text } from "@nuvix/ui/components";
+import { Background, Button, Column, IconButton, Row, Text } from "@nuvix/ui/components";
 import type { Route } from "../+types/home";
 import { DASHBOARD_URL, DOCS_URL } from "~/lib/constants";
-import { CustomerIdentity } from "~/components/products/auth";
+import { AuthExample, CustomerIdentity } from "~/components/products/auth";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -15,7 +15,19 @@ export function meta({}: Route.MetaArgs) {
 
 export default function AuthPage() {
   return (
-    <div className="flex flex-col gap-20">
+    <section className="flex flex-col gap-20 z-5 relative">
+      <Background
+        dots={{
+          display: true,
+          size: "8",
+          opacity: 10,
+          color: "brand-solid-medium",
+        }}
+        height={"xl"}
+        position="absolute"
+        fillWidth
+        zIndex={-1}
+      />
       <div className="max-w-7xl mx-auto p-4 py-20 flex items-center">
         <Column gap="12" className="max-w-2xl">
           <Row gap={"8"} vertical="center">
@@ -27,7 +39,7 @@ export default function AuthPage() {
             Secure and Scalable Authentication
           </Text>
 
-          <Text variant="body-default-s" onBackground="neutral-weak" className="max-w-lg">
+          <Text variant="body-default-s" onBackground="neutral-medium" className="max-w-lg">
             A complete solution for user authentication, from registration to session management,
             all out of the box.
           </Text>
@@ -36,17 +48,18 @@ export default function AuthPage() {
             <Button variant="primary" size="s" href={DASHBOARD_URL} arrowIcon>
               Get Started
             </Button>
-            <Button variant="secondary" size="s" href={`${DOCS_URL}/services/auth`}>
+            <Button variant="secondary" size="s" href={`${DOCS_URL}/products/auth`}>
               Read Docs
             </Button>
           </Row>
         </Column>
         <div className="hidden lg:block flex-1">
-          <img src="/images/services/phone.auth.png" alt="Auth Service" className="max-w-md" />
+          <img src="/images/services/auth.png" alt="Auth Service" className="max-w-md" />
         </div>
       </div>
 
       <CustomerIdentity />
-    </div>
+      <AuthExample />
+    </section>
   );
 }
