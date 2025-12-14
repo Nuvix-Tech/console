@@ -12,6 +12,7 @@ import {
   PageLastUpdate,
 } from "@/components/root/page";
 import { Metadata } from "next";
+import { headers } from "next/headers";
 
 export default async function Page(props: { params: Promise<{ slug?: string[] }> }) {
   const params = await props.params;
@@ -21,6 +22,14 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
   const MDX = page.data.body;
   const lastEditedAt = page.data.lastModified;
   const isArticleLayout = page.data.layout === "article";
+  const markdown = await page.data.getText("processed");
+
+  const headersList = await headers();
+  const host = headersList.get("host");
+  const forwardedHost = headersList.get("x-forwarded-host");
+  const protocol = headersList.get("x-forwarded-proto") || "http";
+
+  const domain = forwardedHost || host;
 
   return (
     <>
@@ -39,8 +48,11 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
           </div>
           {isArticleLayout && (
             <ViewOptions
-              markdownUrl={page.url}
+              markdownUrl={[`${protocol}:/`, domain, "api", "raw", ...page.slugs]
+                .join("/")
+                .concat(".md")}
               githubUrl={`https://github.com/Nuvix-Tech/console/blob/main/apps/docs/src/content/docs/${page.path}`}
+              markdown={markdown}
             />
           )}
         </div>

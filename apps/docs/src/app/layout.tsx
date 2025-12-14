@@ -94,7 +94,14 @@ export default async function Layout({ children }: { children: React.ReactNode }
         data-scaling={style.scaling}
         className={cn(customFont.variable, sourceCodePro.variable)}
       >
-        <Column suppressHydrationWarning as="body" fillWidth margin="0" padding="0">
+        <Column
+          suppressHydrationWarning
+          as="body"
+          fillWidth
+          margin="0"
+          padding="0"
+          background="page"
+        >
           <Providers>
             <ToastProvider>
               {children}
