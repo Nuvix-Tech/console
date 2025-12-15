@@ -17,15 +17,17 @@ export const CustomerIdentity = () => {
   };
 
   return (
-    <div className="w-full bg-(--warning-background-strong)">
+    <div className="w-full">
       <div className="mx-auto p-4 py-20 flex flex-col items-center ">
         <Row gap={"8"} vertical="center">
-          <Text variant="display-strong-xs">Authentication Built for Everyone</Text>
+          <Text variant="display-strong-xs"
+            onBackground="neutral-strong"
+          >Authentication Built for Everyone</Text>
         </Row>
 
         <Text
           variant="body-default-m"
-          onBackground="warning-medium"
+          onBackground="neutral-medium"
           className="max-w-lg text-center"
         >
           From simple email login to enterprise SSO, give your users the authentication experience
@@ -39,7 +41,7 @@ export const CustomerIdentity = () => {
               selected={false}
               label={method}
               as={"span"}
-              className="!text-(--warning-on-background-strong)"
+              className="!text-(--neutral-on-background-medium)"
               onClick={() => window.open(`${DOCS_URL}/products/auth/${key}`, "_blank")}
             />
           ))}
