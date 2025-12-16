@@ -62,8 +62,10 @@ export default function AuthPage() {
         <CustomerIdentity />
         <AuthExample />
       </div>
-      <UserManagement />
-      {/* <SecurityFeatures />   */}
+      <div className="w-full info-background-medium">
+        <UserManagement />
+        <SecurityFeatures />
+      </div>
     </section>
   );
 }
