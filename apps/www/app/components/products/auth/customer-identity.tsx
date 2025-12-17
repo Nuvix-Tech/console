@@ -20,9 +20,9 @@ export const CustomerIdentity = () => {
     <div className="w-full">
       <div className="mx-auto p-4 py-20 flex flex-col items-center ">
         <Row gap={"8"} vertical="center">
-          <Text variant="display-strong-xs"
-            onBackground="neutral-strong"
-          >Authentication Built for Everyone</Text>
+          <Text variant="display-strong-xs" onBackground="neutral-strong">
+            Authentication Built for Everyone
+          </Text>
         </Row>
 
         <Text

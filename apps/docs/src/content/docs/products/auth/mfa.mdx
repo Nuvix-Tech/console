@@ -18,19 +18,14 @@ Here are the steps to implement MFA in your application.
 
 ## 1. Display recovery codes
 
-Initialize your Nuvix SDK's `Client`, `Account`, and `Avatars`.
-You'll use Avatars API to generate a QR code for the TOTP authenticator app, you can skip this import if you're not using TOTP.
+Initialize your Nuvix SDK's `Client`.
+You'll use Avatars API to generate a QR code for the TOTP authenticator app.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-import { Client, Avatars } from "@nuvix/client";
+import { Client } from "@nuvix/client";
 
-const nx = new Client();
-
-const account = nx.account;
-const avatars = client.avatars;
-
-client
+const nx = new Client()
     .setEndpoint('https://api.nuvix.in/v1') // Your API Endpoint
     .setProject('<PROJECT_ID>'); // Your project ID
 ```
@@ -162,7 +157,7 @@ You can generate a QR code for the user to scan by calling `avatars.getQR()`.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-const result = await avatars.getQR({
+const result = await nx.avatars.getQR({
     text: uri,
     size: 800,  // optional
     margin: 0,  // optional
@@ -180,7 +175,7 @@ verify the authenticator by calling `nx.account.verifyMfaAuthenticator()`.
 
 <CodeGroup>
 ```javascript JavaScript/TypeScript
-const promise = account.updateMfaAuthenticator({
+const promise = nx.account.updateMfaAuthenticator({
     type: 'totp',
     otp: '<OTP>'
 });

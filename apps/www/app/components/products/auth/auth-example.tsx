@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Column, Row, Text, Chip } from "@nuvix/ui/components";
 import { CodeBlock } from "@nuvix/ui/modules";
 import { motion, AnimatePresence } from "motion/react";
+import { DOCS_URL } from "~/lib/constants";
 
 type AuthMethod = {
   id: string;
@@ -23,51 +24,23 @@ const authMethods: AuthMethod[] = [
     description: "Traditional email and password authentication with secure password hashing",
     codeExamples: [
       {
-        label: "JavaScript",
-        language: "javascript",
-        code: `import { createClient } from '@nuvix/client';
-
-const nuvix = createClient({
-  endpoint: 'https://api.nuvix.app',
-  projectId: 'your-project-id'
-});
-
-// Sign up with email and password
-const { user, session } = await nuvix.auth.signUp({
-  email: 'user@example.com',
-  password: 'securePassword123!'
-});
-
-// Sign in
-const { user, session } = await nuvix.auth.signIn({
-  email: 'user@example.com',
-  password: 'securePassword123!'
-});`,
-      },
-      {
         label: "TypeScript",
         language: "typescript",
-        code: `import { createClient } from '@nuvix/client';
-import type { User, Session } from '@nuvix/types';
+        code: `import { Client, ID } from "@nuvix/client";
+const nx = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
 
-const nuvix = createClient({
-  endpoint: 'https://api.nuvix.app',
-  projectId: 'your-project-id'
-});
-
-// Sign up with email and password
-const { user, session }: { user: User; session: Session } = 
-  await nuvix.auth.signUp({
-    email: 'user@example.com',
-    password: 'securePassword123!'
-  });
-
-// Sign in
-const { user, session }: { user: User; session: Session } = 
-  await nuvix.auth.signIn({
-    email: 'user@example.com',
-    password: 'securePassword123!'
-  });`,
+try {
+    const session = await nx.account.createEmailPasswordSession(
+        'user@example.com',
+        'secure-password'
+    );
+    console.log('Login successful:', session);
+} catch (error) {
+    console.error('Login failed:', error);
+}
+`,
       },
     ],
   },
@@ -77,63 +50,23 @@ const { user, session }: { user: User; session: Session } =
     description: "Seamless social authentication with Google, GitHub, and more",
     codeExamples: [
       {
-        label: "JavaScript",
-        language: "javascript",
-        code: `import { createClient } from '@nuvix/client';
+        label: "TypeScript",
+        language: "typescript",
+        code: `import { Client } from "@nuvix/client";
 
-const nuvix = createClient({
-  endpoint: 'https://api.nuvix.app',
-  projectId: 'your-project-id'
-});
+const nx = new Client()
+    .setEndpoint('https://api.nuvix.in/v1') // Your API Endpoint
+    .setProject('<PROJECT_ID>');                 // Your project ID
 
-// Sign in with Google
-await nuvix.auth.signInWithOAuth({
-  provider: 'google',
-  redirectTo: 'https://yourapp.com/auth/callback'
-});
 
-// Sign in with GitHub
-await nuvix.auth.signInWithOAuth({
-  provider: 'github',
-  redirectTo: 'https://yourapp.com/auth/callback'
+
+// Go to OAuth provider login page
+nx.account.createOAuth2Session({
+    provider: 'github',
+    success: 'https://example.com/success', // redirect here on success
+    failure: 'https://example.com/failed', // redirect here on failure
+    scopes: ['repo', 'user'] // scopes (optional)
 });`,
-      },
-      {
-        label: "React",
-        language: "tsx",
-        code: `import { createClient } from '@nuvix/client';
-
-const nuvix = createClient({
-  endpoint: 'https://api.nuvix.app',
-  projectId: 'your-project-id'
-});
-
-function LoginPage() {
-  const handleGoogleLogin = async () => {
-    await nuvix.auth.signInWithOAuth({
-      provider: 'google',
-      redirectTo: window.location.origin + '/auth/callback'
-    });
-  };
-
-  const handleGitHubLogin = async () => {
-    await nuvix.auth.signInWithOAuth({
-      provider: 'github',
-      redirectTo: window.location.origin + '/auth/callback'
-    });
-  };
-
-  return (
-    <div>
-      <button onClick={handleGoogleLogin}>
-        Sign in with Google
-      </button>
-      <button onClick={handleGitHubLogin}>
-        Sign in with GitHub
-      </button>
-    </div>
-  );
-}`,
       },
     ],
   },
@@ -145,43 +78,35 @@ function LoginPage() {
       {
         label: "JavaScript",
         language: "javascript",
-        code: `import { createClient } from '@nuvix/client';
+        code: `import { Client, ID } from "@nuvix/client";
 
-const nuvix = createClient({
-  endpoint: 'https://api.nuvix.app',
-  projectId: 'your-project-id'
+const nx = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+// Create magic URL token
+const token = await nx.account.createMagicURLToken(
+    ID.unique(),                    // User ID
+    'user@example.com',            // Email address
+    'https://yourapp.com/verify'   // Redirect URL
+);
+
+// User will receive email with login link
+
+// On your redirect page (https://yourapp.com/verify)
+const urlParams = new URLSearchParams(window.location.search);
+const secret = urlParams.get('secret');
+const userId = urlParams.get('userId');
+
+// Create session from magic link data
+const session = await nx.account.createSession({
+    userId: userId,
+    secret: secret
 });
 
-// Send magic link to user's email
-await nuvix.auth.signInWithMagicLink({
-  email: 'user@example.com',
-  redirectTo: 'https://yourapp.com/auth/verify'
-});
-
-// User clicks the link in their email and gets authenticated
-// Handle the callback on your redirect page
-const { user, session } = await nuvix.auth.verifyMagicLink();`,
-      },
-      {
-        label: "TypeScript",
-        language: "typescript",
-        code: `import { createClient } from '@nuvix/client';
-import type { User, Session } from '@nuvix/types';
-
-const nuvix = createClient({
-  endpoint: 'https://api.nuvix.app',
-  projectId: 'your-project-id'
-});
-
-// Send magic link to user's email
-await nuvix.auth.signInWithMagicLink({
-  email: 'user@example.com',
-  redirectTo: 'https://yourapp.com/auth/verify'
-});
-
-// Handle the callback
-const { user, session }: { user: User; session: Session } = 
-  await nuvix.auth.verifyMagicLink();`,
+// User is now authenticated - redirect to app
+window.location.href = '/dashboard';
+`,
       },
     ],
   },
@@ -191,36 +116,76 @@ const { user, session }: { user: User; session: Session } =
     description: "Add an extra layer of security with TOTP-based MFA",
     codeExamples: [
       {
-        label: "JavaScript",
-        language: "javascript",
-        code: `import { createClient } from '@nuvix/client';
+        label: "TypeScript",
+        language: "typescript",
+        code: `import { Client, ID, Avatars } from "@nuvix/client";
 
-const nuvix = createClient({
-  endpoint: 'https://api.nuvix.app',
-  projectId: 'your-project-id'
-});
+const nx = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
 
-// Enable MFA for user
-const { qrCode, secret } = await nuvix.auth.mfa.enroll({
-  type: 'totp',
-  friendlyName: 'My Authenticator'
-});
+async function handleMFA() {
+    try {
+        // 1. Generate and display recovery codes (do this before enabling MFA)
+        console.log("--- Generating Recovery Codes ---");
+        const recoveryCodesResponse = await nx.account.createMfaRecoveryCodes();
+        console.log('Please save these recovery codes:', recoveryCodesResponse.recoveryCodes);
+        // In a real application, securely display these to the user.
 
-// User scans QR code with authenticator app
-// Verify with the code from authenticator
-await nuvix.auth.mfa.verify({
-  code: '123456'
-});
+        // 2. Enable MFA (assuming factors like email/TOTP are already verified)
+        console.log("\\n--- Enabling MFA ---");
+        await nx.account.updateMFA({ enabled: true });
+        console.log('MFA enabled successfully.');
 
-// Sign in with MFA
-const { user } = await nuvix.auth.signIn({
-  email: 'user@example.com',
-  password: 'password'
-});
+        // 3. Simulate a login attempt that will require MFA
+        console.log("\\n--- Attempting Login (will require MFA) ---");
+        try {
+            await nx.account.createEmailPasswordSession(
+                'user@example.com',
+                'secure-password'
+            );
+            console.log('Login successful without MFA (if no factors are set or enforced).');
+        } catch (error: any) {
+            if (error.type === 'user_more_factors_required') {
+                console.error('Login requires MFA. Initiating MFA challenge flow.');
 
-const { session } = await nuvix.auth.mfa.challenge({
-  code: '123456'
-});`,
+                // 4. List available MFA factors for the user
+                const factors = await nx.account.listMfaFactors();
+                console.log('Available MFA factors:', factors);
+
+                // 5. Create an MFA Challenge (e.g., using email as a second factor)
+                if (factors.email) {
+                    console.log("\\n--- Creating Email MFA Challenge ---");
+                    const challenge = await nx.account.createMfaChallenge({
+                        factor: 'email'
+                    });
+                    console.log(\`Email MFA challenge created. Challenge ID: \${challenge.$id}\`);
+                    // User would receive an email with an OTP.
+                    // Prompt the user to enter the OTP.
+                    const userOtp = '123456'; // Replace with actual OTP from user input
+
+                    // 6. Complete the MFA Challenge
+                    console.log("\\n--- Completing Email MFA Challenge ---");
+                    await nx.account.updateMfaChallenge({
+                        challengeId: challenge.$id,
+                        otp: userOtp
+                    });
+                    console.log('MFA challenge completed. User is now fully authenticated.');
+                } else {
+                    console.warn('No email factor available for challenge. Check other factors like TOTP.');
+                }
+            } else {
+                console.error('Login failed with other error:', error);
+            }
+        }
+    } catch (error) {
+        console.error('An error occurred during MFA process:', error);
+    }
+}
+
+// Call the function to execute the MFA flow
+handleMFA();
+`,
       },
     ],
   },
@@ -306,8 +271,8 @@ export const AuthExample = () => {
                 codeInstances={currentMethod.codeExamples}
                 copyButton={true}
                 compact={false}
+                className="h-full"
                 codeHeight={24}
-                className=" h-full"
               />
             </motion.div>
           </AnimatePresence>
@@ -338,12 +303,7 @@ function getMethodFeatures(methodId: string): string[] {
       "Link expiration",
       "One-click authentication",
     ],
-    mfa: [
-      "TOTP support",
-      "Backup codes",
-      "Trusted devices",
-      "Recovery options",
-    ],
+    mfa: ["TOTP support", "Backup codes", "Trusted devices", "Recovery options"],
   };
 
   return features[methodId] || [];

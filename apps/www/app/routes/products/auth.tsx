@@ -1,9 +1,14 @@
 import { Background, Button, Column, IconButton, Row, Text } from "@nuvix/ui/components";
 import type { Route } from "../+types/home";
 import { DASHBOARD_URL, DOCS_URL } from "~/lib/constants";
-import { AuthExample, CustomerIdentity, UserManagement, SecurityFeatures } from "~/components/products/auth";
+import {
+  AuthExample,
+  CustomerIdentity,
+  UserManagement,
+  SecurityFeatures,
+} from "~/components/products/auth";
 
-export function meta({ }: Route.MetaArgs) {
+export function meta({}: Route.MetaArgs) {
   return [
     { title: "Auth - Nuvix" },
     {
@@ -32,14 +37,20 @@ export default function AuthPage() {
         <Column gap="8" className="max-w-2xl">
           <div className="flex items-center gap-2 px-3 py-1 rounded-full border border-neutral-200 bg-white/50 w-fit backdrop-blur-sm">
             <IconButton icon="authentication" size="s" variant="ghost" className="!p-0 size-4" />
-            <Text variant="label-default-s" onBackground="neutral-strong">Authentication</Text>
+            <Text variant="label-default-s" onBackground="neutral-strong">
+              Authentication
+            </Text>
           </div>
 
           <Text variant="display-default-l" className="mt-4 mb-2 tracking-tight">
             Secure and Scalable Authentication
           </Text>
 
-          <Text variant="body-default-m" onBackground="neutral-medium" className="max-w-lg leading-relaxed">
+          <Text
+            variant="body-default-m"
+            onBackground="neutral-medium"
+            className="max-w-lg leading-relaxed"
+          >
             A complete solution for user authentication, from registration to session management,
             all out of the box.
           </Text>
@@ -54,7 +65,11 @@ export default function AuthPage() {
           </Row>
         </Column>
         <div className="hidden lg:block flex-1 relative animation-float">
-          <img src="/images/services/auth.png" alt="Auth Service" className="max-w-lg w-full drop-shadow-2xl" />
+          <img
+            src="/images/services/auth.png"
+            alt="Auth Service"
+            className="max-w-lg w-full drop-shadow-2xl"
+          />
         </div>
       </div>
 
