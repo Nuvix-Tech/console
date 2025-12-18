@@ -6,6 +6,6 @@ export default [
     route("products/authentication", "routes/products/auth.tsx"),
     route("products/database", "routes/products/database.tsx"),
     route("products/messaging", "routes/products/messaging.tsx"),
-    // route("products/storage", "routes/products/storage.tsx"),
+    route("products/storage", "routes/products/storage.tsx"),
   ]),
 ] satisfies RouteConfig;
