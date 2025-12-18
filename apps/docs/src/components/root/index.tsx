@@ -257,8 +257,8 @@ export function DocsLayout({
               {nav.title}
             </Link>
             <div className="flex-1">{nav.children}</div> */}
-              {searchToggle.enabled !== false &&
-                (searchToggle.components?.sm ?? <SearchToggle className="p-2" hideIfDisabled />)}
+              {/* {searchToggle.enabled !== false &&
+                (searchToggle.components?.sm ?? <SearchToggle className="p-2" hideIfDisabled />)} */}
               {/* {sidebarEnabled && (
                     <SidebarTrigger
                       className={cn(

@@ -6,13 +6,14 @@ import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/p
 import { cn } from "@nuvix/sui/lib/utils";
 import { ButtonGroup } from "@nuvix/sui/components/button-group";
 import { Button } from "@nuvix/sui/components/button";
-import { Icon } from "@nuvix/ui/components";
+import { Icon, useToast } from "@nuvix/ui/components";
 
 const optionVariants = cva(
   "text-sm p-1.5 items-center rounded-lg flex gap-4 hover:text-fd-accent-foreground hover:bg-fd-accent [&_svg]:size-4",
 );
 
-export function ViewOptions(props: { markdownUrl: string; githubUrl?: string }) {
+export function ViewOptions(props: { markdownUrl: string; githubUrl?: string; markdown?: string }) {
+  const act = useToast();
   const baseUrl =
     typeof window !== "undefined" && window.location ? window.location.origin : "http://localhost";
   const markdownUrl = new URL(props.markdownUrl, baseUrl);
@@ -68,8 +69,8 @@ export function ViewOptions(props: { markdownUrl: string; githubUrl?: string }) 
 
   const copyPage = async () => {
     try {
-      await navigator.clipboard.writeText(markdownUrl.toString());
-      alert("Page URL copied to clipboard!");
+      await navigator.clipboard.writeText(props.markdown ?? "there was some issue");
+      act.addToast("Page copied in markdown");
     } catch (e) {
       console.error(e);
     }
@@ -112,7 +113,7 @@ export function ViewOptions(props: { markdownUrl: string; githubUrl?: string }) 
               </div>
               <Icon
                 name="externalLink"
-                size="s"
+                size="m"
                 className="ml-auto"
                 onBackground="neutral-medium"
               />

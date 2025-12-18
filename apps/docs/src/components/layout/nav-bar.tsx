@@ -1,4 +1,4 @@
-import { Row } from "@nuvix/ui/components";
+import { Row, ToggleButton } from "@nuvix/ui/components";
 import { GithubButton } from "@nuvix/ui/modules";
 import { ThemeSwitch } from "./theme-switch";
 import { Logo } from "@nuvix/ui/components";
@@ -10,19 +10,7 @@ import { SidebarIcon } from "lucide-react";
 
 export const NavBar = () => {
   return (
-    <Row className="gap-2 h-12 min-h-12 w-full flex px-4 items-center" id="nav_bar">
-      <SidebarTrigger
-        className={cn(
-          buttonVariants({
-            color: "ghost",
-            size: "icon-sm",
-            className: "pr-2",
-          }),
-          "!pl-0 md:hidden",
-        )}
-      >
-        <SidebarIcon />
-      </SidebarTrigger>
+    <Row className="gap-2 h-12 min-h-12 w-full flex px-4 items-center justify-between" id="nav_bar">
       <Link href={"/"}>
         <Logo
           icon={false}
@@ -37,10 +25,26 @@ export const NavBar = () => {
           wordmarkSrc="/trademark/logo-dark.svg"
         />
       </Link>
-      <ThemeSwitch />
-      <div className="flex gap-2 items-center">
+
+      <div className="flex gap-2 items-center justify-end">
+        <ToggleButton variant="ghost" className="font-solid">
+          Documentation
+        </ToggleButton>
+        <ThemeSwitch />
         <GithubButton />
       </div>
+      <SidebarTrigger
+        className={cn(
+          buttonVariants({
+            color: "ghost",
+            size: "icon-sm",
+            className: "pr-2",
+          }),
+          "md:hidden",
+        )}
+      >
+        <SidebarIcon />
+      </SidebarTrigger>
     </Row>
   );
 };

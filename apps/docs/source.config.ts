@@ -93,6 +93,9 @@ export const docs = defineDocs({
       index: z.boolean().default(false),
       layout: z.enum(["article", "overview"]).optional().default("article"),
     }),
+    postprocess: {
+      includeProcessedMarkdown: true,
+    },
   },
   meta: {
     schema: metaSchema.extend({
