@@ -27,7 +27,7 @@ const schemas: SchemaInfo[] = [
     name: "Document Schema",
     tagline: "NoSQL Simplicity",
     description:
-      "A NoSQL-style abstraction over PostgreSQL. No SQL required—just JSON documents, collections, and REST APIs for rapid development.",
+      "A NoSQL-style abstraction over PostgreSQL. No SQL required - just JSON documents, collections, and REST APIs for rapid development.",
     icon: "document",
     color: "purple",
     features: [
@@ -63,7 +63,7 @@ const schemas: SchemaInfo[] = [
     name: "Managed Schema",
     tagline: "SQL + Automation",
     description:
-      "Full PostgreSQL power with automatic security. Get Row Level Security policies, permission tables, and API generation—all automated so you can focus on building.",
+      "Full PostgreSQL power with automatic security. Get Row Level Security policies, permission tables, and API generation - all automated so you can focus on building.",
     icon: "database",
     color: "teal",
     features: [
