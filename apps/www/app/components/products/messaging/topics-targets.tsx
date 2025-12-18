@@ -48,9 +48,9 @@ export const TopicsTargets = () => {
                 Targets
               </Text>
               <Text variant="body-default-m" onBackground="neutral-medium">
-                A target is a specific communication channel for a user. Each user can have
-                multiple targets - like two email addresses, a phone number, and multiple devices
-                with your app installed.
+                A target is a specific communication channel for a user. Each user can have multiple
+                targets - like two email addresses, a phone number, and multiple devices with your
+                app installed.
               </Text>
             </Column>
 
