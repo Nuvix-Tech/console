@@ -7,10 +7,11 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@nuvix/sui/components/t
 type Props = ButtonProps &
   B & {
     dirtyCheck?: boolean;
+    showErrors?: boolean;
   };
 
 const SubmitButton = React.forwardRef<HTMLButtonElement, Props>((props, ref) => {
-  const { loadingText, dirtyCheck = true, ...rest } = props;
+  const { loadingText, dirtyCheck = true, showErrors = true, ...rest } = props;
   const { isSubmitting, isValid, dirty, errors } = useFormikContext();
   const isDisabled = !isValid || (dirtyCheck && !dirty) || isSubmitting || props.disabled;
 
@@ -24,7 +25,7 @@ const SubmitButton = React.forwardRef<HTMLButtonElement, Props>((props, ref) => 
         disabled={isDisabled}
         loading={isSubmitting && isValid}
       />
-      {!isValid ? (
+      {!isValid && showErrors ? (
         <Tooltip>
           <TooltipTrigger asChild className="cursor-pointer">
             <Icon name="infoCircle" size="m" onBackground="accent-weak" />

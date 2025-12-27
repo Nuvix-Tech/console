@@ -9,39 +9,48 @@ export const RegisterPage = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className="flex flex-col items-center size-full gap-5 justigy-center md:p-4 rounded-sm"
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="flex flex-col size-full gap-6 md:p-6 max-w-md mx-auto"
     >
-      <Logo size="l" wordmark={false} iconSrc="/favicon.ico" />
-      <div>
-        <Heading as="h3" variant="display-default-xs" align="center" className="mt-6">
-          Get Started
+      <Logo size="l" wordmark={false} iconSrc="/favicon.ico" className="sm:!hidden mb-2" />
+      <div className="space-y-2">
+        <Heading as="h3" variant="display-default-s">
+          Create your account
         </Heading>
-        <Text onBackground="neutral-weak" className="mt-2">
-          Create a new account or{" "}
-          <Link
-            href="/auth/login"
-            className="font-medium hover:underline neutral-on-background-medium"
-          >
-            log in
-          </Link>
+        <Text onBackground="neutral-weak" variant="body-default-m">
+          Start building something amazing today
         </Text>
       </div>
 
       <RegisterForm />
 
-      <Text onBackground="neutral-weak" className="mt-4 text-sm text-center">
-        By creating an account, you agree to our{" "}
+      <div className="mt-2 text-center">
+        <Text onBackground="neutral-weak" className="text-sm">
+          Already have an account?{" "}
+          <Link
+            href="/auth/login"
+            className="font-semibold hover:underline neutral-on-background-medium transition-colors"
+          >
+            Sign in
+          </Link>
+        </Text>
+      </div>
+
+      <Text
+        onBackground="neutral-weak"
+        className="mt-auto pt-6 text-xs text-center leading-relaxed"
+      >
+        By signing up, you agree to our{" "}
         <Link
           href="https://www.nuvix.in/legal/terms"
-          className="font-medium hover:underline neutral-on-background-medium"
+          className="font-medium hover:underline neutral-on-background-medium transition-colors"
         >
           Terms of Service
         </Link>{" "}
         and{" "}
         <Link
           href="https://www.nuvix.in/legal/privacy"
-          className="font-medium hover:underline neutral-on-background-medium"
+          className="font-medium hover:underline neutral-on-background-medium transition-colors"
         >
           Privacy Policy
         </Link>

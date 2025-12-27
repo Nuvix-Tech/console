@@ -28,7 +28,7 @@ export const NavBar = () => {
 
       <div className="flex gap-2 items-center justify-end">
         <ToggleButton variant="ghost" className="font-solid">
-          Documentation
+          Cloud
         </ToggleButton>
         <ThemeSwitch />
         <GithubButton />

@@ -1,12 +1,10 @@
 "use client";
-
-import React from "react";
-import { Form, InputField } from "../others/forms";
+import { Form, InputField, SubmitButton } from "../others/forms";
 import * as y from "yup";
 import { sdkForConsole } from "@/lib/sdk";
 import { ID } from "@nuvix/console";
-import { Button, useToast } from "@nuvix/ui/components";
 import { useRouter } from "@bprogress/next";
+import { toast } from "sonner";
 
 const schema = y.object({
   firstName: y.string().required("First name is required"),
@@ -23,13 +21,11 @@ const schema = y.object({
 });
 
 export const RegisterForm = () => {
-  const [loading, setLoading] = React.useState(false);
   const { account } = sdkForConsole;
-  const { addToast } = useToast();
   const { replace } = useRouter();
 
   return (
-    <>
+    <div className="w-full max-w-md mx-auto">
       <Form
         initialValues={{
           firstName: "",
@@ -39,40 +35,48 @@ export const RegisterForm = () => {
         }}
         validationSchema={schema}
         onSubmit={async (values, { resetForm }) => {
-          setLoading(true);
-          try {
-            const res = await account.create(
-              ID.unique(),
-              values.email,
-              values.password,
-              [values.firstName, values.lastName].filter(Boolean).join(" "),
-            );
-            addToast({
-              variant: "success",
-              message: `Your account has been created`,
-            });
-            resetForm();
-            replace("/auth/login");
-          } catch (error: any) {
-            addToast({
-              variant: "danger",
-              message: error.message,
-            });
-          }
-          setLoading(false);
+          return toast.promise(
+            async () => {
+              await account.create(
+                ID.unique(),
+                values.email,
+                values.password,
+                [values.firstName.trim(), values.lastName?.trim()].filter(Boolean).join(" "),
+              );
+              resetForm();
+              replace("/auth/login");
+            },
+            {
+              loading: "Creating your account...",
+              success: "Account created successfully! Redirecting to login...",
+              error: (err) => `Failed to create account: ${err.message}`,
+            },
+          );
         }}
-        className="space-y-4"
+        className="space-y-5"
       >
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <InputField name="firstName" label="First Name" required />
-          <InputField name="lastName" label="Last Name" />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 items-start">
+          <InputField name="firstName" label="First Name" placeholder="John" required />
+          <InputField name="lastName" label="Last Name" placeholder="Doe" />
         </div>
-        <InputField name="email" label="Email" type="email" required />
-        <InputField name="password" label="Password" type="password" required />
-        <Button type="submit" loading={loading} fillWidth variant="primary" disabled={loading}>
-          Create Account
-        </Button>
+        <InputField
+          name="email"
+          label="Email Address"
+          type="email"
+          placeholder="you@example.com"
+          required
+        />
+        <InputField
+          name="password"
+          label="Password"
+          type="password"
+          placeholder="••••••••"
+          required
+        />
+        <div className="pt-2 [&>span]:w-full">
+          <SubmitButton label="Create Your Account" fillWidth size="l" showErrors={false} />
+        </div>
       </Form>
-    </>
+    </div>
   );
 };
