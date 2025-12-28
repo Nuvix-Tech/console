@@ -1,4 +1,4 @@
-import { Row, ToggleButton } from "@nuvix/ui/components";
+import { Row, Button } from "@nuvix/ui/components";
 import { GithubButton } from "@nuvix/ui/modules";
 import { ThemeSwitch } from "./theme-switch";
 import { Logo } from "@nuvix/ui/components";
@@ -7,6 +7,7 @@ import { SidebarTrigger } from "@/components/root/sidebar";
 import { cn } from "@nuvix/sui/lib/utils";
 import { buttonVariants } from "fumadocs-ui/components/ui/button";
 import { SidebarIcon } from "lucide-react";
+import { HomeButton } from "./nav-client";
 
 export const NavBar = () => {
   return (
@@ -27,11 +28,12 @@ export const NavBar = () => {
       </Link>
 
       <div className="flex gap-2 items-center justify-end">
-        <ToggleButton variant="ghost" className="font-solid">
-          Cloud
-        </ToggleButton>
+        <div className="flex items-center">
+          <HomeButton />
+        </div>
         <ThemeSwitch />
         <GithubButton />
+        <Button size="s">Get Started</Button>
       </div>
       <SidebarTrigger
         className={cn(
