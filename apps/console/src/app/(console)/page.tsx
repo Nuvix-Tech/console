@@ -24,6 +24,10 @@ export default function Page() {
         return;
       }
 
+      if (!isPlatform) {
+        return;
+      }
+
       try {
         let org: Models.Organization<any> | null = null;
 

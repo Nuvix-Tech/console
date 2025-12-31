@@ -69,7 +69,7 @@ export default function Login() {
         validationSchema={schema}
         initialValues={{ email: "", password: "" }}
         onSubmit={async ({ email, password }) => {
-          toast.promise(
+          return await toast.promise(
             async () => {
               await account.createEmailPasswordSession(email, password);
               replace("/");

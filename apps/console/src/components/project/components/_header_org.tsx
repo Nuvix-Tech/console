@@ -32,8 +32,10 @@ export function HeaderOrganization(props: React.ComponentProps<typeof Button>) {
       const orgs = await orgApi.list<any>();
       setOrgs(orgs.data);
     }
-    getAll();
+    if (IS_PLATFORM) getAll();
   }, []);
+
+  if (!IS_PLATFORM) return;
 
   return organization && orgs ? (
     <Popover open={open} onOpenChange={setOpen}>
