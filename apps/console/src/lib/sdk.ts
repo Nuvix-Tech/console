@@ -4,7 +4,6 @@ import {
   Avatars,
   Billing,
   Client,
-  Console,
   ConsoleAccount,
   ConsoleUsers,
   Databases,
@@ -29,10 +28,9 @@ import {
 import { Schemas } from "./external-sdk";
 import { PLATFORM_URL } from "./constants";
 
-export const API_URL =
-  process.env.NEXT_PUBLIC_NUVIX_ENDPOINT ?? process.env.NUVIX_ENDPOINT ?? "https://api.nuvix.in/v1";
+export const API_URL = process.env.NEXT_PUBLIC_NUVIX_ENDPOINT ?? "http://localhost:4000/v1";
 
-export const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_ENDPOINT ?? "https://server.nuvix.in";
+export const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_ENDPOINT ?? "http://localhost:4100";
 
 const clientConsole = new Client().setEndpoint(API_URL).setProject("console");
 const clientServer = new Client().setEndpoint(SERVER_URL).setProject("console");
@@ -45,7 +43,6 @@ const sdkForProject = {
   platform: clientServerProject,
   account: new Account(clientProject),
   avatars: new Avatars(clientProject),
-  // backups: new Backups(clientProject),
   databases: new Databases(clientProject),
   functions: new Functions(clientProject),
   health: new Health(clientProject),
