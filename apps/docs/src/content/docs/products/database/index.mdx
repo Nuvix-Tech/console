@@ -1,37 +1,85 @@
 ---
-title: 'Database'
-description: 'Nuvix Database is a unified, schema-based data layer built on PostgreSQL with structured REST APIs'
+title: Database
+description: A unified, schema-based data layer built on PostgreSQL with structured REST APIs and flexible schema types.
 ---
 
-Every Nuvix project includes a fully managed PostgreSQL instance. PostgreSQL is trusted across financial systems, global commerce, and high-scale platforms for its stability, performance, and advanced features. Nuvix leverages this foundation and extends it with a unified, schema-driven data layer designed for modern development.
+Every Nuvix project includes a fully managed PostgreSQL instance. PostgreSQL powers financial systems, global commerce platforms, and high-scale applications. Nuvix extends this foundation with a unified, schema-driven data layer designed for modern development.
 
-## What is Nuvix Database?
+<Card title="Get started in minutes" href="/products/database/quick-start" icon="rocket" />
 
-Nuvix Database is a unified, schema-based data layer built on PostgreSQL. It offers three schema types: Document, Managed, and Unmanaged. Choose the level of abstraction and control that fits your needs, from rapid prototyping to production at scale.
+## Three ways to work with your data
 
-## Core Principles
+Nuvix provides three schema types, each suited to different needs. Pick one or combine them in the same project.
 
-- **Schema isolation**: Each schema operates independently within your project.
-- **Flexible access**: Managed and Unmanaged schemas support full SQL; Document schemas are API-only.
-
-## Architecture
-Built on PostgreSQL, Nuvix provides enterprise-grade reliability, ACID compliance, and advanced capabilities. Each schema type balances abstraction and control differently, ranging from automated security to fully manual configuration.
-## Schema Creation
-Schemas are created through the Nuvix API or Console. Direct creation of PostgreSQL databases or roles is not permitted; these are governed by Nuvix's internal metadata system to ensure security and consistency.
-
-<CardGroup cols={2}>
-<Card title="Schema Types" icon="database" href="/products/database/schema-types">
-    Learn about Document, Managed, and Unmanaged schema types
+<CardGroup cols={3}>
+<Card title="Document Schema" href="/products/database/schema-types#document-schema" icon="file-text">
+NoSQL-style JSON documents with collections, attributes, and powerful query operators. No SQL required.
 </Card>
-
-{/* <Card title="API System" icon="code" href="/products/database/api-system">
-    Understand the REST API structure and the NuvQL query language
-</Card> */}
+<Card title="Managed Schema" href="/products/database/schema-types#managed-schema" icon="shield">
+Full PostgreSQL with automatic Row Level Security, permission tables, and API generation.
+</Card>
+<Card title="Unmanaged Schema" href="/products/database/schema-types#unmanaged-schema" icon="database">
+Raw PostgreSQL access. Complete control over tables, policies, and constraints.
+</Card>
 </CardGroup>
 
+## Core concepts
+
+<CardGroup cols={2}>
+<Card title="Schema Types" href="/products/database/schema-types" icon="layers">
+Understanding Document, Managed, and Unmanaged schemas
+</Card>
+<Card title="Collections" href="/products/database/collections" icon="folder">
+Organize documents with collections and define their structure
+</Card>
+<Card title="Attributes" href="/products/database/attributes" icon="list">
+Define fields with types, validation, and constraints
+</Card>
+<Card title="Documents" href="/products/database/documents" icon="file">
+Create, read, update, and delete documents
+</Card>
+<Card title="Indexes" href="/products/database/indexes" icon="search">
+Optimize query performance with custom indexes
+</Card>
+<Card title="Permissions" href="/products/database/permissions" icon="lock">
+Control access at schema, collection, and document levels
+</Card>
+</CardGroup>
+
+## SQL schemas
+
+<CardGroup cols={2}>
+<Card title="Managed Schema" href="/products/database/managed-schema" icon="shield-check">
+PostgreSQL with automatic security policies
+</Card>
+<Card title="Unmanaged Schema" href="/products/database/unmanaged-schema" icon="terminal">
+Full control for complex SQL workloads
+</Card>
+<Card title="Queries" href="/products/database/queries" icon="code">
+Filter, select, and order data with the query API
+</Card>
+<Card title="Relationships" href="/products/database/relationships" icon="git-branch">
+Link documents and tables with relationships
+</Card>
+</CardGroup>
+
+## Architecture
+
+Nuvix Database is built on PostgreSQL and inherits its enterprise-grade reliability, ACID compliance, and advanced capabilities. Each schema type offers a different balance between abstraction and control.
+
+| Feature | Document | Managed | Unmanaged |
+| --- | --- | --- | --- |
+| SQL access | Read-only | Full | Full |
+| API access | Full CRUD | Full CRUD | Full CRUD |
+| Automatic RLS | N/A | Yes | No |
+| Permission tables | N/A | Auto-generated | Manual |
+| Schema management | API-only | SQL + API | SQL + API |
+| Best for | Rapid prototyping | Production apps | Advanced workloads |
+
 ## Terminology
-- **Postgres**: An advanced open-source relational database management system (RDBMS) known for its robustness and extensibility, also referred to as PostgreSQL.
-- **Schema**: A logical grouping of database objects (tables, views, functions) within a PostgreSQL database.
-- **Document Schema**: A schema optimized for JSON document storage and retrieval via REST APIs. (also called Doc Schema)
-- **Managed Schema**: A schema with automated security and API generation, allowing SQL access.
-- **Unmanaged Schema**: A schema providing full control over database objects and security, with SQL access.
+
+- **Schema**: A logical grouping of database objects within PostgreSQL. Each schema operates independently.
+- **Collection**: A container for documents in Document schemas. Similar to a table but with a JSON document structure.
+- **Attribute**: A field definition within a collection. Specifies type, validation rules, and constraints.
+- **Document**: A single record within a collection. Stored as a JSON object with system fields.
+- **Table**: A standard PostgreSQL table in Managed or Unmanaged schemas.

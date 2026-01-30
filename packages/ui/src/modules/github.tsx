@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Icon, IconButton } from "../components";
+import { Button, Icon, IconButton } from "../components";
 
 const CACHE_KEY = "github_stars_nuvix";
 const CACHE_DURATION = 1000 * 60 * 10; // 10 minutes
@@ -44,16 +44,15 @@ export const GithubButton = () => {
   }, []);
 
   return (
-    <IconButton
+    <Button
       variant="secondary"
-      size="m"
+      size="s"
       className="ml-2 relative"
       href="https://www.github.com/nuvix-tech/nuvix"
+      prefixIcon="github"
+      suffixIcon={<div>{stars !== null ? stars?.toString() : "..."}</div>}
     >
-      <Icon name="github" />
-      <span className="absolute surface-background backdrop-blur-sm size-4.5 flex items-center justify-center text-xs !text-[0.60rem] rounded-full top-16 left-16 border">
-        {stars !== null ? stars?.toString() : "..."}
-      </span>
-    </IconButton>
+      Star on Github
+    </Button>
   );
 };

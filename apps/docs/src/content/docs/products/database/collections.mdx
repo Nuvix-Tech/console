@@ -1,0 +1,134 @@
+---
+title: Collections
+description: Collections organize documents in Document schemas.
+---
+
+In Document schemas, data is organized into **Collections**. A collection is analogous to a table in SQL or a collection in MongoDB. It defines the structure (attributes) and rules (indexes, permissions) for its documents.
+
+<Note>
+Collection management is an **administrative task**. You cannot create or modify collections using the Client SDK (web/mobile). You must use the **Nuvix Console** or the **REST API** with an API Key.
+</Note>
+
+## Creating collections
+
+Create a new collection to store documents.
+
+### REST API
+
+```bash
+curl -X POST https://api.nuvix.in/v1/schemas/my_app/collections \
+  -H "X-Project-ID: <PROJECT_ID>" \
+  -H "X-API-Key: <YOUR_API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "collectionId": "articles",
+    "name": "Articles",
+    "documentSecurity": false,
+    "permissions": [
+      "read(\"any\")",
+      "create(\"users\")",
+      "update(\"users\")",
+      "delete(\"team:admins\")"
+    ]
+  }'
+```
+
+### Parameters
+
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `name` | string | Yes | Display name of the collection. |
+| `collectionId` | string | Yes | Unique ID. Allowed chars: `a-z`, `0-9`, `_`. |
+| `permissions` | string[] | No | Collection-level permissions. |
+| `documentSecurity` | boolean | No | Enable document-level permissions (default: `false`). |
+| `enabled` | boolean | No | Enable/disable the collection (default: `true`). |
+
+## Updating collections
+
+Update collection name, permissions, or security settings.
+
+### REST API
+
+```bash
+curl -X PUT https://api.nuvix.in/v1/schemas/my_app/collections/articles \
+  -H "X-Project-ID: <PROJECT_ID>" \
+  -H "X-API-Key: <YOUR_API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Blog Posts",
+    "enabled": true
+  }'
+```
+
+## Listing collections
+
+Retrieve a list of all collections in a schema.
+
+### REST API
+
+```bash
+curl -X GET https://api.nuvix.in/v1/schemas/my_app/collections \
+  -H "X-Project-ID: <PROJECT_ID>" \
+  -H "X-API-Key: <YOUR_API_KEY>"
+```
+
+### Response
+
+```json
+{
+  "total": 5,
+  "collections": [
+    {
+      "$id": "articles",
+      "$createdAt": "2024-01-01T12:00:00.000Z",
+      "$updatedAt": "2024-01-01T12:00:00.000Z",
+      "name": "Articles",
+      "documentSecurity": false,
+      "attributes": [],
+      "indexes": []
+    }
+  ]
+}
+```
+
+## Deleting collections
+
+Remove a collection and **all its documents**.
+
+### REST API
+
+```bash
+curl -X DELETE https://api.nuvix.in/v1/schemas/my_app/collections/articles \
+  -H "X-Project-ID: <PROJECT_ID>" \
+  -H "X-API-Key: <YOUR_API_KEY>"
+```
+
+<Warning>
+Deleting a collection permanently removes all data within it. This action cannot be undone.
+</Warning>
+
+## Document security
+
+The `documentSecurity` setting controls how permissions are evaluated.
+
+- **False (Default)**: Permissions are checked only at the collection level. If a user has `read` access to the collection, they can read **all** documents.
+- **True**: Permissions are checked at both levels. A user can access a document if they have collection-level access **OR** specific document-level access.
+
+Enable this when users should only see their own data or specific shared items.
+
+```bash
+# Enable document security
+curl -X PUT https://api.nuvix.in/v1/schemas/my_app/collections/articles \
+  -H "X-Project-ID: <PROJECT_ID>" \
+  -H "X-API-Key: <YOUR_API_KEY>" \
+  -d '{ "documentSecurity": true }'
+```
+
+<CardGroup cols={2}>
+<Card title="Attributes" href="/products/database/attributes" icon="list">
+Define data structure
+</Card>
+<Card title="Indexes" href="/products/database/indexes" icon="zap">
+Optimize performance
+</Card>
+</CardGroup>

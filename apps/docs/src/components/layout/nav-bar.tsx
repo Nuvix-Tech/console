@@ -33,7 +33,9 @@ export const NavBar = () => {
         </div>
         <ThemeSwitch />
         <GithubButton />
-        <Button size="s">Get Started</Button>
+        <Button size="s" href="https://www.nuvix.in/get-started">
+          Get Started
+        </Button>
       </div>
       <SidebarTrigger
         className={cn(

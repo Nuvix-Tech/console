@@ -1,0 +1,194 @@
+---
+title: SQL Queries
+description: Querying Managed and Unmanaged schemas using the Fluent API.
+---
+
+SQL-based schemas (Managed and Unmanaged) use a powerful Fluent API that closely mirrors SQL capabilities while providing type safety and ease of use. This API is distinct from the JSON-based API used by Document schemas.
+
+## Accessing Schemas
+
+To query a table, you first select the schema using `.schema()`, then the table using `.from()`.
+
+```typescript
+// Query 'users' table in 'app_data' schema
+const users = await nx.db
+    .schema('app_data')
+    .from('users')
+    .select();
+
+// Query 'public' schema (default, can use shortcut if configured)
+const publicUsers = await nx.db
+    .from('users') // Defaults to public
+    .select();
+```
+
+## Selection
+
+### Selecting columns
+You can select specific columns, rename them with aliases, or use JSON paths.
+
+```typescript
+// Select all (default)
+.select()
+
+// Select specific columns
+.select('id', 'name', 'email')
+
+// Aliasing columns (format: "alias:column")
+.select('userId:id', 'fullName:name')
+
+// JSON path selection (for JSONB columns)
+.select('meta->settings->theme')
+```
+
+## Filtering
+
+The builder supports a wide range of operators. All filters are combined with AND logic by default.
+
+### Comparison Operators
+
+| Method | SQL Equivalent | Description |
+| --- | --- | --- |
+| `.eq('col', val)` | `=` | Equal to |
+| `.neq('col', val)` | `!=` or `<>` | Not equal to |
+| `.gt('col', val)` | `>` | Greater than |
+| `.gte('col', val)` | `>=` | Greater than or equal |
+| `.lt('col', val)` | `<` | Less than |
+| `.lte('col', val)` | `<=` | Less than or equal |
+
+```typescript
+// Users older than 18
+.gt('age', 18)
+
+// Users not in 'archived' status
+.neq('status', 'archived')
+```
+
+### Pattern Matching
+
+| Method | SQL Equivalent | Description |
+| --- | --- | --- |
+| `.like('col', '%val%')` | `LIKE` | Simple pattern matching |
+| `.ilike('col', '%val%')` | `ILIKE` | Case-insensitive matching |
+| `.match('col', 'regex')` | `~` | Regex match |
+| `.imatch('col', 'regex')` | `~*` | Case-insensitive regex match |
+
+```typescript
+// Email ending in @nuvix.io
+.like('email', '%@nuvix.io')
+
+// Name starts with 'John' (case-insensitive)
+.ilike('name', 'john%')
+```
+
+### Lists and Arrays
+
+| Method | SQL Equivalent | Description |
+| --- | --- | --- |
+| `.in('col', [vals])` | `IN` | Value in list |
+| `.notin('col', [vals])` | `NOT IN` | Value not in list |
+| `.cs('col', val)` | `@>` | Contains (Array/JSON) |
+| `.cd('col', val)` | `<@` | Contained by (Array/JSON) |
+| `.ov('col', [vals])` | `&&` | Overlap (Arrays) |
+
+```typescript
+// Users with status 'active' or 'pending'
+.in('status', ['active', 'pending'])
+
+// Users with 'admin' tag (in string[] column)
+.cs('tags', 'admin')
+```
+
+### Null Checks
+
+| Method | Description |
+| --- | --- |
+| `.null('col')` | IS NULL |
+| `.notnull('col')` | IS NOT NULL |
+| `.is('col', val)` | IS `val` (true/false/null) |
+
+```typescript
+// Users without a phone number
+.null('phone')
+```
+
+## Logical Operators
+
+You can group conditions using `.or()`, `.and()`, and `.not()`.
+
+```typescript
+// (age > 18 AND status = 'active') OR role = 'admin'
+.or((b) => b
+    .and((b2) => b2.gt('age', 18).eq('status', 'active'))
+    .eq('role', 'admin')
+)
+```
+
+## Sorting and Pagination
+
+```typescript
+// Sort ascending
+.orderAsc('created_at')
+
+// Sort descending
+.orderDesc('score')
+
+// Limit and Offset
+.limit(10)
+.offset(20)
+```
+
+## Joins
+
+You can join related tables using the `.join()` method.
+
+```typescript
+// Join users with their posts
+const result = await nx.db
+    .schema('app_data')
+    .from('users')
+    .select('name', 'email')
+    .join({ table: 'posts', as: 'user_posts' }, (b) => b
+        .select('title', 'created_at')
+        .eq('published', true)
+    );
+```
+
+## Full Text Search
+
+Use `.fts()`, `.plfts()`, `.phfts()`, or `.wfts()` for PostgreSQL full-text search.
+
+```typescript
+// Search description for 'database'
+.fts('description', 'database')
+
+// Websearch style (supports "quoted phrases" and -exclusions)
+.wfts('description', 'nuvix -"legacy"')
+```
+
+## Calling Functions (RPC)
+
+Execute database functions using `.fn()` or `.rpc()`.
+
+```typescript
+const result = await nx.db
+    .schema('app_data')
+    .fn('calculate_total')
+    .call({ order_id: 123 });
+```
+
+## Range Operators
+
+Support for PostgreSQL range types.
+
+| Method | Operator | Description |
+| --- | --- | --- |
+| `.sl('col', val)` | `<<` | Strictly left of |
+| `.sr('col', val)` | `>>` | Strictly right of |
+| `.adj('col', val)` | `-|-` | Adjacent to |
+| `.between('col', min, max)` | `BETWEEN` | Inclusive range check |
+
+```typescript
+// Created between dates
+.between('created_at', '2024-01-01', '2024-12-31')
+```

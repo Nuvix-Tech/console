@@ -1,0 +1,368 @@
+---
+title: Unmanaged Schema
+description: Full PostgreSQL control without automation for advanced workloads and custom governance.
+---
+
+Unmanaged schemas provide raw PostgreSQL access through the Nuvix API. You have complete control over schema design, SQL queries, and access policies. No automatic RLS or permission tables are created.
+
+## When to use Unmanaged schemas
+
+- Advanced SQL workloads requiring specific optimizations
+- Legacy database migrations
+- Custom security and governance requirements
+- Complex relational designs with specific constraints
+- Integration with existing PostgreSQL tools and extensions
+
+<Warning>
+Unmanaged schemas require manual setup of permissions and security policies. Only choose this option if you need complete control and are comfortable managing PostgreSQL security.
+</Warning>
+
+## Creating an unmanaged schema
+
+```javascript
+import { Client } from '@nuvix/client';
+
+const nx = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const schema = await nx.database.createSchema({
+    name: 'legacy_data',
+    type: 'unmanaged',
+    description: 'Migrated legacy database'
+});
+```
+
+## Creating tables
+
+Connect to your project database and create tables with standard SQL.
+
+```sql
+-- Create tables with your own structure
+CREATE TABLE legacy_data.customers (
+    id SERIAL PRIMARY KEY,
+    external_id UUID UNIQUE NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE,
+    metadata JSONB,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE legacy_data.orders (
+    id SERIAL PRIMARY KEY,
+    customer_id INTEGER REFERENCES legacy_data.customers(id),
+    total DECIMAL(12, 2) NOT NULL,
+    status VARCHAR(50) DEFAULT 'pending',
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+Unlike Managed schemas, no automatic `_id` column or permission tables are created.
+
+## API access
+
+Query tables through the REST API just like Managed schemas.
+
+### Query data
+
+```javascript
+const customers = await nx.schemas.queryTable({
+    schemaId: 'legacy_data',
+    tableId: 'customers',
+    limit: 25
+});
+```
+
+### Insert data
+
+```javascript
+await nx.schemas.insertIntoTable({
+    schemaId: 'legacy_data',
+    tableId: 'customers',
+    data: {
+        external_id: '550e8400-e29b-41d4-a716-446655440000',
+        name: 'Acme Corp',
+        email: 'contact@acme.com',
+        metadata: { industry: 'technology', size: 'enterprise' }
+    }
+});
+```
+
+### Update data
+
+```javascript
+await nx.schemas.updateTable({
+    schemaId: 'legacy_data',
+    tableId: 'customers',
+    data: {
+        metadata: { industry: 'technology', size: 'enterprise', tier: 'premium' }
+    },
+    filter: 'id.eq.42'
+});
+```
+
+### Delete data
+
+```javascript
+await nx.schemas.deleteFromTable({
+    schemaId: 'legacy_data',
+    tableId: 'customers',
+    filter: 'id.eq.42'
+});
+```
+
+## Manual security setup
+
+Since Unmanaged schemas have no automatic security, you must configure it yourself.
+
+### Enabling Row Level Security
+
+```sql
+-- Enable RLS on a table
+ALTER TABLE legacy_data.customers ENABLE ROW LEVEL SECURITY;
+
+-- Force RLS for table owner too
+ALTER TABLE legacy_data.customers FORCE ROW LEVEL SECURITY;
+```
+
+### Creating policies
+
+```sql
+-- Allow authenticated users to read all customers
+CREATE POLICY customer_read_policy ON legacy_data.customers
+    FOR SELECT
+    USING (
+        current_setting('request.auth.role', true) IS NOT NULL
+    );
+
+-- Allow users to modify only their own records
+CREATE POLICY customer_update_policy ON legacy_data.customers
+    FOR UPDATE
+    USING (
+        current_setting('request.auth.user_id', true) = owner_id::TEXT
+    );
+
+-- Admin-only delete
+CREATE POLICY customer_delete_policy ON legacy_data.customers
+    FOR DELETE
+    USING (
+        current_setting('request.auth.role', true) = 'admin'
+    );
+```
+
+### Using request context
+
+Nuvix passes authentication context through PostgreSQL session variables:
+
+| Variable | Description |
+| --- | --- |
+| `request.auth.user_id` | Current user ID |
+| `request.auth.role` | PostgreSQL role name |
+| `request.auth.team_ids` | Array of team IDs |
+| `request.auth.labels` | Array of user labels |
+
+```sql
+-- Access context in policies or functions
+SELECT current_setting('request.auth.user_id', true);
+SELECT current_setting('request.auth.role', true);
+```
+
+## Advanced features
+
+### JSONB operations
+
+```sql
+-- Query JSONB fields
+SELECT * FROM legacy_data.customers
+WHERE metadata->>'industry' = 'technology';
+
+-- Update JSONB
+UPDATE legacy_data.customers
+SET metadata = metadata || '{"verified": true}'::jsonb
+WHERE id = 42;
+
+-- Create GIN index for JSONB
+CREATE INDEX idx_customers_metadata ON legacy_data.customers
+USING GIN (metadata);
+```
+
+### Full-text search
+
+```sql
+-- Add search vector column
+ALTER TABLE legacy_data.customers
+ADD COLUMN search_vector tsvector;
+
+-- Populate search vector
+UPDATE legacy_data.customers
+SET search_vector = to_tsvector('english', name || ' ' || COALESCE(email, ''));
+
+-- Create GIN index
+CREATE INDEX idx_customers_search ON legacy_data.customers
+USING GIN (search_vector);
+
+-- Search
+SELECT * FROM legacy_data.customers
+WHERE search_vector @@ to_tsquery('english', 'acme');
+```
+
+### Partitioning
+
+```sql
+-- Create partitioned table
+CREATE TABLE legacy_data.events (
+    id BIGSERIAL,
+    event_type VARCHAR(100),
+    payload JSONB,
+    created_at TIMESTAMPTZ NOT NULL
+) PARTITION BY RANGE (created_at);
+
+-- Create partitions
+CREATE TABLE legacy_data.events_2024_q1
+    PARTITION OF legacy_data.events
+    FOR VALUES FROM ('2024-01-01') TO ('2024-04-01');
+
+CREATE TABLE legacy_data.events_2024_q2
+    PARTITION OF legacy_data.events
+    FOR VALUES FROM ('2024-04-01') TO ('2024-07-01');
+```
+
+### Materialized views
+
+```sql
+-- Create materialized view for reports
+CREATE MATERIALIZED VIEW legacy_data.customer_stats AS
+SELECT
+    c.id,
+    c.name,
+    COUNT(o.id) as total_orders,
+    SUM(o.total) as total_spent,
+    MAX(o.created_at) as last_order
+FROM legacy_data.customers c
+LEFT JOIN legacy_data.orders o ON o.customer_id = c.id
+GROUP BY c.id, c.name;
+
+-- Create index on materialized view
+CREATE INDEX idx_customer_stats_spent ON legacy_data.customer_stats(total_spent DESC);
+
+-- Refresh periodically
+REFRESH MATERIALIZED VIEW legacy_data.customer_stats;
+```
+
+### Custom functions
+
+```sql
+-- Create a function
+CREATE OR REPLACE FUNCTION legacy_data.get_customer_orders(
+    p_customer_id INTEGER,
+    p_limit INTEGER DEFAULT 10
+)
+RETURNS TABLE (
+    order_id INTEGER,
+    total DECIMAL(12, 2),
+    status VARCHAR(50),
+    created_at TIMESTAMPTZ
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT o.id, o.total, o.status, o.created_at
+    FROM legacy_data.orders o
+    WHERE o.customer_id = p_customer_id
+    ORDER BY o.created_at DESC
+    LIMIT p_limit;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Call via API
+const orders = await nx.schemas.rpc({
+    schemaId: 'legacy_data',
+    functionId: 'get_customer_orders',
+    args: { p_customer_id: 42, p_limit: 5 }
+});
+```
+
+## Migration workflow
+
+### From existing PostgreSQL
+
+```sql
+-- 1. Create the unmanaged schema
+-- (via API or Console)
+
+-- 2. Import existing tables using pg_dump/pg_restore
+pg_dump -t 'source_schema.*' source_db | psql target_db
+
+-- 3. Move tables to new schema
+ALTER TABLE public.customers SET SCHEMA legacy_data;
+
+-- 4. Set up security policies
+ALTER TABLE legacy_data.customers ENABLE ROW LEVEL SECURITY;
+CREATE POLICY ...;
+```
+
+### From other databases
+
+Use standard PostgreSQL migration tools:
+- `pg_dump` and `pg_restore`
+- `COPY` for data import
+- Third-party tools like pgloader
+
+## Best practices
+
+### Document your security model
+
+Since there's no automatic security, document your policies clearly.
+
+```sql
+-- Document: customer_read_policy
+-- Purpose: Allow authenticated users to read all customers
+-- Access: All authenticated users
+CREATE POLICY customer_read_policy ...
+```
+
+### Use consistent naming
+
+```sql
+-- Tables: snake_case plural
+customers, order_items, product_categories
+
+-- Columns: snake_case
+created_at, updated_by, is_active
+
+-- Policies: table_action_policy
+customers_read_policy, orders_insert_policy
+```
+
+### Test policies thoroughly
+
+```sql
+-- Test as different roles
+SET ROLE 'authenticated';
+SET request.auth.user_id = '123';
+
+SELECT * FROM legacy_data.customers;  -- Should work
+
+SET request.auth.role = NULL;
+SELECT * FROM legacy_data.customers;  -- Should fail
+```
+
+### Monitor performance
+
+```sql
+-- Enable query logging for debugging
+-- Check slow queries and missing indexes
+
+EXPLAIN ANALYZE
+SELECT * FROM legacy_data.customers
+WHERE metadata->>'industry' = 'technology';
+```
+
+<CardGroup cols={2}>
+<Card title="Managed Schema" href="/products/database/managed-schema" icon="shield">
+Automatic security with PostgreSQL power
+</Card>
+<Card title="Schema Types" href="/products/database/schema-types" icon="layers">
+Compare all schema types
+</Card>
+</CardGroup>

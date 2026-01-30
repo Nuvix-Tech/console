@@ -1,0 +1,106 @@
+---
+title: Indexes
+description: Optimize query performance and enforce uniqueness with indexes.
+---
+
+Indexes improve the speed of document retrieval. You must create an index for any attribute you want to filter or sort by.
+
+<Note>
+Index management is an **administrative task**. Use the **Nuvix Console** or **REST API** with an API Key.
+</Note>
+
+## Index types
+
+| Type | Description | Use Case |
+| --- | --- | --- |
+| `key` | Standard B-tree index | Exact match, ranges, sorting |
+| `unique` | Enforces unique values | Usernames, emails, slugs |
+| `fulltext` | Text search index | Keyword search (`.search()`) |
+
+## Creating indexes
+
+### Key Index (Filtering/Sorting)
+
+Create a key index to filter or sort by an attribute.
+
+```bash
+curl -X POST https://api.nuvix.in/v1/schemas/my_app/collections/articles/indexes \
+  -H "X-Project-ID: <PROJECT_ID>" \
+  -H "X-API-Key: <YOUR_API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "key": "idx_status_views",
+    "type": "key",
+    "attributes": ["status", "views"],
+    "orders": ["ASC", "DESC"]
+  }'
+```
+
+### Unique Index
+
+Prevent duplicate values for an attribute.
+
+```bash
+curl -X POST https://api.nuvix.in/v1/schemas/my_app/collections/users/indexes \
+  -H "X-Project-ID: <PROJECT_ID>" \
+  -H "X-API-Key: <YOUR_API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "key": "idx_email_unique",
+    "type": "unique",
+    "attributes": ["email"],
+    "orders": ["ASC"]
+  }'
+```
+
+### Fulltext Index
+
+Enable search functionality on string attributes.
+
+```bash
+curl -X POST https://api.nuvix.in/v1/schemas/my_app/collections/articles/indexes \
+  -H "X-Project-ID: <PROJECT_ID>" \
+  -H "X-API-Key: <YOUR_API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "key": "idx_content_search",
+    "type": "fulltext",
+    "attributes": ["title", "content"],
+    "orders": ["ASC", "ASC"]
+  }'
+```
+
+## Listing indexes
+
+```bash
+curl -X GET https://api.nuvix.in/v1/schemas/my_app/collections/articles/indexes \
+  -H "X-Project-ID: <PROJECT_ID>" \
+  -H "X-API-Key: <YOUR_API_KEY>"
+```
+
+## Deleting indexes
+
+```bash
+curl -X DELETE https://api.nuvix.in/v1/schemas/my_app/collections/articles/indexes/idx_status_views \
+  -H "X-Project-ID: <PROJECT_ID>" \
+  -H "X-API-Key: <YOUR_API_KEY>"
+```
+
+## Index rules
+
+1.  **Ordering**: Attribute order matters. If you index `["status", "created"]`, you can filter by `status` alone or `status + created`, but NOT `created` alone.
+2.  **String Size**: Attributes in a `key` or `unique` index should generally be limited in size (e.g., string length < 255 chars). Large text fields should use `fulltext`.
+3.  **Limits**: While there is no hard limit on the number of indexes, too many can slow down write operations.
+
+## Status
+
+Like attributes, index creation happens in the background. The status will change from `processing` to `available` (or `failed`) once the index is built.
+
+<CardGroup cols={2}>
+<Card title="Queries" href="/products/database/queries" icon="search">
+Use indexes to filter data
+</Card>
+<Card title="Collections" href="/products/database/collections" icon="folder">
+Manage collections
+</Card>
+</CardGroup>

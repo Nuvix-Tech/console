@@ -2,7 +2,8 @@
   "pages": [
     "!home",
     "---[rocket]Get Started---",
-    "...",
+    "quick",
+    "self-hosting",
     "!products",
     "---[Boxes]Products---",
     "products/auth",

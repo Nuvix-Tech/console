@@ -1,0 +1,275 @@
+---
+title: Documents
+description: Create, read, update, and delete documents in your collections.
+---
+
+Documents are the records stored in your collections. Each document contains data that follows the collection's attribute structure, plus system fields for tracking and permissions.
+
+<Note>
+This guide uses the **Fluent API** for Document schemas, which allows you to chain methods for filtering, sorting, and pagination.
+</Note>
+
+## Creating documents
+
+Use the `.create()` method on a collection reference.
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+import { Client, ID, Permission, Role } from '@nuvix/client';
+
+const nx = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const document = await nx.database
+    .schema('my_app')
+    .collection('articles')
+    .create(ID.unique(), {
+        title: 'Getting Started with Nuvix',
+        content: 'This guide covers the basics...',
+        published: true,
+        views: 0
+    }, [
+        Permission.read(Role.any()),
+        Permission.update(Role.user('author123')),
+        Permission.delete(Role.user('author123'))
+    ]);
+
+console.log('Created document:', document.$id);
+```
+</CodeGroup>
+
+### Parameters
+
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `documentId` | string | Yes | Unique ID. Use `ID.unique()` for auto-generation. |
+| `data` | object | Yes | Document data matching collection attributes. |
+| `permissions` | string[] | No | Document-level permissions. |
+
+## System fields
+
+Every document automatically includes these read-only fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `$id` | string | Unique document identifier |
+| `$collectionId` | string | Parent collection ID |
+| `$createdAt` | string | ISO 8601 creation timestamp |
+| `$updatedAt` | string | ISO 8601 last update timestamp |
+| `$permissions` | string[] | Document-level permissions |
+
+```javascript
+// Retrieve a document by ID
+const doc = await nx.database
+    .schema('my_app')
+    .collection('articles')
+    .findById('abc123');
+
+console.log('ID:', doc.$id);
+console.log('Created:', doc.$createdAt);
+```
+
+## Listing documents
+
+Retrieve documents using the Fluent API. You can chain filters, sorts, and limits before calling `.find()`.
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+// List all documents (defaults to paginated)
+const all = await nx.database
+    .schema('my_app')
+    .collection('articles')
+    .find();
+
+console.log('Total:', all.total);
+console.log('Documents:', all.documents);
+
+// With chaining
+const filtered = await nx.database
+    .schema('my_app')
+    .collection('articles')
+    .equal('published', true)
+    .greaterThan('views', 100)
+    .orderDesc('$createdAt')
+    .limit(10)
+    .offset(0)
+    .find();
+```
+</CodeGroup>
+
+See the [Queries guide](/products/database/queries) for all available chainable methods.
+
+## Getting a document
+
+Retrieve a single document by ID using `.findById()`.
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+const document = await nx.database
+    .schema('my_app')
+    .collection('articles')
+    .findById('abc123');
+
+console.log('Title:', document.title);
+```
+</CodeGroup>
+
+### Select specific fields
+
+Use `.select()` to retrieve only the fields you need.
+
+```javascript
+const document = await nx.database
+    .schema('my_app')
+    .collection('articles')
+    .select('title', 'published')
+    .findById('abc123');
+// Only title and published are returned
+```
+
+## Updating documents
+
+Modify an existing document using `.update()`.
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+const updated = await nx.database
+    .schema('my_app')
+    .collection('articles')
+    .update('abc123', {
+        title: 'Updated Title',
+        views: 150
+    });
+
+console.log('New title:', updated.title);
+```
+</CodeGroup>
+
+### Update with permissions
+
+Change document permissions by passing the permissions array as the third argument.
+
+```javascript
+await nx.database
+    .schema('my_app')
+    .collection('articles')
+    .update('abc123', {
+        published: true
+    }, [
+        Permission.read(Role.any()),
+        Permission.update(Role.team('editors'))
+    ]);
+```
+
+## Deleting documents
+
+Remove a document using `.delete()`.
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+await nx.database
+    .schema('my_app')
+    .collection('articles')
+    .delete('abc123');
+```
+</CodeGroup>
+
+<Warning>
+Deleting a document is permanent and cannot be undone.
+</Warning>
+
+## Document permissions
+
+Document-level permissions control who can access individual documents.
+
+### Permission roles
+
+```javascript
+import { Permission, Role } from '@nuvix/client';
+
+// Roles helpers
+Role.any()
+Role.users()
+Role.user('user123')
+Role.team('team123')
+Role.team('team123', ['admin'])
+```
+
+### Granting permissions on create
+
+```javascript
+await nx.database
+    .schema('my_app')
+    .collection('private_notes')
+    .create(ID.unique(), { 
+        content: 'My private note' 
+    }, [
+        Permission.read(Role.user(userId)),
+        Permission.update(Role.user(userId)),
+        Permission.delete(Role.user(userId))
+    ]);
+```
+
+## Bulk operations
+
+### Creating multiple documents
+
+Loop through your data to create multiple documents.
+
+```javascript
+const items = [
+    { title: 'First', content: '...' },
+    { title: 'Second', content: '...' },
+    { title: 'Third', content: '...' }
+];
+
+const articles = nx.database.schema('my_app').collection('articles');
+
+const created = await Promise.all(
+    items.map(item => 
+        articles.create(ID.unique(), item)
+    )
+);
+
+console.log('Created', created.length, 'documents');
+```
+
+## Working with arrays
+
+Store and query array fields.
+
+```javascript
+// Query by array contents using .contains()
+const tagged = await nx.database
+    .schema('my_app')
+    .collection('articles')
+    .contains('tags', ['javascript'])
+    .find();
+```
+
+## Working with relationships
+
+Documents can link to other documents through relationship attributes. Use `.populate()` to include related data.
+
+```javascript
+// Fetch with related data
+const post = await nx.database
+    .schema('my_app')
+    .collection('posts')
+    .populate('author') // Include author fields
+    .findById('post123');
+
+console.log('Author:', post.author.name);
+```
+
+See the [Relationships guide](/products/database/relationships) for details.
+
+<CardGroup cols={2}>
+<Card title="Queries" href="/products/database/queries" icon="search">
+Filter and sort documents with chainable methods
+</Card>
+<Card title="Permissions" href="/products/database/permissions" icon="lock">
+Control access to your documents
+</Card>
+</CardGroup>

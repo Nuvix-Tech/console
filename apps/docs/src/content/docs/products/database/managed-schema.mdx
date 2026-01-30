@@ -1,0 +1,352 @@
+---
+title: Managed Schema
+description: PostgreSQL with automatic Row Level Security, permission tables, and API generation.
+---
+
+Managed schemas provide full PostgreSQL access with Nuvix automation. When you create tables, Nuvix automatically sets up Row Level Security policies and permission tracking.
+
+## How it works
+
+When you create a table in a Managed schema, Nuvix automatically:
+
+1. Adds an `_id` column as an auto-incrementing primary key
+2. Creates a `{table}_perms` table for permission storage
+3. Enables Row Level Security on the table
+4. Creates RLS policies for create, read, update, and delete operations
+5. Sets up DDL triggers to maintain policies
+
+This gives you PostgreSQL power with security handled automatically.
+
+## Creating a managed schema
+
+<Note>
+Schema creation is an **administrative task**. Use the **Nuvix Console** or **REST API** with an API Key.
+</Note>
+
+```bash
+curl -X POST https://api.nuvix.in/v1/schemas \
+  -H "X-Project-ID: <PROJECT_ID>" \
+  -H "X-API-Key: <YOUR_API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "app_data",
+    "type": "managed",
+    "description": "Production application data"
+  }'
+```
+
+## Creating tables
+
+Create tables using standard PostgreSQL DDL. Connect to your project database and run SQL:
+
+```sql
+-- Create a products table
+CREATE TABLE app_data.products (
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    price DECIMAL(10, 2) NOT NULL,
+    quantity INTEGER DEFAULT 0,
+    category VARCHAR(100),
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Nuvix automatically adds:
+-- - _id column (auto-increment primary key)
+-- - products_perms table
+-- - RLS policies
+```
+
+## The _id column
+
+Every table in a Managed schema receives an automatic `_id` column:
+
+- Auto-incrementing integer
+- Primary key
+- Used for row-level permission references
+- Cannot be modified
+
+```sql
+-- Query by _id
+SELECT * FROM app_data.products WHERE _id = 42;
+```
+
+## Permission tables
+
+For each table, Nuvix creates a `{table}_perms` table:
+
+```sql
+-- Structure of products_perms
+CREATE TABLE app_data.products_perms (
+    row_id INTEGER,           -- NULL for table-level permissions
+    permission VARCHAR(10),   -- 'read', 'create', 'update', 'delete'
+    roles TEXT[]              -- Array of role strings
+);
+```
+
+### Table-level permissions
+
+Apply to all rows in the table. Stored with `row_id = NULL`.
+
+```bash
+# Set table permissions via REST API
+curl -X PUT https://api.nuvix.in/v1/schemas/app_data/tables/products/permissions \
+  -H "X-API-Key: <YOUR_API_KEY>" \
+  -d '{
+    "permissions": [
+      "read(\"any\")",
+      "create(\"users\")",
+      "update(\"team:staff\")",
+      "delete(\"team:admin\")"
+    ]
+  }'
+```
+
+### Row-level permissions
+
+Apply to specific rows. Stored with the row's `_id`.
+
+```bash
+# Set row permissions via REST API
+curl -X PUT https://api.nuvix.in/v1/schemas/app_data/tables/products/rows/42/permissions \
+  -H "X-API-Key: <YOUR_API_KEY>" \
+  -d '{
+    "permissions": [
+      "read(\"any\")",
+      "update(\"user:owner123\")"
+    ]
+  }'
+```
+
+## Row Level Security
+
+Nuvix creates RLS policies that check permissions before allowing operations.
+
+### How policies work
+
+```sql
+-- Simplified view of auto-generated read policy
+CREATE POLICY read_policy ON app_data.products
+    FOR SELECT
+    USING (
+        -- Check table-level read permission
+        EXISTS (
+            SELECT 1 FROM app_data.products_perms
+            WHERE row_id IS NULL
+            AND permission = 'read'
+            AND roles && current_user_roles()
+        )
+        OR
+        -- Check row-level read permission
+        EXISTS (
+            SELECT 1 FROM app_data.products_perms
+            WHERE row_id = products._id
+            AND permission = 'read'
+            AND roles && current_user_roles()
+        )
+    );
+```
+
+### Permission inheritance
+
+Users need permission at **either** table or row level:
+
+- Table permission grants access to **all** rows
+- Row permission grants access to **that specific** row
+
+## Querying data
+
+Use the Client SDK to query tables.
+
+### Select data
+
+```javascript
+// Query products
+const products = await nx.database
+    .schema('app_data')
+    .from('products')
+    .limit(25)
+    .offset(0)
+    .select();
+
+console.log('Products:', products);
+```
+
+### Filter with URL parameters (REST)
+
+```http
+GET /v1/schemas/app_data/tables/products?filter=is_active.eq.true&filter=price.gt.100&order=name.asc&limit=25
+```
+
+### Insert data
+
+```javascript
+await nx.database
+    .schema('app_data')
+    .from('products')
+    .insert({
+        name: 'New Product',
+        price: 29.99,
+        quantity: 100,
+        category: 'electronics'
+    });
+```
+
+### Update data
+
+```javascript
+await nx.database
+    .schema('app_data')
+    .from('products')
+    .eq('category', 'electronics') // Filter required
+    .limit(100)
+    .update({
+        price: 24.99
+    });
+```
+
+<Note>
+Update and delete operations require a filter or explicit limit to prevent accidental bulk modifications.
+</Note>
+
+### Delete data
+
+```javascript
+await nx.database
+    .schema('app_data')
+    .from('products')
+    .eq('_id', 42)
+    .delete();
+```
+
+## Calling functions
+
+Execute PostgreSQL functions.
+
+```javascript
+// With named parameters
+const result = await nx.database
+    .schema('app_data')
+    .fn('get_order_total')
+    .call({ order_id: 123 });
+
+// With positional parameters
+const result = await nx.database
+    .schema('app_data')
+    .fn('calculate_discount')
+    .call([100.00, 'SUMMER20']);
+```
+
+## Direct SQL access
+
+Connect directly to your project's PostgreSQL database for complex operations.
+
+```sql
+-- Complex queries
+SELECT 
+    p.name,
+    p.price,
+    COUNT(o.id) as order_count
+FROM app_data.products p
+LEFT JOIN app_data.order_items o ON o.product_id = p._id
+WHERE p.is_active = true
+GROUP BY p._id, p.name, p.price
+HAVING COUNT(o.id) > 10
+ORDER BY order_count DESC;
+```
+
+<Note>
+Direct SQL connections are available through your project's database credentials. RLS policies still apply based on the connected role.
+</Note>
+
+## Custom policies
+
+You can add custom RLS policies alongside the auto-generated ones.
+
+```sql
+-- Add a custom policy for draft products
+CREATE POLICY draft_policy ON app_data.products
+    FOR SELECT
+    USING (
+        is_active = false
+        AND current_setting('request.auth.role', true) = 'admin'
+    );
+```
+
+## Indexes and constraints
+
+Add your own indexes and constraints as needed.
+
+```sql
+-- Add indexes
+CREATE INDEX idx_products_category ON app_data.products(category);
+CREATE INDEX idx_products_price ON app_data.products(price);
+
+-- Add constraints
+ALTER TABLE app_data.products
+    ADD CONSTRAINT price_positive CHECK (price >= 0);
+```
+
+## Triggers
+
+Create custom triggers for business logic.
+
+```sql
+-- Update timestamp trigger
+CREATE OR REPLACE FUNCTION app_data.update_timestamp()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER products_update_timestamp
+    BEFORE UPDATE ON app_data.products
+    FOR EACH ROW
+    EXECUTE FUNCTION app_data.update_timestamp();
+```
+
+## Best practices
+
+### Use appropriate data types
+
+```sql
+-- Good: specific types
+price DECIMAL(10, 2)
+quantity INTEGER
+created_at TIMESTAMPTZ
+
+-- Avoid: generic types for structured data
+price TEXT
+quantity VARCHAR(255)
+```
+
+### Index frequently queried columns
+
+```sql
+-- Index columns used in WHERE, ORDER BY, JOIN
+CREATE INDEX idx_products_category ON app_data.products(category);
+CREATE INDEX idx_products_active ON app_data.products(is_active);
+```
+
+### Start with table-level permissions
+
+Grant table-level permissions first, then add row-level for fine-grained control.
+
+```bash
+# Start with table-level
+curl -X PUT .../permissions -d '{"permissions": ["read(\"any\")", "update(\"team:staff\")"]}'
+
+# Add row-level for specific cases
+curl -X PUT .../rows/42/permissions -d '{"permissions": ["update(\"user:specific-user\")"]}'
+```
+
+<CardGroup cols={2}>
+<Card title="Unmanaged Schema" href="/products/database/unmanaged-schema" icon="terminal">
+Full control without automation
+</Card>
+<Card title="Permissions" href="/products/database/permissions" icon="lock">
+Learn about the permission system
+</Card>
+</CardGroup>

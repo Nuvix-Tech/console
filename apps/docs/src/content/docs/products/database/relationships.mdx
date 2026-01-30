@@ -1,0 +1,224 @@
+---
+title: Relationships
+description: Link documents across collections with one-to-one, one-to-many, and many-to-many relationships.
+---
+
+Relationships connect documents across collections. Instead of embedding data or using IDs manually, you define explicit links that Nuvix manages for you.
+
+## Relationship types
+
+| Type | Description | Example |
+| --- | --- | --- |
+| `oneToOne` | One document links to exactly one other | User to Profile |
+| `oneToMany` | One document links to many others | Author to Posts |
+| `manyToOne` | Many documents link to one | Posts to Author |
+| `manyToMany` | Many documents link to many | Posts to Tags |
+
+## Creating relationships
+
+Use the relationship attribute to define connections between collections.
+
+<Note>
+Creating attributes is an **administrative task**. Use the **Nuvix Console** or **REST API**.
+</Note>
+
+```bash
+# Example: One-to-many (Author has many Posts)
+curl -X POST https://api.nuvix.in/v1/schemas/my_app/collections/posts/attributes/relationship \
+  -H "X-API-Key: <YOUR_API_KEY>" \
+  -d '{
+    "relatedCollectionId": "authors",
+    "type": "manyToOne",
+    "key": "author",
+    "twoWay": true,
+    "twoWayKey": "posts",
+    "onDelete": "setNull"
+  }'
+```
+
+### Parameters
+
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `relatedCollectionId` | string | Yes | The collection to link to |
+| `type` | string | Yes | Relationship type |
+| `key` | string | Yes | Attribute name on this collection |
+| `twoWay` | boolean | No | Create reverse attribute. Default: false |
+| `twoWayKey` | string | No | Attribute name on related collection |
+| `onDelete` | string | Yes | Action when related document is deleted |
+
+### On delete actions
+
+| Action | Description |
+| --- | --- |
+| `cascade` | Delete related documents |
+| `setNull` | Set reference to null |
+| `restrict` | Prevent deletion if references exist |
+
+## Creating Linked Documents
+
+### One-to-one / Many-to-one
+
+Pass the related document's ID string directly.
+
+```javascript
+// Create post linked to an author
+const post = await nx.database
+    .schema('my_app')
+    .collection('posts')
+    .create(ID.unique(), {
+        title: 'First Post',
+        author: 'author-id-123' // Pass ID string
+    });
+```
+
+### Many-to-many
+
+For array relationships, use the `{ set: [...] }` syntax.
+
+```javascript
+// Create post with multiple tags
+const post = await nx.database
+    .schema('my_app')
+    .collection('posts')
+    .create(ID.unique(), {
+        title: 'JavaScript Tutorial',
+        tags: { 
+            set: ['tag-id-1', 'tag-id-2'] 
+        }
+    });
+```
+
+## Querying relationships
+
+### Populating related documents
+
+Use the `.populate()` method to include related document data in your response. This works like an SQL JOIN.
+
+```javascript
+// Get post with author details
+const post = await nx.database
+    .schema('my_app')
+    .collection('posts')
+    .populate('author')
+    .findById('post123');
+
+console.log('Title:', post.title);
+console.log('Author Name:', post.author.name);
+```
+
+### Nested selection
+
+You can also specify which fields to select from the related document using a callback.
+
+```javascript
+const posts = await nx.database
+    .schema('my_app')
+    .collection('posts')
+    .select('title')
+    .populate('author', (author) => author.select('name', 'email'))
+    .find();
+
+posts.documents.forEach(post => {
+    console.log(`${post.title} by ${post.author.name}`);
+});
+```
+
+### Filtering by relationship
+
+Query documents based on related document attributes.
+
+```javascript
+// Get posts by a specific author ID
+const posts = await nx.database
+    .schema('my_app')
+    .collection('posts')
+    .equal('author', 'author123')
+    .find();
+```
+
+## Updating relationships
+
+### Changing references (Single)
+
+For single relationships, update by setting a new ID directly.
+
+```javascript
+// Change post author
+await nx.database
+    .schema('my_app')
+    .collection('posts')
+    .update('post123', {
+        author: 'new-author-id'
+    });
+```
+
+### Removing references (Single)
+
+Set the reference to null.
+
+```javascript
+await nx.database
+    .schema('my_app')
+    .collection('posts')
+    .update('post123', {
+        author: null
+    });
+```
+
+### Many-to-many updates (Array)
+
+For array relationships, use `set`, `connect`, or `disconnect`.
+
+**Replace all tags:**
+```javascript
+await nx.database
+    .schema('my_app')
+    .collection('posts')
+    .update('post123', {
+        tags: { set: ['tag1', 'tag2'] }
+    });
+```
+
+**Add a tag (connect):**
+```javascript
+await nx.database
+    .schema('my_app')
+    .collection('posts')
+    .update('post123', {
+        tags: { connect: ['new-tag-id'] }
+    });
+```
+
+**Remove a tag (disconnect):**
+```javascript
+await nx.database
+    .schema('my_app')
+    .collection('posts')
+    .update('post123', {
+        tags: { disconnect: ['old-tag-id'] }
+    });
+```
+
+## Updating relationship attributes
+
+Modify relationship settings after creation using the REST API.
+
+```bash
+curl -X PATCH https://api.nuvix.in/v1/schemas/my_app/collections/posts/attributes/relationship/author \
+  -H "X-API-Key: <YOUR_API_KEY>" \
+  -d '{
+    "onDelete": "restrict"
+  }'
+```
+
+Only `onDelete` and `newKey` can be changed after creation.
+
+<CardGroup cols={2}>
+<Card title="Attributes" href="/products/database/attributes" icon="list">
+Learn about all attribute types
+</Card>
+<Card title="Queries" href="/products/database/queries" icon="search">
+Query documents with relationships
+</Card>
+</CardGroup>
