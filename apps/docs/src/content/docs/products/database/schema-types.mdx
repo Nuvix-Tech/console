@@ -1,116 +1,134 @@
 ---
-title: 'Schema Types'
-description: 'Learn about Document, Managed, and Unmanaged schema types in Nuvix Database'
+title: Schema Types
+description: Document, Managed, and Unmanaged schemas offer different levels of abstraction and control for your data.
 ---
 
-Nuvix Database provides three schema types, each optimized for different use cases and levels of control. Use this guide to choose the right approach for your application.
+Nuvix Database provides three schema types optimized for different use cases. Use this guide to choose the right approach for your application.
 
 ## Document Schema
 
-A NoSQL-style abstraction over PostgreSQL designed for rapid prototyping and developer-friendly use. Document schemas do not require SQL and expose document-based APIs for simplicity and speed.
+A NoSQL-style abstraction over PostgreSQL designed for rapid development. Document schemas expose JSON document APIs and do not require SQL knowledge.
 
 ### Key features
+
 - **NoSQL interface**: JSON-based document CRUD operations
 - **Collection-based**: Data organized into collections with user-defined attributes
-- **Query operators**: Rich filtering and search capabilities
+- **Chainable Builder**: Fluent API syntax (`.equal('status', 'active').find()`)
 - **ACL permissions**: Custom access control at collection and document levels
 
 ### API structure
-```http
-/v1/schemas/:schema/collections/:collection/documents
-```
 
-### Common use cases
-- Rapid prototyping without SQL knowledge
+- **Endpoint**: `/v1/schemas/:schemaId/collections/:collectionId/documents`
+- **Query Style**: Fluent Chainable Builder
+- **Response**: JSON documents with system fields (`$id`, `$createdAt`)
+
+### When to use
+
+- Rapid prototyping without SQL
 - Dynamic, flexible data models
 - NoSQL-style applications
 - Mobile and web app backends
 
-### Data definition
-- Collections defined via API
-- Attributes declared per collection
-- Indexes for performance optimization
-- No direct SQL table management required
-
 <Note>
-Document schemas offer read-only SQL access. Use the API layer for any data modifications.
+Document schemas provide read-only SQL access. All data modifications must go through the API layer.
 </Note>
 
 ## Managed Schema
 
-A PostgreSQL schema governed by Nuvix automation. Managed schemas generate metadata, permission tables, and RLS policies automatically. This approach balances control and convenience.
+A PostgreSQL schema with Nuvix automation. Managed schemas generate metadata, permission tables, and Row Level Security policies automatically.
 
 ### Key features
+
 - **Full SQL support**: Complete PostgreSQL querying capabilities
-- **Automatic RLS**: Row Level Security policies generated automatically
-- **Permission automation**: Automatic creation of permission tables
-- **Nuvix governance**: Simplified management with built-in best practices
+- **Fluent API**: Type-safe SQL query builder (`nx.db.schema(...).from(...).select()`)
+- **Automatic RLS**: Row Level Security policies generated for every table
+- **Permission automation**: Automatic creation of permission tracking tables
+- **Nuvix governance**: Simplified management with built-in security
 
 ### Built-in automation
-- Automatic `_id` column for each table
-- Automatic `[table]_perms` table for permissions
-- RLS enabled with CRUD policies generated
-- DDL triggers handle policy generation
+
+When you create a table in a Managed schema, Nuvix automatically:
+
+1. Adds an `_id` column (auto-incrementing primary key)
+2. Creates a `{table}_perms` table for permission tracking
+3. Enables Row Level Security with CRUD policies
+4. Sets up DDL triggers for policy generation
 
 ### API structure
-```http
-/v1/schemas/:schema/tables/:table
-```
 
-### Common use cases
+- **Endpoint**: `/v1/schemas/:schemaId/tables/:tableId`
+- **Query Style**: Fluent SQL API or REST parameters
+- **Response**: Flat JSON records (table rows)
+
+### When to use
+
 - Production-grade relational applications
 - Multi-tenant systems
-- Enterprise apps requiring structured data governance
+- Enterprise apps requiring data governance
 - Applications needing both SQL and API access
 
 <Check>
-Managed schemas provide the best of both worlds: Postgres power with Nuvix automation.
+Managed schemas provide PostgreSQL power with Nuvix automation. You get full SQL access with security handled automatically.
 </Check>
-<Note>
-You can also define custom RLS policies and triggers if needed, but the automated system covers most use cases.
-</Note>
 
 ## Unmanaged Schema
 
-A raw Postgres schema exposed through the Nuvix API without automation. You get complete control over schema design, SQL queries, and access policies.
+A raw PostgreSQL schema exposed through the Nuvix API without automation. You have complete control over schema design, SQL queries, and access policies.
 
 ### Key features
-- **Full Postgres control**: Complete schema and permission management
+
+- **Full PostgreSQL control**: Complete schema and permission management
 - **No automation**: No automatic RLS or permission tables
+- **Fluent API**: Same powerful SQL builder as Managed schemas
 - **Manual governance**: User-defined access controls and policies
 - **Maximum flexibility**: Custom constraints, indexes, and relationships
 
 ### API structure
-```http
-/v1/schemas/:schema/tables/:table
-```
 
-### Common use cases
+- **Endpoint**: `/v1/schemas/:schemaId/tables/:tableId`
+- **Query Style**: Fluent SQL API
+- **Response**: Flat JSON records (table rows)
+
+### When to use
+
 - Advanced SQL workloads
 - Legacy database migrations
 - Custom governance systems
 - Complex relational designs
 
 <Warning>
-Unmanaged schemas require manual setup of permissions and RLS policies. Choose this option only if you need complete control.
+Unmanaged schemas require manual setup of permissions and RLS policies. Choose this option only if you need complete control and are comfortable managing PostgreSQL security.
 </Warning>
 
-## Choosing the right schema type
+## Comparison
 
-| Use case | Recommended type | Reason |
-| --- | --- | --- |
-| Quick prototyping | Document | No SQL required, fastest setup |
-| Production app with SQL | Managed | Automated security with full SQL access |
-| Legacy migration | Unmanaged | Complete control over existing schema |
-| Complex relationships | Managed/Unmanaged | Full PostgreSQL feature support |
-| NoSQL-style app | Document | Document-based API simplicity |
+| Feature | Document | Managed | Unmanaged |
+| --- | --- | --- | --- |
+| SQL access | Read-only | Full | Full |
+| API access | Full CRUD | Full CRUD | Full CRUD |
+| Query Style | Chainable Builder | Fluent SQL API | Fluent SQL API |
+| Automatic RLS | N/A | Yes | No |
+| Permission tables | N/A | Auto-generated | Manual |
+| Schema management | API-only | SQL + API | SQL + API |
+| Learning curve | Low | Medium | High |
 
-<CardGroup cols={2}>
-<Card title="API System" icon="code" href="/products/database/api-system">
-  Learn about REST APIs and the NuvQL query language
+## Access Pattern Summary
+
+| Schema Type | SDK Access Pattern |
+| --- | --- |
+| **Document** | `nx.db.schema('my_doc').collection('users').find()` |
+| **Managed** | `nx.db.schema('app_data').from('orders').select()` |
+| **Unmanaged** | `nx.db.schema('legacy').from('logs').select()` |
+| **Public** | `nx.db.from('users').select()` (Shortcut for public schema) |
+
+<CardGroup cols={3}>
+<Card title="Collections" href="/products/database/collections" icon="folder">
+Document Schemas
 </Card>
-
-<Card title="Permissions" icon="shield" href="/products/database/permissions">
-  Understand permission models for each schema type
+<Card title="Managed Schema" href="/products/database/managed-schema" icon="shield">
+Managed SQL
+</Card>
+<Card title="Unmanaged Schema" href="/products/database/unmanaged-schema" icon="database">
+Raw SQL
 </Card>
 </CardGroup>

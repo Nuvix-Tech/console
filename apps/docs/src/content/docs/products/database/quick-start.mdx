@@ -1,0 +1,130 @@
+---
+title: Quick Start
+description: Create your first collection, add attributes, and store documents in minutes.
+---
+
+Get a Document schema up and running with collections and documents. This guide covers the essentials of setting up your database and interacting with it using the Client SDK.
+
+## 1. Create a Schema & Collection
+
+<Note>
+Schema and Collection management are **administrative tasks**. Please perform these steps in the **Nuvix Console**.
+</Note>
+
+1.  Log in to the **Nuvix Console**.
+2.  Navigate to **Database** and click **Create Schema**.
+    *   **Name**: `my_app`
+    *   **Type**: Document
+3.  Click on your new schema and select **Create Collection**.
+    *   **Name**: `Tasks`
+    *   **Collection ID**: `tasks`
+
+## 2. Add Attributes
+
+Define the structure of your documents by adding attributes in the **Attributes** tab of your collection.
+
+1.  **String Attribute**: Key `title`, Size `255`, Required.
+2.  **Boolean Attribute**: Key `completed`, Default `false`.
+3.  **Datetime Attribute**: Key `dueDate`, Optional.
+
+## 3. Initialize the SDK
+
+Install and configure the Nuvix Client SDK in your application.
+
+<CodeGroup>
+```bash npm
+npm install @nuvix/client
+```
+</CodeGroup>
+
+```javascript
+import { Client } from '@nuvix/client';
+
+const nx = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>'); // Your Project ID
+```
+
+## 4. Create Documents
+
+Store data in your collection using the Fluent API.
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+import { ID } from '@nuvix/client';
+
+// Reference the collection
+const tasks = nx.database.schema('my_app').collection('tasks');
+
+// Create a document
+const document = await tasks.create(ID.unique(), {
+    title: 'Write documentation',
+    completed: false,
+    dueDate: '2024-12-31T23:59:59.000Z'
+});
+
+console.log('Document created:', document.$id);
+```
+</CodeGroup>
+
+## 5. Query Documents
+
+Retrieve documents with filters, sorting, and pagination using chainable methods.
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+// List all documents
+const allTasks = await nx.database
+    .schema('my_app')
+    .collection('tasks')
+    .find();
+
+console.log('Total:', allTasks.total);
+
+// Filter incomplete tasks
+const incompleteTasks = await nx.database
+    .schema('my_app')
+    .collection('tasks')
+    .equal('completed', false)
+    .orderDesc('$createdAt')
+    .limit(10)
+    .find();
+```
+</CodeGroup>
+
+## 6. Update and Delete
+
+Modify or remove documents by their ID.
+
+<CodeGroup>
+```javascript JavaScript/TypeScript
+const tasks = nx.database.schema('my_app').collection('tasks');
+
+// Update a document
+await tasks.update('<DOCUMENT_ID>', {
+    completed: true
+});
+
+// Delete a document
+await tasks.delete('<DOCUMENT_ID>');
+```
+</CodeGroup>
+
+<Check>
+You now have a working database with collections and documents. Check out the guides below to learn more.
+</Check>
+
+<CardGroup cols={2}>
+<Card title="Attributes" href="/products/database/attributes" icon="list">
+Learn about all attribute types and validation options
+</Card>
+<Card title="Queries" href="/products/database/queries" icon="search">
+Master filtering, sorting, and pagination
+</Card>
+<Card title="Permissions" href="/products/database/permissions" icon="lock">
+Control who can access your data
+</Card>
+<Card title="Indexes" href="/products/database/indexes" icon="zap">
+Optimize query performance
+</Card>
+</CardGroup>

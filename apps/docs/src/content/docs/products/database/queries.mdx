@@ -1,0 +1,195 @@
+---
+title: Document Queries
+description: Filter, sort, and paginate data in Document schemas using the chainable Query builder.
+---
+
+For Document schemas, Nuvix uses a fluent, chainable API. You start by selecting a collection and then chain methods to filter, sort, and paginate before calling `.find()`.
+
+<Note>
+This page covers queries for **Document Schemas**. For Managed and Unmanaged schemas, see [SQL Queries](/products/database/sql-queries).
+</Note>
+
+## Query Basics
+
+Queries are constructed by chaining methods on a collection reference. All filter methods are combined with AND logic.
+
+```javascript
+const documents = await nx.database
+    .schema('my_app')
+    .collection('articles')
+    .equal('status', 'published')
+    .greaterThan('views', 100)
+    .orderDesc('$createdAt')
+    .limit(10)
+    .find();
+```
+
+## Filter Methods
+
+### Equality
+
+```javascript
+// Exact match
+.equal('status', 'active')
+
+// IN clause behavior (match any in array)
+.equal('category', ['tech', 'science'])
+
+// Not equal
+.notEqual('status', 'deleted')
+```
+
+### Comparison
+
+```javascript
+// Greater than
+.greaterThan('price', 100)
+.greaterThanEqual('price', 100)
+
+// Less than
+.lessThan('quantity', 10)
+.lessThanEqual('quantity', 10)
+
+// Between (inclusive)
+// Not directly supported as a method, use gte + lte
+.greaterThanEqual('price', 10)
+.lessThanEqual('price', 100)
+```
+
+### String Matching
+
+```javascript
+// Starts with
+.startsWith('name', 'John')
+
+// Ends with
+.endsWith('email', '@example.com')
+
+// Contains substring (or array element)
+.contains('tags', ['javascript'])
+```
+
+## Sorting
+
+Order results by one or more attributes.
+
+```javascript
+// Ascending order
+.orderAsc('name')
+
+// Descending order
+.orderDesc('$createdAt')
+
+// Multiple sort fields (applied in order)
+.orderAsc('category')
+.orderDesc('$createdAt')
+```
+
+## Pagination
+
+Control the number and position of results.
+
+```javascript
+// Limit results
+.limit(25)
+
+// Skip results (offset)
+.offset(50)
+```
+
+## Field Selection
+
+Retrieve only specific fields to reduce payload size.
+
+```javascript
+// Select specific fields
+.select('title', 'status', '$createdAt')
+```
+
+## Population (Relationships)
+
+Include data from related documents using `.populate()`.
+
+```javascript
+// Populate 'author' relationship
+.populate('author')
+
+// Populate with nested selection
+.populate('author', (builder) => builder.select('name', 'email'))
+```
+
+## Advanced Querying
+
+### Mini Builder for Nested Populates
+
+When populating, you can pass a callback that receives a "Mini Builder" to apply filters or selections to the related document.
+
+```javascript
+const posts = await nx.database
+    .schema('my_app')
+    .collection('posts')
+    .populate('comments', (comment) => comment
+        .equal('status', 'approved') // Only load approved comments
+        .orderDesc('created_at')     // Sort comments
+        .limit(5)                    // Limit per post
+    )
+    .find();
+```
+
+## Examples
+
+### Published Articles (Recent)
+
+```javascript
+const recent = await nx.database
+    .schema('my_app')
+    .collection('articles')
+    .equal('published', true)
+    .orderDesc('$createdAt')
+    .limit(20)
+    .find();
+```
+
+### Search by Tag
+
+```javascript
+const tagged = await nx.database
+    .schema('my_app')
+    .collection('articles')
+    .contains('tags', 'javascript')
+    .find();
+```
+
+### Pagination Loop
+
+```javascript
+const pageSize = 50;
+let offset = 0;
+let keepFetching = true;
+
+while (keepFetching) {
+    const page = await nx.database
+        .schema('my_app')
+        .collection('logs')
+        .limit(pageSize)
+        .offset(offset)
+        .find();
+
+    console.log(`Fetched ${page.documents.length} logs`);
+    
+    if (page.documents.length < pageSize) {
+        keepFetching = false;
+    } else {
+        offset += pageSize;
+    }
+}
+```
+
+<CardGroup cols={2}>
+<Card title="SQL Queries" href="/products/database/sql-queries" icon="database">
+Query Managed and Unmanaged schemas
+</Card>
+<Card title="Relationships" href="/products/database/relationships" icon="diagram-project">
+Learn about linking documents
+</Card>
+</CardGroup>

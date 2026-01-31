@@ -1,0 +1,155 @@
+---
+title: Attributes
+description: Define the structure of your documents with typed attributes.
+---
+
+Attributes define the structure of documents in a collection. They enforce data types, required fields, and validation rules.
+
+<Note>
+Attribute management is an **administrative task**. Use the **Nuvix Console** or **REST API** with an API Key.
+</Note>
+
+## Attribute types
+
+| Type | Description |
+| --- | --- |
+| `string` | Text values (max size configurable) |
+| `integer` | Whole numbers |
+| `float` | Decimal numbers |
+| `boolean` | True / False |
+| `email` | Valid email addresses |
+| `url` | Valid URLs |
+| `ip` | Valid IP addresses (v4 or v6) |
+| `enum` | Predefined list of strings |
+| `datetime` | ISO 8601 dates |
+| `relationship` | Link to other documents |
+
+## Creating attributes
+
+### String Attribute
+
+```bash
+curl -X POST https://api.nuvix.in/v1/schemas/my_app/collections/articles/attributes/string \
+  -H "X-Project-ID: <PROJECT_ID>" \
+  -H "X-API-Key: <YOUR_API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "key": "title",
+    "size": 255,
+    "required": true,
+    "default": "Untitled"
+  }'
+```
+
+### Integer Attribute
+
+```bash
+curl -X POST https://api.nuvix.in/v1/schemas/my_app/collections/articles/attributes/integer \
+  -H "X-Project-ID: <PROJECT_ID>" \
+  -H "X-API-Key: <YOUR_API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "key": "views",
+    "required": false,
+    "min": 0,
+    "max": 1000000,
+    "default": 0
+  }'
+```
+
+### Boolean Attribute
+
+```bash
+curl -X POST https://api.nuvix.in/v1/schemas/my_app/collections/articles/attributes/boolean \
+  -H "X-Project-ID: <PROJECT_ID>" \
+  -H "X-API-Key: <YOUR_API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "key": "published",
+    "required": true,
+    "default": false
+  }'
+```
+
+### Enum Attribute
+
+```bash
+curl -X POST https://api.nuvix.in/v1/schemas/my_app/collections/articles/attributes/enum \
+  -H "X-Project-ID: <PROJECT_ID>" \
+  -H "X-API-Key: <YOUR_API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "key": "status",
+    "elements": ["draft", "review", "published"],
+    "required": true,
+    "default": "draft"
+  }'
+```
+
+## Array attributes
+
+Any attribute can be an array. Set `array: true` in the request body.
+
+```bash
+# Create an array of strings (tags)
+curl -X POST https://api.nuvix.in/v1/schemas/my_app/collections/articles/attributes/string \
+  -H "X-Project-ID: <PROJECT_ID>" \
+  -H "X-API-Key: <YOUR_API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "key": "tags",
+    "size": 50,
+    "required": false,
+    "array": true
+  }'
+```
+
+## Updating attributes
+
+You can update properties like `required`, `default`, and validation limits (`min`, `max`). The `key` and `type` cannot be changed (except renaming via `newKey` if supported).
+
+```bash
+curl -X PATCH https://api.nuvix.in/v1/schemas/my_app/collections/articles/attributes/string/title \
+  -H "X-Project-ID: <PROJECT_ID>" \
+  -H "X-API-Key: <YOUR_API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "required": false,
+    "default": "New Default"
+  }'
+```
+
+## Deleting attributes
+
+Remove an attribute and all its data from documents.
+
+```bash
+curl -X DELETE https://api.nuvix.in/v1/schemas/my_app/collections/articles/attributes/title \
+  -H "X-Project-ID: <PROJECT_ID>" \
+  -H "X-API-Key: <YOUR_API_KEY>"
+```
+
+<Warning>
+Deleting an attribute permanently removes that data from all documents in the collection.
+</Warning>
+
+## Status and availability
+
+When you create or delete an attribute, it may take a few moments to process on large collections. The attribute status will be `processing` until it is `available`.
+
+You can check the status by retrieving the attribute:
+
+```bash
+curl -X GET https://api.nuvix.in/v1/schemas/my_app/collections/articles/attributes/title \
+  -H "X-Project-ID: <PROJECT_ID>" \
+  -H "X-API-Key: <YOUR_API_KEY>"
+```
+
+<CardGroup cols={2}>
+<Card title="Relationships" href="/products/database/relationships" icon="diagram-project">
+Link collections together
+</Card>
+<Card title="Indexes" href="/products/database/indexes" icon="zap">
+Create indexes for performance
+</Card>
+</CardGroup>

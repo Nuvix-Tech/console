@@ -1,0 +1,293 @@
+---
+title: Permissions
+description: Control access to schemas, collections, tables, documents, and rows with Nuvix permissions.
+---
+
+Nuvix provides a unified permission system that works across all schema types. Permissions define who can perform operations on your data.
+
+## How permissions work
+
+Permissions are **granted**, not denied. By default, no one has access to anything. You explicitly grant permissions to users, teams, or roles.
+
+### Permission types
+
+| Permission | Description |
+| --- | --- |
+| `create` | Add new records |
+| `read` | View records |
+| `update` | Modify existing records |
+| `delete` | Remove records |
+
+### Permission format
+
+Permissions use a string format: `type("role")`
+
+```javascript
+'read("any")'              // Anyone can read
+'create("users")'          // Authenticated users can create
+'update("user:abc123")'    // Specific user can update
+'delete("team:dev/admin")' // Team admins can delete
+```
+
+## Roles
+
+Roles define who receives a permission.
+
+| Role | Syntax | Description |
+| --- | --- | --- |
+| Any | `Role.any()` | Anyone, including guests |
+| Users | `Role.users()` | Any authenticated user |
+| Guests | `Role.guests()` | Only unauthenticated users |
+| User | `Role.user('id')` | Specific user by ID |
+| Team | `Role.team('id')` | All members of a team |
+| Team Role | `Role.team('id', ['role'])` | Team members with specific roles |
+| Label | `Role.label('name')` | Users with a specific label |
+
+### Using roles in code
+
+```javascript
+import { Permission, Role } from '@nuvix/client';
+
+// Common patterns
+Permission.read(Role.any())           // Public read
+Permission.create(Role.users())        // Authenticated create
+Permission.update(Role.user('abc'))    // Owner update
+Permission.delete(Role.team('dev'))    // Team delete
+
+// Team with roles
+Permission.update(Role.team('project', ['editor', 'admin']))
+
+// Labeled users
+Permission.read(Role.label('premium'))
+```
+
+## Document schema permissions
+
+Document schemas have two permission levels: collection and document.
+
+### Collection permissions
+
+Apply to all documents in the collection.
+
+<Note>
+Setting collection permissions is an administrative task requiring the Nuvix Console or REST API.
+</Note>
+
+```bash
+# REST API Example: Create collection with permissions
+curl -X POST https://api.nuvix.in/v1/schemas/my_app/collections \
+  -H "X-API-Key: <YOUR_API_KEY>" \
+  -d '{
+    "collectionId": "articles",
+    "name": "Articles",
+    "permissions": [
+      "read(\"any\")",
+      "create(\"users\")",
+      "update(\"users\")",
+      "delete(\"team:admins\")"
+    ]
+  }'
+```
+
+### Document permissions
+
+Apply to individual documents. Requires `documentSecurity: true` on the collection.
+
+```javascript
+// Client SDK: Create document with specific permissions
+await nx.database
+    .schema('my_app')
+    .collection('articles')
+    .create(ID.unique(), { 
+        title: 'My Private Note' 
+    }, [
+        Permission.read(Role.user('owner123')),
+        Permission.update(Role.user('owner123')),
+        Permission.delete(Role.user('owner123'))
+    ]);
+```
+
+### Permission inheritance
+
+When `documentSecurity` is enabled, users need permission at **either** level:
+
+- Collection permission grants access to **all** documents
+- Document permission grants access to **that** document
+
+```javascript
+// Collection allows team read
+// Document allows specific user read
+// Result: team members AND the specific user can read
+```
+
+When `documentSecurity` is disabled, only collection permissions apply.
+
+## Managed schema permissions
+
+Managed schemas use automatic Row Level Security (RLS) with permission tables.
+
+### Table permissions
+
+Control who can access all rows in a table.
+
+```bash
+# REST API: Update table permissions
+curl -X PUT https://api.nuvix.in/v1/schemas/app_data/tables/products/permissions \
+  -H "X-API-Key: <YOUR_API_KEY>" \
+  -d '{
+    "permissions": [
+      "read(\"any\")",
+      "create(\"users\")",
+      "update(\"team:staff\")",
+      "delete(\"team:admin\")"
+    ]
+  }'
+```
+
+### Row permissions
+
+Control access to individual rows.
+
+```bash
+# REST API: Update row permissions
+curl -X PUT https://api.nuvix.in/v1/schemas/app_data/tables/products/rows/42/permissions \
+  -H "X-API-Key: <YOUR_API_KEY>" \
+  -d '{
+    "permissions": [
+      "read(\"any\")",
+      "update(\"user:owner123\")"
+    ]
+  }'
+```
+
+### How RLS works
+
+When you create a table in a Managed schema, Nuvix automatically:
+
+1. Creates a `{table}_perms` table to store permissions
+2. Enables Row Level Security on the table
+3. Creates policies for read, create, update, and delete operations
+
+The policies check both table-level and row-level permissions.
+
+## Unmanaged schema permissions
+
+Unmanaged schemas have no automatic permission system. You must:
+
+1. Define your own RLS policies
+2. Create permission tracking tables if needed
+3. Manage access through custom SQL
+
+This provides maximum flexibility but requires PostgreSQL knowledge.
+
+## Common patterns
+
+### Public read, authenticated write
+
+```javascript
+permissions: [
+    Permission.read(Role.any()),
+    Permission.create(Role.users()),
+    Permission.update(Role.users()),
+    Permission.delete(Role.users())
+]
+```
+
+### Owner-only access
+
+```javascript
+// On document creation
+await nx.database
+    .schema('my_app')
+    .collection('notes')
+    .create(ID.unique(), { content: '...' }, [
+        Permission.read(Role.user(userId)),
+        Permission.update(Role.user(userId)),
+        Permission.delete(Role.user(userId))
+    ]);
+```
+
+### Team-based access
+
+```javascript
+permissions: [
+    Permission.read(Role.team('project-x')),
+    Permission.create(Role.team('project-x', ['member', 'admin'])),
+    Permission.update(Role.team('project-x', ['admin'])),
+    Permission.delete(Role.team('project-x', ['admin']))
+]
+```
+
+### Multi-tenant isolation
+
+```javascript
+// Each tenant is a team
+const tenantId = 'tenant-acme';
+
+await nx.database
+    .schema('my_app')
+    .collection('data')
+    .create(ID.unique(), { ... }, [
+        Permission.read(Role.team(tenantId)),
+        Permission.update(Role.team(tenantId)),
+        Permission.delete(Role.team(tenantId, ['owner']))
+    ]);
+```
+
+## API authentication
+
+Permissions are evaluated based on the authentication context:
+
+| Authentication | Roles granted |
+| --- | --- |
+| None | `guests` |
+| User session | `users`, `user:{id}`, `team:{id}` for each team, `label:{name}` for each label |
+| API key | Depends on key scopes (can act as admin) |
+| JWT | Custom claims determine roles |
+
+### Admin access
+
+API keys with admin scope bypass permission checks. Use them for server-side operations and background jobs.
+
+```bash
+curl -H "X-API-Key: <ADMIN_KEY>" ...
+```
+
+## Best practices
+
+### Start restrictive
+
+Grant minimal permissions and expand as needed.
+
+```javascript
+// Bad: too permissive
+permissions: [Permission.create(Role.any())]
+
+// Good: require authentication
+permissions: [Permission.create(Role.users())]
+```
+
+### Use teams for groups
+
+Instead of managing individual user permissions, use teams.
+
+```javascript
+// Instead of
+permissions: [
+    Permission.read(Role.user('user1')),
+    Permission.read(Role.user('user2')),
+    Permission.read(Role.user('user3'))
+]
+
+// Use
+permissions: [Permission.read(Role.team('project-team'))]
+```
+
+<CardGroup cols={2}>
+<Card title="Teams" href="/products/auth/teams" icon="users">
+Learn about team-based access control
+</Card>
+<Card title="Labels" href="/products/auth/labels" icon="tag">
+Understand user labels for permissions
+</Card>
+</CardGroup>

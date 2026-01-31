@@ -1,77 +1,98 @@
 ---
-title: Getting Started
-description: Nuvix — high-performance BaaS for fast, scalable, and developer-first backend APIs.
+title: Get Started
+description: Set up your first Nuvix project and make your first API call.
 ---
 
-Nuvix delivers a production-ready backend so you can focus on building your application, not infrastructure. It provides authentication, managed databases with real-time capabilities, file storage, and serverless functions — all accessible via consistent, type-safe SDKs and extensible APIs.
+Nuvix provides a complete backend-as-a-service. This guide will get you from zero to a running application in minutes.
 
-## Quick Start
+## 1. Create a Project
 
-Spin up a project in minutes with the steps below.
+Everything in Nuvix starts with a **Project**.
 
-<CardGroup cols={2}>
-<Card title="Authentication" href="/products/auth" icon="shield">
-    Secure, extensible user authentication with email/password, OAuth, and passwordless flows — fully integrated with role-based access control.
-</Card>
-<Card title="Database" href="/products/database" icon="database">
-    Scalable, real-time database with fine-grained permissions, computed fields, and flexible query APIs for complex workflows.
-</Card>
-<Card title="Storage" href="/products/storage" icon="folder">
-    Reliable file storage with direct and chunked uploads, resumable transfers, and optional processing pipelines.
-</Card>
-<Card title="Messaging" href="/products/messaging" icon="messaging">
-    Flexible messaging solutions for SMS, email, and push notifications — all with built-in templates and scheduling.
-</Card>
-</CardGroup>
+1.  Log in to the [Nuvix Console](https://console.nuvix.in).
+2.  Click **Create Project**.
+3.  Give it a name (e.g., "My Awesome App") and a unique ID.
 
-## Why Nuvix?
+<Note>
+Save your **Project ID**. You'll need it to initialize the SDK.
+</Note>
 
-### Developer-first
+## 2. Install the SDK
 
-Type-safe, modular SDKs and consistent APIs make building and extending your application effortless. Hooks and event-driven architecture allow customization without touching core logic.
-
-### Secure by Design
-
-Industry-standard practices including Argon2 password hashing, JWT authentication, role-based access control, and row/column-level security.
-
-### Multi-platform
-
-Support for web, mobile, and server environments with native SDKs and portable APIs that scale across platforms.
-
-### Performance & Scalability
-
-Optimized for low-latency and high throughput with connection pooling, edge-friendly routing, caching layers, and efficient query execution.
-
-## Get Started
-
-
-## 1. Create Project
-
-Sign up at [nuvix.in](https://www.nuvix.in) and create a new project to obtain your project ID and API endpoint.
-
-## 2. Install SDK
+Nuvix provides type-safe SDKs for your client applications.
 
 <CodeGroup>
-```shell npm
+```bash npm
 npm install @nuvix/client
 ```
-```shell bun
-bun install @nuvix/client
+```bash yarn
+yarn add @nuvix/client
 ```
-```shell pnpm
-pnpm install @nuvix/client
+```bash pnpm
+pnpm add @nuvix/client
 ```
 </CodeGroup>
 
-## 3. Initialize Client
+## 3. Initialize the Client
 
-```ts
+Initialize the SDK in your application's entry point (e.g., `App.js`, `main.ts`).
+
+```typescript
 import { Client } from '@nuvix/client';
 
-const nx = new Client({
-  projectId: 'YOUR_PROJECT_ID', // Your project ID
-  endpoint: 'https://api.nuvix.in/v1' // Your API endpoint
-});
+const nx = new Client()
+    .setEndpoint('https://api.nuvix.in/v1') // Your API Endpoint
+    .setProject('<PROJECT_ID>'); // Your Project ID
 ```
 
-Now you’re ready to start building with Nuvix!
+## 4. Make Your First Request
+
+Let's test the connection by creating an anonymous session. This verifies that your app can talk to Nuvix.
+
+```typescript
+import { Client, Account } from '@nuvix/client';
+
+const nx = new Client()
+    .setEndpoint('https://api.nuvix.in/v1')
+    .setProject('<PROJECT_ID>');
+
+const account = new Account(nx);
+
+// Create an anonymous session
+const session = await account.createAnonymousSession();
+
+console.log('Logged in as guest:', session.$id);
+```
+
+## Next Steps
+
+Now that you're connected, explore the core modules:
+
+<CardGroup cols={2}>
+<Card title="Authentication" href="/products/auth" icon="shield">
+  Add user login, registration, and password recovery.
+</Card>
+<Card title="Database" href="/products/database" icon="database">
+  Store and query your application data.
+</Card>
+<Card title="Storage" href="/products/storage" icon="folder">
+  Upload and manage files.
+</Card>
+<Card title="Messaging" href="/products/messaging" icon="envelope">
+  Send emails, SMS, and push notifications.
+</Card>
+</CardGroup>
+
+## Server-Side Access
+
+For backend scripts or administrative tasks, use the REST API with an **API Key**.
+
+1.  In the Console, go to **Settings** > **API Keys**.
+2.  Create a key with the scopes you need (e.g., `documents.read`, `users.write`).
+3.  Pass the key in the `X-API-Key` header.
+
+```bash
+curl -H "X-Project-ID: <PROJECT_ID>" \
+     -H "X-API-Key: <YOUR_API_KEY>" \
+     https://api.nuvix.in/v1/users
+```

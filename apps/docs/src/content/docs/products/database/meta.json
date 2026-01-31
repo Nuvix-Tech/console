@@ -1,6 +1,23 @@
 {
   "title": "Database",
   "icon": "database",
-  "pages": ["schema-types"],
+  "pages": [
+    "index",
+    "---Concepts---",
+    "schema-types",
+    "collections",
+    "attributes",
+    "documents",
+    "indexes",
+    "queries",
+    "relationships",
+    "---SQL Schemas---",
+    "managed-schema",
+    "unmanaged-schema",
+    "sql-queries",
+    "---Guides---",
+    "quick-start",
+    "permissions"
+  ],
   "defaultOpen": false
 }
