@@ -1,8 +1,8 @@
-import React, { ElementType, ComponentPropsWithoutRef } from "react";
+import React, { type ElementType, type ComponentPropsWithoutRef } from "react";
 import classNames from "classnames";
 
-import { TextProps, CommonProps, SpacingProps } from "../interfaces";
-import { ColorScheme, ColorWeight, TextVariant, SpacingToken } from "../types";
+import type { TextProps, CommonProps, SpacingProps } from "../interfaces";
+import type { ColorScheme, ColorWeight, TextVariant, SpacingToken } from "../types";
 
 type TypeProps<T extends ElementType> = TextProps<T> &
   CommonProps &

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect, forwardRef, ReactNode, useId } from "react";
+import React, { useState, useRef, useEffect, forwardRef, type ReactNode, useId } from "react";
 import classNames from "classnames";
 import {
   DropdownWrapper,
@@ -8,10 +8,10 @@ import {
   Icon,
   IconButton,
   Input,
-  InputProps,
+  type InputProps,
   Option,
-  OptionProps,
-  DropdownWrapperProps,
+  type OptionProps,
+  type DropdownWrapperProps,
   Column,
   ArrowNavigation,
 } from ".";

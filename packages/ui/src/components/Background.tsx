@@ -4,8 +4,8 @@ import React, { forwardRef, useEffect, useRef } from "react";
 import { Flex, Mask } from ".";
 import styles from "./Background.module.scss";
 import classNames from "classnames";
-import { DisplayProps } from "../interfaces";
-import { SpacingToken } from "../types";
+import type { DisplayProps } from "../interfaces";
+import type { SpacingToken } from "../types";
 
 function setRef<T>(ref: React.Ref<T> | undefined, value: T | null) {
   if (typeof ref === "function") {

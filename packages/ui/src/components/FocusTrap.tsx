@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useRef, useEffect, ReactNode, KeyboardEvent, RefObject } from "react";
+import React, {
+  useRef,
+  useEffect,
+  type ReactNode,
+  type KeyboardEvent,
+  type RefObject,
+} from "react";
 
 interface FocusTrapProps {
   children: ReactNode;

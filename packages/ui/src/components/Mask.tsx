@@ -1,6 +1,6 @@
 "use client";
 
-import React, { CSSProperties, forwardRef, useEffect, useRef, useState } from "react";
+import React, { type CSSProperties, forwardRef, useEffect, useRef, useState } from "react";
 import { Flex } from ".";
 import styles from "./Mask.module.scss";
 import classNames from "classnames";

@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import { SpacingToken } from "../types";
-import { DisplayProps } from "../interfaces";
+import type { SpacingToken } from "../types";
+import type { DisplayProps } from "../interfaces";
 import { Flex } from ".";
 
 interface ParticleProps extends React.ComponentProps<typeof Flex> {

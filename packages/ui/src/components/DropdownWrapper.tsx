@@ -4,12 +4,12 @@ import React, {
   useState,
   useRef,
   useEffect,
-  ReactNode,
+  type ReactNode,
   forwardRef,
   useImperativeHandle,
   useCallback,
-  KeyboardEvent,
-  FocusEvent,
+  type KeyboardEvent,
+  type FocusEvent,
 } from "react";
 import { createPortal } from "react-dom";
 import {
@@ -19,11 +19,11 @@ import {
   flip,
   size,
   autoUpdate,
-  Placement,
+  type Placement,
 } from "@floating-ui/react-dom";
 import { Flex, Dropdown, Column, Row, FocusTrap, ArrowNavigation } from ".";
 import styles from "./DropdownWrapper.module.scss";
-import { NavigationLayout } from "../hooks/useArrowNavigation";
+import type { NavigationLayout } from "../hooks/useArrowNavigation";
 
 export interface DropdownWrapperProps {
   fillWidth?: boolean;

@@ -1,7 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useRef, ReactNode, useEffect } from "react";
-import { useArrowNavigation, ArrowNavigationOptions } from "../hooks/useArrowNavigation";
+import React, { createContext, useContext, useRef, type ReactNode, useEffect } from "react";
+import { useArrowNavigation, type ArrowNavigationOptions } from "../hooks/useArrowNavigation";
 import { FocusTrap } from "./FocusTrap";
 
 interface ArrowNavigationContextType {

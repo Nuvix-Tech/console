@@ -5,7 +5,7 @@ import type React from "react";
 import { type ReactNode, forwardRef } from "react";
 import { ElementType } from "./ElementType";
 
-import { Arrow, Flex, Icon, IconButtonProps, Spinner, IconProps } from ".";
+import { Arrow, Flex, Icon, Spinner, type IconButtonProps, type IconProps } from ".";
 import styles from "./Button.module.scss";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@nuvix/sui/components/tooltip";
 

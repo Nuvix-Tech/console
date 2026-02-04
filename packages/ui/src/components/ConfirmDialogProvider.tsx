@@ -1,6 +1,6 @@
 "use client";
-import React, { createContext, useContext, useState, ReactNode } from "react";
-import { ConfirmDialog, ConfirmDialogProps } from "./ConfirmDialog";
+import React, { createContext, useContext, useState, type ReactNode } from "react";
+import { ConfirmDialog, type ConfirmDialogProps } from "./ConfirmDialog";
 
 interface ConfirmContextType {
   confirm: (
