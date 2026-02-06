@@ -1,6 +1,8 @@
 import { Column, Row, Text, Button, Accordion, Background } from "@nuvix/ui/components";
 import { useState } from "react";
 import { O1, O2, O3 } from "./hero_v2";
+import { motion } from "motion/react";
+import { HeroThreeScene } from "./hero-3d";
 
 export const HeroV2 = () => {
   const [openTab, setOpenTab] = useState("01");
@@ -28,65 +30,129 @@ export const HeroV2 = () => {
       data-theme="dark"
       data-header-bg="static-transparent"
       data-header-theme="dark"
-      className="w-full cont my-2 px-2.5 -mt-16"
+      className="relative w-full overflow-hidden"
     >
+      <Background
+        fill
+        className="-z-10"
+        gradient={{
+          display: true,
+          opacity: 100,
+          x: -30,
+          y: 20,
+          tilt: 6,
+          colorEnd: "neutral-background-medium",
+          colorStart: "neutral-background-weak",
+        }}
+        lines={{
+          display: false,
+          opacity: 100,
+          size: "16",
+          thickness: 1,
+          angle: 90,
+          color: "brand-background-strong",
+        }}
+        dots={{
+          display: false,
+          opacity: 10,
+          size: "4",
+          color: "brand-background-strong",
+        }}
+      />
+      <div className="pointer-events-none absolute inset-0">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 0.8, scale: 1 }}
+          transition={{ duration: 1.8, ease: "easeOut" }}
+          className="absolute -top-24 left-1/3 h-80 w-80 rounded-full bg-[radial-gradient(circle_at_center,rgba(124,109,255,0.8),rgba(124,109,255,0))] blur-3xl"
+        />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 0.75, scale: 1 }}
+          transition={{ duration: 2.2, ease: "easeOut", delay: 0.2 }}
+          className="absolute bottom-0 right-10 h-96 w-96 rounded-full bg-[radial-gradient(circle_at_center,rgba(79,226,255,0.7),rgba(79,226,255,0))] blur-3xl"
+        />
+      </div>
       <Column
-        // background="danger-weak"
         radius="xs"
         padding="12"
         onBackground="neutral-medium"
         vertical="stretch"
-        className="overflow-hidden z-5"
+        className="cont relative z-10 my-2 overflow-hidden px-2.5 -mt-16"
         position="relative"
       >
-        <Background
-          fill
-          className="-z-5"
-          gradient={{
-            display: true,
-            opacity: 100,
-            x: 10,
-            y: 5,
-            tilt: -1,
-            colorEnd: "neutral-background-medium",
-            colorStart: "neutral-background-weak",
-          }}
-          lines={{
-            display: false,
-            opacity: 100,
-            size: "16",
-            thickness: 1,
-            angle: 90,
-            color: "brand-background-strong",
-          }}
-          dots={{
-            display: false,
-            opacity: 10,
-            size: "4",
-            color: "brand-background-strong",
-          }}
-        />
         <Row
           gap="12"
           marginTop="48"
-          paddingTop="24"
+          paddingTop="32"
           paddingX="12"
           fill
           data-header-bg="neutral-background-medium"
           data-header-theme="light"
+          className="flex flex-col lg:flex-row"
         >
-          <Column className="md:max-w-xs" fillHeight vertical="space-between" gap="24">
+          <Column className="flex-1" fillHeight vertical="space-between" gap="24">
             <div className="flex-grow">
-              <Text variant="display-strong-s" onSolid="neutral-strong" className="">
-                Start simple.
-                <br />
-                Scale your way.
-              </Text>
-              <Button variant="primary" size="s" className="mt-8 ">
-                Start building
-              </Button>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+              >
+                <Text variant="heading-strong-xs" onSolid="accent-weak" className="uppercase">
+                  Nuvix Cloud Studio
+                </Text>
+                <Text variant="display-strong-l" onSolid="neutral-strong" className="mt-4">
+                  Build billion-dollar apps on a single, luminous backend platform.
+                </Text>
+                <Text variant="body-default-m" onBackground="neutral-weak" className="mt-6 max-w-xl">
+                  Orchestrate auth, data, messaging, and storage with a unified API, cinematic
+                  dashboards, and performance that scales from MVP to global enterprise.
+                </Text>
+                <Row gap="12" className="mt-8 flex-wrap">
+                  <Button variant="primary" size="m">
+                    Launch your stack
+                  </Button>
+                  <Button variant="secondary" size="m">
+                    Watch the platform demo
+                  </Button>
+                </Row>
+              </motion.div>
             </div>
-            <div className="mt-auto flex-shrink flex flex-col divide-y divide-(--brand-alpha-weak)">
+            <div className="mt-6 grid gap-4 md:grid-cols-3">
+              {[
+                {
+                  title: "99.99% uptime",
+                  desc: "Redundant control plane across regions.",
+                },
+                {
+                  title: "120ms APIs",
+                  desc: "Edge-cached responses everywhere.",
+                },
+                {
+                  title: "Built-in compliance",
+                  desc: "SOC2-ready workflows and audit trails.",
+                },
+              ].map((item) => (
+                <div
+                  key={item.title}
+                  className="rounded-2xl border border-(--surface-border) bg-(--surface-background) p-4"
+                >
+                  <Text variant="heading-strong-s" onSolid="neutral-strong">
+                    {item.title}
+                  </Text>
+                  <Text variant="body-default-s" onBackground="neutral-weak" className="mt-2">
+                    {item.desc}
+                  </Text>
+                </div>
+              ))}
+            </div>
+          </Column>
+          <Column className="relative mt-10 flex-1 lg:mt-0" fill fillHeight>
+            <div className="relative h-[420px] w-full overflow-hidden rounded-3xl border border-(--surface-border) bg-(--surface-background)">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.12),transparent_55%)]" />
+              <HeroThreeScene />
+            </div>
+            <div className="mt-6 grid gap-4">
               {tabs.map((tab) => (
                 <Accordion
                   key={tab.value}
@@ -112,11 +178,6 @@ export const HeroV2 = () => {
                 </Accordion>
               ))}
             </div>
-          </Column>
-          <Column className="flex-grow !hidden md:!flex" fill fillHeight>
-            {openTab === "01" && <O1 />}
-            {openTab === "02" && <O2 />}
-            {openTab === "03" && <O3 />}
           </Column>
         </Row>
       </Column>

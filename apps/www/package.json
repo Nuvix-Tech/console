@@ -15,6 +15,7 @@
     "isbot": "^5.1.27",
     "lucide-react": "^0.525.0",
     "motion": "^12.9.2",
+    "three": "^0.179.1",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-router": "^7.7.0"
