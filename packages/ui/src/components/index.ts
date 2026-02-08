@@ -100,3 +100,4 @@ export * from "./UserMenu";
 export * from "./CloseButton";
 export * from "./ConfirmDialog";
 export * from "./ConfirmDialogProvider";
+export * from "./ScrollLock";

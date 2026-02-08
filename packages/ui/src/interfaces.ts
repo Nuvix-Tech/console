@@ -11,16 +11,16 @@ import type {
   TextVariant,
   TextWeight,
   flex,
-  gridColumns,
+  gridSize,
 } from "./types";
 
 export interface GridProps extends HTMLAttributes<HTMLDivElement> {
-  columns?: gridColumns;
-  rows?: gridColumns;
-  tabletColumns?: gridColumns;
-  mobileColumns?: gridColumns;
-  tabletRows?: gridColumns;
-  mobileRows?: gridColumns;
+  columns?: gridSize;
+  rows?: gridSize;
+  tabletColumns?: gridSize;
+  mobileColumns?: gridSize;
+  tabletRows?: gridSize;
+  mobileRows?: gridSize;
 }
 
 export interface FlexProps extends HTMLAttributes<HTMLDivElement> {

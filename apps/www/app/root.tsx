@@ -12,7 +12,7 @@ import "./app.css";
 import "@nuvix/ui/styles/index.scss";
 import "@nuvix/ui/tokens/index.scss";
 import "@nuvix/sui/globals.css";
-import { MetaProvider } from "@nuvix/ui/contexts";
+import { LayoutProvider, MetaProvider, ThemeProvider } from "@nuvix/ui/contexts";
 import { Link } from "react-router";
 import { Provider } from "@nuvix/cui/provider";
 import { usePathname } from "./hooks/usePathname";
@@ -52,15 +52,25 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <MetaProvider link={Link} img="img" usePathname={usePathname} useRouter={useRouter}>
-        <body className="page-background">
-          <Provider attribute={[]} defaultTheme="light" enableSystem={false} forcedTheme="light">
-            {children}
-          </Provider>
-          <ScrollRestoration />
-          <Scripts />
-        </body>
-      </MetaProvider>
+      <LayoutProvider>
+        <ThemeProvider>
+          <MetaProvider link={Link} img="img" usePathname={usePathname} useRouter={useRouter}>
+            <body className="page-background">
+              <Provider
+                attribute={["class", "data-theme"]}
+                storageKey="data-theme"
+                defaultTheme="light"
+                enableSystem={false}
+                forcedTheme="light"
+              >
+                {children}
+              </Provider>
+              <ScrollRestoration />
+              <Scripts />
+            </body>
+          </MetaProvider>
+        </ThemeProvider>
+      </LayoutProvider>
     </html>
   );
 }
