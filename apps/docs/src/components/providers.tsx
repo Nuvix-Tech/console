@@ -13,7 +13,11 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     <>
       <MetaProvider link={Link} img={Image}>
         <RootProvider
-          theme={{ attribute: ["class", "data-theme"], defaultTheme: "dark" }}
+          theme={{
+            attribute: ["class", "data-theme"],
+            defaultTheme: "dark",
+            storageKey: "data-theme",
+          }}
           search={{
             SearchDialog,
           }}

@@ -24,8 +24,8 @@
   .neutral-background-alpha-medium,
   .neutral-background-alpha-strong {
       ::selection {
-          background-color: var(--neutral-on-background-weak) !important;
-          color: var(--neutral-background-weak) !important;
+          background-color: var(--neutral-on-background-weak);
+          color: var(--neutral-background-weak);
       }
   }
 
@@ -33,8 +33,8 @@
   .neutral-solid-medium,
   .neutral-solid-strong {
       ::selection {
-          background-color: var(--neutral-background-weak) !important ;
-          color: var(--neutral-on-background-medium) !important;
+          background-color: var(--neutral-background-weak);
+          color: var(--neutral-on-background-medium);
       }
   }
 
@@ -82,8 +82,8 @@
   .brand-background-alpha-medium,
   .brand-background-alpha-strong {
       ::selection {
-          background-color: var(--brand-on-background-weak) !important;
-          color: var(--brand-background-weak) !important;
+          background-color: var(--brand-on-background-weak);
+          color: var(--brand-background-weak);
       }
   }
 
@@ -91,8 +91,8 @@
   .brand-solid-medium,
   .brand-solid-strong {
       ::selection {
-          background-color: var(--brand-background-weak) !important;
-          color: var(--brand-on-background-medium) !important;
+          background-color: var(--brand-background-weak);
+          color: var(--brand-on-background-medium);
       }
   }
 
@@ -140,8 +140,8 @@
   .accent-background-alpha-medium,
   .accent-background-alpha-strong {
       ::selection {
-          background-color: var(--accent-on-background-weak) !important;
-          color: var(--accent-background-weak) !important;
+          background-color: var(--accent-on-background-weak);
+          color: var(--accent-background-weak);
       }
   }
 
@@ -149,8 +149,8 @@
   .accent-solid-medium,
   .accent-solid-strong {
       ::selection {
-          background-color: var(--accent-background-weak) !important;
-          color: var(--accent-on-background-medium) !important;
+          background-color: var(--accent-background-weak);
+          color: var(--accent-on-background-medium);
       }
   }
 
@@ -198,8 +198,8 @@
   .info-background-alpha-medium,
   .info-background-alpha-strong {
       ::selection {
-          background-color: var(--info-on-background-weak) !important;
-          color: var(--info-background-weak) !important;
+          background-color: var(--info-on-background-weak);
+          color: var(--info-background-weak);
       }
   }
 
@@ -207,8 +207,8 @@
   .info-solid-medium,
   .info-solid-strong {
       ::selection {
-          background-color: var(--info-background-weak) !important;
-          color: var(--info-on-background-medium) !important;
+          background-color: var(--info-background-weak);
+          color: var(--info-on-background-medium);
       }
   }
 
@@ -256,8 +256,8 @@
   .danger-background-alpha-medium,
   .danger-background-alpha-strong {
       ::selection {
-          background-color: var(--danger-on-background-weak) !important;
-          color: var(--danger-background-weak) !important;
+          background-color: var(--danger-on-background-weak);
+          color: var(--danger-background-weak);
       }
   }
 
@@ -265,8 +265,8 @@
   .danger-solid-medium,
   .danger-solid-strong {
       ::selection {
-          background-color: var(--danger-background-weak) !important;
-          color: var(--danger-on-background-medium) !important;
+          background-color: var(--danger-background-weak);
+          color: var(--danger-on-background-medium);
       }
   }
 
@@ -314,8 +314,8 @@
   .warning-background-alpha-medium,
   .warning-background-alpha-strong {
       ::selection {
-          background-color: var(--warning-on-background-weak) !important;
-          color: var(--warning-background-weak) !important;
+          background-color: var(--warning-on-background-weak);
+          color: var(--warning-background-weak);
       }
   }
 
@@ -323,8 +323,8 @@
   .warning-solid-medium,
   .warning-solid-strong {
       ::selection {
-          background-color: var(--warning-background-weak) !important;
-          color: var(--warning-on-background-medium) !important;
+          background-color: var(--warning-background-weak);
+          color: var(--warning-on-background-medium);
       }
   }
 
@@ -372,8 +372,8 @@
   .success-background-alpha-medium,
   .success-background-alpha-strong {
       ::selection {
-          background-color: var(--success-on-background-weak) !important;
-          color: var(--success-background-weak) !important;
+          background-color: var(--success-on-background-weak);
+          color: var(--success-background-weak);
       }
   }
 
@@ -381,8 +381,8 @@
   .success-solid-medium,
   .success-solid-strong {
       ::selection {
-          background-color: var(--success-background-weak) !important;
-          color: var(--success-on-background-medium) !important;
+          background-color: var(--success-background-weak);
+          color: var(--success-on-background-medium);
       }
   }
 

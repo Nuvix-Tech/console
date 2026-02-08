@@ -22,8 +22,15 @@ function getPreferenceFromCookie() {
   return {};
 }
 
+function getPreferenceFromLocalStorage() {
+  return { neutral: localStorage.getItem("data-neutral") };
+}
+
 export function usePreference() {
-  const [preferences, setPreferences] = useState(() => getPreferenceFromCookie());
+  const [preferences, setPreferences] = useState(() => {
+    const cookiePref = getPreferenceFromCookie();
+    return Object.keys(cookiePref).length > 0 ? cookiePref : getPreferenceFromLocalStorage();
+  });
 
   const setPref = useCallback(({ neutral }: { neutral: string }) => {
     const data = JSON.stringify({ neutral });
@@ -32,9 +39,10 @@ export function usePreference() {
     const cookieString = `${COOKIES_KEYS.PREFERENCE}=${encodedData}; path=/; expires=Fri, 31 Dec 9999 23:59:59 GMT; SameSite=Lax`;
     document.cookie = cookieString;
 
+    localStorage.setItem("data-neutral", neutral);
+
     updateHtmlAttribute(neutral);
 
-    // Update the local state to reflect the new preferences
     setPreferences({ neutral });
   }, []);
 

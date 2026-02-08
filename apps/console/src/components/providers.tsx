@@ -20,7 +20,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           options={{ showSpinner: false }}
           shallowRouting
         >
-          <Provider attribute={["class", "data-theme"]}>
+          <Provider attribute={["class", "data-theme"]} storageKey="data-theme">
             <NuqsAdapter>
               <ConfirmProvider>{children}</ConfirmProvider>
             </NuqsAdapter>

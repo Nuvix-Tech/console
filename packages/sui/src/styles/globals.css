@@ -45,7 +45,7 @@
   --xy-controls-button-background-color: var(--neutral-background-medium) !important;
   --xy-controls-button-border-color: var(--neutral-border-medium) !important;
 
-  --main-background: var(--page-background);
+  --main-background: color-mix(in srgb, var(--neutral-background-medium) 62%, rgb(255, 255, 255));
 }
 
 .dark {
@@ -81,7 +81,7 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.552 0.016 285.938);
 
-  --main-background: color-mix(in srgb, var(--function-neutral-100) 92%, white);
+  --main-background: color-mix(in srgb, var(--neutral-background-medium) 92%, rgb(48, 48, 48));
 }
 
 @theme inline {

@@ -95,14 +95,24 @@ export const HeroV2 = () => {
                 <Button variant="primary" size="s" className="mt-8 group">
                   <span className="flex items-center gap-2">
                     Start building
-                    <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    <svg
+                      className="w-4 h-4 transition-transform group-hover:translate-x-1"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 8l4 4m0 0l-4 4m4-4H3"
+                      />
                     </svg>
                   </span>
                 </Button>
               </motion.div>
             </div>
-            <motion.div 
+            <motion.div
               className="mt-auto flex-shrink flex flex-col divide-y divide-(--neutral-alpha-weak)"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -113,21 +123,19 @@ export const HeroV2 = () => {
                   key={tab.value}
                   title={
                     <Row vertical="center" gap="8">
-                      <span 
+                      <span
                         className={`text-xs font-mono transition-colors ${
-                          openTab === tab.value 
-                            ? "text-(--brand-on-background-strong)" 
+                          openTab === tab.value
+                            ? "text-(--brand-on-background-strong)"
                             : "text-(--neutral-on-background-weak)"
                         }`}
                       >
                         {tab.value}
                       </span>
-                      <Text 
-                        variant="heading-default-s" 
+                      <Text
+                        variant="heading-default-s"
                         className={`transition-colors ${
-                          openTab === tab.value 
-                            ? "!text-(--neutral-on-background-strong)" 
-                            : ""
+                          openTab === tab.value ? "!text-(--neutral-on-background-strong)" : ""
                         }`}
                         onSolid="neutral-medium"
                       >
@@ -141,7 +149,11 @@ export const HeroV2 = () => {
                   radius="xs"
                   icon=""
                 >
-                  <Text variant="body-default-s" onBackground="neutral-weak" className="leading-relaxed">
+                  <Text
+                    variant="body-default-s"
+                    onBackground="neutral-weak"
+                    className="leading-relaxed"
+                  >
                     {tab.desc}
                   </Text>
                 </Accordion>

@@ -20,7 +20,7 @@ export const UseWithSection = () => {
         fillWidth
         className="!flex-col md:!flex-row gap-10 md:gap-16 items-center justify-between"
       >
-        <motion.div 
+        <motion.div
           className="flex-1"
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -30,13 +30,8 @@ export const UseWithSection = () => {
           <Text variant="display-strong-xs" as="h2" onBackground="neutral-medium" className="mb-3">
             Works with your stack
           </Text>
-          <Text
-            variant="body-default-m"
-            as="p"
-            onBackground="neutral-weak"
-            className="max-w-sm"
-          >
-            First-class SDKs for the frameworks you already use. 
+          <Text variant="body-default-m" as="p" onBackground="neutral-weak" className="max-w-sm">
+            First-class SDKs for the frameworks you already use.
             <span className="text-(--neutral-on-background-strong)"> Zero lock-in.</span>
           </Text>
         </motion.div>
