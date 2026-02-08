@@ -1,11 +1,11 @@
 "use client";
 
 import React, { forwardRef, useEffect, useRef } from "react";
-import { Flex, Mask } from ".";
+import { Flex, Mask, MaskProps } from ".";
 import styles from "./Background.module.scss";
 import classNames from "classnames";
-import type { DisplayProps } from "../interfaces";
-import type { SpacingToken } from "../types";
+import { DisplayProps } from "../interfaces";
+import { SpacingToken } from "../types";
 
 function setRef<T>(ref: React.Ref<T> | undefined, value: T | null) {
   if (typeof ref === "function") {
@@ -13,13 +13,6 @@ function setRef<T>(ref: React.Ref<T> | undefined, value: T | null) {
   } else if (ref && "current" in ref) {
     (ref as React.RefObject<T | null>).current = value;
   }
-}
-
-interface MaskProps {
-  cursor?: boolean;
-  x?: number;
-  y?: number;
-  radius?: number;
 }
 
 interface GradientProps {
