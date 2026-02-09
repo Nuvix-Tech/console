@@ -36,7 +36,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     <html
       lang="en"
       data-theme="light"
-      data-neutral="gray"
+      data-neutral="slate"
       data-brand={"custom"}
       data-accent={"aqua"}
       data-border={"rounded"}
@@ -53,9 +53,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <LayoutProvider>
-        <ThemeProvider>
+        <ThemeProvider theme="light" neutral="slate">
           <MetaProvider link={Link} img="img" usePathname={usePathname} useRouter={useRouter}>
-            <body className="page-background">
+            <body className="neutral-background-medium">
               <Provider
                 attribute={["class", "data-theme"]}
                 storageKey="data-theme"

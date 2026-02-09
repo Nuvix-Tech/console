@@ -57,6 +57,10 @@
 :root {
   --custom-font: "CustomFont", "Circular", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-source-code-pro: "Source Code Pro", "Office Code Pro", Menlo, monospace;
+  --font-heading: var(--custom-font);
+  --font-body: var(--custom-font);
+  --font-label: var(--custom-font);
+  --font-code: var(--font-source-code-pro);
 }
 
 @keyframes dash-run {
