@@ -48,7 +48,7 @@ export const HeroV2 = () => {
             x: 10,
             y: 5,
             tilt: -1,
-            colorEnd: "neutral-background-medium",
+            colorEnd: "neutral-background-strong",
             colorStart: "neutral-background-weak",
           }}
           lines={{
@@ -86,7 +86,7 @@ export const HeroV2 = () => {
                 Start building
               </Button>
             </div>
-            <div className="mt-auto flex-shrink flex flex-col divide-y divide-(--brand-alpha-weak)">
+            <div className="mt-auto flex-shrink flex flex-col divide-y divide-(--neutral-alpha-weak)">
               {tabs.map((tab) => (
                 <Accordion
                   key={tab.value}

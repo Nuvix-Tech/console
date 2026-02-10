@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode, useEffect, useRef, useState } from "react";
+import React, { type ReactNode, useEffect, useRef, useState } from "react";
 import { Spinner } from "./Spinner";
 import { Column } from "./Column";
 import { Row } from "./Row";

@@ -9,16 +9,14 @@ import "@nuvix/sui/styles/datagrid.scss";
 import Providers from "@/components/providers";
 import classNames from "classnames";
 import type { Metadata } from "next";
-import { cookies, headers } from "next/headers";
-
-import { Column, Flex, ToastProvider } from "@nuvix/ui/components";
+import { headers } from "next/headers";
+import { Column, ToastProvider } from "@nuvix/ui/components";
 import { Toaster } from "@nuvix/sui/components/sonner";
-import { baseURL, meta, og, schema, social, getStyle } from "@nuvix/ui/resources/config";
+import { baseURL, meta, og } from "@nuvix/ui/resources/config";
+import { fonts, ThemeInit } from "@nuvix/ui/resources";
 import { customFont, sourceCodePro } from "@nuvix/ui/fonts";
-import { COOKIES_KEYS } from "@nuvix/sui/lib/constants";
+import { LayoutProvider, ThemeProvider } from "@nuvix/ui/contexts";
 
-/*
- */
 export async function generateMetadata(): Promise<Metadata> {
   const host = (await headers()).get("host");
   const metadataBase = host ? new URL(`https://${host}`) : undefined;
@@ -60,66 +58,61 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-const schemaData = {
-  "@context": "https://schema.org",
-  "@type": schema.type,
-  url: "https://" + baseURL,
-  logo: schema.logo,
-  name: schema.name,
-  description: schema.description,
-  email: schema.email,
-  sameAs: Object.values(social).filter(Boolean),
-};
-
 export default async function Layout({ children }: { children: React.ReactNode }) {
-  const cookieStore = await cookies();
-  const cookie = cookieStore.get(COOKIES_KEYS.PREFERENCE)!;
-  const style = getStyle(cookie?.value);
-
   return (
     <>
-      <Flex
-        suppressHydrationWarning
+      <Column
         as="html"
         lang="en"
         fillHeight
-        background="page"
-        data-neutral={style.neutral}
-        data-brand={style.brand}
-        data-accent={style.accent}
-        data-border={style.border}
-        data-solid={style.solid}
-        data-solid-style={style.solidStyle}
-        data-surface={style.surface}
-        data-transition={style.transition}
-        data-scaling={style.scaling}
-        className={classNames(customFont.variable, sourceCodePro.variable)}
+        suppressHydrationWarning
+        className={classNames(
+          fonts.heading.variable,
+          fonts.body.variable,
+          fonts.label.variable,
+          fonts.code.variable,
+          customFont.variable,
+          sourceCodePro.variable,
+        )}
       >
         <head>
-          <script
-            suppressHydrationWarning
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify(schemaData),
+          <ThemeInit
+            config={{
+              theme: "system",
+              brand: "custom",
+              accent: "custom",
+              neutral: "gray",
+              solid: "color",
+              "solid-style": "flat",
+              border: "rounded",
+              surface: "translucent",
+              transition: "all",
+              scaling: "100",
+              "viz-style": "gradient",
             }}
           />
         </head>
-        <Column
-          suppressHydrationWarning
-          as="body"
-          fillWidth
-          margin="0"
-          padding="0"
-          background="page"
-        >
-          <Providers>
-            <ToastProvider>
-              {children}
-              <Toaster position="top-right" closeButton />
-            </ToastProvider>
-          </Providers>
-        </Column>
-      </Flex>
+        <LayoutProvider>
+          <ThemeProvider>
+            <Column
+              suppressHydrationWarning
+              as="body"
+              fillWidth
+              fillHeight
+              margin="0"
+              padding="0"
+              background="page"
+            >
+              <ToastProvider>
+                <Providers>
+                  {children}
+                  <Toaster position="top-right" closeButton />
+                </Providers>
+              </ToastProvider>
+            </Column>
+          </ThemeProvider>
+        </LayoutProvider>
+      </Column>
     </>
   );
 }

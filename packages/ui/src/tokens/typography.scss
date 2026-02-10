@@ -1,3 +1,5 @@
+@use "../styles/breakpoints.scss" as breakpoints;
+
 :root {
     /* FONT WEIGHT */
     --font-weight-thin:            100;
@@ -16,9 +18,9 @@
     --font-weight-code-default:    var(--font-weight-normal);
     --font-weight-code-strong:     var(--font-weight-bold);
     --font-weight-heading-default: var(--font-weight-normal);
-    --font-weight-heading-strong:  var(--font-weight-bold);
+    --font-weight-heading-strong:  var(--font-weight-semiBold);
     --font-weight-display-default: var(--font-weight-light);
-    --font-weight-display-strong:  var(--font-weight-extraBold);
+    --font-weight-display-strong:  var(--font-weight-semiBold);
 
     /* FONT SIZE */
     --font-size-display-xl:        5rem;
@@ -39,9 +41,11 @@
     --font-size-body-s:            0.875rem;
     --font-size-body-xs:           0.75rem;
 
+    --font-size-label-xl:          1.125rem;
     --font-size-label-l:           1rem;
     --font-size-label-m:           0.925rem;
     --font-size-label-s:           0.825rem;
+    --font-size-label-xs:          0.75rem;
 
     /* LINE HEIGHT */
     --line-height-display-xl:      5rem;
@@ -62,12 +66,14 @@
     --line-height-body-s:          1.125rem;
     --line-height-body-xs:         1rem;
 
+    --line-height-label-xl:        1.5rem;
     --line-height-label-l:         1.25rem;
     --line-height-label-m:         1.25rem;
     --line-height-label-s:         1rem;
+    --line-height-label-xs:        0.875rem;
 }
 
-@media (--m) {
+@include breakpoints.m {
     :root {
         /* FONT SIZE */
         --font-size-display-xl:    3.5rem;
@@ -93,7 +99,7 @@
     }
 }
 
-@media (--s) {
+@include breakpoints.s {
     :root {
         /* FONT SIZE */
         --font-size-display-xl:    2.75rem;
@@ -103,7 +109,7 @@
     
         /* LINE HEIGHT */
         --line-height-display-xl:  3rem;
-        --line-height-display-l:   3rem;
+        --line-height-display-l:   2.75rem;
         --line-height-display-m:   2.5rem;
         --line-height-display-s:   2.5rem;
     }

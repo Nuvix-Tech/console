@@ -5,11 +5,11 @@ import type React from "react";
 import { type ReactNode, forwardRef, useEffect, useState } from "react";
 import type { IconType } from "react-icons";
 import { Flex, Tooltip } from ".";
-import { IconName } from "../icons";
+import { type IconName } from "../icons";
 import type { ColorScheme, ColorWeight } from "../types";
 import styles from "./Icon.module.scss";
 import iconStyles from "./IconButton.module.scss";
-import { LucideIcon } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { useIcons } from "../contexts";
 
 export interface IconProps extends React.ComponentProps<typeof Flex> {

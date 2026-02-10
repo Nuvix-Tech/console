@@ -2,7 +2,7 @@
 
 import classNames from "classnames";
 import React, { useRef, type ReactNode, forwardRef } from "react";
-import { Flex, Icon, IconProps } from ".";
+import { Flex, Icon, type IconProps } from ".";
 import buttonStyles from "./Button.module.scss";
 import { ElementType } from "./ElementType";
 import iconStyles from "./IconButton.module.scss";

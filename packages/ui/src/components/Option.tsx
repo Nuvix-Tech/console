@@ -3,7 +3,7 @@
 import classNames from "classnames";
 import { Text, ElementType, Column, Row } from ".";
 import styles from "./Option.module.scss";
-import React, { forwardRef, KeyboardEvent, useRef, useEffect, useState } from "react";
+import React, { forwardRef, type KeyboardEvent, useRef, useEffect, useState } from "react";
 
 export interface OptionProps extends Omit<React.ComponentProps<typeof Row>, "onClick"> {
   label?: React.ReactNode;

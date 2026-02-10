@@ -42,7 +42,8 @@ export function UserProfile(props: Partial<React.ComponentProps<typeof UserMenu>
         avatarProps={{
           ...props.avatarProps,
           empty: !user,
-          src: avatars.getInitials(user?.name, 100, 100),
+          src: avatars.getInitials(user?.name, 100, 100, "B7A7FF"),
+          unoptimized: true,
         }}
         loading={!user}
         dropClass="!z-[999]"
