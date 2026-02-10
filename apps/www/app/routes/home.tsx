@@ -20,7 +20,8 @@ export default function Home() {
       <UseWithSection />
       <FeaturesSection />
       <StickyStackCards />
-      <BottomCtaSection />
+      <div className="h-18" />
+      {/* <BottomCtaSection /> */}
     </>
   );
 }

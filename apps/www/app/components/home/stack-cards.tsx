@@ -1,6 +1,6 @@
 import { cn } from "@nuvix/sui/lib/utils";
 import { Background, Icon, Text } from "@nuvix/ui/components";
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 
 type ColorType = React.ComponentProps<typeof Icon>["onBackground"];
 
@@ -31,7 +31,7 @@ const CardContent = ({
 }: CardContentProps) => {
   return (
     <>
-      <div className="py-8 pl-4 max-w-sm space-y-4">
+      <div className="py-8 pl-4 max-w-sm space-y-4 relative">
         <Icon
           name={icon}
           decorative
@@ -79,8 +79,8 @@ function Card1() {
           height: 200,
           y: 50,
           x: 20,
-          colorEnd: "accent-alpha-weak",
-          colorStart: "brand-alpha-weak",
+          colorEnd: "neutral-background-weak",
+          colorStart: "brand-background-medium",
         },
       }}
     >
@@ -169,49 +169,28 @@ Every rule is enforced consistently across data models, storage, and operations 
 }
 
 const cardComponents = [Card1, Card2, Card3];
+
+const CARD_TOP_BASE = 80; // px — where the first card sticks
+const CARD_TOP_STEP = 20; // px — offset between each card's sticky top
+
 export default function StickyStackCards() {
-  const itemsRef = useRef<(HTMLElement | null)[]>([]);
-  const [active, setActive] = useState(0);
-
-  useEffect(() => {
-    const observers: IntersectionObserver[] = [];
-
-    itemsRef.current.forEach((el, index) => {
-      if (!el) return;
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) setActive(index);
-          });
-        },
-        { threshold: 0.5 },
-      );
-
-      observer.observe(el);
-      observers.push(observer);
-    });
-
-    return () => observers.forEach((o) => o.disconnect());
-  }, []);
-
   return (
     <div className="relative w-full px-4 cont">
       {cardComponents.map((CardComponent, idx) => (
-        <section
+        <div
           key={idx}
-          ref={(el) => (itemsRef.current[idx] = el) as any}
-          className="h-screen relative"
+          className="sticky"
+          style={{
+            top: `${CARD_TOP_BASE + idx * CARD_TOP_STEP}px`,
+            zIndex: idx + 1,
+            marginBottom:
+              idx < cardComponents.length - 1
+                ? `calc(100vh - ${CARD_TOP_BASE + idx * CARD_TOP_STEP + 420}px)`
+                : undefined,
+          }}
         >
-          <div
-            className={cn(
-              "sticky top-80 mx-auto transition-all duration-500",
-              active === idx ? "opacity-100 scale-100" : "opacity-40 scale-[0.96]",
-            )}
-          >
-            <CardComponent />
-          </div>
-        </section>
+          <CardComponent />
+        </div>
       ))}
     </div>
   );

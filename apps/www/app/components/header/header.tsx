@@ -20,7 +20,7 @@ const Header: React.FC<{ defaultTransBg?: boolean }> = ({ defaultTransBg = true 
 
   return (
     <header
-      className={`h-18 sticky top-0 left-0 flex w-full justify-between items-center px-4 py-2 z-[999] transition-colors ${isScrolled ? "neutral-background-medium border-b" : ""}`}
+      className={`h-18 sticky top-0 left-0 flex w-full justify-between items-center px-4 py-2 z-[999] transition-colors ${isScrolled ? "bg-(--page-background)/90 backdrop-blur-md border-b neutral-border-medium !h-16" : ""}`}
     >
       <div className="flex items-center justify-between gap-2 w-full cont px-2.5 md:px-5">
         <div
