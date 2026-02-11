@@ -3,7 +3,10 @@ import { motion } from "motion/react";
 
 export const SchemasSection = () => {
   return (
-    <section className="py-12 container mx-auto flex flex-col my-16 px-4 gap-20">
+    <section
+      data-theme="dark"
+      className="py-12 cont flex flex-col my-16 px-8 gap-20 page-background rounded-md"
+    >
       <div className="flex flex-col justify-center">
         <Text className="text-center" variant="display-strong-xs" as="h2">
           <span className="neutral-on-background-medium">Schema Management,</span> Reimagined

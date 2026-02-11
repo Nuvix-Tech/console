@@ -117,11 +117,6 @@ export function NavMenu() {
             ],
           },
           {
-            id: "blog",
-            label: labelx("Blog"),
-            href: "https://stack.nuvix.in",
-          },
-          {
             id: "docs",
             label: labelx("Docs"),
             href: DOCS_URL,
@@ -131,11 +126,6 @@ export function NavMenu() {
           //   label: "Pricing",
           //   href: "/pricing",
           // },
-          {
-            id: "cloud",
-            label: labelx("Cloud"),
-            href: "/cloud",
-          },
         ]}
       />
     </>
