@@ -38,6 +38,11 @@ export const AccountLayout = ({ children }: { children: React.ReactNode }) => {
     }
   }
 
+  function getSelectedRoute() {
+    const currentRoute = routes.filter(Boolean).find((r) => r.value === selected[2]);
+    return currentRoute ? currentRoute.value : "account";
+  }
+
   return (
     <>
       <Column gap="16" paddingY="16" background="neutral-alpha-weak">
@@ -47,8 +52,8 @@ export const AccountLayout = ({ children }: { children: React.ReactNode }) => {
             variant="tertiary"
             prefixIcon="chevronLeft"
             weight="default"
-            className="!text-primary/70"
             href="/"
+            className="opacity-80"
           >
             Back to dashboard
           </Button>
@@ -62,12 +67,13 @@ export const AccountLayout = ({ children }: { children: React.ReactNode }) => {
           </Row>
           <SegmentedControl
             fillWidth={false}
-            defaultSelected={selected.length && selected[2] ? selected[2] : "account"}
+            defaultSelected={getSelectedRoute()}
             buttons={routes.map((r) => ({
               value: r.value,
               label: r.label,
               href: `/account/${r.href ?? r.value}`,
             }))}
+            selected={getSelectedRoute()}
             onToggle={(value) => console.log(value)}
           />
         </BodyWrapper>

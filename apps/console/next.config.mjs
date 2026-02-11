@@ -16,6 +16,15 @@ const nextConfig = {
     ],
   },
   reactStrictMode: false,
+  redirects: async () => {
+    return [
+      {
+        source: "/docs/:slug*",
+        destination: "https://docs.nuvix.in/:slug*",
+        permanent: true,
+      },
+    ];
+  },
   experimental: {
     optimizePackageImports: ["@chakra-ui/react"],
   },
