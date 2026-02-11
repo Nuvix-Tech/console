@@ -131,6 +131,7 @@ const GlowingEffect = memo(
               "--active": "0",
               "--glowingeffect-border-width": `${borderWidth}px`,
               "--repeating-conic-gradient-times": "5",
+              "--black": "var(--neutral-on-background-medium)",
               "--gradient":
                 variant === "white"
                   ? `repeating-conic-gradient(

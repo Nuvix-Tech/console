@@ -1,6 +1,6 @@
 "use client";
 import { Route } from "lucide-react";
-import { Column, GlitchFx, Icon, Mask, Row, Text, type IconProps } from "@nuvix/ui/components";
+import { Column, Icon, Mask, Row, Text, type IconProps } from "@nuvix/ui/components";
 import { GlowingEffect } from "~/ui/glowing-effect";
 import { cn } from "@nuvix/sui/lib/utils";
 import { Authentication } from "./features/auth";
@@ -62,7 +62,7 @@ export function FeaturesSection() {
               ))}
             </Column>
           }
-          // link="/products/postgres"
+          link="/products/database"
         />
         <GridItem
           area="col-span-1 md:col-span-4 md:row-span-1"
@@ -70,7 +70,7 @@ export function FeaturesSection() {
           title="Authentication"
           description="Effortless, secure auth with social logins, multi-factor authentication, and custom flows."
           extra={<Authentication />}
-          link="/products/auth"
+          link="/products/authentication"
         />
 
         {/* Second row: three columns, third is tall */}
@@ -80,7 +80,7 @@ export function FeaturesSection() {
           title="Storage"
           description="Store and serve files with automatic CDN distribution and access control."
           extra={<Storage />}
-          // link="/products/storage"
+          link="/products/storage"
         />
         <GridItem
           area="col-span-1 md:col-span-4 md:row-start-2 md:row-span-1"
@@ -88,7 +88,7 @@ export function FeaturesSection() {
           title="Messaging"
           description="Set up a full-functioning messaging service that covers multiple channels under one unified platform"
           extra={<Messaging />}
-          // link="/products/messaging"
+          link="/products/messaging"
         />
         <GridItem
           area="col-span-1 md:col-span-3 md:row-start-2 md:row-end-4"
@@ -103,7 +103,7 @@ export function FeaturesSection() {
             </>
           }
           extra={<Schemas />}
-          // link="/products/schemas"
+          link="https://docs.nuvix.in/products/database/schema-types"
         />
 
         {/* Third row: two more items in remaining space */}
@@ -113,7 +113,7 @@ export function FeaturesSection() {
           title="Data APIs"
           description="Instantly available RESTful APIs for your data."
           extra={<DataAPIs />}
-          // link="/docs"
+          link="/docs"
         />
         <GridItem
           area="col-span-1 md:col-span-3 md:row-start-3 md:row-span-1"
@@ -121,11 +121,11 @@ export function FeaturesSection() {
           title="Vector"
           description="Power your AI features by storing, indexing, and searching vector embeddings seamlessly."
           extra={<Vector />}
-          // link="/products/vector"
+          link="#"
         />
       </ul>
       <div className="mt-4 px-2">
-        <Text as="h3" variant="heading-default-xl" onBackground="neutral-weak">
+        <Text as="h3" variant="heading-default-xl" onBackground="neutral-medium">
           <Text onBackground="neutral-strong">Use what you need.</Text> Everything works better
           together.
         </Text>
@@ -148,45 +148,47 @@ interface GridItemProps {
 const GridItem = ({ area, icon, title, info, link, description, wide, extra }: GridItemProps) => {
   return (
     <li className={`min-h-[24rem] list-none ${area} group cursor-pointer`}>
-      {/* <Link className="" to={link ?? "#"}> */}
-      <div className="relative h-full rounded-2xl border neutral-border-weak p-2 md:rounded-3xl md:p-3">
-        <GlowingEffect
-          spread={500}
-          glow={false}
-          disabled={false}
-          proximity={64}
-          inactiveZone={0.01}
-          className="hidden sm:block"
-        />
-        <div className="border-0.75 relative flex h-full flex-col justify-between gap-6 overflow-hidden rounded-lg p-6 md:p-6 neutral-background-alpha-weak">
-          <div
-            className={cn("relative flex flex-1 flex-col gap-3", {
-              "flex-row": wide,
-            })}
-          >
-            <Column gap="16">
-              <Row gap="8" vertical="center" className="w-full">
-                <Icon
-                  name={icon}
-                  border="accent-alpha-weak"
-                  radius="l"
-                  className="p-2"
-                  onBackground="neutral-medium"
-                />
-                <Text variant="label-strong-m" onBackground="neutral-medium">
-                  {title}
+      <Link className="" to={link ?? ""}>
+        <div className="relative h-full rounded-2xl border neutral-border-weak p-2 md:rounded-3xl md:p-3">
+          <GlowingEffect
+            spread={40}
+            glow={true}
+            disabled={false}
+            proximity={64}
+            inactiveZone={0.001}
+            variant="white"
+            className="hidden sm:block"
+            borderWidth={2}
+          />
+          <div className="border-0.75 relative flex h-full flex-col justify-between gap-6 overflow-hidden rounded-lg p-6 md:p-6 neutral-background-alpha-weak">
+            <div
+              className={cn("relative flex flex-1 flex-col gap-3", {
+                "flex-row": wide,
+              })}
+            >
+              <Column gap="16">
+                <Row gap="8" vertical="center" className="w-full">
+                  <Icon
+                    name={icon}
+                    border="neutral-alpha-weak"
+                    radius="l"
+                    className="p-2"
+                    onBackground="neutral-medium"
+                  />
+                  <Text variant="label-strong-m" onBackground="neutral-medium">
+                    {title}
+                  </Text>
+                </Row>
+                <Text variant="body-default-m" onBackground="neutral-weak">
+                  {description}
                 </Text>
-              </Row>
-              <Text variant="body-default-m" onBackground="neutral-weak">
-                {description}
-              </Text>
-              {info}
-            </Column>
-            {extra}
+                {info}
+              </Column>
+              {extra}
+            </div>
           </div>
         </div>
-      </div>
-      {/* </Link> */}
+      </Link>
     </li>
   );
 };

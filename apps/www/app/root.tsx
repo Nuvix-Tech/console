@@ -55,7 +55,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <LayoutProvider>
         <ThemeProvider theme="light" neutral="slate">
           <MetaProvider link={Link} img="img" usePathname={usePathname} useRouter={useRouter}>
-            <body className="neutral-background-medium">
+            <body>
               <Provider
                 attribute={["class", "data-theme"]}
                 storageKey="data-theme"

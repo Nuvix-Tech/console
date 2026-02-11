@@ -82,7 +82,13 @@ export const HeroV2 = () => {
                 <br />
                 Scale your way.
               </Text>
-              <Button variant="primary" size="s" className="mt-8 ">
+              <Button
+                href="https://console.nuvix.in"
+                target="_self"
+                variant="primary"
+                size="s"
+                className="mt-8 "
+              >
                 Start building
               </Button>
             </div>

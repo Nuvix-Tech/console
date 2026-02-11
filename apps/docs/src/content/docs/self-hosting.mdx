@@ -3,114 +3,110 @@ title: Self Hosting
 description: Deploy Nuvix on your own infrastructure using Docker.
 ---
 
-Nuvix is designed to be self-hosted on any provider that supports Docker. This guide will walk you through setting up a production-ready Nuvix instance using Docker Compose.
+Nuvix allows you to own your infrastructure completely. This guide covers deploying the full stack—Database, Auth, Storage, and Console—using Docker.
 
 ## Prerequisites
 
-Before you begin, ensure you have the following installed on your server (Ubuntu/Debian recommended):
-
 - **Docker Engine** (v20.10+)
 - **Docker Compose** (v2.0+)
-- **Git** (optional, for cloning)
+- **Git**
 
-## 1. Get the Docker Compose file
+## 1. Setup
 
-You can either clone the repository or download the `docker-compose.yml` file directly.
+Clone the main repository.
 
 ```bash
 git clone https://github.com/Nuvix-tech/nuvix.git
 cd nuvix
 ```
 
-## 2. Configuration
+## 2. Environment Configuration
 
-Nuvix uses environment variables for configuration. Create a `.env` file from the example.
+Copy the example configuration to a production `.env` file.
 
 ```bash
 cp .env.example .env
 ```
 
-### Critical Environment Variables
+### Critical Variables
 
-Edit the `.env` file and update the following security keys. You should generate random strings for these values.
+You **must** change these values in `.env` for a secure deployment:
 
-```text
-# Database Security
-NUVIX_DATABASE_ADMIN_PASSWORD=change-me-to-secure-password
-NUVIX_DATABASE_PASSWORD=change-me-to-secure-password
+```bash
+# Security Keys (Generate strong random strings)
+NUVIX_JWT_SECRET="<generate-random-string>"
+NUVIX_ENCRYPTION_KEY="<generate-random-string>"
+NUVIX_DATABASE_ENCRYPTION_KEY="<must-be-exactly-16-chars>" # e.g. "a1b2c3d4e5f6g7h8"
 
-# Application Secrets
-NUVIX_APP_SECRET=generate-a-long-random-string
-NUVIX_JWT_SECRET=generate-a-long-random-string
+# Database Credentials
+NUVIX_DATABASE_ADMIN_PASSWORD="<strong-db-password>"
+NUVIX_DATABASE_PASSWORD="<strong-db-password>"
 
-# Environment
-NODE_ENV=production
+# Initial Admin User (Created on first run)
+NUVIX_ADMIN_EMAIL="admin@yourdomain.com"
+NUVIX_ADMIN_PASSWORD="<strong-admin-password>"
+
+# Domain Configuration
+NUVIX_DOMAIN="yourdomain.com"
+NUVIX_CONSOLE_URL="https://console.yourdomain.com"
 ```
 
-## 3. Start Nuvix
+## 3. Deploy
 
-Run the following command to start the Nuvix stack in detached mode.
+Start the stack in detached mode.
 
 ```bash
 docker compose up -d
 ```
 
-Docker will pull the necessary images (`nuvix/postgres`, `redis`, etc.) and start the services.
+### Stack Components
 
-### Check Status
+- **`server`**: Core API (Port 4000)
+- **`platform`**: Console UI (Port 4100)
+- **`postgres`**: Main Database (Port 5432)
+- **`redis`**: Cache & PubSub (Port 6379)
+- **`pgcat`**: Connection Pooler (Optional/Commented out by default)
 
-Verify that all containers are running:
+## 4. Verify
+
+Check container status:
 
 ```bash
 docker compose ps
 ```
 
-You should see the following services:
-- `server`: The main API server (Port 4000)
-- `platform`: The Nuvix Console (Port 4100)
-- `postgres`: Database
-- `redis`: Cache
+Access the console at:
+`http://<your-server-ip>:4100` (or your configured domain).
 
-## 4. Access the Console
+## Production Tips
 
-Once the services are up, open your browser and navigate to:
+### Reverse Proxy
+We recommend running Nuvix behind a reverse proxy like **Caddy** or **Nginx** for HTTPS.
 
+**Example Caddyfile:**
+```bash
+console.yourdomain.com {
+    reverse_proxy localhost:4100
+}
+
+api.yourdomain.com {
+    reverse_proxy localhost:4000
+}
 ```
-http://<your-server-ip>:4100
-```
 
-You should see the Nuvix Console login screen. Create your root admin account to get started.
+### Storage
+By default, Nuvix uses local disk storage mounted to the `server` container.
+- Volume: `nuvix_storage`
+- Host Path: `/var/lib/docker/volumes/nuvix_storage/_data`
 
-## Updating Nuvix
+Ensure your host has sufficient disk space or mount an external block storage volume to this location.
 
-To upgrade to the latest version, pull the new images and restart the stack.
+### Updates
+
+To update your instance:
 
 ```bash
-# 1. Pull latest images
+git pull
 docker compose pull
-
-# 2. Recreate containers
 docker compose up -d
-```
-
-## Troubleshooting
-
-### Logs
-
-If something isn't working, check the logs for specific services.
-
-```bash
-# View server logs
-docker compose logs -f server
-
-# View database logs
-docker compose logs -f postgres
-```
-
-### Database Connection
-
-Ensure the `postgres` container is healthy before the server starts. If the server crashes on startup, it might be waiting for the database to become ready. Nuvix handles this automatically with `depends_on`, but a manual restart often fixes timing issues on slower machines.
-
-```bash
-docker compose restart server
 ```
