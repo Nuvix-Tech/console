@@ -1,15 +1,5 @@
-import {
-  Background,
-  Button,
-  Column,
-  IconButton,
-  Row,
-  Text,
-  ToggleButton,
-} from "@nuvix/ui/components";
-import { StripedPattern } from "components/magicui/striped-pattern";
+import { Column, IconButton, Row, Text, ToggleButton } from "@nuvix/ui/components";
 import { Link } from "react-router";
-import { DOCS_URL } from "~/lib/constants";
 
 export const Footer = () => {
   const year = new Date().getFullYear();
@@ -17,43 +7,17 @@ export const Footer = () => {
   return (
     <div
       data-theme="dark"
-      className="page-background border-t border-border/40 !text-(--neutral-alpha-medium)"
+      className="page-background !text-(--neutral-alpha-medium) relative overflow-hidden"
     >
-      <div className="h-96 cont overflow-hidden px-4 py-10">
-        <div className="relative flex z-[1] items-center justify-center size-full overflow-hidden rounded-sm border border-(--neutral-border-weak)">
-          <StripedPattern className="stroke-[0.3] [stroke-dasharray:7,1]" />
-          <Background
-            position="absolute"
-            fill
-            gradient={{
-              display: true,
-              colorEnd: "neutral-background-medium",
-              colorStart: "static-transparent",
-            }}
-            className="-z-[1]"
-          />
-          <div className="flex flex-col gap-8">
-            <Text
-              as="p"
-              variant="display-strong-m"
-              onBackground="neutral-strong"
-              className="!text-center"
-            >
-              Start Simple. <br /> Scale your way.
-            </Text>
-            <div className="flex gap-8 items-center justify-center">
-              <Button variant="primary" size="m">
-                Start building
-              </Button>
-              <Button variant="secondary" size="m" href={DOCS_URL}>
-                Learn more
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="grid grid-cols-4 gap-4 cont px-4 lg:px-7">
-        <div>
+      <div data-theme="light" className="page-background h-14 rounded-b-xl" />
+      <Text
+        variant="display-strong-xl"
+        className="absolute z-10 !text-[6rem] sm:!text-[10rem] md:!text-[14rem] lg:!text-[18rem] !leading-[4rem] sm:!leading-[7rem] md:!leading-[10rem] lg:!leading-[12rem] left-1/2 -translate-x-1/2 bottom-0 opacity-10 select-none pointer-events-none"
+      >
+        Nuvix
+      </Text>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6 lg:gap-4 cont px-4 lg:px-7 pt-8 sm:pt-6 lg:pt-4">
+        <div className="sm:col-span-2 lg:col-span-1">
           <Link to={"/"}>
             <img src={`/trademark/logo-dark.png`} width={120} alt="logo" />
           </Link>
@@ -70,7 +34,6 @@ export const Footer = () => {
               },
               { label: "Storage", href: "/products/storage", prefixIcon: "storage" },
               { label: "Messaging", href: "/products/messaging", prefixIcon: "messaging" },
-              { label: "Open source", href: "/opensource", prefixIcon: "code" },
             ]}
           />
         </div>
@@ -79,9 +42,8 @@ export const Footer = () => {
             title="Resources"
             items={[
               { label: "Documentation", href: "/docs" },
-              { label: "Tutorials", href: "/tutorials" },
-              { label: "API Reference", href: "/api" },
-              { label: "Support", href: "/support" },
+              { label: "Github", href: "https://github.com/Nuvix-Tech/nuvix" },
+              { label: "Discord", href: "https://discord.gg/nuvix" },
             ]}
           />
         </div>
@@ -90,8 +52,6 @@ export const Footer = () => {
             title="Company"
             items={[
               { label: "About Us", href: "/about" },
-              { label: "Careers", href: "/careers" },
-              { label: "Blog", href: "/blog" },
               { label: "Contact", href: "/contact" },
             ]}
           />
@@ -100,21 +60,20 @@ export const Footer = () => {
       <Row
         vertical="center"
         horizontal="space-between"
-        className="flex-col md:flex-row gap-4 cont py-4 px-7"
+        className="flex-col sm:flex-row gap-4 cont py-6 sm:py-4 px-4 sm:px-7"
       >
         <Row gap="4" vertical="center">
-          <Text size="s" onBackground="neutral-medium">
+          <Text size="s" onBackground="neutral-weak" className="text-center sm:text-left">
             © {year} Nuvix. All rights reserved.
           </Text>
         </Row>
-        {/* <Row gap="8" vertical="center">
-          <ColorModeButton />
+        <Row gap="8" vertical="center">
           <IconButton
             icon="github"
             variant="secondary"
             href="https://github.com/Nuvix-Tech/nuvix"
           />
-        </Row> */}
+        </Row>
       </Row>
     </div>
   );

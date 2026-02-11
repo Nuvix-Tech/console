@@ -42,37 +42,37 @@ export function NavMenu() {
                   },
                 ],
               },
-              {
-                links: [],
-                component: (
-                  <div className="flex flex-col gap-2 mt-auto">
-                    <Text onBackground="neutral-weak" variant="label-default-s" className="mb-1">
-                      COMPARE
-                    </Text>
-                    <ToggleButton
-                      href="/alternatives/compare-supabase"
-                      rel="noopener noreferrer"
-                      className="neutral-on-background-medium"
-                    >
-                      Nuvix vs Supabase
-                    </ToggleButton>
-                    {/* <ToggleButton
-                      href="/alternatives/compare-firebase"
-                      rel="noopener noreferrer"
-                      className="neutral-on-background-medium"
-                    >
-                      Nuvix vs Firebase
-                    </ToggleButton> */}
-                    <ToggleButton
-                      href="/alternatives/compare-appwrite"
-                      rel="noopener noreferrer"
-                      className="neutral-on-background-medium"
-                    >
-                      Nuvix vs Appwrite
-                    </ToggleButton>
-                  </div>
-                ),
-              },
+              // {
+              //   links: [],
+              //   component: (
+              //     <div className="flex flex-col gap-2 mt-auto">
+              //       <Text onBackground="neutral-weak" variant="label-default-s" className="mb-1">
+              //         COMPARE
+              //       </Text>
+              //       <ToggleButton
+              //         href="/alternatives/compare-supabase"
+              //         rel="noopener noreferrer"
+              //         className="neutral-on-background-medium"
+              //       >
+              //         Nuvix vs Supabase
+              //       </ToggleButton>
+              //       {/* <ToggleButton
+              //         href="/alternatives/compare-firebase"
+              //         rel="noopener noreferrer"
+              //         className="neutral-on-background-medium"
+              //       >
+              //         Nuvix vs Firebase
+              //       </ToggleButton> */}
+              //       <ToggleButton
+              //         href="/alternatives/compare-appwrite"
+              //         rel="noopener noreferrer"
+              //         className="neutral-on-background-medium"
+              //       >
+              //         Nuvix vs Appwrite
+              //       </ToggleButton>
+              //     </div>
+              //   ),
+              // },
             ],
           },
           {

@@ -62,7 +62,7 @@ export function FeaturesSection() {
               ))}
             </Column>
           }
-          link="/products/postgres"
+          link="/products/database"
         />
         <GridItem
           area="col-span-1 md:col-span-4 md:row-span-1"
@@ -70,7 +70,7 @@ export function FeaturesSection() {
           title="Authentication"
           description="Effortless, secure auth with social logins, multi-factor authentication, and custom flows."
           extra={<Authentication />}
-          link="/products/auth"
+          link="/products/authentication"
         />
 
         {/* Second row: three columns, third is tall */}
@@ -103,7 +103,7 @@ export function FeaturesSection() {
             </>
           }
           extra={<Schemas />}
-          link="/products/schemas"
+          link="https://docs.nuvix.in/products/database/schema-types"
         />
 
         {/* Third row: two more items in remaining space */}
@@ -121,7 +121,7 @@ export function FeaturesSection() {
           title="Vector"
           description="Power your AI features by storing, indexing, and searching vector embeddings seamlessly."
           extra={<Vector />}
-          link="/products/vector"
+          link="#"
         />
       </ul>
       <div className="mt-4 px-2">
