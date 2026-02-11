@@ -33,7 +33,7 @@ export const NavBar = () => {
         </div>
         <ThemeSwitch />
         <GithubButton />
-        <Button size="s" href="https://www.nuvix.in/get-started">
+        <Button size="s" href="https://console.nuvix.in">
           Get Started
         </Button>
       </div>
