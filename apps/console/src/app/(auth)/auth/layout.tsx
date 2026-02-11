@@ -1,19 +1,11 @@
 "use client";
-import { Background, Column, Fade, Logo, Row, SmartImage, Text } from "@nuvix/ui/components";
+import { Background, Column, Logo, MatrixFx, Row, Text } from "@nuvix/ui/components";
 import { Stack } from "@chakra-ui/react";
-import { useTheme } from "next-themes";
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
-  const { resolvedTheme } = useTheme();
   return (
     <>
-      <Row
-        background="page"
-        fill
-        position="relative"
-        // data-theme="light"
-        className="!bg-(--neutral-on-background-strong) md:!bg-(--page-background)"
-      >
+      <Row background="page" fill position="relative">
         <Stack
           height={{ base: "100svh" }}
           my="auto"
@@ -21,7 +13,12 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
           direction={{ base: "row" }}
         >
           <Row fill hide="m" position="relative" background="surface">
-            <Logo icon={false} className="pt-4 pl-4" />
+            <Logo
+              icon={false}
+              wordmark
+              wordmarkSrc="/trademark/logo-dark.svg"
+              className="pt-8 pl-8"
+            />
             <Background
               position="absolute"
               mask={{
@@ -48,10 +45,20 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
                 height: "0.25rem",
               }}
             />
+            <MatrixFx
+              colors={["neutral-on-background-medium", "brand-solid-strong"]}
+              opacity={10}
+              fill
+              bulge={{
+                type: "ripple",
+              }}
+              size={2}
+              position="absolute"
+            />
             <div className="absolute bottom-32 left-10">
               <Text
                 variant="display-strong-l"
-                className="bg-gradient-to-b from-(--neutral-on-background-strong) via-(--accent-solid-weak) to-(--neutral-on-background-strong) bg-clip-text text-transparent"
+                className="bg-gradient-to-b from-(--neutral-on-background-strong) via-(--brand-solid-strong)/80 to-(--neutral-solid-strong) bg-clip-text text-transparent"
               >
                 Start simple, <br /> Scale your way
               </Text>
