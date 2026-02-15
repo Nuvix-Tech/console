@@ -1,12 +1,12 @@
-# Nuvix Frontend Applications
+# Nuvix Console: Admin Dashboard
 
-This monorepo contains the frontend applications for **Nuvix** - an open source modern backend platform that provides built-in authentication, storage, messaging (email, push notifications, SMS), and easy-to-use database to REST API conversion.
+The Nuvix Console is the central hub for managing your Nuvix backend. This admin dashboard offers streamlined control over Nuvix’s core services, including authentication, data storage, messaging, and REST API configurations.
 
-![Nuvix Dashboard](apps/www/public/images/dashboard/hero_dark.png)
+![Nuvix Console Dashboard](apps/www/public/images/dashboard/hero_dark.png)
 
-## 🌟 What is Nuvix?
+## 🌟 About Nuvix Console
 
-Nuvix is a comprehensive backend-as-a-service platform that simplifies backend development by providing:
+The Console simplifies backend management with an intuitive interface designed for developers and operations teams. Key features include:
 
 - 🔐 **Built-in Authentication** - User management, OAuth, and secure session handling
 - 💾 **Storage Solutions** - File storage, database management, and data APIs  
@@ -27,7 +27,7 @@ This repository contains the frontend applications that provide the user interfa
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/Nuvix-Tech/console.git
+git clone https://github.com/nuvix-dev/console.git
 cd console
 ```
 
@@ -75,7 +75,6 @@ This is a monorepo containing multiple applications and shared packages:
 - **UI Libraries**: Chakra UI, Custom component libraries
 - **Build Tools**: Turbo (monorepo), Vite, pnpm
 - **Code Quality**: ESLint, Biome, TypeScript
-- **Backend Integration**: PostgreSQL metadata utilities (pg-meta) for Nuvix backend services
 
 ## 🤝 Contributing
 

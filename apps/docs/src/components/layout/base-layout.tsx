@@ -12,6 +12,6 @@ export const layoutProps = (): BaseLayoutProps => {
       enabled: true,
       component: <ThemeSwitch />,
     },
-    githubUrl: "https://github.com/Nuvix-Tech/nuvix",
+    githubUrl: "https://github.com/nuvix-dev/nuvix",
   };
 };

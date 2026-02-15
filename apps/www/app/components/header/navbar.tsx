@@ -108,7 +108,7 @@ export function NavMenu() {
                   },
                   {
                     label: "GitHub",
-                    href: "https://github.com/nuvix-tech",
+                    href: "https://github.com/nuvix-dev",
                     icon: "github",
                     description: "Track issues and features.",
                   },

@@ -42,7 +42,7 @@ export const Footer = () => {
             title="Resources"
             items={[
               { label: "Documentation", href: "/docs" },
-              { label: "Github", href: "https://github.com/Nuvix-Tech/nuvix" },
+              { label: "Github", href: "https://github.com/nuvix-dev/nuvix" },
               { label: "Discord", href: "https://discord.gg/nuvix" },
             ]}
           />
@@ -68,11 +68,7 @@ export const Footer = () => {
           </Text>
         </Row>
         <Row gap="8" vertical="center">
-          <IconButton
-            icon="github"
-            variant="secondary"
-            href="https://github.com/Nuvix-Tech/nuvix"
-          />
+          <IconButton icon="github" variant="secondary" href="https://github.com/nuvix-dev/nuvix" />
         </Row>
       </Row>
     </div>
