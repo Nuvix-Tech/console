@@ -23,6 +23,7 @@ import SchemaSelector from "@/ui/SchemaSelector";
 import { GenericSkeletonLoader } from "@/components/editor/components/GenericSkeleton";
 import { Input } from "@nuvix/ui/components";
 import { Search } from "@/ui/data-grid";
+import { useQuerySchemaState } from "@/hooks/useSchemaQueryState";
 // import { useAsyncCheckProjectPermissions } from 'hooks/misc/useCheckPermissions'
 // import { useSelectedProjectQuery } from 'hooks/misc/useSelectedProject'
 // import { useUrlState } from 'hooks/ui/useUrlState'
@@ -66,15 +67,11 @@ const onFilterTables = (
 };
 
 export const AuthPoliciesPage = () => {
-  const { params, setQueryParam, getQueryCopy } = useSearchQuery();
-  const query = getQueryCopy();
-  const schema = params.get("schema") || "public";
+  const { params, setQueryParam } = useSearchQuery();
+  const { selectedSchema, setSelectedSchema } = useQuerySchemaState();
+  const schema = selectedSchema || "public";
   const searchString = params.get("search") || "";
-  const setParams = (newParams: { schema?: string; search?: string }) => {
-    if (newParams.schema) {
-      query.set("schema", newParams.schema);
-      query.commit();
-    }
+  const setParams = (newParams: { search?: string }) => {
     setQueryParam("search", newParams.search);
   };
   const { project, sdk } = useProjectStore();
@@ -146,7 +143,8 @@ export const AuthPoliciesPage = () => {
           showError={false}
           selectedSchemaName={schema}
           onSelectSchema={(schema) => {
-            setParams({ ...params, search: undefined, schema });
+            setSelectedSchema(schema);
+            setParams({ ...params, search: undefined });
           }}
         />
       </div>
