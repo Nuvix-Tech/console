@@ -4,6 +4,8 @@ export const APP_NAME = "Nuvix";
 export const APP_NAME_SMALL = "Nuvix";
 export const API_ENDPOINT = process.env.NEXT_PUBLIC_NUVIX_ENDPOINT ?? "https://api.nuvix.in/v1";
 export const SHOW_TABLE_BORDER = process.env.NEXT_PUBLIC_TABLE_BORDER === "true";
+export const NUVIX_INERNAL_API_URL =
+  process.env.NEXT_PUBLIC_NUVIX_INTERNAL_API_URL ?? "https://server.nuvix.in";
 
 // export const API_URL = (() => {
 //   //  If running in platform, use API_URL from the env var
