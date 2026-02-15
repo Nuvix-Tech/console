@@ -1,0 +1,53 @@
+# Dependencies
+node_modules
+.pnpm-store
+.pnpm-debug.log
+
+# Build output
+.next
+dist
+out
+build
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+
+# Turbo cache
+.turbo
+
+# Coverage / test artifacts
+coverage
+*.lcov
+
+# Temporary files
+tmp
+temp
+*.tmp
+
+# Docker artifacts
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Misc
+*.swp
+*.swo
