@@ -3,11 +3,11 @@
 import { type ComponentProps, createContext, type ReactNode, use, useMemo } from "react";
 import { useSidebar } from "fumadocs-ui/components/sidebar/base";
 import { usePathname } from "fumadocs-core/framework";
-import { isTabActive } from "fumadocs-ui/utils/is-active";
 import Link from "fumadocs-core/link";
 import { useIsScrollTop } from "fumadocs-ui/utils/use-is-scroll-top";
 import { cn } from "@nuvix/sui/lib/utils";
 import { SidebarTab } from "fumadocs-ui/components/sidebar/tabs/index";
+import { isTabActive } from "fumadocs-ui/components/sidebar/tabs/dropdown";
 
 export const LayoutContext = createContext<{
   isNavTransparent: boolean;

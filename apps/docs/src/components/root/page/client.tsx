@@ -17,7 +17,6 @@ import { useTreeContext, useTreePath } from "fumadocs-ui/contexts/tree";
 import type * as PageTree from "fumadocs-core/page-tree";
 import { usePathname } from "fumadocs-core/framework";
 import { type BreadcrumbOptions, getBreadcrumbItemsFromPath } from "fumadocs-core/breadcrumb";
-import { isActive } from "fumadocs-ui/utils/is-active";
 import {
   Collapsible,
   CollapsibleContent,
@@ -28,6 +27,7 @@ import { useActiveAnchor } from "fumadocs-core/toc";
 import { LayoutContext } from "../client";
 import { useFooterItems } from "fumadocs-ui/utils/use-footer-items";
 import { cn } from "@nuvix/sui/lib/utils";
+import { isTabActive } from "fumadocs-ui/components/sidebar/tabs/dropdown";
 
 const TocPopoverContext = createContext<{
   open: boolean;
@@ -242,7 +242,7 @@ export function PageFooter({ items, ...props }: FooterProps) {
   const { previous, next } = useMemo(() => {
     if (items) return items;
 
-    const idx = footerList.findIndex((item) => isActive(item.url, pathname, false));
+    const idx = footerList.findIndex((item) => isTabActive(item as any, pathname));
 
     if (idx === -1) return {};
     return {

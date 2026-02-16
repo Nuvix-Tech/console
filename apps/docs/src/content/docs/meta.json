@@ -10,6 +10,7 @@
     "products/messaging",
     "products/storage",
     "products/database",
-    "---Tools---"
+    "---[Cubes]Resources---",
+    "reference"
   ]
 }
