@@ -33,7 +33,7 @@ COPY packages/sui/package.json ./packages/sui/
 COPY packages/ui/package.json ./packages/ui/
 
 # Install dependencies
-RUN pnpm install --frozen-lockfile
+RUN corepack enable pnpm && pnpm i --frozen-lockfile --ignore-scripts
 
 # -----------------------
 # Stage 2: Builder
