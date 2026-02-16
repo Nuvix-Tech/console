@@ -242,7 +242,7 @@ export function DocsLayout({
             {sidebarEnabled && sidebar()}
             <LayoutBody
               {...props.containerProps}
-              className="bg-(--main-background) border border-(--neutral-alpha-weak) radius-xs min-h-[calc(100vh_-_60px)] max-h-[calc(100vh_-_60px)] overflow-y-auto"
+              className="bg-(--neutral-background-medium)/40 border border-(--neutral-alpha-weak) radius-xs min-h-[calc(100vh_-_60px)] max-h-[calc(100vh_-_60px)] overflow-y-auto"
             >
               {/* {nav.enabled !== false &&
               (nav.component ?? (

@@ -11,7 +11,7 @@ export async function GET(_req: NextRequest, ctx: RouteContext<"/api/raw/[...doc
 
   const slug = [...docs.slice(0, -1), docs.at(-1)?.slice(0, -3)!];
   const page = source.getPage(slug);
-  if (!page) return notFound();
+  if (!page || page.data.type === "openapi") return notFound();
 
   const markdown = await page.data.getText("raw");
 

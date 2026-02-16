@@ -13,11 +13,23 @@ import {
 } from "@/components/root/page";
 import { Metadata } from "next";
 import { headers } from "next/headers";
+import { APIPage } from "@/components/api-page";
 
 export default async function Page(props: { params: Promise<{ slug?: string[] }> }) {
   const params = await props.params;
   const page = source.getPage(params.slug);
   if (!page) notFound();
+
+  if (page.data.type === "openapi") {
+    return (
+      <DocsPage full>
+        <DocsTitle>{page.data.title}</DocsTitle>
+        <DocsBody>
+          <APIPage {...page.data.getAPIPageProps()} />
+        </DocsBody>
+      </DocsPage>
+    );
+  }
 
   const MDX = page.data.body;
   const lastEditedAt = page.data.lastModified;

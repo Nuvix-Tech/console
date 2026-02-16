@@ -6,7 +6,7 @@ import { createPageTreeRenderer } from "fumadocs-ui/components/sidebar/page-tree
 import { createLinkItemRenderer } from "fumadocs-ui/components/sidebar/link-item";
 import { buttonVariants } from "fumadocs-ui/components/ui/button";
 import { Sidebar as SidebarIcon } from "lucide-react";
-import { mergeRefs } from "fumadocs-ui/utils/merge-refs";
+import { mergeRefs } from "@chakra-ui/react";
 import { cn } from "@nuvix/sui/lib/utils";
 import { SearchToggle } from "./search-toggle";
 
