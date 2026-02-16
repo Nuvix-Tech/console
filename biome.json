@@ -22,7 +22,7 @@
       "!**/.next/**",
       "!**/.turbo/**",
       "!apps/docs/src/content/docs/api",
-      "!apps/docs/public/specs"
+      "!apps/docs/src/content/openapi.bundle.json"
     ]
   },
   "formatter": {
