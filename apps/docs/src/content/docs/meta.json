@@ -10,7 +10,8 @@
     "products/messaging",
     "products/storage",
     "products/database",
-    "---[Cubes]Resources---",
-    "reference"
+    "---[Code]API References---",
+    "references",
+    "!references/app"
   ]
 }

@@ -10,7 +10,9 @@ export const source = loader(
   multiple({
     docs: docs.toFumadocsSource(),
     openapi: await openapiSource(openapi, {
-      baseDir: "reference",
+      baseDir: "references",
+      per: "operation",
+      groupBy: "tag",
     }),
   }),
   {
