@@ -11,7 +11,6 @@
     "products/storage",
     "products/database",
     "---[Code]API References---",
-    "references",
-    "!references/app"
+    "...references"
   ]
 }

@@ -21,7 +21,8 @@
       "!**/.DS_Store",
       "!**/.next/**",
       "!**/.turbo/**",
-      "!apps/docs/src/content/docs/api"
+      "!apps/docs/src/content/docs/api",
+      "!apps/docs/public/specs"
     ]
   },
   "formatter": {

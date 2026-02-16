@@ -50,16 +50,14 @@ const nx = new Client()
 Let's test the connection by creating an anonymous session. This verifies that your app can talk to Nuvix.
 
 ```typescript
-import { Client, Account } from '@nuvix/client';
+import { Client } from '@nuvix/client';
 
 const nx = new Client()
     .setEndpoint('https://api.nuvix.in/v1')
     .setProject('<PROJECT_ID>');
 
-const account = new Account(nx);
-
 // Create an anonymous session
-const session = await account.createAnonymousSession();
+const session = await nx.account.createAnonymousSession();
 
 console.log('Logged in as guest:', session.$id);
 ```
