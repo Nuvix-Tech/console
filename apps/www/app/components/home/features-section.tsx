@@ -1,4 +1,3 @@
-"use client";
 import { Route } from "lucide-react";
 import { Column, Icon, Mask, Row, Text, type IconProps } from "@nuvix/ui/components";
 import { GlowingEffect } from "~/ui/glowing-effect";

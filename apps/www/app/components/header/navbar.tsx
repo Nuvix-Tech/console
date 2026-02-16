@@ -1,4 +1,3 @@
-"use client";
 import { Text, ToggleButton } from "@nuvix/ui/components";
 import { MegaMenu } from "@nuvix/ui/modules";
 import { DOCS_URL } from "~/lib/constants";

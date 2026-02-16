@@ -16,7 +16,7 @@ Nuvix allows you to own your infrastructure completely. This guide covers deploy
 Clone the main repository.
 
 ```bash
-git clone https://github.com/nuvix-dev/nuvix.git
+git clone https://github.com/nuvix-dev/docker.git nuvix
 cd nuvix
 ```
 
@@ -46,9 +46,6 @@ NUVIX_DATABASE_PASSWORD="<strong-db-password>"
 NUVIX_ADMIN_EMAIL="admin@yourdomain.com"
 NUVIX_ADMIN_PASSWORD="<strong-admin-password>"
 
-# Domain Configuration
-NUVIX_DOMAIN="yourdomain.com"
-NUVIX_CONSOLE_URL="https://console.yourdomain.com"
 ```
 
 ## 3. Deploy
@@ -62,10 +59,10 @@ docker compose up -d
 ### Stack Components
 
 - **`server`**: Core API (Port 4000)
-- **`platform`**: Console UI (Port 4100)
+- **`platform`**: Platform api (Port 4100)
 - **`postgres`**: Main Database (Port 5432)
 - **`redis`**: Cache & PubSub (Port 6379)
-- **`pgcat`**: Connection Pooler (Optional/Commented out by default)
+- **`console`**: Console UI (Port 3000)
 
 ## 4. Verify
 
@@ -76,30 +73,7 @@ docker compose ps
 ```
 
 Access the console at:
-`http://<your-server-ip>:4100` (or your configured domain).
-
-## Production Tips
-
-### Reverse Proxy
-We recommend running Nuvix behind a reverse proxy like **Caddy** or **Nginx** for HTTPS.
-
-**Example Caddyfile:**
-```bash
-console.yourdomain.com {
-    reverse_proxy localhost:4100
-}
-
-api.yourdomain.com {
-    reverse_proxy localhost:4000
-}
-```
-
-### Storage
-By default, Nuvix uses local disk storage mounted to the `server` container.
-- Volume: `nuvix_storage`
-- Host Path: `/var/lib/docker/volumes/nuvix_storage/_data`
-
-Ensure your host has sufficient disk space or mount an external block storage volume to this location.
+`http://<your-server-ip>:3000` (or your configured domain).
 
 ### Updates
 
