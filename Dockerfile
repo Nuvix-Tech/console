@@ -8,7 +8,7 @@ FROM node:20-alpine AS base
 WORKDIR /app
 
 # Enable pnpm globally
-RUN corepack enable
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
 # -----------------------
 # Stage 1: Dependencies
@@ -33,7 +33,7 @@ COPY packages/sui/package.json ./packages/sui/
 COPY packages/ui/package.json ./packages/ui/
 
 # Install dependencies
-RUN pnpm install --frozen-lockfile
+RUN pnpm i --frozen-lockfile --ignore-scripts
 
 # -----------------------
 # Stage 2: Builder
