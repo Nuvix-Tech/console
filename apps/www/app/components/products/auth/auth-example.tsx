@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { Column, Row, Text, Chip } from "@nuvix/ui/components";
 import { CodeBlock } from "@nuvix/ui/modules";

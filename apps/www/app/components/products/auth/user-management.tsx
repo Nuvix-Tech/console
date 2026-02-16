@@ -1,5 +1,3 @@
-"use client";
-
 import { Column, Row, Text, Icon } from "@nuvix/ui/components";
 import { motion } from "motion/react";
 

@@ -8,6 +8,14 @@ export default defineConfig({
   server: {
     allowedHosts: ["ide.nuvix.in"],
   },
+  build: {
+    rollupOptions: {
+      onwarn(warning, defaultHandler) {
+        if (warning.message.includes("sourcemap for reporting an error")) return;
+        defaultHandler(warning);
+      },
+    },
+  },
   css: {
     preprocessorOptions: {
       scss: {
