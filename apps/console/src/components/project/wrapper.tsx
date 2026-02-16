@@ -50,7 +50,7 @@ export default function ProjectWrapper({
   const { data: orgData } = useQuery({
     queryKey: rootKeys.organization(projectData?.teamId),
     queryFn: async () => projectData && organizations.get(projectData.teamId),
-    enabled: !!projectData,
+    enabled: !!projectData && !isPlatform,
     staleTime: Infinity,
   });
 
@@ -60,7 +60,7 @@ export default function ProjectWrapper({
       projectData && isPlatform
         ? organizations.getScopes(projectData.teamId)
         : ({ scopes: [], roles: [] } as Models.Roles),
-    enabled: !!projectData,
+    enabled: !!projectData && !isPlatform,
     staleTime: Infinity,
   });
 

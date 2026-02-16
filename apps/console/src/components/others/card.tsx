@@ -25,7 +25,7 @@ export const CardBox = (props: UpdateCardProps & React.ComponentProps<typeof Car
     <>
       <Card
         className={cn(
-          "bg-[var(--surface-background)] dark:bg-[var(--neutral-alpha-weak)] border-0 shadow-none",
+          "bg-[var(--neutral-background-medium)] dark:bg-[var(--neutral-alpha-weak)] border-0 shadow-none",
           className,
         )}
         {...rest}
