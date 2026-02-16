@@ -51,7 +51,7 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
               markdownUrl={[`${protocol}:/`, domain, "api", "raw", ...page.slugs]
                 .join("/")
                 .concat(".md")}
-              githubUrl={`https://github.com/Nuvix-Tech/console/blob/main/apps/docs/src/content/docs/${page.path}`}
+              githubUrl={`https://github.com/nuvix-dev/console/blob/main/apps/docs/src/content/docs/${page.path}`}
               markdown={markdown}
             />
           )}

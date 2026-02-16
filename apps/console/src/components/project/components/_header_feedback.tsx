@@ -3,6 +3,7 @@ import { useLocalStorageQuery } from "@/hooks/useLocalStorage";
 import { platformClient } from "@/lib/sdk";
 import { Popover, PopoverContent, PopoverTrigger } from "@nuvix/sui/components/popover";
 import { Button, Icon, Text, Textarea } from "@nuvix/ui/components";
+import { NUVIX_INERNAL_API_URL } from "@/lib/constants";
 
 interface FeedbackResponse {
   success: boolean;
@@ -39,7 +40,7 @@ export const FeedbackButton = () => {
     setError(null);
 
     try {
-      const url = new URL(platformClient.config.endpoint + "/internal/feedback");
+      const url = new URL(NUVIX_INERNAL_API_URL + "/internal/feedback");
 
       const headers = {
         "content-type": "application/json",

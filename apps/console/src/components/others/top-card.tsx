@@ -11,7 +11,7 @@ const TopCard = ({ children, minHeight = 16 }: PropsWithChildren<Props>) => {
     <Row
       position="relative"
       minHeight={minHeight}
-      className="bg-[var(--surface-background)] dark:bg-[var(--neutral-alpha-weak)]"
+      className="bg-[var(--neutral-background-medium)] dark:bg-[var(--neutral-alpha-weak)]"
       radius="l"
       padding="12"
       overflow="hidden"

@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { sdkForConsole } from "@/lib/sdk";
 import { toast } from "sonner";
 import { useRouter } from "@bprogress/next";
+import { isPlatform } from "@/lib/constants";
 
 export const AccountLayout = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAppStore((s) => s);
@@ -18,7 +19,7 @@ export const AccountLayout = ({ children }: { children: React.ReactNode }) => {
     { value: "account", label: "Overview", href: "" },
     { value: "preference", label: "Preference" },
     { value: "sessions", label: "Sessions" },
-    { value: "organizations", label: "Organizations" },
+    ...(isPlatform ? [{ value: "organizations", label: "Organizations" }] : []),
   ];
 
   async function onLogOut() {

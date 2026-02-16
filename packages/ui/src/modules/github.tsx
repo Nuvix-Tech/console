@@ -22,7 +22,7 @@ export const GithubButton = () => {
         }
 
         // Fetch fresh data
-        const response = await fetch("https://api.github.com/repos/nuvix-tech/nuvix");
+        const response = await fetch("https://api.github.com/repos/nuvix-dev/nuvix");
         const data = await response.json();
         const starCount = data.stargazers_count;
         setStars(starCount);
@@ -48,7 +48,7 @@ export const GithubButton = () => {
       variant="secondary"
       size="s"
       className="ml-2 relative"
-      href="https://www.github.com/nuvix-tech/nuvix"
+      href="https://www.github.com/nuvix-dev/nuvix"
       prefixIcon="github"
       suffixIcon={<div>{stars !== null ? stars?.toString() : "..."}</div>}
     >

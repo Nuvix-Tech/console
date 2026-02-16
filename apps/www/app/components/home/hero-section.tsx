@@ -29,7 +29,7 @@ export const HeroSection = () => {
 
             <div className="mt-6 flex flex-row gap-4 sm:gap-8 justify-center items-center">
               <Button
-                href="https://github.com/Nuvix-Tech/nuvix"
+                href="https://github.com/nuvix-dev/nuvix"
                 target="_blank"
                 size="s"
                 variant="primary"

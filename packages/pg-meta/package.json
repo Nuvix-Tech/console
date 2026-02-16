@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "author": "Nuvix",
   "main": "./src/index.ts",
-  "repository": "Nuvix-Tech/nuvix",
+  "repository": "nuvix-dev/nuvix",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "clean": "rimraf node_modules",

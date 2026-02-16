@@ -38,7 +38,7 @@ export const HelpButton = () => {
             </a>
 
             <a
-              href="https://github.com/Nuvix-Tech/nuvix/issues/new"
+              href="https://github.com/nuvix-dev/nuvix/issues/new"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-3 p-3 rounded-xs border hover:bg-muted transition-colors group"
