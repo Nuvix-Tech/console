@@ -33,7 +33,7 @@ COPY packages/sui/package.json ./packages/sui/
 COPY packages/ui/package.json ./packages/ui/
 
 # Install dependencies
-RUN pnpm i --frozen-lockfile --ignore-scripts
+RUN pnpm i --frozen-lockfile --filter=console --workspace-root
 
 # -----------------------
 # Stage 2: Builder
@@ -51,7 +51,7 @@ ENV NEXT_PUBLIC_SERVER_ENDPOINT=__NUVIX_DYNAMIC_SERVER_ENDPOINT__
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Build console
-RUN pnpm run build
+RUN pnpm run build --filter=console --workspace-root  
 
 # -----------------------
 # Stage 3: Runtime
