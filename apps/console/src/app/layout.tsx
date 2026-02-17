@@ -76,6 +76,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
         )}
       >
         <head>
+          <script src="/env.js"></script>
           <ThemeInit
             config={{
               theme: "system",

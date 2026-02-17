@@ -26,17 +26,14 @@ import {
   Vcs,
 } from "@nuvix/console";
 import { Schemas } from "./external-sdk";
-import { PLATFORM_URL } from "./constants";
+import { NUVIX_INERNAL_API_URL } from "./constants";
+import { getEnv } from "./env";
 
-export const API_URL = process.env.NEXT_PUBLIC_NUVIX_ENDPOINT ?? "http://localhost:4000/v1";
+const clientConsole = new Client().setEndpoint(getEnv().API_ENDPOINT).setProject("console");
+const clientServer = new Client().setEndpoint(getEnv().PLATFORM_ENDPOINT).setProject("console");
 
-export const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_ENDPOINT ?? "http://localhost:4100";
-
-const clientConsole = new Client().setEndpoint(API_URL).setProject("console");
-const clientServer = new Client().setEndpoint(SERVER_URL).setProject("console");
-
-const clientProject = new Client().setEndpoint(API_URL).setMode("admin");
-const clientServerProject = new Client().setEndpoint(SERVER_URL).setMode("admin");
+const clientProject = new Client().setEndpoint(getEnv().API_ENDPOINT).setMode("admin");
+const clientServerProject = new Client().setEndpoint(getEnv().PLATFORM_ENDPOINT).setMode("admin");
 
 const sdkForProject = {
   client: clientProject,
@@ -183,4 +180,4 @@ export type ProjectSdk = typeof sdkForProject;
 export { sdkForConsole, getProjectSdk };
 export type { sdkForProject };
 
-export const platformClient = new Client().setEndpoint(PLATFORM_URL).setProject("console");
+export const platformClient = new Client().setEndpoint(NUVIX_INERNAL_API_URL).setProject("console");
