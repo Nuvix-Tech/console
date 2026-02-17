@@ -35,7 +35,13 @@ export const EmptyState = ({
         className="neutral-background-alpha-weak"
         gap={4}
       >
-        <SmartImage src="/images/empty-dark.svg" alt="Empty state" height={14} width={20.5} />
+        <SmartImage
+          src="/images/empty-dark.svg"
+          alt="Empty state"
+          height={14}
+          width={20.5}
+          unoptimized
+        />
         <Stack gap={1} justifyContent="center" alignItems="center">
           <Text textStyle="xl" fontWeight="bold">
             {title}

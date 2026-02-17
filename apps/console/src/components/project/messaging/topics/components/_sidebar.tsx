@@ -23,16 +23,16 @@ export const TopicSidebar = () => {
             href: resolveHref(),
             isSelected: path === resolveHref(),
           },
-          {
-            label: "Activity",
-            href: resolveHref("activity"),
-            isSelected: resolveIsSelected("activity"),
-          },
-          {
-            label: "Settings",
-            href: resolveHref("settings"),
-            isSelected: resolveIsSelected("settings"),
-          },
+          // {
+          //   label: "Activity",
+          //   href: resolveHref("activity"),
+          //   isSelected: resolveIsSelected("activity"),
+          // },
+          // {
+          //   label: "Settings",
+          //   href: resolveHref("settings"),
+          //   isSelected: resolveIsSelected("settings"),
+          // },
         ]}
       />
     </>

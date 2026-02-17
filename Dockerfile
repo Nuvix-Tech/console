@@ -72,7 +72,7 @@ RUN addgroup --system --gid 1001 nodejs \
  && adduser --system --uid 1001 nextjs
 
 # Copy standalone output from the monorepo structure
-COPY --from=builder /app/apps/console/public ./apps/console/public
+COPY --from=builder --chown=nextjs:nodejs /app/apps/console/public ./apps/console/public
 COPY --from=builder --chown=nextjs:nodejs /app/apps/console/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/console/.next/static ./apps/console/.next/static
 
@@ -94,7 +94,6 @@ EOF\n\
 exec node apps/console/server.js\n' > /entrypoint.sh \
  && chmod +x /entrypoint.sh
 
-RUN chown -R nextjs:nodejs /app/apps/console/public
 USER nextjs
 EXPOSE 3000
 

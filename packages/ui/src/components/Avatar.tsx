@@ -47,7 +47,7 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
       statusIndicator,
       className,
       style,
-      unoptimized,
+      unoptimized = true,
       ...rest
     },
     ref,

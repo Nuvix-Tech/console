@@ -33,7 +33,7 @@ export const SelectDialog = ({ title, description, children, actions }: Props) =
 };
 
 type SelectBox1Props = {
-  title: string;
+  title: string | null;
   desc?: string;
   src?: string;
   onClick?: () => void;
@@ -66,8 +66,8 @@ export const SelectBox1: React.FC<SelectBox1Props> = ({
         )}
         <div className="flex gap-3 items-center">
           <Avatar>
-            {src && <AvatarImage src={src} alt={title.slice(0, 2)} />}
-            <AvatarFallback>{title.slice(0, 2).toUpperCase()}</AvatarFallback>
+            {src && <AvatarImage src={src} alt={title?.slice(0, 2) || ""} />}
+            <AvatarFallback>{title?.slice(0, 2).toUpperCase()}</AvatarFallback>
           </Avatar>
           <div className="">
             <h3 className="text-sm font-semibold">{title}</h3>

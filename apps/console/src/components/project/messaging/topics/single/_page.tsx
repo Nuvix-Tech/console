@@ -137,7 +137,7 @@ export const TopicSinglePage = ({ topicId }: { topicId: string }) => {
   return (
     <PageContainer>
       <PageHeading
-        heading={`Topic: ${topic!.name}`}
+        heading={`Topic: ${topic?.name}`}
         description="Manage subscribers for this messaging topic."
       />
 
