@@ -83,10 +83,14 @@ ENV NEXT_PUBLIC_SERVER_ENDPOINT=http://localhost:4100
 # Refined Entrypoint script
 RUN printf '#!/bin/sh\n\
 set -e\n\
-echo "Starting Nuvix Console..."\n\
-# Replacement across the standalone folder to catch all instances\n\
-find . -type f -name "*.js" -exec sed -i "s|__NUVIX_DYNAMIC_NUVIX_ENDPOINT__|$NEXT_PUBLIC_NUVIX_ENDPOINT|g" {} +\n\
-find . -type f -name "*.js" -exec sed -i "s|__NUVIX_DYNAMIC_SERVER_ENDPOINT__|$NEXT_PUBLIC_SERVER_ENDPOINT|g" {} +\n\
+echo "Generating runtime env.js..."\n\
+mkdir -p /app/apps/console/public\n\
+cat <<EOF > /app/apps/console/public/env.js\n\
+window.__NUVIX__ = {\n\
+  API_ENDPOINT: "${NUVIX_API_ENDPOINT}",\n\
+  PLATFORM_ENDPOINT: "${NUVIX_PLATFORM_ENDPOINT}"\n\
+}\n\
+EOF\n\
 exec node apps/console/server.js\n' > /entrypoint.sh \
  && chmod +x /entrypoint.sh
 

@@ -6,13 +6,13 @@ import {
   CardBoxTitle,
 } from "@/components/others/card";
 import { ClipboardInput, ClipboardLabel, ClipboardRoot } from "@nuvix/cui/clipboard";
-import { API_ENDPOINT } from "@/lib/constants";
 import { Button } from "@chakra-ui/react";
 import { useRouter } from "@bprogress/next";
 import React from "react";
 import { LuExternalLink } from "react-icons/lu";
 import { useProjectStore } from "@/lib/store";
 import { Icon } from "@nuvix/ui/components";
+import { getEnv } from "@/lib/env";
 
 export const ProjectInfo: React.FC = () => {
   const project = useProjectStore.use.project?.();
@@ -44,7 +44,7 @@ export const ProjectInfo: React.FC = () => {
               <ClipboardInput />
             </ClipboardRoot>
 
-            <ClipboardRoot value={API_ENDPOINT}>
+            <ClipboardRoot value={getEnv().API_ENDPOINT}>
               <ClipboardLabel>API Endpoint</ClipboardLabel>
               <ClipboardInput />
             </ClipboardRoot>

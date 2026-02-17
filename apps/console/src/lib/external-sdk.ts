@@ -1,7 +1,7 @@
 export type { Models as _Models } from "@nuvix/console";
 export type { Models as ModelsX } from "@nuvix/console";
 import { Schemas as BaseSchemas, Models } from "@nuvix/console";
-import { SERVER_URL } from "./sdk";
+import { getEnv } from "./env";
 export enum SchemaType {
   Document = "document",
   Managed = "managed",
@@ -91,7 +91,7 @@ export class Schemas extends BaseSchemas {
     headers?: Record<string, string>;
     payload?: any;
   }) {
-    const uri = new URL(SERVER_URL + "/database" + path);
+    const uri = new URL(getEnv().PLATFORM_ENDPOINT + "/database" + path);
     if (query) {
       for (const [key, value] of Object.entries(query)) {
         value && uri.searchParams.set(key, value.toString());
