@@ -1,5 +1,5 @@
 // import * as Sentry from '@sentry/nextjs'
-import { ProjectSdk, SERVER_URL } from "@/lib/sdk";
+import { ProjectSdk } from "@/lib/sdk";
 // import { uuidv4 } from '@/lib/helpers'
 // import createClient from 'openapi-fetch'
 import { ResponseError } from "@/types";
