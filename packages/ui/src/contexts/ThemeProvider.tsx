@@ -1,6 +1,6 @@
 "use client";
 
-import { Schemes } from "../types";
+import { type Schemes } from "../types";
 import { createContext, useContext, useEffect, useState, useCallback } from "react";
 
 export type Theme = "dark" | "light" | "system";

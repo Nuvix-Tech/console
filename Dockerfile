@@ -94,6 +94,7 @@ EOF\n\
 exec node apps/console/server.js\n' > /entrypoint.sh \
  && chmod +x /entrypoint.sh
 
+RUN chown -R nextjs:nodejs /app/apps/console/public
 USER nextjs
 EXPOSE 3000
 
