@@ -53,6 +53,8 @@ const ProviderCard = ({
   const _provider = project.oAuthProviders.find((p) => p.key === _key);
   const is = _provider?.enabled;
 
+  if (!_provider) return null;
+
   const title = (
     <Row gap="8" vertical="center">
       <Avatar src={`/icons/${theme}/color/${provider.icon}.svg`} className="size-10" />
