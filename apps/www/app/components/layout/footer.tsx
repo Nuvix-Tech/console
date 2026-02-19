@@ -41,9 +41,9 @@ export const Footer = () => {
           <FooterMenu
             title="Resources"
             items={[
-              { label: "Documentation", href: "/docs" },
+              { label: "Documentation", href: "https://docs.nuvix.in" },
               { label: "Github", href: "https://github.com/nuvix-dev/nuvix" },
-              { label: "Discord", href: "https://discord.gg/nuvix" },
+              { label: "Discord", href: "https://discord.gg/2fWv2T6RzK" },
             ]}
           />
         </div>
