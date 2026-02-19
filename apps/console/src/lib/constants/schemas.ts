@@ -10,6 +10,7 @@ export const PROTECTED_SCHEMAS = [
   "realtime",
   "system",
   "vault",
+  "internal",
 ];
 
 export const PROTECTED_SCHEMAS_WITHOUT_EXTENSIONS = PROTECTED_SCHEMAS.filter(
