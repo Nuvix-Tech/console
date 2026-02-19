@@ -101,7 +101,7 @@ export function NavMenu() {
                 links: [
                   {
                     label: "Discord",
-                    href: "https://discord.gg/nuvix",
+                    href: "https://discord.gg/2fWv2T6RzK",
                     icon: "discord",
                     description: "Join our dev community.",
                   },
