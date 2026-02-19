@@ -32,14 +32,20 @@ export const formatValues = (provider: Models.AuthProvider): FormatResult => {
     }),
     format: (values) => ({
       appId: values.appId,
-      secret: JSON.stringify({}),
+      secret: JSON.stringify(values),
       enabled: !!values.enabled,
     }),
   };
 
   const merge = (fields: string[], alwaysOptional: string[] = []) => {
-    for (const field of fields) {
-      result.initialValues[field] = extra?.[field] || "";
+    if (fields.length === 1) {
+      // For single field, use direct value instead of JSON stringified
+      const field = fields[0];
+      result.initialValues[field] = secret;
+    } else {
+      for (const field of fields) {
+        result.initialValues[field] = extra?.[field] || "";
+      }
     }
 
     const shape: Record<string, yup.AnySchema> = {
@@ -59,16 +65,24 @@ export const formatValues = (provider: Models.AuthProvider): FormatResult => {
     result.validationSchema = yup.object().shape(shape);
 
     result.format = (values) => {
-      const formatted: Record<string, string> = {};
-      for (const field of fields) {
-        formatted[field] = values[field];
+      if (fields.length === 1) {
+        // Use direct value, not JSON stringified
+        return {
+          appId: values.appId,
+          secret: values[fields[0]],
+          enabled: !!values.enabled,
+        };
+      } else {
+        const formatted: Record<string, string> = {};
+        for (const field of fields) {
+          formatted[field] = values[field];
+        }
+        return {
+          appId: values.appId,
+          secret: JSON.stringify(formatted),
+          enabled: !!values.enabled,
+        };
       }
-
-      return {
-        appId: values.appId,
-        secret: JSON.stringify(formatted),
-        enabled: !!values.enabled,
-      };
     };
   };
 
