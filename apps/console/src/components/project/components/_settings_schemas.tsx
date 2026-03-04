@@ -10,11 +10,18 @@ import { rootKeys } from "@/lib/keys";
 import { sdkForConsole } from "@/lib/sdk";
 import { useProjectStore } from "@/lib/store";
 import { useQueryClient } from "@tanstack/react-query";
+import { useMemo } from "react";
 import { toast } from "sonner";
 
 export const ManageExposedSchemas = () => {
   const project = useProjectStore((state) => state.project);
+  const _schemas = useProjectStore((state) => state.schemas);
   const queryClient = useQueryClient();
+
+  const schemas = useMemo(() => {
+    if (!project) return [];
+    return _schemas.filter((schema) => schema.type !== "document").map((s) => s.name);
+  }, [project, _schemas]);
 
   return (
     <Form
@@ -48,7 +55,11 @@ export const ManageExposedSchemas = () => {
           <CardBoxItem gap={"4"}>
             <CardBoxTitle>Exposed Schemas</CardBoxTitle>
             <CardBoxDesc>
-              Control which database schemas are exposed over the API for this project.
+              Select which database schemas should be accessible via the client API. 
+              <br />
+              All schemas are always available via server-side SDKs using an API key, regardless of exposure status.
+              <br />
+              Note: Document schemas are always exposed by default.
             </CardBoxDesc>
           </CardBoxItem>
           <CardBoxItem direction="column" gap="8">
@@ -57,6 +68,7 @@ export const ManageExposedSchemas = () => {
               label="Allowed Schemas"
               placeholder="Enter schema name and press enter"
               description="List of database schemas that are allowed to be exposed over the API."
+              suggestion={schemas}
             />
           </CardBoxItem>
         </CardBoxBody>
