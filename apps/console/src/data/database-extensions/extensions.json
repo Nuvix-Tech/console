@@ -177,7 +177,7 @@
     "link": "/guides/database/extensions/index_advisor",
     "github_url": "https://github.com/supabase/index_advisor",
     "product": "Index Advisor Report",
-    "product_url": "/project/{ref}/advisors/query-performance"
+    "product_url": "/project/{ref}/observability/query-performance"
   },
   {
     "name": "intarray",
@@ -276,7 +276,16 @@
     "link": "/guides/database/extensions/pg_net",
     "github_url": "https://github.com/supabase/pg_net",
     "product": "Database Webhooks",
-    "product_url": "/project/{ref}/database/hooks"
+    "product_url": "/project/{ref}/integrations/webhooks"
+  },
+  {
+    "name": "pg_partman",
+    "comment": "Automated partition management",
+    "tags": ["Utility"],
+    "link": "/guides/database/extensions/pg_partman",
+    "github_url": "https://github.com/pgpartman/pg_partman",
+    "product": null,
+    "product_url": null
   },
   {
     "name": "pg_prewarm",
@@ -294,7 +303,7 @@
     "link": "/guides/database/extensions/pg_stat_statements",
     "github_url": null,
     "product": "Query Performance",
-    "product_url": "/project/{ref}/advisors/query-performance"
+    "product_url": "/project/{ref}/observability/query-performance"
   },
   {
     "name": "pg_surgery",
@@ -348,8 +357,7 @@
     "link": "/guides/database/extensions/pgjwt",
     "github_url": "https://github.com/michelp/pgjwt",
     "product": null,
-    "product_url": null,
-    "deprecated": ["Postgres 17"]
+    "product_url": null
   },
   {
     "name": "pgroonga",
@@ -421,7 +429,7 @@
     "github_url": null,
     "product": null,
     "product_url": null,
-    "deprecated": ["Postgres 17"]
+    "deprecated": ["Postgres 17", "Postgres 18"]
   },
   {
     "name": "pljava",
@@ -439,7 +447,7 @@
     "github_url": null,
     "product": null,
     "product_url": null,
-    "deprecated": ["Postgres 17"]
+    "deprecated": ["Postgres 17", "Postgres 18"]
   },
   {
     "name": "plpgsql",
@@ -467,7 +475,7 @@
     "github_url": null,
     "product": null,
     "product_url": null,
-    "deprecated": ["Postgres 17"]
+    "deprecated": ["Postgres 17", "Postgres 18"]
   },
   {
     "name": "postgis",
@@ -549,7 +557,7 @@
     "github_url": null,
     "product": null,
     "product_url": null,
-    "deprecated": ["Postgres 17"]
+    "deprecated": ["Postgres 17", "Postgres 18"]
   },
   {
     "name": "tsm_system_rows",
