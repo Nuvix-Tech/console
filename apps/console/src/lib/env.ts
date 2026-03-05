@@ -6,7 +6,7 @@ type EnvConfig = {
 };
 
 export function getEnv(): EnvConfig {
-  if (isPlatform) {
+  if (isPlatform || process.env.NODE_ENV === "development") {
     return {
       API_ENDPOINT: process.env.NEXT_PUBLIC_NUVIX_ENDPOINT || "http://localhost:4000/v1",
       PLATFORM_ENDPOINT: process.env.NEXT_PUBLIC_SERVER_ENDPOINT || "http://localhost:4100",

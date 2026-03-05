@@ -88,7 +88,7 @@ mkdir -p /app/apps/console/public\n\
 cat <<EOF > /app/apps/console/public/env.js\n\
 window.__NUVIX__ = {\n\
   API_ENDPOINT: "${NUVIX_API_ENDPOINT}",\n\
-  PLATFORM_ENDPOINT: "${NUVIX_PLATFORM_ENDPOINT}"\n\
+  PLATFORM_ENDPOINT: "${NUVIX_CONSOLE_API_ENDPOINT}"\n\
 }\n\
 EOF\n\
 exec node apps/console/server.js\n' > /entrypoint.sh \

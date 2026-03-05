@@ -28,8 +28,8 @@ const SecurityPage: React.FC = () => {
         <SessionDuration />
         <SessionLimit />
         <PasswordHistory />
-        <PasswordDictionary />
-        <PersonalData />
+        {/* <PasswordDictionary /> */}
+        {/* <PersonalData /> */}
         <SessionAlerts />
       </PageContainer>
     </>

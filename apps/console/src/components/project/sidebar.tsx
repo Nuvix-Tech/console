@@ -167,12 +167,13 @@ export const FirstSidebar = ({ inMobile, onClose }: FirstSidebarProps) => {
         maxWidth={inMobile ? undefined : 3.5}
         fill
         paddingBottom="8"
-        paddingTop={inMobile ? "32" : undefined}
+        paddingTop={inMobile ? "40" : undefined}
         vertical="space-between"
         position="relative"
         overflowY="auto"
         className={cn("transition-[max-width] duration-200 ease-in-out no-scrollbar", {
           "!hidden ml:!flex": !inMobile,
+          "px-2": inMobile,
         })}
         background={inMobile ? "transparent" : "surface"}
       >
@@ -285,13 +286,15 @@ const SidebarSmallButton = ({
         <ToggleButton
           size="m"
           href={item.href}
+          fillWidth={showFullSidebar}
           justifyContent={showFullSidebar ? "flex-start" : "center"}
           selected={selected ?? false}
-          onClick={onClose ?? item.onClick}
+          onLinkClick={onClose}
+          onClick={item.onClick}
           disabled={item.disabled}
           prefixIcon={showFullSidebar ? item.icon : undefined}
           label={showFullSidebar && item.name}
-          className={cn({ "": !showFullSidebar }, "!size-10 mx-auto")}
+          className={cn({ "!size-10 mx-auto": !showFullSidebar })}
         >
           {!showFullSidebar && <Icon size="m" name={item.icon} />}
         </ToggleButton>

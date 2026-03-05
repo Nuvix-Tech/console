@@ -33,6 +33,7 @@ interface CommonProps {
   style?: React.CSSProperties;
   children?: ReactNode;
   href?: string;
+  onLinkClick?: () => void;
 }
 
 export type ToggleButtonProps = CommonProps & React.ButtonHTMLAttributes<HTMLButtonElement>;

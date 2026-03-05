@@ -120,13 +120,13 @@ const MobileHeader = () => {
           <Row gap="4" vertical="center">
             <Logo
               icon={false}
-              size="l"
+              size="s"
               className="is-only-dark"
               wordmarkSrc="/trademark/logo-dark.svg"
             />
             <Logo
               icon={false}
-              size="l"
+              size="s"
               className="is-only-light"
               wordmarkSrc="/trademark/logo-light.svg"
             />{" "}
@@ -168,7 +168,7 @@ const MobileHeader = () => {
         placement="bottom"
       >
         <DrawerBackdrop />
-        <DrawerContent offset="4" rounded="md">
+        <DrawerContent offset="4" rounded="md" portalled={false}>
           <DrawerBody className="h-full">
             <SecondSidebar inMobile onClose={() => setIsSecondMenuOpen(false)} />
           </DrawerBody>
