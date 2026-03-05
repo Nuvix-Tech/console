@@ -38,9 +38,10 @@ export function SelectEditor<TRow, TSummaryRow = unknown>({
   return (
     <Select
       autoFocus
+      defaultOpen
       id="select-editor"
       name="select-editor"
-      size="md"
+      size="xs"
       defaultValue={value ? [value] : []}
       className="nx-grid-select-editor"
       style={{ width: `${gridColumn?.width || column.width}px` }}

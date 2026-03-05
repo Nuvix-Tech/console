@@ -55,9 +55,10 @@ export const ManageExposedSchemas = () => {
           <CardBoxItem gap={"4"}>
             <CardBoxTitle>Exposed Schemas</CardBoxTitle>
             <CardBoxDesc>
-              Select which database schemas should be accessible via the client API. 
+              Select which database schemas should be accessible via the client API.
               <br />
-              All schemas are always available via server-side SDKs using an API key, regardless of exposure status.
+              All schemas are always available via server-side SDKs using an API key, regardless of
+              exposure status.
               <br />
               Note: Document schemas are always exposed by default.
             </CardBoxDesc>

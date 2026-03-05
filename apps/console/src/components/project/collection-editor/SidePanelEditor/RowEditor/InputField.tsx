@@ -243,11 +243,13 @@ const NumberField = ({ value, onChange, ...props }: FieldProps) => (
 
 // Select field factory
 const makeSelectField =
-  (baseOptions: SelectProps["options"]) =>
+  (baseOptions: SelectProps["options"], parseBool?: boolean) =>
   ({ value, onChange, options = [], nullable, ...props }: SelectFieldProps) => {
     const _onChange = (v: string) => {
       if ((v === null || v === "null") && nullable) {
         onChange({ target: { value: null } });
+      } else if (parseBool && (v === "true" || v === "false")) {
+        onChange({ target: { value: v === "true" } });
       } else {
         onChange({ target: { value: v } });
       }
@@ -262,7 +264,7 @@ const makeSelectField =
         {...props}
         labelAsPlaceholder
         portal={false}
-        value={value == null ? "null" : value}
+        value={value == null ? "null" : parseBool ? (value ? "true" : "false") : value}
         options={finalOptions}
         onSelect={_onChange}
       />
@@ -271,10 +273,13 @@ const makeSelectField =
 
 // Concrete select fields
 export const SelectField = makeSelectField([]);
-const SelectBooleanField = makeSelectField([
-  { value: "true", label: "True" },
-  { value: "false", label: "False" },
-]);
+const SelectBooleanField = makeSelectField(
+  [
+    { value: "true", label: "True" },
+    { value: "false", label: "False" },
+  ],
+  true,
+);
 
 const RelationshipField = ({
   onEditJson,

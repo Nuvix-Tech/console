@@ -18,52 +18,36 @@ export function useOnRowsChange(rows: Models.Document[]) {
     async onMutate({ projectRef, collection, documentId, payload }) {
       const queryKey = collectionKeys.documents(projectRef, collection.$schema, collection.$id);
 
-      await queryClient.cancelQueries({ queryKey: queryKey });
+      await queryClient.cancelQueries({ queryKey });
 
       const previousRowsQueries = queryClient.getQueriesData({ queryKey });
 
-      queryClient.setQueriesData(
-        {
-          queryKey: queryKey,
-        },
-        (old: any) => {
-          return {
-            documents:
-              old?.documents.map((row: Models.Document) => {
-                // match primary keys
-                if (row.$id === documentId) {
-                  return { ...row, ...payload } as Models.Document;
-                }
+      queryClient.setQueriesData({ queryKey }, (old: any) => {
+        if (!old) return old;
 
-                return row;
-              }) ?? [],
-          };
-        },
-      );
+        return {
+          ...old,
+          documents: old.documents?.map((row: Models.Document) => {
+            if (row.$id === documentId) {
+              return { ...row, ...payload };
+            }
+            return row;
+          }),
+        };
+      });
 
       return { previousRowsQueries };
     },
     onError(error, _variables, context) {
-      const { previousRowsQueries } = context as {
-        previousRowsQueries: [
-          QueryKey,
-          (
-            | {
-                result: any[];
-              }
-            | undefined
-          ),
-        ][];
+      const { previousRowsQueries } = (context ?? {}) as {
+        previousRowsQueries?: [QueryKey, any][];
       };
 
-      previousRowsQueries.forEach(([queryKey, previousRows]) => {
-        if (previousRows) {
-          queryClient.setQueriesData({ queryKey }, previousRows);
-        }
-        queryClient.invalidateQueries({ queryKey });
+      previousRowsQueries?.forEach(([queryKey, previous]) => {
+        queryClient.setQueryData(queryKey, previous);
       });
 
-      toast.error(error?.message ?? error);
+      toast.error(error?.message ?? "Failed to update row");
     },
   });
 
@@ -79,7 +63,6 @@ export function useOnRowsChange(rows: Models.Document[]) {
       const changedColumns = Object.keys(rowData).filter(
         (name) => rowData[name] !== previousRow[name],
       );
-
       if (changedColumns.length === 0) return;
 
       const updatedData = changedColumns.reduce((acc, name) => {

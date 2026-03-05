@@ -191,7 +191,7 @@ function getCellEditor(
       );
     case AttributeFormat.Enum:
       const options = (columnDefinition as Models.AttributeEnum).elements.map((x) => {
-        return { label: x, value: x };
+        return { label: x, value: x, _value: x };
       });
       // eslint-disable-next-line react/display-name
       return (p: any) => (

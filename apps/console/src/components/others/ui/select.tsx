@@ -5,6 +5,7 @@ import {
   Field as ChakraField,
   createListCollection,
   SelectValueChangeDetails,
+  VisuallyHidden,
 } from "@chakra-ui/react";
 import {
   SelectContent,
@@ -95,6 +96,16 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
       }
     };
 
+    const labelJsx = (
+      <ChakraField.Label
+        flexDir={isHoriz ? "column" : undefined}
+        alignItems={isHoriz ? "start" : undefined}
+      >
+        {label}
+        <ChakraField.RequiredIndicator fallback={optional} />
+      </ChakraField.Label>
+    );
+
     return (
       <ChakraField.Root
         orientation={orientation}
@@ -103,15 +114,7 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
         alignItems={isHoriz ? "flex-start" : undefined}
         required={rest.required}
       >
-        {label && (
-          <ChakraField.Label
-            flexDir={isHoriz ? "column" : undefined}
-            alignItems={isHoriz ? "start" : undefined}
-          >
-            {label}
-            <ChakraField.RequiredIndicator fallback={optional} />
-          </ChakraField.Label>
-        )}
+        {label ? labelJsx : <VisuallyHidden>{labelJsx}</VisuallyHidden>}
         <Stack width={isHoriz ? "sm" : "full"} gap="2">
           <SelectRoot
             collection={collection}
